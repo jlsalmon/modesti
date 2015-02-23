@@ -16,7 +16,7 @@
 
 
 <p class="input-group">
-              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" 
+              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened1" min-date="minDate" max-date="'2015-06-22'" 
                      datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
@@ -39,19 +39,24 @@
               </select>
             </td>
             
-            <td data-title="'Date'"> 
-<!--             <p class="input-group">
-              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" 
+            <td data-title="'Address'" style="width: 30%;"> 
+            
+            <p class="input-group">
+              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened2" min-date="minDate" max-date="'2015-06-22'" 
                      datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
               </span>
-            </p> -->
+            </p>
+            </td>
+            
+            <td data-title="'Address'"> 
+
             
             <div class="form-group has-feedback">
-            <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" typeahead="address for address in getLocation($viewValue)" 
-              typeahead-loading="loadingLocations" class="form-control">
-            <i ng-show="loadingLocations" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> <!--  -->
+              <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" typeahead="address for address in getLocation($viewValue)" 
+                typeahead-loading="loadingLocations" class="form-control">
+              <i ng-show="loadingLocations" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> <!--  -->
             </div>
             
             </td>

@@ -63,11 +63,11 @@ app.controller('MainCtrl', ['$scope', '$timeout', '$http', 'NgTableParams', 'Gre
   };
   $scope.toggleMin();
 
-  $scope.open = function($event) {
+  $scope.open = function($event, opened) {
     $event.preventDefault();
     $event.stopPropagation();
 
-    $scope.opened = true;
+    $scope[opened] = true;
   };
 
   $scope.dateOptions = {
