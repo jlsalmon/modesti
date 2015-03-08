@@ -33,6 +33,10 @@ module.exports = function(config) {
       'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'app/bower_components/ng-table/dist/ng-table.min.js',
       'app/bower_components/angular-xeditable/dist/js/xeditable.js',
+      'app/bower_components/angular-spring-data-rest/dist/angular-spring-data-rest.js',
+      'app/bower_components/angular-hateoas/src/angular-hateoas.js',
+      'app/bower_components/lodash/dist/lodash.compat.js',
+      'app/bower_components/restangular/dist/restangular.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

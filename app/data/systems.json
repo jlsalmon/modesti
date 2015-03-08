@@ -1,0 +1,28 @@
+{
+    "systems": [
+        {
+            "name": "EAU",
+            "subsystems": [
+                {
+                    "name": "REJET"
+                },
+                {
+                    "name": "DEMI"
+                }
+            ]
+
+        },
+        {
+            "name": "ACCES",
+            "subsystems": [
+                {
+                    "name": "REJET"
+                },
+                {
+                    "name": "DEMI"
+                }
+            ]
+            
+        }
+    ]
+}

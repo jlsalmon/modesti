@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc overview
- * @name yoTestApp
+ * @name verity
  * @description
- * # yoTestApp
+ * # verity
  *
  * Main module of the application.
  */
 var app = angular
-  .module('yoTestApp', [
+  .module('verity', [
     'ngAnimate',
     'ngCookies',
     'ngResource',
@@ -17,25 +17,54 @@ var app = angular
     'ngSanitize',
     'ngTouch',
     'ui.bootstrap',
-    'ui.grid',
-    'ui.grid.edit',
-    'ui.grid.resizeColumns',
-    'ui.grid.cellNav',
     'ngTable',
-    'xeditable',
-    'myServices'
-  ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
+    'restangular'
+  ]);
+
+
+app.config(function($routeProvider, $locationProvider) {
+  // Configure routes
+  $routeProvider
+  .when('/new', {
+    templateUrl: 'views/new_request.html',
+    controller: 'NewRequestController'
+  })
+  .when('/entry', {
+    templateUrl: 'views/point_entry.html',
+    controller: 'PointEntryController'
+  })
+  .when('/requests', {
+    templateUrl: 'views/user_requests.html',
+    controller: 'UserRequestsController'
+  })
+  .when('/about', {
+    templateUrl: 'views/about.html',
+    controller: 'AboutCtrl'
+  })
+  .otherwise({
+    redirectTo: '/'
   });
+});
+
+
+app.config(function(RestangularProvider) {
+  // Set the base URL
+  RestangularProvider.setBaseUrl('http://localhost:8080/');
+
+  // Add a response interceptor
+  RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
+    var extractedData;
+
+    if (operation === "getList") {
+      extractedData = data._embedded.requests;
+    } else {
+      extractedData = data;
+    }
+    return extractedData;
+  });
+
+  // Set the self link
+  RestangularProvider.setRestangularFields({
+    selfLink : "_links.self.href"
+  });
+});
