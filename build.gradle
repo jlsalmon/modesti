@@ -1,6 +1,17 @@
+
+buildscript {
+    repositories {
+        maven { url "https://repo.spring.io/libs-release" }
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.1.RELEASE")
+    }
+}
+
 apply plugin: 'java'
-apply plugin: 'java'
-apply plugin: 'war'
+apply plugin: 'spring-boot'
 
 version = '1.0'
 
@@ -11,23 +22,17 @@ targetCompatibility = 1.7
 repositories {
     mavenLocal()
     mavenCentral()
+    maven { url "https://repo.spring.io/libs-release" }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-
-    compile 'org.springframework:spring-webmvc:4.0.6.RELEASE'
+    
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.data:spring-data-mongodb")
+    compile("org.springframework.data:spring-data-rest-webmvc")
+    
     compile 'ch.qos.logback:logback-classic:1.1.2'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.+'
-    
-    compile (
-    [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.4.1'],
-    [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.4.1'],
-    [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.1']
-)
-    
-    
 
-    //include in compile only, exclude in the war
-    providedCompile 'javax.servlet:servlet-api:2.5'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
 }
