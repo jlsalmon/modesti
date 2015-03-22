@@ -60,10 +60,15 @@ app.config(function(RestangularProvider) {
 
   // Add a response interceptor
   RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
+    
     var extractedData;
 
     if (operation === "getList") {
-      extractedData = data._embedded.requests;
+      if (data.hasOwnProperty('_embedded')) {
+        extractedData = data._embedded.requests;
+      } else {
+        extractedData = [];
+      }
     } else {
       extractedData = data;
     }

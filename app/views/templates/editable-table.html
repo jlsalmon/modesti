@@ -1,25 +1,33 @@
-
+  
 <div class="nav-tabs-custom">
 
   <!-- Create a new tab for each category -->
   <tabset> <tab ng-repeat="category in table.categories" heading="{{category.name}}" select="activateCategory(category)"> </tab> </tabset>
 
   <table ng-table="tableParams" class="table table-bordered table-striped">
-    <thead>
-      <!--       <tr ng-repeat-start="category in table.categories">
-        <th ng-repeat="field in category.fields">{{field.name}}</th>
+     <thead>
+      <tr ng-repeat-start="category in table.categories">
+        <th ng-repeat="field in category.fields" ng-show="category.active">{{field.name}}</th>
       </tr>
-      <tr ng-repeat-end /> -->
+      <tr ng-repeat-end />
 
-      <tr>
+<!--       <tr>
         <th table-header categories="table.categories"></th>
       </tr>
-
+ -->
     </thead>
     <tbody>
+      <!-- <tr table-row ng-repeat="point in $data" point="point" categories="table.categories" params="tableParams"> -->
+      
       <tr ng-repeat="point in $data">
+        <td ng-repeat="field in getActiveFields()">
+          
+          <span input-field point="point" field="field"></span>
+          
+          <!-- <input class="form-control" type="text" ng-model="point.name" placeholder="Name" /> -->
+        </td>
 
-        <td table-row point="point" categories="table.categories"></td>
+        <!-- <td table-row point="point" categories="table.categories"></td> -->
         <!--         <div ng-repeat="category in table.categories">
         <td ng-repeat="field in category.fields">{{field.name}}: {{point[field.name]}} </td>
         </> -->
