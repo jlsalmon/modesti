@@ -3,16 +3,26 @@
 /**
  * @ngdoc service
  * @name verity.myService
- * @description
- * # myService
- * Service in the verity.
+ * @description # myService Service in the verity.
  */
 var app = angular.module('verity');
 
 app.service('RequestService', function($filter, $q, Restangular) {
 
   function filterData(data, filter) {
-    return $filter('filter')(data, filter)
+    var filtered = $filter('filter')(data, filter);
+    
+    for (var i in data) {
+      var point = data[i];
+      
+      if (filtered.indexOf(point) == -1) {
+        point.hidden = true;
+      } else {
+        point.hidden = false;
+      }
+    }
+    
+    return data;
   }
 
   function orderData(data, params) {
@@ -30,43 +40,108 @@ app.service('RequestService', function($filter, $q, Restangular) {
   var service = {
     cachedRequest : null,
 
-    getData : function($defer, params, filter) {
-
+    getRequests : function() {
       var q = $q.defer();
       
-      if (service.cachedRequest) {
-        console.log('using cached request');
-        var points = service.cachedRequest.points;
-        var filteredData = filterData(points, filter);
-        var transformedData = sliceData(orderData(filteredData, params), params);
-        params.total(filteredData.length)
-        service.cachedRequest.points = transformedData;
+      Restangular.all('requests').getList().then(function(requests) {
+        q.resolve(requests.data);
+      },
+      
+      function(error) {
+        console.log('error: ' + error);
+        q.reject(error);
+      });
+      
+      return q.promise;
+    },
+    
+    getRequest : function(id, params, filter) {
+      var q = $q.defer();
 
-        //$defer.resolve(transformedData);
-        q.resolve(service.cachedRequest);
+      if (service.cachedRequest && service.cachedRequest.id == id) {
+        console.log('using cached request');
+        
+        // Make a copy for sorting/filtering
+        var request = service.cachedRequest;
+
+        // Sort/filter the points
+        request.points = transformData(request.points, filter, params);
+        
+        // Set length for pagination
+        params.total(request.points.length);
+
+        q.resolve(request);
       }
 
       else {
-        console.log('fetching request');
-        var baseRequests = Restangular.all('requests');
+        console.log('fetching request ' + id);
 
-        // This will query /requests and return a promise.
-        baseRequests.getList().then(function(requests) {
-          var request = requests[0];
-          var points = request.points;
+        Restangular.one('requests', id).get().then(function(request) {
+          var points = request.data.points;
 
-          service.cachedRequest = request;
+          if (points.length == 0) {
+            // Add a starter row with some pre-filled data
+            points.push({
+              'name' : '',
+              'description' : '',
+              'domain' : request.domain
+            });
+          }
+
+          service.cachedRequest = request.data;
+          service.cachedRequest.id = id;
           console.log('cached request');
-          params.total(points.length)
-          var filteredData = $filter('filter')(points, filter);
-          var transformedData = transformData(points, filter, params)
-
-          service.cachedRequest.points = transformedData;
           
-          //$defer.resolve(transformedData);
+          //var filteredData = $filter('filter')(points, filter);
+          var transformedData = transformData(points, filter, params);
+          params.total(transformedData.length);
+
+          //service.cachedRequest.points = transformedData;
           q.resolve(service.cachedRequest);
+        },
+
+        function(error) {
+          console.log(error.status + ' ' + error.statusText);
+          q.reject(error);
         });
       }
+
+      return q.promise;
+    },
+
+    createRequest : function(request) {
+      var q = $q.defer();
+      var requests = Restangular.all('requests');
+
+      requests.post(request).then(function(response) {
+        var location = response.headers('Location');
+        console.log('created request: ' + location);
+        q.resolve(location);
+      },
+
+      function(error) {
+        console.log(error.data.message);
+        for ( var i in error.data.errors) {
+          console.log('error: ' + error.data.errors[i].message);
+        }
+        q.reject(error);
+      });
+
+      return q.promise;
+    },
+    
+    deleteRequest : function(id) {
+      var q = $q.defer();
+      
+      Restangular.one('requests', id).remove().then(function(response) {
+        console.log('deleted request: ' + response);
+        q.resolve(response);
+      },
+
+      function(error) {
+        console.log(error.status + ' ' + error.statusText);
+        q.reject(error);
+      });
       
       return q.promise;
     }

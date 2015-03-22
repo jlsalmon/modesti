@@ -26,62 +26,52 @@
 
         <div class="box-body">
 
-          <form name="newRequestForm" class="form-horizontal" novalidate>
+          <form name="form" class="form-horizontal" novalidate>
             <div class="form-group">
               <label for="requestType" class="col-sm-2 control-label">Request Type</label>
               <div class="col-sm-10">
                 <label class="radio-inline">
-                  <input type="radio" name="requestType" id="requestType" value="create" checked>
+                  <input type="radio" name="requestType" value="create" ng-model="request.type" checked>
                   Create
                 </label>
                 <label class="radio-inline">
-                  <input type="radio" name="requestType" id="requestType" value="update" disabled>
+                  <input type="radio" name="requestType" value="update" ng-model="request.type" disabled>
                   Update
                 </label>
                 <label class="radio-inline">
-                  <input type="radio" name="requestType" id="requestType" value="delete" disabled>
+                  <input type="radio" name="requestType" value="delete" ng-model="request.type" disabled>
                   Delete
                 </label>
+                <span class="help-block">Select the type of request you wish (create, update or delete points).</span>
               </div>
             </div>
 
-            <div class="form-group has-feedback" ng-class="{ 'has-error': newRequestForm.description.$invalid && newRequestForm.description.$dirty }">
+            <div class="form-group has-feedback"
+              ng-class="{ 'has-error': (form.description.$invalid && form.description.$dirty) || (form.$submitted && form.description.$invalid) }">
               <label for="description" class="col-sm-2 control-label">Description</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" ng-model="description" name="description" placeholder="Description" required>
+                <input type="text" class="form-control" ng-model="request.description" name="description" placeholder="Description" required>
+                <span class="help-block">Enter a general description of your request.</span>
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="description" class="col-sm-2 control-label">Domain</label>
-              <div class="col-sm-10">
-                <select class="form-control" ng-model="domain" name="domain">
-                  <option>TIM</option>
-                  <option>CSAM</option>
-                  <option>PVSS</option>
-                </select>
-              </div>
+            <!-- Include the separate parts of the form -->
+            <div ng-if="request.type == 'create'">
+              <div ng-include src="'views/forms/new_request/create.html'"></div>
             </div>
 
-            <div class="form-group" ng-show="domain == 'TIM'">
-              <label for="datasource" class="col-sm-2 control-label">Data source</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" ng-model="datasource" name="datasource" placeholder="Data source" required>
-              </div>
+            <div ng-if="request.type == 'update'">
+              <div ng-include src="'views/forms/new_request/update.html'"></div>
             </div>
 
-            <div class="form-group has-feedback" ng-show="domain == 'TIM'">
-              <label for="System/Subsystem" class="col-sm-2 control-label">System/Subsystem</label>
-              <div class="col-sm-10">
-                <input type="text" ng-model="asyncSelected" placeholder="System/Subsystem" typeahead="system for system in getSystems($viewValue)"
-                  typeahead-loading="loadingSystems" class="form-control">
-                <i ng-show="loadingSystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
-              </div>
+            <div ng-if="request.type == 'delete'">
+              <div ng-include src="'views/forms/new_request/delete.html'"></div>
             </div>
+
 
             <div class="form-group">
               <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default">Next</button>
+                <button type="submit" class="btn btn-default" ng-click="submit(form, request)">Next</button>
               </div>
             </div>
           </form>
@@ -91,17 +81,7 @@
 
         <div class="box-footer">
           <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-
-          <tt>description = {{description}}</tt>
-          <br>
-          <tt>newRequestForm.requestType = {{newRequestForm.requestType}}</tt>
-          <br>
-          <tt>newRequestForm.description.$error = {{newRequestForm.description.$error}}</tt>
-          <br>
-          <tt>newRequestForm.$valid = {{newRequestForm.$valid}}</tt>
-          <br>
-          <tt>newRequestForm.$error.required = {{!!newRequestForm.$error.required}}</tt>
-          <br>
+          <tt>form.$valid = {{form.$valid}}</tt>
         </div>
 
       </div>

@@ -1,9 +1,19 @@
-.table-striped>tbody>tr:nth-child(odd)  .form-control {
+.skin-blue .content-header {
+  position: relative;
+  padding: 15px 15px 0 15px;
+  background-color: white;
+}
+
+tab-heading .fa {
+  padding-right: 8px;
+}
+
+.table-striped>tbody>tr:nth-child(odd) .form-control {
   background-color: #f9f9f9;
   border-color: #f9f9f9;
 }
 
-.table-striped>tbody>tr:nth-of-type(odd)  .form-control {
+.table-striped>tbody>tr:nth-of-type(odd) .form-control {
   background-color: #f9f9f9;
   border-color: #f9f9f9;
 }
@@ -13,7 +23,7 @@
   border-color: #fff;
 }
 
-.table-striped>tbody>tr:nth-of-type(even)  .form-control {
+.table-striped>tbody>tr:nth-of-type(even) .form-control {
   background-color: #fff;
   border-color: #fff;
 }
@@ -27,4 +37,47 @@ td .form-group {
   background: #ccc;
   color: #000;
   padding: 0.2em 0;
+}
+
+#request-header {
+  border-bottom: 1px solid #eaecf1;
+}
+
+#request-main-nav {
+  margin-top: 20px;
+}
+
+/* tab colour */
+#request-main-nav .nav-tabs>li>a {
+  background-color: inherit;
+  text-transform: uppercase;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #fff;
+  color: #777;
+}
+
+/* hover tab colour */
+#request-main-nav .nav-tabs>li>a:hover {
+  background-color: inherit;
+  border-top: transparent;
+  border-left: transparent;
+  border-right: transparent;
+  color: #66758c;
+}
+
+/* active tab colour */
+#request-main-nav .nav-tabs>li.active>a, #request-main-nav .nav-tabs>li.active>a:hover,
+  #request-main-nav .nav-tabs>li.active>a:focus {
+  background-color: inherit;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom-color: #529fd2;
+  color: #3c8dbc;
+}
+
+.nav-tabs-custom > .ng-isolate-scope > .tab-content {
+  padding: 0px;
 }

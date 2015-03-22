@@ -1,0 +1,32 @@
+
+<div class="form-group" ng-class="{ 'has-error': (form.domain.$invalid && form.domain.$dirty) || (form.$submitted && form.domain.$invalid) }">
+  <label for="domain" class="col-sm-2 control-label">Domain</label>
+  <div class="col-sm-10">
+    <select class="form-control" ng-model="request.domain" name="domain" required>
+      <option>TIM</option>
+      <option>CSAM</option>
+      <option>PVSS</option>
+    </select>
+    <span class="help-block">Select the target domain of the request.</span>
+  </div>
+</div>
+
+<div class="form-group" ng-show="request.domain == 'TIM'"
+  ng-class="{ 'has-error': (form.datasource.$invalid && form.datasource.$dirty) || (form.$submitted && form.datasource.$invalid) }">
+  <label for="datasource" class="col-sm-2 control-label">Data source</label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" ng-model="request.datasource" name="datasource" placeholder="Data source" required>
+    <span class="help-block">Type the data source from which the points in your request will come.</span>
+  </div>
+</div>
+
+<div class="form-group has-feedback" ng-show="request.domain == 'TIM'"
+  ng-class="{ 'has-error': (form.$submitted && form.system.$invalid) }">
+  <label for="System/Subsystem" class="col-sm-2 control-label">System/Subsystem</label>
+  <div class="col-sm-10">
+    <input type="text" ng-model="request.system" placeholder="System/Subsystem" typeahead="system for system in getSystems($viewValue)"
+      typeahead-loading="loadingSystems" typeahead-editable="false" class="form-control" name="system" required>
+    <i ng-show="loadingSystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
+    <span class="help-block">Type the system/subsystem to which this request relates.</span>
+  </div>
+</div>

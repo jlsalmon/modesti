@@ -1,0 +1,89 @@
+
+<div class="nav-tabs-custom">
+
+  <!-- Create a new tab for each category -->
+  <tabset> <tab ng-repeat="category in table.categories" heading="{{category.name}}" select="activateCategory(category)"> </tab> </tabset>
+
+  <table ng-table="tableParams" class="table table-bordered table-striped">
+    <thead>
+      <!--       <tr ng-repeat-start="category in table.categories">
+        <th ng-repeat="field in category.fields">{{field.name}}</th>
+      </tr>
+      <tr ng-repeat-end /> -->
+
+      <tr>
+        <th table-header categories="table.categories"></th>
+      </tr>
+
+    </thead>
+    <tbody>
+      <tr ng-repeat="point in $data">
+
+        <td table-row point="point" categories="table.categories"></td>
+        <!--         <div ng-repeat="category in table.categories">
+        <td ng-repeat="field in category.fields">{{field.name}}: {{point[field.name]}} </td>
+        </> -->
+      </tr>
+    </tbody>
+  </table>
+
+
+
+
+  <!-- 
+<div class="nav-tabs-custom">
+  <tabset> <tab heading="Basic details">
+
+
+  <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped">
+    <tr ng-repeat="point in $data" ng-hide="point.hidden">
+
+      <td data-title="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
+        <input class="form-control" type="text" ng-model="point.name" placeholder="Name" />
+      </td>
+
+      <td data-title="'Description'" sortable="'description'" filter="{ 'description': 'text' }">
+        <input class="form-control" type="text" ng-model="point.description" placeholder="Description" />
+      </td>
+
+      <td data-title="'Domain'" sortable="'domain'" filter="{ 'domain': 'text' }">
+        <input class="form-control" type="text" ng-model="point.domain" placeholder="Domain" />
+      </td>
+
+      <td data-title="'Select'">
+        <select class="form-control">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+      </td>
+
+
+      <td data-title="'Address'">
+
+        <div class="form-group has-feedback">
+          <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" typeahead="address for address in getLocation($viewValue)"
+            typeahead-loading="loadingLocations" class="form-control">
+          <i ng-show="loadingLocations" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
+        </div>
+
+      </td>
+
+      <td data-title="'Age'" width="200">
+        <input class="form-control" type="number" />
+      </td>
+
+      <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
+        <input type="checkbox" ng-model="checkboxes.items[point.name]" />
+      </td>
+
+      <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+                <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value="" />
+              </script>
+
+    </tr>
+  </table>
+  </tab> <tab heading="Alarm details"> Some content </tab> </tabset>
+</div>
+ -->
+</div>

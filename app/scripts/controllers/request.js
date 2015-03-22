@@ -2,35 +2,35 @@
 
 /**
  * @ngdoc function
- * @name verity.controller:PointEntryController
- * @description # PointEntryController Controller of the verity
+ * @name verity.controller:RequestController
+ * @description # RequestController Controller of the verity
  */
 var app = angular.module('verity');
 
-app.controller('PointEntryController', function($scope, NgTableParams, RequestService) {
+app.controller('RequestController', function($scope, $location, $routeParams, NgTableParams, RequestService) {
 
   $scope.tableParams = new NgTableParams({
     page : 1, // show first page
     count : 10, // count per page
-    sorting : {
-      name : 'asc'
-    }
+    sorting : {}
   }, {
     total : 0, // length of data
+    filterDelay : 0,
     getData : function($defer, params) {
-      RequestService.getData($defer, params, $scope.filter).then(function(request) {
+      var id = $routeParams.id;
+
+      RequestService.getRequest(id, params, params.filter()).then(function(request) {
         $scope.request = request;
         $defer.resolve(request.points);
         console.log('got request');
+      },
+
+      function(error) {
+        console.log('error getting request: ' + error);
+        $location.path('/404');
       });
     }
   });
-
-  $scope.$watch("filter.$", function() {
-    $scope.tableParams.reload();
-  });
-
-  $scope.selected = undefined;
 
   $scope.checkboxes = {
     'checked' : false,
@@ -55,17 +55,17 @@ app.controller('PointEntryController', function($scope, NgTableParams, RequestSe
     if (!$scope.request) {
       return;
     }
-    
+
     var checked = 0, unchecked = 0, total = $scope.request.points.length;
     angular.forEach($scope.request.points, function(item) {
       checked += ($scope.checkboxes.items[item.name]) || 0;
       unchecked += (!$scope.checkboxes.items[item.name]) || 0;
     });
-    
+
     if ((unchecked == 0) || (checked == 0)) {
       $scope.checkboxes.checked = (checked == total);
     }
-    
+
     // grayed checkbox
     angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
   }, true);
@@ -84,23 +84,35 @@ app.controller('PointEntryController', function($scope, NgTableParams, RequestSe
   };
 
   $scope.addRow = function() {
-    var newThing = {
-      'name' : 'DEFAUT_GENERAL',
-      'description' : 'No-so-cool description',
-      'domain' : 'TIM'
+    var request = $scope.request;
+
+    var newRow = {
+      'name' : '',
+      'description' : '',
+      'domain' : request.domain
     };
 
-    var request = $scope.request;
     var points = request.points;
-    points.push(newThing);
+    points.push(newRow);
     console.log('adding new row');
 
-    request.save();
+    request.save().then(function() {
+      console.log('added new row');
+    }, function(error) {
+      console.log('error adding new row: ' + error);
+    });
   };
 
   $scope.save = function() {
     var request = $scope.request;
-    request.save();
-    console.log('saved request');
-  }
+    request.save().then(function() {
+      console.log('saved request');
+    }, function(error) {
+      console.log('error saving request: ' + error);
+    });
+  };
+
+  $scope.toggleFilter = function(params) {
+    params.settings().$scope.show_filter = !params.settings().$scope.show_filter;
+  };
 });

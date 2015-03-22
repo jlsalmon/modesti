@@ -29,17 +29,21 @@ app.config(function($routeProvider, $locationProvider) {
     templateUrl: 'views/new_request.html',
     controller: 'NewRequestController'
   })
-  .when('/entry', {
-    templateUrl: 'views/point_entry.html',
-    controller: 'PointEntryController'
-  })
   .when('/requests', {
     templateUrl: 'views/user_requests.html',
     controller: 'UserRequestsController'
   })
+  .when('/requests/:id', {
+    templateUrl: 'views/request.html',
+    controller: 'RequestController'
+  })
   .when('/about', {
     templateUrl: 'views/about.html',
     controller: 'AboutCtrl'
+  })
+  .when('/404', {
+    templateUrl: 'views/errors/404.html',
+    //controller: 'PageNotFoundController'
   })
   .otherwise({
     redirectTo: '/'
@@ -50,6 +54,9 @@ app.config(function($routeProvider, $locationProvider) {
 app.config(function(RestangularProvider) {
   // Set the base URL
   RestangularProvider.setBaseUrl('http://localhost:8080/');
+  
+  // Enable access to the response headers
+  RestangularProvider.setFullResponse(true);
 
   // Add a response interceptor
   RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {

@@ -34,8 +34,7 @@
   <div class="wrapper">
     <header class="main-header">
       <a href="#/" class="logo">
-        <b>Verity</b>
-        <small> v0.1</small>
+        <b>verity</b>
       </a>
       <!-- Header Navbar: style can be found in header.less -->
       <nav class="navbar navbar-static-top" role="navigation">
@@ -52,7 +51,7 @@
             <li class="dropdown messages-menu">
               <a class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-envelope-o"></i>
-                <span class="label label-success">4</span>
+                <!-- <span class="label label-success">4</span> -->
               </a>
               <ul class="dropdown-menu">
                 <li class="header">You have 4 messages</li>
@@ -83,7 +82,7 @@
             <li class="dropdown notifications-menu">
               <a class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-bell-o"></i>
-                <span class="label label-warning">10</span>
+                <!-- <span class="label label-warning">10</span> -->
               </a>
               <ul class="dropdown-menu">
                 <li class="header">You have 10 notifications</li>
@@ -107,7 +106,7 @@
             <li class="dropdown tasks-menu">
               <a class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-flag-o"></i>
-                <span class="label label-danger">9</span>
+                <!-- <span class="label label-danger">9</span> -->
               </a>
               <ul class="dropdown-menu">
                 <li class="header">You have 9 tasks</li>
@@ -197,7 +196,7 @@
           <div class="input-group">
             <input type="text" name="q" class="form-control" placeholder="Search..." />
             <span class="input-group-btn">
-              <button type='submit' name='seach' id='search-btn' class="btn btn-flat">
+              <button type='submit' name='search' id='search-btn' class="btn btn-flat">
                 <i class="fa fa-search"></i>
               </button>
             </span>
@@ -205,17 +204,16 @@
         </form>
         <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" ng-controller="MainNavigationController">
           <li class="header">MAIN NAVIGATION</li>
-
-          <li>
+          <li ng-class="{ active : isActive('/new')}">
             <a href="#/new">
               <i class="fa fa-plus"></i>
               <span>New Request</span>
             </a>
           </li>
 
-          <li>
+          <li ng-class="{ active : isActive('/requests')}">
             <a href="#/requests">
               <i class="fa fa-user"></i>
               <span>My Requests</span>
@@ -242,14 +240,13 @@
     <!-- /.content-wrapper -->
 
     <footer class="main-footer">
-      <div class="pull-right hidden-xs">
-        <b>Version</b>
-        0.1
-      </div>
-      <strong>&copy; <script>
+      <div class="pull-right hidden-xs">Version 0.1</div>
+      &copy;
+      <script>
               document.write(new Date().getFullYear());
-            </script> <a href="http://cern.ch">CERN</a>
-      </strong>
+            </script>
+      <a href="http://cern.ch">CERN</a>
+
     </footer>
   </div>
   <!-- ./wrapper -->
@@ -280,10 +277,13 @@
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <script src="scripts/app.js"></script>
   <script src="scripts/AdminLTE.js"></script>
+  <script src="scripts/controllers/main_navigation.js"></script>
   <script src="scripts/controllers/new_request.js"></script>
-  <script src="scripts/controllers/point_entry.js"></script>
+  <script src="scripts/controllers/request.js"></script>
+  <script src="scripts/controllers/user_requests.js"></script>
   <script src="scripts/controllers/about.js"></script>
   <script src="scripts/services/services.js"></script>
+  <script src="scripts/directives/editable-table.js"></script>
   <!-- endbuild -->
 </body>
 </html>

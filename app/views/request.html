@@ -1,0 +1,60 @@
+
+<!-- Content Header (Page header) -->
+<section id="request-header" class="content-header">
+  <h1>
+    <i class="fa fa-list fa-fw text-muted" style="font-size: 80%;"></i>
+    Request <small>{{request.id}}</small>
+  </h1>
+
+  <div id="request-main-nav">
+    <tabset justified="true"> <tab> <tab-heading> <i class="fa fa-edit"></i>Edit</tab-heading></tab> <tab> <tab-heading> <i
+      class="fa fa-exclamation-triangle"></i>Error report</tab-heading></tab> <tab> <tab-heading> <i class="fa fa-heartbeat"></i>Activity</tab-heading></tab> <tab> <tab-heading>
+    <i class="fa fa-comments"></i>Comments</tab-heading></tab> </tabset>
+  </div>
+
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+  <div class="row">
+    <div class="col-lg-12">
+
+      <!-- Default box -->
+      <div class="box box-solid">
+        <div class="box-header with-border">
+          <h3 class="box-title">Request type: {{request.type}}, Domain: {{request.domain}}, Data source: {{request.datasource}}</h3>
+        </div>
+        <div class="box-body">
+
+          <!-- 
+            This is the main table directive.
+          -->
+          <div editable-table request="request"></div>
+
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer">
+          <button class="btn btn-default" ng-click="addRow()">
+            <i class="fa fa-add"></i>
+            Add Row
+          </button>
+
+          <button class="btn btn-default" ng-click="save()">
+            <i class="fa fa-add"></i>
+            Save
+          </button>
+
+          <a class="pull-right text-muted" title="Filter" ng-click="toggleFilter(tableParams)" style="padding: 9px; font-size: 18px;">
+            <i class="fa fa-filter"></i>
+          </a>
+        </div>
+        <!-- /.box-footer-->
+      </div>
+      <!-- /.box -->
+
+    </div>
+  </div>
+
+</section>
+<!-- /.content -->
