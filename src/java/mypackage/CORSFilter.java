@@ -17,23 +17,25 @@ import org.springframework.stereotype.Component;
 @Component
 public class CORSFilter implements Filter {
 
-	public static final Logger logger = LoggerFactory.getLogger(CORSFilter.class);
+  public static final Logger logger = LoggerFactory.getLogger(CORSFilter.class);
 
-	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-		logger.info("filtering");
-		HttpServletResponse response = (HttpServletResponse) res;
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
-		response.setHeader("Access-Control-Max-Age", "3600");
-		response.setHeader("Access-Control-Allow-Headers", "x-requested-with, content-type");
-		chain.doFilter(req, res);
-	}
+  @Override
+  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+    logger.info("filtering");
+    HttpServletResponse response = (HttpServletResponse) res;
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+    response.setHeader("Access-Control-Max-Age", "3600");
+    response.setHeader("Access-Control-Allow-Headers", "x-requested-with, content-type");
+    response.setHeader("Access-Control-Expose-Headers", "Location");
+    chain.doFilter(req, res);
+  }
 
-	@Override
-  public void init(FilterConfig filterConfig) {}
+  @Override
+  public void init(FilterConfig filterConfig) {
+  }
 
-	@Override
-  public void destroy() {}
-
+  @Override
+  public void destroy() {
+  }
 }

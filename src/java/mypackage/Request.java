@@ -20,7 +20,9 @@ package mypackage;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -32,9 +34,33 @@ public class Request {
   @Id
   private String id;
 
+  @NotNull(message = "Request type is compulsory")
+  private String type;
+
+  @NotNull(message = "Description is compulsory")
   private String description;
 
+  @NotNull(message = "Domain is compulsory")
+  private String domain;
+
+  @NotNull(message = "Data source is compulsory")
+  private String datasource;
+
   private List<Point> points = new ArrayList<>();
+
+  /**
+   * @return the type
+   */
+  public String getType() {
+    return type;
+  }
+
+  /**
+   * @param type the type to set
+   */
+  public void setType(String type) {
+    this.type = type;
+  }
 
   /**
    * @return the description
@@ -48,6 +74,34 @@ public class Request {
    */
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  /**
+   * @return the domain
+   */
+  public String getDomain() {
+    return domain;
+  }
+
+  /**
+   * @param domain the domain to set
+   */
+  public void setDomain(String domain) {
+    this.domain = domain;
+  }
+
+  /**
+   * @return the datasource
+   */
+  public String getDatasource() {
+    return datasource;
+  }
+
+  /**
+   * @param datasource the datasource to set
+   */
+  public void setDatasource(String datasource) {
+    this.datasource = datasource;
   }
 
   /**
