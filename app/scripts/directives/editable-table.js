@@ -64,11 +64,6 @@ app.controller('EditableTableController', function($scope) {
 
     category.active = true;
     console.log(category);
-
-    // $scope.$watch("categories", function(newValue, oldValue) {
-    // console.log('categories changed, refreshing table');
-    // $scope.tableParams.reload();
-    // }, true);
   };
 
   $scope.getActiveFields = function() {
@@ -99,7 +94,8 @@ app.directive('inputField', function($compile) {
       var html = '<select class="form-control">';
       
       for (var i in field.options) {
-        html += '<option value="field.options[i]">field.options[i]</option>'
+        var option = field.options[i];
+        html += '<option value="' + option + '">' + option + '</option>'
       }
       
       html += '</select>'
@@ -119,120 +115,6 @@ app.directive('inputField', function($compile) {
       element.html(getInput(scope.field)).show();
 
       $compile(element.contents())(scope);
-    }
-  }
-});
-
-// app.directive('tableHeader', function() {
-// return {
-// restrict : 'A',
-// replace : true,
-// scope : {
-// categories : '=categories'
-// },
-//
-// link : function(scope, element, attrs) {
-//
-// var currentElement = element;
-//
-// scope.$watch("categories", function(newValue, oldValue) {
-// // This gets called when data changes.
-// console.log('change 2');
-// var html = '';
-//
-// var categories = scope.categories;
-//
-// for ( var i in categories) {
-// if (categories.hasOwnProperty(i)) {
-//
-// if (categories[i].active) {
-// var fields = categories[i].fields;
-//
-// for ( var j in fields) {
-// if (fields.hasOwnProperty(j)) {
-// html += '<th>' + fields[j].name + '</th>';
-// }
-// }
-// }
-// }
-// }
-//
-// /*
-// * angular.forEach(scope.categories, function(category, index) {
-// *
-// * if (category.active) { angular.forEach(category.fields,
-// * function(field, index) { html += '<th>' + field.name + '</th>';
-// * }); } });
-// */
-//
-// // var replacementElement = angular.element(html);
-// // currentElement.replaceWith(replacementElement);
-// // currentElement = replacementElement;
-// element[0].innerHTML = html;
-// console.log(html)
-// // element.replaceWith(html);
-//
-// }, true);
-//
-// }
-// }
-// });
-
-app.directive('tableRow', function() {
-  return {
-    restrict : 'A',
-    replace : true,
-    scope : {
-      point : '=point',
-      categories : '=categories',
-      tableParams : '=params'
-    },
-
-    link : function(scope, element, attrs) {
-      var currentElement = element;
-
-      scope.$watch("categories", function(newValue, oldValue) {
-        console.log('categories changed');
-        var html = '';
-
-        var categories = scope.categories;
-
-        for ( var i in categories) {
-          if (categories.hasOwnProperty(i)) {
-
-            if (categories[i].active) {
-              var fields = categories[i].fields;
-
-              for ( var j in fields) {
-                if (fields.hasOwnProperty(j)) {
-                  var field = fields[j];
-
-                  html += '<td data-title="\'' + field.name + '\'">' + scope.point.name + '</td>';
-                }
-              }
-            }
-          }
-        }
-
-        // angular.forEach(scope.categories, function(category, index) {
-        //
-        // if (category.active) {
-        // angular.forEach(category.fields, function(field, index) {
-        // html += '<td>' + scope.point[field.name] + '</td>';
-        // });
-        // }
-        // });
-
-        var replacementElement = angular.element(html);
-        currentElement.html(replacementElement);
-        currentElement = replacementElement;
-
-        console.log('reloading table');
-        scope.tableParams.reload();
-      }, true);
-
-      // console.log('initialising table');
-      // scope.tableParams.reload();
     }
   }
 });
