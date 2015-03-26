@@ -47,7 +47,8 @@ app.controller('EditableTableController', function($scope) {
     active : false,
     fields : [ {
       name : 'building',
-      type : 'text'
+      type : 'typeahead',
+      url: 'data/systems.json'
     }, ]
   } ];
 

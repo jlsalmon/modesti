@@ -15,7 +15,10 @@ app.controller('UserRequestsController', function($scope, $location, RequestServ
   
   function(error) {
     // what to do here?
-    $scope.requests = [];
+    //$scope.requests = [];
+    if (error) {
+      
+    }
   })
   
   $scope.deleteRequest = function(request) {
