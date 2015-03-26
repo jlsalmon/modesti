@@ -7,7 +7,7 @@
  */
 var app = angular.module('verity');
 
-app.directive('editableTable', function(RequestService) {
+app.directive('editableTable', function() {
 
   return {
     templateUrl : 'views/templates/editable-table.html',
@@ -28,29 +28,43 @@ app.controller('EditableTableController', function($scope) {
 
   $scope.table = {};
 
-  $scope.table.categories = [ {
-    name : 'Basic details',
-    active : true,
-    fields : [ {
-      name : 'name',
-      type : 'text'
-    }, {
-      name : 'description',
-      type : 'text'
-    }, {
-      name : 'domain',
-      type : 'select',
-      options: ['TIM', 'PVSS', 'CSAM']
-    }, ]
-  }, {
-    name : 'Location',
-    active : false,
-    fields : [ {
-      name : 'building',
-      type : 'typeahead',
-      url: 'data/systems.json'
-    }, ]
-  } ];
+  $scope.table.categories = [
+      {
+        name : 'Basic details',
+        active : true,
+        fields : [
+            {
+              name : 'name',
+              type : 'text'
+            }, {
+              name : 'description',
+              type : 'text'
+            }, {
+              name : 'domain',
+              type : 'select',
+              options : [
+                  'TIM', 'PVSS', 'CSAM'
+              ]
+            },
+        ]
+      }, {
+        name : 'Location',
+        active : false,
+        fields : [
+            {
+              name : 'building',
+              type : 'typeahead',
+              url : 'data/buildings.json',
+              placeholder : 'Building'
+            }, {
+              name : 'room',
+              type : 'typeahead',
+              url : 'data/rooms.json',
+              placeholder : 'Room'
+            }
+        ]
+      }
+  ];
 
   $scope.activateCategory = function(category) {
     console.log('activating category');
@@ -85,8 +99,37 @@ app.controller('EditableTableController', function($scope) {
   };
 });
 
-app.directive('inputField', function($compile) {
 
+app.directive('inputField', function() {
+
+  return {
+    restrict : 'A',
+    controller : 'InputFieldController',
+
+    link : function(scope, element, attrs, controller) {
+      controller.init(scope, element);
+    }
+  };
+});
+
+app.controller('InputFieldController', function($scope, $compile, $http, $filter) {
+
+  this.init = function(scope, element) {
+    element.html(getInput(scope.field)).show();
+    $compile(element.contents())(scope);
+  };
+  
+  $scope.autocomplete = function(url, value) {
+    return $http.get(url, {
+      params : {
+        address : value,
+        sensor : false
+      }
+    }).then(function(response) {
+      return $filter('filter')(response.data, value);
+    });
+  };
+  
   var getInput = function(field) {
     if (field.type == 'text') {
       return '<input type="text" ng-model="point[field.name]" class="form-control" />'
@@ -102,20 +145,17 @@ app.directive('inputField', function($compile) {
       html += '</select>'
       return html;
     }
-  }
-
-  return {
-    restrict : 'A',
-    replace : true,
-    scope : {
-      point : '=point',
-      field : '=field'
-    },
-
-    link : function(scope, element, attrs) {
-      element.html(getInput(scope.field)).show();
-
-      $compile(element.contents())(scope);
+    
+    else if (field.type == 'typeahead') {
+      var template = '\
+        <div class="form-group has-feedback"> \
+          <input type="text" ng-model="point[field.name]" placeholder="' + field.placeholder + '"  \
+                 typeahead="item for item in autocomplete(field.url, $viewValue)" \
+                 typeahead-loading="loading" class="form-control"> \
+          <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
+        </div>'
+        
+      return template;
     }
   }
 });
