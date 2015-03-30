@@ -2,44 +2,64 @@
 
 /**
  * @ngdoc service
- * @name verity.myService
- * @description # myService Service in the verity.
+ * @name modesti.myService
+ * @description # myService Service in the modesti.
  */
-var app = angular.module('verity');
+var app = angular.module('modesti');
 
-app.service('RequestService', function($filter, $q, Restangular) {
+app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
 
   function filterData(data, filter) {
-    var filtered = $filter('filter')(data, filter);
-    
-    for (var i in data) {
-      var point = data[i];
-      
-      if (filtered.indexOf(point) == -1) {
-        point.hidden = true;
-      } else {
-        point.hidden = false;
-      }
-    }
-    
-    return data;
+    return $filter('filter')(data, filter);
   }
 
   function orderData(data, params) {
     return params.sorting() ? $filter('orderBy')(data, params.orderBy()) : filteredData;
   }
 
-  function sliceData(data, params) {
-    return data.slice((params.page() - 1) * params.count(), params.page() * params.count())
-  }
-
   function transformData(data, filter, params) {
-    return sliceData(orderData(filterData(data, filter), params), params);
+    return orderData(filterData(data, filter), params);
+  }
+  
+  /**
+   * Checks if two objects are equal based on their JSON representations.
+   */
+  function contains(array, object) {
+    var i = array.length;
+    while (i--) {
+      if (angular.toJson(array[i]) === angular.toJson(object)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+
+  /**
+   * If the given array contains a modified version of the given point, this
+   * function will update it in the array.
+   */
+  function update(array, point) {
+    var i = array.length;
+    while (i--) {
+      var a = angular.toJson(array[i]);
+      var b = angular.toJson(point);
+      if (array[i].id == point.id && angular.toJson(array[i]) != angular.toJson(point)) {
+        array[i] = point;
+      }
+    }
   }
 
   var service = {
+      
+    /**
+     * 
+     */
     cachedRequest : null,
 
+    /**
+     * 
+     */
     getRequests : function() {
       var q = $q.defer();
       
@@ -55,20 +75,28 @@ app.service('RequestService', function($filter, $q, Restangular) {
       return q.promise;
     },
     
-    getRequest : function(id, params, filter) {
+    /**
+     * 
+     */
+    getRequest : function(id, params, unsavedRequest) {
       var q = $q.defer();
 
       if (service.cachedRequest && service.cachedRequest.id == id) {
         console.log('using cached request');
         
+        // Merge the given potentially unsaved request with the cached
+        // request. This is because we don't want to lose any unsaved
+        // changes.
+        for (var i in unsavedRequest.points) {
+          // If the point has been modified, update it
+          update(service.cachedRequest.points, unsavedRequest.points[i])
+        }
+        
         // Make a copy for sorting/filtering
-        var request = service.cachedRequest;
+        var request = Restangular.copy(service.cachedRequest);
 
         // Sort/filter the points
-        request.points = transformData(request.points, filter, params);
-        
-        // Set length for pagination
-        params.total(request.points.length);
+        request.points = transformData(request.points, params.filter(), params);
 
         q.resolve(request);
       }
@@ -88,16 +116,18 @@ app.service('RequestService', function($filter, $q, Restangular) {
             });
           }
 
+          // Cache the request
           service.cachedRequest = request.data;
           service.cachedRequest.id = id;
-          console.log('cached request');
+          console.log('cached request (with ' + service.cachedRequest.points.length + ' points)');
           
-          //var filteredData = $filter('filter')(points, filter);
-          var transformedData = transformData(points, filter, params);
-          params.total(transformedData.length);
+          // Make a copy for sorting/filtering
+          request = Restangular.copy(service.cachedRequest);
+          
+          // Perform initial sorting/filtering/slicing
+          request.points = transformData(request.points, params.filter(), params);
 
-          //service.cachedRequest.points = transformedData;
-          q.resolve(service.cachedRequest);
+          q.resolve(request);
         },
 
         function(error) {
@@ -108,7 +138,47 @@ app.service('RequestService', function($filter, $q, Restangular) {
 
       return q.promise;
     },
+    
+    /**
+     * 
+     */
+    saveRequest : function(request) {
+      $rootScope.saving = "started";
+      var q = $q.defer();
 
+      // Merge the given request with the cached request. This is because
+      // the given request may have been filtered, and thus contain less
+      // points. We don't want to accidentally delete points!
+      if (request.points.length < service.cachedRequest.points.length) {
+        for (var i in service.cachedRequest.points) {
+          // If the cached point isn't in the given request, add it
+          if (!contains(request.points, service.cachedRequest.points[i])) {
+            request.points.push(service.cachedRequest.points[i]);
+          }
+        }
+      }
+
+      request.save().then(function() {
+        console.log('saved request');
+        
+        // Cache the newly saved request
+        service.cachedRequest = request;
+        
+        q.resolve();
+        $rootScope.saving = "success";
+        
+      }, function(error) {
+        console.log('error saving request: ' + error);
+        q.reject(error);
+        $rootScope.saving = "error";
+      });
+
+      return q.promise;
+    },
+
+    /**
+     * 
+     */
     createRequest : function(request) {
       var q = $q.defer();
       var requests = Restangular.all('requests');
@@ -130,6 +200,9 @@ app.service('RequestService', function($filter, $q, Restangular) {
       return q.promise;
     },
     
+    /**
+     * 
+     */
     deleteRequest : function(id) {
       var q = $q.defer();
       

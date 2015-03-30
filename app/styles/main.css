@@ -81,3 +81,13 @@ td .form-group {
 .nav-tabs-custom > .ng-isolate-scope > .tab-content {
   padding: 0px;
 }
+
+.pagination {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.saving-state {
+  font-size: 21px;
+  vertical-align: middle;
+}

@@ -1,0 +1,48 @@
+[
+    {
+        "name": "Basic details",
+        "active": true,
+        "fields": [
+            {
+                "id": "name",
+                "name": "Name",
+                "type": "text"
+            },
+            {
+                "id": "description",
+                "name": "Description",
+                "type": "text"
+            },
+            {
+                "id": "domain",
+                "name": "Domain",
+                "type": "select",
+                "options": [
+                    "TIM",
+                    "PVSS",
+                    "CSAM"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Location",
+        "active": false,
+        "fields": [
+            {
+                "id": "building",
+                "name": "Building",
+                "type": "typeahead",
+                "url": "data/buildings.json",
+                "placeholder": "Building"
+            },
+            {
+                "id": "room",
+                "name": "Room",
+                "type": "typeahead",
+                "url": "data/rooms.json",
+                "placeholder": "Room"
+            }
+        ]
+    }
+]

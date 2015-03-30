@@ -2,10 +2,10 @@
 
 /**
  * @ngdoc function
- * @name verity.controller:MainNavigationController
- * @description # MainNavigationController Controller of the verity
+ * @name modesti.controller:MainNavigationController
+ * @description # MainNavigationController Controller of the modesti
  */
-var app = angular.module('verity');
+var app = angular.module('modesti');
 
 app.controller('MainNavigationController', function($scope, $rootScope, $location) {
   $scope.isActive = function(viewLocation) {

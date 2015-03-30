@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc overview
- * @name verity
+ * @name modesti
  * @description
- * # verity
+ * # modesti
  *
  * Main module of the application.
  */
 var app = angular
-  .module('verity', [
+  .module('modesti', [
     'ngAnimate',
     'ngCookies',
     'ngResource',

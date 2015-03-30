@@ -2,10 +2,10 @@
 
 /**
  * @ngdoc function
- * @name verity.controller:NewRequestController
- * @description # NewRequestController Controller of the verity
+ * @name modesti.controller:NewRequestController
+ * @description # NewRequestController Controller of the modesti
  */
-var app = angular.module('verity');
+var app = angular.module('modesti');
 
 app.controller('NewRequestController', function($scope, $http, $location, RequestService) {
 

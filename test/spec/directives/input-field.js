@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: editableTableRow', function () {
+describe('Directive: inputField', function () {
 
   // load the directive's module
   beforeEach(module('modesti'));
@@ -13,8 +13,8 @@ describe('Directive: editableTableRow', function () {
   }));
 
   it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<editable-table-row></editable-table-row>');
+    element = angular.element('<input-field></input-field>');
     element = $compile(element)(scope);
-    expect(element.text()).toBe('this is the editableTableRow directive');
+    expect(element.text()).toBe('this is the inputField directive');
   }));
 });

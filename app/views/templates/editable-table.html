@@ -1,97 +1,126 @@
-  
 <div class="nav-tabs-custom">
 
   <!-- Create a new tab for each category -->
-  <tabset> <tab ng-repeat="category in table.categories" heading="{{category.name}}" select="activateCategory(category)"> </tab> </tabset>
+  <tabset> 
+    <tab ng-repeat="category in table.categories" heading="{{category.name}}" select="activateCategory(category)"></tab>
+  </tabset>
 
-  <table ng-table="tableParams" class="table table-bordered table-striped">
-     <thead>
-      <tr ng-repeat-start="category in table.categories">
-        <th ng-repeat="field in category.fields" ng-show="category.active">{{field.name}}</th>
-      </tr>
-      <tr ng-repeat-end />
+  <!-- This is the actual point input table itself -->
+  <table ng-table="tableParams" class="table table-bordered table-striped" template-pagination="custom/pager">
+    <thead>
+      <tr>
+        <th>#</th>
 
-<!--       <tr>
-        <th table-header categories="table.categories"></th>
+        <!-- Column header for each field in the currently active category -->
+        <th ng-repeat="field in getActiveFields()" class="text-center sortable"
+          ng-class="{'sort-asc': tableParams.isSortBy(field.id, 'asc'),'sort-desc': tableParams.isSortBy(field.id, 'desc')}"
+          ng-click="tableParams.sorting(field.id, tableParams.isSortBy(field.id, 'asc') ? 'desc' : 'asc')">
+            <div class="sort-indicator">{{field.name}}</div>
+        </th>
+
+        <!-- Checkbox column header -->
+        <th>
+          <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value="" />
+        </th>
       </tr>
- -->
+
+      <!-- Special table row contianing filter boxes -->
+      <tr ng-show="show_filter">
+        <th></th>
+        <th ng-repeat="field in getActiveFields()" class="text-center sortable">
+          <input type="text" class="form-control" ng-model="searchText[field.id]" ng-model-options="{debounce: 250}" />
+        </th>
+        <th></th>
+      </tr>
     </thead>
+
     <tbody>
-      <!-- <tr table-row ng-repeat="point in $data" point="point" categories="table.categories" params="tableParams"> -->
-      
-      <tr ng-repeat="point in $data">
-        <td ng-repeat="field in getActiveFields()">
-          
+      <!-- Row for each point in the request -->
+      <tr ng-repeat="point in $data" ng-hide="point.hidden">
+
+        <!-- Line number field -->
+        <td class="text-muted" width="30" style="text-align: center; vertical-align: middle;">{{$data.indexOf(point) + 1}}</td>
+
+        <!-- Input field for each field in the currently active category -->
+        <td ng-repeat="field in getActiveFields()" sortable="field.id">
+          <!-- Custom directive to generate an input field based on the field schema -->
           <span input-field point="point" field="field"></span>
-          
-          <!-- <input class="form-control" type="text" ng-model="point.name" placeholder="Name" /> -->
         </td>
 
-        <!-- <td table-row point="point" categories="table.categories"></td> -->
-        <!--         <div ng-repeat="category in table.categories">
-        <td ng-repeat="field in category.fields">{{field.name}}: {{point[field.name]}} </td>
-        </> -->
+        <!-- Checkbox for each point -->
+        <td width="30" style="text-align: left; vertical-align: middle;">
+          <input type="checkbox" ng-model="checkboxes.items[point.id]" />
+        </td>
+
       </tr>
     </tbody>
+
+    <!-- Table footer toolbar -->
+    <tfoot>
+      <tr>
+        <td colspan="20">
+        
+          <div class="btn-group">
+            <!-- Button to add a new row -->
+            <button class="btn btn-default" ng-click="addRow()" tooltip-append-to-body="true" tooltip="Add row">
+              <a>
+                <i class="fa fa-fw fa-plus"></i>
+              </a>
+            </button>
+
+            <!-- Button to duplicate selected rows -->
+            <button class="btn btn-default" ng-click="duplicateSelectedRows()" tooltip-append-to-body="true" tooltip="Duplicate selected rows" disabled>
+              <a>
+                <i class="fa fa-fw fa-copy"></i>
+              </a>
+            </button>
+          </div>
+
+          <!-- Button to activate the filter text boxes at the top of the table -->
+          <button class="btn btn-default" ng-click="toggleFilter(tableParams)" tooltip-append-to-body="true" tooltip="Filter rows">
+            <a>
+              <i class="fa fa-fw fa-filter"></i>
+            </a>
+          </button>
+
+          <!-- Button to save the request -->
+          <button class="btn btn-default" ng-click="save()" tooltip-append-to-body="true" tooltip="Save request">
+            <a>
+              <i class="fa fa-fw fa-save"></i>
+            </a>
+          </button>
+          
+          <!-- Saving state indicators -->
+          <span ng-show="$root.saving == 'started'" class="saving-state" tooltip="Saving..."><i class="fa fa-fw fa-spin fa-cog"></i></span>
+          <span ng-show="$root.saving == 'success'" class="saving-state text-success" tooltip="Saved"><i class="fa fa-fw fa-check"></i></span>
+          <span ng-show="$root.saving == 'error'"   class="saving-state text-danger"  tooltip="Problem saving"><i class="fa fa-fw fa-exclamation-triangle"></i></span>
+        
+          <!-- Custom pagination -->
+          <div class="ng-cloak ng-table-pager pull-right" ng-if="params.data.length">
+            <ul class="pagination ng-table-pagination pull-right">
+              <li ng-class="{'disabled': !page.active && !page.current, 'active': page.current}" ng-repeat="page in pages" ng-switch="page.type">
+                <a ng-switch-when="prev"  ng-click="params.page(page.number)" href="">&laquo;</a>
+                <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>
+                <a ng-switch-when="page"  ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>
+                <a ng-switch-when="more"  ng-click="params.page(page.number)" href="">&#8230;</a>
+                <a ng-switch-when="last"  ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>
+                <a ng-switch-when="next"  ng-click="params.page(page.number)" href="">&raquo;</a>
+              </li>
+            </ul>
+            <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group">
+              <button ng-repeat="count in params.settings().counts" type="button"
+                      ng-class="{'active':params.count() == count}"
+                      ng-click="params.count(count)" class="btn btn-default">
+                <span ng-bind="count"></span>
+              </button>
+            </div>
+          </div>
+          <!-- Remove default pagination -->
+          <script type="text/ng-template" id="custom/pager"></script>
+          
+        </td>
+      </tr>
+    </tfoot>
+
   </table>
-
-
-
-
-  <!-- 
-<div class="nav-tabs-custom">
-  <tabset> <tab heading="Basic details">
-
-
-  <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped">
-    <tr ng-repeat="point in $data" ng-hide="point.hidden">
-
-      <td data-title="'Name'" sortable="'name'" filter="{ 'name': 'text' }">
-        <input class="form-control" type="text" ng-model="point.name" placeholder="Name" />
-      </td>
-
-      <td data-title="'Description'" sortable="'description'" filter="{ 'description': 'text' }">
-        <input class="form-control" type="text" ng-model="point.description" placeholder="Description" />
-      </td>
-
-      <td data-title="'Domain'" sortable="'domain'" filter="{ 'domain': 'text' }">
-        <input class="form-control" type="text" ng-model="point.domain" placeholder="Domain" />
-      </td>
-
-      <td data-title="'Select'">
-        <select class="form-control">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-        </select>
-      </td>
-
-
-      <td data-title="'Address'">
-
-        <div class="form-group has-feedback">
-          <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" typeahead="address for address in getLocation($viewValue)"
-            typeahead-loading="loadingLocations" class="form-control">
-          <i ng-show="loadingLocations" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
-        </div>
-
-      </td>
-
-      <td data-title="'Age'" width="200">
-        <input class="form-control" type="number" />
-      </td>
-
-      <td width="30" style="text-align: left" header="'ng-table/headers/checkbox.html'">
-        <input type="checkbox" ng-model="checkboxes.items[point.name]" />
-      </td>
-
-      <script type="text/ng-template" id="ng-table/headers/checkbox.html">
-                <input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value="" />
-              </script>
-
-    </tr>
-  </table>
-  </tab> <tab heading="Alarm details"> Some content </tab> </tabset>
-</div>
- -->
 </div>

@@ -3,7 +3,7 @@
 describe('Service: myServices', function () {
 
   // load the service's module
-  beforeEach(module('verity'));
+  beforeEach(module('modesti'));
 
   // instantiate service
   var myService;
