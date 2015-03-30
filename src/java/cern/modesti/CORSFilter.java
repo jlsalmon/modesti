@@ -1,4 +1,4 @@
-package mypackage;
+package cern.modesti;
 
 import java.io.IOException;
 

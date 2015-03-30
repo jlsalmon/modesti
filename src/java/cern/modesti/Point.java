@@ -15,51 +15,52 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package mypackage;
+package cern.modesti;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Justin Lewis Salmon
  */
 @Document
-public class Request {
+public class Point {
 
   @Id
-  private String id;
+  private Long id;
 
-  @NotNull(message = "Request type is compulsory")
-  private String type;
+  private String name;
 
-  @NotNull(message = "Description is compulsory")
   private String description;
 
-  @NotNull(message = "Domain is compulsory")
   private String domain;
 
-  @NotNull(message = "Data source is compulsory")
-  private String datasource;
-
-  private List<Point> points = new ArrayList<>();
-
   /**
-   * @return the type
+   * @return the id
    */
-  public String getType() {
-    return type;
+  public Long getId() {
+    return id;
   }
 
   /**
-   * @param type the type to set
+   * @param id the id to set
    */
-  public void setType(String type) {
-    this.type = type;
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * @param name the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
   }
 
   /**
@@ -88,33 +89,5 @@ public class Request {
    */
   public void setDomain(String domain) {
     this.domain = domain;
-  }
-
-  /**
-   * @return the datasource
-   */
-  public String getDatasource() {
-    return datasource;
-  }
-
-  /**
-   * @param datasource the datasource to set
-   */
-  public void setDatasource(String datasource) {
-    this.datasource = datasource;
-  }
-
-  /**
-   * @return the points
-   */
-  public List<Point> getPoints() {
-    return points;
-  }
-
-  /**
-   * @param points the points to set
-   */
-  public void setPoints(List<Point> points) {
-    this.points = points;
   }
 }

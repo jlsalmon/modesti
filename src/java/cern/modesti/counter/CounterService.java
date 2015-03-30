@@ -15,16 +15,34 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package mypackage;
+package cern.modesti.counter;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
+@Service
+public class CounterService {
 
+  @Autowired
+  private MongoOperations mongo;
 
+  /**
+   * Note: "counters" collection must exist in the db before using this.
+   *
+   * @param collectionName
+   * @return
+   */
+  public Long getNextSequence(String collectionName) {
+    Counter counter = mongo.findAndModify(query(where("_id").is(collectionName)), new Update().inc("sequence", 1), options().returnNew(true), Counter.class);
+    return counter.getSequence();
+  }
 }

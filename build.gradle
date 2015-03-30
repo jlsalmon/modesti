@@ -27,9 +27,12 @@ repositories {
 
 dependencies {
     
-    compile("org.springframework.boot:spring-boot-starter-web:1.2.2.RELEASE")
-    compile("org.springframework.data:spring-data-mongodb")
-    compile("org.springframework.data:spring-data-rest-webmvc:2.2.2.RELEASE")
+    //compile("org.springframework.boot:spring-boot-starter-web:1.2.2.RELEASE")
+    //compile("org.springframework.data:spring-data-mongodb")
+    //compile("org.springframework.data:spring-data-rest-webmvc:2.2.2.RELEASE")
+    
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb")
     
     compile('javax.persistence:persistence-api:1.0.2')
     

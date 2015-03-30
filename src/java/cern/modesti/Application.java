@@ -1,25 +1,24 @@
-package mypackage;
-
-import mypackage.Application.CustomRepositoryRestMvcConfiguration;
+package cern.modesti;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.SpringBootRepositoryRestMvcConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
+import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import cern.modesti.Application.CustomRepositoryRestMvcConfiguration;
+
 @ComponentScan
 @Configuration
-@EnableMongoRepositories
+//@EnableMongoRepositories/(repositoryFactoryBeanClass=PersonRepositoryFactoryBean.class)
 @Import(CustomRepositoryRestMvcConfiguration.class)
 @EnableAutoConfiguration
 public class Application {
@@ -44,7 +43,7 @@ public class Application {
    * @author Justin Lewis Salmon
    */
   @Configuration
-  protected static class CustomRepositoryRestMvcConfiguration extends SpringBootRepositoryRestMvcConfiguration {
+  protected static class CustomRepositoryRestMvcConfiguration extends RepositoryRestMvcConfiguration {
 
     @Autowired
     private Validator validator;
@@ -57,7 +56,9 @@ public class Application {
 
     @Override
     protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-        config.exposeIdsFor(Request.class);
+      super.configureRepositoryRestConfiguration(config);
+      config.exposeIdsFor(Request.class, Point.class);
+      System.out.println(">>>>>>>>>>>>> " + config.isIdExposedFor(Request.class) + " " + config.isIdExposedFor(Point.class));
     }
   }
 }

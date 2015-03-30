@@ -15,63 +15,48 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package mypackage;
+package cern.modesti.counter;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Id;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Justin Lewis Salmon
  */
-public class Point {
+@Document(collection = "counters")
+public class Counter {
 
   @Id
   private String id;
 
-  private String name;
-
-  private String description;
-
-  private String domain;
+  private Long sequence;
 
   /**
-   * @return the name
+   * @return the id
    */
-  public String getName() {
-    return name;
+  public String getId() {
+    return id;
   }
 
   /**
-   * @param name the name to set
+   * @param id the id to set
    */
-  public void setName(String name) {
-    this.name = name;
+  public void setId(String id) {
+    this.id = id;
   }
 
   /**
-   * @return the description
+   * @return the sequence
    */
-  public String getDescription() {
-    return description;
+  public Long getSequence() {
+    return sequence;
   }
 
   /**
-   * @param description the description to set
+   * @param sequence the sequence to set
    */
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  /**
-   * @return the domain
-   */
-  public String getDomain() {
-    return domain;
-  }
-
-  /**
-   * @param domain the domain to set
-   */
-  public void setDomain(String domain) {
-    this.domain = domain;
+  public void setSequence(Long sequence) {
+    this.sequence = sequence;
   }
 }
