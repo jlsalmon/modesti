@@ -17,7 +17,11 @@
  ******************************************************************************/
 package cern.modesti;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
@@ -26,5 +30,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
 public interface RequestRepository extends MongoRepository<Request, String> {
 
+//  Page<Request> findByRequestId(@Param("id") Long requestId, Pageable pageable);
 
+  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
 }

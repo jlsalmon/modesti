@@ -18,12 +18,10 @@
 package cern.modesti;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Justin Lewis Salmon
  */
-@Document
 public class Point {
 
   @Id

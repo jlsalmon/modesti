@@ -24,7 +24,9 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.TextScore;
 
 /**
  * @author Justin Lewis Salmon
@@ -32,23 +34,97 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Request {
 
+  /**
+   * Internal mongodb id
+   */
   @Id
   private String id;
 
+  /**
+   * Human-readable id
+   */
+  @TextIndexed(weight = 3)
+  private String requestId;
+
+  @TextIndexed
+  private String status;
+
+  @TextIndexed
   @NotNull(message = "Request type is compulsory")
   private String type;
 
+  @TextIndexed(weight = 2)
   @NotNull(message = "Description is compulsory")
   private String description;
 
+  @TextIndexed
   @NotNull(message = "Domain is compulsory")
   private String domain;
 
+  @TextIndexed
   @NotNull(message = "Data source is compulsory")
   private String datasource;
 
+  @TextIndexed
   @Valid
   private List<Point> points = new ArrayList<>();
+
+  /**
+   *
+   */
+  @TextScore
+  private Float score;
+
+  public interface RequestStatus {
+    String IN_PROGRESS = "in progress";
+    String FOR_CORRECTION = "for correction";
+    String FOR_APPROVAL = "for approval";
+    String FOR_ADDRESSING = "for addressing";
+    String FOR_CABLING = "for cabling";
+    String FOR_CONFIGURATION = "for configuration";
+    String CONFIGURED = "configured";
+    String FOR_TESTING = "for testing";
+    String CLOSED = "closed";
+  }
+
+  /**
+   *
+   */
+  public String getId() {
+    return this.id;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public String getRequestId() {
+    return requestId;
+  }
+
+  /**
+   *
+   * @param id
+   */
+  public void setRequestId(String id) {
+    this.requestId = id;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public String getStatus() {
+    return status;
+  }
+
+  /**
+   *
+   * @param status
+   */
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
   /**
    * @return the type
