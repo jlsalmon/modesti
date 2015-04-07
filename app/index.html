@@ -25,8 +25,8 @@
 <!-- endbuild -->
 </head>
 
-<body ng-app="modesti" class="skin-blue sidebar-collapse">
-  <!--[if lt IE 7]>
+<body ng-app="modesti" class="skin-blue ">
+  <!--[if lt IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
@@ -176,7 +176,7 @@
     <!-- Left side column. contains the sidebar -->
     <aside class="main-sidebar">
       <!-- sidebar: style can be found in sidebar.less -->
-      <section class="sidebar">
+      <section class="sidebar" ng-controller="SidebarController">
         <!-- Sidebar user panel -->
 <!--         <div class="user-panel">
           <div class="pull-left image">
@@ -192,11 +192,11 @@
           </div>
         </div> -->
         <!-- search form -->
-        <form action="#" method="get" class="sidebar-form">
+        <form class="sidebar-form">
           <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Search..." />
+            <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search..." />
             <span class="input-group-btn">
-              <button type='submit' name='search' id='search-btn' class="btn btn-flat">
+              <button type='submit' name='search' id='search-btn' class="btn btn-flat" ng-click="search(q)">
                 <i class="fa fa-search"></i>
               </button>
             </span>
@@ -204,8 +204,8 @@
         </form>
         <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->
-        <ul class="sidebar-menu" ng-controller="MainNavigationController">
-          <li class="header">MAIN NAVIGATION</li>
+        <ul class="sidebar-menu">
+          <!-- <li class="header">MAIN NAVIGATION</li> -->
           <li ng-class="{ active : isActive('/new')}">
             <a href="#/new">
               <i class="fa fa-plus"></i>
@@ -277,11 +277,12 @@
   <!-- build:js({.tmp,app}) scripts/scripts.js -->
   <script src="scripts/app.js"></script>
   <script src="scripts/AdminLTE.js"></script>
-  <script src="scripts/controllers/main_navigation.js"></script>
+  <script src="scripts/controllers/sidebar.js"></script>
   <script src="scripts/controllers/new_request.js"></script>
   <script src="scripts/controllers/request.js"></script>
   <script src="scripts/controllers/user_requests.js"></script>
   <script src="scripts/controllers/about.js"></script>
+  <script src="scripts/controllers/search.js"></script>
   <script src="scripts/services/services.js"></script>
   <script src="scripts/directives/editable-table.js"></script>
   <script src="scripts/directives/input-field.js"></script>

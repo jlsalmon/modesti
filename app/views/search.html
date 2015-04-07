@@ -1,0 +1,24 @@
+
+<!-- Content Header (Page header) -->
+<section class="content-header"></section>
+
+<!-- Main content -->
+<section class="content">
+
+  results:
+
+  <div ng-show="results.length == 0">
+    <h4>
+      <i class="icon fa fa-info"></i> No Results
+    </h4>
+    No results found matching your search terms.
+  </div>
+
+  <div class="row" ng-hide="requests.length == 0">
+    <div ng-repeat="request in results">
+      <p>
+        {{request.requestId}} : {{request.description}} : {{request.domain}} : {{request._links.self.href}}
+      </p>
+    </div>
+  </div>
+</section>

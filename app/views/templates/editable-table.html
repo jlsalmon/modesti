@@ -69,9 +69,18 @@
             </button>
 
             <!-- Button to duplicate selected rows -->
-            <button class="btn btn-default" ng-click="duplicateSelectedRows()" tooltip-append-to-body="true" tooltip="Duplicate selected rows" disabled>
+            <button class="btn btn-default" ng-click="duplicateSelectedRows()" tooltip-append-to-body="true" tooltip="Duplicate selected rows" 
+                    ng-disabled='!checkboxes.dirty'>
               <a>
                 <i class="fa fa-fw fa-copy"></i>
+              </a>
+            </button>
+            
+            <!-- Button to delete selected rows -->
+            <button class="btn btn-default" ng-click="deleteSelectedRows()" tooltip-append-to-body="true" tooltip="Delete selected rows"
+                    ng-disabled='!checkboxes.dirty'>
+              <a>
+                <i class="fa fa-fw fa-remove"></i>
               </a>
             </button>
           </div>

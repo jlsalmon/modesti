@@ -141,6 +141,8 @@ app.controller('EditableTableController', function($scope, $location, $http, $ro
     if ((unchecked == 0) || (checked == 0)) {
       $scope.checkboxes.checked = (checked == total);
     }
+    
+    $scope.checkboxes.dirty = checked != 0 ? true : false; 
 
     // grayed checkbox
     angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
@@ -161,8 +163,9 @@ app.controller('EditableTableController', function($scope, $location, $http, $ro
 
     request.points.push(newRow);
 
-    RequestService.saveRequest(request).then(function() {
+    RequestService.saveRequest(request).then(function(request) {
       console.log('added new row');
+      $scope.request = request;
       
       // Reload the table data
       $scope.tableParams.reload();
@@ -184,9 +187,63 @@ app.controller('EditableTableController', function($scope, $location, $http, $ro
    * 
    */
   $scope.duplicateSelectedRows = function() {
-    console.log('duplicating rows');
+    var points = $scope.request.points;
+    console.log('duplicating rows (before: ' + points.length + ' points)');
     
-    // TODO
+    // Find the selected points and duplicate them
+    for (var i in points) {
+      var point = points[i];
+
+      if ($scope.checkboxes.items[point.id]) {
+        var duplicate = angular.copy(point);
+        // Remove the ID of the duplicated point, as the backend will generate
+        // us a new one when we save
+        delete duplicate.id;
+        // Add the new duplicate to the original points
+        points.push(duplicate);
+      }
+    }
+    
+    // Save the changes
+    RequestService.saveRequest($scope.request).then(function(savedRequest) {
+      console.log('saved request after row duplication');
+      console.log('duplicated rows (after: ' + savedRequest.points.length + ' points)');
+
+      // Reload the table data
+      $scope.tableParams.reload();
+
+    }, function(error) {
+      console.log('error saving request after row duplication: ' + error);
+    });
+  }
+  
+  /**
+   * 
+   */
+  $scope.deleteSelectedRows = function() {
+    var points = $scope.request.points;
+    console.log('deleting rows (before: ' + points.length + ' points)');
+    
+    // Find the selected points and mark them as deleted
+    for (var i in points) {
+      var point = points[i];
+
+      if ($scope.checkboxes.items[point.id]) {
+        point.deleted = true;
+      }
+    }
+    
+    // Save the changes
+    RequestService.saveRequest($scope.request).then(function(savedRequest) {
+      console.log('saved request after row deletion');
+      console.log('deleted rows (after: ' + savedRequest.points.length + ' points)');
+
+      // Reload the table data
+      $scope.tableParams.reload();
+
+    }, function(error) {
+      console.log('error saving request after row deletion: ' + error);
+    });
   }
 
   /**

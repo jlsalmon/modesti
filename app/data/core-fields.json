@@ -44,5 +44,18 @@
                 "placeholder": "Room"
             }
         ]
+    },
+    {
+        "name": "Alarm details",
+        "active": false,
+        "fields": [
+            {
+                "id": "category",
+                "name": "Category",
+                "type": "typeahead",
+                "url": "data/buildings.json",
+                "placeholder": "Category"
+            }
+        ]
     }
 ]

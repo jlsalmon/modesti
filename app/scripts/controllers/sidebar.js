@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:MainNavigationController
- * @description # MainNavigationController Controller of the modesti
+ * @name modesti.controller:SidebarController
+ * @description # SidebarController Controller of the modesti
  */
 var app = angular.module('modesti');
 
-app.controller('MainNavigationController', function($scope, $rootScope, $location) {
+app.controller('SidebarController', function($scope, $rootScope, $location) {
   $scope.isActive = function(viewLocation) {
     return $location.path().lastIndexOf(viewLocation, 0) === 0;
   };
@@ -16,4 +16,8 @@ app.controller('MainNavigationController', function($scope, $rootScope, $locatio
     console.log('caught server.error.connection: ' + status);
     $scope.serverConnectionError = true;
   });
+  
+  $scope.search = function(q) {
+    $location.path('/search/' + q);
+  }
 });

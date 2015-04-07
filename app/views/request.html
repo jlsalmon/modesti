@@ -2,8 +2,10 @@
 <!-- Content Header (Page header) -->
 <section id="request-header" class="content-header">
   <h1>
-    <i class="fa fa-list fa-fw text-muted" style="font-size: 80%;"></i>
-    Request <small>{{request.id}}</small>
+    <i class="fa fa-list fa-fw text-muted" style="vertical-align: middle;"></i>
+    requests <span class="text-muted">/</span> {{request.requestId}}
+    
+    <span style="font-size: 70%;" class="label pull-right bg-green">{{request.status}}</span>
   </h1>
 
   <div id="request-main-nav">

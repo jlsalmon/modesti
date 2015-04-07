@@ -41,6 +41,10 @@ app.config(function($routeProvider, $locationProvider) {
     templateUrl: 'views/about.html',
     controller: 'AboutCtrl'
   })
+  .when('/search/:q', {
+    templateUrl: 'views/search.html',
+    controller: 'SearchController'
+  })
   .when('/404', {
     templateUrl: 'views/errors/404.html',
     //controller: 'PageNotFoundController'

@@ -22,12 +22,12 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
   }
   
   /**
-   * Checks if two objects are equal based on their JSON representations.
+   * 
    */
-  function contains(array, object) {
+  function contains(array, point) {
     var i = array.length;
     while (i--) {
-      if (angular.toJson(array[i]) === angular.toJson(object)) {
+      if (array[i].id == point.id) {
         return true;
       }
     }
@@ -42,8 +42,6 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
   function update(array, point) {
     var i = array.length;
     while (i--) {
-      var a = angular.toJson(array[i]);
-      var b = angular.toJson(point);
       if (array[i].id == point.id && angular.toJson(array[i]) != angular.toJson(point)) {
         array[i] = point;
       }
@@ -81,7 +79,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
     getRequest : function(id, params, unsavedRequest) {
       var q = $q.defer();
 
-      if (service.cachedRequest && service.cachedRequest.id == id) {
+      if (service.cachedRequest && service.cachedRequest.requestId == id) {
         console.log('using cached request');
         
         // Merge the given potentially unsaved request with the cached
@@ -118,7 +116,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
 
           // Cache the request
           service.cachedRequest = request.data;
-          service.cachedRequest.id = id;
+          //service.cachedRequest.id = id;
           console.log('cached request (with ' + service.cachedRequest.points.length + ' points)');
           
           // Make a copy for sorting/filtering
@@ -146,25 +144,40 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
       $rootScope.saving = "started";
       var q = $q.defer();
 
+      // Handle points that have been added, removed, modified or filtered since
+      // the request was last cached.
+
       // Merge the given request with the cached request. This is because
       // the given request may have been filtered, and thus contain less
       // points. We don't want to accidentally delete points!
       if (request.points.length < service.cachedRequest.points.length) {
         for (var i in service.cachedRequest.points) {
+          var point = service.cachedRequest.points[i];
           // If the cached point isn't in the given request, add it
-          if (!contains(request.points, service.cachedRequest.points[i])) {
-            request.points.push(service.cachedRequest.points[i]);
+          if (!contains(request.points, point)) {
+            request.points.push(point);
           }
         }
       }
+      
 
-      request.save().then(function() {
+      // Remove points that have been marked as deleted. Note that points
+      // that have been filtered out will not be deleted.
+      var i = request.points.length;
+      while (i--) {
+        var point = request.points[i];
+        if (point.deleted) {
+          request.points.splice(request.points.indexOf(point), 1);
+        }
+      }
+
+      request.save().then(function(savedRequest) {
         console.log('saved request');
         
         // Cache the newly saved request
-        service.cachedRequest = request;
+        service.cachedRequest = savedRequest.data;
         
-        q.resolve();
+        q.resolve(service.cachedRequest);
         $rootScope.saving = "success";
         
       }, function(error) {
@@ -217,7 +230,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
       });
       
       return q.promise;
-    }
+    },
   };
 
   return service;
