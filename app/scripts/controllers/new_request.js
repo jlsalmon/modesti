@@ -7,23 +7,18 @@
  */
 var app = angular.module('modesti');
 
-app.controller('NewRequestController', function($scope, $http, $location, RequestService) {
+app.controller('NewRequestController', function($scope, $http, $location, $filter, RequestService) {
 
   $scope.request = {
     type : 'create',
     description : ''
   };
 
-  $scope.getSystems = function(val) {
+  $scope.getSystems = function(value) {
     return $http.get('data/systems.json', {
-      params : {
-        address : val,
-        sensor : false
-      }
+      params : {}
     }).then(function(response) {
-      return response.data.systems.map(function(item) {
-        return item.name;
-      });
+      return $filter('filter')(response.data, value);
     });
   };
 

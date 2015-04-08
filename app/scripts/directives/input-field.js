@@ -33,10 +33,7 @@ app.controller('InputFieldController', function($scope, $compile, $http, $filter
   
   $scope.autocomplete = function(url, value) {
     return $http.get(url, {
-      params : {
-        address : value,
-        sensor : false
-      }
+      params : {}
     }).then(function(response) {
       return $filter('filter')(response.data, value);
     });
@@ -65,8 +62,7 @@ app.controller('InputFieldController', function($scope, $compile, $http, $filter
           <input type="text" ng-model="point[field.id]" placeholder="' + field.placeholder + '"  \
                  typeahead="item for item in autocomplete(field.url, $viewValue)" \
                  typeahead-loading="loading" class="form-control"> \
-          <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
-        </div>'
+        </div>' // <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
         
       return template;
     }

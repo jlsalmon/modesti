@@ -1,28 +1,16 @@
-{
-    "systems": [
-        {
-            "name": "EAU",
-            "subsystems": [
-                {
-                    "name": "REJET"
-                },
-                {
-                    "name": "DEMI"
-                }
-            ]
-
-        },
-        {
-            "name": "ACCES",
-            "subsystems": [
-                {
-                    "name": "REJET"
-                },
-                {
-                    "name": "DEMI"
-                }
-            ]
-            
-        }
-    ]
-}
+[
+  "EAU DEMI",
+  "EAU REJET",
+  "EAU GENERALE",
+  "EAU MIXTE",
+  "EAU CHAUDE",
+  "ACCE ZORA",
+  "ACCE MIS",
+  "ACCE SUSI",
+  "ACCE GENERALE",
+  "ELEC GENERALE",
+  "ELEC UPS",
+  "ELEC BT",
+  "ELEC 48V",
+  "ELEC MC18KV"
+]

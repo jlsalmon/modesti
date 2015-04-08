@@ -14,27 +14,75 @@
                 "type": "text"
             },
             {
-                "id": "domain",
-                "name": "Domain",
+                "id": "datatype",
+                "name": "Data Type",
                 "type": "select",
                 "options": [
-                    "TIM",
-                    "PVSS",
-                    "CSAM"
+                    "Boolean",
+                    "Integer",
+                    "Float",
+                    "String"
                 ]
+            },
+            {
+                "id": "system",
+                "name": "System/Subsystem",
+                "type": "typeahead",
+                "url": "data/systems.json",
+                "placeholder": "System/Subsystem"
+            },
+            {
+                "id": "gmao",
+                "name": "GMAO Code",
+                "type": "text"
+            },
+            {
+                "id": "responsible",
+                "name": "Responsible Person",
+                "type": "typeahead",
+                "url": "data/responsibles.json",
+                "placeholder": "Start typing name or ID"
+            },
+            {
+                "id": "attribute",
+                "name": "Point Attribute",
+                "type": "text"
             }
         ]
     },
+
+
     {
         "name": "Location",
         "active": false,
         "fields": [
             {
-                "id": "building",
-                "name": "Building",
+                "id": "site",
+                "name": "Site",
                 "type": "typeahead",
-                "url": "data/buildings.json",
-                "placeholder": "Building"
+                "url": "data/sites.json",
+                "placeholder": "Site"
+            },
+            {
+                "id": "building_no",
+                "name": "Building No.",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Number"
+            },
+            {
+                "id": "building_name",
+                "name": "Building Name",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Name"
+            },
+            {
+                "id": "floor",
+                "name": "Floor",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Floor"
             },
             {
                 "id": "room",
@@ -42,9 +90,25 @@
                 "type": "typeahead",
                 "url": "data/rooms.json",
                 "placeholder": "Room"
+            },
+            {
+                "id": "zone",
+                "name": "Zone",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Zone"
+            },
+            {
+                "id": "detail",
+                "name": "Detail",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Detail"
             }
         ]
     },
+
+
     {
         "name": "Alarm details",
         "active": false,

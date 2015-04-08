@@ -1,4 +1,4 @@
-<div class="nav-tabs-custom">
+<div class="nav-tabs">
 
   <!-- Create a new tab for each category -->
   <tabset> 
@@ -12,7 +12,7 @@
         <th>#</th>
 
         <!-- Column header for each field in the currently active category -->
-        <th ng-repeat="field in getActiveFields()" class="text-center sortable"
+        <th ng-repeat="field in getActiveFields()" class="text-left sortable"
           ng-class="{'sort-asc': tableParams.isSortBy(field.id, 'asc'),'sort-desc': tableParams.isSortBy(field.id, 'desc')}"
           ng-click="tableParams.sorting(field.id, tableParams.isSortBy(field.id, 'asc') ? 'desc' : 'asc')">
             <div class="sort-indicator">{{field.name}}</div>
@@ -24,7 +24,7 @@
         </th>
       </tr>
 
-      <!-- Special table row contianing filter boxes -->
+      <!-- Special table row containing filter boxes -->
       <tr ng-show="show_filter">
         <th></th>
         <th ng-repeat="field in getActiveFields()" class="text-center sortable">
@@ -39,16 +39,16 @@
       <tr ng-repeat="point in $data" ng-hide="point.hidden">
 
         <!-- Line number field -->
-        <td class="text-muted" width="30" style="text-align: center; vertical-align: middle;">{{$data.indexOf(point) + 1}}</td>
+        <td class="input-field text-muted" width="30" style="text-align: center; vertical-align: middle;">{{$data.indexOf(point) + 1}}</td>
 
         <!-- Input field for each field in the currently active category -->
-        <td ng-repeat="field in getActiveFields()" sortable="field.id">
+        <td class="input-field" ng-repeat="field in getActiveFields()" sortable="field.id">
           <!-- Custom directive to generate an input field based on the field schema -->
           <span input-field point="point" field="field"></span>
         </td>
 
         <!-- Checkbox for each point -->
-        <td width="30" style="text-align: left; vertical-align: middle;">
+        <td class="input-field" width="30" style="text-align: center; vertical-align: middle;">
           <input type="checkbox" ng-model="checkboxes.items[point.id]" />
         </td>
 

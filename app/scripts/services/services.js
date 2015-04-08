@@ -85,9 +85,11 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
         // Merge the given potentially unsaved request with the cached
         // request. This is because we don't want to lose any unsaved
         // changes.
-        for (var i in unsavedRequest.points) {
-          // If the point has been modified, update it
-          update(service.cachedRequest.points, unsavedRequest.points[i])
+        if (unsavedRequest) {
+          for ( var i in unsavedRequest.points) {
+            // If the point has been modified, update it
+            update(service.cachedRequest.points, unsavedRequest.points[i])
+          }
         }
         
         // Make a copy for sorting/filtering

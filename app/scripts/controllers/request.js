@@ -9,5 +9,11 @@ var app = angular.module('modesti');
 
 app.controller('RequestController', function($scope) {
 
-  
+  $scope.tabs = {
+    active : 0,
+    activate : function(id) {
+      this.active = id;
+    }
+  };
+
 });
