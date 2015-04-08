@@ -15,15 +15,15 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.validation;
+package cern.modesti.repository.jpa;
 
-import org.springframework.data.repository.Repository;
-
-import cern.modesti.Request;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * @author Justin Lewis Salmon
  */
-public interface ValidationRepository extends Repository<Request, String> {
+@RepositoryRestResource
+public interface ValidationRepository extends JpaRepository<Person, String> {
 
 }

@@ -32,6 +32,7 @@ import org.springframework.stereotype.Component;
 
 import cern.modesti.Request.RequestStatus;
 import cern.modesti.counter.CounterService;
+import cern.modesti.repository.mongo.RequestRepository;
 
 /**
  * TODO
