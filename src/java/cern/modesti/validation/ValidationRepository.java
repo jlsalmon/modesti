@@ -15,32 +15,15 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti;
+package cern.modesti.validation;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.repository.Repository;
+
+import cern.modesti.Request;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
+public interface ValidationRepository extends Repository<Request, String> {
 
-//  Page<Request> findByRequestId(@Param("id") Long requestId, Pageable pageable);
-
-  @Query(value = "{'title': {$regex : ?0, $options: 'i'}}")
-  Page<Request> findAllByRegex(String regexString);
-
-  /**
-   *
-   * @param criteria
-   * @param page
-   * @return
-   */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
 }

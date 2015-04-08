@@ -109,7 +109,7 @@ public class RequestEventHandler implements BackendIdConverter {
   public Serializable fromRequestId(String id, Class<?> entityType) {
     logger.trace("fromRequestId() converting request id: " + id);
 
-    BasicQuery query = new BasicQuery("{ requestId : " + id + " }");
+    BasicQuery query = new BasicQuery("{ requestId : \"" + id + "\" }");
     Request request = mongoTemplate.findOne(query, Request.class);
 
     if (request != null) {

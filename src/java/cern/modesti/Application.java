@@ -1,24 +1,15 @@
 package cern.modesti;
 
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.node.NodeClient;
-import org.elasticsearch.node.NodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.support.ConfigurableConversionService;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
@@ -27,11 +18,9 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import cern.modesti.Application.CustomRepositoryRestMvcConfiguration;
-import cern.modesti.elastic.Building;
-import cern.modesti.elastic.BuildingRepository;
 
 @SpringBootApplication
-@EnableElasticsearchRepositories(basePackages = "cern/modesti/elastic")
+//@EnableElasticsearchRepositories(basePackages = "cern/modesti/elastic")
 @Import(CustomRepositoryRestMvcConfiguration.class)
 public class Application {
 
@@ -40,11 +29,11 @@ public class Application {
   public static void main(String[] args) {
     ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 
-    BuildingRepository repository = context.getBean(BuildingRepository.class);
-    logger.info(repository.toString());
-    ElasticsearchOperations eo = context.getBean(ElasticsearchOperations.class);
-
-    repository.index(new Building("1", "Restaurant 1", "500"));
+//    BuildingRepository repository = context.getBean(BuildingRepository.class);
+//    logger.info(repository.toString());
+//    ElasticsearchOperations eo = context.getBean(ElasticsearchOperations.class);
+//
+//    repository.index(new Building("1", "Restaurant 1", "500"));
 
   }
 
@@ -71,56 +60,56 @@ public class Application {
   // }
   // }
 
-  @Configuration
-  @EnableConfigurationProperties(ElasticsearchProperties.class)
-  protected static class ElasticsearchConfiguration implements DisposableBean {
-
-    private final Logger logger = LoggerFactory.getLogger(ElasticsearchConfiguration.class);
-
-    @Autowired
-    private ElasticsearchProperties properties;
-
-    private NodeClient client;
-
-    @Bean
-    public ElasticsearchTemplate elasticsearchTemplate() {
-      return new ElasticsearchTemplate(esClient());
-    }
-
-    @Bean
-    public Client esClient() {
-      try {
-        if (logger.isInfoEnabled()) {
-          logger.info("Starting Elasticsearch client");
-        }
-        NodeBuilder nodeBuilder = new NodeBuilder();
-        nodeBuilder.clusterName(this.properties.getClusterName()).local(false);
-        nodeBuilder.settings().put("http.enabled", true);
-        this.client = (NodeClient) nodeBuilder.node().client();
-        return this.client;
-      } catch (Exception ex) {
-        throw new IllegalStateException(ex);
-      }
-    }
-
-    @Override
-    public void destroy() throws Exception {
-      if (this.client != null) {
-        try {
-          if (logger.isInfoEnabled()) {
-            logger.info("Closing Elasticsearch client");
-          }
-          if (this.client != null) {
-            this.client.close();
-          }
-        } catch (final Exception ex) {
-          if (logger.isErrorEnabled()) {
-            logger.error("Error closing Elasticsearch client: ", ex);
-          }
-        }
-      }
-    }
-  }
+//  @Configuration
+//  @EnableConfigurationProperties(ElasticsearchProperties.class)
+//  protected static class ElasticsearchConfiguration implements DisposableBean {
+//
+//    private final Logger logger = LoggerFactory.getLogger(ElasticsearchConfiguration.class);
+//
+//    @Autowired
+//    private ElasticsearchProperties properties;
+//
+//    private NodeClient client;
+//
+//    @Bean
+//    public ElasticsearchTemplate elasticsearchTemplate() {
+//      return new ElasticsearchTemplate(esClient());
+//    }
+//
+//    @Bean
+//    public Client esClient() {
+//      try {
+//        if (logger.isInfoEnabled()) {
+//          logger.info("Starting Elasticsearch client");
+//        }
+//        NodeBuilder nodeBuilder = new NodeBuilder();
+//        nodeBuilder.clusterName(this.properties.getClusterName()).local(false);
+//        nodeBuilder.settings().put("http.enabled", true);
+//        this.client = (NodeClient) nodeBuilder.node().client();
+//        return this.client;
+//      } catch (Exception ex) {
+//        throw new IllegalStateException(ex);
+//      }
+//    }
+//
+//    @Override
+//    public void destroy() throws Exception {
+//      if (this.client != null) {
+//        try {
+//          if (logger.isInfoEnabled()) {
+//            logger.info("Closing Elasticsearch client");
+//          }
+//          if (this.client != null) {
+//            this.client.close();
+//          }
+//        } catch (final Exception ex) {
+//          if (logger.isErrorEnabled()) {
+//            logger.error("Error closing Elasticsearch client: ", ex);
+//          }
+//        }
+//      }
+//    }
+//  }
 
   /**
    * Allows validation errors to be converted to REST responses
@@ -149,7 +138,6 @@ public class Application {
 
     @Bean
     public SearchTextConverter searchTextConverter() {
-      logger.info("creating search text converter bean");
       return new SearchTextConverter();
     }
 

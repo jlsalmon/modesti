@@ -2,9 +2,7 @@ package cern.modesti.elastic;
 
 import javax.persistence.Id;
 
-import org.springframework.data.elasticsearch.annotations.Document;
-
-@Document(indexName = "buildings")
+//@Document(indexName = "buildings")
 public class Building {
 
   @Id
