@@ -2,8 +2,8 @@
 
 /**
  * @ngdoc service
- * @name modesti.myService
- * @description # myService Service in the modesti.
+ * @name modesti.RequestService
+ * @description # RequestService Service in the modesti.
  */
 var app = angular.module('modesti');
 

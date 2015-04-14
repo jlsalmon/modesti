@@ -23,7 +23,7 @@ app.directive('editableTable', function() {
   };
 });
 
-app.controller('EditableTableController', function($scope, $location, $http, $routeParams, NgTableParams, RequestService) {
+app.controller('EditableTableController', function($scope, $location, $http, $routeParams, NgTableParams, RequestService, ValidationService) {
 
   this.init = function() {
   };
@@ -258,6 +258,20 @@ app.controller('EditableTableController', function($scope, $location, $http, $ro
       console.log('error saving request: ' + error);
     });
   };
+  
+  /**
+   * 
+   */
+  $scope.validate = function() {
+    var request = $scope.request;
+    
+    ValidationService.validateRequest(request).then(function(result) {
+      console.log('validated request');
+      $scope.validationResult = result;
+    }, function(error) {
+      console.log('error validating request: ' + error);
+    });
+  }
 
   /**
    * 

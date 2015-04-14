@@ -5,9 +5,9 @@
  * @name modesti.controller:RequestController
  * @description # RequestController Controller of the modesti
  */
-var app = angular.module('modesti');
+angular.module('modesti').controller('RequestController', RequestController);
 
-app.controller('RequestController', function($scope) {
+function RequestController($scope) {
 
   $scope.tabs = {
     active : 0,
@@ -15,5 +15,4 @@ app.controller('RequestController', function($scope) {
       this.active = id;
     }
   };
-
-});
+}

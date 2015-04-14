@@ -38,6 +38,9 @@ module.exports = function(config) {
       'app/bower_components/angular-hateoas/src/angular-hateoas.js',
       'app/bower_components/lodash/dist/lodash.compat.js',
       'app/bower_components/restangular/dist/restangular.js',
+      'app/bower_components/bootstrap-select/bootstrap-select.js',
+      'app/bower_components/angular-bootstrap-select/build/angular-bootstrap-select.js',
+      'app/bower_components/angular-ui-select/dist/select.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

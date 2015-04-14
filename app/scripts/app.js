@@ -26,11 +26,11 @@ app.config(function($routeProvider, $locationProvider) {
   // Configure routes
   $routeProvider
   .when('/new', {
-    templateUrl: 'views/new_request.html',
-    controller: 'NewRequestController'
+    templateUrl: 'views/new-request.html',
+    controller: 'NewRequestController as ctrl'
   })
   .when('/requests', {
-    templateUrl: 'views/user_requests.html',
+    templateUrl: 'views/user_-equests.html',
     controller: 'UserRequestsController'
   })
   .when('/requests/:id', {

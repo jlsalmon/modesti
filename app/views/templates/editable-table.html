@@ -13,8 +13,8 @@
 
         <!-- Column header for each field in the currently active category -->
         <th ng-repeat="field in getActiveFields()" class="text-left sortable"
-          ng-class="{'sort-asc': tableParams.isSortBy(field.id, 'asc'),'sort-desc': tableParams.isSortBy(field.id, 'desc')}"
-          ng-click="tableParams.sorting(field.id, tableParams.isSortBy(field.id, 'asc') ? 'desc' : 'asc')">
+            ng-class="{'sort-asc': tableParams.isSortBy(field.id, 'asc'),'sort-desc': tableParams.isSortBy(field.id, 'desc')}"
+            ng-click="tableParams.sorting(field.id, tableParams.isSortBy(field.id, 'asc') ? 'desc' : 'asc')">
             <div class="sort-indicator">{{field.name}}</div>
         </th>
 
@@ -39,7 +39,9 @@
       <tr ng-repeat="point in $data" ng-hide="point.hidden">
 
         <!-- Line number field -->
-        <td class="input-field text-muted" width="30" style="text-align: center; vertical-align: middle;">{{$data.indexOf(point) + 1}}</td>
+        <td class="input-field text-muted" width="30" style="text-align: center; vertical-align: middle;">
+          {{$data.indexOf(point) + 1}}
+        </td>
 
         <!-- Input field for each field in the currently active category -->
         <td class="input-field" ng-repeat="field in getActiveFields()" sortable="field.id">
@@ -93,16 +95,15 @@
           </button>
 
           <!-- Button to save the request -->
-          <button class="btn btn-default" ng-click="save()" tooltip-append-to-body="true" tooltip="Save request">
-            <a>
-              <i class="fa fa-fw fa-save"></i>
-            </a>
+          <button class="btn btn-default" ng-click="save()">
+            
+            <!-- Saving state indicators -->
+            <a ng-show="$root.saving == undefined"><i class="fa fa-fw fa-save saving-state" tooltip-append-to-body="true" tooltip="Save request"></i></a>
+            <a ng-show="$root.saving == 'started'"><i class="fa fa-fw fa-spin fa-cog saving-state" tooltip-append-to-body="true" tooltip="Saving..."></i></a>
+            <a ng-show="$root.saving == 'success'"> <i class="fa fa-fw fa-save saving-state" tooltip-append-to-body="true" tooltip="Saved"></i></a>
+            <a ng-show="$root.saving == 'error'" > <i class="fa fa-fw fa-exclamation-triangle saving-state text-danger" tooltip-append-to-body="true" tooltip="Problem saving"></i></a>
+        
           </button>
-          
-          <!-- Saving state indicators -->
-          <span ng-show="$root.saving == 'started'" class="saving-state" tooltip="Saving..."><i class="fa fa-fw fa-spin fa-cog"></i></span>
-          <span ng-show="$root.saving == 'success'" class="saving-state text-success" tooltip="Saved"><i class="fa fa-fw fa-check"></i></span>
-          <span ng-show="$root.saving == 'error'"   class="saving-state text-danger"  tooltip="Problem saving"><i class="fa fa-fw fa-exclamation-triangle"></i></span>
         
           <!-- Custom pagination -->
           <div class="ng-cloak ng-table-pager pull-right" ng-if="params.data.length">
@@ -127,6 +128,37 @@
           <!-- Remove default pagination -->
           <script type="text/ng-template" id="custom/pager"></script>
           
+        </td>
+      </tr>
+      
+      <tr>
+        <td colspan="20">
+
+          <div class="btn-group" ng-click="validate()">
+            <!-- Button to validate the request -->
+            <button ng-show="$root.validating == undefined" class="btn btn-primary"  tooltip-append-to-body="true" tooltip="Validate request">
+               <i class="fa fa-fw fa-check-square-o"></i> Validate
+            </button>
+            
+            <button ng-show="$root.validating == 'started'" class="btn btn-primary" tooltip-append-to-body="true" tooltip="Validating...">
+               <i class="fa fa-fw fa-spin fa-cog"></i> Validate
+            </button>
+            
+            <button ng-show="$root.validating == 'success'" class="btn btn-success" tooltip-append-to-body="true" tooltip="Request is valid">
+               <i class="fa fa-fw fa-check-square-o"></i> Validate
+            </button>
+            
+            <button ng-show="$root.validating == 'error'" class="btn btn-danger" tooltip-append-to-body="true" tooltip="Problem validating request">
+               <i class="fa fa-fw fa-exclamation-triangle"></i> Invalid
+            </button>
+            
+            <!-- Button to submit the request -->
+            <button class="btn btn-default" ng-click="submit()" ng-disabled="$root.validating != 'success'" tooltip-append-to-body="true" tooltip="Submit request">
+                <i class="fa fa-fw fa-external-link"></i> Submit
+            </button>
+          </div>
+          
+          <span>{{validationResult}}</span>
         </td>
       </tr>
     </tfoot>

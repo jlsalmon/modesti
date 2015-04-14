@@ -331,8 +331,8 @@ td .form-group {
 }
 
 .saving-state {
-  font-size: 21px;
-  vertical-align: middle;
+  /* font-size: 18px; */
+  /* vertical-align: middle; */
 }
 
 .main-footer {
