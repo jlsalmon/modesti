@@ -15,34 +15,35 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request;
+package cern.modesti.repository.jpa.location;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+import java.util.List;
+
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 
-import cern.modesti.model.Request;
+import cern.modesti.model.Site;
+import cern.modesti.repository.base.ReadOnlyRepository;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
-
-//  Page<Request> findByRequestId(@Param("id") Long requestId, Pageable pageable);
-
-//  @Query(value = "{'title': {$regex : ?0, $options: 'i'}}")
-//  Page<Request> findAllByRegex(String regexString);
+public interface SiteRepository extends ReadOnlyRepository<Site, String> {
 
   /**
+   * TODO
    *
-   * @param criteria
-   * @param page
+   * We don't need a manual query here, as the functionalities table is very
+   * simple. So we annotate the {@link Site} class with the necessary table and
+   * column names and let Spring create a query automatically based on the
+   * method name.
+   *
+   * We also rename the REST endpoint for this resource via the
+   * {@link RestResource} annotation to make things nicer.
+   *
+   * @param name
    * @return
    */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
+  @RestResource(rel = "findByName", path = "findByName")
+  List<Site> findByNameStartsWithIgnoreCase(@Param("name") String name);
 }

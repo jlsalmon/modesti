@@ -15,34 +15,71 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request;
+package cern.modesti.model;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-import cern.modesti.model.Request;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
+@Entity
+//@Table(name = "persons_mv")
+public class Person {
 
-//  Page<Request> findByRequestId(@Param("id") Long requestId, Pageable pageable);
+  @Id
+  //@Column(name = "person_id")
+  private Long id;
 
-//  @Query(value = "{'title': {$regex : ?0, $options: 'i'}}")
-//  Page<Request> findAllByRegex(String regexString);
+  //@Column(name = "first_name")
+  private String name;
+
+  //@Column(name = "last_name")
+  //private String lastName;
+
+  public Person() {
+  }
 
   /**
-   *
-   * @param criteria
-   * @param page
-   * @return
+   * @return the id
    */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
+  public Long getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * @param name the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+//  /**
+//   * @return the lastName
+//   */
+//  public String getLastName() {
+//    return lastName;
+//  }
+//
+//  /**
+//   * @param lastName the lastName to set
+//   */
+//  public void setLastName(String lastName) {
+//    this.lastName = lastName;
+//  }
 }

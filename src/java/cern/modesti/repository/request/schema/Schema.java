@@ -15,34 +15,66 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request;
+package cern.modesti.repository.request.schema;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import java.util.List;
 
-import cern.modesti.model.Request;
+import javax.persistence.Id;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
+@Document
+public class Schema {
 
-//  Page<Request> findByRequestId(@Param("id") Long requestId, Pageable pageable);
+  @Id
+  private String id;
 
-//  @Query(value = "{'title': {$regex : ?0, $options: 'i'}}")
-//  Page<Request> findAllByRegex(String regexString);
+  private String name;
+
+  private List<Category> categories;
 
   /**
-   *
-   * @param criteria
-   * @param page
-   * @return
+   * @return the id
    */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
+  public String getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  /**
+   * @return the name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * @param name the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * @return the categories
+   */
+  public List<Category> getCategories() {
+    return categories;
+  }
+
+  /**
+   * @param categories the categories to set
+   */
+  public void setCategories(List<Category> categories) {
+    this.categories = categories;
+  }
 }

@@ -15,34 +15,62 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request;
+package cern.modesti.repository.request.schema;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import java.util.List;
 
-import cern.modesti.model.Request;
+import cern.modesti.repository.request.schema.field.Field;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
+public class Category {
 
-//  Page<Request> findByRequestId(@Param("id") Long requestId, Pageable pageable);
+  private String name;
 
-//  @Query(value = "{'title': {$regex : ?0, $options: 'i'}}")
-//  Page<Request> findAllByRegex(String regexString);
+  private Boolean active;
+
+  private List<Field> fields;
 
   /**
-   *
-   * @param criteria
-   * @param page
-   * @return
+   * @return the name
    */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * @param name the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * @return the active
+   */
+  public Boolean getActive() {
+    return active;
+  }
+
+  /**
+   * @param active the active to set
+   */
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
+
+  /**
+   * @return the fields
+   */
+  public List<Field> getFields() {
+    return fields;
+  }
+
+  /**
+   * @param fields the fields to set
+   */
+  public void setFields(List<Field> fields) {
+    this.fields = fields;
+  }
 }

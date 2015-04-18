@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti;
+package cern.modesti.repository.request;
 
 import java.io.Serializable;
 
@@ -30,9 +30,10 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.data.rest.webmvc.spi.BackendIdConverter;
 import org.springframework.stereotype.Component;
 
-import cern.modesti.Request.RequestStatus;
-import cern.modesti.counter.CounterService;
-import cern.modesti.repository.mongo.RequestRepository;
+import cern.modesti.model.Point;
+import cern.modesti.model.Request;
+import cern.modesti.model.Request.RequestStatus;
+import cern.modesti.repository.request.util.CounterService;
 
 /**
  * TODO

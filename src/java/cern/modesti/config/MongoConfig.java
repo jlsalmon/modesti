@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventL
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import cern.modesti.repository.mongo.RequestRepository;
+import cern.modesti.repository.request.RequestRepository;
 
 @Configuration
 @EnableMongoRepositories(basePackageClasses=RequestRepository.class)

@@ -9,42 +9,41 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-import cern.modesti.repository.jpa.UserRepository;
-
 @Configuration
 @PropertySource("classpath:cern/modesti/config/properties/hibernate.properties")
-@EnableJpaRepositories(basePackageClasses=UserRepository.class)
+// @EnableJpaRepositories(basePackageClasses=SystemRepository.class)
 public class JpaConfig {
 
-    @Autowired private Environment env;
-    @Autowired private DataSource dataSource;
+  @Autowired
+  private Environment env;
+  @Autowired
+  private DataSource dataSource;
 
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+  @Bean
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
-        HibernateJpaVendorAdapter hibernateJpa = new HibernateJpaVendorAdapter();
-        hibernateJpa.setDatabasePlatform(env.getProperty("hibernate.dialect"));
-        hibernateJpa.setShowSql(env.getProperty("hibernate.show_sql", Boolean.class));
-        hibernateJpa.setGenerateDdl(true);
+    HibernateJpaVendorAdapter hibernateJpa = new HibernateJpaVendorAdapter();
+    hibernateJpa.setDatabasePlatform(env.getProperty("hibernate.dialect"));
+    hibernateJpa.setShowSql(env.getProperty("hibernate.show_sql", Boolean.class));
+    hibernateJpa.setGenerateDdl(true);
 
-        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(dataSource);
-        emf.setPackagesToScan("cern.modesti");
-        emf.setJpaVendorAdapter(hibernateJpa);
-        emf.setJpaPropertyMap(Collections.singletonMap("javax.persistence.validation.mode", "none"));
-        return emf;
-    }
+    LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+    emf.setDataSource(dataSource);
+    emf.setPackagesToScan("cern.modesti");
+    emf.setJpaVendorAdapter(hibernateJpa);
+    emf.setJpaPropertyMap(Collections.singletonMap("javax.persistence.validation.mode", "none"));
+    return emf;
+  }
 
-    @Bean
-    public JpaTransactionManager transactionManager() {
-        JpaTransactionManager txnMgr = new JpaTransactionManager();
-        txnMgr.setEntityManagerFactory(entityManagerFactory().getObject());
-        return txnMgr;
-    }
+  @Bean
+  public JpaTransactionManager transactionManager() {
+    JpaTransactionManager txnMgr = new JpaTransactionManager();
+    txnMgr.setEntityManagerFactory(entityManagerFactory().getObject());
+    return txnMgr;
+  }
 
 }

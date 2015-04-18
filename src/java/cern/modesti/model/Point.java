@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti;
+package cern.modesti.model;
 
 import org.springframework.data.annotation.Id;
 
@@ -31,7 +31,15 @@ public class Point {
 
   private String description;
 
-  private String domain;
+  private DataType datatype;
+
+  private SubSystem subsystem;
+
+  private GMAOCode gmao;
+
+  private Person responsiblePerson;
+
+  private String attribute;
 
   /**
    * @return the id
@@ -76,16 +84,72 @@ public class Point {
   }
 
   /**
-   * @return the domain
+   * @return the datatype
    */
-  public String getDomain() {
-    return domain;
+  public DataType getDatatype() {
+    return datatype;
   }
 
   /**
-   * @param domain the domain to set
+   * @param datatype the datatype to set
    */
-  public void setDomain(String domain) {
-    this.domain = domain;
+  public void setDatatype(DataType datatype) {
+    this.datatype = datatype;
+  }
+
+  /**
+   * @return the subsystem
+   */
+  public SubSystem getSubsystem() {
+    return subsystem;
+  }
+
+  /**
+   * @param subsystem the subsystem to set
+   */
+  public void setSubsystem(SubSystem subsystem) {
+    this.subsystem = subsystem;
+  }
+
+  /**
+   * @return the gmao
+   */
+  public GMAOCode getGmao() {
+    return gmao;
+  }
+
+  /**
+   * @param gmao the gmao to set
+   */
+  public void setGmao(GMAOCode gmao) {
+    this.gmao = gmao;
+  }
+
+  /**
+   * @return the responsiblePerson
+   */
+  public Person getResponsiblePerson() {
+    return responsiblePerson;
+  }
+
+  /**
+   * @param responsiblePerson the responsiblePerson to set
+   */
+  public void setResponsiblePerson(Person responsiblePerson) {
+    this.responsiblePerson = responsiblePerson;
+  }
+
+  /**
+   * @return the attribute
+   */
+  public String getAttribute() {
+    return attribute;
+  }
+
+  /**
+   * @param attribute the attribute to set
+   */
+  public void setAttribute(String attribute) {
+    this.attribute = attribute;
   }
 }

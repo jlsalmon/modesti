@@ -15,34 +15,23 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request;
+package cern.modesti.repository.jpa.datatype;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.query.Param;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import cern.modesti.model.Request;
+import cern.modesti.model.DataType;
+import cern.modesti.repository.base.ReadOnlyRepository;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
+@RepositoryRestResource(collectionResourceRel = "datatypes", path = "datatypes")
+public interface DataTypeRepository extends ReadOnlyRepository<DataType, String> {
 
-//  Page<Request> findByRequestId(@Param("id") Long requestId, Pageable pageable);
-
-//  @Query(value = "{'title': {$regex : ?0, $options: 'i'}}")
-//  Page<Request> findAllByRegex(String regexString);
-
-  /**
-   *
-   * @param criteria
-   * @param page
-   * @return
-   */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
+  @Override
+  @Query(value = "SELECT rv_low_value as name FROM cg_ref_codes WHERE rv_domain = 'PTDATATYPES'", nativeQuery = true)
+  public List<DataType> findAll();
 }

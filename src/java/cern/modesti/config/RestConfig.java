@@ -9,8 +9,13 @@ import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.validation.Validator;
 
-import cern.modesti.Point;
-import cern.modesti.SearchTextConverter;
+import cern.modesti.model.AlarmCategory;
+import cern.modesti.model.AlarmPriority;
+import cern.modesti.model.DataType;
+import cern.modesti.model.Person;
+import cern.modesti.model.Point;
+import cern.modesti.model.Site;
+import cern.modesti.repository.request.SearchTextConverter;
 
 @Configuration
 public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
@@ -27,7 +32,7 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
   @Override
   protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
     super.configureRepositoryRestConfiguration(config);
-    config.exposeIdsFor(Point.class);
+    config.exposeIdsFor(Point.class, Person.class, Site.class, DataType.class, AlarmCategory.class, AlarmPriority.class);
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);
   }

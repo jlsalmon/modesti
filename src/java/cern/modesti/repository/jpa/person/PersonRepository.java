@@ -15,34 +15,29 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request;
+package cern.modesti.repository.jpa.person;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import cern.modesti.model.Request;
+import cern.modesti.model.Person;
+import cern.modesti.repository.base.ReadOnlyRepository;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
+public interface PersonRepository extends ReadOnlyRepository<Person, String> {
 
-//  Page<Request> findByRequestId(@Param("id") Long requestId, Pageable pageable);
+  @Override
+  @Query(value = "SELECT person_id, first_name, last_name FROM persons_mv WHERE at_cern = 'Y' AND cern_class = 'STAF'", nativeQuery = true)
+  public List<Person> findAll();
 
-//  @Query(value = "{'title': {$regex : ?0, $options: 'i'}}")
-//  Page<Request> findAllByRegex(String regexString);
-
-  /**
-   *
-   * @param criteria
-   * @param page
-   * @return
-   */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
+  @Query(value = "SELECT person_id as id, first_name || ' ' || last_name as name "
+               + "FROM   persons_mv "
+               + "WHERE  at_cern = 'Y' AND cern_class = 'STAF' "
+               + "AND   (person_id  LIKE UPPER(:id || '%') "
+               + "OR     first_name || ' ' || last_name LIKE UPPER(:name || '%'))", nativeQuery = true)
+  public List<Person> findByIdOrName(@Param("id") String id, @Param("name") String name);
 }

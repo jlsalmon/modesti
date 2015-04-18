@@ -2,6 +2,7 @@
 buildscript {
     repositories {
         maven { url "https://repo.spring.io/libs-release" }
+        maven { url "http://artifactory/release" }
         mavenLocal()
         mavenCentral()
     }
@@ -24,6 +25,7 @@ repositories {
     mavenCentral()
     maven { url "https://repo.spring.io/libs-release" }
     maven { url "https://repo.spring.io/snapshot" }
+    maven { url "http://artifactory/release" }
 }
 
 dependencies {
@@ -35,12 +37,14 @@ dependencies {
     
     compile("org.hsqldb:hsqldb")
     compile("com.h2database:h2")
+    compile("oracle:ojdbc:11.2.0.3")
     compile("commons-dbcp:commons-dbcp")
     
     //compile('javax.persistence:persistence-api:1.0.2')
     
     compile("ch.qos.logback:logback-classic:1.1.2")
     compile("org.slf4j:slf4j-api:1.7.+")
+    compile("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
 
     testCompile("junit:junit:4.11")
 }

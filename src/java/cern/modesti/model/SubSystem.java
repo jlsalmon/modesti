@@ -15,34 +15,62 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request;
+package cern.modesti.model;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-import cern.modesti.model.Request;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
+@Entity
+//@Table(name = "vpts_sysdet")
+public class SubSystem {
 
-//  Page<Request> findByRequestId(@Param("id") Long requestId, Pageable pageable);
+  @Id
+  //@Column(name = "tess_subsystem_id")
+  //private Long id;
 
-//  @Query(value = "{'title': {$regex : ?0, $options: 'i'}}")
-//  Page<Request> findAllByRegex(String regexString);
+  //@Column(name = "tess_subsystem_name")
+  //@Id
+  private String name;
+
+//  @Column(name = "tes_system_name")
+//  private String system;
+
+  public SubSystem() {
+  }
+
+  public SubSystem(final String name) {
+    this.name = name;
+  }
 
   /**
-   *
-   * @param criteria
-   * @param page
-   * @return
+   * @return the name
    */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * @param name the name to set
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+//  /**
+//   * @return the system
+//   */
+//  public String getSystem() {
+//    return system;
+//  }
+//
+//  /**
+//   * @param system the system to set
+//   */
+//  public void setSystem(String system) {
+//    this.system = system;
+//  }
 }
