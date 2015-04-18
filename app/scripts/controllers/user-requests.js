@@ -5,40 +5,53 @@
  * @name modesti.controller:UserRequestsController
  * @description # UserRequestsController Controller of the modesti
  */
-var app = angular.module('modesti');
+angular.module('modesti').controller('UserRequestsController', UserRequestsController);
 
-app.controller('UserRequestsController', function($scope, $location, RequestService) {
+function UserRequestsController($location, RequestService) {
+  var self = this;
+
+  self.deleteRequest = deleteRequest;
+  self.editRequest = editRequest;
   
-  RequestService.getRequests().then(function(requests) {
-    $scope.requests = requests;
-  },
-  
-  function(error) {
-    // what to do here?
-    //$scope.requests = [];
-    if (error) {
-      
-    }
-  })
-  
-  $scope.deleteRequest = function(request) {
+  getRequests();
+
+  /**
+   * 
+   */
+  function getRequests() {
+    RequestService.getRequests().then(function(requests) {
+      self.requests = requests;
+    },
+
+    function(error) {
+      // what to do here?
+    });
+  }
+
+  /**
+   * 
+   */
+  function deleteRequest(request) {
     var href = request._links.self.href;
     var id = href.substring(href.lastIndexOf('/') + 1);
-    
+
     RequestService.deleteRequest(id).then(function() {
       console.log('deleted request ' + id);
-      $scope.requests.splice($scope.requests.indexOf(request), 1);
+      self.requests.splice(self.requests.indexOf(request), 1);
     },
-    
+
     function(error) {
       // something went wrong deleting the request
     });
-  };
-  
-  $scope.editRequest = function(request) {
+  }
+
+  /**
+   * 
+   */
+  function editRequest(request) {
     var href = request._links.self.href;
     var id = href.substring(href.lastIndexOf('/') + 1);
-    
+
     $location.path('/requests/' + id);
   }
-});
+};

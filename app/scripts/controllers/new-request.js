@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('NewRequestController', NewRequestController);
   
-function NewRequestController($http, $location, $filter, RequestService) {
+function NewRequestController($http, $location, $filter, RequestService, Restangular) {
   var self = this;
   
   self.getSystems = getSystems;
@@ -22,10 +22,14 @@ function NewRequestController($http, $location, $filter, RequestService) {
    * 
    */
   function getSystems(value) {
-    return $http.get('data/systems.json', {
-      params : {}
+    return $http.get('http://localhost:8080/subsystems/search/findByName', {
+      params : {
+        name : value
+      }
     }).then(function(response) {
-      return $filter('filter')(response.data, value);
+      return response.data._embedded.subsystems.map(function(item) {
+        return item.name;
+      });
     });
   }
 
@@ -55,4 +59,37 @@ function NewRequestController($http, $location, $filter, RequestService) {
       });
     }
   };
+  
+  
+  // TODO: move everything below here to another page ------------------------------------------------------------------------
+  
+  self.schema = {};
+  self.schemaString = '';
+  self.saveSchema = saveSchema;
+  
+  var id = '553135bcb760e38d3bc923ac';
+  
+  Restangular.one('schemas', id).get().then(function(schema) {
+    console.log('fetched schema');
+    self.schema = schema.data;
+    self.schemaString = JSON.stringify(schema.data, null, "    ");
+  },
+
+  function(error) {
+    console.log('error fetching schema');
+  });
+  
+
+  function saveSchema() {
+    self.schema.categories = JSON.parse(self.schemaString).categories;
+    
+    self.schema.save().then(function(response) {
+      console.log('saved schema');
+      self.categories = response.data;
+    }, function(error) {
+      console.log('error saving schema: ' + error.data.message);
+    });
+  };
+  
+  
 };

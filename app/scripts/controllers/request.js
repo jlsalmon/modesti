@@ -7,12 +7,16 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope) {
+function RequestController() {
+  var self = this;
 
-  $scope.tabs = {
-    active : 0,
-    activate : function(id) {
-      this.active = id;
-    }
-  };
+  self.currentActiveTab = 0;
+  self.activateTab = activateTab;
+
+  /**
+   * Activate a particular tab
+   */
+  function activateTab(tab) {
+    self.currentActiveTab = tab;
+  }
 }

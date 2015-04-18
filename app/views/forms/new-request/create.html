@@ -26,6 +26,9 @@
   ng-class="{ 'has-error': (form.$submitted && form.system.$invalid) }">
   <label for="System/Subsystem" class="col-sm-2 control-label">System/Subsystem</label>
   <div class="col-sm-10">
+  
+  <!-- TODO: use input-field directive to replace this -->
+  
     <input type="text" ng-model="ctrl.request.system" placeholder="System/Subsystem" typeahead="system for system in ctrl.getSystems($viewValue)"
       typeahead-loading="loadingSystems" typeahead-editable="false" class="form-control" name="system" required>
     <i ng-show="loadingSystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>

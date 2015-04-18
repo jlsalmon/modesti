@@ -10,16 +10,16 @@
 
   <div id="request-main-nav">
     <tabset justified="false"> 
-      <tab ng-click="tabs.activate(0)">
+      <tab ng-click="ctrl.activateTab(0)">
         <tab-heading> <i class="fa fa-edit"></i>Edit</tab-heading>
       </tab> 
-      <tab ng-click="tabs.activate(1)">
+      <tab ng-click="ctrl.activateTab(1)">
         <tab-heading> <i class="fa fa-exclamation-triangle"></i>Error report</tab-heading>
       </tab> 
-      <tab ng-click="tabs.activate(2)">
+      <tab ng-click="ctrl.activateTab(2)">
         <tab-heading> <i class="fa fa-heartbeat"></i>Activity</tab-heading>
       </tab> 
-      <tab ng-click="tabs.activate(3)">
+      <tab ng-click="ctrl.activateTab(3)">
         <tab-heading><i class="fa fa-comments"></i>Comments</tab-heading>
       </tab> 
     </tabset>
@@ -34,7 +34,7 @@
     <div class="col-lg-12">
 
       <!-- Request editing page -->
-      <div ng-show="tabs.active == 0">
+      <div ng-show="ctrl.currentActiveTab == 0">
         <!-- Default box -->
         <!-- <div class="box box-solid"> -->
         <div class="box-header with-border">
@@ -55,21 +55,15 @@
         <!-- </div> -->
         <!-- /.box -->
       </div>
-      
+
       <!-- Request error report page -->
-      <div ng-show="tabs.active == 1">
-        stuff
-      </div>
-      
+      <div ng-show="ctrl.currentActiveTab == 1">stuff</div>
+
       <!-- Request activity page -->
-      <div ng-show="tabs.active == 2">
-      more stuff
-      </div>
-      
+      <div ng-show="ctrl.currentActiveTab == 2">more stuff</div>
+
       <!-- Request comments page -->
-      <div ng-show="tabs.active == 3">
-      too much stuff
-      </div>
+      <div ng-show="ctrl.currentActiveTab == 3">too much stuff</div>
     </div>
   </div>
 

@@ -1,3 +1,6 @@
+{
+  "name": "core",
+  "categories":
 [
     {
         "name": "Basic details",
@@ -17,30 +20,41 @@
                 "id": "datatype",
                 "name": "Data Type",
                 "type": "select",
-                "options": [
-                    "Boolean",
-                    "Integer",
-                    "Float",
-                    "String"
-                ]
+                "options": "http://localhost:8080/datatypes",
+                "model": "name",
+                "returnPropertyName": "datatypes",
+                "placeholder": "Data Type"
             },
             {
-                "id": "system",
+                "id": "subsystem",
                 "name": "System/Subsystem",
                 "type": "typeahead",
-                "url": "data/systems.json",
+                "url": "http://localhost:8080/subsystems/search/findByName",
+                "params": [
+                  "name"
+                ],
+                "model": "name",
+                "returnPropertyName": "subsystems",
                 "placeholder": "System/Subsystem"
             },
             {
                 "id": "gmao",
                 "name": "GMAO Code",
-                "type": "text"
+                "type": "text",
+                "model": "name"
             },
             {
-                "id": "responsible",
+                "id": "responsiblePerson",
                 "name": "Responsible Person",
                 "type": "typeahead",
-                "url": "data/responsibles.json",
+                "url": "http://localhost:8080/persons/search/findByIdOrName",
+                "params": [
+                  "id",
+                  "name"
+                ],
+                "model": "name",
+                "template": "<span> ({{match.model.id}})</span>",
+                "returnPropertyName": "persons",
                 "placeholder": "Start typing name or ID"
             },
             {
@@ -60,7 +74,12 @@
                 "id": "site",
                 "name": "Site",
                 "type": "typeahead",
-                "url": "data/sites.json",
+                "url": "http://localhost:8080/sites/search/findByName",
+                "params": [
+                  "name"
+                ],
+                "model": "name",
+                "returnPropertyName": "sites",
                 "placeholder": "Site"
             },
             {
@@ -117,9 +136,23 @@
                 "id": "category",
                 "name": "Category",
                 "type": "typeahead",
-                "url": "data/buildings.json",
+                "url": "http://localhost:8080/alarmCategories/search/findByName",
+                "params": [
+                  "name"
+                ],
+                "model": "name",
+                "returnPropertyName": "alarmCategories",
                 "placeholder": "Category"
+            },
+            {
+                "id": "priority",
+                "name": "Priority",
+                "type": "select",
+                "options": "http://localhost:8080/alarmPriorities",
+                "model": "priority",
+                "returnPropertyName": "alarmPriorities"
             }
         ]
     }
 ]
+}

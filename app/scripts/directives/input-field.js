@@ -6,65 +6,145 @@
  * @description
  * # inputField
  */
-var app = angular.module('modesti');
+angular.module('modesti').directive('inputField', inputField);
 
-app.directive('inputField', function() {
-
+function inputField() {
   return {
     restrict : 'A',
-    controller : 'InputFieldController',
+    controller : 'InputFieldController as ctrl',
     scope : {
-      field : '=field',
-      point : '=point'
+      schema : '=schema',
+      model  : '=model'
     },
 
     link : function(scope, element, attrs, controller) {
       controller.init(scope, element);
     }
   };
-});
+}
 
-app.controller('InputFieldController', function($scope, $compile, $http, $filter) {
+// TODO move this controller to a separate file
+angular.module('modesti').controller('InputFieldController', InputFieldController);
+    
+function InputFieldController($compile, $http, $filter) {
+  var self = this;
 
-  this.init = function(scope, element) {
-    element.html(getInput(scope.field, scope.point)).show();
+  self.autocomplete = autocomplete;
+
+  self.init = function(scope, element) {
+    element.html(getInput(scope.schema, scope.model)).show();
     $compile(element.contents())(scope);
   };
   
-  $scope.autocomplete = function(url, value) {
-    return $http.get(url, {
-      params : {}
-    }).then(function(response) {
-      return $filter('filter')(response.data, value);
-    });
-  };
+  /**
+   * 
+   */
+  function getInput(schema, model) {
+    if (schema.type == 'text') {
+      return getTextInput(schema, model);
+    }
+    
+    else if (schema.type == 'select') {
+      return getSelectInput(schema, model);
+    }
+    
+    else if (schema.type == 'typeahead') {
+      return getTypeaheadInput(schema, model);
+    }
+  }
   
-  var getInput = function(field, point) {
-    if (field.type == 'text') {
-      return '<input type="text" ng-model="point[field.id]" class="form-control" />'
+  /**
+   * 
+   */
+  function getTextInput(schema, model) {
+    if (schema.model) {
+      // Field is an object, so we should bind the model property specified in
+      // the schema
+      return '<input type="text" ng-model="model[schema.model]" class="form-control" />'
+    } else {
+      // Field is a simple string, so we should just bind the model directly
+      return '<input type="text" ng-model="model" class="form-control" />'
     }
-    
-    else if (field.type == 'select') {
-      var html = '<select class="form-control">';
-      
-      for (var i in field.options) {
-        var option = field.options[i];
-        html += '<option value="' + option + '">' + option + '</option>'
-      }
-      
-      html += '</select>'
-      return html;
-    }
-    
-    else if (field.type == 'typeahead') {
-      var template = '\
-        <div class="form-group has-feedback"> \
-          <input type="text" ng-model="point[field.id]" placeholder="' + field.placeholder + '"  \
-                 typeahead="item for item in autocomplete(field.url, $viewValue)" \
-                 typeahead-loading="loading" class="form-control"> \
-        </div>' // <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
+  }
+  
+  /**
+   * 
+   */
+  function getSelectInput(schema, model) {
+    self.options = [];
+
+    if( typeof schema.options === 'string' ) {
+      // Options given as a URL
+      var html = '<select ng-model="model[schema.model]" ng-options="option for option in ctrl.options track by option" class="form-control" />';
+
+      // TODO refactor this into a service
+      $http.get(schema.options).then(function(response) {
+        if (!response.data.hasOwnProperty('_embedded')) return [];
         
-      return template;
+        response.data._embedded[schema.returnPropertyName].map(function(item) {
+          self.options.push(item[schema.model]);
+        });
+        
+        
+      });
     }
-  };
-});
+    
+    else {
+      // Options given as inline array
+      var html = '<select ng-model="model[schema.model]" ng-options="option for option in schema.options track by option" class="form-control" />';
+    }
+
+    return html;
+  }
+  
+  /**
+   * 
+   */
+  function getTypeaheadInput(schema, model) {
+    var template = '\
+      <div class="form-group has-feedback"> \
+        <input type="text" class="form-control" ng-model="model" placeholder="' + schema.placeholder + '"  \
+               typeahead="item as item.' + schema.model + ' for item in ctrl.autocomplete(schema, $viewValue)" \
+               typeahead-editable="false" \
+               typeahead-loading="loading" \
+               typeahead-template-url="item-template-' + schema.id + '.html"> \
+      </div>' // <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
+               
+    var itemTemplate = '\
+      <script type="text/ng-template" id="item-template-' + schema.id + '.html"> \
+        <a><span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>';
+    
+    if (schema.template) {
+      itemTemplate += schema.template;
+    }
+    
+    itemTemplate += '</a></script>';
+    return template + itemTemplate;
+  }
+  
+  /**
+   * 
+   */
+  function autocomplete(schema, value) {
+    var params = {}
+    for (var i in schema.params) {
+      params[schema.params[i]] = value;
+    }
+    
+    // TODO refactor this into a service
+    return $http.get(schema.url, {
+      params : params
+    }).then(function(response) {
+      
+      if (!response.data.hasOwnProperty('_embedded')) {
+        var empty = {};
+        empty[schema.model] = 'No results';
+        return [empty];
+      }
+
+      return response.data._embedded[schema.returnPropertyName].map(function(item){
+        return item;
+      });
+    });
+  }
+};

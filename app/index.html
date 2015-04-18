@@ -180,7 +180,7 @@
     <!-- Left side column. contains the sidebar -->
     <aside class="main-sidebar">
       <!-- sidebar: style can be found in sidebar.less -->
-      <section class="sidebar" ng-controller="SidebarController">
+      <section class="sidebar" ng-controller="SidebarController as ctrl">
         <!-- Sidebar user panel -->
         <!--         <div class="user-panel">
           <div class="pull-left image">
@@ -200,7 +200,7 @@
           <div class="input-group">
             <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search..." />
             <span class="input-group-btn">
-              <button type='submit' name='search' id='search-btn' class="btn btn-flat" ng-click="search(q)">
+              <button type='submit' name='search' id='search-btn' class="btn btn-flat" ng-click="ctrl.search(q)">
                 <i class="fa fa-search"></i>
               </button>
             </span>
@@ -210,14 +210,14 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
           <!-- <li class="header">MAIN NAVIGATION</li> -->
-          <li ng-class="{ active : isActive('/new')}">
+          <li ng-class="{ active : ctrl.isActivePage('/new')}">
             <a href="#/new">
               <i class="fa fa-plus"></i>
               <span>New Request</span>
             </a>
           </li>
 
-          <li ng-class="{ active : isActive('/requests')}">
+          <li ng-class="{ active : ctrl.isActivePage('/requests')}">
             <a href="#/requests">
               <i class="fa fa-user"></i>
               <span>My Requests</span>
@@ -230,9 +230,9 @@
               Documentation
             </a>
           </li> -->
-          <li ng-show="serverConnectionError">
+<!--           <li ng-show="serverConnectionError">
             <a>srv conn err</a>
-          </li>
+          </li> -->
         </ul>
       </section>
       <!-- /.sidebar -->
@@ -291,6 +291,7 @@
   <script src="scripts/controllers/new-request.js"></script>
   <script src="scripts/controllers/request.js"></script>
   <script src="scripts/controllers/user-requests.js"></script>
+  <script src="scripts/controllers/editable-table.js"></script>
   <script src="scripts/controllers/about.js"></script>
   <script src="scripts/controllers/search.js"></script>
   <script src="scripts/services/request-service.js"></script>

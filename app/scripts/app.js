@@ -30,12 +30,12 @@ app.config(function($routeProvider, $locationProvider) {
     controller: 'NewRequestController as ctrl'
   })
   .when('/requests', {
-    templateUrl: 'views/user_-equests.html',
-    controller: 'UserRequestsController'
+    templateUrl: 'views/user-requests.html',
+    controller: 'UserRequestsController as ctrl'
   })
   .when('/requests/:id', {
     templateUrl: 'views/request.html',
-    controller: 'RequestController'
+    controller: 'RequestController as ctrl'
   })
   .when('/about', {
     templateUrl: 'views/about.html',
@@ -43,7 +43,7 @@ app.config(function($routeProvider, $locationProvider) {
   })
   .when('/search/:q', {
     templateUrl: 'views/search.html',
-    controller: 'SearchController'
+    controller: 'SearchController as ctrl'
   })
   .when('/404', {
     templateUrl: 'views/errors/404.html',

@@ -183,7 +183,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
         $rootScope.saving = "success";
         
       }, function(error) {
-        console.log('error saving request: ' + error);
+        console.log('error saving request: ' + error.data.message);
         q.reject(error);
         $rootScope.saving = "error";
       });

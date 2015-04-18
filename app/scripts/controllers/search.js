@@ -5,15 +5,21 @@
  * @name modesti.controller:SearchController
  * @description # SearchController Controller of the modesti
  */
-var app = angular.module('modesti');
+angular.module('modesti').controller('SearchController', SearchController);
 
-app.controller('SearchController', function($scope, $location, $routeParams,Restangular) {
-    var q = $routeParams.q;
-    console.log('searching for ' + q);
-    
-    // TODO refactor this into a service
-    Restangular.all('requests/search/findAllByOrderByScoreDesc').getList({"q": q}).then(function(requests) {
-      console.log('got ' + requests.data.length + ' results');
-      $scope.results = requests.data;
-    });
-});
+function SearchController($location, $routeParams, Restangular) {
+  var self = this;
+  
+  self.results = [];
+  
+  var q = $routeParams.q;
+  console.log('searching for ' + q);
+
+  // TODO refactor this into a service
+  Restangular.all('requests/search/findAllByOrderByScoreDesc').getList({
+    "q" : q
+  }).then(function(requests) {
+    console.log('got ' + requests.data.length + ' results');
+    self.results = requests.data;
+  });
+};

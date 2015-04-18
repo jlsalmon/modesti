@@ -7,15 +7,15 @@
 
   results:
 
-  <div ng-show="results.length == 0">
+  <div ng-show="ctrl.results.length == 0">
     <h4>
       <i class="icon fa fa-info"></i> No Results
     </h4>
     No results found matching your search terms.
   </div>
 
-  <div class="row" ng-hide="requests.length == 0">
-    <div ng-repeat="request in results">
+  <div class="row" ng-hide="ctrl.requests.length == 0">
+    <div ng-repeat="request in ctrl.results">
       <p>
         {{request.requestId}} : {{request.description}} : {{request.domain}} : {{request._links.self.href}}
       </p>
