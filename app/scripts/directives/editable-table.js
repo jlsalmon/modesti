@@ -13,11 +13,12 @@ function editableTable() {
     restrict : 'A',
     controller : 'EditableTableController as ctrl',
     scope: {
-      request: '=request'
+      request: '=request',
+      schema:  '=schema'
     },
 
     link : function(scope, element, attrs, controller) {
-      controller.init();
+      controller.init(scope.request, scope.schema);
     }
   };
   

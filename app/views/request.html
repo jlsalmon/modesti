@@ -3,9 +3,9 @@
 <section id="request-header" class="content-header">
   <h1>
     <i class="fa fa-list fa-fw text-muted" style="vertical-align: middle;"></i>
-    requests <span class="text-muted">/</span> {{request.requestId}} <small>{{request.description}}</small>
+    requests <span class="text-muted">/</span> {{ctrl.request.requestId}} <small>{{ctrl.request.description}}</small>
     
-    <span style="font-size: 70%;" class="label pull-right bg-green">{{request.status}}</span>
+    <span style="font-size: 70%;" class="label pull-right bg-green">{{ctrl.request.status}}</span>
   </h1>
 
   <div id="request-main-nav">
@@ -38,19 +38,19 @@
         <!-- Default box -->
         <!-- <div class="box box-solid"> -->
         <div class="box-header with-border">
-          <h3 class="box-title">Request type: {{request.type}}, Domain: {{request.domain}}, Data source: {{request.datasource}}</h3>
+          <h3 class="box-title">Request type: {{ctrl.request.type}}, Domain: {{ctrl.request.domain}}, Data source: {{ctrl.request.datasource}}</h3>
         </div>
         <div class="box-body">
 
           <!-- 
             This is the main table directive.
           -->
-          <div editable-table request="request"></div>
+          <div editable-table request="ctrl.request" schema="ctrl.schema"></div>
 
         </div>
         <!-- /.box-body -->
 
-        <div class="box-footer"></div>
+        <div class="box-footer">{{ctrl.request.schema}}</div>
         <!-- /.box-footer-->
         <!-- </div> -->
         <!-- /.box -->

@@ -67,7 +67,7 @@ function NewRequestController($http, $location, $filter, RequestService, Restang
   self.schemaString = '';
   self.saveSchema = saveSchema;
   
-  var id = '553135bcb760e38d3bc923ac';
+  var id = 'tim';
   
   Restangular.one('schemas', id).get().then(function(schema) {
     console.log('fetched schema');

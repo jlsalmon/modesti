@@ -1,0 +1,14 @@
+{
+  "name": "plc",
+  "extends": "tim",
+  "categories":
+[
+    {
+        "id": "plcDetails",
+        "name": "PLC Details",
+        "fields": [
+            "blockAddress"
+        ]
+    }
+]
+}

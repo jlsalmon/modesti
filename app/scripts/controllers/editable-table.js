@@ -10,7 +10,8 @@ angular.module('modesti').controller('EditableTableController', EditableTableCon
 function EditableTableController($scope, $location, $http, $routeParams, NgTableParams, RequestService, ValidationService) {
   var self = this;
 
-  self.categories = {};
+  self.request = {};
+  self.schema = {};
   self.searchText = {};
   
   self.tableParams = new NgTableParams({
@@ -21,7 +22,7 @@ function EditableTableController($scope, $location, $http, $routeParams, NgTable
     total : 0,
     filterDelay : 0,
     $scope: self, // see https://github.com/esvit/ng-table/issues/362
-    getData : getRequest
+    getData : getTableData
   });
 
   self.checkboxes = {
@@ -39,71 +40,13 @@ function EditableTableController($scope, $location, $http, $routeParams, NgTable
   self.validate = validate;
   self.toggleFilter = toggleFilter;
     
-  function init() {
-    getCategories();
+  function init(request, schema) {
+    self.request = request;
+    self.schema = schema;
   };
   
-
-  // TODO: remove these watches and use ng-change instead
-  
-  $scope.$watch("ctrl.searchText", function() {
-    if (!jQuery.isEmptyObject(self.searchText) && self.tableParams) {
-      self.tableParams.filter(self.searchText)
-    }
-  }, true);
-
-  // watch for check all checkbox
-  $scope.$watch('ctrl.checkboxes.checked', function(value) {
-    if (!self.request) {
-      return;
-    }
-
-    angular.forEach(self.request.points, function(point) {
-      if (angular.isDefined(point.name)) {
-        self.checkboxes.items[point.id] = value;
-      }
-    });
-  });
-
-  // watch for data checkboxes
-  $scope.$watch('ctrl.checkboxes.items', function(values) {
-    if (!self.request) {
-      return;
-    }
-
-    var checked = 0, unchecked = 0, total = self.request.points.length;
-    angular.forEach(self.request.points, function(point) {
-      checked += (self.checkboxes.items[point.id]) || 0;
-      unchecked += (!self.checkboxes.items[point.id]) || 0;
-    });
-
-    if ((unchecked == 0) || (checked == 0)) {
-      self.checkboxes.checked = (checked == total);
-    }
-    
-    self.checkboxes.dirty = checked != 0 ? true : false; 
-
-    // grayed checkbox
-    angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
-  }, true);
-  
-  /**
-   * 
-   */
-  function getCategories() {
-    var id = $routeParams.id;
-    
-    // TODO refactor this into a service
-    $http.get('http://localhost:8080/request/' + id + '/schema').then(function(response) {
-      self.categories = response.data;
-    });
-  }
-
-  /**
-   * 
-   */
-  function getRequest($defer, params) {
-    console.log('getRequest() called');
+  function getTableData($defer, params) {
+    console.log('getting table data');
     var id = $routeParams.id;
     
     // If we already have a request, send it to the service for merging,
@@ -123,7 +66,6 @@ function EditableTableController($scope, $location, $http, $routeParams, NgTable
 
     function(error) {
       console.log('error getting request: ' + error);
-      $location.path('/404');
     });
   }
 
@@ -132,7 +74,7 @@ function EditableTableController($scope, $location, $http, $routeParams, NgTable
    */
   function activateCategory(category) {
     console.log('activating category');
-    var categories = self.categories;
+    var categories = self.schema.categories;
 
     for ( var key in categories) {
       if (categories.hasOwnProperty(key)) {
@@ -149,7 +91,7 @@ function EditableTableController($scope, $location, $http, $routeParams, NgTable
    * 
    */
   function getActiveFields() {
-    var categories = self.categories;
+    var categories = self.schema.categories;
     var fields = [];
 
     for ( var key in categories) {
@@ -296,4 +238,47 @@ function EditableTableController($scope, $location, $http, $routeParams, NgTable
   function toggleFilter() {
     self.tableParams.settings().$scope.show_filter = !self.tableParams.settings().$scope.show_filter;
   }
+  
+  // TODO: remove these watches and use ng-change instead
+  
+  $scope.$watch("ctrl.searchText", function() {
+    if (!jQuery.isEmptyObject(self.searchText) && self.tableParams) {
+      self.tableParams.filter(self.searchText)
+    }
+  }, true);
+
+  // watch for check all checkbox
+  $scope.$watch('ctrl.checkboxes.checked', function(value) {
+    if (!self.request) {
+      return;
+    }
+
+    angular.forEach(self.request.points, function(point) {
+      if (angular.isDefined(point.name)) {
+        self.checkboxes.items[point.id] = value;
+      }
+    });
+  });
+
+  // watch for data checkboxes
+  $scope.$watch('ctrl.checkboxes.items', function(values) {
+    if (!self.request) {
+      return;
+    }
+
+    var checked = 0, unchecked = 0, total = self.request.points.length;
+    angular.forEach(self.request.points, function(point) {
+      checked += (self.checkboxes.items[point.id]) || 0;
+      unchecked += (!self.checkboxes.items[point.id]) || 0;
+    });
+
+    if ((unchecked == 0) || (checked == 0)) {
+      self.checkboxes.checked = (checked == total);
+    }
+    
+    self.checkboxes.dirty = checked != 0 ? true : false; 
+
+    // grayed checkbox
+    angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
+  }, true);
 };

@@ -95,8 +95,10 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
         // Make a copy for sorting/filtering
         var request = Restangular.copy(service.cachedRequest);
 
-        // Sort/filter the points
-        request.points = transformData(request.points, params.filter(), params);
+        if (params) {
+          // Sort/filter the points
+          request.points = transformData(request.points, params.filter(), params);
+        }
 
         q.resolve(request);
       }
@@ -124,8 +126,10 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
           // Make a copy for sorting/filtering
           request = Restangular.copy(service.cachedRequest);
           
-          // Perform initial sorting/filtering/slicing
-          request.points = transformData(request.points, params.filter(), params);
+          if (params) {
+            // Perform initial sorting/filtering/slicing
+            request.points = transformData(request.points, params.filter(), params);
+          }
 
           q.resolve(request);
         },

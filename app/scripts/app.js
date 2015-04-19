@@ -35,7 +35,35 @@ app.config(function($routeProvider, $locationProvider) {
   })
   .when('/requests/:id', {
     templateUrl: 'views/request.html',
-    controller: 'RequestController as ctrl'
+    controller: 'RequestController as ctrl',
+    resolve: {
+      
+      // TODO refactor this out
+      request: function getRequest($route, RequestService) {
+        var id = $route.current.params.id;
+        return RequestService.getRequest(id);
+      },
+      
+      schema:  function getSchema($route, $q, $http) {
+        console.log('fetching schema');
+        var q = $q.defer();
+        var id = $route.current.params.id;
+
+        // TODO refactor this into a service
+        $http.get('http://localhost:8080/requests/' + id + '/schema').then(function(response) {
+          console.log('fetched schema: ' + response.data.name);
+          q.resolve(response.data);
+          //self.schema = response.data;
+        },
+        
+        function(error) {
+          console.log('error fetching schema: ' + error);
+          q.reject();
+        });
+        
+        return q.promise;
+      }
+    }
   })
   .when('/about', {
     templateUrl: 'views/about.html',
@@ -53,7 +81,6 @@ app.config(function($routeProvider, $locationProvider) {
     redirectTo: '/'
   });
 });
-
 
 app.config(function(RestangularProvider) {
   // Set the base URL

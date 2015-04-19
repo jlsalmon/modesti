@@ -1,0 +1,17 @@
+{
+  "name": "tim",
+  "categories":
+[
+    {
+        "name": "Alarm details",
+        "active": false,
+        "fields": [
+            {
+                "id": "autocall",
+                "name": "Autocall",
+                "type": "text"
+            }
+        ]
+    }
+]
+}
