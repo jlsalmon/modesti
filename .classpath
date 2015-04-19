@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.springsource.ide.eclipse.gradle.classpathcontainer"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry exported="true" kind="lib" path="/home/jsalmon/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-mongodb/1.6.2.RELEASE/a0292bffe73a65b73fde8420dffcef16c83a7c5e/spring-data-mongodb-1.6.2.RELEASE.jar" sourcepath="/home/jsalmon/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-mongodb/1.6.2.RELEASE/16c33c4bca1a0e3eb8499b0599f4a86c5371b71b/spring-data-mongodb-1.6.2.RELEASE-sources.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

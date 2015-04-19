@@ -23,6 +23,14 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import cern.modesti.repository.request.schema.field.OptionsField;
+import cern.modesti.repository.request.schema.field.TextField;
+import cern.modesti.repository.request.schema.field.TypeaheadField;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+
 /**
  * @author Justin Lewis Salmon
  */
@@ -76,5 +84,9 @@ public class Schema {
    */
   public void setCategories(List<Category> categories) {
     this.categories = categories;
+  }
+
+  public void addCategory(Category category) {
+    categories.add(category);
   }
 }

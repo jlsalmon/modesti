@@ -18,6 +18,8 @@
 package cern.modesti.repository.request;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,10 @@ import org.springframework.stereotype.Component;
 import cern.modesti.model.Point;
 import cern.modesti.model.Request;
 import cern.modesti.model.Request.RequestStatus;
+import cern.modesti.repository.request.schema.Category;
+import cern.modesti.repository.request.schema.Schema;
+import cern.modesti.repository.request.schema.SchemaRepository;
+import cern.modesti.repository.request.schema.field.Field;
 import cern.modesti.repository.request.util.CounterService;
 
 /**
@@ -51,6 +57,9 @@ public class RequestEventHandler implements BackendIdConverter {
 
   @Autowired
   private RequestRepository requestRepository;
+
+  @Autowired
+  private SchemaRepository schemaRepository;
 
   @Autowired
   private MongoTemplate mongoTemplate;
@@ -72,6 +81,40 @@ public class RequestEventHandler implements BackendIdConverter {
         logger.trace("beforeCreate() generated point id: " + point.getId());
       }
     }
+
+//    // Link the correct schema to this request
+//    Schema schema = schemaRepository.findOneByName(request.getDomain().toLowerCase());
+//
+//    // Merge the domain-specific schema with the core schema
+//    Schema coreSchema = schemaRepository.findOneByName("core");
+//    List<Category> categories = schema.getCategories();
+//    List<Category> newCategories = new ArrayList<>();
+//
+//    for (Category coreCategory : coreSchema.getCategories()) {
+//      if (!categories.contains(coreCategory)) {
+//        newCategories.add(coreCategory);
+//        
+//      } else {
+//        Category category = categories.get(categories.indexOf(coreCategory));
+//        List<Field> newFields = new ArrayList<>();
+//        
+//        for (Field coreField : coreCategory.getFields()) {
+//          if (!category.getFields().contains(coreField)) {
+//            newFields.add(coreField);
+//          }
+//        }
+//        
+//        newFields.addAll(category.getFields());
+//        category.setFields(newFields);
+//      }
+//    }
+//    
+//    newCategories.addAll(schema.getCategories());
+//    schema.setCategories(newCategories);
+//
+//    schemaRepository.save(schema);
+//
+//    request.setSchema(schema);
   }
 
   /**
@@ -109,13 +152,25 @@ public class RequestEventHandler implements BackendIdConverter {
    */
   @Override
   public Serializable fromRequestId(String id, Class<?> entityType) {
-    logger.trace("fromRequestId() converting request id: " + id);
 
-    BasicQuery query = new BasicQuery("{ requestId : \"" + id + "\" }");
-    Request request = mongoTemplate.findOne(query, Request.class);
+    if (entityType.equals(Request.class)) {
+      logger.trace("fromRequestId() converting request id: " + id);
 
-    if (request != null) {
-      return request.getId();
+      BasicQuery query = new BasicQuery("{ requestId : \"" + id + "\" }");
+      Request request = mongoTemplate.findOne(query, Request.class);
+
+      if (request != null) {
+        return request.getId();
+      }
+    } else if (entityType.equals(Schema.class)) {
+      logger.trace("fromRequestId() converting schema id: " + id);
+
+      BasicQuery query = new BasicQuery("{ name : \"" + id + "\" }");
+      Schema schema = mongoTemplate.findOne(query, Schema.class);
+
+      if (schema != null) {
+        return schema.getId();
+      }
     }
 
     return id;
@@ -130,11 +185,22 @@ public class RequestEventHandler implements BackendIdConverter {
    */
   @Override
   public String toRequestId(Serializable id, Class<?> entityType) {
-    logger.trace("toRequestId() converting request id : " + id);
 
     if (entityType.equals(Request.class)) {
+      logger.trace("toRequestId() converting request id : " + id);
       Request request = requestRepository.findOne(id.toString());
-      return request.getRequestId().toString();
+
+      if (request != null) {
+        return request.getRequestId().toString();
+      }
+
+    } else if (entityType.equals(Schema.class)) {
+      logger.trace("toRequestId() converting schema id : " + id);
+      Schema schema = schemaRepository.findOne(id.toString());
+      
+      if (schema != null) {
+        return schema.getName();
+      }
     }
 
     return id.toString();

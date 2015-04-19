@@ -24,8 +24,11 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
+
+import cern.modesti.repository.request.schema.Schema;
 
 /**
  * @author Justin Lewis Salmon
@@ -67,6 +70,9 @@ public class Request {
   //@TextIndexed
   @Valid
   private List<Point> points = new ArrayList<>();
+  
+  @DBRef
+  private Schema schema;
 
   /**
    *
@@ -197,5 +203,13 @@ public class Request {
    */
   public void setPoints(List<Point> points) {
     this.points = points;
+  }
+  
+  public Schema getSchema() {
+    return schema;
+  }
+  
+  public void setSchema(Schema schema) {
+    this.schema = schema;
   }
 }
