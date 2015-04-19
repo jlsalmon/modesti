@@ -1,3 +1,10 @@
 /bin/
 /build/
 data
+jdbc.properties
+.rest-shell.log
+spring-shell.log
+.gradle
+gradle
+gradlew
+gradlew.bat

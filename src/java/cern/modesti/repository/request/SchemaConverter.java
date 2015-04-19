@@ -3,18 +3,22 @@ package cern.modesti.repository.request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.stereotype.Component;
 
+import cern.modesti.repository.request.schema.Schema;
+
 @Component
-public class SearchTextConverter implements Converter<String, TextCriteria>{
+public class SchemaConverter implements Converter<Schema, String>{
 
   Logger logger = LoggerFactory.getLogger(SearchTextConverter.class);
 
   @Override
-  public TextCriteria convert(String q) {
-    logger.info("converting search text");
-    return new TextCriteria().matching(q);
+  public String convert(Schema schema) {
+    // Merge the core schema with the domain-specific schema
+    logger.info("converting schema");
+    
+    return "lol";
   }
 
 }
+

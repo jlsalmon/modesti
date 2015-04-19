@@ -18,10 +18,12 @@
 package cern.modesti.repository.request.schema;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * @author Justin Lewis Salmon
  */
+@RepositoryRestResource(exported = false)
 public interface SchemaRepository extends MongoRepository<Schema, String> {
 
 }
