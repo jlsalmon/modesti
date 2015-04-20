@@ -7,12 +7,12 @@
  */
 angular.module('modesti').controller('SearchController', SearchController);
 
-function SearchController($location, $routeParams, Restangular) {
+function SearchController($location, $stateParams, Restangular) {
   var self = this;
   
   self.results = [];
   
-  var q = $routeParams.q;
+  var q = $stateParams.q;
   console.log('searching for ' + q);
 
   // TODO refactor this into a service

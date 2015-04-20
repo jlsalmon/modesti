@@ -17,40 +17,44 @@ var app = angular
     'ngSanitize',
     'ngTouch',
     'ui.bootstrap',
+    'ui.router',
     'ngTable',
     'restangular'
   ]);
 
 
-app.config(function($routeProvider, $locationProvider) {
+app.config(function($stateProvider, $urlRouterProvider) {
   // Configure routes
-  $routeProvider
-  .when('/new', {
+  $stateProvider
+  .state('new', {
+    url: '/new',
     templateUrl: 'views/new-request.html',
     controller: 'NewRequestController as ctrl'
   })
-  .when('/requests', {
+  .state('requests', {
+    url: '/requests',
     templateUrl: 'views/user-requests.html',
     controller: 'UserRequestsController as ctrl'
   })
-  .when('/requests/:id', {
+  .state('request', {
+    url: '/requests/:id',
     templateUrl: 'views/request.html',
     controller: 'RequestController as ctrl',
     resolve: {
       
       // TODO refactor this out
-      request: function getRequest($route, RequestService) {
-        var id = $route.current.params.id;
+      request: function getRequest($stateParams, RequestService) {
+        var id = $stateParams.id;
         return RequestService.getRequest(id);
       },
       
-      schema:  function getSchema($route, $q, $http) {
+      schema:  function getSchema($q, $http, request) {
         console.log('fetching schema');
         var q = $q.defer();
-        var id = $route.current.params.id;
+        //var id = $stateParams.id;
 
         // TODO refactor this into a service
-        $http.get('http://localhost:8080/requests/' + id + '/schema').then(function(response) {
+        $http.get(request._links.schema.href).then(function(response) {
           console.log('fetched schema: ' + response.data.name);
           q.resolve(response.data);
           //self.schema = response.data;
@@ -65,20 +69,20 @@ app.config(function($routeProvider, $locationProvider) {
       }
     }
   })
-  .when('/about', {
+  .state('about', {
+    url: '/about',
     templateUrl: 'views/about.html',
     controller: 'AboutCtrl'
   })
-  .when('/search/:q', {
+  .state('search', {
+    url: '/search/:q',
     templateUrl: 'views/search.html',
     controller: 'SearchController as ctrl'
   })
-  .when('/404', {
+  .state('404', {
+    url: '/404',
     templateUrl: 'views/errors/404.html',
     //controller: 'PageNotFoundController'
-  })
-  .otherwise({
-    redirectTo: '/'
   });
 });
 

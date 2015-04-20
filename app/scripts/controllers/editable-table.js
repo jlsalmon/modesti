@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('EditableTableController', EditableTableController);
 
-function EditableTableController($scope, $location, $http, $routeParams, NgTableParams, RequestService, ValidationService) {
+function EditableTableController($scope, $location, $http, $stateParams, NgTableParams, RequestService, ValidationService) {
   var self = this;
 
   self.request = {};
@@ -47,7 +47,7 @@ function EditableTableController($scope, $location, $http, $routeParams, NgTable
   
   function getTableData($defer, params) {
     console.log('getting table data');
-    var id = $routeParams.id;
+    var id = $stateParams.id;
     
     // If we already have a request, send it to the service for merging,
     // as we might have made unsaved changes.

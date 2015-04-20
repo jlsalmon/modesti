@@ -211,14 +211,14 @@
         <ul class="sidebar-menu">
           <!-- <li class="header">MAIN NAVIGATION</li> -->
           <li ng-class="{ active : ctrl.isActivePage('/new')}">
-            <a href="#/new">
+            <a ui-sref="new">
               <i class="fa fa-plus"></i>
               <span>New Request</span>
             </a>
           </li>
 
           <li ng-class="{ active : ctrl.isActivePage('/requests')}">
-            <a href="#/requests">
+            <a ui-sref="requests">
               <i class="fa fa-user"></i>
               <span>My Requests</span>
             </a>
@@ -241,7 +241,7 @@
     <!-- =============================================== -->
 
     <div class="content-wrapper">
-      <div ng-view=""></div>
+      <div ui-view></div>
     </div>
     <!-- /.content-wrapper -->
 
@@ -281,6 +281,7 @@
   <script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
   <script src="bower_components/angular-bootstrap-select/build/angular-bootstrap-select.js"></script>
   <script src="bower_components/angular-ui-select/dist/select.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
