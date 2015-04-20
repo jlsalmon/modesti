@@ -7,16 +7,35 @@
  */
 angular.module('modesti').controller('NewRequestController', NewRequestController);
   
-function NewRequestController($http, $location, $filter, RequestService, Restangular) {
+function NewRequestController($scope, $http, $location, $filter, RequestService, Restangular) {
   var self = this;
   
+  self.domains = [];
+  
+  self.getDomains = getDomains;
   self.getSystems = getSystems;
+  self.updateDatasources = updateDatasources;
   self.submit = submit;
   
   self.request = {
     type : 'create',
     description : ''
   };
+  
+  getDomains();
+
+  /**
+   * 
+   */
+  function getDomains(value) {
+    $http.get('http://localhost:8080/domains').then(function(response) {
+      response.data._embedded.domains.map(function(item) {
+        self.domains.push(item);
+      });
+      
+      self.datasources = response.datasources;
+    });
+  }
   
   /**
    * 
@@ -31,6 +50,18 @@ function NewRequestController($http, $location, $filter, RequestService, Restang
         return item.name;
       });
     });
+  }
+  
+  /**
+   * 
+   */
+  function updateDatasources() {
+    var domain = self.request.domain;
+    for (var i in self.domains) {
+      if (self.domains[i].name == domain) {
+        self.datasources = self.domains[i].datasources;
+      }
+    }
   }
 
   /**
