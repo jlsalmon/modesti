@@ -25,7 +25,7 @@ repositories {
     mavenCentral()
     maven { url "https://repo.spring.io/libs-release" }
     maven { url "https://repo.spring.io/snapshot" }
-    maven { url "http://localhost:11112/release" }
+    maven { url "http://artifactory/release" }
 }
 
 dependencies {
@@ -39,6 +39,7 @@ dependencies {
     compile("com.h2database:h2")
     compile("oracle:ojdbc:11.2.0.3")
     compile("commons-dbcp:commons-dbcp")
+    compile("oracle:ojdbc:11.2.0.3")
     
     //compile('javax.persistence:persistence-api:1.0.2')
     

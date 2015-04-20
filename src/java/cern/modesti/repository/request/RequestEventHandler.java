@@ -18,8 +18,6 @@
 package cern.modesti.repository.request;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +33,8 @@ import org.springframework.stereotype.Component;
 import cern.modesti.model.Point;
 import cern.modesti.model.Request;
 import cern.modesti.model.Request.RequestStatus;
-import cern.modesti.repository.request.schema.Category;
 import cern.modesti.repository.request.schema.Schema;
 import cern.modesti.repository.request.schema.SchemaRepository;
-import cern.modesti.repository.request.schema.field.Field;
 import cern.modesti.repository.request.util.CounterService;
 
 /**
@@ -82,39 +78,9 @@ public class RequestEventHandler implements BackendIdConverter {
       }
     }
 
-//    // Link the correct schema to this request
-//    Schema schema = schemaRepository.findOneByName(request.getDomain().toLowerCase());
-//
-//    // Merge the domain-specific schema with the core schema
-//    Schema coreSchema = schemaRepository.findOneByName("core");
-//    List<Category> categories = schema.getCategories();
-//    List<Category> newCategories = new ArrayList<>();
-//
-//    for (Category coreCategory : coreSchema.getCategories()) {
-//      if (!categories.contains(coreCategory)) {
-//        newCategories.add(coreCategory);
-//        
-//      } else {
-//        Category category = categories.get(categories.indexOf(coreCategory));
-//        List<Field> newFields = new ArrayList<>();
-//        
-//        for (Field coreField : coreCategory.getFields()) {
-//          if (!category.getFields().contains(coreField)) {
-//            newFields.add(coreField);
-//          }
-//        }
-//        
-//        newFields.addAll(category.getFields());
-//        category.setFields(newFields);
-//      }
-//    }
-//    
-//    newCategories.addAll(schema.getCategories());
-//    schema.setCategories(newCategories);
-//
-//    schemaRepository.save(schema);
-//
-//    request.setSchema(schema);
+    // Link the correct schema to this request
+    Schema schema = schemaRepository.findOneByName(request.getDatasource().toLowerCase());
+    request.setSchema(schema);
   }
 
   /**
@@ -197,7 +163,7 @@ public class RequestEventHandler implements BackendIdConverter {
     } else if (entityType.equals(Schema.class)) {
       logger.trace("toRequestId() converting schema id : " + id);
       Schema schema = schemaRepository.findOne(id.toString());
-      
+
       if (schema != null) {
         return schema.getName();
       }

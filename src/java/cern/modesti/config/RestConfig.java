@@ -16,7 +16,6 @@ import cern.modesti.model.Person;
 import cern.modesti.model.Point;
 import cern.modesti.model.Site;
 import cern.modesti.repository.request.SearchTextConverter;
-import cern.modesti.repository.request.schema.field.Field;
 import cern.modesti.repository.request.schema.field.OptionsField;
 import cern.modesti.repository.request.schema.field.TextField;
 import cern.modesti.repository.request.schema.field.TypeaheadField;

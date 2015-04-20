@@ -23,13 +23,7 @@ import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import cern.modesti.repository.request.schema.field.OptionsField;
-import cern.modesti.repository.request.schema.field.TextField;
-import cern.modesti.repository.request.schema.field.TypeaheadField;
-
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Justin Lewis Salmon
@@ -41,6 +35,11 @@ public class Schema {
   private String id;
 
   private String name;
+
+  @JsonProperty("extends")
+  private String parent;
+
+  private String domain;
 
   private List<Category> categories;
 
@@ -70,6 +69,34 @@ public class Schema {
    */
   public void setName(String name) {
     this.name = name;
+  }
+
+  /**
+   * @return the parent
+   */
+  public String getParent() {
+    return parent;
+  }
+
+  /**
+   * @param parent the parent to set
+   */
+  public void setParent(String parent) {
+    this.parent = parent;
+  }
+
+  /**
+   * @return the domain
+   */
+  public String getDomain() {
+    return domain;
+  }
+
+  /**
+   * @param domain the domain to set
+   */
+  public void setDomain(String domain) {
+    this.domain = domain;
   }
 
   /**

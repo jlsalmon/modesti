@@ -18,6 +18,7 @@
 package cern.modesti.repository.request.schema;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
@@ -26,4 +27,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(exported = false)
 public interface SchemaRepository extends MongoRepository<Schema, String> {
 
+  Schema findOneByName(@Param("name") String name);
 }
