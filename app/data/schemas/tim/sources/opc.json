@@ -1,0 +1,17 @@
+{
+  "name": "opc",
+  "domain": "tim",
+  "categories":
+[
+    {
+        "name": "OPC",
+        "fields": [
+            {
+                "id": "tagname",
+                "name": "Tagname",
+                "type": "text"
+            }
+        ]
+    }
+]
+}

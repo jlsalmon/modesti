@@ -1,0 +1,17 @@
+{
+  "name": "plc",
+  "domain": "tim",
+  "categories":
+[
+    {
+        "name": "PLC",
+        "fields": [
+            {
+                "id": "blockType",
+                "name": "Block Type",
+                "type": "text"
+            }
+        ]
+    }
+]
+}

@@ -1,10 +1,10 @@
 {
   "name": "tim",
+  "extends": "core",
   "categories":
 [
     {
         "name": "Alarm details",
-        "active": false,
         "fields": [
             {
                 "id": "autocall",
