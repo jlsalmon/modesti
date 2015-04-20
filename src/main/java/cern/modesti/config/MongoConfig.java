@@ -14,6 +14,7 @@ import cern.modesti.repository.request.RequestRepository;
 import cern.modesti.repository.request.schema.SchemaRepository;
 
 @Configuration
+
 @EnableMongoRepositories(basePackageClasses = { RequestRepository.class, SchemaRepository.class })
 public class MongoConfig //extends AbstractMongoConfiguration {
 //

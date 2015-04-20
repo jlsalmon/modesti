@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.repository.request.datasource;
+package cern.modesti.repository.request.domain;
 
 import javax.persistence.Id;
 
@@ -13,22 +13,13 @@ import javax.persistence.Id;
 public class Datasource {
 
   @Id
-  private String id;
-
   private String name;
-
-  /**
-   * @return the id
-   */
-  public String getId() {
-    return id;
+  
+  public Datasource() {
   }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(String id) {
-    this.id = id;
+  
+  public Datasource(String name) {
+    this.name = name;
   }
 
   /**
