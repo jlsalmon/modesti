@@ -8,3 +8,4 @@ spring-shell.log
 gradle
 gradlew
 gradlew.bat
+src/java/cern/modesti/config/properties/jdbc.properties
