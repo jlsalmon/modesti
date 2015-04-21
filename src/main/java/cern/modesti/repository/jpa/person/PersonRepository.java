@@ -38,6 +38,6 @@ public interface PersonRepository extends ReadOnlyRepository<Person, String> {
                + "FROM   persons_mv "
                + "WHERE  at_cern = 'Y' AND cern_class = 'STAF' "
                + "AND   (person_id  LIKE UPPER(:id || '%') "
-               + "OR     first_name || ' ' || last_name LIKE UPPER(:name || '%'))", nativeQuery = true)
+               + "OR     first_name || ' ' || last_name LIKE UPPER('%' || :name || '%'))", nativeQuery = true)
   public List<Person> findByIdOrName(@Param("id") String id, @Param("name") String name);
 }
