@@ -1,0 +1,158 @@
+{
+  "name": "core",
+  "categories":
+[
+    {
+        "name": "Basic details",
+        "active": true,
+        "fields": [
+            {
+                "id": "name",
+                "name": "Name",
+                "type": "text"
+            },
+            {
+                "id": "description",
+                "name": "Description",
+                "type": "text"
+            },
+            {
+                "id": "datatype",
+                "name": "Data Type",
+                "type": "select",
+                "options": "http://localhost:8080/datatypes",
+                "model": "name",
+                "returnPropertyName": "datatypes",
+                "placeholder": "Data Type"
+            },
+            {
+                "id": "subsystem",
+                "name": "System/Subsystem",
+                "type": "typeahead",
+                "url": "http://localhost:8080/subsystems/search/findByName",
+                "params": [
+                  "name"
+                ],
+                "model": "name",
+                "returnPropertyName": "subsystems",
+                "placeholder": "System/Subsystem"
+            },
+            {
+                "id": "gmao",
+                "name": "GMAO Code",
+                "type": "text",
+                "model": "name"
+            },
+            {
+                "id": "responsiblePerson",
+                "name": "Responsible Person",
+                "type": "typeahead",
+                "url": "http://localhost:8080/persons/search/findByIdOrName",
+                "params": [
+                  "id",
+                  "name"
+                ],
+                "model": "name",
+                "template": "<span> ({{match.model.id}})</span>",
+                "returnPropertyName": "persons",
+                "placeholder": "Start typing name or ID"
+            },
+            {
+                "id": "attribute",
+                "name": "Point Attribute",
+                "type": "text"
+            }
+        ]
+    },
+
+
+    {
+        "name": "Location",
+        "active": false,
+        "fields": [
+            {
+                "id": "site",
+                "name": "Site",
+                "type": "typeahead",
+                "url": "http://localhost:8080/sites/search/findByName",
+                "params": [
+                  "name"
+                ],
+                "model": "name",
+                "returnPropertyName": "sites",
+                "placeholder": "Site"
+            },
+            {
+                "id": "building_no",
+                "name": "Building No.",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Number"
+            },
+            {
+                "id": "building_name",
+                "name": "Building Name",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Name"
+            },
+            {
+                "id": "floor",
+                "name": "Floor",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Floor"
+            },
+            {
+                "id": "room",
+                "name": "Room",
+                "type": "typeahead",
+                "url": "data/rooms.json",
+                "placeholder": "Room"
+            },
+            {
+                "id": "zone",
+                "name": "Zone",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Zone"
+            },
+            {
+                "id": "detail",
+                "name": "Detail",
+                "type": "typeahead",
+                "url": "data/sites.json",
+                "placeholder": "Detail"
+            }
+        ]
+    },
+
+
+    {
+        "name": "Alarm details",
+        "active": false,
+        "fields": [
+            {
+                "id": "category",
+                "name": "Category",
+                "type": "typeahead",
+                "url": "http://localhost:8080/alarmCategories/search/findByName",
+                "params": [
+                  "name"
+                ],
+                "model": "name",
+                "returnPropertyName": "alarmCategories",
+                "placeholder": "Category"
+            },
+            {
+                "id": "priority",
+                "name": "Priority",
+                "type": "select",
+                "options": "http://localhost:8080/alarmPriorities",
+                "model": "priority",
+                "returnPropertyName": "alarmPriorities"
+            }
+        ]
+    }
+]
+}

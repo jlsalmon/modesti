@@ -1,6 +1,5 @@
 /bin/
 /build/
-data
 .rest-shell.log
 spring-shell.log
 .gradle
