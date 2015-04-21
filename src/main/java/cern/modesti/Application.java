@@ -1,7 +1,7 @@
 package cern.modesti;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.config.EnableEntityLinks;
 
@@ -10,12 +10,21 @@ import cern.modesti.config.JpaConfig;
 import cern.modesti.config.MongoConfig;
 import cern.modesti.config.RestConfig;
 
+/**
+ * TODO
+ *
+ * To run with test profile, pass -Dspring.profiles.active=test
+ * To run with prod profile, pass -Dspring.profiles.active=prod
+ *
+ * @author Justin Lewis Salmon
+ *
+ */
 @SpringBootApplication
 @EnableEntityLinks
 @Import( {DataSourceConfig.class, JpaConfig.class, MongoConfig.class, RestConfig.class} )
 public class Application {
 
   public static void main(String[] args) {
-    SpringApplication.run(Application.class, args);
+    new SpringApplicationBuilder(Application.class).properties("spring.config.name:modesti").build().run(args);
   }
 }
