@@ -15,43 +15,35 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request.schema.field;
+package cern.modesti.repository.mongo.request;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+import cern.modesti.model.Request;
 
 /**
  * @author Justin Lewis Salmon
  */
-public class OptionsField extends Field {
-
-  private String options;
-
-  private String returnPropertyName;
+@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
+public interface RequestRepository extends MongoRepository<Request, String> {
 
   /**
-   * @return the options
+   *
+   * @param requestId
+   * @return
    */
-  public String getOptions() {
-    return options;
-  }
+  Request findOneByRequestId(@Param("requestId") String requestId);
 
   /**
-   * @param options the options to set
+   *
+   * @param criteria
+   * @param page
+   * @return
    */
-  public void setOptions(String options) {
-    this.options = options;
-  }
-
-  /**
-   * @return the returnPropertyName
-   */
-  public String getReturnPropertyName() {
-    return returnPropertyName;
-  }
-
-  /**
-   * @param returnPropertyName the returnPropertyName to set
-   */
-  public void setReturnPropertyName(String returnPropertyName) {
-    this.returnPropertyName = returnPropertyName;
-  }
+  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
 }

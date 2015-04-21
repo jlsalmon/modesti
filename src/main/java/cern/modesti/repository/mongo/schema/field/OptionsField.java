@@ -15,56 +15,43 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request.util;
+package cern.modesti.repository.mongo.schema.field;
 
-import javax.persistence.Id;
-
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Justin Lewis Salmon
  */
-@Document(collection = "counters")
-public class Counter {
+public class OptionsField extends Field {
 
-  @Id
-  private String id;
+  private String options;
 
-  private Long sequence;
+  private String returnPropertyName;
 
   /**
-   *
+   * @return the options
    */
-  public Counter(String id, Long sequence) {
-    this.id = id;
-    this.sequence = sequence;
+  public String getOptions() {
+    return options;
   }
 
   /**
-   * @return the id
+   * @param options the options to set
    */
-  public String getId() {
-    return id;
+  public void setOptions(String options) {
+    this.options = options;
   }
 
   /**
-   * @param id the id to set
+   * @return the returnPropertyName
    */
-  public void setId(String id) {
-    this.id = id;
+  public String getReturnPropertyName() {
+    return returnPropertyName;
   }
 
   /**
-   * @return the sequence
+   * @param returnPropertyName the returnPropertyName to set
    */
-  public Long getSequence() {
-    return sequence;
-  }
-
-  /**
-   * @param sequence the sequence to set
-   */
-  public void setSequence(Long sequence) {
-    this.sequence = sequence;
+  public void setReturnPropertyName(String returnPropertyName) {
+    this.returnPropertyName = returnPropertyName;
   }
 }

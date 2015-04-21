@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request.schema.field;
+package cern.modesti.repository.mongo.schema.field;
 
 import java.util.ArrayList;
 import java.util.List;

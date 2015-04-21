@@ -15,25 +15,47 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request.schema;
+package cern.modesti.repository.mongo.schema;
 
 import java.util.List;
 
 import javax.persistence.Id;
 
-import cern.modesti.repository.request.schema.field.Field;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author Justin Lewis Salmon
  */
-public class Category {
+@Document
+public class Schema {
 
   @Id
+  private String id;
+
   private String name;
 
-  private Boolean active;
+  @JsonProperty("extends")
+  private String parent;
 
-  private List<Field> fields;
+  private String domain;
+
+  private List<Category> categories;
+
+  /**
+   * @return the id
+   */
+  public String getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
 
   /**
    * @return the name
@@ -50,67 +72,48 @@ public class Category {
   }
 
   /**
-   * @return the active
+   * @return the parent
    */
-  public Boolean getActive() {
-    return active;
+  public String getParent() {
+    return parent;
   }
 
   /**
-   * @param active the active to set
+   * @param parent the parent to set
    */
-  public void setActive(Boolean active) {
-    this.active = active;
+  public void setParent(String parent) {
+    this.parent = parent;
   }
 
   /**
-   * @return the fields
+   * @return the domain
    */
-  public List<Field> getFields() {
-    return fields;
+  public String getDomain() {
+    return domain;
   }
 
   /**
-   * @param fields the fields to set
+   * @param domain the domain to set
    */
-  public void setFields(List<Field> fields) {
-    this.fields = fields;
+  public void setDomain(String domain) {
+    this.domain = domain;
   }
 
   /**
-   * @param field the field to add
+   * @return the categories
    */
-  public void addField(Field field) {
-    fields.add(field);
+  public List<Category> getCategories() {
+    return categories;
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    return result;
+  /**
+   * @param categories the categories to set
+   */
+  public void setCategories(List<Category> categories) {
+    this.categories = categories;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null) {
-      return false;
-    }
-    if (!(obj instanceof Category)) {
-      return false;
-    }
-    Category other = (Category) obj;
-    if (name == null) {
-      if (other.name != null) {
-        return false;
-      }
-    } else if (!name.equals(other.name)) {
-      return false;
-    }
-    return true;
+  public void addCategory(Category category) {
+    categories.add(category);
   }
 }

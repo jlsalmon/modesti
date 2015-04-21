@@ -6,18 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.mongodb.repository.support.MongoRepositoryFactory;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-
-import cern.modesti.repository.request.RequestRepository;
-import cern.modesti.repository.request.schema.SchemaRepository;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 @Configuration
-@EnableMongoRepositories(basePackageClasses = { RequestRepository.class, SchemaRepository.class })
+//@EnableMongoRepositories(basePackageClasses = { RequestRepository.class, SchemaRepository.class })
 public class MongoConfig extends AbstractMongoConfiguration {
 
   @Autowired

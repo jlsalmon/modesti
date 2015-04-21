@@ -1,4 +1,4 @@
-package cern.modesti.repository.request.schema;
+package cern.modesti.repository.mongo.schema;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;

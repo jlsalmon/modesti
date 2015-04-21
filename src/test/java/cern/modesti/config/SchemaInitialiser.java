@@ -12,8 +12,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
-import cern.modesti.repository.request.schema.Schema;
-import cern.modesti.repository.request.schema.SchemaRepository;
+import cern.modesti.repository.mongo.schema.Schema;
+import cern.modesti.repository.mongo.schema.SchemaRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;

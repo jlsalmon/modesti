@@ -16,10 +16,10 @@ import cern.modesti.model.Person;
 import cern.modesti.model.Point;
 import cern.modesti.model.Site;
 import cern.modesti.model.SubSystem;
-import cern.modesti.repository.request.SearchTextConverter;
-import cern.modesti.repository.request.schema.field.OptionsField;
-import cern.modesti.repository.request.schema.field.TextField;
-import cern.modesti.repository.request.schema.field.TypeaheadField;
+import cern.modesti.repository.mongo.request.SearchTextConverter;
+import cern.modesti.repository.mongo.schema.field.OptionsField;
+import cern.modesti.repository.mongo.schema.field.TextField;
+import cern.modesti.repository.mongo.schema.field.TypeaheadField;
 
 @Configuration
 public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
