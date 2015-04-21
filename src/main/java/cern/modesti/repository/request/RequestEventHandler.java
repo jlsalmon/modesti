@@ -17,17 +17,12 @@
  ******************************************************************************/
 package cern.modesti.repository.request;
 
-import java.io.Serializable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
-import org.springframework.data.rest.webmvc.spi.BackendIdConverter;
 import org.springframework.stereotype.Component;
 
 import cern.modesti.model.Point;
@@ -35,7 +30,7 @@ import cern.modesti.model.Request;
 import cern.modesti.model.Request.RequestStatus;
 import cern.modesti.repository.request.schema.Schema;
 import cern.modesti.repository.request.schema.SchemaRepository;
-import cern.modesti.repository.request.util.CounterService;
+import cern.modesti.repository.request.util.CounterServiceImpl;
 
 /**
  * TODO
@@ -44,21 +39,15 @@ import cern.modesti.repository.request.util.CounterService;
  */
 @Component
 @RepositoryEventHandler(Request.class)
-public class RequestEventHandler implements BackendIdConverter {
+public class RequestEventHandler {
 
   Logger logger = LoggerFactory.getLogger(RequestEventHandler.class);
 
   @Autowired
-  private CounterService counterService;
-
-  @Autowired
-  private RequestRepository requestRepository;
+  private CounterServiceImpl counterService;
 
   @Autowired
   private SchemaRepository schemaRepository;
-
-  @Autowired
-  private MongoTemplate mongoTemplate;
 
   /**
    * TODO
@@ -74,7 +63,7 @@ public class RequestEventHandler implements BackendIdConverter {
     for (Point point : request.getPoints()) {
       if (point.getId() == null) {
         point.setId(counterService.getNextSequence("points"));
-        logger.trace("beforeCreate() generated point id: " + point.getId());
+        logger.debug("beforeCreate() generated point id: " + point.getId());
       }
     }
 
@@ -93,82 +82,8 @@ public class RequestEventHandler implements BackendIdConverter {
     for (Point point : request.getPoints()) {
       if (point.getId() == null) {
         point.setId(counterService.getNextSequence("points"));
-        logger.trace("beforeSave() generated point id: " + point.getId());
+        logger.debug("beforeSave() generated point id: " + point.getId());
       }
     }
-  }
-
-  /**
-   * TODO
-   *
-   * @param delimiter
-   * @return
-   */
-  @Override
-  public boolean supports(Class<?> delimiter) {
-    return true;
-  }
-
-  /**
-   * TODO
-   *
-   * @param id
-   * @param entityType
-   * @return
-   */
-  @Override
-  public Serializable fromRequestId(String id, Class<?> entityType) {
-
-    if (entityType.equals(Request.class)) {
-      logger.trace("fromRequestId() converting request id: " + id);
-
-      BasicQuery query = new BasicQuery("{ requestId : \"" + id + "\" }");
-      Request request = mongoTemplate.findOne(query, Request.class);
-
-      if (request != null) {
-        return request.getId();
-      }
-    } else if (entityType.equals(Schema.class)) {
-      logger.trace("fromRequestId() converting schema id: " + id);
-
-      BasicQuery query = new BasicQuery("{ name : \"" + id + "\" }");
-      Schema schema = mongoTemplate.findOne(query, Schema.class);
-
-      if (schema != null) {
-        return schema.getId();
-      }
-    }
-
-    return id;
-  }
-
-  /**
-   * TODO
-   *
-   * @param id
-   * @param entityType
-   * @return
-   */
-  @Override
-  public String toRequestId(Serializable id, Class<?> entityType) {
-
-    if (entityType.equals(Request.class)) {
-      logger.trace("toRequestId() converting request id : " + id);
-      Request request = requestRepository.findOne(id.toString());
-
-      if (request != null) {
-        return request.getRequestId().toString();
-      }
-
-    } else if (entityType.equals(Schema.class)) {
-      logger.trace("toRequestId() converting schema id : " + id);
-      Schema schema = schemaRepository.findOne(id.toString());
-
-      if (schema != null) {
-        return schema.getName();
-      }
-    }
-
-    return id.toString();
   }
 }
