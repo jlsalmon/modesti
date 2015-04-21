@@ -19,6 +19,7 @@ package cern.modesti.repository.jpa.person;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -30,14 +31,11 @@ import cern.modesti.repository.base.ReadOnlyRepository;
  */
 public interface PersonRepository extends ReadOnlyRepository<Person, String> {
 
-  @Override
-  @Query(value = "SELECT person_id, first_name, last_name FROM persons_mv WHERE at_cern = 'Y' AND cern_class = 'STAF'", nativeQuery = true)
-  public List<Person> findAll();
-
   @Query(value = "SELECT person_id as id, first_name || ' ' || last_name as name "
                + "FROM   persons_mv "
                + "WHERE  at_cern = 'Y' AND cern_class = 'STAF' "
                + "AND   (person_id  LIKE UPPER(:id || '%') "
                + "OR     first_name || ' ' || last_name LIKE UPPER('%' || :name || '%'))", nativeQuery = true)
+  @Cacheable("persons")
   public List<Person> findByIdOrName(@Param("id") String id, @Param("name") String name);
 }
