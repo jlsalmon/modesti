@@ -15,17 +15,56 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request.schema;
+package cern.modesti.repository.mongo.request.counter;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import javax.persistence.Id;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(exported = false)
-public interface SchemaRepository extends MongoRepository<Schema, String> {
+@Document(collection = "counters")
+public class Counter {
 
-  Schema findOneByName(@Param("name") String name);
+  @Id
+  private String id;
+
+  private Long sequence;
+
+  /**
+   *
+   */
+  public Counter(String id, Long sequence) {
+    this.id = id;
+    this.sequence = sequence;
+  }
+
+  /**
+   * @return the id
+   */
+  public String getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  /**
+   * @return the sequence
+   */
+  public Long getSequence() {
+    return sequence;
+  }
+
+  /**
+   * @param sequence the sequence to set
+   */
+  public void setSequence(Long sequence) {
+    this.sequence = sequence;
+  }
 }

@@ -28,7 +28,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import cern.modesti.repository.request.schema.Schema;
+import cern.modesti.repository.mongo.schema.Schema;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

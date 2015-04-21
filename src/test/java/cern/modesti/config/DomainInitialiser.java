@@ -13,8 +13,8 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
-import cern.modesti.repository.request.domain.Domain;
-import cern.modesti.repository.request.domain.DomainRepository;
+import cern.modesti.repository.mongo.domain.Domain;
+import cern.modesti.repository.mongo.domain.DomainRepository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

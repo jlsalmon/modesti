@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.repository.request;
+package cern.modesti.repository.mongo.request;
 
 import java.io.Serializable;
 

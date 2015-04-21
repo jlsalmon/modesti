@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cern.modesti.repository.request.domain;
+package cern.modesti.repository.mongo.domain;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

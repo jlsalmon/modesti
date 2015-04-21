@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.repository.request.util;
+package cern.modesti.repository.mongo.request.counter;
 
 /**
  * @author Justin Lewis Salmon

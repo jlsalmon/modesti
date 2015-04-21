@@ -15,34 +15,17 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request.util;
+package cern.modesti.repository.mongo.schema;
 
-import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
-import static org.springframework.data.mongodb.core.query.Query.query;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Service;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * @author Justin Lewis Salmon
  */
-@Service
-public class CounterServiceImpl implements CounterService {
+@RepositoryRestResource(exported = false)
+public interface SchemaRepository extends MongoRepository<Schema, String> {
 
-  @Autowired
-  private MongoOperations mongo;
-
-  /**
-   *
-   * @param collectionName
-   * @return
-   */
-  @Override
-  public Long getNextSequence(String collectionName) {
-    Counter counter = mongo.findAndModify(query(where("_id").is(collectionName)), new Update().inc("sequence", 1), options().returnNew(true), Counter.class);
-    return counter.getSequence();
-  }
+  Schema findOneByName(@Param("name") String name);
 }

@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request;
+package cern.modesti.repository.mongo.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +28,9 @@ import org.springframework.stereotype.Component;
 import cern.modesti.model.Point;
 import cern.modesti.model.Request;
 import cern.modesti.model.Request.RequestStatus;
-import cern.modesti.repository.request.schema.Schema;
-import cern.modesti.repository.request.schema.SchemaRepository;
-import cern.modesti.repository.request.util.CounterServiceImpl;
+import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
+import cern.modesti.repository.mongo.schema.Schema;
+import cern.modesti.repository.mongo.schema.SchemaRepository;
 
 /**
  * TODO

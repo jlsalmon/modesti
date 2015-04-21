@@ -1,4 +1,4 @@
-package cern.modesti.repository.request;
+package cern.modesti.repository.mongo.request;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;

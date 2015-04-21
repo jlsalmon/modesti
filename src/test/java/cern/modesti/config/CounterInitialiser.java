@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.stereotype.Service;
 
-import cern.modesti.repository.request.util.Counter;
+import cern.modesti.repository.mongo.request.counter.Counter;
 
 /**
  * @author Justin Lewis Salmon

@@ -15,35 +15,34 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.request;
+package cern.modesti.repository.mongo.request.counter;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
 
-import cern.modesti.model.Request;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RepositoryRestResource(collectionResourceRel = "requests", path = "requests")
-public interface RequestRepository extends MongoRepository<Request, String> {
+@Service
+public class CounterServiceImpl implements CounterService {
+
+  @Autowired
+  private MongoOperations mongo;
 
   /**
    *
-   * @param requestId
+   * @param collectionName
    * @return
    */
-  Request findOneByRequestId(@Param("requestId") String requestId);
-
-  /**
-   *
-   * @param criteria
-   * @param page
-   * @return
-   */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
+  @Override
+  public Long getNextSequence(String collectionName) {
+    Counter counter = mongo.findAndModify(query(where("_id").is(collectionName)), new Update().inc("sequence", 1), options().returnNew(true), Counter.class);
+    return counter.getSequence();
+  }
 }
