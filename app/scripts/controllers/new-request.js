@@ -46,6 +46,10 @@ function NewRequestController($scope, $http, $location, $filter, RequestService,
         name : value
       }
     }).then(function(response) {
+      if (!response.data.hasOwnProperty('_embedded')) {
+        return [];
+      }
+      
       return response.data._embedded.subsystems.map(function(item) {
         return item.name;
       });

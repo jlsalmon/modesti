@@ -3,7 +3,8 @@
                                               || (form.$submitted && form.domain.$invalid) }">
   <label for="domain" class="col-sm-2 control-label">Domain</label>
   <div class="col-sm-10">
-    <select class="form-control" ng-model="ctrl.request.domain" ng-options="domain.name as domain.name for domain in ctrl.domains" 
+    <select class="form-control" ng-model="ctrl.request.domain" 
+            ng-options="domain.name as domain.name for domain in ctrl.domains" 
             ng-change="ctrl.updateDatasources()" name="domain" required />
     <span class="help-block">Select the target domain of the request.</span>
   </div>
@@ -14,7 +15,8 @@
                         || (form.$submitted && form.datasource.$invalid) }">
   <label for="datasource" class="col-sm-2 control-label">Data source</label>
   <div class="col-sm-10">
-    <select class="form-control" ng-model="ctrl.request.datasource" ng-options="datasource.name as datasource.name for datasource in ctrl.datasources" 
+    <select class="form-control" ng-model="ctrl.request.datasource" 
+            ng-options="datasource.name as datasource.name for datasource in ctrl.datasources" 
             name="datasource" required />
 
     <span class="help-block">Type the data source from which the points in your request will come.</span>
@@ -28,8 +30,10 @@
   
   <!-- TODO: use input-field directive to replace this -->
   
-    <input type="text" ng-model="ctrl.request.system" placeholder="System/Subsystem" typeahead="system for system in ctrl.getSystems($viewValue)"
-      typeahead-loading="loadingSystems"  class="form-control" name="system" required><!-- typeahead-editable="false" -->
+    <input type="text" ng-model="ctrl.request.system" placeholder="System/Subsystem" 
+      typeahead="system for system in ctrl.getSystems($viewValue)"
+      typeahead-loading="loadingSystems" 
+      typeahead-editable="false" class="form-control" name="system" required>
     <i ng-show="loadingSystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
     <span class="help-block">Type the system/subsystem to which this request relates.</span>
   </div>
