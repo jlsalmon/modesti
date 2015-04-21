@@ -1,7 +1,6 @@
 /bin/
 /build/
 data
-jdbc.properties
 .rest-shell.log
 spring-shell.log
 .gradle
@@ -12,4 +11,7 @@ gradlew.bat
 .settings
 .classpath
 .project
-src/java/cern/modesti/config/properties/jdbc.properties
+
+# Exclude properties files
+modesti-test.properties
+modesti-prod.properties

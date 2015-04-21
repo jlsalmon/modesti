@@ -1,14 +1,15 @@
 package cern.modesti.config;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 import cern.modesti.repository.request.schema.Schema;
@@ -19,21 +20,19 @@ import com.google.common.io.ByteStreams;
 
 /**
  * This class will delete all schemas stored in the schema repository and re-add
- * them.
- * 
+ * them from the data/schemas classpath directory.
+ *
  * @author Justin Lewis Salmon
  *
  */
 @Service
-// @Profile("dev")
+@Profile("test")
 public class SchemaInitialiser {
   private static final Logger LOG = LoggerFactory.getLogger(SchemaInitialiser.class);
 
-  private static final String BASE_PATH = "data/schemas/";
+  private static final String SCHEMA_RESOURCE_PATTERN = "classpath:/data/schemas/**/*.json";
 
   private ObjectMapper mapper;
-
-  private String[] schemas = { "core.json", "tim/tim.json", "tim/sources/plc.json" };
 
   @Autowired
   public SchemaInitialiser(SchemaRepository repo) throws IOException {
@@ -42,20 +41,23 @@ public class SchemaInitialiser {
 
     repo.deleteAll();
 
-    for (String schema : schemas) {
-      repo.insert(loadSchemaFromFile(BASE_PATH + schema));
+    ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
+    Resource[] schemas = resolver.getResources(SCHEMA_RESOURCE_PATTERN);
+
+    for (Resource schema : schemas) {
+      repo.insert(loadSchemaFromResource(schema));
     }
   }
 
   /**
-   * 
-   * @param path
+   *
+   * @param resource
    * @return
    * @throws IOException
    */
-  public Schema loadSchemaFromFile(String path) throws IOException {
-    LOG.info("Loading schema from classpath resource: " + path);
-    byte[] bytes = ByteStreams.toByteArray(Thread.currentThread().getContextClassLoader().getResourceAsStream(path));
+  public Schema loadSchemaFromResource(Resource resource) throws IOException {
+    LOG.info("Loading schema from classpath resource: " + resource);
+    byte[] bytes = ByteStreams.toByteArray(resource.getInputStream());
     return mapper.readValue(new String(bytes, StandardCharsets.UTF_8), Schema.class);
   }
 }
