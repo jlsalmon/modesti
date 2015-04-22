@@ -52,6 +52,8 @@ public class Field {
 
   private String placeholder;
 
+  private Boolean required;
+
   /**
    * @return the id
    */
@@ -120,6 +122,20 @@ public class Field {
    */
   public void setPlaceholder(String placeholder) {
     this.placeholder = placeholder;
+  }
+
+  /**
+   * @return the required
+   */
+  public Boolean getRequired() {
+    return required;
+  }
+
+  /**
+   * @param required the required to set
+   */
+  public void setRequired(Boolean required) {
+    this.required = required;
   }
 
   @Override
