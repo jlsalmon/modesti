@@ -57,14 +57,16 @@ function InputFieldController($compile, $http, $filter) {
    * 
    */
   function getTextInput(schema, model) {
+    var html = '<input type="text" name="{{schema.id}}" class="form-control" ';
     if (schema.model) {
       // Field is an object, so we should bind the model property specified in
       // the schema
-      return '<input type="text" ng-model="model[schema.model]" class="form-control" />'
+      html += 'ng-model="model[schema.model]" ';
     } else {
       // Field is a simple string, so we should just bind the model directly
-      return '<input type="text" ng-model="model" class="form-control" />'
+      html += 'ng-model="model" '
     }
+    return html += (schema.required ? 'required' : '') + ' />'
   }
   
   /**
@@ -72,10 +74,11 @@ function InputFieldController($compile, $http, $filter) {
    */
   function getSelectInput(schema, model) {
     self.options = [];
+    var html = '<select ng-model="model[schema.model]" name="{{schema.id}}" class="form-control" ';
 
     if( typeof schema.options === 'string' ) {
       // Options given as a URL
-      var html = '<select ng-model="model[schema.model]" ng-options="option for option in ctrl.options track by option" class="form-control" />';
+      html += 'ng-options="option for option in ctrl.options track by option" ';
 
       // TODO refactor this into a service
       $http.get(schema.options).then(function(response) {
@@ -84,17 +87,15 @@ function InputFieldController($compile, $http, $filter) {
         response.data._embedded[schema.returnPropertyName].map(function(item) {
           self.options.push(item[schema.model]);
         });
-        
-        
       });
     }
     
     else {
       // Options given as inline array
-      var html = '<select ng-model="model[schema.model]" ng-options="option for option in schema.options track by option" class="form-control" />';
+      html += 'ng-options="option for option in schema.options track by option" ';
     }
 
-    return html;
+    return html += (schema.required ? 'required' : '') + ' />'
   }
   
   /**
@@ -103,11 +104,13 @@ function InputFieldController($compile, $http, $filter) {
   function getTypeaheadInput(schema, model) {
     var template = '\
       <div class="form-group has-feedback"> \
-        <input type="text" class="form-control" ng-model="model" placeholder="' + schema.placeholder + '"  \
+        <input type="text" class="form-control" name="{{schema.id}}" ng-model="model" \
+               placeholder="' + schema.placeholder + '"  \
                typeahead="item as item.' + schema.model + ' for item in ctrl.autocomplete(schema, $viewValue)" \
                typeahead-editable="false" \
                typeahead-loading="loading" \
-               typeahead-template-url="item-template-' + schema.id + '.html"> \
+               typeahead-template-url="item-template-' + schema.id + '.html" \
+               ' + (schema.required ? 'required' : '') + '> \
       </div>' // <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
                
     var itemTemplate = '\
