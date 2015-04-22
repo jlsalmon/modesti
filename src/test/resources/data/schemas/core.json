@@ -9,12 +9,14 @@
             {
                 "id": "name",
                 "name": "Name",
-                "type": "text"
+                "type": "text",
+                "required": true
             },
             {
                 "id": "description",
                 "name": "Description",
-                "type": "text"
+                "type": "text",
+                "required": true
             },
             {
                 "id": "datatype",
@@ -23,7 +25,8 @@
                 "options": "http://localhost:8080/datatypes",
                 "model": "name",
                 "returnPropertyName": "datatypes",
-                "placeholder": "Data Type"
+                "placeholder": "Data Type",
+                "required": true
             },
             {
                 "id": "subsystem",
@@ -35,13 +38,15 @@
                 ],
                 "model": "name",
                 "returnPropertyName": "subsystems",
-                "placeholder": "System/Subsystem"
+                "placeholder": "System/Subsystem",
+                "required": true
             },
             {
                 "id": "gmao",
                 "name": "GMAO Code",
                 "type": "text",
-                "model": "name"
+                "model": "name",
+                "required": true
             },
             {
                 "id": "responsiblePerson",
@@ -55,7 +60,8 @@
                 "model": "name",
                 "template": "<span> ({{match.model.id}})</span>",
                 "returnPropertyName": "persons",
-                "placeholder": "Start typing name or ID"
+                "placeholder": "Start typing name or ID",
+                "required": true
             },
             {
                 "id": "attribute",
