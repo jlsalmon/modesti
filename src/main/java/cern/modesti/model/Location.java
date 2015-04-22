@@ -1,7 +1,7 @@
 /**
- * 
+ *
  */
-package cern.modesti.repository.jpa.location;
+package cern.modesti.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,17 +14,15 @@ import javax.persistence.Id;
 public class Location {
 
   @Id
-  private String id;
-  
   private String location;
-  
+
   /**
    * @return the location
    */
   public String getLocation() {
     return location;
   }
-  
+
   /**
    * @param location the location to set
    */
