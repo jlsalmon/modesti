@@ -83,46 +83,33 @@
                 "placeholder": "Site"
             },
             {
-                "id": "building_no",
-                "name": "Building No.",
+                "id": "location",
+                "name": "Location",
                 "type": "typeahead",
-                "url": "data/sites.json",
-                "placeholder": "Number"
-            },
-            {
-                "id": "building_name",
-                "name": "Building Name",
-                "type": "typeahead",
-                "url": "data/sites.json",
-                "placeholder": "Name"
-            },
-            {
-                "id": "floor",
-                "name": "Floor",
-                "type": "typeahead",
-                "url": "data/sites.json",
-                "placeholder": "Floor"
-            },
-            {
-                "id": "room",
-                "name": "Room",
-                "type": "typeahead",
-                "url": "data/rooms.json",
-                "placeholder": "Room"
+                "url": "http://localhost:8080/locations/search/find",
+                "params": [
+                  "q"
+                ],
+                "model": "location",
+                "returnPropertyName": "locations",
+                "placeholder": "Start typing a building number..."
             },
             {
                 "id": "zone",
                 "name": "Zone",
                 "type": "typeahead",
-                "url": "data/sites.json",
+                "url": "http://localhost:8080/zones/search/findByName",
+                "params": [
+                  "name"
+                ],
+                "model": "name",
+                "returnPropertyName": "zones",
                 "placeholder": "Zone"
             },
             {
                 "id": "detail",
                 "name": "Detail",
-                "type": "typeahead",
-                "url": "data/sites.json",
-                "placeholder": "Detail"
+                "type": "text"
             }
         ]
     },

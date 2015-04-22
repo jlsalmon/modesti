@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.jpa.location;
+package cern.modesti.repository.jpa.location.site;
 
 import java.util.List;
 
