@@ -1,8 +1,9 @@
 <div class="nav-tabs">
 
   <!-- Create a new tab for each category -->
-  <tabset> 
-    <tab ng-repeat="category in ctrl.schema.categories" heading="{{category.name}}" select="ctrl.activateCategory(category)"></tab>
+  <tabset class="category-headings"> 
+    <tab ng-repeat="category in ctrl.schema.categories" 
+         heading="{{category.name}}" select="ctrl.activateCategory(category)" class="category-heading"></tab>
   </tabset>
 
   <!-- This is the actual point input table itself -->
