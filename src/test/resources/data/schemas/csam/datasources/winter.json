@@ -1,0 +1,22 @@
+{
+  "name": "winter",
+  "domain": "csam",
+  "categories":
+[
+    {
+        "name": "WINTER",
+        "fields": [
+            {
+                "id": "status",
+                "name": "Status",
+                "type": "select",
+                "options": "http://localhost:8080/winterStatuses",
+                "model": "status",
+                "returnPropertyName": "winterStatuses",
+                "placeholder": "Status",
+                "required": true
+            }
+        ]
+    }
+]
+}
