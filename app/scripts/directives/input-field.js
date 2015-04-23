@@ -110,6 +110,7 @@ function InputFieldController($compile, $http, $filter) {
                typeahead-editable="false" \
                typeahead-loading="loading" \
                typeahead-template-url="item-template-' + schema.id + '.html" \
+               typeahead-min-length="{{schema.minLength}}" \
                ' + (schema.required ? 'required' : '') + '> \
       </div>' // <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
                
