@@ -10,6 +10,11 @@
                 "id": "blockType",
                 "name": "Block Type",
                 "type": "text"
+            },
+            {
+                "id": "wordId",
+                "name": "Word ID",
+                "type": "text"
             }
         ]
     }

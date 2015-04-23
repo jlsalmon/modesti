@@ -57,6 +57,7 @@
                   "id",
                   "name"
                 ],
+                "minLength": 2,
                 "model": "name",
                 "template": "<span> ({{match.model.id}})</span>",
                 "returnPropertyName": "persons",
@@ -96,6 +97,7 @@
                 "params": [
                   "q"
                 ],
+                "minLength": 2,
                 "model": "location",
                 "returnPropertyName": "locations",
                 "placeholder": "Start typing a building number..."
