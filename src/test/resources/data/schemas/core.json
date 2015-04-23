@@ -45,7 +45,6 @@
                 "id": "gmao",
                 "name": "GMAO Code",
                 "type": "text",
-                "model": "name",
                 "required": true
             },
             {
