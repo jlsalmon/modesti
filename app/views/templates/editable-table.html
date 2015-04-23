@@ -50,7 +50,7 @@
           <!-- Input field for each field in the currently active category -->
           <td class="input-field" ng-repeat="field in ctrl.getActiveFields()" sortable="field.id">
             <!-- Custom directive to generate an input field based on the field schema -->
-            <span input-field model="point[field.id]" schema="field"></span>
+            <span input-field model="point.properties[field.id]" schema="field"></span>
           </td>
   
           <!-- Checkbox for each point -->
