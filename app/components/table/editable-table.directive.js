@@ -9,7 +9,7 @@ angular.module('modesti').directive('editableTable', editableTable);
 
 function editableTable() {
   var directive = {
-    templateUrl : 'views/templates/editable-table.html',
+    templateUrl : 'components/table/editable-table.html',
     restrict : 'A',
     controller : 'EditableTableController as ctrl',
     scope: {

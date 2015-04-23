@@ -28,17 +28,17 @@ app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
   .state('new', {
     url: '/new',
-    templateUrl: 'views/new-request.html',
+    templateUrl: 'components/request/new-request.html',
     controller: 'NewRequestController as ctrl'
   })
   .state('requests', {
     url: '/requests',
-    templateUrl: 'views/user-requests.html',
+    templateUrl: 'components/request/user-requests.html',
     controller: 'UserRequestsController as ctrl'
   })
   .state('request', {
     url: '/requests/:id',
-    templateUrl: 'views/request.html',
+    templateUrl: 'components/request/request.html',
     controller: 'RequestController as ctrl',
     resolve: {
       
@@ -71,17 +71,17 @@ app.config(function($stateProvider, $urlRouterProvider) {
   })
   .state('about', {
     url: '/about',
-    templateUrl: 'views/about.html',
+    templateUrl: 'components/about/about.html',
     controller: 'AboutCtrl'
   })
   .state('search', {
     url: '/search/:q',
-    templateUrl: 'views/search.html',
+    templateUrl: 'components/search/search.html',
     controller: 'SearchController as ctrl'
   })
   .state('404', {
     url: '/404',
-    templateUrl: 'views/errors/404.html',
+    templateUrl: 'components/errors/404.html',
     //controller: 'PageNotFoundController'
   });
 });

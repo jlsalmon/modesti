@@ -5,3 +5,4 @@ dist
 bower_components
 .rest-shell.log
 spring-shell.log
+.DS_Store

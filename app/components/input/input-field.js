@@ -1,29 +1,10 @@
 'use strict';
 
 /**
- * @ngdoc directive
- * @name modesti.directive:inputField
- * @description
- * # inputField
+ * @ngdoc function
+ * @name modesti.controller:InputFieldController
+ * @description # InputFieldController Controller of the modesti
  */
-angular.module('modesti').directive('inputField', inputField);
-
-function inputField() {
-  return {
-    restrict : 'A',
-    controller : 'InputFieldController as ctrl',
-    scope : {
-      schema : '=schema',
-      model  : '=model'
-    },
-
-    link : function(scope, element, attrs, controller) {
-      controller.init(scope, element);
-    }
-  };
-}
-
-// TODO move this controller to a separate file
 angular.module('modesti').controller('InputFieldController', InputFieldController);
     
 function InputFieldController($compile, $http, $filter) {
@@ -31,6 +12,9 @@ function InputFieldController($compile, $http, $filter) {
 
   self.autocomplete = autocomplete;
 
+  /**
+   * 
+   */
   self.init = function(scope, element) {
     element.html(getInput(scope.schema, scope.model)).show();
     $compile(element.contents())(scope);
