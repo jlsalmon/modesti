@@ -1,0 +1,22 @@
+{
+  "name": "securifire",
+  "domain": "csam",
+  "categories":
+[
+    {
+        "name": "SECURIFIRE",
+        "fields": [
+            {
+                "id": "type",
+                "name": "Type",
+                "type": "select",
+                "options": "http://localhost:8080/securifireTypes",
+                "model": "type",
+                "returnPropertyName": "securifireTypes",
+                "placeholder": "Type",
+                "required": true
+            }
+        ]
+    }
+]
+}

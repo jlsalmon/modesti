@@ -60,6 +60,11 @@ public class RequestEventHandler {
     request.setRequestId(counterService.getNextSequence("requests").toString());
     logger.trace("beforeCreate() generated request id: " + request.getRequestId());
 
+    if (request.getPoints().isEmpty()) {
+      // TODO add a default, pre-filled point to a new request
+
+    }
+
     for (Point point : request.getPoints()) {
       if (point.getId() == null) {
         point.setId(counterService.getNextSequence("points"));

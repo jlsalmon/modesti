@@ -12,7 +12,8 @@
     "name": "CSAM",
     "datasources":
     [
-      "WINTER"
+      "WINTER",
+      "SECURIFIRE"
     ]
   }
 ]

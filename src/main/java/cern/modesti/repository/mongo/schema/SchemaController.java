@@ -4,6 +4,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/schemas")
 @ExposesResourceFor(Schema.class)
 public class SchemaController {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SchemaController.class);
 
   @Autowired
   private SchemaRepository schemaRepository;
@@ -60,7 +64,7 @@ public class SchemaController {
   }
 
   @ExceptionHandler(IllegalStateException.class)
-  void handleException() {
-    System.out.println("caught exception");
+  void handleException(IllegalStateException e) {
+    LOG.error("Caught exception: ", e);
   }
 }
