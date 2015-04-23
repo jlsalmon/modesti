@@ -29,6 +29,8 @@ public class TypeaheadField extends Field {
 
   private List<String> params = new ArrayList<String>();
 
+  private Integer minLength;
+
   private String returnPropertyName;
 
   private String template;
@@ -59,6 +61,20 @@ public class TypeaheadField extends Field {
    */
   public void setParams(List<String> params) {
     this.params = params;
+  }
+
+  /**
+   * @return the minLength
+   */
+  public Integer getMinLength() {
+    return minLength;
+  }
+
+  /**
+   * @param minLength the minLength to set
+   */
+  public void setMinLength(Integer minLength) {
+    this.minLength = minLength;
   }
 
   /**
