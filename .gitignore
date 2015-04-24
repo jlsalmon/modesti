@@ -7,3 +7,6 @@ bower_components
 spring-shell.log
 .DS_Store
 /build
+.project
+.settings
+.tern-project
