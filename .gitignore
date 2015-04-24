@@ -3,14 +3,11 @@
 /data/
 .rest-shell.log
 spring-shell.log
-.gradle
-gradle
-gradlew
-gradlew.bat
 .springBeans
 .settings
 .classpath
 .project
+.gradle
  
 # Exclude properties files
 modesti-test.properties
