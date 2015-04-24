@@ -24,6 +24,7 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -47,29 +48,29 @@ public class Request {
   /**
    * Human-readable id
    */
-  // @TextIndexed(weight = 3)
+  @TextIndexed(weight = 3)
   private String requestId;
 
-  // @TextIndexed
+  @TextIndexed
   private String status;
 
-  // @TextIndexed
+  @TextIndexed
   @NotNull(message = "Request type is compulsory")
   private String type;
 
-  // @TextIndexed(weight = 2)
+  @TextIndexed(weight = 2)
   @NotNull(message = "Description is compulsory")
   private String description;
 
-  // @TextIndexed
+  @TextIndexed
   @NotNull(message = "Domain is compulsory")
   private String domain;
 
-  // @TextIndexed
+  @TextIndexed
   @NotNull(message = "Data source is compulsory")
   private String datasource;
 
-  // @TextIndexed
+  @TextIndexed
   @Valid
   private List<Point> points = new ArrayList<>();
 
