@@ -17,19 +17,23 @@
  ******************************************************************************/
 package cern.modesti.repository.jpa;
 
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
 
 /**
  * @author Justin Lewis Salmon
  */
 //@RepositoryRestResource(collectionResourceRel="validate", path="validate")
-//public interface UserRepository extends CrudRepository<User, String> {
-//
-//  // Explicitly mapped to named stored procedure {@code User.plus1} in the {@link EntityManager}.
-//  // By default, we would've try to find a procedure declaration named User.plus1BackedByOtherNamedStoredProcedure
-//  @Procedure(name = "User.plus1")
-//  Integer plus1BackedByOtherNamedStoredProcedure(@Param("arg") Integer arg);
-//
-//  // Directly map the method to the stored procedure in the database (to avoid the annotation madness on your domain classes).
-//  //@Procedure
-//  //Integer plus1inout(@Param("arg") Integer arg);
-//}
+public interface UserRepository extends CrudRepository<User, String> {
+
+  // Explicitly mapped to named stored procedure {@code User.plus1} in the {@link EntityManager}.
+  // By default, we would've try to find a procedure declaration named User.plus1BackedByOtherNamedStoredProcedure
+  @Procedure(name = "User.plus1")
+  Integer plus1BackedByOtherNamedStoredProcedure(@Param("arg") Integer arg);
+
+  // Directly map the method to the stored procedure in the database (to avoid the annotation madness on your domain classes).
+  //@Procedure
+  //Integer plus1inout(@Param("arg") Integer arg);
+}
