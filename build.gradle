@@ -51,3 +51,7 @@ dependencies {
     testCompile("org.springframework:spring-test")
     testCompile("org.mockito:mockito-core")
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
