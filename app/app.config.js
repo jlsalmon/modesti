@@ -5,7 +5,7 @@
  * @name modesti.config:configure
  * 
  * @description
- * 
+ * Configures the various parts of the application.
  */
 angular.module('modesti').config(configure);
 
