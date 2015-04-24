@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:SidebarController
- * @description # SidebarController Controller of the modesti
+ * @name modesti.controller:LayoutController
+ * @description # LayoutController Controller of the modesti
  */
-angular.module('modesti').controller('SidebarController', SidebarController);
+angular.module('modesti').controller('LayoutController', LayoutController);
     
-function SidebarController($location) {
+function LayoutController($location) {
   var self = this;
   
   self.isActivePage = isActivePage;

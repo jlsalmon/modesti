@@ -15,7 +15,7 @@ app.service('ValidationService', function($q, $rootScope, Restangular) {
       $rootScope.validating = "started";
       var q = $q.defer();
       
-      Restangular.one('validate/search/plus1BackedByOtherNamedStoredProcedure').get({arg: "2"}).then(function(result) {
+      Restangular.one('requests/' + request.requestId + '/validate').get().then(function(result) {
         $rootScope.validating = "success";
         q.resolve(result.data);
       },

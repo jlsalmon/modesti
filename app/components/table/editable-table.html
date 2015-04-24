@@ -13,10 +13,10 @@
         <th>#</th>
 
         <!-- Column header for each field in the currently active category -->
-        <th ng-repeat="field in ctrl.getActiveFields()" class="text-left sortable"
-            ng-class="{'sort-asc': ctrl.tableParams.isSortBy(field.id, 'asc'),
-                      'sort-desc': ctrl.tableParams.isSortBy(field.id, 'desc')}"
-            ng-click="ctrl.tableParams.sorting(field.id, ctrl.tableParams.isSortBy(field.id, 'asc') ? 'desc' : 'asc')">
+        <th ng-repeat="field in ctrl.activeFields" class="text-left sortable"
+            ng-class="{'sort-asc': ctrl.tableParams.isSortBy('properties.' + field.id, 'asc'),
+                      'sort-desc': ctrl.tableParams.isSortBy('properties.' + field.id, 'desc')}"
+            ng-click="ctrl.tableParams.sorting('properties.' + field.id, ctrl.tableParams.isSortBy('properties.' + field.id, 'asc') ? 'desc' : 'asc')">
             <div class="sort-indicator">{{field.name}}</div>
         </th>
 
@@ -29,7 +29,7 @@
       <!-- Special table row containing filter boxes -->
       <tr ng-show="show_filter">
         <th></th>
-        <th ng-repeat="field in ctrl.getActiveFields()" class="text-center sortable">
+        <th ng-repeat="field in ctrl.activeFields" class="text-center sortable">
           <input type="text" class="form-control" ng-model="ctrl.searchText[field.id]" ng-model-options="{debounce: 250}" />
         </th>
         <th></th>
@@ -48,7 +48,7 @@
           </td>
   
           <!-- Input field for each field in the currently active category -->
-          <td class="input-field" ng-repeat="field in ctrl.getActiveFields()" sortable="field.id">
+          <td class="input-field" ng-repeat="field in ctrl.activeFields" >
             <!-- Custom directive to generate an input field based on the field schema -->
             <span input-field model="point.properties[field.id]" schema="field"></span>
           </td>
@@ -112,7 +112,7 @@
         
           <!-- Custom pagination -->
           <div class="ng-cloak ng-table-pager pull-right" ng-if="params.data.length">
-            <ul class="pagination ng-table-pagination pull-right">
+            <ul class="pagination ng-table-pagination pull-right" ng-hide="params.settings().$scope.pages == 0">
               <li ng-class="{'disabled': !page.active && !page.current, 'active': page.current}" ng-repeat="page in pages" ng-switch="page.type">
                 <a ng-switch-when="prev"  ng-click="params.page(page.number)" href="">&laquo;</a>
                 <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>

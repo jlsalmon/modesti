@@ -37,15 +37,43 @@
         </div>
         <div class="box-body"> -->
 
-          <div ng-repeat="request in ctrl.requests">
-            <p>
-              {{request.description}} : {{request._links.self.href}}
-              <button ng-click="ctrl.deleteRequest(request)">delete</button>
-              <button ng-click="ctrl.editRequest(request)">edit</button>
-            </p>
-          </div>
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Domain</th>
+            <th>Datasource</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
 
-<!--         </div>
+        <tbody>
+          <tr ng-repeat="request in ctrl.requests">
+            <td>{{request.requestId}}</td>
+            <td>{{request.description}}</td>
+            <td>{{request.type}}</td>
+            <td>{{request.domain}}</td>
+            <td>{{request.datasource}}</td>
+            <td>{{request.status}}</td>
+            <td>
+              <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
+                <i class="fa fa-fw fa-edit"></i>
+                Edit
+              </button>
+              <button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
+
+      <!--         </div>
         /.box-body
         <div class="box-footer"></div>
         /.box-footer

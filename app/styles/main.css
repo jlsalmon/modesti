@@ -27,6 +27,21 @@
   background: rgba(255, 255, 255, 0.8);
 }
 
+.skin-blue .navbar-form {
+  padding: 0px;
+}
+
+.skin-blue .navbar-form.sidebar-form {
+  margin: 6px 0px;
+  margin-right: 10px;
+  border-radius: 3px;
+}
+
+.skin-blue .navbar-form button#search-btn {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
 .skin-blue .navbar .sidebar-toggle:hover .icon-bar {
   background: #f6f6f6 !important;
 }
@@ -412,6 +427,10 @@ td .form-group {
 .pagination {
   margin: 0;
   padding-left: 20px;
+}
+
+.pagination-hidden {
+  padding-left: 0px;
 }
 
 .saving-state {

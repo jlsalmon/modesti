@@ -14,7 +14,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
   }
 
   function orderData(data, params) {
-    return params.sorting() ? $filter('orderBy')(data, params.orderBy()) : filteredData;
+    return params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
   }
 
   function transformData(data, filter, params) {

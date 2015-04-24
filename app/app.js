@@ -26,15 +26,15 @@ var app = angular
 app.config(function($stateProvider, $urlRouterProvider) {
   // Configure routes
   $stateProvider
-  .state('new', {
-    url: '/new',
-    templateUrl: 'components/request/new-request.html',
-    controller: 'NewRequestController as ctrl'
-  })
   .state('requests', {
     url: '/requests',
     templateUrl: 'components/request/user-requests.html',
     controller: 'UserRequestsController as ctrl'
+  })
+  .state('requests/new', {
+    url: '/requests/new',
+    templateUrl: 'components/request/new-request.html',
+    controller: 'NewRequestController as ctrl'
   })
   .state('request', {
     url: '/requests/:id',

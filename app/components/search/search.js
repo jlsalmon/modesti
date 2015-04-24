@@ -21,5 +21,6 @@ function SearchController($location, $stateParams, Restangular) {
   }).then(function(requests) {
     console.log('got ' + requests.data.length + ' results');
     self.results = requests.data;
+    self.q = q;
   });
 };

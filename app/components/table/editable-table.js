@@ -85,6 +85,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
 
     category.active = true;
     console.log(category);
+    self.activeFields = getActiveFields();
   }
 
   /**
@@ -104,6 +105,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
       }
     }
 
+    console.log('got active fields');
     return fields;
   }
   
@@ -243,7 +245,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   
   $scope.$watch("ctrl.searchText", function() {
     if (!jQuery.isEmptyObject(self.searchText) && self.tableParams) {
-      self.tableParams.filter(self.searchText)
+      self.tableParams.filter({properties: self.searchText});
     }
   }, true);
 
