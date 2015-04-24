@@ -1,6 +1,6 @@
 # modesti
 
-MOnitoring and Data Entry System for Technical Infrastructure
+MOnitoring and Data Entry System for Technical Infrastructure.
 
 ## Build & development
 
