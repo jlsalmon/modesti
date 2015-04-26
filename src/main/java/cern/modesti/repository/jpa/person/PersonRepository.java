@@ -31,10 +31,10 @@ import cern.modesti.repository.base.ReadOnlyRepository;
  */
 public interface PersonRepository extends ReadOnlyRepository<Person, String> {
 
-  @Query(value = "SELECT person_id as id, first_name || ' ' || last_name as name "
+  @Query(value = "SELECT cernid as id, first_name || ' ' || last_name as name "
                + "FROM   persons_mv "
                + "WHERE  at_cern = 'Y' AND cern_class = 'STAF' "
-               + "AND   (person_id  LIKE UPPER(:id || '%') "
+               + "AND   (cernid  LIKE UPPER(:id || '%') "
                + "OR     first_name || ' ' || last_name LIKE UPPER('%' || :name || '%'))", nativeQuery = true)
   @Cacheable("persons")
   public List<Person> findByIdOrName(@Param("id") String id, @Param("name") String name);

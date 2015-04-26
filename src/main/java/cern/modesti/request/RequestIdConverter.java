@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.repository.mongo.request;
+package cern.modesti.request;
 
 import java.io.Serializable;
 
@@ -12,6 +12,7 @@ import org.springframework.data.rest.webmvc.spi.BackendIdConverter;
 import org.springframework.stereotype.Component;
 
 import cern.modesti.model.Request;
+import cern.modesti.repository.mongo.request.RequestRepository;
 
 /**
  * @author Justin Lewis Salmon

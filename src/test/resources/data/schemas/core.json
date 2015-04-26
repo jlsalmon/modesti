@@ -7,19 +7,13 @@
         "active": true,
         "fields": [
             {
-                "id": "name",
-                "name": "Name",
-                "type": "text",
-                "required": true
-            },
-            {
-                "id": "description",
+                "id": "pointDescription",
                 "name": "Description",
                 "type": "text",
                 "required": true
             },
             {
-                "id": "datatype",
+                "id": "pointDataType",
                 "name": "Data Type",
                 "type": "select",
                 "options": "http://localhost:8080/datatypes",
@@ -42,7 +36,7 @@
                 "required": true
             },
             {
-                "id": "gmao",
+                "id": "gmaoCode",
                 "name": "GMAO Code",
                 "type": "text",
                 "required": true
@@ -64,7 +58,7 @@
                 "required": true
             },
             {
-                "id": "attribute",
+                "id": "pointAttribute",
                 "name": "Point Attribute",
                 "type": "text"
             }
@@ -127,7 +121,7 @@
         "active": false,
         "fields": [
             {
-                "id": "category",
+                "id": "alarmCategory",
                 "name": "Category",
                 "type": "typeahead",
                 "url": "http://localhost:8080/alarmCategories/search/findByName",
@@ -139,7 +133,7 @@
                 "placeholder": "Category"
             },
             {
-                "id": "priority",
+                "id": "priorityCode",
                 "name": "Priority",
                 "type": "select",
                 "options": "http://localhost:8080/alarmPriorities",

@@ -20,10 +20,10 @@ import cern.modesti.model.SubSystem;
 import cern.modesti.model.Zone;
 import cern.modesti.model.csam.SecurifireType;
 import cern.modesti.model.csam.WinterStatus;
-import cern.modesti.repository.mongo.request.SearchTextConverter;
 import cern.modesti.repository.mongo.schema.field.OptionsField;
 import cern.modesti.repository.mongo.schema.field.TextField;
 import cern.modesti.repository.mongo.schema.field.TypeaheadField;
+import cern.modesti.request.SearchTextConverter;
 
 @Configuration
 public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {

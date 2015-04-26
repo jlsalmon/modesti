@@ -7,7 +7,7 @@
         "name": "Alarm details",
         "fields": [
             {
-                "id": "autocall",
+                "id": "autoCallNumber",
                 "name": "Autocall",
                 "type": "text"
             }
