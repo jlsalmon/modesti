@@ -19,5 +19,6 @@ var app = angular.module('modesti',
     'ngTable',
     'ui.bootstrap',
     'ui.router',
-    'restangular'
+    'restangular',
+    'angularFileUpload'
   ]);

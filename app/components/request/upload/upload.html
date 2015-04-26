@@ -1,0 +1,154 @@
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>Upload request</h1>
+  <ol class="breadcrumb">
+    <li><a href="#/"> <i class="fa fa-home"></i> Home
+    </a></li>
+    <li class="active">Upload request</li>
+  </ol>
+</section>
+
+<style>
+.drop-zone {
+  border: 2px dashed #ccc;
+  margin-top: 55px;
+  height: 250px;
+  display: table;
+  width: 100%;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  border-radius: 8px;
+}
+
+.drop-zone span {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity = 0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+</style>
+
+<!-- Main content -->
+<section class="content">
+
+  <div class="row">
+    <div class="col-md-8">
+
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Select file</h3>
+    
+          <div class="input-group">
+            <span class="input-group-btn">
+              <span class="btn btn-primary btn-file">
+                <i class="fa fa-folder-open"></i> Browse&hellip; <input type="file" nv-file-select="" uploader="ctrl.uploader" />
+              </span>
+            </span>
+            <input type="text" class="form-control" readonly>
+          </div>
+          <span class="help-block">Select the legacy MODESTI Excel file you wish to upload. Both .xls and .xlsx formats are supported.<br/>
+          Note: only versions greater than or equal to <strong>4.2</strong> are supported.</span>
+  
+          <!-- Multiple <input type="file" nv-file-select="" uploader="ctrl.uploader" multiple /><br /> --> 
+          </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-12" style="margin-bottom: 40px">
+
+          <h3>Upload queue</h3>
+          <p>Queue length: {{ ctrl.uploader.queue.length }}</p>
+    
+          <table class="table">
+            <thead>
+              <tr>
+                <th width="50%">Name</th>
+                <th ng-show="ctrl.uploader.isHTML5">Size</th>
+                <th ng-show="ctrl.uploader.isHTML5">Progress</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in ctrl.uploader.queue">
+                <td><strong>{{ item.file.name }}</strong></td>
+                <td ng-show="ctrl.uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                <td ng-show="ctrl.uploader.isHTML5">
+                  <div class="progress" style="margin-bottom: 0;">
+                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                  </div>
+                </td>
+                <td class="text-center"><span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span> <span ng-show="item.isCancel"><i
+                    class="glyphicon glyphicon-ban-circle"></i></span> <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span></td>
+                <td nowrap>
+                  <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                    <span class="glyphicon glyphicon-upload"></span> Upload
+                  </button>
+                  <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                  </button>
+                  <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                    <span class="glyphicon glyphicon-trash"></span> Remove
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    
+    <!--       <div>
+        <div>
+          Queue progress:
+          <div class="progress" style="">
+            <div class="progress-bar" role="progressbar" ng-style="{ 'width': ctrl.uploader.progress + '%' }"></div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-success btn-s" ng-click="ctrl.uploader.uploadAll()" ng-disabled="!ctrl.uploader.getNotUploadedItems().length">
+          <span class="glyphicon glyphicon-upload"></span> Upload all
+        </button>
+        <button type="button" class="btn btn-warning btn-s" ng-click="ctrl.uploader.cancelAll()" ng-disabled="!ctrl.uploader.isUploading">
+          <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+        </button>
+        <button type="button" class="btn btn-danger btn-s" ng-click="ctrl.uploader.clearQueue()" ng-disabled="!ctrl.uploader.queue.length">
+          <span class="glyphicon glyphicon-trash"></span> Remove all
+        </button>
+      </div> -->
+
+        </div>
+      </div>
+      
+    </div>
+    <div class="col-md-4">
+          <div ng-show="ctrl.uploader.isHTML5">
+            <div class="well drop-zone" nv-file-over="" uploader="ctrl.uploader">
+              <span class="text-muted">Drop file here</span>
+            </div>
+          </div>
+    </div>
+
+
+
+  </div>
+</section>

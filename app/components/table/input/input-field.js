@@ -58,7 +58,7 @@ function InputFieldController($compile, $http, $filter) {
    */
   function getSelectInput(schema, model) {
     self.options = [];
-    var html = '<select ng-model="model[schema.model]" name="{{schema.id}}" class="form-control" ';
+    var html = '<select ng-model="model" name="{{schema.id}}" class="form-control" ';
 
     if( typeof schema.options === 'string' ) {
       // Options given as a URL

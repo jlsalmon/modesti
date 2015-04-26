@@ -26,6 +26,11 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     templateUrl : 'components/request/new-request.html',
     controller : 'NewRequestController as ctrl'
 
+  }).state('requests/upload', {
+    url : '/requests/upload',
+    templateUrl : 'components/request/upload/upload.html',
+    controller : 'UploadController as ctrl'
+
   }).state('request', {
     url : '/requests/:id',
     templateUrl : 'components/request/request.html',

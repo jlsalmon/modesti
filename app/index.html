@@ -53,15 +53,22 @@
         <div class="navbar-custom-menu pull-left">
           <ul class="nav navbar-nav">
             <li>
-              <a ui-sref="requests/new">
+              <a ui-sref="requests/new" tooltip="New Request" tooltip-placement="bottom">
                 <i class="fa fa-plus"></i>
               </a>
               <ul class="dropdown-menu">
               </ul>
             </li>
             <li>
-              <a ui-sref="requests">
+              <a ui-sref="requests"  tooltip="My Requests" tooltip-placement="bottom">
                 <i class="fa fa-user"></i>
+              </a>
+              <ul class="dropdown-menu">
+              </ul>
+            </li>
+            <li>
+              <a ui-sref="requests/upload" tooltip="Upload" tooltip-placement="bottom">
+                <i class="fa fa-upload"></i>
               </a>
               <ul class="dropdown-menu">
               </ul>
@@ -291,6 +298,7 @@
 
   <!-- build:js(.) scripts/vendor.js -->
   <!-- bower:js -->
+  <script src="bower_components/es5-shim/es5-shim.js"></script>
   <script src="bower_components/modernizr/modernizr.js"></script>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/angular/angular.js"></script>
@@ -314,6 +322,7 @@
   <script src="bower_components/angular-bootstrap-select/build/angular-bootstrap-select.js"></script>
   <script src="bower_components/angular-ui-select/dist/select.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="bower_components/angular-file-upload/angular-file-upload.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 
@@ -326,12 +335,13 @@
   <script src="components/home/home.js"></script>
   <script src="components/errors/interceptor.js"></script>
   <script src="components/request/new-request.js"></script>
+  <script src="components/request/upload/upload.js"></script>
   <script src="components/request/request.js"></script>
   <script src="components/request/user-requests.js"></script>
   <script src="components/table/editable-table.js"></script>
   <script src="components/table/editable-table.directive.js"></script>
-  <script src="components/input/input-field.js"></script>
-  <script src="components/input/input-field.directive.js"></script>
+  <script src="components/table/input/input-field.js"></script>
+  <script src="components/table/input/input-field.directive.js"></script>
   <script src="components/about/about.js"></script>
   <script src="components/search/search.js"></script>
   <script src="components/services/request-service.js"></script>
