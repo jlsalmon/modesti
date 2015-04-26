@@ -8,6 +8,8 @@ spring-shell.log
 .classpath
 .project
 .gradle
+make_tunnels.sh
+.DS_Store
  
 # Exclude properties files
 modesti-test.properties

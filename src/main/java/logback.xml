@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <logger name="cern.modesti" level="INFO" />
-    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="cern.modesti" level="DEBUG" />
+<!--     <logger name="org.springframework" level="DEBUG" /> -->
+<!--     <logger name="org.hibernate.SQL" level="DEBUG"/>
     <logger name="org.hibernate.type" level="TRACE"/>
     <logger name="org.hibernate.jdbc" level="TRACE"/>
     <logger name="org.hibernate.engine.query" level="TRACE"/>
-    <logger name="jdbc.resultsettable" level="TRACE"/>
+    <logger name="jdbc.resultsettable" level="TRACE"/> -->
 </configuration>

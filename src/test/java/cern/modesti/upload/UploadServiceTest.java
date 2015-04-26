@@ -1,0 +1,47 @@
+/**
+ *
+ */
+package cern.modesti.upload;
+
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
+import cern.modesti.repository.mongo.schema.SchemaRepository;
+import cern.modesti.request.upload.UploadService;
+import cern.modesti.request.upload.parser.RequestParser;
+
+/**
+ * @author Justin Lewis Salmon
+ *
+ */
+@RunWith(MockitoJUnitRunner.class)
+public class UploadServiceTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(UploadServiceTest.class);
+
+  /**
+   * The class to be tested
+   */
+  @InjectMocks
+  UploadService uploadService;
+
+  @InjectMocks
+  RequestParser parser;
+
+  @Mock
+  RequestRepository requestRepository;
+
+  @Mock
+  CounterServiceImpl counterService;
+
+  @Mock
+  SchemaRepository schemaRepository;
+
+
+}

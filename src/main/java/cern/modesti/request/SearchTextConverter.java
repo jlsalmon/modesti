@@ -1,4 +1,4 @@
-package cern.modesti.repository.mongo.request;
+package cern.modesti.request;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

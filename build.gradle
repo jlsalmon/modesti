@@ -41,7 +41,10 @@ dependencies {
     compile("commons-dbcp:commons-dbcp")
     compile("oracle:ojdbc:11.2.0.3")
     
-    //compile('javax.persistence:persistence-api:1.0.2')
+    compile("org.apache.poi:poi:3.12-beta1")
+    compile("org.apache.poi:poi-ooxml:3.12-beta1")
+    
+    compile("org.apache.commons:commons-lang3:3.4")
     
     compile("ch.qos.logback:logback-classic:1.1.2")
     compile("org.slf4j:slf4j-api:1.7.+")

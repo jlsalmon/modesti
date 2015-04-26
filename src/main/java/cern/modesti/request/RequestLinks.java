@@ -1,5 +1,7 @@
-package cern.modesti.repository.mongo.request;
+package cern.modesti.request;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
@@ -14,7 +16,14 @@ public class RequestLinks {
   @Autowired
   private EntityLinks entityLinks;
 
+  private static final Logger LOG = LoggerFactory.getLogger(RequestLinks.class);
+
   Link getSchemaLink(Request request) {
-    return entityLinks.linkToSingleResource(Schema.class, request.getSchema().getName());
+    if (request.getSchema() != null) {
+      return entityLinks.linkToSingleResource(Schema.class, request.getSchema().getName());
+    } else {
+      LOG.warn("Request " + request.getRequestId() + " has no schema link!");
+      return null;
+    }
   }
 }
