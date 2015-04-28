@@ -1,9 +1,10 @@
-package cern.modesti.repository.mongo.schema;
+package cern.modesti.schema;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+import cern.modesti.repository.mongo.schema.SchemaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,8 +7,7 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
-import cern.modesti.model.Request;
-import cern.modesti.repository.mongo.schema.Schema;
+import cern.modesti.schema.Schema;
 
 @Component
 public class RequestLinks {

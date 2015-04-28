@@ -1,12 +1,12 @@
 /**
  *
  */
-package cern.modesti.request.upload.parser;
+package cern.modesti.legacy.parser;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import cern.modesti.model.Point;
+import cern.modesti.request.point.Point;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import java.util.List;
  * @author Justin Lewis Salmon
  *
  */
-public class CSAMRequestParser extends RequestParser {
+public class PVSSRequestParser extends RequestParser {
 
   /**
    * @param sheet
    */
-  public CSAMRequestParser(Sheet sheet) {
+  public PVSSRequestParser(Sheet sheet) {
     super(sheet);
   }
 
@@ -32,4 +32,5 @@ public class CSAMRequestParser extends RequestParser {
   protected String parseDatasource(List<Point> points) {
     throw new UnsupportedOperationException("Not implemented yet");
   }
+
 }

@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
 import cern.modesti.repository.mongo.schema.SchemaRepository;
-import cern.modesti.request.upload.UploadService;
-import cern.modesti.request.upload.parser.RequestParser;
+import cern.modesti.legacy.UploadService;
+import cern.modesti.legacy.parser.RequestParser;
 
 /**
  * @author Justin Lewis Salmon

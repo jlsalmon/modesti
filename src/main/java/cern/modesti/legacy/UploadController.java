@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.request.upload;
+package cern.modesti.legacy;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import cern.modesti.model.Request;
+import cern.modesti.request.Request;
 
 /**
  * @author Justin Lewis Salmon

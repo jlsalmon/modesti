@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.request.upload.parser;
+package cern.modesti.legacy.parser;
 
 import java.io.InputStream;
 
@@ -13,7 +13,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cern.modesti.request.upload.exception.RequestParseException;
+import cern.modesti.legacy.exception.RequestParseException;
 
 /**
  * @author Justin Lewis Salmon

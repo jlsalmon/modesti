@@ -7,8 +7,7 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
 
-import cern.modesti.model.Request;
-import cern.modesti.repository.mongo.schema.SchemaController;
+import cern.modesti.schema.SchemaController;
 
 /**
  *

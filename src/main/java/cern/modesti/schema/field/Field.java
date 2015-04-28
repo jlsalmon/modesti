@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.mongo.schema.field;
+package cern.modesti.schema.field;
 
 import javax.persistence.Id;
 

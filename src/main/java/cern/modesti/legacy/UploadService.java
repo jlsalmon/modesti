@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.request.upload;
+package cern.modesti.legacy;
 
 import java.io.InputStream;
 
@@ -10,14 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cern.modesti.model.Request;
-import cern.modesti.model.Request.RequestStatus;
+import cern.modesti.request.Request;
+import cern.modesti.request.Request.RequestStatus;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterService;
-import cern.modesti.repository.mongo.schema.Schema;
+import cern.modesti.schema.Schema;
 import cern.modesti.repository.mongo.schema.SchemaRepository;
-import cern.modesti.request.upload.parser.RequestParser;
-import cern.modesti.request.upload.parser.RequestParserFactory;
+import cern.modesti.legacy.parser.RequestParser;
+import cern.modesti.legacy.parser.RequestParserFactory;
 
 /**
  * @author Justin Lewis Salmon

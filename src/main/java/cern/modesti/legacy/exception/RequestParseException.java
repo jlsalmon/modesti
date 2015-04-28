@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.request.upload.exception;
+package cern.modesti.legacy.exception;
 
 /**
  * @author Justin Lewis Salmon
