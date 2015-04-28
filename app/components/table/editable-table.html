@@ -1,9 +1,42 @@
+<style>
+  li > a.new-tab {
+    border-top: 1px dashed #ccc !important;
+    border-right: 1px dashed #ccc !important;
+    border-left: 1px;
+    border-bottom: 1px !important;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 0;
+    padding: 4px 10px 3px;
+  }
+
+  li > a.new-tab:hover, li > a.new-tab:focus {
+    background: #EEEEEE;
+    border-top: 1px solid #CCC !important;
+    border-right: 1px solid #CCC !important;
+    border-left: 1px;
+    border-bottom: 1px !important;
+  }
+
+  li > ul.new-tab-menu {
+    margin-top: 1px !important;
+    margin-left: -1px;
+  }
+</style>
+
 <div class="nav-tabs">
 
   <!-- Create a new tab for each category -->
   <tabset class="category-headings"> 
     <tab ng-repeat="category in ctrl.schema.categories" 
          heading="{{category.name}}" select="ctrl.activateCategory(category)" class="category-heading"></tab>
+
+    <!-- Button to dynamically add a new tab category -->
+    <li dropdown>
+      <a dropdown-toggle class="new-tab dropdown-toggle" href=""><i class="fa fa-plus-square-o"></i></a>
+      <ul class="new-tab-menu dropdown-menu" role="menu">
+        <li ng-repeat="tab in ctrl.availableCategories"><a ng-click="ctrl.addNewCategory(tab)">{{tab}}</a></li>
+      </ul>
+    </li>
   </tabset>
 
   <!-- This is the actual point input table itself -->

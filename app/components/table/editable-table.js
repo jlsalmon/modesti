@@ -29,9 +29,13 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
     'checked' : false,
     items : {}
   };
+
+  // TODO make this dynamic. Merge in schemas
+  self.availableCategories = ["DIP", "JAPC", "TIMBER"];
   
   self.init = init;
   self.activateCategory = activateCategory;
+  self.addNewCategory = addNewCategory;
   self.getActiveFields = getActiveFields;
   self.addRow = addRow;
   self.duplicateSelectedRows = duplicateSelectedRows;
@@ -43,7 +47,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   function init(request, schema) {
     self.request = request;
     self.schema = schema;
-  };
+  }
   
   function getTableData($defer, params) {
     console.log('getting table data');
@@ -86,6 +90,16 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
     category.active = true;
     console.log(category);
     self.activeFields = getActiveFields();
+  }
+
+  /**
+   *
+   * @param category
+   */
+  function addNewCategory(category) {
+    console.log("adding category " + category);
+
+    // What to do here? Need to merge in the new category. Has to be in the schema controller
   }
 
   /**
