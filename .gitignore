@@ -10,7 +10,8 @@ spring-shell.log
 .gradle
 make_tunnels.sh
 .DS_Store
- 
+.idea
+modesti-api.iml 
 # Exclude properties files
 modesti-test.properties
 modesti-prod.properties

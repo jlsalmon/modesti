@@ -2,7 +2,7 @@
 buildscript {
     repositories {
         maven { url "https://repo.spring.io/libs-release" }
-        maven { url "http://localhost:11112/release" }
+        maven { url "http://artifactory/release" }
         mavenLocal()
         mavenCentral()
     }
@@ -39,7 +39,6 @@ dependencies {
     compile("com.h2database:h2")
     compile("oracle:ojdbc:11.2.0.3")
     compile("commons-dbcp:commons-dbcp")
-    compile("oracle:ojdbc:11.2.0.3")
     
     compile("org.apache.poi:poi:3.12-beta1")
     compile("org.apache.poi:poi-ooxml:3.12-beta1")

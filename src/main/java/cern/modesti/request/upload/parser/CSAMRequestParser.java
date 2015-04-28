@@ -8,6 +8,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 import cern.modesti.model.Point;
 
+import java.util.List;
+
 /**
  * @author Justin Lewis Salmon
  *
@@ -27,7 +29,7 @@ public class CSAMRequestParser extends RequestParser {
   }
 
   @Override
-  protected String parseDatasource(Sheet sheet) {
+  protected String parseDatasource(List<Point> points) {
     throw new UnsupportedOperationException("Not implemented yet");
   }
 }

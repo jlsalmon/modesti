@@ -81,7 +81,7 @@ public class RequestParserTest {
     Request request = RequestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
 
     assertTrue(request.getDomain().equals("TIM"));
-    assertTrue(request.getType().equals("create"));
+    assertTrue(request.getType().equals("CREATE"));
     assertTrue(request.getDatasource().equals("plc"));
 
     List<Point> points = request.getPoints();

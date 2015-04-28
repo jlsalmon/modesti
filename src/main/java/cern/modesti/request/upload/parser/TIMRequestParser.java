@@ -80,7 +80,7 @@ public class TIMRequestParser extends RequestParser {
   }
 
   @Override
-  protected String parseDatasource(List<Point> points, Sheet sheet) {
+  protected String parseDatasource(List<Point> points) {
 
     // Naive implementation: look at the first point and assume the rest are the same.
     Point point = points.get(0);
@@ -166,8 +166,7 @@ public class TIMRequestParser extends RequestParser {
 
   /**
    *
-   * @param row
-   * @param column
+   * @param cell
    * @return
    */
   private String getStringCellValue(Cell cell) {
@@ -179,8 +178,7 @@ public class TIMRequestParser extends RequestParser {
 
   /**
    *
-   * @param row
-   * @param column
+   * @param cell
    * @return
    */
   private Double getNumericCellValue(Cell cell) {

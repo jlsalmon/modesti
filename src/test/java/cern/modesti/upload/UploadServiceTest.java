@@ -3,6 +3,7 @@
  */
 package cern.modesti.upload;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,7 +32,7 @@ public class UploadServiceTest {
   @InjectMocks
   UploadService uploadService;
 
-  @InjectMocks
+  @Mock
   RequestParser parser;
 
   @Mock
@@ -43,5 +44,8 @@ public class UploadServiceTest {
   @Mock
   SchemaRepository schemaRepository;
 
+  @Test
+  public void empty() {
 
+  }
 }
