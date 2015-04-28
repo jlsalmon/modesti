@@ -16,11 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import cern.modesti.model.Point;
-import cern.modesti.model.Request;
-import cern.modesti.model.Request.RequestStatus;
+import cern.modesti.request.point.Point;
+import cern.modesti.request.Request;
+import cern.modesti.request.Request.RequestStatus;
 import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
-import cern.modesti.repository.mongo.schema.Schema;
+import cern.modesti.schema.Schema;
 import cern.modesti.repository.mongo.schema.SchemaRepository;
 import cern.modesti.request.RequestEventHandler;
 

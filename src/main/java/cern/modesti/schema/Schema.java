@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.mongo.schema;
+package cern.modesti.schema;
 
 import java.util.List;
 

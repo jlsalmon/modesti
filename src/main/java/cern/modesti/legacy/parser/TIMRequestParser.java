@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.request.upload.parser;
+package cern.modesti.legacy.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,8 +15,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import cern.modesti.model.Person;
-import cern.modesti.model.Point;
-import cern.modesti.request.upload.exception.RequestParseException;
+import cern.modesti.request.point.Point;
+import cern.modesti.legacy.exception.RequestParseException;
 
 import com.google.common.base.CaseFormat;
 

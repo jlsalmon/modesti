@@ -15,43 +15,47 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.mongo.schema.field;
+package cern.modesti.request.point;
 
+import java.util.Map;
+
+import org.springframework.data.annotation.Id;
 
 /**
  * @author Justin Lewis Salmon
  */
-public class OptionsField extends Field {
+public class Point {
 
-  private String options;
+  @Id
+  private Long id;
 
-  private String returnPropertyName;
+  private Map<String, Object> properties;
 
   /**
-   * @return the options
+   * @return the id
    */
-  public String getOptions() {
-    return options;
+  public Long getId() {
+    return id;
   }
 
   /**
-   * @param options the options to set
+   * @param id the id to set
    */
-  public void setOptions(String options) {
-    this.options = options;
+  public void setId(Long id) {
+    this.id = id;
   }
 
   /**
-   * @return the returnPropertyName
+   * @return the properties
    */
-  public String getReturnPropertyName() {
-    return returnPropertyName;
+  public Map<String, Object> getProperties() {
+    return properties;
   }
 
   /**
-   * @param returnPropertyName the returnPropertyName to set
+   * @param properties the properties to set
    */
-  public void setReturnPropertyName(String returnPropertyName) {
-    this.returnPropertyName = returnPropertyName;
+  public void setProperties(Map<String, Object> properties) {
+    this.properties = properties;
   }
 }

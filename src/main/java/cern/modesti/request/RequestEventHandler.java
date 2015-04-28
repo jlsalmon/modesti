@@ -25,15 +25,18 @@ import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
-import cern.modesti.model.Point;
-import cern.modesti.model.Request;
-import cern.modesti.model.Request.RequestStatus;
+import cern.modesti.request.point.Point;
+import cern.modesti.request.Request.RequestStatus;
 import cern.modesti.repository.mongo.request.counter.CounterService;
-import cern.modesti.repository.mongo.schema.Schema;
+import cern.modesti.schema.Schema;
 import cern.modesti.repository.mongo.schema.SchemaRepository;
 
 /**
  * TODO
+ *
+ * The {@link cern.modesti.repository.mongo.request.RequestRepository} is automatically exposed as a REST resource via Spring Data REST, hence why there is no explicit MVC
+ * controller for it. This class simply hooks into the Spring Data REST lifecycle and intercepts request create/save events.
+ *
  *
  * @author Justin Lewis Salmon
  */

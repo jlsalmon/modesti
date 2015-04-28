@@ -1,12 +1,13 @@
-package cern.modesti.repository.mongo.schema;
+package cern.modesti.schema;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cern.modesti.repository.mongo.schema.SchemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cern.modesti.repository.mongo.schema.field.Field;
+import cern.modesti.schema.field.Field;
 
 @Service
 public class SchemaService {

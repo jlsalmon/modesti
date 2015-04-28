@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.model;
+package cern.modesti.request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +24,13 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import cern.modesti.request.point.Point;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import cern.modesti.repository.mongo.schema.Schema;
+import cern.modesti.schema.Schema;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

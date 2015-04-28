@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.spi.BackendIdConverter;
 import org.springframework.stereotype.Component;
 
-import cern.modesti.model.Request;
 import cern.modesti.repository.mongo.request.RequestRepository;
 
 /**

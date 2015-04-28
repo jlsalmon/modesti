@@ -19,11 +19,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import cern.modesti.model.Point;
-import cern.modesti.model.Request;
-import cern.modesti.request.upload.exception.RequestParseException;
-import cern.modesti.request.upload.exception.VersionNotSupportedException;
-import cern.modesti.request.upload.parser.RequestParserFactory;
+import cern.modesti.request.point.Point;
+import cern.modesti.request.Request;
+import cern.modesti.legacy.exception.RequestParseException;
+import cern.modesti.legacy.exception.VersionNotSupportedException;
+import cern.modesti.legacy.parser.RequestParserFactory;
 
 /**
  * @author Justin Lewis Salmon

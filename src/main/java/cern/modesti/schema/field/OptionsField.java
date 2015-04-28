@@ -15,66 +15,30 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.mongo.schema.field;
+package cern.modesti.schema.field;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Justin Lewis Salmon
  */
-public class TypeaheadField extends Field {
+public class OptionsField extends Field {
 
-  private String url;
-
-  private List<String> params = new ArrayList<String>();
-
-  private Integer minLength;
+  private String options;
 
   private String returnPropertyName;
 
-  private String template;
-
   /**
-   * @return the url
+   * @return the options
    */
-  public String getUrl() {
-    return url;
+  public String getOptions() {
+    return options;
   }
 
   /**
-   * @param url the url to set
+   * @param options the options to set
    */
-  public void setUrl(String url) {
-    this.url = url;
-  }
-
-  /**
-   * @return the params
-   */
-  public List<String> getParams() {
-    return params;
-  }
-
-  /**
-   * @param params the params to set
-   */
-  public void setParams(List<String> params) {
-    this.params = params;
-  }
-
-  /**
-   * @return the minLength
-   */
-  public Integer getMinLength() {
-    return minLength;
-  }
-
-  /**
-   * @param minLength the minLength to set
-   */
-  public void setMinLength(Integer minLength) {
-    this.minLength = minLength;
+  public void setOptions(String options) {
+    this.options = options;
   }
 
   /**
@@ -89,19 +53,5 @@ public class TypeaheadField extends Field {
    */
   public void setReturnPropertyName(String returnPropertyName) {
     this.returnPropertyName = returnPropertyName;
-  }
-
-  /**
-   * @return the template
-   */
-  public String getTemplate() {
-    return template;
-  }
-
-  /**
-   * @param template the template to set
-   */
-  public void setTemplate(String template) {
-    this.template = template;
   }
 }

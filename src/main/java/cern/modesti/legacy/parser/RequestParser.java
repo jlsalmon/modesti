@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.request.upload.parser;
+package cern.modesti.legacy.parser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cern.modesti.model.Point;
-import cern.modesti.model.Request;
-import cern.modesti.request.upload.exception.RequestParseException;
-import cern.modesti.request.upload.exception.VersionNotSupportedException;
+import cern.modesti.request.point.Point;
+import cern.modesti.request.Request;
+import cern.modesti.legacy.exception.RequestParseException;
+import cern.modesti.legacy.exception.VersionNotSupportedException;
 
 /**
  * @author Justin Lewis Salmon
