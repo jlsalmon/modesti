@@ -15,6 +15,11 @@
                 "id": "wordId",
                 "name": "Word ID",
                 "type": "text"
+            },
+            {
+                "id": "abc",
+                "name": "Robin's Field",
+                "type": "text"
             }
         ]
     }
