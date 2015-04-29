@@ -307,7 +307,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
     }
 
     angular.forEach(self.request.points, function(point) {
-      if (angular.isDefined(point.name)) {
+      if (angular.isDefined(point.id)) {
         self.checkboxes.items[point.id] = value;
       }
     });
