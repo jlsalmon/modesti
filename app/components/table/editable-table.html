@@ -40,6 +40,7 @@
       <a dropdown-toggle class="new-tab dropdown-toggle" href=""><i class="fa fa-plus-square-o"></i></a>
       <ul class="new-tab-menu dropdown-menu" role="menu">
         <li ng-repeat="tab in ctrl.availableCategories"><a ng-click="ctrl.addNewCategory(tab)">{{tab}}</a></li>
+        <li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">No categories available</li>
       </ul>
     </li>
   </tabset>
