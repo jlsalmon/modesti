@@ -65,7 +65,7 @@ function InputFieldController($compile, $http, $filter) {
       html += 'ng-options="option for option in ctrl.options track by option" ';
 
       // TODO refactor this into a service
-      $http.get(schema.options).then(function(response) {
+      $http.get(schema.options, {cache: true}).then(function(response) {
         if (!response.data.hasOwnProperty('_embedded')) return [];
         
         response.data._embedded[schema.returnPropertyName].map(function(item) {
