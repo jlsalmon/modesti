@@ -22,8 +22,21 @@ public interface LocationRepository extends ReadOnlyRepository<Location, String>
                + "WHERE  o.numero = l.numbat "
                + "AND    o.actif = 'Y'"
                + "AND   (LOWER(o.numero || '/' || l.etage || '-' || l.numloc) LIKE LOWER(:q || '%') "
-               + "OR     LOWER(o.numero || ' ' || l.etage || '-' || l.numloc) LIKE LOWER(:q || '%'))"
-               + "ORDER BY 1", nativeQuery = true)
+               + "OR     LOWER(o.numero || ' ' || l.etage || '-' || l.numloc) LIKE LOWER(:q || '%')) "
+               + "UNION "
+               + "SELECT o.numero || '/' || l.etage AS location FROM timref.local@timref_oper l, ouvrage o "
+               + "WHERE  o.numero = l.numbat "
+               + "AND    o.actif = 'Y' "
+               + "AND   (LOWER(o.numero || '/' || l.etage) LIKE LOWER(:q || '%') "
+               + "OR     LOWER(o.numero || ' ' || l.etage) LIKE LOWER(:q || '%')) "
+               + "UNION "
+               + "SELECT TO_CHAR(o.numero) AS location FROM timref.local@timref_oper l, ouvrage o "
+               + "WHERE  o.numero = l.numbat "
+               + "AND    o.actif = 'Y' "
+               + "AND   (LOWER(o.numero) LIKE LOWER(:q || '%') "
+               + "OR     LOWER(o.numero) LIKE LOWER(:q || '%')) "
+               + "ORDER BY 1 "
+               , nativeQuery = true)
   @Cacheable("locations")
   public List<Location> find(@Param("q") String q);
 }
