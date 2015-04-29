@@ -82,7 +82,8 @@ public class RequestParserTest {
 
     assertTrue(request.getDomain().equals("TIM"));
     assertTrue(request.getType().equals("CREATE"));
-    assertTrue(request.getDatasource().equals("plc"));
+    assertTrue(request.getCategories().size() == 1);
+    assertTrue(request.getCategories().get(0).equals("plc"));
 
     List<Point> points = request.getPoints();
     assertTrue(points.size() == 279);

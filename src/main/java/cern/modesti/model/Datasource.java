@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.repository.mongo.domain;
+package cern.modesti.model;
 
 import javax.persistence.Id;
 

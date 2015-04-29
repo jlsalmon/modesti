@@ -8,6 +8,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -45,7 +46,7 @@ public class RequestEventHandlerTest {
 
   @Test
   public void requestIsCreatedInProgress() throws Exception {
-    when(schemaRepository.findOneByName(anyString())).thenReturn(new Schema());
+    when(schemaRepository.findOneByNameIgnoreCase(anyString())).thenReturn(new Schema());
 
     Request request = getTestRequest();
     requestEventHandler.handleRequestCreate(request);
@@ -55,7 +56,7 @@ public class RequestEventHandlerTest {
   @Test
   public void requestIdIsGenerated() {
     when(counterService.getNextSequence(anyString())).thenReturn(1L);
-    when(schemaRepository.findOneByName(anyString())).thenReturn(new Schema());
+    when(schemaRepository.findOneByNameIgnoreCase(anyString())).thenReturn(new Schema());
 
     Request request = getTestRequest();
     requestEventHandler.handleRequestCreate(request);
@@ -74,11 +75,11 @@ public class RequestEventHandlerTest {
 
   @Test
   public void requestSchemaIsLinked() {
-    when(schemaRepository.findOneByName(anyString())).thenReturn(new Schema());
+    when(schemaRepository.findOneByNameIgnoreCase(anyString())).thenReturn(new Schema());
 
     Request request = getTestRequest();
     requestEventHandler.handleRequestCreate(request);
-    assertTrue(request.getSchema() != null);
+    assertTrue(request.getCategories() != null);
   }
 
   private Request getTestRequest() {
@@ -86,7 +87,7 @@ public class RequestEventHandlerTest {
     request.setType("create");
     request.setDescription("cool description");
     request.setDomain("TIM");
-    request.setDatasource("PLC");
+    request.setCategories(new ArrayList<>(Arrays.asList("PLC")));
     request.setPoints(getTestPoints());
     return request;
   }

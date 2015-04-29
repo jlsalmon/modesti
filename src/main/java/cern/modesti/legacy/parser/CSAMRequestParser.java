@@ -29,7 +29,7 @@ public class CSAMRequestParser extends RequestParser {
   }
 
   @Override
-  protected String parseDatasource(List<Point> points) {
+  protected List<String> parseCategories(List<Point> points) {
     throw new UnsupportedOperationException("Not implemented yet");
   }
 }

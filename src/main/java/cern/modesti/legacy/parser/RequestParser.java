@@ -57,7 +57,7 @@ public abstract class RequestParser {
     request.setPoints(points);
 
     // Figure out the data source
-    request.setDatasource(parseDatasource(points));
+    request.setCategories(parseCategories(points));
 
     return request;
   }
@@ -132,5 +132,5 @@ public abstract class RequestParser {
    *
    * @return
    */
-  protected abstract String parseDatasource(List<Point> points);
+  protected abstract List<String> parseCategories(List<Point> points);
 }

@@ -80,26 +80,31 @@ public class TIMRequestParser extends RequestParser {
   }
 
   @Override
-  protected String parseDatasource(List<Point> points) {
+  protected List<String> parseCategories(List<Point> points) {
+    List<String> categories = new ArrayList<>();
 
     // Naive implementation: look at the first point and assume the rest are the same.
     Point point = points.get(0);
 
     if (point.getProperties().containsKey("tagname")) {
-      return "opc";
+      categories.add("opc");
     } else if (point.getProperties().containsKey("item")) {
-      return "dip";
+      categories.add("dip");
     } else if (point.getProperties().containsKey("blockType")) {
-      return "plc";
+      categories.add("plc");
     } else if (point.getProperties().containsKey("protocol")) {
-      return "japc";
+      categories.add("japc");
     } else if (point.getProperties().containsKey("hostName")) {
-      return "diamon";
+      categories.add("diamon");
     } else if (point.getProperties().containsKey("dbTagname")) {
-      return "db";
+      categories.add("db");
     }
 
-    throw new RequestParseException("Could not determine request datasource");
+    if (categories.isEmpty()) {
+      throw new RequestParseException("Could not determine request categories");
+    }
+
+    return categories;
   }
 
   /**
