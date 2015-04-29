@@ -16,7 +16,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   
   self.tableParams = new NgTableParams({
     page : 1,
-    count : 10,
+    count : 50,
     sorting : {}
   }, {
     total : 0,

@@ -21,6 +21,11 @@
     margin-top: 1px !important;
     margin-left: -1px;
   }
+  
+  tr.ng-isolate-scope.fsm-sticky-header {
+    background-color: #fff;
+    margin-left: 1px;
+  }
 </style>
 
 <div class="nav-tabs">
@@ -40,9 +45,10 @@
   </tabset>
 
   <!-- This is the actual point input table itself -->
-  <table ng-table="ctrl.tableParams" class="table table-bordered table-striped" template-pagination="custom/pager">
+  <table id="table" ng-table="ctrl.tableParams" class="table table-bordered table-striped" template-pagination="custom/pager">
     <thead>
-      <tr>
+      <!-- The fsm-sticky-header makes the table headers stick to the top of the page when scrolling -->
+      <tr fsm-sticky-header scroll-body="'#table'" scroll-stop='0'>
         <th>#</th>
 
         <!-- Column header for each field in the currently active category -->

@@ -20,5 +20,6 @@ var app = angular.module('modesti',
     'ui.bootstrap',
     'ui.router',
     'restangular',
-    'angularFileUpload'
+    'angularFileUpload',
+    'fsm'
   ]);
