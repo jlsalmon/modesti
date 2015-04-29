@@ -51,8 +51,8 @@ public class UploadService {
     request.setStatus(RequestStatus.IN_PROGRESS);
 
     // Link to the correct schema
-    Schema schema = schemaRepository.findOneByName(request.getDatasource().toLowerCase());
-    request.setSchema(schema);
+//    Schema schema = schemaRepository.findOneByNameIgnoreCase(request.getDatasource().toLowerCase());
+//    request.setSchema(schema);
 
     // Generate a request id
     request.setRequestId(counterService.getNextSequence("requests").toString());

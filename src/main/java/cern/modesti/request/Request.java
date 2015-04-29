@@ -49,39 +49,39 @@ public class Request {
   /**
    * Human-readable id
    */
-  @TextIndexed(weight = 3)
+  //@TextIndexed(weight = 3)
   private String requestId;
 
-  @TextIndexed
+  //@TextIndexed
   private String status;
 
-  @TextIndexed
+  //@TextIndexed
   @NotNull(message = "Request type is compulsory")
   private String type;
 
-  @TextIndexed(weight = 2)
+  //@TextIndexed(weight = 2)
   @NotNull(message = "Description is compulsory")
   private String description;
 
-  @TextIndexed
+  //@TextIndexed
   @NotNull(message = "Domain is compulsory")
   private String domain;
 
-  @TextIndexed
-  @NotNull(message = "Data source is compulsory")
-  private String datasource;
+  //@TextIndexed
+  @NotNull(message = "At least one category is compulsory")
+  private List<String> categories = new ArrayList<>();
 
-  @TextIndexed
+  //@TextIndexed
   @Valid
   private List<Point> points = new ArrayList<>();
 
-  /**
-   * Don't show this directly in the response. It will be added as an href link
-   * by the {link: RequestResourceProcessor}
-   */
-  @JsonIgnore
-  @RestResource(exported = false)
-  private Schema schema;
+//  /**
+//   * Don't show this directly in the response. It will be added as an href link
+//   * by the {link: RequestResourceProcessor}
+//   */
+//  @JsonIgnore
+//  @RestResource(exported = false)
+//  private Schema schema;
 
   /**
    *
@@ -187,17 +187,17 @@ public class Request {
   }
 
   /**
-   * @return the datasource
+   * @return the categories
    */
-  public String getDatasource() {
-    return datasource;
+  public List<String> getCategories() {
+    return categories;
   }
 
   /**
-   * @param datasource the datasource to set
+   * @param categories the categories to set
    */
-  public void setDatasource(String datasource) {
-    this.datasource = datasource;
+  public void setCategories(List<String> categories) {
+    this.categories = categories;
   }
 
   /**
@@ -213,18 +213,18 @@ public class Request {
   public void setPoints(List<Point> points) {
     this.points = points;
   }
-
-  /**
-   * @return the schema
-   */
-  public Schema getSchema() {
-    return schema;
-  }
-
-  /**
-   * @param schema the schema to set
-   */
-  public void setSchema(Schema schema) {
-    this.schema = schema;
-  }
+//
+//  /**
+//   * @return the schema
+//   */
+//  public Schema getSchema() {
+//    return schema;
+//  }
+//
+//  /**
+//   * @param schema the schema to set
+//   */
+//  public void setSchema(Schema schema) {
+//    this.schema = schema;
+//  }
 }

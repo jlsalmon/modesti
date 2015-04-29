@@ -17,10 +17,12 @@
  ******************************************************************************/
 package cern.modesti.schema;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Id;
 
+import oracle.net.aso.d;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,7 +43,22 @@ public class Schema {
 
   private String domain;
 
-  private List<Category> categories;
+  private List<Category> categories = new ArrayList<>();
+
+  public Schema() {
+  }
+
+  /**
+   *
+   * @param id
+   * @param name
+   * @param domain
+   */
+  public Schema(String id, String name, String domain) {
+    this.id = id;
+    this.name = name;
+    this.domain = domain;
+  }
 
   /**
    * @return the id

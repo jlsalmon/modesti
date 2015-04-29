@@ -76,8 +76,8 @@ public class RequestEventHandler {
     }
 
     // Link the correct schema to this request
-    Schema schema = schemaRepository.findOneByName(request.getDatasource().toLowerCase());
-    request.setSchema(schema);
+//    Schema schema = schemaRepository.findOneByNameIgnoreCase(request.getDatasource());
+//    request.setSchema(schema);
   }
 
   /**
