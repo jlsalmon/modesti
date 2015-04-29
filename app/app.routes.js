@@ -46,13 +46,11 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
       schema : function getSchema($q, $http, request) {
         console.log('fetching schema');
         var q = $q.defer();
-        // var id = $stateParams.id;
 
         // TODO refactor this into a service
         $http.get(request._links.schema.href).then(function(response) {
           console.log('fetched schema: ' + response.data.name);
           q.resolve(response.data);
-          // self.schema = response.data;
         },
 
         function(error) {

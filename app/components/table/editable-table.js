@@ -30,12 +30,12 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
     items : {}
   };
 
-  // TODO make this dynamic. Merge in schemas
-  self.availableCategories = ["DIP", "JAPC", "TIMBER"];
+  self.availableCategories = [];
   
   self.init = init;
   self.activateCategory = activateCategory;
   self.addNewCategory = addNewCategory;
+  self.getAvailableCategories = getAvailableCategories;
   self.getActiveFields = getActiveFields;
   self.addRow = addRow;
   self.duplicateSelectedRows = duplicateSelectedRows;
@@ -47,6 +47,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   function init(request, schema) {
     self.request = request;
     self.schema = schema;
+    getAvailableCategories();
   }
   
   function getTableData($defer, params) {
@@ -80,7 +81,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
     console.log('activating category');
     var categories = self.schema.categories;
 
-    for ( var key in categories) {
+    for (var key in categories) {
       if (categories.hasOwnProperty(key)) {
         categories[key].active = false;
         console.log('category:' + categories[key]);
@@ -99,7 +100,43 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   function addNewCategory(category) {
     console.log("adding category " + category);
 
-    // What to do here? Need to merge in the new category. Has to be in the schema controller
+    var schemaLink = self.request._links.schema.href;
+
+    if(schemaLink.indexOf('?categories') > -1) {
+      schemaLink += ',' + category;
+    } else {
+      schemaLink += '?categories=' + category;
+    }
+
+    // TODO refactor this into a service
+    $http.get(schemaLink).then(function(response) {
+      console.log('fetched new schema: ' + response.data.name);
+      self.schema = response.data;
+      self.request._links.schema.href = schemaLink;
+      getAvailableCategories();
+    },
+
+    function(error) {
+      console.log('error fetching schema: ' + error);
+    });
+  }
+
+  /**
+   *
+   */
+  function getAvailableCategories() {
+    // TODO refactor this into a service
+    $http.get('http://localhost:8080/domains/' + self.request.domain).then(function(response) {
+      self.availableCategories = [];
+
+      response.data.datasources.map(function(category) {
+
+        // Only add the category if we aren't already using it
+        if ($.grep(self.schema.categories, function(item){ return item.name == category.name; }).length == 0) {
+          self.availableCategories.push(category.name);
+        }
+      });
+    });
   }
 
   /**
