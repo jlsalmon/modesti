@@ -1,13 +1,14 @@
 package cern.modesti.request;
 
-import cern.modesti.schema.SchemaController;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import cern.modesti.schema.SchemaController;
 
 @Component
 public class RequestLinks {
@@ -17,11 +18,15 @@ public class RequestLinks {
   Link getSchemaLink(Request request) {
     if (request.getCategories() != null) {
 
+      // Need to manually build a comma-separated list of categories
       StringBuilder categories = new StringBuilder();
       for (String category : request.getCategories()) {
         categories.append(category).append(",");
       }
-      categories.deleteCharAt(categories.length() - 1);
+
+      if (categories.length() > 0) {
+        categories.deleteCharAt(categories.length() - 1);
+      }
 
       return linkTo(methodOn(SchemaController.class).getSchema(request.getRequestId(), categories.toString())).withRel("schema");
     } else {
