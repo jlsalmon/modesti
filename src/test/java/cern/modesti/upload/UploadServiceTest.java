@@ -3,6 +3,11 @@
  */
 package cern.modesti.upload;
 
+import cern.modesti.legacy.UploadService;
+import cern.modesti.legacy.parser.RequestParser;
+import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
+import cern.modesti.repository.mongo.schema.SchemaRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,12 +15,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
-import cern.modesti.repository.mongo.schema.SchemaRepository;
-import cern.modesti.legacy.UploadService;
-import cern.modesti.legacy.parser.RequestParser;
 
 /**
  * @author Justin Lewis Salmon
