@@ -1,8 +1,7 @@
-<!doctype html>
-<!--[if IE 9]><html class="no-js lt-ie10" lang="en"> <![endif]-->
-<!--[if gt IE 9]><!-->
+<!DOCTYPE html>
+<!--[if gte IE 10]><!-->
 <html class="no-js" lang="en">
-<!--<![endif]--> 
+<!--<![endif]-->
 <head>
 
 <title>modesti</title>
@@ -16,12 +15,8 @@
 <!-- bower:css -->
 <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
 <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-<link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
 <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
-<link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css" />
 <link rel="stylesheet" href="bower_components/normalize.css/normalize.css" />
-<link rel="stylesheet" href="bower_components/bootstrap-select/bootstrap-select.css" />
-<link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
 <!-- endbower -->
 <!-- endbuild -->
 <!-- build:css(.tmp) styles/main.css -->
@@ -32,13 +27,20 @@
 </head>
 
 <body ng-app="modesti" class="skin-blue sidebar-collapse">
-  <!--[if lt IE 9]>
-    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+
+  <!--[if lt IE 10]>
   <![endif]-->
+  <!--<div class="col-lg-12">-->
+    <!--<div class="alert alert-info" style="margin-top: 20px; z-index: 1000;">-->
+      <!--<p>You are using an <strong>unsupported</strong> browser. Some parts of this site will not work properly.-->
+         <!--Please <a class="alert-link" href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>-->
+    <!--</div>-->
+    <!--<div class="clearfix"></div>-->
+  <!--</div>-->
 
 
   <div class="wrapper" ng-controller="LayoutController as ctrl">
-  
+
     <header class="main-header">
       <a href="#/" class="logo"> modesti </a>
       <!-- Header Navbar: style can be found in header.less -->
@@ -75,10 +77,10 @@
             </li>
           </ul>
         </div>
-        
+
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
-          
+
           <form class="navbar-form navbar-left sidebar-form" role="search">
             <div class="form-group input-group">
               <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search...">
@@ -89,7 +91,7 @@
               </span>
             </div>
           </form>
-          
+
             <!-- Messages: style can be found in dropdown.less-->
 <!--             <li class="dropdown messages-menu">
               <a class="dropdown-toggle" data-toggle="dropdown">
@@ -310,17 +312,10 @@
   <script src="bower_components/angular-touch/angular-touch.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/slimscroll/jquery.slimscroll.min.js"></script>
-  <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
-  <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
-  <script src="bower_components/angular-spring-data-rest/dist/angular-spring-data-rest.js"></script>
-  <script src="bower_components/angular-hateoas/src/angular-hateoas.js"></script>
   <script src="bower_components/lodash/dist/lodash.compat.js"></script>
   <script src="bower_components/restangular/dist/restangular.js"></script>
-  <script src="bower_components/bootstrap-select/bootstrap-select.js"></script>
-  <script src="bower_components/angular-bootstrap-select/build/angular-bootstrap-select.js"></script>
-  <script src="bower_components/angular-ui-select/dist/select.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="bower_components/angular-file-upload/angular-file-upload.js"></script>
   <script src="bower_components/fsm-sticky-header/src/fsm-sticky-header.js"></script>
@@ -348,5 +343,6 @@
   <script src="components/services/request-service.js"></script>
   <script src="components/services/validation-service.js"></script>
   <!-- endbuild -->
+
 </body>
 </html>

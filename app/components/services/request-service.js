@@ -20,9 +20,9 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
   function transformData(data, filter, params) {
     return orderData(filterData(data, filter), params);
   }
-  
+
   /**
-   * 
+   *
    */
   function contains(array, point) {
     var i = array.length;
@@ -33,7 +33,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
     }
     return false;
   }
-  
+
 
   /**
    * If the given array contains a modified version of the given point, this
@@ -49,39 +49,39 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
   }
 
   var service = {
-      
+
     /**
-     * 
+     *
      */
     cachedRequest : null,
 
     /**
-     * 
+     *
      */
     getRequests : function() {
       var q = $q.defer();
-      
+
       Restangular.all('requests').getList().then(function(requests) {
         q.resolve(requests.data);
       },
-      
+
       function(error) {
         console.log('error: ' + error);
         q.reject(error);
       });
-      
+
       return q.promise;
     },
-    
+
     /**
-     * 
+     *
      */
     getRequest : function(id, params, unsavedRequest) {
       var q = $q.defer();
 
       if (service.cachedRequest && service.cachedRequest.requestId == id) {
         console.log('using cached request');
-        
+
         // Merge the given potentially unsaved request with the cached
         // request. This is because we don't want to lose any unsaved
         // changes.
@@ -91,7 +91,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
             update(service.cachedRequest.points, unsavedRequest.points[i])
           }
         }
-        
+
         // Make a copy for sorting/filtering
         var request = Restangular.copy(service.cachedRequest);
 
@@ -110,22 +110,18 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
           var points = request.data.points;
 
           if (points.length == 0) {
-            // Add a starter row with some pre-filled data
-            points.push({
-              'name' : '',
-              'description' : '',
-              'domain' : request.domain
-            });
+            // Add a starter row
+            points.push({properties: {}});
           }
 
           // Cache the request
           service.cachedRequest = request.data;
           //service.cachedRequest.id = id;
           console.log('cached request (with ' + service.cachedRequest.points.length + ' points)');
-          
+
           // Make a copy for sorting/filtering
           request = Restangular.copy(service.cachedRequest);
-          
+
           if (params) {
             // Perform initial sorting/filtering/slicing
             request.points = transformData(request.points, params.filter(), params);
@@ -142,9 +138,9 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
 
       return q.promise;
     },
-    
+
     /**
-     * 
+     *
      */
     saveRequest : function(request) {
       $rootScope.saving = "started";
@@ -165,7 +161,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
           }
         }
       }
-      
+
 
       // Remove points that have been marked as deleted. Note that points
       // that have been filtered out will not be deleted.
@@ -179,13 +175,13 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
 
       request.save().then(function(savedRequest) {
         console.log('saved request');
-        
+
         // Cache the newly saved request
         service.cachedRequest = savedRequest.data;
-        
+
         q.resolve(service.cachedRequest);
         $rootScope.saving = "success";
-        
+
       }, function(error) {
         console.log('error saving request: ' + error.data.message);
         q.reject(error);
@@ -196,7 +192,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
     },
 
     /**
-     * 
+     *
      */
     createRequest : function(request) {
       var q = $q.defer();
@@ -218,13 +214,13 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
 
       return q.promise;
     },
-    
+
     /**
-     * 
+     *
      */
     deleteRequest : function(id) {
       var q = $q.defer();
-      
+
       Restangular.one('requests', id).remove().then(function(response) {
         console.log('deleted request: ' + response);
         q.resolve(response);
@@ -234,9 +230,9 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
         console.log(error.status + ' ' + error.statusText);
         q.reject(error);
       });
-      
+
       return q.promise;
-    },
+    }
   };
 
   return service;

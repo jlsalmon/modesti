@@ -3,32 +3,32 @@
 /**
  * @ngdoc function
  * @name modesti.config:configure
- * 
+ *
  * @description
  * Configures the various parts of the application.
  */
 angular.module('modesti').config(configure);
 
 function configure($httpProvider, RestangularProvider) {
-  
+
   configureRestangular(RestangularProvider);
   configureErrorInterceptors($httpProvider);
 }
 
 /**
- * 
+ *
  * @param RestangularProvider
  */
 function configureRestangular(RestangularProvider) {
   // Set the base URL
   RestangularProvider.setBaseUrl('http://localhost:8080/');
-  
+
   // Enable access to the response headers
   RestangularProvider.setFullResponse(true);
 
   // Add a response interceptor
   RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
-    
+
     var extractedData;
 
     if (operation === "getList") {
@@ -50,7 +50,7 @@ function configureRestangular(RestangularProvider) {
 }
 
 /**
- * 
+ *
  * @param $httpProvider
  */
 function configureErrorInterceptors($httpProvider) {

@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-var app = angular.module('modesti', 
+var app = angular.module('modesti',
   [
     'ngAnimate',
     'ngCookies',

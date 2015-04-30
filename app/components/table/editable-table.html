@@ -21,7 +21,7 @@
     margin-top: 1px !important;
     margin-left: -1px;
   }
-  
+
   tr.ng-isolate-scope.fsm-sticky-header {
     background-color: #fff;
     margin-left: 1px;
@@ -31,8 +31,8 @@
 <div class="nav-tabs">
 
   <!-- Create a new tab for each category -->
-  <tabset class="category-headings"> 
-    <tab ng-repeat="category in ctrl.schema.categories" 
+  <tabset class="category-headings">
+    <tab ng-repeat="category in ctrl.schema.categories"
          heading="{{category.name}}" select="ctrl.activateCategory(category)" class="category-heading"></tab>
 
     <!-- Button to dynamically add a new tab category -->
@@ -82,23 +82,21 @@
 
           <!-- Line number field -->
           <td class="input-field text-muted" width="30" style="text-align: center; vertical-align: middle;"
-          ng-class="{ 'bg-danger': (pointForm.$invalid && pointForm.$dirty) 
+          ng-class="{ 'bg-danger': (pointForm.$invalid && pointForm.$dirty)
                         || (pointForm.$submitted && pointForm.$invalid) }">
             {{$data.indexOf(point) + 1}}
           </td>
-  
+
           <!-- Input field for each field in the currently active category -->
           <td class="input-field" ng-repeat="field in ctrl.activeFields" >
             <!-- Custom directive to generate an input field based on the field schema -->
             <span input-field model="point.properties[field.id]" schema="field"></span>
           </td>
-  
+
           <!-- Checkbox for each point -->
           <td class="input-field" width="30" style="text-align: center; vertical-align: middle;">
             <input type="checkbox" ng-model="ctrl.checkboxes.items[point.id]" />
           </td>
-          
-            
       </tr>
     </tbody>
 
@@ -106,7 +104,7 @@
     <tfoot>
       <tr>
         <td colspan="20">
-        
+
           <div class="btn-group">
             <!-- Button to add a new row -->
             <button class="btn btn-default" ng-click="ctrl.addRow()" tooltip-append-to-body="true" tooltip="Add row">
@@ -116,13 +114,13 @@
             </button>
 
             <!-- Button to duplicate selected rows -->
-            <button class="btn btn-default" ng-click="ctrl.duplicateSelectedRows()" tooltip-append-to-body="true" tooltip="Duplicate selected rows" 
+            <button class="btn btn-default" ng-click="ctrl.duplicateSelectedRows()" tooltip-append-to-body="true" tooltip="Duplicate selected rows"
                     ng-disabled='!ctrl.checkboxes.dirty'>
               <a>
                 <i class="fa fa-fw fa-copy"></i>
               </a>
             </button>
-            
+
             <!-- Button to delete selected rows -->
             <button class="btn btn-default" ng-click="ctrl.deleteSelectedRows()" tooltip-append-to-body="true" tooltip="Delete selected rows"
                     ng-disabled='!ctrl.checkboxes.dirty'>
@@ -141,15 +139,15 @@
 
           <!-- Button to save the request -->
           <button class="btn btn-default" ng-click="ctrl.save()">
-            
+
             <!-- Saving state indicators -->
             <a ng-show="$root.saving == undefined"><i class="fa fa-fw fa-save saving-state" tooltip-append-to-body="true" tooltip="Save request"></i></a>
             <a ng-show="$root.saving == 'started'"><i class="fa fa-fw fa-spin fa-cog saving-state" tooltip-append-to-body="true" tooltip="Saving..."></i></a>
             <a ng-show="$root.saving == 'success'"> <i class="fa fa-fw fa-save saving-state" tooltip-append-to-body="true" tooltip="Saved"></i></a>
             <a ng-show="$root.saving == 'error'" > <i class="fa fa-fw fa-exclamation-triangle saving-state text-danger" tooltip-append-to-body="true" tooltip="Problem saving"></i></a>
-        
+
           </button>
-        
+
           <!-- Custom pagination -->
           <div class="ng-cloak ng-table-pager pull-right" ng-if="params.data.length">
             <ul class="pagination ng-table-pagination pull-right" ng-hide="params.settings().$scope.pages == 0">
@@ -172,10 +170,10 @@
           </div>
           <!-- Remove default pagination -->
           <script type="text/ng-template" id="custom/pager"></script>
-          
+
         </td>
       </tr>
-      
+
       <tr>
         <td colspan="20">
 
@@ -184,25 +182,25 @@
             <button ng-show="$root.validating == undefined" class="btn btn-primary"  tooltip-append-to-body="true" tooltip="Validate request">
                <i class="fa fa-fw fa-check-square-o"></i> Validate
             </button>
-            
+
             <button ng-show="$root.validating == 'started'" class="btn btn-primary" tooltip-append-to-body="true" tooltip="Validating...">
                <i class="fa fa-fw fa-spin fa-cog"></i> Validate
             </button>
-            
+
             <button ng-show="$root.validating == 'success'" class="btn btn-success" tooltip-append-to-body="true" tooltip="Request is valid">
                <i class="fa fa-fw fa-check-square-o"></i> Validate
             </button>
-            
+
             <button ng-show="$root.validating == 'error'" class="btn btn-danger" tooltip-append-to-body="true" tooltip="Problem validating request">
                <i class="fa fa-fw fa-exclamation-triangle"></i> Invalid
             </button>
-            
+
             <!-- Button to submit the request -->
             <button class="btn btn-default" ng-click="ctrl.submit()" ng-disabled="$root.validating != 'success'" tooltip-append-to-body="true" tooltip="Submit request">
                 <i class="fa fa-fw fa-external-link"></i> Submit
             </button>
           </div>
-          
+
           <span>{{ctrl.validationResult}}</span>
         </td>
       </tr>

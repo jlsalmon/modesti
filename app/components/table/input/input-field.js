@@ -6,39 +6,39 @@
  * @description # InputFieldController Controller of the modesti
  */
 angular.module('modesti').controller('InputFieldController', InputFieldController);
-    
+
 function InputFieldController($compile, $http, $filter) {
   var self = this;
 
   self.autocomplete = autocomplete;
 
   /**
-   * 
+   *
    */
   self.init = function(scope, element) {
     element.html(getInput(scope.schema, scope.model)).show();
     $compile(element.contents())(scope);
   };
-  
+
   /**
-   * 
+   *
    */
   function getInput(schema, model) {
     if (schema.type == 'text') {
       return getTextInput(schema, model);
     }
-    
+
     else if (schema.type == 'select') {
       return getSelectInput(schema, model);
     }
-    
+
     else if (schema.type == 'typeahead') {
       return getTypeaheadInput(schema, model);
     }
   }
-  
+
   /**
-   * 
+   *
    */
   function getTextInput(schema, model) {
     var html = '<input type="text" name="{{schema.id}}" class="form-control" ';
@@ -52,9 +52,9 @@ function InputFieldController($compile, $http, $filter) {
     }
     return html += (schema.required ? 'required' : '') + ' />'
   }
-  
+
   /**
-   * 
+   *
    */
   function getSelectInput(schema, model) {
     self.options = [];
@@ -67,13 +67,13 @@ function InputFieldController($compile, $http, $filter) {
       // TODO refactor this into a service
       $http.get(schema.options, {cache: true}).then(function(response) {
         if (!response.data.hasOwnProperty('_embedded')) return [];
-        
+
         response.data._embedded[schema.returnPropertyName].map(function(item) {
           self.options.push(item[schema.model]);
         });
       });
     }
-    
+
     else {
       // Options given as inline array
       html += 'ng-options="option for option in schema.options track by option" ';
@@ -81,9 +81,9 @@ function InputFieldController($compile, $http, $filter) {
 
     return html += (schema.required ? 'required' : '') + ' />'
   }
-  
+
   /**
-   * 
+   *
    */
   function getTypeaheadInput(schema, model) {
     var template = '\
@@ -97,33 +97,33 @@ function InputFieldController($compile, $http, $filter) {
                typeahead-min-length="{{schema.minLength}}" \
                ' + (schema.required ? 'required' : '') + '> \
       </div>' // <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
-               
+
     var itemTemplate = '\
       <script type="text/ng-template" id="item-template-' + schema.id + '.html"> \
         <a><span bind-html-unsafe="match.label | typeaheadHighlight:query"></span>';
-    
+
     if (schema.template) {
       itemTemplate += schema.template;
     }
-    
+
     itemTemplate += '</a></script>';
     return template + itemTemplate;
   }
-  
+
   /**
-   * 
+   *
    */
   function autocomplete(schema, value) {
     var params = {}
     for (var i in schema.params) {
       params[schema.params[i]] = value;
     }
-    
+
     // TODO refactor this into a service
     return $http.get(schema.url, {
       params : params
     }).then(function(response) {
-      
+
       if (!response.data.hasOwnProperty('_embedded')) {
         var empty = {};
         empty[schema.model] = 'No results';

@@ -7,13 +7,13 @@
  */
 angular.module('modesti').controller('EditableTableController', EditableTableController);
 
-function EditableTableController($scope, $location, $http, $stateParams, NgTableParams, RequestService, ValidationService) {
+function EditableTableController($scope, $http, $stateParams, NgTableParams, RequestService, ValidationService) {
   var self = this;
 
   self.request = {};
   self.schema = {};
   self.searchText = {};
-  
+
   self.tableParams = new NgTableParams({
     page : 1,
     count : 50,
@@ -31,7 +31,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   };
 
   self.availableCategories = [];
-  
+
   self.init = init;
   self.activateCategory = activateCategory;
   self.addNewCategory = addNewCategory;
@@ -43,17 +43,27 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   self.save = save;
   self.validate = validate;
   self.toggleFilter = toggleFilter;
-    
+
+  /**
+   *
+   * @param request
+   * @param schema
+   */
   function init(request, schema) {
     self.request = request;
     self.schema = schema;
     getAvailableCategories();
   }
-  
+
+  /**
+   *
+   * @param $defer
+   * @param params
+   */
   function getTableData($defer, params) {
     console.log('getting table data');
     var id = $stateParams.id;
-    
+
     // If we already have a request, send it to the service for merging,
     // as we might have made unsaved changes.
     var unsavedRequest = self.request ? self.request : undefined;
@@ -61,7 +71,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
     RequestService.getRequest(id, params, unsavedRequest).then(function(request) {
       self.request = request;
       console.log('got request (with ' + request.points.length + ' points)');
-      
+
       // Set total for pagination
       params.total(request.points.length);
 
@@ -75,7 +85,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   }
 
   /**
-   * 
+   *
    */
   function activateCategory(category) {
     console.log('activating category');
@@ -140,7 +150,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   }
 
   /**
-   * 
+   *
    */
   function getActiveFields() {
     var categories = self.schema.categories;
@@ -159,9 +169,9 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
     console.log('got active fields');
     return fields;
   }
-  
+
   /**
-   * 
+   *
    */
   function addRow() {
     console.log('adding new row');
@@ -178,10 +188,10 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
     RequestService.saveRequest(request).then(function(request) {
       console.log('added new row');
       self.request = request;
-      
+
       // Reload the table data
       self.tableParams.reload();
-      
+
       // Move to the last page
       var pages = self.tableParams.settings().$scope.pages;
       for (var i in pages) {
@@ -194,14 +204,14 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
       console.log('error adding new row: ' + error);
     });
   }
-  
+
   /**
-   * 
+   *
    */
   function duplicateSelectedRows() {
     var points = self.request.points;
     console.log('duplicating rows (before: ' + points.length + ' points)');
-    
+
     // Find the selected points and duplicate them
     for (var i in points) {
       var point = points[i];
@@ -215,7 +225,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
         points.push(duplicate);
       }
     }
-    
+
     // Save the changes
     RequestService.saveRequest(self.request).then(function(savedRequest) {
       console.log('saved request after row duplication');
@@ -228,14 +238,14 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
       console.log('error saving request after row duplication: ' + error);
     });
   }
-  
+
   /**
-   * 
+   *
    */
   function deleteSelectedRows() {
     var points = self.request.points;
     console.log('deleting rows (before: ' + points.length + ' points)');
-    
+
     // Find the selected points and mark them as deleted
     for (var i in points) {
       var point = points[i];
@@ -244,7 +254,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
         point.deleted = true;
       }
     }
-    
+
     // Save the changes
     RequestService.saveRequest(self.request).then(function(savedRequest) {
       console.log('saved request after row deletion');
@@ -259,7 +269,7 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   }
 
   /**
-   * 
+   *
    */
   function save() {
     var request = self.request;
@@ -270,13 +280,13 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
       console.log('error saving request');
     });
   }
-  
+
   /**
-   * 
+   *
    */
   function validate() {
     var request = self.request;
-    
+
     ValidationService.validateRequest(request).then(function(result) {
       console.log('validated request');
       self.validationResult = result;
@@ -286,14 +296,14 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
   }
 
   /**
-   * 
+   *
    */
   function toggleFilter() {
     self.tableParams.settings().$scope.show_filter = !self.tableParams.settings().$scope.show_filter;
   }
-  
+
   // TODO: remove these watches and use ng-change instead
-  
+
   $scope.$watch("ctrl.searchText", function() {
     if (!jQuery.isEmptyObject(self.searchText) && self.tableParams) {
       self.tableParams.filter({properties: self.searchText});
@@ -328,8 +338,8 @@ function EditableTableController($scope, $location, $http, $stateParams, NgTable
     if ((unchecked == 0) || (checked == 0)) {
       self.checkboxes.checked = (checked == total);
     }
-    
-    self.checkboxes.dirty = checked != 0 ? true : false; 
+
+    self.checkboxes.dirty = checked != 0 ? true : false;
 
     // grayed checkbox
     angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));

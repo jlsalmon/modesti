@@ -295,12 +295,12 @@ a:focus {
   line-height: 50px;
   text-align: center;
   width: 230px;
-  font-family: "Norican", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+  font-family: "Norican", "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   padding: 0 15px;
   font-weight: 300;
 }
 .nain-header .logo small {
-  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .main-header .navbar-brand {
   color: #fff;
