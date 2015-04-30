@@ -1,7 +1,7 @@
 /**
  *
  */
-package java.cern.modesti.config.init;
+package cern.modesti.config.init;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import cern.modesti.repository.mongo.request.counter.Counter;
 @Profile("test")
 public class CounterInitialiser {
 
-  private static final Logger LOG = LoggerFactory.getLogger(DomainInitialiser.class);
+  private static final Logger LOG = LoggerFactory.getLogger(CounterInitialiser.class);
 
   /**
    * This method will initialise the counter collections in a test environment.
