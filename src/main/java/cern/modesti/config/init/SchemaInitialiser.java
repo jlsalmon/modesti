@@ -1,4 +1,4 @@
-package cern.modesti.config;
+package cern.modesti.config.init;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

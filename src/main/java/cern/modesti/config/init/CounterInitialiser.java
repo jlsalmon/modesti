@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.config;
+package java.cern.modesti.config.init;
 
 import java.util.ArrayList;
 import java.util.Arrays;
