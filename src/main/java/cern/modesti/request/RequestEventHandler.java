@@ -35,8 +35,8 @@ import cern.modesti.repository.mongo.schema.SchemaRepository;
  * TODO
  *
  * The {@link cern.modesti.repository.mongo.request.RequestRepository} is automatically exposed as a REST resource via Spring Data REST, hence why there is no explicit MVC
- * controller for it. This class simply hooks into the Spring Data REST lifecycle and intercepts request create/save events.
- *
+ * controller for it. This class simply hooks into the Spring Data REST lifecycle and intercepts request create/save events, and lets Spring Data REST do everything else
+ * automatically.
  *
  * @author Justin Lewis Salmon
  */
@@ -49,9 +49,6 @@ public class RequestEventHandler {
   @Autowired
   private CounterService counterService;
 
-  @Autowired
-  private SchemaRepository schemaRepository;
-
   /**
    * TODO
    *
@@ -63,9 +60,12 @@ public class RequestEventHandler {
     request.setRequestId(counterService.getNextSequence("requests").toString());
     logger.trace("beforeCreate() generated request id: " + request.getRequestId());
 
+    // Add some empty points
     if (request.getPoints().isEmpty()) {
-      // TODO add a default, pre-filled point to a new request
-
+      for (int i = 0; i < 10; i++) {
+        Point point = new Point(counterService.getNextSequence("points"));
+        request.getPoints().add(point);
+      }
     }
 
     for (Point point : request.getPoints()) {
@@ -74,10 +74,6 @@ public class RequestEventHandler {
         logger.debug("beforeCreate() generated point id: " + point.getId());
       }
     }
-
-    // Link the correct schema to this request
-//    Schema schema = schemaRepository.findOneByNameIgnoreCase(request.getDatasource());
-//    request.setSchema(schema);
   }
 
   /**

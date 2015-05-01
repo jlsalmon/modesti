@@ -10,7 +10,6 @@
                 "id": "pointDescription",
                 "name": "Description",
                 "type": "text",
-                "minLength": 5,
                 "maxLength": 10,
                 "required": true
             },

@@ -17,6 +17,7 @@
  ******************************************************************************/
 package cern.modesti.request.point;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
@@ -29,7 +30,15 @@ public class Point {
   @Id
   private Long id;
 
-  private Map<String, Object> properties;
+  private Map<String, Object> properties = new HashMap<>();
+
+  public Point() {
+  }
+
+  public Point(Long id) {
+    this.id = id;
+    this.properties.put("pointDescription", "");
+  }
 
   /**
    * @return the id
