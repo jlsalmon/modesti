@@ -60,17 +60,19 @@ public class RequestEventHandler {
     request.setRequestId(counterService.getNextSequence("requests").toString());
     logger.trace("beforeCreate() generated request id: " + request.getRequestId());
 
-    // Add some empty points
+    // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
       for (int i = 0; i < 10; i++) {
-        Point point = new Point(counterService.getNextSequence("points"));
+        // Point IDs are 1-based
+        Point point = new Point((long) (i + 1));
         request.getPoints().add(point);
       }
     }
 
     for (Point point : request.getPoints()) {
       if (point.getId() == null) {
-        point.setId(counterService.getNextSequence("points"));
+        // Point IDs are 1-based
+        point.setId((long) (request.getPoints().indexOf(point) + 1));
         logger.debug("beforeCreate() generated point id: " + point.getId());
       }
     }
@@ -85,7 +87,8 @@ public class RequestEventHandler {
   public void handleRequestSave(Request request) {
     for (Point point : request.getPoints()) {
       if (point.getId() == null) {
-        point.setId(counterService.getNextSequence("points"));
+        // Point IDs are 1-based
+        point.setId((long) (request.getPoints().indexOf(point) + 1));
         logger.debug("beforeSave() generated point id: " + point.getId());
       }
     }
