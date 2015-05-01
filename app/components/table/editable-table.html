@@ -68,7 +68,7 @@
 
       <!-- Special table row containing filter boxes -->
       <tr ng-show="show_filter">
-        <th></th>
+        <th style="vertical-align: middle;"><a ng-click="ctrl.toggleFilter()"><i class="fa fa-times"></i></a></th>
         <th ng-repeat="field in ctrl.activeFields" class="text-center sortable">
           <input type="text" class="form-control" ng-model="ctrl.searchText[field.id]" ng-model-options="{debounce: 250}" />
         </th>
@@ -125,7 +125,7 @@
             <button class="btn btn-default" ng-click="ctrl.deleteSelectedRows()" tooltip-append-to-body="true" tooltip="Delete selected rows"
                     ng-disabled='!ctrl.checkboxes.dirty'>
               <a>
-                <i class="fa fa-fw fa-remove"></i>
+                <i class="fa fa-fw fa-trash"></i>
               </a>
             </button>
           </div>
