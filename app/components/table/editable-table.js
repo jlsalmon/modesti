@@ -16,8 +16,8 @@ function EditableTableController($scope, $http, $stateParams, NgTableParams, Req
 
   self.tableParams = new NgTableParams({
     page : 1,
-    count : 50,
-    sorting : {}
+    count : 10,
+    sorting : {id : 'asc'}
   }, {
     total : 0,
     filterDelay : 0,
@@ -43,6 +43,8 @@ function EditableTableController($scope, $http, $stateParams, NgTableParams, Req
   self.save = save;
   self.validate = validate;
   self.toggleFilter = toggleFilter;
+  self.getSortingClass = getSortingClass;
+  self.toggleSorting = toggleSorting;
 
   /**
    *
@@ -300,6 +302,23 @@ function EditableTableController($scope, $http, $stateParams, NgTableParams, Req
    */
   function toggleFilter() {
     self.tableParams.settings().$scope.show_filter = !self.tableParams.settings().$scope.show_filter;
+  }
+
+  /**
+   *
+   * @param property
+   */
+  function getSortingClass(property) {
+    if (self.tableParams.isSortBy(property, 'asc')) return 'sort-asc';
+    if (self.tableParams.isSortBy(property, 'desc')) return 'sort-desc';
+  }
+
+  /**
+   *
+   * @param property
+   */
+  function toggleSorting(property) {
+    self.tableParams.sorting(property, self.tableParams.isSortBy(property, 'asc') ? 'desc' : 'asc');
   }
 
   // TODO: remove these watches and use ng-change instead

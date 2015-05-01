@@ -1,27 +1,77 @@
+<style>
+
+  div.details {
+    width: 100%;
+    display: table;
+    content: " ";
+    clear: both;
+    margin-bottom: 20px;
+  }
+
+  div.details div.details-header {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAADCAYAAABS3WWCAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NEQ5RDgxQzc2RjQ5MTFFMjhEMUNENzFGRUMwRjhBRTciIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NEQ5RDgxQzg2RjQ5MTFFMjhEMUNENzFGRUMwRjhBRTciPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0RDlEODFDNTZGNDkxMUUyOEQxQ0Q3MUZFQzBGOEFFNyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0RDlEODFDNjZGNDkxMUUyOEQxQ0Q3MUZFQzBGOEFFNyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PvXFWFAAAAAYSURBVHjaYvj//z8D0/Pnz/8zgFgAAQYAS5UJscReGMIAAAAASUVORK5CYII=) repeat-x scroll 0 17px;
+  }
+
+  div.details div.details-header > h5 {
+    background-color: #fff;
+    display: inline-block;
+    padding-right: 5px;
+    font-weight: bold;
+  }
+
+  div.details div.property-list > span {
+    margin-top: 1px;
+  }
+
+  .label {
+    line-height: 99%;
+    font-size: 90%;
+    margin: 0;
+    padding: 2px 5px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .pagination > li > a {
+    background: #fafafa;
+    color: #666;
+  }
+
+  .pagination > .active > a,
+  .pagination > .active > span,
+  .pagination > .active > a:hover,
+  .pagination > .active > span:hover,
+  .pagination > .active > a:focus,
+  .pagination > .active > span:focus {
+    color: #333;
+    background-color: #E6E6E6;
+    border-color: #ADADAD;
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  }
+</style>
 
 <!-- Content Header (Page header) -->
 <section id="request-header" class="content-header">
   <h1>
     <i class="fa fa-list fa-fw text-muted" style="vertical-align: middle;"></i>
     requests <span class="text-muted">/</span> {{ctrl.request.requestId}} <small>{{ctrl.request.description}}</small>
-    
-    <span style="font-size: 70%;" class="label pull-right bg-green">{{ctrl.request.status}}</span>
   </h1>
 
   <div id="request-main-nav">
-    <tabset justified="false"> 
+    <tabset justified="false">
       <tab ng-click="ctrl.activateTab(0)">
         <tab-heading> <i class="fa fa-edit"></i>Edit</tab-heading>
-      </tab> 
+      </tab>
       <tab ng-click="ctrl.activateTab(1)">
         <tab-heading> <i class="fa fa-exclamation-triangle"></i>Error report</tab-heading>
-      </tab> 
+      </tab>
       <tab ng-click="ctrl.activateTab(2)">
         <tab-heading> <i class="fa fa-heartbeat"></i>Activity</tab-heading>
-      </tab> 
+      </tab>
       <tab ng-click="ctrl.activateTab(3)">
         <tab-heading><i class="fa fa-comments"></i>Comments</tab-heading>
-      </tab> 
+      </tab>
     </tabset>
   </div>
 
@@ -35,25 +85,38 @@
 
       <!-- Request editing page -->
       <div ng-show="ctrl.currentActiveTab == 0">
-        <!-- Default box -->
-        <!-- <div class="box box-solid"> -->
-        <div class="box-header with-border">
-          <h3 class="box-title">Request type: {{ctrl.request.type}}, Domain: {{ctrl.request.domain}}, Data source: {{ctrl.request.datasource}}</h3>
-        </div>
-        <div class="box-body">
 
-          <!-- 
+        <div class="details">
+          <div class="details-header">
+            <h5>Metadata</h5>
+          </div>
+
+          <div class="property-list col-md-2">
+            <span class="text-muted">Request type:</span><br/>
+            <span class="text-muted">Status:</span><br/>
+            <span class="text-muted">Domain:</span><br/>
+            <span class="text-muted">Categories:</span><br/>
+          </div>
+
+          <div class="property-list col-md-2">
+            <span>{{ctrl.request.type | uppercase}}</span><br/>
+            <span class="label bg-green">{{ctrl.request.status}}</span><br/>
+            <span>{{ctrl.request.domain}}</span><br/>
+            <span>{{ctrl.request.categories.join(', ')}}</span><br/>
+          </div>
+        </div>
+
+        <div class="details">
+          <div class="details-header">
+            <h5>Points</h5>
+          </div>
+
+          <!--
             This is the main table directive.
           -->
           <div editable-table request="ctrl.request" schema="ctrl.schema"></div>
 
         </div>
-        <!-- /.box-body -->
-
-        <div class="box-footer">{{ctrl.request.schema}}</div>
-        <!-- /.box-footer-->
-        <!-- </div> -->
-        <!-- /.box -->
       </div>
 
       <!-- Request error report page -->

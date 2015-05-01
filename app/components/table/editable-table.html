@@ -1,4 +1,13 @@
 <style>
+  .table-wrapper {
+    border-left: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+  }
+
+  .table-wrapper table {
+    margin-bottom: 0;
+  }
+
   li > a.new-tab {
     border-top: 1px dashed #ccc !important;
     border-right: 1px dashed #ccc !important;
@@ -45,18 +54,22 @@
     </li>
   </tabset>
 
+  <div class="table-wrapper">
+
   <!-- This is the actual point input table itself -->
   <table id="table" ng-table="ctrl.tableParams" class="table table-bordered table-striped" template-pagination="custom/pager">
     <thead>
       <!-- The fsm-sticky-header makes the table headers stick to the top of the page when scrolling -->
       <tr fsm-sticky-header scroll-body="'#table'" scroll-stop='0'>
-        <th>#</th>
+        <!-- Column header for the point ID -->
+        <th class="sortable" ng-class="ctrl.getSortingClass('id')" ng-click="ctrl.toggleSorting('id')">
+          <div class="sort-indicator">#</div>
+        </th>
 
         <!-- Column header for each field in the currently active category -->
         <th ng-repeat="field in ctrl.activeFields" class="text-left sortable"
-            ng-class="{'sort-asc': ctrl.tableParams.isSortBy('properties.' + field.id, 'asc'),
-                      'sort-desc': ctrl.tableParams.isSortBy('properties.' + field.id, 'desc')}"
-            ng-click="ctrl.tableParams.sorting('properties.' + field.id, ctrl.tableParams.isSortBy('properties.' + field.id, 'asc') ? 'desc' : 'asc')">
+            ng-class="ctrl.getSortingClass('properties.' + field.id)"
+            ng-click="ctrl.toggleSorting('properties.' + field.id)">
             <div class="sort-indicator">{{field.name}}</div>
         </th>
 
@@ -84,7 +97,7 @@
           <td class="input-field text-muted" width="30" style="text-align: center; vertical-align: middle;"
           ng-class="{ 'bg-danger': (pointForm.$invalid && pointForm.$dirty)
                         || (pointForm.$submitted && pointForm.$invalid) }">
-            {{$data.indexOf(point) + 1}}
+            {{point.id}}<!--{{$data.indexOf(point) + 1}}-->
           </td>
 
           <!-- Input field for each field in the currently active category -->
@@ -108,33 +121,33 @@
           <div class="btn-group">
             <!-- Button to add a new row -->
             <button class="btn btn-default" ng-click="ctrl.addRow()" tooltip-append-to-body="true" tooltip="Add row">
-              <a>
+
                 <i class="fa fa-fw fa-plus"></i>
-              </a>
+
             </button>
 
             <!-- Button to duplicate selected rows -->
             <button class="btn btn-default" ng-click="ctrl.duplicateSelectedRows()" tooltip-append-to-body="true" tooltip="Duplicate selected rows"
                     ng-disabled='!ctrl.checkboxes.dirty'>
-              <a>
+
                 <i class="fa fa-fw fa-copy"></i>
-              </a>
+
             </button>
 
             <!-- Button to delete selected rows -->
             <button class="btn btn-default" ng-click="ctrl.deleteSelectedRows()" tooltip-append-to-body="true" tooltip="Delete selected rows"
                     ng-disabled='!ctrl.checkboxes.dirty'>
-              <a>
+
                 <i class="fa fa-fw fa-trash"></i>
-              </a>
+
             </button>
           </div>
 
           <!-- Button to activate the filter text boxes at the top of the table -->
           <button class="btn btn-default" ng-click="ctrl.toggleFilter()" tooltip-append-to-body="true" tooltip="Filter rows">
-            <a>
+
               <i class="fa fa-fw fa-filter"></i>
-            </a>
+
           </button>
 
           <!-- Button to save the request -->
@@ -177,7 +190,7 @@
       <tr>
         <td colspan="20">
 
-          <div class="btn-group" ng-click="ctrl.validate()">
+          <div class="btn-group pull-right" ng-click="ctrl.validate()">
             <!-- Button to validate the request -->
             <button ng-show="$root.validating == undefined" class="btn btn-primary"  tooltip-append-to-body="true" tooltip="Validate request">
                <i class="fa fa-fw fa-check-square-o"></i> Validate
@@ -207,4 +220,5 @@
     </tfoot>
 
   </table>
+  </div>
 </div>
