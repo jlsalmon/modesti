@@ -50,6 +50,10 @@ public class Field {
 
   private String model;
 
+  private Integer minLength;
+
+  private Integer maxLength;
+
   private String placeholder;
 
   private Boolean required;
@@ -108,6 +112,34 @@ public class Field {
    */
   public void setModel(String model) {
     this.model = model;
+  }
+
+  /**
+   * @return the minLength
+   */
+  public Integer getMinLength() {
+    return minLength;
+  }
+
+  /**
+   * @param minLength the minLength to set
+   */
+  public void setMinLength(Integer minLength) {
+    this.minLength = minLength;
+  }
+
+  /**
+   * @return the maxLength
+   */
+  public Integer getMaxLength() {
+    return maxLength;
+  }
+
+  /**
+   * @param maxLength the maxLength to set
+   */
+  public void setMaxLength(Integer maxLength) {
+    this.maxLength = maxLength;
   }
 
   /**
