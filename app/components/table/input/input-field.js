@@ -50,7 +50,10 @@ function InputFieldController($compile, $http, $filter) {
       // Field is a simple string, so we should just bind the model directly
       html += 'ng-model="model" '
     }
-    return html += (schema.required ? 'required' : '') + ' />'
+
+    html += schema.minLength ? 'ng-minlength="{{schema.minLength}}" ': '';
+    html += schema.maxLength ? 'ng-maxlength="{{schema.maxLength}}" ': '';
+    return html + (schema.required ? 'required' : '') + ' />'
   }
 
   /**
@@ -95,8 +98,10 @@ function InputFieldController($compile, $http, $filter) {
                typeahead-loading="loading" \
                typeahead-template-url="item-template-' + schema.id + '.html" \
                typeahead-min-length="{{schema.minLength}}" \
+               ' + (schema.minLength ? 'ng-minlength="{{schema.minLength}}" ': '') +' \
+               ' + (schema.maxLength ? 'ng-maxlength="{{schema.maxLength}}" ': '') +' \
                ' + (schema.required ? 'required' : '') + '> \
-      </div>' // <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
+      </div>'; // <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
 
     var itemTemplate = '\
       <script type="text/ng-template" id="item-template-' + schema.id + '.html"> \
