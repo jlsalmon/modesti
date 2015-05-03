@@ -1,4 +1,4 @@
-package cern.modesti.repository.mongo.validation;
+package cern.modesti.validation;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
