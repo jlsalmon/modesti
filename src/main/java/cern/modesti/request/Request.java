@@ -17,6 +17,7 @@
  ******************************************************************************/
 package cern.modesti.request;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,21 +25,18 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import cern.modesti.request.point.Point;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
-import org.springframework.data.rest.core.annotation.RestResource;
 
-import cern.modesti.schema.Schema;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import cern.modesti.request.point.Point;
 
 /**
  * @author Justin Lewis Salmon
  */
 @Document
-public class Request {
+public class Request implements Serializable {
+
+  private static final long serialVersionUID = -7075036449830835583L;
 
   /**
    * Internal mongodb id
@@ -213,18 +211,12 @@ public class Request {
   public void setPoints(List<Point> points) {
     this.points = points;
   }
-//
-//  /**
-//   * @return the schema
-//   */
-//  public Schema getSchema() {
-//    return schema;
-//  }
-//
-//  /**
-//   * @param schema the schema to set
-//   */
-//  public void setSchema(Schema schema) {
-//    this.schema = schema;
-//  }
+
+  /**
+   *
+   * @return
+   */
+  public boolean containsAlarms() {
+    return true;
+  }
 }
