@@ -35,6 +35,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa:1.2.3.RELEASE")
     compile("org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE")
 
+    compile("org.springframework.security:spring-security-ldap")
+    compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
     compile('org.springframework.security.extensions:spring-security-saml2-core:1.0.0.RELEASE')
 
     compile('org.activiti:spring-boot-starter-basic:5.17.0')
