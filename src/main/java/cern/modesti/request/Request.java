@@ -20,6 +20,7 @@ package cern.modesti.request;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.persistence.Id;
 import javax.validation.Valid;
@@ -217,6 +218,7 @@ public class Request implements Serializable {
    * @return
    */
   public boolean containsAlarms() {
-    return true;
+    Random random = new Random(System.currentTimeMillis());
+    return random.nextBoolean();
   }
 }
