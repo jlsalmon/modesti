@@ -17,6 +17,7 @@
  ******************************************************************************/
 package cern.modesti.request.point;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,9 @@ import org.springframework.data.annotation.Id;
 /**
  * @author Justin Lewis Salmon
  */
-public class Point {
+public class Point implements Serializable {
+
+  private static final long serialVersionUID = -6275036449999835583L;
 
   @Id
   private Long id;

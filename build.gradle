@@ -33,22 +33,25 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-rest:1.2.3.RELEASE")
     compile("org.springframework.boot:spring-boot-starter-data-mongodb:1.2.3.RELEASE")
     compile("org.springframework.boot:spring-boot-starter-data-jpa:1.2.3.RELEASE")
-    //compile("org.springframework.boot:spring-boot-autoconfigure:1.2.3.RELEASE")
-    
+    compile("org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE")
+
+    compile('org.springframework.security.extensions:spring-security-saml2-core:1.0.0.RELEASE')
+
     compile('org.activiti:spring-boot-starter-basic:5.17.0')
     compile('org.activiti:spring-boot-starter-jpa:5.17.0')
-    compile('org.activiti:ldap:5.17.0')
-    
+//    compile('org.activiti:spring-boot-starter-rest-api:5.17.0')
+    compile('org.activiti:activiti-ldap:5.17.0')
+
     compile("org.hsqldb:hsqldb")
     compile("com.h2database:h2")
     compile("oracle:ojdbc:11.2.0.3")
     compile("commons-dbcp:commons-dbcp")
-    
+
     compile("org.apache.poi:poi:3.12-beta1")
     compile("org.apache.poi:poi-ooxml:3.12-beta1")
-    
+
     compile("org.apache.commons:commons-lang3:3.4")
-    
+
     compile("ch.qos.logback:logback-classic:1.1.2")
     compile("org.slf4j:slf4j-api:1.7.+")
     compile("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
