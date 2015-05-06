@@ -1,0 +1,39 @@
+<style>
+  body {
+    background: #D2D6DE !important;
+  }
+</style>
+
+<section class="content">
+  <div class="login-box">
+    <div class="login-logo">
+      <a>modesti</a>
+    </div>
+
+    <div class="login-box-body">
+      <p class="login-box-msg">Sign in with your NICE credentials</p>
+
+      <div class="alert alert-danger" ng-show="ctrl.error">
+        There was a problem logging in. Please try again.
+      </div>
+
+      <form ng-submit="ctrl.login()">
+        <div class="form-group has-feedback">
+          <input type="text" class="form-control" placeholder="Username" id="username" ng-model="ctrl.credentials.username"/>
+          <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+          <input type="password" class="form-control" placeholder="Password" id="password" ng-model="ctrl.credentials.password"/>
+          <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+        <div class="row">
+          <div class="col-xs-4">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+  </div>
+</section>

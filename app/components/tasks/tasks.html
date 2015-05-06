@@ -1,0 +1,42 @@
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Search: <strong>{{ctrl.q}}</strong>
+  </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+  <div class="row" ng-show="ctrl.results.length == 0">
+    <div class="col-lg-12">
+      <div class="alert">
+        <h4>
+          <i class="icon fa fa-info"></i> No Results
+        </h4>
+        No results found matching <strong>{{ctrl.q}}</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="row" ng-show="ctrl.results.length != 0">
+    <div class="col-lg-12">
+
+      <h4>{{ctrl.results.length}} results:</h4>
+
+      <table class="table">
+        <tbody>
+        <tr ng-repeat="request in ctrl.results">
+          <td>
+            <a href="{{request._links.self.href}}">
+              {{request.domain}} | {{request.datasource}} | {{request.description}} | {{request.status}}
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</section>

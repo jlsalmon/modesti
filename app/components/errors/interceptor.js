@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.factory:errorInterceptor
- * 
+ *
  * @description
  */
 angular.module('modesti').factory('errorInterceptor', errorInterceptor);
@@ -32,6 +32,24 @@ function errorInterceptor($q, $rootScope) {
         console.log('error: ' + response.statusText);
       }
       return $q.reject(response);
+    }
+  };
+}
+
+angular.module('modesti').factory('requestInterceptor', requestInterceptor);
+
+function requestInterceptor($rootScope) {
+  return {
+    request: function (config) {
+
+      // use this to destroying other existing headers
+      //config.headers = {'Authentication': $rootScope.authorization};
+
+      // use this to prevent destroying other existing headers
+      config.headers['Authorization'] = $rootScope.authorization;
+      config.withCredentials = true;
+
+      return config;
     }
   };
 }

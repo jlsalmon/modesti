@@ -3,18 +3,23 @@
 /**
  * @ngdoc function
  * @name modesti.config:configureRoutes
- * 
+ *
  * @description Specifies the navigation flow between views.
  */
 angular.module('modesti').config(configureRoutes);
 
 function configureRoutes($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/');
-  
+
   $stateProvider.state('home', {
     url : '/',
     templateUrl : 'components/home/home.html',
     controller : 'HomeController as ctrl'
+
+  }).state('login', {
+    url : '/login',
+    templateUrl : 'components/login/login.html',
+    controller : 'LoginController as ctrl'
 
   }).state('requests', {
     url : '/requests',
@@ -62,10 +67,15 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
       }
     }
 
+  }).state('tasks', {
+    url : '/tasks',
+    templateUrl : 'components/tasks/tasks.html',
+    controller : 'TasksController as ctrl'
+
   }).state('about', {
     url : '/about',
     templateUrl : 'components/about/about.html',
-    controller : 'AboutCtrl'
+    controller : 'AboutController as ctrl'
 
   }).state('search', {
     url : '/search/:q',

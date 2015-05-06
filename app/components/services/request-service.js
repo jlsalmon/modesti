@@ -66,7 +66,7 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
       },
 
       function(error) {
-        console.log('error: ' + error);
+        console.log('error: ' + error.statusText);
         q.reject(error);
       });
 
