@@ -37,12 +37,12 @@ public class WorkflowConfig {
 //    };
 //  }
 
-  @Bean
-  LDAPConfigurator ldapConfigurator() {
-
-    System.out.println("creating ldap bean >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    LDAPConfigurator ldapConfigurator = new LDAPConfigurator();
-    ldapConfigurator.setUser("abc");
-    return ldapConfigurator;
-  }
+//  @Bean
+//  LDAPConfigurator ldapConfigurator() {
+//
+//    System.out.println("creating ldap bean >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//    LDAPConfigurator ldapConfigurator = new LDAPConfigurator();
+//    ldapConfigurator.setUser("abc");
+//    return ldapConfigurator;
+//  }
 }
