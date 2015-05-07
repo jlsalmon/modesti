@@ -1,6 +1,7 @@
 package cern.modesti.filter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -8,6 +9,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -28,7 +30,10 @@ public class CORSFilter implements Filter {
     response.setHeader("Access-Control-Allow-Headers", "x-requested-with, content-type, accept, authorization");
     response.setHeader("Access-Control-Expose-Headers", "Location");
     response.setHeader("Access-Control-Allow-Credentials", "true");
-    chain.doFilter(req, res);
+
+    if (!((HttpServletRequest) req).getMethod().equals("OPTIONS")) {
+      chain.doFilter(req, res);
+    }
   }
 
   @Override

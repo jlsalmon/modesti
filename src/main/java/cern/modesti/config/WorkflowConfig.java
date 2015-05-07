@@ -1,11 +1,5 @@
 package cern.modesti.config;
 
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.identity.Group;
-import org.activiti.engine.identity.User;
-import org.activiti.ldap.LDAPConfigurator;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
@@ -45,4 +39,5 @@ public class WorkflowConfig {
 //    ldapConfigurator.setUser("abc");
 //    return ldapConfigurator;
 //  }
+
 }

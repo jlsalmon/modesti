@@ -5,18 +5,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
 /**
  * TODO
  *
  * @author Justin Lewis Salmon
  */
 @RestController
-public class UserController {
+public class LoginController {
 
-  @RequestMapping(value = "/user", method = GET)
-  public Principal getUser(Principal user) {
+  @RequestMapping(value = "/login")
+  public Principal login(Principal user) {
     return user;
   }
 }
