@@ -11,11 +11,14 @@ import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.access.event.LoggerListener;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
@@ -49,20 +52,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and().csrf().disable();
   }
 
-  //    @Configuration
-  //    protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
-  //
-  //      @Override
-  //      public void init(AuthenticationManagerBuilder auth) throws Exception {
-  //        auth
-  //          .ldapAuthentication()
-  //
-  //            .userDnPatterns("CN={0},OU=Users,OU=Organic Units")
-  //            .groupSearchBase("OU=e-groups,OU=Workgroups")
-  //            .contextSource()//.ldif("classpath:test-server.ldif")
-  //            .url("ldaps://cerndc.cern.ch:636/DC=cern,DC=ch");
-  //      }
-  //    }
+  @Configuration
+  @Profile("test")
+  protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+    @Override
+    public void init(AuthenticationManagerBuilder auth) throws Exception {
+      auth
+      .ldapAuthentication()
+      .userDnPatterns("uid={0},ou=people")
+      .groupSearchBase("ou=groups")
+      .contextSource().ldif("classpath:test-server.ldif");
+    }
+  }
 
 
   @Bean
@@ -71,6 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
+  @Profile("prod")
   public LdapContextSource contextSource() {
     DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.url"));
     contextSource.setBase(env.getRequiredProperty("ldap.base"));
@@ -78,11 +81,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
+  @Profile("prod")
   public LdapAuthenticationProvider ldapAuthenticationProvider() {
     return new LdapAuthenticationProvider(ldapAuthenticator());
   }
 
   @Bean
+  @Profile("prod")
   public LdapAuthenticator ldapAuthenticator() {
     BindAuthenticator authenticator = new BindAuthenticator(contextSource());
     String[] userDnPatterns = new String[]{env.getRequiredProperty("ldap.user")};
