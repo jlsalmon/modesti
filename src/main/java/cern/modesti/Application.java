@@ -1,5 +1,6 @@
 package cern.modesti;
 
+import org.activiti.spring.boot.RestApiAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Import;
@@ -21,7 +22,7 @@ import cern.modesti.config.WebSecurityConfig;
  */
 @SpringBootApplication
 @EnableEntityLinks
-@Import({DataSourceConfig.class, JpaConfig.class, MongoConfig.class, RestConfig.class, WebSecurityConfig.class})
+@Import({DataSourceConfig.class, JpaConfig.class, MongoConfig.class, RestConfig.class, WebSecurityConfig.class, RestApiAutoConfiguration.class})
 public class Application {
 
   public static void main(String[] args) {
