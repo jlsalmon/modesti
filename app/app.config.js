@@ -11,17 +11,14 @@ angular.module('modesti').config(configure);
 
 var BACKEND_BASE_URL = 'http://localhost:8080';
 
-function configure($httpProvider, $sceDelegateProvider, RestangularProvider) {
+function configure($httpProvider, RestangularProvider) {
 
-  // Needed so that Spring Security sends us back a WWW-Authenticate header
-  //$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+  // Needed so that Spring Security sends us back a WWW-Authenticate header,
+  // which will prevent th browser from showing a basic auth popup
+  $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
-  // Needed so that the browser doesn't "preflight" the backend server
-  //$sceDelegateProvider.resourceUrlWhitelist(['self', BACKEND_BASE_URL + '/**']);
-
-  //$httpProvider.defaults.useXDomain = true;
-  //delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
+  // Needed to make sure that the JSESSIONCOOKIE is sent with every request
+  $httpProvider.defaults.withCredentials = true;
 
   configureRestangular(RestangularProvider);
   configureErrorInterceptors($httpProvider);
@@ -47,7 +44,7 @@ function configureRestangular(RestangularProvider) {
       if (data.hasOwnProperty('_embedded')) {
         extractedData = data._embedded.requests;
       } else {
-        extractedData = [];
+        extractedData = data.data;
       }
     } else {
       extractedData = data;

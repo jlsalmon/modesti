@@ -7,74 +7,49 @@
  */
 angular.module('modesti').controller('LoginController', LoginController);
 
-function LoginController($http, $rootScope, $location) {
+function LoginController($http, $localStorage, $location, $modalInstance, authService) {
   var self = this;
 
   self.credentials = {};
+  self.storage = $localStorage.$default();
 
-  self.login  = login;
-  self.logout = logout;
-
-  authenticate();
+  self.login = login;
 
   /**
    *
    */
   function login() {
-    authenticate(self.credentials, function () {
-      if ($rootScope.authenticated) {
-        $location.path("/");
-        self.error = false;
-      } else {
-        $location.path("/login");
-        self.error = true;
-      }
-    });
-  }
 
-  /**
-   *
-   */
-  function logout() {
-    $http.post('http://localhost:8080/logout', {}).success(function() {
-      $rootScope.authenticated = false;
-      $rootScope.username = undefined;
-      $location.path("/");
-    }).error(function(data) {
-      $rootScope.authenticated = false;
-      $rootScope.username = undefined;
-    });
-  }
-
-  /**
-   *
-   * @param credentials
-   * @param callback
-   */
-  function authenticate(credentials, callback) {
-    $rootScope.authorization = credentials ? "Basic " + btoa(credentials.username + ":" + credentials.password) : '';
-
-    var headers = credentials ? {
-      authorization: $rootScope.authorization
+    // Build a basic auth header
+    var headers = self.credentials ? {
+      authorization: "Basic " + btoa(self.credentials.username + ":" + self.credentials.password)
     } : {};
 
+    // Set ignoreAuthModule so that angular-http-auth doesn't show another modal
+    // if the authentication fails
+    $http.get('http://localhost:8080/login', {headers: headers, ignoreAuthModule: true}).success(function (data) {
+      console.log('authenticated');
 
-    $http.get('http://localhost:8080/user', {headers: headers, withCredentials: true}).success(function (data) {
-      if (data.name) {
-        console.log('authenticated');
-        $rootScope.authenticated = true;
-        $rootScope.username = data.name;
-      } else {
-        console.log('failed to authenticate');
-        $rootScope.authenticated = false;
-        $rootScope.username = undefined;
-      }
-      callback && callback();
+      // Set data in local storage for other parts of the app to use
+      $localStorage.authenticated = true;
+      $localStorage.username = data.name;
+
+      self.loginError = false;
+
+      // Confirm the login, so that angular-http-auth can resume any ajax requests
+      // that were suspended due to 401s
+      authService.loginConfirmed();
+
+      // Close the modal
+      $modalInstance.close();
+
     }).error(function () {
       console.log('failed to authenticate');
-      $rootScope.authenticated = false;
-      $rootScope.username = undefined;
-      callback && callback();
+
+      $localStorage.authenticated = false;
+      $localStorage.username = undefined;
+
+      self.loginError = true;
     });
   }
 }

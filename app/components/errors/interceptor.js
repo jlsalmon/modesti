@@ -35,21 +35,3 @@ function errorInterceptor($q, $rootScope) {
     }
   };
 }
-
-angular.module('modesti').factory('requestInterceptor', requestInterceptor);
-
-function requestInterceptor($rootScope) {
-  return {
-    request: function (config) {
-
-      // use this to destroying other existing headers
-      //config.headers = {'Authentication': $rootScope.authorization};
-
-      // use this to prevent destroying other existing headers
-      config.headers['Authorization'] = $rootScope.authorization;
-      config.withCredentials = true;
-
-      return config;
-    }
-  };
-}

@@ -16,11 +16,6 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     templateUrl : 'components/home/home.html',
     controller : 'HomeController as ctrl'
 
-  }).state('login', {
-    url : '/login',
-    templateUrl : 'components/login/login.html',
-    controller : 'LoginController as ctrl'
-
   }).state('requests', {
     url : '/requests',
     templateUrl : 'components/request/user-requests.html',

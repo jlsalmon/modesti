@@ -1,10 +1,7 @@
-<style>
-  body {
-    background: #D2D6DE !important;
-  }
-</style>
-
-<section class="content">
+<!--<div class="modal-header">-->
+  <!--<h3 class="modal-title">Sign In</h3>-->
+<!--</div>-->
+<div class="modal-body">
   <div class="login-box">
     <div class="login-logo">
       <a>modesti</a>
@@ -13,8 +10,8 @@
     <div class="login-box-body">
       <p class="login-box-msg">Sign in with your NICE credentials</p>
 
-      <div class="alert alert-danger" ng-show="ctrl.error">
-        There was a problem logging in. Please try again.
+      <div class="alert alert-danger" ng-show="ctrl.loginError">
+        There was a problem signing in. Please try again.
       </div>
 
       <form ng-submit="ctrl.login()">
@@ -27,8 +24,8 @@
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
         <div class="row">
-          <div class="col-xs-4">
-            <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+          <div class="col-xs-4 pull-right">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Sign in</button>
           </div>
 
         </div>
@@ -36,4 +33,7 @@
 
     </div>
   </div>
-</section>
+</div>
+<!--<div class="modal-footer">-->
+  <!--<button class="btn btn-primary" ng-click="ctrl.login()">Sign In</button>-->
+<!--</div>-->

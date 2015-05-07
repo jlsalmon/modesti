@@ -17,9 +17,11 @@ var app = angular.module('modesti',
     'ngSanitize',
     'ngTouch',
     'ngTable',
+    'ngStorage',
     'ui.bootstrap',
     'ui.router',
     'restangular',
     'angularFileUpload',
-    'fsm'
+    'fsm',
+    'http-auth-interceptor'
   ]);
