@@ -44,7 +44,7 @@
             <th>Description</th>
             <th>Type</th>
             <th>Domain</th>
-            <th>Datasource</th>
+            <th>Categories</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -56,8 +56,8 @@
             <td>{{request.description}}</td>
             <td>{{request.type}}</td>
             <td>{{request.domain}}</td>
-            <td>{{request.datasource}}</td>
-            <td>{{request.status}}</td>
+            <td>{{request.categories.join(', ')}}</td>
+            <td><span class="label request-status bg-green">{{request.status}}</span></td>
             <td>
               <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                 <i class="fa fa-fw fa-edit"></i>

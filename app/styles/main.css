@@ -7,8 +7,13 @@
   background-color: #3c8dbc;
 }
 
-.skin-blue .navbar .nav a {
-  color: rgba(255, 255, 255, 0.8);
+/*.skin-blue .navbar .nav a {*/
+  /*color: rgba(255, 255, 255, 0.8);*/
+/*}*/
+
+.navbar-nav > .user-menu > .dropdown-menu {
+  padding: 5px 0;
+  width: inherit;
 }
 
 .skin-blue .navbar .nav>li>a:hover, .skin-blue .navbar .nav>li>a:active,
@@ -458,4 +463,14 @@ select.form-control {
 
 .lt-ie10>.sidebar-open .main-sidebar {
   left: 0;
+}
+
+.label.request-status {
+  line-height: 99%;
+  font-size: 90%;
+  margin: 0;
+  padding: 2px 5px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
 }

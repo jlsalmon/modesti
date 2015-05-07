@@ -96,7 +96,7 @@ function NewRequestController($scope, $http, $location, $filter, RequestService,
    */
   function submit(form) {
     console.log(form);
-    if (form.$invalid) {
+    if (form.$invalid || self.request.categories.length == 0) {
       console.log('form invalid');
       return;
     }

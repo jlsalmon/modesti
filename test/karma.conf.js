@@ -38,6 +38,9 @@ module.exports = function(config) {
       'app/bower_components/angular-ui-router/release/angular-ui-router.js',
       'app/bower_components/angular-file-upload/angular-file-upload.js',
       'app/bower_components/fsm-sticky-header/src/fsm-sticky-header.js',
+      'app/bower_components/ngstorage/ngStorage.js',
+      'app/bower_components/angular-local-storage/dist/angular-local-storage.js',
+      'app/bower_components/angular-http-auth/src/http-auth-interceptor.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
