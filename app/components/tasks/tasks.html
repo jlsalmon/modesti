@@ -16,12 +16,21 @@
         <thead>
         <tr>
           <th>Task Name</th>
+          <th>Assignee</th>
+          <th>Actions</th>
         </tr>
         </thead>
 
         <tbody>
         <tr ng-repeat="task in ctrl.tasks">
           <td>{{task.name}}</td>
+          <td>{{task.assignee}}</td>
+          <td>
+            <button class="btn btn-default btn-xs" ng-click="ctrl.claimTask(task)">
+                <i class="fa fa-fw fa-hand-o-right"></i>
+                Claim
+            </button>
+          </td>
         </tr>
         </tbody>
       </table>

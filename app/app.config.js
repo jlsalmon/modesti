@@ -64,5 +64,4 @@ function configureRestangular(RestangularProvider) {
  */
 function configureErrorInterceptors($httpProvider) {
   $httpProvider.interceptors.push('errorInterceptor');
-  $httpProvider.interceptors.push('requestInterceptor');
 }

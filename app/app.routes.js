@@ -67,6 +67,19 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     templateUrl : 'components/tasks/tasks.html',
     controller : 'TasksController as ctrl'
 
+  }).state('task', {
+    url : '/tasks/:id',
+    templateUrl : 'components/tasks/task.html',
+    controller : 'TaskController as ctrl',
+    resolve : {
+
+      // TODO refactor this out
+      task : function getTask($stateParams, TaskService) {
+        var id = $stateParams.id;
+        return TaskService.getTask(id);
+      },
+    }
+
   }).state('about', {
     url : '/about',
     templateUrl : 'components/about/about.html',
