@@ -7,11 +7,12 @@
  */
 angular.module('modesti').controller('UploadController', UploadController);
 
-function UploadController($location, FileUploader) {
+function UploadController($location, $cookies, FileUploader) {
   var self = this;
 
   self.uploader = new FileUploader({
-    url : 'http://localhost:8080/requests/upload'
+    url : 'http://localhost:8080/requests/upload',
+    withCredentials: true
   });
 
   self.uploader.filters.push({
@@ -34,7 +35,7 @@ function UploadController($location, FileUploader) {
     var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
     input.trigger('fileselect', [numFiles, label]);
   };
-  
+
 
   $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
     var input = $(this).parents('.input-group').find(':text');
@@ -47,7 +48,7 @@ function UploadController($location, FileUploader) {
         alert(log);
     }
   });
-  
+
   self.uploader.onAfterAddingAll = function(addedFileItems) {
     console.log('onAfterAddingAll', addedFileItems);
   };
