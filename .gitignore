@@ -11,6 +11,7 @@ spring-shell.log
 make_tunnels.sh
 .DS_Store
 .idea/
+.xml/
 modesti-api.iml
 # Exclude properties files
 modesti-test.properties
