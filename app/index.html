@@ -181,14 +181,14 @@
             </li> -->
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
-              <a ng-click="ctrl.login()" ng-show="!ctrl.storage.authenticated" ng-cloak>
+              <a href="" ng-click="ctrl.login()" ng-show="!ctrl.storage.authenticated" ng-cloak>
                 <span class="hidden-xs" >
                   <i class="fa fa-fw fa-sign-in"></i>
                     Sign in
                 </span>
               </a>
 
-              <a class="dropdown-toggle" data-toggle="dropdown" ng-show="ctrl.storage.authenticated && ctrl.storage.username" ng-cloak>
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-show="ctrl.storage.authenticated && ctrl.storage.username" ng-cloak>
                 <!--<img src="images/no-avatar.png" class="user-image" alt="User Image" />-->
                 <span class="hidden-xs">
                   <i class="fa fa-fw fa-user"></i>
@@ -221,7 +221,7 @@
                 <!--</li>-->
 
                   <li>
-                    <a class="header" ng-click="ctrl.logout()">
+                    <a href="" class="header" ng-click="ctrl.logout()">
                       <i class="fa fa-fw fa-sign-out"></i>
                       Sign out
                     </a>
