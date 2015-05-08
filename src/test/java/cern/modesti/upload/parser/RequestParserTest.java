@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cern.modesti.request.RequestType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.core.io.Resource;
@@ -81,7 +82,7 @@ public class RequestParserTest {
     Request request = RequestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
 
     assertTrue(request.getDomain().equals("TIM"));
-    assertTrue(request.getType().equals("CREATE"));
+    assertTrue(request.getType().equals(RequestType.CREATE));
     assertTrue(request.getCategories().size() == 1);
     assertTrue(request.getCategories().get(0).equals("plc"));
 

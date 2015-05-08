@@ -19,28 +19,28 @@ package cern.modesti.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 
 /**
  * @author Justin Lewis Salmon
  */
 @Entity
-//@Table(name = "persons_mv")
-public class Person {
+public class Person implements Serializable {
+
+  private static final long serialVersionUID = 548818728867189335L;
 
   @Id
-  //@Column(name = "person_id")
   private Long id;
 
-  //@Column(name = "first_name")
   private String name;
 
-  //@Column(name = "last_name")
-  //private String lastName;
-
-  public Person() {
-  }
-
+  /**
+   * Create a new Person instance.
+   *
+   * @param id the id
+   * @param name the name
+   */
   public Person(Long id, String name) {
     this.id = id;
     this.name = name;
@@ -73,18 +73,4 @@ public class Person {
   public void setName(String name) {
     this.name = name;
   }
-
-//  /**
-//   * @return the lastName
-//   */
-//  public String getLastName() {
-//    return lastName;
-//  }
-//
-//  /**
-//   * @param lastName the lastName to set
-//   */
-//  public void setLastName(String lastName) {
-//    this.lastName = lastName;
-//  }
 }

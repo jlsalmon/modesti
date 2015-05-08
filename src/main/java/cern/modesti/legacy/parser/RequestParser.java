@@ -83,20 +83,18 @@ public abstract class RequestParser {
    *
    * @return
    */
-  private String parseRequestType() {
+  private RequestType parseRequestType() {
     String type = sheet.getRow(0).getCell(1).getStringCellValue();
 
     if (type.contains("creation")) {
-      type = RequestType.CREATE.toString();
+      return RequestType.CREATE;
     } else if (type.contains("modification")) {
-      type = RequestType.MODIFY.toString();
+      return RequestType.MODIFY;
     } else if (type.contains("deletion")) {
-      type = RequestType.DELETE.toString();
+      return RequestType.DELETE;
     } else {
       throw new RequestParseException("Invalid request type: " + type);
     }
-
-    return type;
   }
 
   /**

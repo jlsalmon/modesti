@@ -19,7 +19,7 @@ public class ConfigurePointsTask implements JavaDelegate {
 
   @Override
   public void execute(DelegateExecution execution) throws Exception {
-    Request request = execution.getVariable("request", Request.class);
-    LOG.info("configuring points for request id " + request.getRequestId() + "...");
+    String requestId = execution.getVariable("requestId", String.class);
+    LOG.info("configuring points for request id " + requestId + "...");
   }
 }

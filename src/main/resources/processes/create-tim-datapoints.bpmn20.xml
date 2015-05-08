@@ -8,100 +8,104 @@
       <lane id="lane1" name="REQUESTOR">
         <flowNodeRef>alarmCheck</flowNodeRef>
       </lane>
-      <lane id="lane2" name="TI OPERATOR">
+      <lane id="lane2" name="MODESTI">
+        <flowNodeRef>configurePoints</flowNodeRef>
+      </lane>
+      <lane id="lane3" name="TI OPERATOR">
         <flowNodeRef>approveAlarms</flowNodeRef>
         <flowNodeRef>testPoints</flowNodeRef>
       </lane>
-      <lane id="lane3" name="MODESTI">
-        <flowNodeRef>configurePoints</flowNodeRef>
-        <flowNodeRef>closeRequest</flowNodeRef>
-      </lane>
     </laneSet>
-    <startEvent id="start" name="Start"></startEvent>
-    <sequenceFlow id="flow1" sourceRef="start" targetRef="alarmCheck"></sequenceFlow>
-    <exclusiveGateway id="alarmCheck" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow2" sourceRef="alarmCheck" targetRef="approveAlarms">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${request.containsAlarms()}]]></conditionExpression>
-    </sequenceFlow>
-    <userTask id="approveAlarms" name="Approve alarms"></userTask>
-    <sequenceFlow id="flow3" sourceRef="alarmCheck" targetRef="configurePoints">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!request.containsAlarms()}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow4" sourceRef="approveAlarms" targetRef="configurePoints"></sequenceFlow>
-    <sequenceFlow id="flow5" sourceRef="configurePoints" targetRef="testPoints"></sequenceFlow>
-    <userTask id="testPoints" name="Test points"></userTask>
-    <sequenceFlow id="flow6" sourceRef="testPoints" targetRef="closeRequest"></sequenceFlow>
-    <serviceTask id="configurePoints" name="Configure points" activiti:class="cern.modesti.workflow.ConfigurePointsTask"></serviceTask>
-    <serviceTask id="closeRequest" name="Close request" activiti:class="cern.modesti.workflow.CloseRequestTask"></serviceTask>
-    <sequenceFlow id="flow7" sourceRef="closeRequest" targetRef="end"></sequenceFlow>
     <endEvent id="end" name="End"></endEvent>
+    <sequenceFlow id="flow2" sourceRef="alarmCheck" targetRef="approveAlarms">
+      <extensionElements>
+        <activiti:executionListener event="take" expression="${requestStatusManager.setRequestStatus(requestId, &quot;FOR_APPROVAL&quot;)}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${containsAlarms}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow3" sourceRef="alarmCheck" targetRef="configurePoints">
+      <extensionElements>
+        <activiti:executionListener event="take" expression="${requestStatusManager.setRequestStatus(requestId, &quot;FOR_CONFIGURATION&quot;)}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!containsAlarms}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="alarmCheck" name="Exclusive Gateway"></exclusiveGateway>
+    <startEvent id="start" name="Start"></startEvent>
+    <sequenceFlow id="flow9" sourceRef="start" targetRef="alarmCheck"></sequenceFlow>
+    <userTask id="approveAlarms" name="Approve alarms"></userTask>
+    <sequenceFlow id="flow4" sourceRef="approveAlarms" targetRef="configurePoints">
+      <extensionElements>
+        <activiti:executionListener event="take" expression="${requestStatusManager.setRequestStatus(requestId, &quot;FOR_CONFIGURATION&quot;)}"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+    <serviceTask id="configurePoints" name="Configure points" activiti:class="cern.modesti.workflow.ConfigurePointsTask"></serviceTask>
+    <sequenceFlow id="flow5" sourceRef="configurePoints" targetRef="testPoints">
+      <extensionElements>
+        <activiti:executionListener event="take" expression="${requestStatusManager.setRequestStatus(requestId, &quot;FOR_TESTING&quot;)}"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+    <userTask id="testPoints" name="Test points"></userTask>
+    <sequenceFlow id="flow6" sourceRef="testPoints" targetRef="end">
+      <extensionElements>
+        <activiti:executionListener event="take" expression="${requestStatusManager.setRequestStatus(requestId, &quot;CLOSED&quot;)}"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_Collaboration">
     <bpmndi:BPMNPlane bpmnElement="Collaboration" id="BPMNPlane_Collaboration">
       <bpmndi:BPMNShape bpmnElement="pool1" id="BPMNShape_pool1">
-        <omgdc:Bounds height="498.0" width="691.0" x="140.0" y="60.0"></omgdc:Bounds>
+        <omgdc:Bounds height="498.0" width="421.0" x="100.0" y="60.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="lane1" id="BPMNShape_lane1">
-        <omgdc:Bounds height="166.0" width="671.0" x="160.0" y="60.0"></omgdc:Bounds>
+        <omgdc:Bounds height="166.0" width="401.0" x="120.0" y="60.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="lane2" id="BPMNShape_lane2">
-        <omgdc:Bounds height="166.0" width="671.0" x="160.0" y="226.0"></omgdc:Bounds>
+        <omgdc:Bounds height="166.0" width="401.0" x="120.0" y="226.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="lane3" id="BPMNShape_lane3">
-        <omgdc:Bounds height="166.0" width="671.0" x="160.0" y="392.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="35.0" width="35.0" x="50.0" y="120.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="alarmCheck" id="BPMNShape_alarmCheck">
-        <omgdc:Bounds height="51.0" width="41.0" x="230.0" y="120.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="approveAlarms" id="BPMNShape_approveAlarms">
-        <omgdc:Bounds height="55.0" width="105.0" x="200.0" y="280.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="testPoints" id="BPMNShape_testPoints">
-        <omgdc:Bounds height="55.0" width="105.0" x="460.0" y="280.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="configurePoints" id="BPMNShape_configurePoints">
-        <omgdc:Bounds height="55.0" width="105.0" x="330.0" y="450.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="closeRequest" id="BPMNShape_closeRequest">
-        <omgdc:Bounds height="55.0" width="105.0" x="610.0" y="450.0"></omgdc:Bounds>
+        <omgdc:Bounds height="166.0" width="401.0" x="120.0" y="392.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="35.0" width="35.0" x="880.0" y="460.0"></omgdc:Bounds>
+        <omgdc:Bounds height="40.0" width="35.0" x="560.0" y="450.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
-        <omgdi:waypoint x="85.0" y="137.0"></omgdi:waypoint>
-        <omgdi:waypoint x="230.0" y="145.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape bpmnElement="alarmCheck" id="BPMNShape_alarmCheck">
+        <omgdc:Bounds height="40.0" width="40.0" x="220.0" y="130.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="40.0" width="40.0" x="21.0" y="130.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approveAlarms" id="BPMNShape_approveAlarms">
+        <omgdc:Bounds height="55.0" width="141.0" x="170.0" y="440.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="configurePoints" id="BPMNShape_configurePoints">
+        <omgdc:Bounds height="65.0" width="139.0" x="340.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="testPoints" id="BPMNShape_testPoints">
+        <omgdc:Bounds height="55.0" width="139.0" x="340.0" y="440.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
-        <omgdi:waypoint x="250.0" y="171.0"></omgdi:waypoint>
-        <omgdi:waypoint x="252.0" y="280.0"></omgdi:waypoint>
+        <omgdi:waypoint x="240.0" y="170.0"></omgdi:waypoint>
+        <omgdi:waypoint x="240.0" y="440.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
-        <omgdi:waypoint x="271.0" y="145.0"></omgdi:waypoint>
-        <omgdi:waypoint x="382.0" y="140.0"></omgdi:waypoint>
-        <omgdi:waypoint x="382.0" y="450.0"></omgdi:waypoint>
+        <omgdi:waypoint x="240.0" y="170.0"></omgdi:waypoint>
+        <omgdi:waypoint x="409.0" y="280.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="61.0" y="150.0"></omgdi:waypoint>
+        <omgdi:waypoint x="220.0" y="150.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
-        <omgdi:waypoint x="252.0" y="335.0"></omgdi:waypoint>
-        <omgdi:waypoint x="252.0" y="477.0"></omgdi:waypoint>
-        <omgdi:waypoint x="330.0" y="477.0"></omgdi:waypoint>
+        <omgdi:waypoint x="240.0" y="440.0"></omgdi:waypoint>
+        <omgdi:waypoint x="409.0" y="345.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
-        <omgdi:waypoint x="435.0" y="477.0"></omgdi:waypoint>
-        <omgdi:waypoint x="512.0" y="477.0"></omgdi:waypoint>
-        <omgdi:waypoint x="512.0" y="335.0"></omgdi:waypoint>
+        <omgdi:waypoint x="409.0" y="345.0"></omgdi:waypoint>
+        <omgdi:waypoint x="409.0" y="440.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
-        <omgdi:waypoint x="565.0" y="307.0"></omgdi:waypoint>
-        <omgdi:waypoint x="662.0" y="307.0"></omgdi:waypoint>
-        <omgdi:waypoint x="662.0" y="450.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
-        <omgdi:waypoint x="715.0" y="477.0"></omgdi:waypoint>
-        <omgdi:waypoint x="880.0" y="477.0"></omgdi:waypoint>
+        <omgdi:waypoint x="479.0" y="467.0"></omgdi:waypoint>
+        <omgdi:waypoint x="560.0" y="470.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

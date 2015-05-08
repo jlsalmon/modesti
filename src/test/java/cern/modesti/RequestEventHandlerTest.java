@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cern.modesti.request.RequestType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -84,7 +85,7 @@ public class RequestEventHandlerTest {
 
   private Request getTestRequest() {
     Request request = new Request();
-    request.setType("create");
+    request.setType(RequestType.CREATE);
     request.setDescription("cool description");
     request.setDomain("TIM");
     request.setCategories(new ArrayList<>(Arrays.asList("PLC")));

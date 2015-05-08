@@ -37,5 +37,5 @@ public interface PersonRepository extends ReadOnlyRepository<Person, String> {
                + "AND   (cernid  LIKE UPPER(:id || '%') "
                + "OR     first_name || ' ' || last_name LIKE UPPER('%' || :name || '%'))", nativeQuery = true)
   @Cacheable("persons")
-  public List<Person> findByIdOrName(@Param("id") String id, @Param("name") String name);
+  List<Person> findByIdOrName(@Param("id") String id, @Param("name") String name);
 }
