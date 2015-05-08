@@ -1,4 +1,8 @@
 <style>
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    background-color: #f4f4f4;
+    color: #444;
+}
   .tasklist-controls {
     margin-bottom: 10px;
   }
@@ -57,9 +61,28 @@
         <!--</div>-->
         <div class="box-body no-padding">
           <ul class="nav nav-pills nav-stacked">
-            <li class="active"><a href="#"><i class="fa fa-inbox"></i> In Progress <span class="label label-primary pull-right">12</span></a></li>
-            <li><a href="#"><i class="fa fa-envelope-o"></i> For Approval <span class="label label-success pull-right">12</span></a></li>
-            <li><a href="#"><i class="fa fa-filter"></i> For Testing <span class="label label-waring pull-right">65</span></a></li>
+            <li ng-class="{active: ctrl.filter.status == ''}">
+              <a href="" ng-click="ctrl.filter.status = ''" >
+                <i class="fa fa-circle-o"></i> All </a>
+              </li>
+            <li ng-class="{active: ctrl.filter.status == 'IN_PROGRESS'}">
+              <a href="" ng-click="ctrl.filter.status = 'IN_PROGRESS'" >
+              <i class="fa fa-inbox"></i> In Progress 
+              <span class="label label-primary pull-right">{{(ctrl.requests | filter:{status: 'IN_PROGRESS'}).length}}</span>
+              </a>
+            </li>
+            <li ng-class="{active: ctrl.filter.status == 'FOR_APPROVAL'}">
+              <a href="" ng-click="ctrl.filter.status = 'FOR_APPROVAL'">
+                <i class="fa fa-envelope-o"></i> For Approval 
+                <span class="label label-success pull-right">{{(ctrl.requests | filter:{status: 'FOR_APPROVAL'}).length}}</span>
+              </a>
+            </li>
+            <li ng-class="{active: ctrl.filter.status == 'FOR_TESTING'}">
+              <a href="" ng-click="ctrl.filter.status = 'FOR_TESTING'">
+                <i class="fa fa-filter"></i> For Testing 
+                <span class="label label-waring pull-right">{{(ctrl.requests | filter:{status: 'FOR_TESTING'}).length}}</span>
+              </a>
+            </li>
           </ul>
         </div><!-- /.box-body -->
       </div><!-- /. box -->
@@ -83,25 +106,25 @@
           <div class="tasklist-controls">
             <div class="btn-group" dropdown>
               <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                <i class="fa fa-fw fa-user"></i> <span class="text-muted">assignee: </span> Any <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
-              </ul>
-            </div>
-
-            <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
                 <i class="fa fa-fw fa-crosshairs"></i> <span class="text-muted">domain: </span> Any <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
+                <li ng-repeat="place in ctrl.requests | unique:'domain'"><a href="">{{domain}}</a></li>
               </ul>
             </div>
 
             <div class="btn-group" dropdown>
               <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
                 <i class="fa fa-fw fa-cogs"></i> <span class="text-muted">subsystem: </span> Any <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li ng-repeat="request in ctrl.requests | unique:'subsystem'"><a href="">{{request}}</a></li>
+              </ul>
+            </div>
+            
+            <div class="btn-group" dropdown>
+              <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+                <i class="fa fa-fw fa-user"></i> <span class="text-muted">assignee: </span> Any <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li><a href="#">Action</a></li>
@@ -113,7 +136,9 @@
                 <span class="text-muted">type: </span> Any <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
+                <li><a href="#">CREATE</a></li>
+                <li><a href="#">UPDATE</a></li>
+                <li><a href="#">DELETE</a></li>
               </ul>
             </div>
 
@@ -133,7 +158,7 @@
 
           <ul class="todo-list">
 
-            <li ng-repeat="request in ctrl.requests">
+            <li ng-repeat="request in ctrl.requests | filter: ctrl.filter">
               <div class="request-icon">
                 <i class="fa fa-list fa-fw text-muted vcenter"></i>
               </div>

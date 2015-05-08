@@ -9,6 +9,14 @@ angular.module('modesti').controller('UserRequestsController', UserRequestsContr
 
 function UserRequestsController($location, RequestService) {
   var self = this;
+  
+  self.filter = {
+      status: '',
+      domain: '',
+      subsystem: '',
+      assignee: '',
+      type: ''
+  };
 
   self.deleteRequest = deleteRequest;
   self.editRequest = editRequest;
