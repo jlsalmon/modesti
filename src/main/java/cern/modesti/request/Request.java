@@ -26,6 +26,7 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
@@ -48,29 +49,33 @@ public class Request implements Serializable {
   /**
    * Human-readable id
    */
-  //@TextIndexed(weight = 3)
+  @TextIndexed(weight = 3)
   private String requestId;
 
-  //@TextIndexed
-  private String status;
+  @TextIndexed
+  private RequestStatus status;
 
-  //@TextIndexed
+  @TextIndexed
   @NotNull(message = "Request type is compulsory")
-  private String type;
+  private RequestType type;
 
-  //@TextIndexed(weight = 2)
+  @TextIndexed
+  @NotNull(message = "Request creator is compulsory")
+  private String creator;
+
+  @TextIndexed(weight = 2)
   @NotNull(message = "Description is compulsory")
   private String description;
 
-  //@TextIndexed
+  @TextIndexed
   @NotNull(message = "Domain is compulsory")
   private String domain;
 
-  //@TextIndexed
+  @TextIndexed
   @NotNull(message = "At least one category is compulsory")
   private List<String> categories = new ArrayList<>();
 
-  //@TextIndexed
+  @TextIndexed
   @Valid
   private List<Point> points = new ArrayList<>();
 
@@ -92,16 +97,16 @@ public class Request implements Serializable {
    *
    * @author Justin Lewis Salmon
    */
-  public interface RequestStatus {
-    String IN_PROGRESS = "in progress";
-    String FOR_CORRECTION = "for correction";
-    String FOR_APPROVAL = "for approval";
-    String FOR_ADDRESSING = "for addressing";
-    String FOR_CABLING = "for cabling";
-    String FOR_CONFIGURATION = "for configuration";
-    String CONFIGURED = "configured";
-    String FOR_TESTING = "for testing";
-    String CLOSED = "closed";
+  public enum RequestStatus {
+    IN_PROGRESS,
+    FOR_CORRECTION,
+    FOR_APPROVAL,
+    FOR_ADDRESSING,
+    FOR_CABLING,
+    FOR_CONFIGURATION,
+    CONFIGURED,
+    FOR_TESTING,
+    CLOSED
   }
 
   /**
@@ -131,7 +136,7 @@ public class Request implements Serializable {
    *
    * @return
    */
-  public String getStatus() {
+  public RequestStatus getStatus() {
     return status;
   }
 
@@ -139,22 +144,36 @@ public class Request implements Serializable {
    *
    * @param status
    */
-  public void setStatus(String status) {
+  public void setStatus(RequestStatus status) {
     this.status = status;
   }
 
   /**
    * @return the type
    */
-  public String getType() {
+  public RequestType getType() {
     return type;
   }
 
   /**
    * @param type the type to set
    */
-  public void setType(String type) {
+  public void setType(RequestType type) {
     this.type = type;
+  }
+
+  /**
+   * @return the creator
+   */
+  public String getCreator() {
+    return creator;
+  }
+
+  /**
+   * @param creator the creator to set
+   */
+  public void setCreator(String creator) {
+    this.creator = creator;
   }
 
   /**

@@ -73,7 +73,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  @Profile("prod")
   public LdapContextSource contextSource() {
     DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.url"));
     contextSource.setBase(env.getRequiredProperty("ldap.base"));
@@ -81,13 +80,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Bean
-  @Profile("prod")
   public LdapAuthenticationProvider ldapAuthenticationProvider() {
     return new LdapAuthenticationProvider(ldapAuthenticator());
   }
 
   @Bean
-  @Profile("prod")
   public LdapAuthenticator ldapAuthenticator() {
     BindAuthenticator authenticator = new BindAuthenticator(contextSource());
     String[] userDnPatterns = new String[]{env.getRequiredProperty("ldap.user")};

@@ -39,7 +39,8 @@ public class SubmitRequestService {
     Request request = requestRepository.findOneByRequestId(requestId);
 
     Map<String, Object> variables = new HashMap<>();
-    variables.put("request", request);
+    variables.put("requestId", request.getRequestId());
+    variables.put("containsAlarms", request.containsAlarms());
 
     runtimeService.startProcessInstanceByKey("createTimPoints", variables);
   }
