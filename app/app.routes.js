@@ -9,16 +9,11 @@
 angular.module('modesti').config(configureRoutes);
 
 function configureRoutes($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/requests');
 
-  $stateProvider.state('home', {
-    url : '/',
-    templateUrl : 'components/home/home.html',
-    controller : 'HomeController as ctrl'
-
-  }).state('requests', {
+  $stateProvider.state('requests', {
     url : '/requests',
-    templateUrl : 'components/request/user-requests.html',
+    templateUrl : 'components/request/requests.html',
     controller : 'UserRequestsController as ctrl'
 
   }).state('requests/new', {

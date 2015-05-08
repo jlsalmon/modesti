@@ -474,3 +474,9 @@ select.form-control {
   text-decoration: none;
   text-transform: uppercase;
 }
+
+.vcenter {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+}

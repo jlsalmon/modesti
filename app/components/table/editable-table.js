@@ -360,7 +360,7 @@ function EditableTableController($scope, $http, $stateParams, NgTableParams, Req
 
     self.checkboxes.dirty = checked != 0 ? true : false;
 
-    // grayed checkbox
+    // greyed checkbox
     angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
   }, true);
-};
+}

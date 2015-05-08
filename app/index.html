@@ -42,36 +42,31 @@
   <div class="wrapper" ng-controller="LayoutController as ctrl">
 
     <header class="main-header">
-      <a href="#/" class="logo"> modesti </a>
+      <a ui-sref="requests" class="logo"> modesti </a>
       <!-- Header Navbar: style can be found in header.less -->
       <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
-        <a ng-href="#/" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
+        <!--<a ng-href="#/" class="sidebar-toggle" data-toggle="offcanvas" role="button">-->
+          <!--<span class="sr-only">Toggle navigation</span>-->
+          <!--<span class="icon-bar"></span>-->
+          <!--<span class="icon-bar"></span>-->
+          <!--<span class="icon-bar"></span>-->
+        <!--</a>-->
         <div class="navbar-custom-menu pull-left">
           <ul class="nav navbar-nav">
+            <li>
+              <a ui-sref="requests"  tooltip="Requests" tooltip-placement="bottom">
+                <i class="fa fa-tasks"></i>
+              </a>
+            </li>
             <li>
               <a ui-sref="requests/new" tooltip="New Request" tooltip-placement="bottom">
                 <i class="fa fa-plus"></i>
               </a>
             </li>
             <li>
-              <a ui-sref="requests"  tooltip="My Requests" tooltip-placement="bottom">
-                <i class="fa fa-user"></i>
-              </a>
-            </li>
-            <li>
               <a ui-sref="requests/upload" tooltip="Upload" tooltip-placement="bottom">
                 <i class="fa fa-upload"></i>
-              </a>
-            </li>
-            <li>
-              <a ui-sref="tasks" tooltip="My Tasks" tooltip-placement="bottom">
-                <i class="fa fa-tasks"></i>
               </a>
             </li>
           </ul>
@@ -277,8 +272,8 @@
 
           <li ng-class="{ active : ctrl.isActivePage('/requests')}">
             <a ui-sref="requests">
-              <i class="fa fa-user"></i>
-              <span>My Requests</span>
+              <i class="fa fa-list"></i>
+              <span>Requests</span>
             </a>
           </li>
 
@@ -349,12 +344,11 @@
   <script src="components/layout/AdminLTE.js"></script>
   <script src="components/layout/layout.js"></script>
   <script src="components/login/login.js"></script>
-  <script src="components/home/home.js"></script>
   <script src="components/errors/interceptor.js"></script>
   <script src="components/request/new-request.js"></script>
   <script src="components/request/upload/upload.js"></script>
   <script src="components/request/request.js"></script>
-  <script src="components/request/user-requests.js"></script>
+  <script src="components/request/requests.js"></script>
   <script src="components/table/editable-table.js"></script>
   <script src="components/table/editable-table.directive.js"></script>
   <script src="components/table/input/input-field.js"></script>

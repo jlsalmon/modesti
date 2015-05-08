@@ -21,6 +21,6 @@ function editableTable() {
       controller.init(scope.request, scope.schema);
     }
   };
-  
+
   return directive;
-};
+}
