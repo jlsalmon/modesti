@@ -6,16 +6,17 @@ package cern.modesti.legacy.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import cern.modesti.request.RequestType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cern.modesti.request.point.Point;
-import cern.modesti.request.Request;
 import cern.modesti.legacy.exception.RequestParseException;
 import cern.modesti.legacy.exception.VersionNotSupportedException;
+import cern.modesti.model.SubSystem;
+import cern.modesti.request.Request;
+import cern.modesti.request.RequestType;
+import cern.modesti.request.point.Point;
 
 /**
  * @author Justin Lewis Salmon
@@ -56,8 +57,11 @@ public abstract class RequestParser {
     }
     request.setPoints(points);
 
-    // Figure out the data source
+    // Figure out the data sources
     request.setCategories(parseCategories(points));
+
+    // Figure out the subsystem
+    request.setSubsystem(parseSubsystem(points));
 
     return request;
   }
@@ -124,6 +128,13 @@ public abstract class RequestParser {
    * @return null if the row contained no data
    */
   protected abstract Point parseDataPoint(Row row);
+
+  /**
+   * @param points
+   *
+   * @return
+   */
+  protected abstract SubSystem parseSubsystem(List<Point> points);
 
   /**
    * @param points

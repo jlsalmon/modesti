@@ -14,9 +14,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import cern.modesti.model.Person;
-import cern.modesti.request.point.Point;
 import cern.modesti.legacy.exception.RequestParseException;
+import cern.modesti.model.Person;
+import cern.modesti.model.SubSystem;
+import cern.modesti.request.point.Point;
 
 import com.google.common.base.CaseFormat;
 
@@ -69,14 +70,22 @@ public class TIMRequestParser extends RequestParser {
     properties.put("responsiblePerson", new Person(responsiblePersonId, responsiblePersonName));
 
     // Special case: composite System/Subsystem
-    String system = (String) properties.get("systemName");
-    String subsystem = (String) properties.get("subSystemName");
-    properties.put("subsystem", system + " " + subsystem);
+    SubSystem subsystem = new SubSystem();
+    subsystem.setSystem((String) properties.get("systemName"));
+    subsystem.setSubsystem((String) properties.get("subSystemName"));
+    subsystem.setName(subsystem.getSystem() + " " + subsystem.getSubsystem());
+    properties.put("subsystem", subsystem);
 
     // Special case: composite Location object
 
     point.setProperties(properties);
     return point;
+  }
+
+  @Override
+  protected SubSystem parseSubsystem(List<Point> points) {
+    // Naive implementation: look at the first point and assume the rest are the same.
+    return (SubSystem) points.get(0).getProperties().get("subsystem");
   }
 
   @Override
@@ -87,17 +96,17 @@ public class TIMRequestParser extends RequestParser {
     Point point = points.get(0);
 
     if (point.getProperties().containsKey("tagname")) {
-      categories.add("opc");
+      categories.add("OPC");
     } else if (point.getProperties().containsKey("item")) {
-      categories.add("dip");
+      categories.add("DIP");
     } else if (point.getProperties().containsKey("blockType")) {
-      categories.add("plc");
+      categories.add("PLC");
     } else if (point.getProperties().containsKey("protocol")) {
-      categories.add("japc");
+      categories.add("JAPC");
     } else if (point.getProperties().containsKey("hostName")) {
-      categories.add("diamon");
+      categories.add("DIAMON");
     } else if (point.getProperties().containsKey("dbTagname")) {
-      categories.add("db");
+      categories.add("DB");
     }
 
     if (categories.isEmpty()) {

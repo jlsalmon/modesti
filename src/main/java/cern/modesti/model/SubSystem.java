@@ -25,26 +25,14 @@ import javax.persistence.Id;
  * @author Justin Lewis Salmon
  */
 @Entity
-//@Table(name = "vpts_sysdet")
 public class SubSystem {
 
   @Id
-  //@Column(name = "tess_subsystem_id")
-  //private Long id;
-
-  //@Column(name = "tess_subsystem_name")
-  //@Id
   private String name;
 
-//  @Column(name = "tes_system_name")
-//  private String system;
+  private String system;
 
-  public SubSystem() {
-  }
-
-  public SubSystem(final String name) {
-    this.name = name;
-  }
+  private String subsystem;
 
   /**
    * @return the name
@@ -60,17 +48,31 @@ public class SubSystem {
     this.name = name;
   }
 
-//  /**
-//   * @return the system
-//   */
-//  public String getSystem() {
-//    return system;
-//  }
-//
-//  /**
-//   * @param system the system to set
-//   */
-//  public void setSystem(String system) {
-//    this.system = system;
-//  }
+  /**
+   * @return the system
+   */
+  public String getSystem() {
+    return system;
+  }
+
+  /**
+   * @param system the system to set
+   */
+  public void setSystem(String system) {
+    this.system = system;
+  }
+
+  /**
+   * @return the subsystem
+   */
+  public String getSubsystem() {
+    return subsystem;
+  }
+
+  /**
+   * @param subsystem the subsystem to set
+   */
+  public void setSubsystem(String subsystem) {
+    this.subsystem = subsystem;
+  }
 }

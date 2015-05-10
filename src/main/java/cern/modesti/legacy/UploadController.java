@@ -5,6 +5,8 @@ package cern.modesti.legacy;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.security.Principal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,19 +39,21 @@ public class UploadController {
   private UploadService service;
 
   @RequestMapping(value = "/requests/upload", method = POST)
-  public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, UriComponentsBuilder b) {
+  public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, UriComponentsBuilder b, Principal user) {
     Request request = null;
 
     if (!file.isEmpty()) {
       try {
-        request = service.parseRequestFromExcelSheet(file.getOriginalFilename(), file.getInputStream());
+        request = service.parseRequestFromExcelSheet(file.getOriginalFilename(), file.getInputStream(), user);
 
         LOG.info("successfully uploaded " + file.getOriginalFilename());
       } catch (Exception e) {
         LOG.info("failed to upload " + file.getOriginalFilename(), e);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
       }
     } else {
       LOG.info("failed to upload " + file.getOriginalFilename() + " because the file was empty.");
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     // Add link to newly created request in Location header

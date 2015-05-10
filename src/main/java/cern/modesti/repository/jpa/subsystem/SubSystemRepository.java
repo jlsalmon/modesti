@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.jpa.system;
+package cern.modesti.repository.jpa.subsystem;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public interface SubSystemRepository extends ReadOnlyRepository<SubSystem, Strin
    * @param name
    * @return
    */
-  @Query(value = "SELECT tes_system_name || ' ' || tess_subsystem_name as name "
+  @Query(value = "SELECT tes_system_name || ' ' || tess_subsystem_name as name, tes_system_name as system, tess_subsystem_name as subsystem "
                + "FROM   vpts_sysdet "
                + "WHERE  tes_system_name || ' ' || tess_subsystem_name LIKE UPPER(:name || '%') " , nativeQuery = true)
   public List<SubSystem> findByName(@Param("name") String name);
