@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:EditableTableController
- * @description # EditableTableController Controller of the modesti
+ * @name modesti.controller:ModestiTableController
+ * @description # ModestiTableController Controller of the modesti
  */
-angular.module('modesti').controller('EditableTableController', EditableTableController);
+angular.module('modesti').controller('ModestiTableController', ModestiTableController);
 
-function EditableTableController($scope, $http, $stateParams, NgTableParams, RequestService, ValidationService) {
+function ModestiTableController($scope, $http, $stateParams, NgTableParams, RequestService, ValidationService) {
   var self = this;
 
   self.request = {};
@@ -37,11 +37,7 @@ function EditableTableController($scope, $http, $stateParams, NgTableParams, Req
   self.addNewCategory = addNewCategory;
   self.getAvailableCategories = getAvailableCategories;
   self.getActiveFields = getActiveFields;
-  self.addRow = addRow;
-  self.duplicateSelectedRows = duplicateSelectedRows;
-  self.deleteSelectedRows = deleteSelectedRows;
   self.save = save;
-  self.validate = validate;
   self.toggleFilter = toggleFilter;
   self.getSortingClass = getSortingClass;
   self.toggleSorting = toggleSorting;
@@ -175,104 +171,6 @@ function EditableTableController($scope, $http, $stateParams, NgTableParams, Req
   /**
    *
    */
-  function addRow() {
-    console.log('adding new row');
-    var request = self.request;
-
-    var newRow = {
-      'name' : '',
-      'description' : '',
-      'domain' : request.domain
-    };
-
-    request.points.push(newRow);
-
-    RequestService.saveRequest(request).then(function(request) {
-      console.log('added new row');
-      self.request = request;
-
-      // Reload the table data
-      self.tableParams.reload();
-
-      // Move to the last page
-      var pages = self.tableParams.settings().$scope.pages;
-      for (var i in pages) {
-        if (pages[i].type == "last") {
-          self.tableParams.page(pages[i].number);
-        }
-      }
-
-    }, function(error) {
-      console.log('error adding new row: ' + error);
-    });
-  }
-
-  /**
-   *
-   */
-  function duplicateSelectedRows() {
-    var points = self.request.points;
-    console.log('duplicating rows (before: ' + points.length + ' points)');
-
-    // Find the selected points and duplicate them
-    for (var i in points) {
-      var point = points[i];
-
-      if (self.checkboxes.items[point.id]) {
-        var duplicate = angular.copy(point);
-        // Remove the ID of the duplicated point, as the backend will generate
-        // us a new one when we save
-        delete duplicate.id;
-        // Add the new duplicate to the original points
-        points.push(duplicate);
-      }
-    }
-
-    // Save the changes
-    RequestService.saveRequest(self.request).then(function(savedRequest) {
-      console.log('saved request after row duplication');
-      console.log('duplicated rows (after: ' + savedRequest.points.length + ' points)');
-
-      // Reload the table data
-      self.tableParams.reload();
-
-    }, function(error) {
-      console.log('error saving request after row duplication: ' + error);
-    });
-  }
-
-  /**
-   *
-   */
-  function deleteSelectedRows() {
-    var points = self.request.points;
-    console.log('deleting rows (before: ' + points.length + ' points)');
-
-    // Find the selected points and mark them as deleted
-    for (var i in points) {
-      var point = points[i];
-
-      if (self.checkboxes.items[point.id]) {
-        point.deleted = true;
-      }
-    }
-
-    // Save the changes
-    RequestService.saveRequest(self.request).then(function(savedRequest) {
-      console.log('saved request after row deletion');
-      console.log('deleted rows (after: ' + savedRequest.points.length + ' points)');
-
-      // Reload the table data
-      self.tableParams.reload();
-
-    }, function(error) {
-      console.log('error saving request after row deletion: ' + error);
-    });
-  }
-
-  /**
-   *
-   */
   function save() {
     var request = self.request;
 
@@ -280,20 +178,6 @@ function EditableTableController($scope, $http, $stateParams, NgTableParams, Req
       console.log('saved request');
     }, function(error) {
       console.log('error saving request');
-    });
-  }
-
-  /**
-   *
-   */
-  function validate() {
-    var request = self.request;
-
-    ValidationService.validateRequest(request).then(function(result) {
-      console.log('validated request');
-      self.validationResult = result;
-    }, function(error) {
-      console.log('error validating request: ' + error);
     });
   }
 

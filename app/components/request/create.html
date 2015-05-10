@@ -32,11 +32,11 @@
 
   <!-- TODO: use input-field directive to replace this -->
 
-    <input type="text" ng-model="ctrl.request.system" placeholder="System/Subsystem"
-      typeahead="system for system in ctrl.getSystems($viewValue)"
-      typeahead-loading="loadingSystems"
+    <input type="text" ng-model="ctrl.request.subsystem" placeholder="System/Subsystem"
+      typeahead="subsystem as subsystem.name for subsystem in ctrl.getSubsystems($viewValue)"
+      typeahead-loading="loadingSubsystems"
       typeahead-editable="false" class="form-control" name="system" required>
-    <i ng-show="loadingSystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
+    <i ng-show="loadingSubsystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
     <span class="help-block">Type the system/subsystem to which this request relates.</span>
   </div>
 </div>

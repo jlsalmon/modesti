@@ -90,7 +90,7 @@
 
           <div class="property-list col-md-2">
             <span>{{ctrl.request.type | uppercase}}</span><br/>
-            <span class="label request-status bg-green">{{ctrl.request.status}}</span><br/>
+            <span class="label request-status" ng-class="'{{ctrl.request.status}}'">{{ctrl.request.status.replace('_', ' ')}}</span><br/>
             <span>{{ctrl.request.domain}}</span><br/>
             <span>{{ctrl.request.categories.join(', ')}}</span><br/>
           </div>
@@ -104,7 +104,21 @@
           <!--
             This is the main table directive.
           -->
-          <div editable-table request="ctrl.request" schema="ctrl.schema"></div>
+          <modesti-table request="ctrl.request" schema="ctrl.schema">
+            
+            <!-- Show appripriate controls based on the request status -->
+            <div ng-switch="ctrl.request.status">
+              <div ng-switch-when="IN_PROGRESS">
+                <request-creation-controls />
+              </div>
+              <div ng-switch-when="FOR_APPROVAL">
+                <alarm-approval-controls />
+              </div>
+              <div ng-switch-when="FOR_TESTING">
+                <point-testing-controls />
+              </div>
+            </div>
+          </modesti-table>
 
         </div>
       </div>

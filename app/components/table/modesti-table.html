@@ -1,0 +1,190 @@
+<style>
+  .table-wrapper {
+    border-left: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+  }
+
+  .table-wrapper table {
+    margin-bottom: 0;
+  }
+
+  li > a.new-tab {
+    border-top: 1px dashed #ccc !important;
+    border-right: 1px dashed #ccc !important;
+    border-left: 1px;
+    border-bottom: 1px !important;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 0;
+    padding: 4px 10px 3px;
+  }
+
+  li > a.new-tab:hover, li > a.new-tab:focus {
+    background: #EEEEEE;
+    border-top: 1px solid #CCC !important;
+    border-right: 1px solid #CCC !important;
+    border-left: 1px;
+    border-bottom: 1px !important;
+  }
+
+  li > ul.new-tab-menu {
+    margin-top: 1px !important;
+    margin-left: -1px;
+  }
+
+  tr.ng-isolate-scope.fsm-sticky-header {
+    background-color: #fff;
+    margin-left: 1px;
+  }
+</style>
+
+<div class="nav-tabs">
+
+  <!-- Create a new tab for each category -->
+  <tabset class="category-headings">
+    <tab ng-repeat="category in ctrl.schema.categories"
+         heading="{{category.name}}" select="ctrl.activateCategory(category)" class="category-heading"></tab>
+
+    <!-- Button to dynamically add a new tab category -->
+    <li dropdown>
+      <a dropdown-toggle class="new-tab dropdown-toggle" href=""><i class="fa fa-plus-square-o"></i></a>
+      <ul class="new-tab-menu dropdown-menu" role="menu">
+        <li ng-repeat="tab in ctrl.availableCategories"><a ng-click="ctrl.addNewCategory(tab)">{{tab}}</a></li>
+        <li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">No categories available</li>
+      </ul>
+    </li>
+  </tabset>
+
+  <div class="table-wrapper">
+
+  <!-- This is the actual point input table itself -->
+  <table id="table" ng-table="ctrl.tableParams" class="table table-bordered table-striped" template-pagination="custom/pager">
+    <thead>
+      <!-- The fsm-sticky-header makes the table headers stick to the top of the page when scrolling -->
+      <tr fsm-sticky-header scroll-body="'#table'" scroll-stop='0'>
+        <!-- Column header for the point ID -->
+        <th class="sortable" ng-class="ctrl.getSortingClass('id')" ng-click="ctrl.toggleSorting('id')">
+          <div class="sort-indicator">#</div>
+        </th>
+
+        <!-- Column header for each field in the currently active category -->
+        <th ng-repeat="field in ctrl.activeFields" class="text-left sortable"
+            ng-class="ctrl.getSortingClass('properties.' + field.id)"
+            ng-click="ctrl.toggleSorting('properties.' + field.id)">
+            <div class="sort-indicator">{{field.name}}</div>
+        </th>
+
+        <!-- Checkbox column header -->
+        <th>
+          <input type="checkbox" ng-model="ctrl.checkboxes.checked" id="select_all" name="filter-checkbox" value="" />
+        </th>
+      </tr>
+
+      <!-- Special table row containing filter boxes -->
+      <tr ng-show="show_filter">
+        <th style="vertical-align: middle;"><a ng-click="ctrl.toggleFilter()"><i class="fa fa-times"></i></a></th>
+        <th ng-repeat="field in ctrl.activeFields" class="text-center sortable">
+          <input type="text" class="form-control" ng-model="ctrl.searchText[field.id]" ng-model-options="{debounce: 250}" />
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <!-- Row for each point in the request -->
+      <tr ng-repeat="point in $data" ng-form="pointForm">
+
+          <!-- Line number field -->
+          <td class="input-field text-muted" width="30" style="text-align: center; vertical-align: middle;"
+          ng-class="{ 'bg-danger': (pointForm.$invalid && pointForm.$dirty)
+                        || (pointForm.$submitted && pointForm.$invalid) }">
+            {{point.id}}<!--{{$data.indexOf(point) + 1}}-->
+          </td>
+
+          <!-- Input field for each field in the currently active category -->
+          <td class="input-field" ng-repeat="field in ctrl.activeFields" >
+            <!-- Custom directive to generate an input field based on the field schema -->
+            <span input-field model="point.properties[field.id]" schema="field"></span>
+          </td>
+
+          <!-- Checkbox for each point -->
+          <td class="input-field" width="30" style="text-align: center; vertical-align: middle;">
+            <input type="checkbox" ng-model="ctrl.checkboxes.items[point.id]" />
+          </td>
+      </tr>
+    </tbody>
+
+    <!-- Table footer toolbar -->
+    <tfoot>
+      <tr>
+        <td colspan="20">
+        
+          <div class="row">
+            <div class="col-md-2">
+            
+              <!-- Button to save the request -->
+              <button class="btn btn-default" ng-click="ctrl.save()" tooltip-append-to-body="true" tooltip="Save request"> 
+                <i class="fa fa-fw fa-save saving-state"></i>
+                
+                <!-- Saving state indicators -->
+                <span ng-show="$root.saving == 'started'">
+                  <i class="fa fa-fw fa-spin fa-cog saving-state"></i>
+                </span>
+                <span ng-show="$root.saving == 'success'">
+                  <i class="fa fa-fw fa-check saving-state text-success"></i>
+                </span>
+                <span ng-show="$root.saving == 'error'">
+                  <i class="fa fa-fw fa-exclamation-triangle saving-state text-danger"></i>
+                </span>
+                
+                <div tooltip="foo"></div>
+              </button>
+              
+              <!-- Button to activate the filter text boxes at the top of the table -->
+              <button class="btn btn-default" ng-click="ctrl.toggleFilter()" tooltip-append-to-body="true" tooltip="Filter rows">
+                <i class="fa fa-fw fa-filter"></i>
+              </button>
+            </div>
+
+          <!-- Custom pagination controls -->
+            <div class="col-md-8">
+              <div class="ng-cloak ng-table-pager text-center" ng-if="params.data.length">
+                <ul class="pagination ng-table-pagination" ng-hide="params.settings().$scope.pages == 0">
+                  <li ng-class="{'disabled': !page.active && !page.current, 'active': page.current}" ng-repeat="page in pages" ng-switch="page.type">
+                    <a ng-switch-when="prev"  ng-click="params.page(page.number)" href="">&laquo;</a>
+                    <a ng-switch-when="first" ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>
+                    <a ng-switch-when="page"  ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>
+                    <a ng-switch-when="more"  ng-click="params.page(page.number)" href="">&#8230;</a>
+                    <a ng-switch-when="last"  ng-click="params.page(page.number)" href=""><span ng-bind="page.number"></span></a>
+                    <a ng-switch-when="next"  ng-click="params.page(page.number)" href="">&raquo;</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right">
+                <button ng-repeat="count in params.settings().counts" type="button"
+                        ng-class="{'active':params.count() == count}"
+                        ng-click="params.count(count)" class="btn btn-default">
+                  <span ng-bind="count"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Remove default pagination -->
+          <script type="text/ng-template" id="custom/pager"></script>
+
+        </td>
+      </tr>
+      
+      <tr>
+        <td colspan="100">
+          <!-- This is where the status-specific controls are inserted -->
+          <span ng-transclude></span>
+        </td>
+      </tr>
+    </tfoot>
+
+  </table>
+  </div>
+</div>

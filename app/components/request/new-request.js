@@ -14,7 +14,7 @@ function NewRequestController($scope, $http, $location, $filter, $localStorage, 
   self.categories = [];
 
   self.getDomains = getDomains;
-  self.getSystems = getSystems;
+  self.getSubsystems = getSubsystems;
   self.updateCategories = updateCategories;
   self.toggleCategory = toggleCategory;
   self.submit = submit;
@@ -42,7 +42,7 @@ function NewRequestController($scope, $http, $location, $filter, $localStorage, 
   /**
    *
    */
-  function getSystems(value) {
+  function getSubsystems(value) {
     return $http.get('http://localhost:8080/subsystems/search/findByName', {
       params : {
         name : value
@@ -52,9 +52,7 @@ function NewRequestController($scope, $http, $location, $filter, $localStorage, 
         return [];
       }
 
-      return response.data._embedded.subsystems.map(function(item) {
-        return item.name;
-      });
+      return response.data._embedded.subsystems;
     });
   }
 

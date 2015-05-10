@@ -13,8 +13,12 @@ function UserRequestsController($location, RequestService) {
   self.filter = {
       status: '',
       domain: '',
-      subsystem: '',
-      assignee: '',
+      subsystem: {
+        system: '',
+        subsystem: ''
+      },
+      categories: '',
+      creator: '',
       type: ''
   };
 
