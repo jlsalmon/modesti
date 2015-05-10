@@ -1,5 +1,24 @@
 <style>
+  .content-header > .request-title {
+    padding-left: 5px;
+  }
+  
+  .content-header > .request-title > .request-details {
+    margin-top:10px;
+  }
+  
+  .content-header > .request-title > .request-details > .request-detail-item {
+    margin-left:10px;
+  }
 
+  .content-header > .request-title h1 {
+    margin: 0;
+  }
+
+  .content-header > .request-icon h1 {
+    margin: 0;
+  }
+  
   div.details {
     width: 100%;
     display: table;
@@ -43,10 +62,44 @@
 
 <!-- Content Header (Page header) -->
 <section id="request-header" class="content-header">
-  <h1>
+<!--   <h1>
     <i class="fa fa-list-ol fa-fw text-muted" style="vertical-align: middle;"></i>
     requests <span class="text-muted">/</span> {{ctrl.request.requestId}} <small>{{ctrl.request.description}}</small>
-  </h1>
+  </h1> -->
+  
+  <div class="request-icon">
+  <h1>
+    <i class="fa fa-list-ol fa-fw text-muted" style="vertical-align: middle;"></i>
+    </h1>
+  </div>
+  <div class="request-title">
+    <h1>
+      requests <span class="text-muted">/</span> {{ctrl.request.requestId}} <small>{{ctrl.request.description}}</small>
+    </h1>
+    
+    <div class="request-details">
+      <span class="label request-status" ng-class="'{{ctrl.request.status}}'">{{ctrl.request.status.replace('_', ' ')}}</span>
+      <!-- <span class="text-muted">
+        {{ctrl.request.type | uppercase}}
+      </span> -->
+      <span class="request-detail-item text-muted">
+        <i class="fa fa-fw fa-sitemap"></i>
+        {{ctrl.request.subsystem.name}}
+      </span>
+      <span class="request-detail-item text-muted">
+        <i class="fa fa-fw fa-crosshairs"></i>
+        {{ctrl.request.domain}}
+      </span>
+      <span class="request-detail-item text-muted">
+        <i class="fa fa-fw fa-cogs"></i>
+        {{ctrl.request.categories.join(', ')}}
+      </span>
+      <span class="request-detail-item text-muted">
+        <i class="fa fa-fw fa-user"></i>
+        {{ctrl.request.creator}}
+      </span>
+    </div>
+  </div>
 
   <div id="request-main-nav">
     <tabset justified="false">
@@ -76,7 +129,7 @@
       <!-- Request editing page -->
       <div ng-show="ctrl.currentActiveTab == 0">
 
-        <div class="details">
+<!--         <div class="details">
           <div class="details-header">
             <h5>Metadata</h5>
           </div>
@@ -94,12 +147,12 @@
             <span>{{ctrl.request.domain}}</span><br/>
             <span>{{ctrl.request.categories.join(', ')}}</span><br/>
           </div>
-        </div>
+        </div> -->
 
         <div class="details">
-          <div class="details-header">
+<!--           <div class="details-header">
             <h5>Points</h5>
-          </div>
+          </div> -->
 
           <!--
             This is the main table directive.

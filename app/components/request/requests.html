@@ -24,23 +24,6 @@
     border-left: none;
   }
 
-  .request-icon {
-    display: table-cell;
-  }
-
-  .request-title {
-    display: table-cell;
-    width: 100%;
-  }
-
-  .request-title .text-muted {
-    margin-left: 5px;
-  }
-
-  .request-title .label {
-    margin-left: 2px !important;
-  }
-
   .todo-list > li .tools {
     display: inline-block;
   }
@@ -76,13 +59,13 @@
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_TESTING'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_TESTING'">
-                <i class="fa fa-filter"></i> For Testing 
+                <i class="fa fa-check-square-o"></i> For Testing 
                 <span class="label request-status pull-right" ng-class="'FOR_TESTING'">{{(ctrl.requests | filter:{status: 'FOR_TESTING'}).length}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'CLOSED'}">
               <a href="" ng-click="ctrl.filter.status = 'CLOSED'">
-                <i class="fa fa-filter"></i> Closed
+                <i class="fa fa-lock"></i> Closed
                 <span class="label request-status pull-right" ng-class="'CLOSED'">{{(ctrl.requests | filter:{status: 'CLOSED'}).length}}</span>
               </a>
             </li>
@@ -98,7 +81,7 @@
             <div class="btn-group">
               <div class="btn-group" dropdown>
                 <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                  <i class="fa fa-fw fa-cube"></i> 
+                  <i class="fa fa-fw fa-square"></i> 
                   <span class="text-muted">system: </span>{{ctrl.filter.subsystem.system != '' ? ctrl.filter.subsystem.system : 'Any'}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
@@ -113,7 +96,7 @@
               </div>
               <div class="btn-group" dropdown>
                 <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="ctrl.filter.subsystem.system == ''">
-                  <i class="fa fa-fw fa-cubes"></i> 
+                  <i class="fa fa-fw fa-sitemap"></i> 
                   <span class="text-muted">subsystem: </span>{{ctrl.filter.subsystem.subsystem != '' ? ctrl.filter.subsystem.subsystem : 'Any'}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
@@ -207,13 +190,27 @@
                 <span class="text">{{request.description}}</span>
                 <span class="label request-status pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
                 <br/>
-                <span class="text-muted">#{{request.requestId}} by {{request.creator}}</span>
-                &middot;
-                <span>{{request.type}} &middot; {{request.domain}} &middot; {{request.subsystem.name}} &middot; {{request.categories.join(', ')}}</span>
-
-                <span>
-
+                <span class="text-muted" style="margin-left: 5px;">
+                  #{{request.requestId}} by <!-- <i class="fa fa-fw fa-user"></i> --> {{request.creator}}
                 </span>
+                
+<!--                 <span class="text-muted">
+                  <i class="fa fa-fw fa-user"></i>
+                  {{request.type}}
+                </span> -->
+                <span class="text-muted" style="margin-left: 5px;">
+                  <!-- <i class="fa fa-fw fa-crosshairs"></i> -->
+                  {{request.domain}} &middot;
+                </span>
+                <span class="text-muted">
+                  <!-- <i class="fa fa-fw fa-sitemap"></i> -->
+                  {{request.subsystem.name}} &middot;
+                </span>
+                <span class="text-muted">
+                  <!-- <i class="fa fa-fw fa-cogs"></i> -->
+                  {{request.categories.join(', ')}}
+                </span>
+
                 <div class="tools">
                 
                   <!-- Show different options based on the request status -->

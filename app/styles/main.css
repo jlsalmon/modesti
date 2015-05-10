@@ -465,6 +465,21 @@ select.form-control {
   left: 0;
 }
 
+/** */
+
+.request-icon {
+  display: table-cell;
+}
+
+.request-title {
+  display: table-cell;
+  width: 100%;
+}
+
+.request-title .label {
+  margin-left: 2px !important;
+}
+
 .label.request-status {
   line-height: 99%;
   font-size: 90%;
