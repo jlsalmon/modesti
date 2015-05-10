@@ -2,19 +2,19 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:AlarmApprovalControlsController
- * @description # AlarmApprovalControlsController Controller of the modesti
+ * @name modesti.controller:PointTestingControlsController
+ * @description # PointTestingControlsController Controller of the modesti
  */
-angular.module('modesti').controller('AlarmApprovalControlsController', AlarmApprovalControlsController);
+angular.module('modesti').controller('PointTestingControlsController', PointTestingControlsController);
 
-function AlarmApprovalControlsController($window, TaskService) {
+function PointTestingControlsController($window, Restangular, TaskService) {
   var self = this;
-
+  
   self.init = init;
-  self.approveRequest = approveRequest;
+  self.submit = submit;
 
   /**
-   * 
+   *
    */
   function init(parent) {
     self.parent = parent;
@@ -23,7 +23,7 @@ function AlarmApprovalControlsController($window, TaskService) {
   /**
    * 
    */
-  function approveRequest() {
+  function submit() {
     var request = self.parent.request;
     
     TaskService.getTaskForRequest(request.requestId).then(function(task) {

@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('UserRequestsController', UserRequestsController);
 
-function UserRequestsController($location, RequestService) {
+function UserRequestsController($location, $localStorage, Restangular, RequestService, TaskService) {
   var self = this;
   
   self.filter = {
@@ -24,6 +24,7 @@ function UserRequestsController($location, RequestService) {
 
   self.deleteRequest = deleteRequest;
   self.editRequest = editRequest;
+  self.claimTask = claimTask;
   
   getRequests();
 
@@ -65,5 +66,25 @@ function UserRequestsController($location, RequestService) {
     var id = href.substring(href.lastIndexOf('/') + 1);
 
     $location.path('/requests/' + id);
+  }
+  
+  /**
+   * 
+   */
+  function claimTask(request) {
+    
+    TaskService.getTaskForRequest(request.requestId).then(function(task){
+      TaskService.claimTask(task.id).then(function(task){
+        $location.path('/requests/' + request.requestId);
+      }, 
+      
+      function(error) {
+        console.log('error claiming task ' + id);
+      });
+    }, 
+    
+    function(error) {
+      console.log('error querying tasks');
+    });
   }
 };

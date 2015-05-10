@@ -506,6 +506,10 @@ select.form-control {
   background-color: #00a65a;
 }
 
+.label.request-status.CLOSED {
+  background-color: #999;
+}
+
 .vcenter {
   display: inline-block;
   vertical-align: middle;

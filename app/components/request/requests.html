@@ -80,6 +80,12 @@
                 <span class="label request-status pull-right" ng-class="'FOR_TESTING'">{{(ctrl.requests | filter:{status: 'FOR_TESTING'}).length}}</span>
               </a>
             </li>
+            <li ng-class="{active: ctrl.filter.status == 'CLOSED'}">
+              <a href="" ng-click="ctrl.filter.status = 'CLOSED'">
+                <i class="fa fa-filter"></i> Closed
+                <span class="label request-status pull-right" ng-class="'CLOSED'">{{(ctrl.requests | filter:{status: 'CLOSED'}).length}}</span>
+              </a>
+            </li>
           </ul>
         </div><!-- /.box-body -->
       </div><!-- /. box -->
@@ -195,7 +201,7 @@
 
             <li ng-repeat="request in ctrl.requests | filter: ctrl.filter">
               <div class="request-icon">
-                <i class="fa fa-list fa-fw text-muted vcenter"></i>
+                <i class="fa fa-list-ol fa-fw text-muted vcenter"></i>
               </div>
               <div class="request-title">
                 <span class="text">{{request.description}}</span>
@@ -209,15 +215,34 @@
 
                 </span>
                 <div class="tools">
-                  <!--<i class="fa fa-edit"></i>-->
-                  <!--<i class="fa fa-trash-o"></i>-->
-                  <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                    <i class="fa fa-fw fa-edit"></i>
-                    Edit
-                  </button>
-                  <button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">
-                    <i class="fa fa-trash"></i>
-                  </button>
+                
+                  <!-- Show different options based on the request status -->
+                  <span ng-switch="request.status">
+                  
+                    <span ng-switch-when="IN_PROGRESS">
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
+                        <i class="fa fa-fw fa-edit"></i>
+                        Edit
+                      </button>
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </span>
+                    
+                    <span ng-switch-when="FOR_APPROVAL">
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.claimTask(request)">
+                        <i class="fa fa-fw fa-hand-o-right"></i>
+                        Claim Task
+                      </button>
+                    </span>
+                    
+                    <span ng-switch-when="FOR_TESTING">
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.claimTask(request)">
+                        <i class="fa fa-fw fa-hand-o-right"></i>
+                        Claim Task
+                      </button>
+                    </span>
+                  </span>
                 </div>
               </div>
             </li>
