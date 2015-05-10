@@ -3,13 +3,13 @@ package cern.modesti.schema;
 import java.util.ArrayList;
 import java.util.List;
 
-import cern.modesti.repository.mongo.schema.SchemaRepository;
-import cern.modesti.request.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cern.modesti.repository.mongo.schema.SchemaRepository;
+import cern.modesti.request.Request;
 import cern.modesti.schema.field.Field;
 
 @Service
@@ -170,6 +170,16 @@ public class SchemaService {
           }
         }
 
+        // Copy the parent disabled state list if the child doesn't specify it.
+        if (domainCategory.getDisabledStates() != null && category.getDisabledStates() == null) {
+          category.setDisabledStates(domainCategory.getDisabledStates());
+        }
+
+        // Copy the parent editable state list if the child doesn't specify it.
+        if (domainCategory.getEditableStates() != null && category.getEditableStates() == null) {
+          category.setEditableStates(domainCategory.getEditableStates());
+        }
+
         newFields.addAll(category.getFields());
         category.setFields(newFields);
       }
@@ -203,6 +213,16 @@ public class SchemaService {
           if (!category.getFields().contains(parentField)) {
             newFields.add(parentField);
           }
+        }
+
+        // Copy the parent disabled state list if the child doesn't specify it.
+        if (parentCategory.getDisabledStates() != null && category.getDisabledStates() == null) {
+          category.setDisabledStates(parentCategory.getDisabledStates());
+        }
+
+        // Copy the parent editable state list if the child doesn't specify it.
+        if (parentCategory.getEditableStates() != null && category.getEditableStates() == null) {
+          category.setEditableStates(parentCategory.getEditableStates());
         }
 
         newFields.addAll(category.getFields());

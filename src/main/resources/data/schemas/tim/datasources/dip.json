@@ -5,6 +5,8 @@
 [
     {
         "name": "DIP",
+        "editableStates": ["IN_PROGRESS"],
+        "disabledStates": ["FOR_APPROVAL"],
         "fields": [
             {
                 "id": "item",

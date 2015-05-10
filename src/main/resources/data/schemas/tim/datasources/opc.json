@@ -5,6 +5,8 @@
 [
     {
         "name": "OPC",
+        "editableStates": ["IN_PROGRESS"],
+        "disabledStates": ["FOR_APPROVAL"],
         "fields": [
             {
                 "id": "tagname",

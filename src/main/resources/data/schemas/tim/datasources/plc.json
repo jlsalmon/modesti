@@ -5,6 +5,8 @@
 [
     {
         "name": "PLC",
+        "editableStates": ["IN_PROGRESS"],
+        "disabledStates": ["FOR_APPROVAL"],
         "fields": [
             {
                 "id": "blockType",

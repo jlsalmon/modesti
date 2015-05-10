@@ -28,11 +28,25 @@ import cern.modesti.schema.field.Field;
  */
 public class Category {
 
+  /**
+   *
+   */
   @Id
   private String name;
 
-  private Boolean active;
+  /**
+   * Enumerates the workflow states for which this category is disabled.
+   */
+  private List<String> disabledStates;
 
+  /**
+   * Enumerates the workflow states for which this category is editable.
+   */
+  private List<String> editableStates;
+
+  /**
+   *
+   */
   private List<Field> fields;
 
   /**
@@ -50,17 +64,31 @@ public class Category {
   }
 
   /**
-   * @return the active
+   * @return the disabledStates
    */
-  public Boolean getActive() {
-    return active;
+  public List<String> getDisabledStates() {
+    return disabledStates;
   }
 
   /**
-   * @param active the active to set
+   * @param disabledStates the disabled to set
    */
-  public void setActive(Boolean active) {
-    this.active = active;
+  public void setDisabledStates(List<String> disabledStates) {
+    this.disabledStates = disabledStates;
+  }
+
+  /**
+   * @return the editableStates
+   */
+  public List<String> getEditableStates() {
+    return editableStates;
+  }
+
+  /**
+   * @param editableStates the editableStates to set
+   */
+  public void setEditableStates(List<String> editableStates) {
+    this.editableStates = editableStates;
   }
 
   /**
