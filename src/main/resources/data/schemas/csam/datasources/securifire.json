@@ -5,6 +5,8 @@
 [
     {
         "name": "SECURIFIRE",
+        "editableStates": ["IN_PROGRESS"],
+        "disabledStates": ["FOR_APPROVAL"],
         "fields": [
             {
                 "id": "type",
