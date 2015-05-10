@@ -14,7 +14,8 @@ function inputField() {
     controller : 'InputFieldController as ctrl',
     scope : {
       schema : '=schema',
-      model  : '=model'
+      model  : '=model',
+      editable : '=editable'
     },
 
     link : function(scope, element, attrs, controller) {

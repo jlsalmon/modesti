@@ -36,7 +36,7 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
   self.activateCategory = activateCategory;
   self.addNewCategory = addNewCategory;
   self.getAvailableCategories = getAvailableCategories;
-  self.getActiveFields = getActiveFields;
+  self.getActiveCategory = getActiveCategory;
   self.save = save;
   self.toggleFilter = toggleFilter;
   self.getSortingClass = getSortingClass;
@@ -98,7 +98,7 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
 
     category.active = true;
     console.log(category);
-    self.activeFields = getActiveFields();
+    self.activeCategory = category;
   }
 
   /**
@@ -146,26 +146,18 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
       });
     });
   }
-
+  
   /**
-   *
+   * 
    */
-  function getActiveFields() {
-    var categories = self.schema.categories;
-    var fields = [];
-
-    for ( var key in categories) {
+  function getActiveCategory() {
+    for (var key in categories) {
       if (categories.hasOwnProperty(key)) {
-        var category = categories[key];
-
-        if (category.active) {
-          fields = category.fields;
+        if (categories[key].active) {
+          return categories[key];
         }
       }
     }
-
-    console.log('got active fields');
-    return fields;
   }
 
   /**

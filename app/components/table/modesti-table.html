@@ -41,7 +41,8 @@
 
   <!-- Create a new tab for each category -->
   <tabset class="category-headings">
-    <tab ng-repeat="category in ctrl.schema.categories"
+    <!-- Categories are only shown if they are enabled for the current workflow state -->
+    <tab ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status"
          heading="{{category.name}}" select="ctrl.activateCategory(category)" class="category-heading"></tab>
 
     <!-- Button to dynamically add a new tab category -->
@@ -67,7 +68,7 @@
         </th>
 
         <!-- Column header for each field in the currently active category -->
-        <th ng-repeat="field in ctrl.activeFields" class="text-left sortable"
+        <th ng-repeat="field in ctrl.activeCategory.fields" class="text-left sortable"
             ng-class="ctrl.getSortingClass('properties.' + field.id)"
             ng-click="ctrl.toggleSorting('properties.' + field.id)">
             <div class="sort-indicator">{{field.name}}</div>
@@ -82,7 +83,7 @@
       <!-- Special table row containing filter boxes -->
       <tr ng-show="show_filter">
         <th style="vertical-align: middle;"><a ng-click="ctrl.toggleFilter()"><i class="fa fa-times"></i></a></th>
-        <th ng-repeat="field in ctrl.activeFields" class="text-center sortable">
+        <th ng-repeat="field in ctrl.activeCategory.fields" class="text-center sortable">
           <input type="text" class="form-control" ng-model="ctrl.searchText[field.id]" ng-model-options="{debounce: 250}" />
         </th>
         <th></th>
@@ -101,9 +102,12 @@
           </td>
 
           <!-- Input field for each field in the currently active category -->
-          <td class="input-field" ng-repeat="field in ctrl.activeFields" >
+          <td class="input-field" ng-repeat="field in ctrl.activeCategory.fields" >
             <!-- Custom directive to generate an input field based on the field schema -->
-            <span input-field model="point.properties[field.id]" schema="field"></span>
+            <span input-field 
+                  model="point.properties[field.id]" 
+                  schema="field" 
+                  editable="ctrl.activeCategory.editableStates.indexOf(ctrl.request.status) > -1"></span>
           </td>
 
           <!-- Checkbox for each point -->
