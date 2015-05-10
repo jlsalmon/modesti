@@ -30,6 +30,7 @@ import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
+import cern.modesti.model.SubSystem;
 import cern.modesti.request.point.Point;
 
 /**
@@ -70,6 +71,10 @@ public class Request implements Serializable {
   @TextIndexed
   @NotNull(message = "Domain is compulsory")
   private String domain;
+
+  @TextIndexed
+  @NotNull(message = "Subsystem is compulsory")
+  private SubSystem subsystem;
 
   @TextIndexed
   @NotNull(message = "At least one category is compulsory")
@@ -202,6 +207,20 @@ public class Request implements Serializable {
    */
   public void setDomain(String domain) {
     this.domain = domain;
+  }
+
+  /**
+   * @return the subsystem
+   */
+  public SubSystem getSubsystem() {
+    return subsystem;
+  }
+
+  /**
+   * @param subsystem the subsystem to set
+   */
+  public void setSubsystem(SubSystem subsystem) {
+    this.subsystem = subsystem;
   }
 
   /**

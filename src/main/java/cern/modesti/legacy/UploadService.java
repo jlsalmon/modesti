@@ -4,20 +4,20 @@
 package cern.modesti.legacy;
 
 import java.io.InputStream;
+import java.security.Principal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cern.modesti.request.Request;
-import cern.modesti.request.Request.RequestStatus;
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.repository.mongo.request.counter.CounterService;
-import cern.modesti.schema.Schema;
-import cern.modesti.repository.mongo.schema.SchemaRepository;
 import cern.modesti.legacy.parser.RequestParser;
 import cern.modesti.legacy.parser.RequestParserFactory;
+import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.repository.mongo.request.counter.CounterService;
+import cern.modesti.repository.mongo.schema.SchemaRepository;
+import cern.modesti.request.Request;
+import cern.modesti.request.Request.RequestStatus;
 
 /**
  * @author Justin Lewis Salmon
@@ -41,18 +41,17 @@ public class UploadService {
    *
    * @param filename
    * @param stream
+   * @param principal
    * @return
    */
-  public Request parseRequestFromExcelSheet(String filename, InputStream stream) {
+  public Request parseRequestFromExcelSheet(String filename, InputStream stream, Principal user) {
     RequestParser parser = RequestParserFactory.createRequestParser(stream);
     Request request = parser.parseRequest();
 
     request.setDescription(filename);
+    request.setCreator(user.getName());
     request.setStatus(RequestStatus.IN_PROGRESS);
-
-    // Link to the correct schema
-//    Schema schema = schemaRepository.findOneByNameIgnoreCase(request.getDatasource().toLowerCase());
-//    request.setSchema(schema);
+    //request.set
 
     // Generate a request id
     request.setRequestId(counterService.getNextSequence("requests").toString());

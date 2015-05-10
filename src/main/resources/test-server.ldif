@@ -66,7 +66,7 @@ objectclass: inetOrgPerson
 cn: Mouse, Jerry
 sn: Mouse
 uid: jerry
-userPassword: jerryspassword
+userPassword: {SHA}nFCebWjxfaLbHHG1Qk5UU4trbvQ=
 
 dn: cn=slash/guy,ou=people,dc=springframework,dc=org
 objectclass: top
