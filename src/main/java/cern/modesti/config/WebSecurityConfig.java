@@ -3,7 +3,14 @@
  */
 package cern.modesti.config;
 
+import cern.modesti.security.SpringSecurityLdapUserEntityManager;
+import org.activiti.engine.impl.interceptor.Session;
+import org.activiti.engine.impl.interceptor.SessionFactory;
+import org.activiti.engine.impl.persistence.entity.GroupIdentityManager;
+import org.activiti.engine.impl.persistence.entity.UserIdentityManager;
+import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.apache.catalina.Context;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
@@ -15,6 +22,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.access.event.LoggerListener;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -41,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    //http.authenticationProvider(ldapAuthenticationProvider());
+    http.authenticationProvider(ldapAuthenticationProvider());
 
     http
         // Enable basic HTTP authentication
@@ -52,32 +60,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and().csrf().disable();
   }
 
-  @Configuration
-  @Profile("test")
-  protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
-
-    @Override
-    public void init(AuthenticationManagerBuilder auth) throws Exception {
-      auth
-      .ldapAuthentication()
-      .userDnPatterns("uid={0},ou=people")
-      .groupSearchBase("ou=groups")
-      .contextSource().ldif("classpath:test-server.ldif");
-    }
-  }
-
-
-  @Bean
-  public LoggerListener loggerListener() {
-    return new LoggerListener();
-  }
-
-  @Bean
-  public LdapContextSource contextSource() {
-    DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.url"));
-    contextSource.setBase(env.getRequiredProperty("ldap.base"));
-    return contextSource;
-  }
+//  @Configuration
+//  @Profile("test")
+//  protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
+//
+//    @Override
+//    public void init(AuthenticationManagerBuilder auth) throws Exception {
+//      auth
+//      .ldapAuthentication()
+//      .userDnPatterns("uid={0},ou=people")
+//      .groupSearchBase("ou=groups")
+//      .contextSource().ldif("classpath:test-server.ldif");
+//    }
+//  }
 
   @Bean
   public LdapAuthenticationProvider ldapAuthenticationProvider() {
@@ -90,6 +85,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     String[] userDnPatterns = new String[]{env.getRequiredProperty("ldap.user")};
     authenticator.setUserDnPatterns(userDnPatterns);
     return authenticator;
+  }
+
+  @Bean
+  public LdapTemplate ldapTemplate() {
+    return new LdapTemplate(contextSource());
+  }
+
+  @Bean
+  public LdapContextSource contextSource() {
+    DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.auth.url"));
+    contextSource.setBase(env.getRequiredProperty("ldap.base"));
+    return contextSource;
+  }
+
+  @Bean
+  public LoggerListener loggerListener() {
+    return new LoggerListener();
   }
 
   /**
