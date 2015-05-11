@@ -1,4 +1,4 @@
-package cern.modesti.security;
+package cern.modesti.security.ldap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +36,16 @@ import org.springframework.stereotype.Service;
  * @author Justin Lewis Salmon
  */
 @Service
-public class SpringSecurityLdapUserEntityManager extends AbstractManager implements UserIdentityManager {
-  static final Logger LOG = LoggerFactory.getLogger(SpringSecurityLdapUserEntityManager.class);
-
-  LdapTemplate ldapTemplate;
+public class LdapUserManager extends AbstractManager implements UserIdentityManager {
+  static final Logger LOG = LoggerFactory.getLogger(LdapUserManager.class);
 
   @Autowired
   Environment env;
 
+  LdapTemplate ldapTemplate;
+
   @Autowired
-  public SpringSecurityLdapUserEntityManager(LdapTemplate ldapTemplate) {
+  public LdapUserManager(LdapTemplate ldapTemplate) {
     this.ldapTemplate = ldapTemplate;
   }
 

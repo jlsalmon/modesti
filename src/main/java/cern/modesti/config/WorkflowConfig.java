@@ -1,7 +1,5 @@
 package cern.modesti.config;
 
-import org.activiti.engine.impl.interceptor.Session;
-import org.activiti.engine.impl.interceptor.SessionFactory;
 import org.activiti.engine.impl.persistence.entity.GroupIdentityManager;
 import org.activiti.engine.impl.persistence.entity.UserIdentityManager;
 import org.activiti.spring.SpringProcessEngineConfiguration;
@@ -16,8 +14,10 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 
-import cern.modesti.security.CustomGroupEntityManager;
-import cern.modesti.security.SpringSecurityLdapUserEntityManager;
+import cern.modesti.security.ldap.LdapGroupManager;
+import cern.modesti.security.ldap.LdapGroupManagerFactory;
+import cern.modesti.security.ldap.LdapUserManager;
+import cern.modesti.security.ldap.LdapUserManagerFactory;
 import cern.modesti.workflow.RequestStatusManager;
 
 /**
@@ -43,30 +43,30 @@ public class WorkflowConfig {
     return new InitializingBean() {
       @Override
       public void afterPropertiesSet() {
-        //configuration.addConfigurator(ldapConfigurator());
-
-        configuration.getSessionFactories().put(UserIdentityManager.class, new CustomUserEntityManagerFactory());
-        //configuration.getSessionFactories().put(GroupIdentityManager.class, new CustomGroupEntityManagerFactory());
+        configuration.getSessionFactories().put(UserIdentityManager.class, userManagerFactory());
+        configuration.getSessionFactories().put(GroupIdentityManager.class, groupManagerFactory());
       }
     };
   }
 
-  class CustomUserEntityManagerFactory implements SessionFactory {
-
-    @Override
-    public Class<?> getSessionType() {
-      return UserIdentityManager.class;
-    }
-
-    @Override
-    public Session openSession() {
-      return userEntityManager();
-    }
+  @Bean
+  LdapUserManagerFactory userManagerFactory() {
+    return new LdapUserManagerFactory(userManager());
   }
 
   @Bean
-  SpringSecurityLdapUserEntityManager userEntityManager() {
-    return new SpringSecurityLdapUserEntityManager(anonymousLdapTemplate());
+  LdapGroupManagerFactory groupManagerFactory() {
+    return new LdapGroupManagerFactory(groupManager());
+  }
+
+  @Bean
+  LdapUserManager userManager() {
+    return new LdapUserManager(anonymousLdapTemplate());
+  }
+
+  @Bean
+  LdapGroupManager groupManager() {
+    return new LdapGroupManager(anonymousLdapTemplate());
   }
 
   @Bean
@@ -80,18 +80,5 @@ public class WorkflowConfig {
     contextSource.setBase(env.getRequiredProperty("ldap.base"));
     contextSource.setAnonymousReadOnly(true);
     return contextSource;
-  }
-
-  class CustomGroupEntityManagerFactory implements SessionFactory {
-
-    @Override
-    public Class<?> getSessionType() {
-      return GroupIdentityManager.class;
-    }
-
-    @Override
-    public Session openSession() {
-      return new CustomGroupEntityManager();
-    }
   }
 }
