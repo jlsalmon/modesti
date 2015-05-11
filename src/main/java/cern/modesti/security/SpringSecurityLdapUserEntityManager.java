@@ -1,5 +1,12 @@
 package cern.modesti.security;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.naming.NamingException;
+import javax.naming.directory.SearchResult;
+
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.ActivitiIllegalArgumentException;
 import org.activiti.engine.identity.Group;
@@ -13,31 +20,15 @@ import org.activiti.engine.impl.persistence.AbstractManager;
 import org.activiti.engine.impl.persistence.entity.IdentityInfoEntity;
 import org.activiti.engine.impl.persistence.entity.UserEntity;
 import org.activiti.engine.impl.persistence.entity.UserIdentityManager;
-import org.apache.directory.shared.ldap.name.LdapDN;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.NameClassPairCallbackHandler;
 import org.springframework.ldap.core.support.BaseLdapPathContextSource;
-import org.springframework.ldap.core.support.LdapContextSource;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
-import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
 import org.springframework.stereotype.Service;
-
-import javax.naming.InvalidNameException;
-import javax.naming.NameClassPair;
-import javax.naming.NamingException;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.SearchResult;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * TODO
@@ -83,30 +74,17 @@ public class SpringSecurityLdapUserEntityManager extends AbstractManager impleme
   public UserEntity findUserById(final String userId) {
     LOG.debug("findUserById()");
 
-    String base = "DC=cern,DC=ch";
-    String filter = "(&(CN={0})(OU=Users)(OU=Organic Units)(DC=cern,DC=ch))";
+    String base = "";
+    String filter = "(cn={0})";
 
     FilterBasedLdapUserSearch search = new FilterBasedLdapUserSearch(base, filter, (BaseLdapPathContextSource) ldapTemplate.getContextSource());
 
     DirContextOperations operations = search.searchForUser(userId);
 
-
-    //    try {
-    //      ldapTemplate.search(new LdapDN("ldaps://xldap.cern.ch:636/DC=cern,DC=ch"), env.getRequiredProperty("ldap.user"), new AttributesMapper() {
-    //        @Override
-    //        public Object mapFromAttributes(Attributes attributes) throws NamingException {
-    //
-    //          LOG.info(attributes.toString());
-    //          return null;
-    //        }
-    //      });
-    //
-    //    } catch (InvalidNameException e) {
-    //      e.printStackTrace();
-    //    }
-
-
-    UserEntity user = new UserEntity(userId);
+    UserEntity user = new UserEntity(operations.getStringAttribute("cn"));
+    user.setFirstName(operations.getStringAttribute("givenName"));
+    user.setLastName(operations.getStringAttribute("sn"));
+    user.setEmail(operations.getStringAttribute("mail"));
     return user;
 
     //    LDAPTemplate ldapTemplate = new LDAPTemplate(ldapConfigurator);
