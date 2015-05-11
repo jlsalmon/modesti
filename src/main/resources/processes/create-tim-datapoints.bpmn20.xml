@@ -32,7 +32,7 @@
     <exclusiveGateway id="alarmCheck" name="Exclusive Gateway"></exclusiveGateway>
     <startEvent id="start" name="Start"></startEvent>
     <sequenceFlow id="flow9" sourceRef="start" targetRef="alarmCheck"></sequenceFlow>
-    <userTask id="approveAlarms" name="Approve alarms"></userTask>
+    <userTask id="approveAlarms" name="Approve alarms" activiti:candidateGroups="ROLE_MANAGER"></userTask>
     <sequenceFlow id="flow4" sourceRef="approveAlarms" targetRef="configurePoints">
       <extensionElements>
         <activiti:executionListener event="take" expression="${requestStatusManager.setRequestStatus(requestId, &quot;FOR_CONFIGURATION&quot;)}"></activiti:executionListener>
