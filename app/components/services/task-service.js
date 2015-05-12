@@ -12,7 +12,7 @@ app.service('TaskService', function($q, $localStorage, Restangular) {
   var service = {
 
     /**
-     * 
+     *
      */
     getTaskForRequest : function(requestId) {
       var q = $q.defer();
@@ -39,13 +39,13 @@ app.service('TaskService', function($q, $localStorage, Restangular) {
 
       return q.promise;
     },
-    
+
     /**
-     * 
+     *
      */
     claimTask : function(taskId) {
       var q = $q.defer();
-      
+
       var params = {
         action : 'claim',
         assignee : $localStorage.username
@@ -60,19 +60,19 @@ app.service('TaskService', function($q, $localStorage, Restangular) {
         console.log('error claiming task ' + taskId);
         q.reject(error);
       });
-      
+
       return q.promise;
     },
-    
+
     /**
-     * 
+     *
      */
     completeTask : function(taskId) {
       var q = $q.defer();
-      
+
       var params = {
         "action" : "complete"
-      }
+      };
 
       Restangular.one('runtime/tasks', taskId).post('', params).then(function(result) {
         console.log('completed task ' + taskId);
@@ -83,7 +83,7 @@ app.service('TaskService', function($q, $localStorage, Restangular) {
         console.log('error completing task ' + taskId);
         q.reject(error);
       });
-      
+
       return q.promise;
     }
   };

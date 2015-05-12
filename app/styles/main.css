@@ -508,9 +508,13 @@ select.form-control {
     black: "#222222",
     gray: "#d2d6de"
   */
-  
+
 .label.request-status.IN_PROGRESS {
   background-color: #3c8dbc;
+}
+
+.label.request-status.FOR_CORRECTION {
+  background-color: #f56954;
 }
 
 .label.request-status.FOR_APPROVAL {

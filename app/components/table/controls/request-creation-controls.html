@@ -23,15 +23,15 @@
     <button ng-show="$root.validating == undefined" class="btn btn-primary"  tooltip-append-to-body="true" tooltip="Validate request">
        <i class="fa fa-fw fa-check-square-o"></i> Validate
     </button>
-  
+
     <button ng-show="$root.validating == 'started'" class="btn btn-primary" tooltip-append-to-body="true" tooltip="Validating...">
        <i class="fa fa-fw fa-spin fa-cog"></i> Validate
     </button>
-  
+
     <button ng-show="$root.validating == 'success'" class="btn btn-success" tooltip-append-to-body="true" tooltip="Request is valid">
        <i class="fa fa-fw fa-check-square-o"></i> Validate
     </button>
-  
+
     <button ng-show="$root.validating == 'error'" class="btn btn-danger" tooltip-append-to-body="true" tooltip="Problem validating request">
        <i class="fa fa-fw fa-exclamation-triangle"></i> Invalid
     </button>
@@ -42,5 +42,3 @@
       <i class="fa fa-fw fa-external-link"></i> Submit
   </button>
 </div>
-
-<span>{{ctrl.validationResult}}</span>

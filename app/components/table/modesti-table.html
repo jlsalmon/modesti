@@ -104,9 +104,9 @@
           <!-- Input field for each field in the currently active category -->
           <td class="input-field" ng-repeat="field in ctrl.activeCategory.fields" >
             <!-- Custom directive to generate an input field based on the field schema -->
-            <span input-field 
-                  model="point.properties[field.id]" 
-                  schema="field" 
+            <span input-field
+                  model="point.properties[field.id]"
+                  schema="field"
                   editable="ctrl.activeCategory.editableStates.indexOf(ctrl.request.status) > -1"></span>
           </td>
 
@@ -121,14 +121,14 @@
     <tfoot>
       <tr>
         <td colspan="20">
-        
+
           <div class="row">
-            <div class="col-md-2">
-            
+            <div class="col-md-3">
+
               <!-- Button to save the request -->
-              <button class="btn btn-default" ng-click="ctrl.save()" tooltip-append-to-body="true" tooltip="Save request"> 
+              <button class="btn btn-default" ng-click="ctrl.save()" tooltip-append-to-body="true" tooltip="Save request">
                 <i class="fa fa-fw fa-save saving-state"></i>
-                
+
                 <!-- Saving state indicators -->
                 <span ng-show="$root.saving == 'started'">
                   <i class="fa fa-fw fa-spin fa-cog saving-state"></i>
@@ -139,10 +139,10 @@
                 <span ng-show="$root.saving == 'error'">
                   <i class="fa fa-fw fa-exclamation-triangle saving-state text-danger"></i>
                 </span>
-                
+
                 <div tooltip="foo"></div>
               </button>
-              
+
               <!-- Button to activate the filter text boxes at the top of the table -->
               <button class="btn btn-default" ng-click="ctrl.toggleFilter()" tooltip-append-to-body="true" tooltip="Filter rows">
                 <i class="fa fa-fw fa-filter"></i>
@@ -150,7 +150,7 @@
             </div>
 
           <!-- Custom pagination controls -->
-            <div class="col-md-8">
+            <div class="col-md-6">
               <div class="ng-cloak ng-table-pager text-center" ng-if="params.data.length">
                 <ul class="pagination ng-table-pagination" ng-hide="params.settings().$scope.pages == 0">
                   <li ng-class="{'disabled': !page.active && !page.current, 'active': page.current}" ng-repeat="page in pages" ng-switch="page.type">
@@ -164,7 +164,7 @@
                 </ul>
               </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
               <div ng-if="params.settings().counts.length" class="ng-table-counts btn-group pull-right">
                 <button ng-repeat="count in params.settings().counts" type="button"
                         ng-class="{'active':params.count() == count}"
@@ -174,13 +174,13 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Remove default pagination -->
           <script type="text/ng-template" id="custom/pager"></script>
 
         </td>
       </tr>
-      
+
       <tr>
         <td colspan="100">
           <!-- This is where the status-specific controls are inserted -->

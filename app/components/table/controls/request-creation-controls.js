@@ -7,9 +7,9 @@
  */
 angular.module('modesti').controller('RequestCreationControlsController', RequestCreationControlsController);
 
-function RequestCreationControlsController($window, Restangular, RequestService, ValidationService) {
+function RequestCreationControlsController($window, Restangular, RequestService) {
   var self = this;
-  
+
   self.init = init;
   self.addRow = addRow;
   self.duplicateSelectedRows = duplicateSelectedRows;
@@ -121,24 +121,24 @@ function RequestCreationControlsController($window, Restangular, RequestService,
       console.log('error saving request after row deletion: ' + error);
     });
   }
-  
+
 
   /**
-   * 
+   *
    */
   function validate() {
     var request = self.parent.request;
 
-    ValidationService.validateRequest(request).then(function(result) {
+    RequestService.validateRequest(request).then(function() {
       console.log('validated request');
-      self.validationResult = result;
+      
     }, function(error) {
       console.log('error validating request: ' + error);
     });
   }
-  
+
   /**
-   * 
+   *
    */
   function submit() {
     Restangular.one('requests/' + self.parent.request.requestId + '/submit').post().then(function(response) {
@@ -146,7 +146,7 @@ function RequestCreationControlsController($window, Restangular, RequestService,
       // Reload the current state
       $window.location.reload(true);
     },
-    
+
     function(error) {
       console.log('error submitting request: ' + error);
     });

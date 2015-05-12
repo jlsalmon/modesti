@@ -9,45 +9,6 @@ var app = angular.module('modesti');
 
 app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
 
-  function filterData(data, filter) {
-    return $filter('filter')(data, filter);
-  }
-
-  function orderData(data, params) {
-    return params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
-  }
-
-  function transformData(data, filter, params) {
-    return orderData(filterData(data, filter), params);
-  }
-
-  /**
-   *
-   */
-  function contains(array, point) {
-    var i = array.length;
-    while (i--) {
-      if (array[i].id == point.id) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-
-  /**
-   * If the given array contains a modified version of the given point, this
-   * function will update it in the array.
-   */
-  function update(array, point) {
-    var i = array.length;
-    while (i--) {
-      if (array[i].id == point.id && angular.toJson(array[i]) != angular.toJson(point)) {
-        array[i] = point;
-      }
-    }
-  }
-
   var service = {
 
     /**
@@ -232,8 +193,95 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
       });
 
       return q.promise;
+    },
+
+    /**
+     *
+     */
+
+    validateRequest: function(request) {
+      $rootScope.validating = "started";
+      var q = $q.defer();
+
+      Restangular.one('requests/' + request.requestId + '/validate').post().then(function(result) {
+        $rootScope.validating = "success";
+        q.resolve(result.data);
+      },
+
+      function(error) {
+        console.log('error: ' + error);
+        $rootScope.validating = "error";
+        q.reject(error);
+      });
+
+      return q.promise;
+    },
+
+    /**
+     *
+     */
+    submitRequest : function() {
+
     }
   };
 
   return service;
+
+  /**
+   *
+   * @param data
+   * @param filter
+   * @returns {*}
+   */
+  function filterData(data, filter) {
+    return $filter('filter')(data, filter);
+  }
+
+  /**
+   *
+   * @param data
+   * @param params
+   * @returns {*}
+   */
+  function orderData(data, params) {
+    return params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
+  }
+
+  /**
+   *
+   * @param data
+   * @param filter
+   * @param params
+   * @returns {*}
+   */
+  function transformData(data, filter, params) {
+    return orderData(filterData(data, filter), params);
+  }
+
+  /**
+   *
+   */
+  function contains(array, point) {
+    var i = array.length;
+    while (i--) {
+      if (array[i].id == point.id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   * If the given array contains a modified version of the given point, this
+   * function will update it in the array.
+   */
+  function update(array, point) {
+    var i = array.length;
+    while (i--) {
+      if (array[i].id == point.id && angular.toJson(array[i]) != angular.toJson(point)) {
+        array[i] = point;
+      }
+    }
+  }
 });
