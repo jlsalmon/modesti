@@ -3,8 +3,14 @@ package cern.modesti.request;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import java.util.List;
+
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
+import org.activiti.rest.service.api.runtime.task.TaskResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +21,14 @@ public class RequestLinks {
 
   private static final Logger LOG = LoggerFactory.getLogger(RequestLinks.class);
 
+  @Autowired
+  TaskService taskService;
+
+  /**
+   *
+   * @param request
+   * @return
+   */
   Link getSchemaLink(Request request) {
     if (request.getCategories() != null) {
 
@@ -33,5 +47,25 @@ public class RequestLinks {
       LOG.warn("Request " + request.getRequestId() + " has no schema link!");
       return null;
     }
+  }
+
+  /**
+   *
+   * @param request
+   * @return
+   */
+  Link getTaskLink(Request request) {
+    List<Task> tasks = taskService.createTaskQuery().processVariableValueEquals("requestId", request.getRequestId()).orderByTaskCreateTime().desc().list();
+    if (tasks.isEmpty()) {
+      return null;
+    }
+
+    Task task = tasks.get(0);
+    // The creator must submit the request
+    taskService.claim(task.getId(), request.getCreator());
+
+    // TODO is this right? Should we even allow multiple instances of the process for a particular request?
+    // Link to the most recent task
+    return linkTo(methodOn(TaskResource.class).getTask(task.getId(), null)).withRel("task");
   }
 }

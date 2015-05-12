@@ -17,9 +17,10 @@
  ******************************************************************************/
 package cern.modesti.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.io.Serializable;
 
 
 /**
@@ -34,6 +35,9 @@ public class Person implements Serializable {
   private Long id;
 
   private String name;
+
+  public Person() {
+  }
 
   /**
    * Create a new Person instance.

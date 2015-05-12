@@ -17,6 +17,10 @@
  ******************************************************************************/
 package cern.modesti.request;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.activiti.engine.RuntimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +29,18 @@ import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
 
-import cern.modesti.request.point.Point;
-import cern.modesti.request.Request.RequestStatus;
 import cern.modesti.repository.mongo.request.counter.CounterService;
-import cern.modesti.schema.Schema;
-import cern.modesti.repository.mongo.schema.SchemaRepository;
+import cern.modesti.request.Request.RequestStatus;
+import cern.modesti.request.point.Point;
 
 /**
  * TODO
  *
- * The {@link cern.modesti.repository.mongo.request.RequestRepository} is automatically exposed as a REST resource via Spring Data REST, hence why there is no explicit MVC
- * controller for it. This class simply hooks into the Spring Data REST lifecycle and intercepts request create/save events, and lets Spring Data REST do everything else
- * automatically.
+ * The {@link cern.modesti.repository.mongo.request.RequestRepository} is
+ * automatically exposed as a REST resource via Spring Data REST, hence why
+ * there is no explicit MVC controller for it. This class simply hooks into the
+ * Spring Data REST lifecycle and intercepts request create/save events, and
+ * lets Spring Data REST do everything else automatically.
  *
  * @author Justin Lewis Salmon
  */
@@ -44,10 +48,13 @@ import cern.modesti.repository.mongo.schema.SchemaRepository;
 @RepositoryEventHandler(Request.class)
 public class RequestEventHandler {
 
-  Logger logger = LoggerFactory.getLogger(RequestEventHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(RequestEventHandler.class);
 
   @Autowired
   private CounterService counterService;
+
+  @Autowired
+  private RuntimeService runtimeService;
 
   /**
    * TODO
@@ -56,9 +63,8 @@ public class RequestEventHandler {
    */
   @HandleBeforeCreate
   public void handleRequestCreate(Request request) {
-    request.setStatus(RequestStatus.IN_PROGRESS);
     request.setRequestId(counterService.getNextSequence("requests").toString());
-    logger.trace("beforeCreate() generated request id: " + request.getRequestId());
+    LOG.trace("beforeCreate() generated request id: " + request.getRequestId());
 
     // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
@@ -73,9 +79,19 @@ public class RequestEventHandler {
       if (point.getId() == null) {
         // Point IDs are 1-based
         point.setId((long) (request.getPoints().indexOf(point) + 1));
-        logger.debug("beforeCreate() generated point id: " + point.getId());
+        LOG.debug("beforeCreate() generated point id: " + point.getId());
       }
     }
+
+    // Kick off the workflow process
+    LOG.info("starting process for request " + request.getRequestId());
+    request.setStatus(RequestStatus.IN_PROGRESS);
+
+    Map<String, Object> variables = new HashMap<>();
+    variables.put("requestId", request.getRequestId());
+    variables.put("containsAlarms", request.containsAlarms());
+
+    runtimeService.startProcessInstanceByKey("createTimPoints", request.getRequestId(), variables);
   }
 
   /**
@@ -89,7 +105,7 @@ public class RequestEventHandler {
       if (point.getId() == null) {
         // Point IDs are 1-based
         point.setId((long) (request.getPoints().indexOf(point) + 1));
-        logger.debug("beforeSave() generated point id: " + point.getId());
+        LOG.debug("beforeSave() generated point id: " + point.getId());
       }
     }
   }

@@ -5,7 +5,10 @@ package cern.modesti.legacy;
 
 import java.io.InputStream;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.activiti.engine.RuntimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,6 @@ import cern.modesti.legacy.parser.RequestParser;
 import cern.modesti.legacy.parser.RequestParserFactory;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterService;
-import cern.modesti.repository.mongo.schema.SchemaRepository;
 import cern.modesti.request.Request;
 import cern.modesti.request.Request.RequestStatus;
 
@@ -32,10 +34,10 @@ public class UploadService {
   private RequestRepository requestRepository;
 
   @Autowired
-  private SchemaRepository schemaRepository;
+  private CounterService counterService;
 
   @Autowired
-  private CounterService counterService;
+  private RuntimeService runtimeService;
 
   /**
    *
@@ -50,12 +52,20 @@ public class UploadService {
 
     request.setDescription(filename);
     request.setCreator(user.getName());
-    request.setStatus(RequestStatus.IN_PROGRESS);
-    //request.set
 
     // Generate a request id
     request.setRequestId(counterService.getNextSequence("requests").toString());
     LOG.debug("generated request id: " + request.getRequestId());
+
+    // Kick off the workflow process
+    LOG.info("starting process for request " + request.getRequestId());
+    request.setStatus(RequestStatus.IN_PROGRESS);
+
+    Map<String, Object> variables = new HashMap<>();
+    variables.put("requestId", request.getRequestId());
+    variables.put("containsAlarms", request.containsAlarms());
+
+    runtimeService.startProcessInstanceByKey("createTimPoints", request.getRequestId(), variables);
 
     // Store the request in the database
     requestRepository.insert(request);

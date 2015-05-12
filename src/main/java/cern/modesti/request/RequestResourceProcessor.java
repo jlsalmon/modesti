@@ -3,6 +3,7 @@ package cern.modesti.request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,12 @@ public class RequestResourceProcessor implements ResourceProcessor<Resource<Requ
     LOG.debug("adding schema link to request " + request.getRequestId());
 
     resource.add(requestLinks.getSchemaLink(request));
+
+    Link taskLink = requestLinks.getTaskLink(request);
+    if (taskLink != null) {
+      resource.add(taskLink);
+    }
+
     return resource;
   }
 
