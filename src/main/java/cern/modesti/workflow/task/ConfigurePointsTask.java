@@ -1,12 +1,9 @@
-package cern.modesti.workflow;
+package cern.modesti.workflow.task;
 
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.request.Request;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * TODO

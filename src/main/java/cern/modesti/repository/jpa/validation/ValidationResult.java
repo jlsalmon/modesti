@@ -3,6 +3,7 @@
  */
 package cern.modesti.repository.jpa.validation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +15,9 @@ import javax.persistence.Id;
  *
  */
 //@Entity
-public class ValidationResult {
+public class ValidationResult implements Serializable {
+
+  private static final long serialVersionUID = 1215131608580861894L;
 
   @Id
   private Long id;

@@ -3,14 +3,7 @@
  */
 package cern.modesti.config;
 
-import cern.modesti.security.SpringSecurityLdapUserEntityManager;
-import org.activiti.engine.impl.interceptor.Session;
-import org.activiti.engine.impl.interceptor.SessionFactory;
-import org.activiti.engine.impl.persistence.entity.GroupIdentityManager;
-import org.activiti.engine.impl.persistence.entity.UserIdentityManager;
-import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.apache.catalina.Context;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
@@ -18,25 +11,27 @@ import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.access.event.LoggerListener;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
+import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 
 
 /**
+ * TODO
+ *
+ * Web security and LDAP configuration beans
+ *
  * @author Justin Lewis Salmon
  */
 @Configuration
@@ -60,20 +55,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and().csrf().disable();
   }
 
-//  @Configuration
-//  @Profile("test")
-//  protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
-//
-//    @Override
-//    public void init(AuthenticationManagerBuilder auth) throws Exception {
-//      auth
-//      .ldapAuthentication()
-//      .userDnPatterns("uid={0},ou=people")
-//      .groupSearchBase("ou=groups")
-//      .contextSource().ldif("classpath:test-server.ldif");
-//    }
-//  }
-
   @Bean
   public LdapAuthenticationProvider ldapAuthenticationProvider() {
     return new LdapAuthenticationProvider(ldapAuthenticator());
@@ -82,20 +63,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapAuthenticator ldapAuthenticator() {
     BindAuthenticator authenticator = new BindAuthenticator(contextSource());
-    String[] userDnPatterns = new String[]{env.getRequiredProperty("ldap.user")};
+    String[] userDnPatterns = new String[]{env.getRequiredProperty("ldap.user.filter")};
     authenticator.setUserDnPatterns(userDnPatterns);
     return authenticator;
-  }
-
-  @Bean
-  public LdapTemplate ldapTemplate() {
-    return new LdapTemplate(contextSource());
   }
 
   @Bean
   public LdapContextSource contextSource() {
     DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.auth.url"));
     contextSource.setBase(env.getRequiredProperty("ldap.base"));
+    return contextSource;
+  }
+
+  @Bean
+  public LdapTemplate anonymousLdapTemplate() {
+    return new SpringSecurityLdapTemplate(anonymousContextSource());
+  }
+
+  @Bean
+  public LdapContextSource anonymousContextSource() {
+    DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.anon.url"));
+    contextSource.setBase(env.getRequiredProperty("ldap.base"));
+    contextSource.setAnonymousReadOnly(true);
     return contextSource;
   }
 

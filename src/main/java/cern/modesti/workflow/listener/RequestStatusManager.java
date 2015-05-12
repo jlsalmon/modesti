@@ -1,4 +1,4 @@
-package cern.modesti.workflow;
+package cern.modesti.workflow.listener;
 
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
@@ -18,7 +18,6 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 public class RequestStatusManager {
-
   private static final Logger LOG = LoggerFactory.getLogger(RequestStatusManager.class);
 
   @Autowired

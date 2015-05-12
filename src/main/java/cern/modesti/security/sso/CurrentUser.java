@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cern.modesti.security;
+package cern.modesti.security.sso;
 
 import java.lang.annotation.*;
 
