@@ -7,11 +7,12 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, request, schema) {
+function RequestController($scope, request, schema, task) {
   var self = this;
 
   self.request = request;
   self.schema = schema;
+  self.task = task;
   self.currentActiveTab = 0;
 
   self.activateTab = activateTab;

@@ -103,7 +103,7 @@ function InputFieldController($compile, $http, $filter) {
       <div class="form-group has-feedback"> \
         <input type="text" class="form-control" name="{{self.schema.id}}" ng-model="model" \
                placeholder="' + self.schema.placeholder + '"  \
-               typeahead="item as item.' + self.schema.model + ' for item in ctrl.autocomplete(self.schema, $viewValue)" \
+               typeahead="item as item.' + self.schema.model + ' for item in ctrl.autocomplete(ctrl.schema, $viewValue)" \
                typeahead-editable="false" \
                typeahead-loading="loading" \
                typeahead-template-url="item-template-' + self.schema.id + '.html" \

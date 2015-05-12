@@ -7,11 +7,14 @@
  */
 angular.module('modesti').controller('ModestiTableController', ModestiTableController);
 
-function ModestiTableController($scope, $http, $stateParams, NgTableParams, RequestService, ValidationService) {
+function ModestiTableController($scope, $http, $stateParams, NgTableParams, RequestService) {
   var self = this;
 
   self.request = {};
   self.schema = {};
+  self.task = {}
+  self.tableForm = {};
+  self.pointForms = {};
   self.searchText = {};
 
   self.tableParams = new NgTableParams({
@@ -47,9 +50,10 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
    * @param request
    * @param schema
    */
-  function init(request, schema) {
+  function init(request, schema, task) {
     self.request = request;
     self.schema = schema;
+    self.task = task;
     getAvailableCategories();
   }
 

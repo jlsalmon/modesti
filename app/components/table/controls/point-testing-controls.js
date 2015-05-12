@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('PointTestingControlsController', PointTestingControlsController);
 
-function PointTestingControlsController($window, Restangular, TaskService) {
+function PointTestingControlsController($state, Restangular, TaskService) {
   var self = this;
   
   self.init = init;
@@ -28,7 +28,7 @@ function PointTestingControlsController($window, Restangular, TaskService) {
     
     TaskService.getTaskForRequest(request.requestId).then(function(task) {
       TaskService.completeTask(task.id).then(function(task) {
-        $window.location.reload(true);
+        $state.reload();
       },
 
       function(error) {

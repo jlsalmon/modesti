@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('AlarmApprovalControlsController', AlarmApprovalControlsController);
 
-function AlarmApprovalControlsController($window, TaskService) {
+function AlarmApprovalControlsController($state, TaskService) {
   var self = this;
 
   self.init = init;
@@ -28,7 +28,7 @@ function AlarmApprovalControlsController($window, TaskService) {
     
     TaskService.getTaskForRequest(request.requestId).then(function(task) {
       TaskService.completeTask(task.id).then(function(task) {
-        $window.location.reload(true);
+        $state.reload();
       },
 
       function(error) {

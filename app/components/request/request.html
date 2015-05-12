@@ -157,12 +157,15 @@
           <!--
             This is the main table directive.
           -->
-          <modesti-table request="ctrl.request" schema="ctrl.schema">
+          <modesti-table request="ctrl.request" schema="ctrl.schema" task="ctrl.task">
             
             <!-- Show appripriate controls based on the request status -->
             <div ng-switch="ctrl.request.status">
               <div ng-switch-when="IN_PROGRESS">
                 <request-creation-controls />
+              </div>
+              <div ng-switch-when="FOR_CORRECTION">
+                <request-correction-controls />
               </div>
               <div ng-switch-when="FOR_APPROVAL">
                 <alarm-approval-controls />

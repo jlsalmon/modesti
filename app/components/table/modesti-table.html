@@ -90,14 +90,14 @@
       </tr>
     </thead>
 
-    <tbody>
+    <tbody ng-form="ctrl.tableForm">
       <!-- Row for each point in the request -->
-      <tr ng-repeat="point in $data" ng-form="pointForm">
+      <tr ng-repeat="point in $data" ng-form="ctrl.pointForms.form_{{$index}}">
 
           <!-- Line number field -->
           <td class="input-field text-muted" width="30" style="text-align: center; vertical-align: middle;"
-          ng-class="{ 'bg-danger': (pointForm.$invalid && pointForm.$dirty)
-                        || (pointForm.$submitted && pointForm.$invalid) }">
+          ng-class="{ 'bg-danger': (ctrl.pointForms.form_{{$index}}.$invalid && ctrl.pointForms.form_{{$index}}.$dirty)
+                        || (ctrl.pointForms.form_{{$index}}.$submitted && ctrl.pointForms.form_{{$index}}.$invalid) }">
             {{point.id}}<!--{{$data.indexOf(point) + 1}}-->
           </td>
 

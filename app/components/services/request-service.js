@@ -196,32 +196,10 @@ app.service('RequestService', function($filter, $rootScope, $q, Restangular) {
     },
 
     /**
-     *
+     * 
      */
-
-    validateRequest: function(request) {
-      $rootScope.validating = "started";
-      var q = $q.defer();
-
-      Restangular.one('requests/' + request.requestId + '/validate').post().then(function(result) {
-        $rootScope.validating = "success";
-        q.resolve(result.data);
-      },
-
-      function(error) {
-        console.log('error: ' + error);
-        $rootScope.validating = "error";
-        q.reject(error);
-      });
-
-      return q.promise;
-    },
-
-    /**
-     *
-     */
-    submitRequest : function() {
-
+    clearCache : function() {
+      delete service.cachedRequest;
     }
   };
 

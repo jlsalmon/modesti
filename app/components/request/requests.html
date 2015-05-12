@@ -51,6 +51,12 @@
               <span class="label request-status pull-right" ng-class="'IN_PROGRESS'">{{(ctrl.requests | filter:{status: 'IN_PROGRESS'}).length}}</span>
               </a>
             </li>
+            <li ng-class="{active: ctrl.filter.status == 'FOR_CORRECTION'}">
+              <a href="" ng-click="ctrl.filter.status = 'FOR_CORRECTION'">
+                <i class="fa fa-exclamation-circle"></i> For Correction 
+                <span class="label request-status pull-right" ng-class="'FOR_CORRECTION'">{{(ctrl.requests | filter:{status: 'FOR_CORRECTION'}).length}}</span>
+              </a>
+            </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_APPROVAL'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_APPROVAL'">
                 <i class="fa fa-bell-o"></i> For Approval 
@@ -217,6 +223,7 @@
                   <span ng-switch="request.status">
                   
                     <span ng-switch-when="IN_PROGRESS">
+                      <!-- Only the request owner can edit the request -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-edit"></i>
                         Edit
@@ -226,7 +233,16 @@
                       </button>
                     </span>
                     
+                    <span ng-switch-when="FOR_CORRECTION">
+                      <!-- Only the requesr owner can correct the errors -->
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.claimTask(request)">
+                        <i class="fa fa-fw fa-hand-o-right"></i>
+                        Claim Task
+                      </button>
+                    </span>
+                    
                     <span ng-switch-when="FOR_APPROVAL">
+                      <!-- Only approvers can approve -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.claimTask(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
                         Claim Task
@@ -234,6 +250,7 @@
                     </span>
                     
                     <span ng-switch-when="FOR_TESTING">
+                      <!-- Only testers can test -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.claimTask(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
                         Claim Task

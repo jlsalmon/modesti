@@ -15,11 +15,12 @@ function modestiTable() {
     controller : 'ModestiTableController as ctrl',
     scope: {
       request: '=request',
-      schema:  '=schema'
+      schema:  '=schema',
+      task: '=task'
     },
 
     link : function(scope, element, attrs, controller) {
-      controller.init(scope.request, scope.schema);
+      controller.init(scope.request, scope.schema, scope.task);
     }
   };
 

@@ -7,14 +7,14 @@
  */
 angular.module('modesti').controller('RequestCreationControlsController', RequestCreationControlsController);
 
-function RequestCreationControlsController($window, Restangular, RequestService) {
+function RequestCreationControlsController($window, $state, Restangular, RequestService, TaskService) {
   var self = this;
 
   self.init = init;
   self.addRow = addRow;
   self.duplicateSelectedRows = duplicateSelectedRows;
   self.deleteSelectedRows = deleteSelectedRows;
-  self.validate = validate;
+  //self.validate = validate;
   self.submit = submit;
 
   /**
@@ -110,7 +110,7 @@ function RequestCreationControlsController($window, Restangular, RequestService)
     }
 
     // Save the changes
-    RequestService.saveRequest(self.request).then(function(savedRequest) {
+    RequestService.saveRequest(self.parent.request).then(function(savedRequest) {
       console.log('saved request after row deletion');
       console.log('deleted rows (after: ' + savedRequest.points.length + ' points)');
 
@@ -122,33 +122,21 @@ function RequestCreationControlsController($window, Restangular, RequestService)
     });
   }
 
-
-  /**
-   *
-   */
-  function validate() {
-    var request = self.parent.request;
-
-    RequestService.validateRequest(request).then(function() {
-      console.log('validated request');
-      
-    }, function(error) {
-      console.log('error validating request: ' + error);
-    });
-  }
-
   /**
    *
    */
   function submit() {
-    Restangular.one('requests/' + self.parent.request.requestId + '/submit').post().then(function(response) {
-      console.log('submitted request');
-      // Reload the current state
-      $window.location.reload(true);
-    },
-
+    // Complete the task associated with the request
+    var task = self.parent.task;
+    
+    TaskService.completeTask(task.id).then(function(task) {
+      console.log('completed task ' + task.id);
+      RequestService.clearCache();
+      $state.reload();
+    }, 
+    
     function(error) {
-      console.log('error submitting request: ' + error);
+      console.log('error getting task: ' + error);
     });
   }
 }

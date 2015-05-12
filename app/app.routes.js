@@ -54,6 +54,24 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
         });
 
         return q.promise;
+      },
+      
+      task : function getTask($q, $http, request) {
+        console.log('fetching task');
+        var q = $q.defer();
+        
+        // TODO refactor this into a service
+        $http.get(request._links.task.href).then(function(response) {
+          console.log('fetched task: ' + response.data.name);
+          q.resolve(response.data);
+        },
+
+        function(error) {
+          console.log('error fetching task: ' + error);
+          q.reject();
+        });
+
+        return q.promise;
       }
     }
 
