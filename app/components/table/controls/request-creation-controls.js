@@ -126,15 +126,16 @@ function RequestCreationControlsController($window, $state, Restangular, Request
    *
    */
   function submit() {
-    // Complete the task associated with the request
     var task = self.parent.task;
-    
+
+    // Complete the task associated with the request
     TaskService.completeTask(task.id).then(function(task) {
       console.log('completed task ' + task.id);
+      // Clear the cache so that the state reload also pulls a fresh request
       RequestService.clearCache();
       $state.reload();
-    }, 
-    
+    },
+
     function(error) {
       console.log('error getting task: ' + error);
     });

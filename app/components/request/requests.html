@@ -37,7 +37,7 @@
 <!-- Main content -->
 <section class="content">
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-3" style="min-width: 200px;">
       <div class="box box-solid">
         <div class="box-body no-padding">
           <ul class="nav nav-pills nav-stacked">
@@ -47,25 +47,25 @@
               </li>
             <li ng-class="{active: ctrl.filter.status == 'IN_PROGRESS'}">
               <a href="" ng-click="ctrl.filter.status = 'IN_PROGRESS'" >
-              <i class="fa fa-inbox"></i> In Progress 
+              <i class="fa fa-inbox"></i> In Progress
               <span class="label request-status pull-right" ng-class="'IN_PROGRESS'">{{(ctrl.requests | filter:{status: 'IN_PROGRESS'}).length}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_CORRECTION'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_CORRECTION'">
-                <i class="fa fa-exclamation-circle"></i> For Correction 
+                <i class="fa fa-exclamation-circle"></i> For Correction
                 <span class="label request-status pull-right" ng-class="'FOR_CORRECTION'">{{(ctrl.requests | filter:{status: 'FOR_CORRECTION'}).length}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_APPROVAL'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_APPROVAL'">
-                <i class="fa fa-bell-o"></i> For Approval 
+                <i class="fa fa-bell-o"></i> For Approval
                 <span class="label request-status pull-right" ng-class="'FOR_APPROVAL'">{{(ctrl.requests | filter:{status: 'FOR_APPROVAL'}).length}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_TESTING'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_TESTING'">
-                <i class="fa fa-check-square-o"></i> For Testing 
+                <i class="fa fa-check-square-o"></i> For Testing
                 <span class="label request-status pull-right" ng-class="'FOR_TESTING'">{{(ctrl.requests | filter:{status: 'FOR_TESTING'}).length}}</span>
               </a>
             </li>
@@ -79,7 +79,7 @@
         </div><!-- /.box-body -->
       </div><!-- /. box -->
     </div><!-- /.col -->
-    <div class="col-md-10">
+    <div class="col-md-9">
       <div class="box box-solid">
         <div class="box-body no-padding">
 
@@ -87,7 +87,7 @@
             <div class="btn-group">
               <div class="btn-group" dropdown>
                 <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                  <i class="fa fa-fw fa-square"></i> 
+                  <i class="fa fa-fw fa-square"></i>
                   <span class="text-muted">system: </span>{{ctrl.filter.subsystem.system != '' ? ctrl.filter.subsystem.system : 'Any'}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
@@ -102,7 +102,7 @@
               </div>
               <div class="btn-group" dropdown>
                 <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="ctrl.filter.subsystem.system == ''">
-                  <i class="fa fa-fw fa-sitemap"></i> 
+                  <i class="fa fa-fw fa-sitemap"></i>
                   <span class="text-muted">subsystem: </span>{{ctrl.filter.subsystem.subsystem != '' ? ctrl.filter.subsystem.subsystem : 'Any'}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
@@ -116,10 +116,10 @@
                 </ul>
               </div>
             </div>
-            
+
             <div class="btn-group" dropdown>
               <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                <i class="fa fa-fw fa-crosshairs"></i> 
+                <i class="fa fa-fw fa-crosshairs"></i>
                 <span class="text-muted">domain: </span>{{ctrl.filter.domain != '' ? ctrl.filter.domain : 'Any'}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
@@ -130,10 +130,10 @@
                 <li ng-repeat="request in ctrl.requests | unique:'domain'"><a href="" ng-click="ctrl.filter.domain = request.domain">{{request.domain}}</a></li>
               </ul>
             </div>
-            
+
 <!--             <div class="btn-group" dropdown>
               <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                <i class="fa fa-fw fa-sitemap"></i> 
+                <i class="fa fa-fw fa-sitemap"></i>
                 <span class="text-muted">categories: </span>{{ctrl.filter.categories != '' ? ctrl.filter.categories : 'Any'}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
@@ -144,10 +144,10 @@
                 <li ng-repeat="request in ctrl.requests | unique:'categories'"><a href="" ng-click="ctrl.filter.categories = request.categories">{{request.categories}}</a></li>
               </ul>
             </div> -->
-            
+
             <div class="btn-group" dropdown>
               <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                <i class="fa fa-fw fa-user"></i> 
+                <i class="fa fa-fw fa-user"></i>
                 <span class="text-muted">creator: </span>{{ctrl.filter.creator != '' ? ctrl.filter.creator : 'Any'}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
@@ -172,18 +172,18 @@
               </ul>
             </div>
 
-            <div class="pull-right">
-              <form class="form-inline search-form">
-                <div class="form-group input-group">
-                  <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search requests...">
-                  <span class="input-group-btn">
-                    <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-                      <i class="fa fa-search"></i>
-                    </button>
-                  </span>
-                </div>
-              </form>
-            </div>
+            <!--<div class="pull-right">-->
+              <!--<form class="form-inline search-form">-->
+                <!--<div class="form-group input-group">-->
+                  <!--<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search requests...">-->
+                  <!--<span class="input-group-btn">-->
+                    <!--<button type="submit" name="search" id="search-btn" class="btn btn-flat">-->
+                      <!--<i class="fa fa-search"></i>-->
+                    <!--</button>-->
+                  <!--</span>-->
+                <!--</div>-->
+              <!--</form>-->
+            <!--</div>-->
           </div>
 
           <ul class="todo-list">
@@ -199,7 +199,7 @@
                 <span class="text-muted" style="margin-left: 5px;">
                   #{{request.requestId}} by <!-- <i class="fa fa-fw fa-user"></i> --> {{request.creator}}
                 </span>
-                
+
 <!--                 <span class="text-muted">
                   <i class="fa fa-fw fa-user"></i>
                   {{request.type}}
@@ -218,10 +218,10 @@
                 </span>
 
                 <div class="tools">
-                
+
                   <!-- Show different options based on the request status -->
                   <span ng-switch="request.status">
-                  
+
                     <span ng-switch-when="IN_PROGRESS">
                       <!-- Only the request owner can edit the request -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
@@ -232,26 +232,34 @@
                         <i class="fa fa-trash"></i>
                       </button>
                     </span>
-                    
+
                     <span ng-switch-when="FOR_CORRECTION">
-                      <!-- Only the requesr owner can correct the errors -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.claimTask(request)">
+                      <!-- Only the request owner can correct the errors -->
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
                         Claim Task
                       </button>
                     </span>
-                    
+
                     <span ng-switch-when="FOR_APPROVAL">
                       <!-- Only approvers can approve -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.claimTask(request)">
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
                         Claim Task
                       </button>
                     </span>
-                    
+
                     <span ng-switch-when="FOR_TESTING">
                       <!-- Only testers can test -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.claimTask(request)">
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
+                        <i class="fa fa-fw fa-hand-o-right"></i>
+                        Claim Task
+                      </button>
+                    </span>
+
+                    <span ng-switch-when="CLOSED">
+                      <!-- Everyone can view a closed request -->
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
                         Claim Task
                       </button>
@@ -260,7 +268,7 @@
                 </div>
               </div>
             </li>
-            
+
           </ul>
 
         </div><!-- /.box-body -->
