@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import cern.modesti.schema.SchemaController;
 
+import java.util.List;
+
 /**
  *
  * @author Justin Lewis Salmon
@@ -25,13 +27,13 @@ public class RequestResourceProcessor implements ResourceProcessor<Resource<Requ
   @Override
   public Resource<Request> process(Resource<Request> resource) {
     Request request = resource.getContent();
-    LOG.debug("adding schema link to request " + request.getRequestId());
+    LOG.debug("adding links to request " + request.getRequestId());
 
     resource.add(requestLinks.getSchemaLink(request));
 
-    Link taskLink = requestLinks.getTaskLink(request);
-    if (taskLink != null) {
-      resource.add(taskLink);
+    List<Link> taskLinks = requestLinks.getTaskLinks(request);
+    if (!taskLinks.isEmpty()) {
+      resource.add(taskLinks);
     }
 
     return resource;

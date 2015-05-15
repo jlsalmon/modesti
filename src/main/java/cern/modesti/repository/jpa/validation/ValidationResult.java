@@ -40,13 +40,21 @@ public class ValidationResult implements Serializable {
     this.id = id;
   }
 
-  /**
-   *
-   */
   public ValidationResult() {
+  }
+
+  /**
+   * Constructor to create a dummy validation result for testing.
+   */
+  public ValidationResult(boolean failed) {
     this.id = 0L;
-    this.valid = false;
-    this.errors = new ArrayList<>(Arrays.asList("Field x is not valid", "Field y is out of range"));
+    if (failed) {
+      this.valid = false;
+      this.errors = new ArrayList<>(Arrays.asList("Field x is not valid", "Field y is out of range"));
+    } else {
+      this.valid = true;
+      this.errors = new ArrayList<>();
+    }
   }
 
   /**

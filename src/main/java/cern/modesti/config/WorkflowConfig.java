@@ -3,6 +3,8 @@ package cern.modesti.config;
 
 import cern.modesti.security.ldap.LdapSynchroniser;
 import cern.modesti.workflow.listener.RequestStatusManager;
+import cern.modesti.workflow.task.RequestConfigurationTask;
+import cern.modesti.workflow.task.RequestSplittingTask;
 import cern.modesti.workflow.task.RequestValidationTask;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,16 @@ public class WorkflowConfig {
   @Bean
   public RequestValidationTask requestValidationTask() {
     return new RequestValidationTask();
+  }
+
+  @Bean
+  public RequestConfigurationTask requestConfigurationTask() {
+    return new RequestConfigurationTask();
+  }
+
+  @Bean
+  public RequestSplittingTask requestSplittingTask() {
+    return new RequestSplittingTask();
   }
 
   /**

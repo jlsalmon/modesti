@@ -26,6 +26,7 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import cern.modesti.repository.jpa.validation.ValidationResult;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
@@ -52,6 +53,12 @@ public class Request implements Serializable {
    */
   @TextIndexed(weight = 3)
   private String requestId;
+
+  @TextIndexed
+  private String parentRequestId;
+
+  @TextIndexed
+  private List<String> childRequestIds = new ArrayList<>();
 
   @TextIndexed
   private RequestStatus status;
@@ -84,13 +91,10 @@ public class Request implements Serializable {
   @Valid
   private List<Point> points = new ArrayList<>();
 
-//  /**
-//   * Don't show this directly in the response. It will be added as an href link
-//   * by the {link: RequestResourceProcessor}
-//   */
-//  @JsonIgnore
-//  @RestResource(exported = false)
-//  private Schema schema;
+  /**
+   *
+   */
+  private ValidationResult validationResult;
 
   /**
    *
@@ -115,6 +119,31 @@ public class Request implements Serializable {
   }
 
   /**
+   * Default constructor
+   */
+  public Request() {
+  }
+
+  /**
+   * Copy constructor
+   *
+   * @param request
+   */
+  public Request(Request request) {
+    this.requestId = request.requestId;
+    this.parentRequestId = request.parentRequestId;
+    this.childRequestIds = request.childRequestIds;
+    this.status = request.status;
+    this.type = request.type;
+    this.creator = request.creator;
+    this.description = request.description;
+    this.domain = request.domain;
+    this.subsystem = request.subsystem;
+    this.categories = request.categories;
+    this.points = request.points;
+  }
+
+  /**
    *
    */
   public String getId() {
@@ -135,6 +164,38 @@ public class Request implements Serializable {
    */
   public void setRequestId(String id) {
     this.requestId = id;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public String getParentRequestId() {
+    return parentRequestId;
+  }
+
+  /**
+   *
+   * @param parentRequestId
+   */
+  public void setParentRequestId(String parentRequestId) {
+    this.parentRequestId = parentRequestId;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public List<String> getChildRequestIds() {
+    return childRequestIds;
+  }
+
+  /**
+   *
+   * @param childRequestIds
+   */
+  public void setChildRequestIds(List<String> childRequestIds) {
+    this.childRequestIds = childRequestIds;
   }
 
   /**
@@ -252,10 +313,26 @@ public class Request implements Serializable {
   }
 
   /**
+   * @return the validationResult
+   */
+  public ValidationResult getValidationResult() {
+    return validationResult;
+  }
+
+  /**
+   * @param validationResult the validationResult to set
+   */
+  public void setValidationResult(ValidationResult validationResult) {
+    this.validationResult = validationResult;
+  }
+
+  /**
+   * TODO: implement this properly
    *
-   * @return
+   * @return true if this request contains alarms, false otherwise
    */
   public boolean containsAlarms() {
+    // Return a random result for now
     Random random = new Random(System.currentTimeMillis());
     return random.nextBoolean();
   }

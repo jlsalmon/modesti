@@ -65,7 +65,7 @@ public class UploadService {
     variables.put("requestId", request.getRequestId());
     variables.put("containsAlarms", request.containsAlarms());
 
-    runtimeService.startProcessInstanceByKey("createTimPoints", request.getRequestId(), variables);
+    runtimeService.startProcessInstanceByKey("create-tim-points", request.getRequestId(), variables);
 
     // Store the request in the database
     requestRepository.insert(request);

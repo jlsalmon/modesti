@@ -4,19 +4,35 @@ import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.Random;
 
 /**
  * TODO
  *
  * @author Justin Lewis Salmon
  */
-public class RequestConfigurationTask implements JavaDelegate {
+@Service
+@Transactional
+public class RequestConfigurationTask {
 
   private static final Logger LOG = LoggerFactory.getLogger(RequestConfigurationTask.class);
 
-  @Override
-  public void execute(DelegateExecution execution) throws Exception {
-    String requestId = execution.getVariable("requestId", String.class);
+
+  public void configurePoints(String requestId, DelegateExecution execution) {
     LOG.info("configuring points for request id " + requestId + "...");
+
+
+    /**
+     * TODO: implement actual point configuration here
+     */
+
+
+    // Randomly fail the configuration
+    boolean failed = new Random(System.currentTimeMillis()).nextBoolean();
+
+    execution.setVariable("configurationFailure", failed);
   }
 }

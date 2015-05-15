@@ -3,6 +3,7 @@ package cern.modesti.request;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.activiti.engine.TaskService;
@@ -54,18 +55,16 @@ public class RequestLinks {
    * @param request
    * @return
    */
-  Link getTaskLink(Request request) {
+  List<Link> getTaskLinks(Request request) {
+    List<Link> links = new ArrayList<>();
     List<Task> tasks = taskService.createTaskQuery().processVariableValueEquals("requestId", request.getRequestId()).orderByTaskCreateTime().desc().list();
-    if (tasks.isEmpty()) {
-      return null;
+
+    for (Task task : tasks) {
+      // The creator must submit the request
+      //taskService.claim(task.getId(), request.getCreator());
+      links.add(linkTo(methodOn(TaskResource.class).getTask(task.getId(), null)).withRel("tasks"));
     }
 
-    Task task = tasks.get(0);
-    // The creator must submit the request
-    taskService.claim(task.getId(), request.getCreator());
-
-    // TODO is this right? Should we even allow multiple instances of the process for a particular request?
-    // Link to the most recent task
-    return linkTo(methodOn(TaskResource.class).getTask(task.getId(), null)).withRel("task");
+    return links;
   }
 }

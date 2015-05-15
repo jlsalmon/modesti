@@ -41,7 +41,7 @@ public class RequestValidationTask {
 
 
     /**
-     * Perform actual request validation here
+     * TODO: perform actual request validation here
      */
 
 
@@ -49,10 +49,15 @@ public class RequestValidationTask {
     boolean failed = new Random(System.currentTimeMillis()).nextBoolean();
 
     if (failed) {
-      execution.setVariable("validationResult", new ValidationResult());
+      request.setValidationResult(new ValidationResult(true));
+    } else {
+      request.setValidationResult(new ValidationResult(false));
     }
 
     // Set the variable for the next stage to evaluate
     execution.setVariable("containsErrors", failed);
+
+    // Store the request
+    requestRepository.save(request);
   }
 }
