@@ -38,6 +38,17 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
         return RequestService.getRequest(id);
       },
 
+      children : function getChildren($q, request, RequestService) {
+        var childRequestIds = request.childRequestIds;
+        var promises = [];
+
+        angular.forEach(childRequestIds, function(childRequestId) {
+          promises.push(RequestService.getRequest(childRequestId));
+        });
+
+        return $q.all(promises);
+      },
+
       schema : function getSchema($q, $http, request) {
         console.log('fetching schema');
         var q = $q.defer();
@@ -55,20 +66,33 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
 
         return q.promise;
       },
-      
-      task : function getTask($q, $http, request) {
-        console.log('fetching task');
+
+      tasks : function getTasks($q, $http, request) {
+        console.log('fetching tasks');
         var q = $q.defer();
-        
+        var promises = [];
+
         // TODO refactor this into a service
-        $http.get(request._links.task.href).then(function(response) {
-          console.log('fetched task: ' + response.data.name);
-          q.resolve(response.data);
+        angular.forEach(request._links.tasks, function(link) {
+          var href = link.href ? link.href : link;
+          var promise = $http.get(href);
+          promises.push(promise);
+        });
+
+        $q.all(promises).then(function(responses) {
+          console.log('fetched ' + responses.length + ' task(s)');
+          var tasks = {};
+
+          angular.forEach(responses, function(response) {
+            tasks[response.data.name] = response.data;
+          });
+
+          q.resolve(tasks);
         },
 
         function(error) {
-          console.log('error fetching task: ' + error);
-          q.reject();
+          console.log('error fetching tasks: ' + error);
+          q.reject(error);
         });
 
         return q.promise;
@@ -90,7 +114,7 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
       task : function getTask($stateParams, TaskService) {
         var id = $stateParams.id;
         return TaskService.getTask(id);
-      },
+      }
     }
 
   }).state('about', {

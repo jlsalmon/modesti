@@ -67,11 +67,12 @@ app.service('TaskService', function($q, $localStorage, Restangular) {
     /**
      *
      */
-    completeTask : function(taskId) {
+    completeTask : function(taskId, variables) {
       var q = $q.defer();
 
       var params = {
-        "action" : "complete"
+        'action' : 'complete',
+        'variables' : variables
       };
 
       Restangular.one('runtime/tasks', taskId).post('', params).then(function(result) {

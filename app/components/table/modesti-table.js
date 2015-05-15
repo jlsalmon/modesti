@@ -12,7 +12,7 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
 
   self.request = {};
   self.schema = {};
-  self.task = {}
+  self.tasks = {};
   self.tableForm = {};
   self.pointForms = {};
   self.searchText = {};
@@ -49,11 +49,12 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
    *
    * @param request
    * @param schema
+   * @param tasks
    */
-  function init(request, schema, task) {
+  function init(request, schema, tasks) {
     self.request = request;
     self.schema = schema;
-    self.task = task;
+    self.tasks = tasks;
     getAvailableCategories();
   }
 
@@ -150,9 +151,9 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
       });
     });
   }
-  
+
   /**
-   * 
+   *
    */
   function getActiveCategory() {
     for (var key in categories) {

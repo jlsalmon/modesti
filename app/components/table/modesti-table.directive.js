@@ -16,11 +16,11 @@ function modestiTable() {
     scope: {
       request: '=request',
       schema:  '=schema',
-      task: '=task'
+      tasks: '=tasks'
     },
 
     link : function(scope, element, attrs, controller) {
-      controller.init(scope.request, scope.schema, scope.task);
+      controller.init(scope.request, scope.schema, scope.tasks);
     }
   };
 

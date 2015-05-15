@@ -7,37 +7,40 @@
  */
 angular.module('modesti').controller('AlarmApprovalControlsController', AlarmApprovalControlsController);
 
-function AlarmApprovalControlsController($state, TaskService) {
+function AlarmApprovalControlsController($state, RequestService, TaskService) {
   var self = this;
 
   self.init = init;
   self.approveRequest = approveRequest;
 
   /**
-   * 
+   *
    */
   function init(parent) {
     self.parent = parent;
   }
 
   /**
-   * 
+   *
    */
-  function approveRequest() {
-    var request = self.parent.request;
-    
-    TaskService.getTaskForRequest(request.requestId).then(function(task) {
-      TaskService.completeTask(task.id).then(function(task) {
-        $state.reload();
-      },
+  function approveRequest(approved) {
+    var task = self.parent.tasks['approve'];
+    var variables = [{
+      "name" : "approved",
+      "value" : approved,
+      "type" : "boolean"
+    }];
 
-      function(error) {
-        console.log('error claiming task ' + id);
-      });
+    TaskService.completeTask(task.id, variables).then(function(task) {
+      console.log('completed task ' + task.id);
+      // Clear the cache so that the state reload also pulls a fresh request
+      RequestService.clearCache();
+      $state.reload();
     },
 
     function(error) {
-      console.log('error querying tasks');
+      console.log('error completing task ' + task.id);
     });
+
   }
 }

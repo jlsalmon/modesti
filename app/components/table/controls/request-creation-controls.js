@@ -7,15 +7,16 @@
  */
 angular.module('modesti').controller('RequestCreationControlsController', RequestCreationControlsController);
 
-function RequestCreationControlsController($window, $state, Restangular, RequestService, TaskService) {
+function RequestCreationControlsController($http, $state, Restangular, RequestService, TaskService) {
   var self = this;
 
   self.init = init;
   self.addRow = addRow;
   self.duplicateSelectedRows = duplicateSelectedRows;
   self.deleteSelectedRows = deleteSelectedRows;
-  //self.validate = validate;
+  self.validate = validate;
   self.submit = submit;
+  self.split = split;
 
   /**
    *
@@ -125,8 +126,13 @@ function RequestCreationControlsController($window, $state, Restangular, Request
   /**
    *
    */
-  function submit() {
-    var task = self.parent.task;
+  function validate() {
+    var task = self.parent.tasks['validate'];
+
+    if (!task) {
+      console.log('warning: no validate task found');
+      return;
+    }
 
     // Complete the task associated with the request
     TaskService.completeTask(task.id).then(function(task) {
@@ -137,7 +143,67 @@ function RequestCreationControlsController($window, $state, Restangular, Request
     },
 
     function(error) {
-      console.log('error getting task: ' + error);
+      console.log('error completing task: ' + error);
+    });
+  }
+
+  /**
+   *
+   */
+  function submit() {
+    var task = self.parent.tasks['submit'];
+
+    if (!task) {
+      console.log('warning: no submit task found');
+      return;
+    }
+
+    // Complete the task associated with the request
+    TaskService.completeTask(task.id).then(function (task) {
+      console.log('completed task ' + task.id);
+      // Clear the cache so that the state reload also pulls a fresh request
+      RequestService.clearCache();
+      $state.reload();
+    },
+
+    function (error) {
+      console.log('error completing task: ' + error);
+    });
+  }
+
+  /**
+   *
+   */
+  function split() {
+    var task = self.parent.tasks['validate'];
+    if (!task) {
+      console.log('error splitting request: no task');
+      return;
+    }
+
+    var url = task.executionUrl;
+    var variables = [{
+      "name" : "points",
+      "value" : JSON.stringify([1, 2, 3]),
+      "type" : "string"
+    }];
+
+    var params = {
+      "action":"signalEventReceived",
+      "signalName":"splitRequest",
+      "variables": variables
+    };
+
+    // TODO refactor this into a service
+    $http.put(url, params).then(function (result) {
+      console.log('sent split signal');
+      // Clear the cache so that the state reload also pulls a fresh request
+      RequestService.clearCache();
+      $state.reload();
+    },
+
+    function (error) {
+      console.log('error completing task: ' + error);
     });
   }
 }

@@ -17,36 +17,47 @@
   </button>
 </div>
 
-<!-- <div class="btn-group pull-right">
-  <div class="btn-group" ng-click="ctrl.validate()">
-    Button to validate the request
-    <button ng-show="$root.validating == undefined" class="btn btn-primary"  tooltip-append-to-body="true" tooltip="Validate request">
+<div class="btn-group pull-right">
+  <div class="btn-group">
+
+    <!--Button to validate the request-->
+    <button class="btn btn-primary"  ng-click="ctrl.validate()"
+            ng-disabled="!ctrl.parent.tasks['validate'] || ctrl.parent.tableForm.$invalid"
+            tooltip-append-to-body="true" tooltip="Validate request">
        <i class="fa fa-fw fa-check-square-o"></i> Validate
     </button>
 
-    <button ng-show="$root.validating == 'started'" class="btn btn-primary" tooltip-append-to-body="true" tooltip="Validating...">
-       <i class="fa fa-fw fa-spin fa-cog"></i> Validate
-    </button>
+    <!--<button ng-show="$root.validating == 'started'" class="btn btn-primary" tooltip-append-to-body="true" tooltip="Validating...">-->
+       <!--<i class="fa fa-fw fa-spin fa-cog"></i> Validate-->
+    <!--</button>-->
 
-    <button ng-show="$root.validating == 'success'" ng-disabled="$root.validating == 'success'" class="btn btn-success" tooltip-append-to-body="true" tooltip="Request is valid">
-       <i class="fa fa-fw fa-check-square-o"></i> Validate
-    </button>
+    <!--<button ng-show="$root.validating == 'success'" ng-disabled="$root.validating == 'success'" class="btn btn-success" tooltip-append-to-body="true" tooltip="Request is valid">-->
+       <!--<i class="fa fa-fw fa-check-square-o"></i> Validate-->
+    <!--</button>-->
 
-    <button ng-show="$root.validating == 'error'" class="btn btn-danger" tooltip-append-to-body="true" tooltip="Problem validating request">
-       <i class="fa fa-fw fa-exclamation-triangle"></i> Invalid
-    </button>
-  </div> -->
-  
-  
+    <!--<button ng-show="$root.validating == 'error'" class="btn btn-danger" tooltip-append-to-body="true" tooltip="Problem validating request">-->
+       <!--<i class="fa fa-fw fa-exclamation-triangle"></i> Invalid-->
+    <!--</button>-->
+  </div>
+
+
 
   <!-- Button to submit the request -->
-  <button class="btn btn-primary pull-right" ng-click="ctrl.submit()" ng-disabled="ctrl.parent.tableForm.$invalid" tooltip-append-to-body="true" tooltip="Submit request">
+  <button class="btn btn-default" ng-click="ctrl.submit()" ng-disabled="!ctrl.parent.tasks['submit']"
+          tooltip-append-to-body="true" tooltip="Submit request">
       <i class="fa fa-fw fa-external-link"></i> Submit
   </button>
-  
-  
-  <p class="form-control-static pull-right" style="margin-right:10px;">
-    <small>request valid: {{ctrl.parent.tableForm.$valid}}</small>  
-  </p>
-  
-<!-- </div> -->
+
+</div>
+
+<!-- Button to split the request -->
+<button class="btn btn-danger" ng-click="ctrl.split()" tooltip="Split request">
+  <i class="fa fa-fw fa-code-fork"></i> Split
+</button>
+
+<p class="form-control-static pull-right" style="margin-right:10px;">
+  <small>request valid: {{ctrl.parent.tableForm.$valid}}</small>
+</p>
+
+{{ctrl.parent.request.validationResult}}
+{{ctrl.parent.task.name}}

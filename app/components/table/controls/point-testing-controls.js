@@ -7,9 +7,9 @@
  */
 angular.module('modesti').controller('PointTestingControlsController', PointTestingControlsController);
 
-function PointTestingControlsController($state, Restangular, TaskService) {
+function PointTestingControlsController($state, RequestService, TaskService) {
   var self = this;
-  
+
   self.init = init;
   self.submit = submit;
 
@@ -21,23 +21,25 @@ function PointTestingControlsController($state, Restangular, TaskService) {
   }
 
   /**
-   * 
+   *
    */
-  function submit() {
-    var request = self.parent.request;
-    
-    TaskService.getTaskForRequest(request.requestId).then(function(task) {
-      TaskService.completeTask(task.id).then(function(task) {
-        $state.reload();
-      },
+  function submit(accepted) {
+    var task = self.parent.tasks['test'];
+    var variables = [{
+      "name" : "accepted",
+      "value" : accepted,
+      "type" : "boolean"
+    }];
 
-      function(error) {
-        console.log('error claiming task ' + id);
-      });
+    TaskService.completeTask(task.id, variables).then(function(task) {
+      console.log('completed task');
+      // Clear the cache so that the state reload also pulls a fresh request
+      RequestService.clearCache();
+      $state.reload();
     },
 
     function(error) {
-      console.log('error querying tasks');
+      console.log('error completing task ' + task.id);
     });
   }
 }

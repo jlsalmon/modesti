@@ -2,11 +2,11 @@
   .content-header > .request-title {
     padding-left: 5px;
   }
-  
+
   .content-header > .request-title > .request-details {
     margin-top:10px;
   }
-  
+
   .content-header > .request-title > .request-details > .request-detail-item {
     margin-left:10px;
   }
@@ -18,7 +18,7 @@
   .content-header > .request-icon h1 {
     margin: 0;
   }
-  
+
   div.details {
     width: 100%;
     display: table;
@@ -66,7 +66,7 @@
     <i class="fa fa-list-ol fa-fw text-muted" style="vertical-align: middle;"></i>
     requests <span class="text-muted">/</span> {{ctrl.request.requestId}} <small>{{ctrl.request.description}}</small>
   </h1> -->
-  
+
   <div class="request-icon">
   <h1>
     <i class="fa fa-list-ol fa-fw text-muted" style="vertical-align: middle;"></i>
@@ -76,7 +76,7 @@
     <h1>
       requests <span class="text-muted">/</span> {{ctrl.request.requestId}} <small>{{ctrl.request.description}}</small>
     </h1>
-    
+
     <div class="request-details">
       <span class="label request-status" ng-class="'{{ctrl.request.status}}'">{{ctrl.request.status.replace('_', ' ')}}</span>
       <!-- <span class="text-muted">
@@ -129,43 +129,21 @@
       <!-- Request editing page -->
       <div ng-show="ctrl.currentActiveTab == 0">
 
-<!--         <div class="details">
-          <div class="details-header">
-            <h5>Metadata</h5>
-          </div>
-
-          <div class="property-list col-md-2">
-            <span class="text-muted">Request type:</span><br/>
-            <span class="text-muted">Status:</span><br/>
-            <span class="text-muted">Domain:</span><br/>
-            <span class="text-muted">Categories:</span><br/>
-          </div>
-
-          <div class="property-list col-md-2">
-            <span>{{ctrl.request.type | uppercase}}</span><br/>
-            <span class="label request-status" ng-class="'{{ctrl.request.status}}'">{{ctrl.request.status.replace('_', ' ')}}</span><br/>
-            <span>{{ctrl.request.domain}}</span><br/>
-            <span>{{ctrl.request.categories.join(', ')}}</span><br/>
-          </div>
-        </div> -->
-
-        <div class="details">
-<!--           <div class="details-header">
-            <h5>Points</h5>
-          </div> -->
+        <!-- If this is not a parent request, show the table of points -->
+        <div class="details" ng-if="ctrl.children.length == 0">
 
           <!--
             This is the main table directive.
           -->
-          <modesti-table request="ctrl.request" schema="ctrl.schema" task="ctrl.task">
-            
+          <modesti-table request="ctrl.request" schema="ctrl.schema" tasks="ctrl.tasks">
+
             <!-- Show appripriate controls based on the request status -->
             <div ng-switch="ctrl.request.status">
               <div ng-switch-when="IN_PROGRESS">
                 <request-creation-controls />
               </div>
               <div ng-switch-when="FOR_CORRECTION">
-                <request-correction-controls />
+                <request-creation-controls />
               </div>
               <div ng-switch-when="FOR_APPROVAL">
                 <alarm-approval-controls />
@@ -176,7 +154,17 @@
             </div>
           </modesti-table>
 
+          tasks: <span ng-repeat="task in ctrl.tasks"> {{task.name }}</span>
         </div>
+
+
+        <div class="details" ng-if="ctrl.children.length > 0">
+          children:
+          <div ng-repeat="child in ctrl.children">
+            <a href="#/requests/{{child.requestId}}">{{child.requestId}}</a> {{child.status}}
+          </div>
+        </div>
+
       </div>
 
       <!-- Request error report page -->

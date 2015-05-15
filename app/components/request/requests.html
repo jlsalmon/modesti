@@ -86,7 +86,7 @@
           <div class="tasklist-controls">
             <div class="btn-group">
               <div class="btn-group" dropdown>
-                <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+                <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
                   <i class="fa fa-fw fa-square"></i>
                   <span class="text-muted">system: </span>{{ctrl.filter.subsystem.system != '' ? ctrl.filter.subsystem.system : 'Any'}} <span class="caret"></span>
                 </button>
@@ -101,7 +101,7 @@
                 </ul>
               </div>
               <div class="btn-group" dropdown>
-                <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle ng-disabled="ctrl.filter.subsystem.system == ''">
+                <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle ng-disabled="ctrl.filter.subsystem.system == ''">
                   <i class="fa fa-fw fa-sitemap"></i>
                   <span class="text-muted">subsystem: </span>{{ctrl.filter.subsystem.subsystem != '' ? ctrl.filter.subsystem.subsystem : 'Any'}} <span class="caret"></span>
                 </button>
@@ -118,7 +118,7 @@
             </div>
 
             <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
                 <i class="fa fa-fw fa-crosshairs"></i>
                 <span class="text-muted">domain: </span>{{ctrl.filter.domain != '' ? ctrl.filter.domain : 'Any'}} <span class="caret"></span>
               </button>
@@ -146,7 +146,7 @@
             </div> -->
 
             <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
                 <i class="fa fa-fw fa-user"></i>
                 <span class="text-muted">creator: </span>{{ctrl.filter.creator != '' ? ctrl.filter.creator : 'Any'}} <span class="caret"></span>
               </button>
@@ -160,7 +160,7 @@
             </div>
 
             <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
                 <span class="text-muted">type: </span>{{ctrl.filter.type != '' ? ctrl.filter.type : 'Any'}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
@@ -236,8 +236,8 @@
                     <span ng-switch-when="FOR_CORRECTION">
                       <!-- Only the request owner can correct the errors -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                        <i class="fa fa-fw fa-hand-o-right"></i>
-                        Claim Task
+                        <i class="fa fa-fw fa-edit"></i>
+                        Edit
                       </button>
                     </span>
 
@@ -245,7 +245,7 @@
                       <!-- Only approvers can approve -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
-                        Claim Task
+                        Approve
                       </button>
                     </span>
 
@@ -253,15 +253,15 @@
                       <!-- Only testers can test -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
-                        Claim Task
+                        Test
                       </button>
                     </span>
 
                     <span ng-switch-when="CLOSED">
                       <!-- Everyone can view a closed request -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                        <i class="fa fa-fw fa-hand-o-right"></i>
-                        Claim Task
+                        <i class="fa fa-fw fa-eye"></i>
+                        View
                       </button>
                     </span>
                   </span>
