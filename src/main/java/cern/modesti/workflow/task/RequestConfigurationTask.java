@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Justin Lewis Salmon
  */
-public class ConfigurePointsTask implements JavaDelegate {
+public class RequestConfigurationTask implements JavaDelegate {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ConfigurePointsTask.class);
+  private static final Logger LOG = LoggerFactory.getLogger(RequestConfigurationTask.class);
 
   @Override
   public void execute(DelegateExecution execution) throws Exception {
