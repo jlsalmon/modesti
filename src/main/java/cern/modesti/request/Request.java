@@ -333,7 +333,16 @@ public class Request implements Serializable {
    */
   public boolean containsAlarms() {
     // Return a random result for now
-    Random random = new Random(System.currentTimeMillis());
-    return random.nextBoolean();
+    return new Random(System.currentTimeMillis()).nextBoolean();
+  }
+
+  /**
+   * TODO: implement this properly
+   *
+   * @return true if this request requires cabling, false otherwise
+   */
+  public Object requiresCabling() {
+    // Return a random result for now
+    return new Random(System.currentTimeMillis()).nextBoolean();
   }
 }

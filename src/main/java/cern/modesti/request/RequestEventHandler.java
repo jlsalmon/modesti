@@ -20,7 +20,7 @@ package cern.modesti.request;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.activiti.engine.RuntimeService;
+import cern.modesti.workflow.WorkflowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class RequestEventHandler {
   private CounterService counterService;
 
   @Autowired
-  private RuntimeService runtimeService;
+  private WorkflowService workflowService;
 
   /**
    * TODO
@@ -84,14 +84,7 @@ public class RequestEventHandler {
     }
 
     // Kick off the workflow process
-    LOG.info("starting process for request " + request.getRequestId());
-    request.setStatus(RequestStatus.IN_PROGRESS);
-
-    Map<String, Object> variables = new HashMap<>();
-    variables.put("requestId", request.getRequestId());
-    variables.put("containsAlarms", request.containsAlarms());
-
-    runtimeService.startProcessInstanceByKey("create-tim-points", request.getRequestId(), variables);
+    workflowService.startProcessInstance(request);
   }
 
   /**

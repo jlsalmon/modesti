@@ -32,17 +32,17 @@ public class WorkflowService {
 
   /**
    *
-   * @param requestId
+   * @param request
    */
-  public void validateRequest(final String requestId) {
-    LOG.info("starting process for request " + requestId);
-
-    Request request = requestRepository.findOneByRequestId(requestId);
+  public void startProcessInstance(final Request request) {
+    LOG.info("starting process for request " + request.getRequestId());
+    request.setStatus(Request.RequestStatus.IN_PROGRESS);
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
     variables.put("containsAlarms", request.containsAlarms());
+    variables.put("requiresCabling", request.requiresCabling());
 
-    runtimeService.startProcessInstanceByKey("createTimPoints", requestId, variables);
+    runtimeService.startProcessInstanceByKey("create-tim-points", request.getRequestId(), variables);
   }
 }

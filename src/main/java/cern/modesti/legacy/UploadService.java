@@ -8,6 +8,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+import cern.modesti.workflow.WorkflowService;
 import org.activiti.engine.RuntimeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +38,13 @@ public class UploadService {
   private CounterService counterService;
 
   @Autowired
-  private RuntimeService runtimeService;
+  private WorkflowService workflowService;
 
   /**
    *
    * @param filename
    * @param stream
-   * @param principal
+   * @param user
    * @return
    */
   public Request parseRequestFromExcelSheet(String filename, InputStream stream, Principal user) {
@@ -58,14 +59,7 @@ public class UploadService {
     LOG.debug("generated request id: " + request.getRequestId());
 
     // Kick off the workflow process
-    LOG.info("starting process for request " + request.getRequestId());
-    request.setStatus(RequestStatus.IN_PROGRESS);
-
-    Map<String, Object> variables = new HashMap<>();
-    variables.put("requestId", request.getRequestId());
-    variables.put("containsAlarms", request.containsAlarms());
-
-    runtimeService.startProcessInstanceByKey("create-tim-points", request.getRequestId(), variables);
+    workflowService.startProcessInstance(request);
 
     // Store the request in the database
     requestRepository.insert(request);
