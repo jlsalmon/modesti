@@ -7,29 +7,6 @@
  */
 angular.module('modesti').controller('ModestiTableController', ModestiTableController);
 
-angular.module('modesti').directive('faSuspendable', function () {
-  return {
-    link: function (scope) {
-      // Heads up: this might break is suspend/resume called out of order
-      // or if watchers are added while suspended
-      var watchers;
-
-      scope.$on('suspend', function () {
-        watchers = scope.$$watchers;
-        scope.$$watchers = [];
-      });
-
-      scope.$on('resume', function () {
-        if (watchers)
-          scope.$$watchers = watchers;
-
-        // discard our copy of the watchers
-        watchers = void 0;
-      });
-    }
-  };
-});
-
 function ModestiTableController($scope, $http, $stateParams, NgTableParams, RequestService) {
   var self = this;
 
@@ -39,6 +16,7 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
   self.tableForm = {};
   self.pointForms = {};
   self.searchText = {};
+  self.selectOptions = {};
 
   self.tableParams = new NgTableParams({
     page : 1,
@@ -79,6 +57,7 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
     self.schema = schema;
     self.tasks = tasks;
     getAvailableCategories();
+    getSelectOptions();
   }
 
   /**
@@ -179,6 +158,8 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
    *
    */
   function getActiveCategory() {
+    var categories = self.schema.categories;
+    
     for (var key in categories) {
       if (categories.hasOwnProperty(key)) {
         if (categories[key].active) {
@@ -223,6 +204,35 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
    */
   function toggleSorting(property) {
     self.tableParams.sorting(property, self.tableParams.isSortBy(property, 'asc') ? 'desc' : 'asc');
+  }
+  
+  /**
+   * 
+   */
+  function getSelectOptions() {
+    for (var i in self.schema.categories) {
+      var category = self.schema.categories[i];
+      
+      for (var j in category.fields) {
+        var field = category.fields[j];
+        
+        if (field.type == 'select') {
+          // TODO refactor this into a service
+          $http.get(field.options, {cache: true}).then(function(response) {
+            if (!response.data.hasOwnProperty('_embedded')) return [];
+            var options = [];
+            
+            return response.data._embedded[field.returnPropertyName].map(function(item) {
+              options.push(item[field.model]);
+            });
+            
+            self.selectOptions[field.id] = options;
+          });
+        }
+      }
+    }
+    
+    
   }
 
   // TODO: remove these watches and use ng-change instead

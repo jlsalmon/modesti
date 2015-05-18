@@ -110,7 +110,7 @@
           </td>
 
           <!--Input field for each field in the currently active category-->
-          <td class="input-field" ng-repeat="field in ctrl.activeCategory.fields" >
+          <td class="input-field" ng-repeat="field in ctrl.activeCategory.fields track by $index" >
             <!-- Custom directive to generate an input field based on the field schema -->
             <!--<span input-field-->
                   <!--model="point.properties[field.id]"-->
@@ -121,23 +121,23 @@
             <div ng-switch="::field.type">
 
               <div ng-switch-when="text">
-                <input type="text"
-                       ng-model="point.properties[field.id]"
+                <input ng-model="point.properties[field.id]"
+                       type="text"
                        class="form-control"
                        name="{{::field.id}}"
                        ng-minlength="{{::field.minLength}}"
-                       ng-maxlength="{{::field.maxLength}}">
+                       ng-maxlength="{{::field.maxLength}}"
+                       ng-model-options="{ allowInvalid: true }">
                        <!--ng-readonly="ctrl.activeCategory.editableStates.indexOf(ctrl.request.status) > -1">-->
-                       {{point.properties[field.id]}}
               </div>
 
-              <!--<div ng-switch-when="select">-->
-                <!--<select ng-model="point.properties[field.id]"-->
-                        <!--class="form-control"-->
-                        <!--name="{{::field.id}}"-->
-                        <!--ng-options="option for option in ::options track by option">-->
-                <!--</select>-->
-              <!--</div>-->
+              <div ng-switch-when="select">
+                <select ng-model="point.properties[field.id]"
+                        class="form-control"
+                        name="{{::field.id}}"
+                        ng-options="option for option in ::ctrl.selectOptions[field.id] track by option">
+                </select>
+              </div>
 
               <!--<div ng-switch-when="typeahead">-->
                 <!--<div class="form-group has-feedback">-->
