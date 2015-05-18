@@ -7,9 +7,9 @@
  */
 angular.module('modesti').controller('InputFieldController', InputFieldController);
 
-function InputFieldController($compile, $http, $filter) {
+function InputFieldController($compile, $http, $templateCache) {
   var self = this;
-  
+
   self.schema = {};
   self.model = {};
   self.editable = false;
@@ -23,7 +23,7 @@ function InputFieldController($compile, $http, $filter) {
     self.schema = scope.schema;
     self.model = scope.model;
     self.editable = scope.editable;
-    
+
     element.html(getInput()).show();
     $compile(element.contents())(scope);
   };

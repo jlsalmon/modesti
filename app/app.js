@@ -10,12 +10,12 @@
  */
 var app = angular.module('modesti',
   [
-    'ngAnimate',
+    //'ngAnimate',
     'ngCookies',
-    'ngResource',
-    'ngRoute',
-    'ngSanitize',
-    'ngTouch',
+    //'ngResource',
+    //'ngRoute',
+    //'ngSanitize',
+    //'ngTouch',
     'ngTable',
     'ngStorage',
     'ui.bootstrap',

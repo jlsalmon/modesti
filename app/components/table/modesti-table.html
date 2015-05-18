@@ -35,6 +35,14 @@
     background-color: #fff;
     margin-left: 1px;
   }
+
+  input.form-control, select.form-control{
+    height: 25px;
+  }
+
+  select.form-control {
+    padding: 0 !important;
+  }
 </style>
 
 <div class="nav-tabs">
@@ -43,13 +51,13 @@
   <tabset class="category-headings">
     <!-- Categories are only shown if they are enabled for the current workflow state -->
     <tab ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status"
-         heading="{{category.name}}" select="ctrl.activateCategory(category)" class="category-heading"></tab>
+         heading="{{::category.name}}" select="ctrl.activateCategory(category)" class="category-heading"></tab>
 
     <!-- Button to dynamically add a new tab category -->
-    <li dropdown>
+    <li dropdown ng-show="::ctrl.request.status == 'IN_PROGRESS'">
       <a dropdown-toggle class="new-tab dropdown-toggle" href=""><i class="fa fa-plus-square-o"></i></a>
       <ul class="new-tab-menu dropdown-menu" role="menu">
-        <li ng-repeat="tab in ctrl.availableCategories"><a ng-click="ctrl.addNewCategory(tab)">{{tab}}</a></li>
+        <li ng-repeat="tab in ctrl.availableCategories"><a ng-click="ctrl.addNewCategory(tab)">{{::tab}}</a></li>
         <li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">No categories available</li>
       </ul>
     </li>
@@ -68,7 +76,7 @@
         </th>
 
         <!-- Column header for each field in the currently active category -->
-        <th ng-repeat="field in ctrl.activeCategory.fields" class="text-left sortable"
+        <th ng-repeat="field in ctrl.activeCategory.fields track by field.id" class="text-left sortable"
             ng-class="ctrl.getSortingClass('properties.' + field.id)"
             ng-click="ctrl.toggleSorting('properties.' + field.id)">
             <div class="sort-indicator">{{field.name}}</div>
@@ -83,7 +91,7 @@
       <!-- Special table row containing filter boxes -->
       <tr ng-show="show_filter">
         <th style="vertical-align: middle;"><a ng-click="ctrl.toggleFilter()"><i class="fa fa-times"></i></a></th>
-        <th ng-repeat="field in ctrl.activeCategory.fields" class="text-center sortable">
+        <th ng-repeat="field in ctrl.activeCategory.fields track by field.id" class="text-center sortable">
           <input type="text" class="form-control" ng-model="ctrl.searchText[field.id]" ng-model-options="{debounce: 250}" />
         </th>
         <th></th>
@@ -92,22 +100,53 @@
 
     <tbody ng-form="ctrl.tableForm">
       <!-- Row for each point in the request -->
-      <tr ng-repeat="point in $data" ng-form="ctrl.pointForms.form_{{$index}}">
+      <tr ng-repeat="point in $data" ng-form="ctrl.pointForms.form_{{::$index}}">
 
           <!-- Line number field -->
           <td class="input-field text-muted" width="30" style="text-align: center; vertical-align: middle;"
-          ng-class="{ 'bg-danger': (ctrl.pointForms.form_{{$index}}.$invalid && ctrl.pointForms.form_{{$index}}.$dirty)
-                        || (ctrl.pointForms.form_{{$index}}.$submitted && ctrl.pointForms.form_{{$index}}.$invalid) }">
-            {{point.id}}<!--{{$data.indexOf(point) + 1}}-->
+          ng-class="{ 'bg-danger': (ctrl.pointForms.form_{{::$index}}.$invalid && ctrl.pointForms.form_{{::$index}}.$dirty)
+                        || (ctrl.pointForms.form_{{::$index}}.$submitted && ctrl.pointForms.form_{{::$index}}.$invalid) }">
+            {{::point.id}}<!--{{$data.indexOf(point) + 1}}-->
           </td>
 
-          <!-- Input field for each field in the currently active category -->
+          <!--Input field for each field in the currently active category-->
           <td class="input-field" ng-repeat="field in ctrl.activeCategory.fields" >
             <!-- Custom directive to generate an input field based on the field schema -->
-            <span input-field
-                  model="point.properties[field.id]"
-                  schema="field"
-                  editable="ctrl.activeCategory.editableStates.indexOf(ctrl.request.status) > -1"></span>
+            <!--<span input-field-->
+                  <!--model="point.properties[field.id]"-->
+                  <!--schema="field"-->
+                  <!--editable="ctrl.activeCategory.editableStates.indexOf(ctrl.request.status) > -1"></span>-->
+
+
+            <div ng-switch="::field.type">
+
+              <div ng-switch-when="text">
+                <input type="text"
+                       ng-model="point.properties[field.id]"
+                       class="form-control"
+                       name="{{::field.id}}"
+                       ng-minlength="{{::field.minLength}}"
+                       ng-maxlength="{{::field.maxLength}}">
+                       <!--ng-readonly="ctrl.activeCategory.editableStates.indexOf(ctrl.request.status) > -1">-->
+                       {{point.properties[field.id]}}
+              </div>
+
+              <!--<div ng-switch-when="select">-->
+                <!--<select ng-model="point.properties[field.id]"-->
+                        <!--class="form-control"-->
+                        <!--name="{{::field.id}}"-->
+                        <!--ng-options="option for option in ::options track by option">-->
+                <!--</select>-->
+              <!--</div>-->
+
+              <!--<div ng-switch-when="typeahead">-->
+                <!--<div class="form-group has-feedback">-->
+                  <!--<input type="text" class="form-control" name="{{::schema.id}}">-->
+                <!--</div>-->
+              <!--</div>-->
+            </div>
+
+
           </td>
 
           <!-- Checkbox for each point -->

@@ -1,0 +1,27 @@
+<div ng-switch="::schema.type">
+
+  <div ng-switch-when="text">
+    <input ng-model="::model"
+           type="text"
+           class="form-control"
+           name="{{::schema.id}}"
+           ng-minlength="{{::schema.minLength}}"
+           ng-maxlength="{{::schema.maxLength}}"
+           ng-readonly="{{::editable}}">
+    </input>
+  </div>
+
+  <div ng-switch-when="select">
+    <select ng-model="::model"
+            class="form-control"
+            name="{{::self.schema.id}}"
+            ng-options="option for option in ::options track by option">
+    </select>
+  </div>
+
+  <div ng-switch-when="typeahead">
+    <div class="form-group has-feedback">
+      <input type="text" class="form-control" name="{{::schema.id}}" />
+    </div>
+  </div>
+</div>

@@ -7,6 +7,29 @@
  */
 angular.module('modesti').controller('ModestiTableController', ModestiTableController);
 
+angular.module('modesti').directive('faSuspendable', function () {
+  return {
+    link: function (scope) {
+      // Heads up: this might break is suspend/resume called out of order
+      // or if watchers are added while suspended
+      var watchers;
+
+      scope.$on('suspend', function () {
+        watchers = scope.$$watchers;
+        scope.$$watchers = [];
+      });
+
+      scope.$on('resume', function () {
+        if (watchers)
+          scope.$$watchers = watchers;
+
+        // discard our copy of the watchers
+        watchers = void 0;
+      });
+    }
+  };
+});
+
 function ModestiTableController($scope, $http, $stateParams, NgTableParams, RequestService) {
   var self = this;
 
@@ -19,7 +42,7 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
 
   self.tableParams = new NgTableParams({
     page : 1,
-    count : 10,
+    count : 100,
     sorting : {id : 'asc'}
   }, {
     total : 0,

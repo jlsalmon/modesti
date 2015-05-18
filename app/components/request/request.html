@@ -74,29 +74,29 @@
   </div>
   <div class="request-title">
     <h1>
-      requests <span class="text-muted">/</span> {{ctrl.request.requestId}} <small>{{ctrl.request.description}}</small>
+      requests <span class="text-muted">/</span> {{::ctrl.request.requestId}} <small>{{::ctrl.request.description}}</small>
     </h1>
 
     <div class="request-details">
-      <span class="label request-status" ng-class="'{{ctrl.request.status}}'">{{ctrl.request.status.replace('_', ' ')}}</span>
+      <span class="label request-status" ng-class="'{{::ctrl.request.status}}'">{{::ctrl.request.status.replace('_', ' ')}}</span>
       <!-- <span class="text-muted">
         {{ctrl.request.type | uppercase}}
       </span> -->
       <span class="request-detail-item text-muted">
         <i class="fa fa-fw fa-sitemap"></i>
-        {{ctrl.request.subsystem.name}}
+        {{::ctrl.request.subsystem.name}}
       </span>
       <span class="request-detail-item text-muted">
         <i class="fa fa-fw fa-crosshairs"></i>
-        {{ctrl.request.domain}}
+        {{::ctrl.request.domain}}
       </span>
       <span class="request-detail-item text-muted">
         <i class="fa fa-fw fa-cogs"></i>
-        {{ctrl.request.categories.join(', ')}}
+        {{::ctrl.request.categories.join(', ')}}
       </span>
       <span class="request-detail-item text-muted">
         <i class="fa fa-fw fa-user"></i>
-        {{ctrl.request.creator}}
+        {{::ctrl.request.creator}}
       </span>
     </div>
   </div>
@@ -135,7 +135,7 @@
           <!--
             This is the main table directive.
           -->
-          <modesti-table request="ctrl.request" schema="ctrl.schema" tasks="ctrl.tasks">
+          <modesti-table fa-suspendable request="ctrl.request" schema="ctrl.schema" tasks="ctrl.tasks">
 
             <!-- Show appripriate controls based on the request status -->
             <div ng-switch="ctrl.request.status">
@@ -154,14 +154,14 @@
             </div>
           </modesti-table>
 
-          tasks: <span ng-repeat="task in ctrl.tasks"> {{task.name }}</span>
+          tasks: <span ng-repeat="task in ctrl.tasks"> {{::task.name}}</span>
         </div>
 
 
         <div class="details" ng-if="ctrl.children.length > 0">
           children:
           <div ng-repeat="child in ctrl.children">
-            <a href="#/requests/{{child.requestId}}">{{child.requestId}}</a> {{child.status}}
+            <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a> {{::child.status}}
           </div>
         </div>
 
