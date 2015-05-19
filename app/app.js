@@ -24,5 +24,6 @@ var app = angular.module('modesti',
     'restangular',
     'angularFileUpload',
     'fsm',
-    'http-auth-interceptor'
+    'http-auth-interceptor',
+    'QuickList'
   ]);

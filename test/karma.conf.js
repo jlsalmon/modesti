@@ -42,6 +42,7 @@ module.exports = function(config) {
       'app/bower_components/angular-local-storage/dist/angular-local-storage.js',
       'app/bower_components/angular-http-auth/src/http-auth-interceptor.js',
       'app/bower_components/angular-ui-utils/ui-utils.js',
+      'app/bower_components/quick-ngrepeat/quick-ng-repeat.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

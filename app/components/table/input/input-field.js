@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('InputFieldController', InputFieldController);
 
-function InputFieldController($compile, $http, $templateCache) {
+function InputFieldController($compile, $http) {
   var self = this;
 
   self.schema = {};
@@ -49,7 +49,7 @@ function InputFieldController($compile, $http, $templateCache) {
    *
    */
   function getTextInput() {
-    var html = '<input type="text" name="{{self.schema.id}}" class="form-control" ';
+    var html = '<input type="text" name="{{::self.schema.id}}" class="form-control" ';
     if (self.schema.model) {
       // Field is an object, so we should bind the model property specified in
       // the schema
@@ -59,8 +59,8 @@ function InputFieldController($compile, $http, $templateCache) {
       html += 'ng-model="model" '
     }
 
-    html += self.schema.minLength ? 'ng-minlength="{{self.schema.minLength}}" ': '';
-    html += self.schema.maxLength ? 'ng-maxlength="{{self.schema.maxLength}}" ': '';
+    html += self.schema.minLength ? 'ng-minlength="{{::self.schema.minLength}}" ': '';
+    html += self.schema.maxLength ? 'ng-maxlength="{{::self.schema.maxLength}}" ': '';
     html += self.editable ? '': 'ng-readonly="true" '
     return html + (self.schema.required ? 'required' : '') + ' />'
   }
@@ -70,11 +70,11 @@ function InputFieldController($compile, $http, $templateCache) {
    */
   function getSelectInput() {
     self.options = [];
-    var html = '<select ng-model="model" name="{{self.schema.id}}" class="form-control" ';
+    var html = '<select ng-model="model" name="{{::self.schema.id}}" class="form-control" ';
 
     if( typeof self.schema.options === 'string' ) {
       // Options given as a URL
-      html += 'ng-options="option for option in ctrl.options track by option" ';
+      html += 'ng-options="option for option in ::ctrl.options track by option" ';
 
       // TODO refactor this into a service
       $http.get(self.schema.options, {cache: true}).then(function(response) {
@@ -88,7 +88,7 @@ function InputFieldController($compile, $http, $templateCache) {
 
     else {
       // Options given as inline array
-      html += 'ng-options="option for option in self.schema.options track by option" ';
+      html += 'ng-options="option for option in ::self.schema.options track by option" ';
     }
 
     html += self.editable ? '': 'ng-disabled="true" '
@@ -101,15 +101,15 @@ function InputFieldController($compile, $http, $templateCache) {
   function getTypeaheadInput() {
     var template = '\
       <div class="form-group has-feedback"> \
-        <input type="text" class="form-control" name="{{self.schema.id}}" ng-model="model" \
+        <input type="text" class="form-control" name="{{::self.schema.id}}" ng-model="model" \
                placeholder="' + self.schema.placeholder + '"  \
                typeahead="item as item.' + self.schema.model + ' for item in ctrl.autocomplete(ctrl.schema, $viewValue)" \
                typeahead-editable="false" \
                typeahead-loading="loading" \
                typeahead-template-url="item-template-' + self.schema.id + '.html" \
-               typeahead-min-length="{{self.schema.minLength}}" \
-               ' + (self.schema.minLength ? 'ng-minlength="{{self.schema.minLength}}" ': '') +' \
-               ' + (self.schema.maxLength ? 'ng-maxlength="{{self.schema.maxLength}}" ': '') +' \
+               typeahead-min-length="{{::self.schema.minLength}}" \
+               ' + (self.schema.minLength ? 'ng-minlength="{{::self.schema.minLength}}" ': '') +' \
+               ' + (self.schema.maxLength ? 'ng-maxlength="{{::self.schema.maxLength}}" ': '') +' \
                ' + (self.editable ? '': 'ng-readonly="true" ') + ' \
                ' + (self.schema.required ? 'required' : '') + '> \
       </div>'; // <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i> \
@@ -130,7 +130,7 @@ function InputFieldController($compile, $http, $templateCache) {
    *
    */
   function autocomplete(schema, value) {
-    var params = {}
+    var params = {};
     for (var i in schema.params) {
       params[schema.params[i]] = value;
     }
@@ -141,9 +141,7 @@ function InputFieldController($compile, $http, $templateCache) {
     }).then(function(response) {
 
       if (!response.data.hasOwnProperty('_embedded')) {
-        var empty = {};
-        empty[schema.model] = 'No results';
-        return [empty];
+        return [];
       }
 
       return response.data._embedded[schema.returnPropertyName].map(function(item){
@@ -151,4 +149,4 @@ function InputFieldController($compile, $http, $templateCache) {
       });
     });
   }
-};
+}

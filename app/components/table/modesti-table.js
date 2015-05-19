@@ -16,7 +16,9 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
   self.tableForm = {};
   self.pointForms = {};
   self.searchText = {};
-  self.selectOptions = {};
+
+  self.activeCategory = {};
+  self.allFields = {};
 
   self.tableParams = new NgTableParams({
     page : 1,
@@ -56,8 +58,20 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
     self.request = request;
     self.schema = schema;
     self.tasks = tasks;
+
     getAvailableCategories();
-    getSelectOptions();
+
+    var allFields = [];
+    var categories = self.schema.categories;
+
+    for (var i in categories) {
+      if (categories.hasOwnProperty(i)) {
+        var fields = categories[i].fields;
+        Array.prototype.push.apply(allFields, fields);
+      }
+    }
+
+    self.allFields = allFields;
   }
 
   /**
@@ -159,7 +173,7 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
    */
   function getActiveCategory() {
     var categories = self.schema.categories;
-    
+
     for (var key in categories) {
       if (categories.hasOwnProperty(key)) {
         if (categories[key].active) {
@@ -204,35 +218,6 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
    */
   function toggleSorting(property) {
     self.tableParams.sorting(property, self.tableParams.isSortBy(property, 'asc') ? 'desc' : 'asc');
-  }
-  
-  /**
-   * 
-   */
-  function getSelectOptions() {
-    for (var i in self.schema.categories) {
-      var category = self.schema.categories[i];
-      
-      for (var j in category.fields) {
-        var field = category.fields[j];
-        
-        if (field.type == 'select') {
-          // TODO refactor this into a service
-          $http.get(field.options, {cache: true}).then(function(response) {
-            if (!response.data.hasOwnProperty('_embedded')) return [];
-            var options = [];
-            
-            return response.data._embedded[field.returnPropertyName].map(function(item) {
-              options.push(item[field.model]);
-            });
-            
-            self.selectOptions[field.id] = options;
-          });
-        }
-      }
-    }
-    
-    
   }
 
   // TODO: remove these watches and use ng-change instead
