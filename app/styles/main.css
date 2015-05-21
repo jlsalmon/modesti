@@ -521,6 +521,14 @@ select.form-control {
   background-color: #f39c12;
 }
 
+.label.request-status.FOR_ADDRESSING {
+  background-color: #8E24AA;
+}
+
+.label.request-status.FOR_CABLING {
+  background-color: #D81B60;
+}
+
 .label.request-status.FOR_TESTING {
   background-color: #00a65a;
 }

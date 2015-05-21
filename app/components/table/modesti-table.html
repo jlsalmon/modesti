@@ -36,10 +36,6 @@
     margin-left: 1px;
   }
 
-  input.form-control, select.form-control{
-    height: 25px;
-  }
-
   select.form-control {
     padding: 0 !important;
   }
@@ -51,6 +47,7 @@
   .loading-container {
     position: relative;
   }
+
   .loading-container .loading:before, .loading-container .loading:after {
     content: " ";
     position: absolute;
@@ -61,11 +58,11 @@
     min-height: 50px;
     min-width: 50px;
   }
+
   .loading-container .loading:before {
     background-color: white;
     opacity: 0.5;
   }
-
 
 </style>
 
@@ -74,7 +71,7 @@
   <!-- Create a new tab for each category -->
   <tabset class="category-headings">
     <!-- Categories are only shown if they are enabled for the current workflow state -->
-    <tab ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status"
+    <tab ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status track by category.name"
          heading="{{::category.name}}"
          select="ctrl.activateCategory(category)"
          class="category-heading"></tab>
@@ -95,17 +92,19 @@
     </li>
   </tabset>
 
-  <div class="table-wrapper" loading-container="tableParams.settings().$loading">
+  <div class="table-wrapper" loading-container="ctrl.tableParams.settings().$loading">
 
   <!-- This is the actual point input table itself -->
   <table id="table"
          ng-table="ctrl.tableParams"
          class="table table-bordered table-striped ng-table-rowselected"
          template-pagination="custom/pager">
+         <!--fixed-header table-height="500px">-->
+
 
     <thead>
       <!-- The fsm-sticky-header makes the table headers stick to the top of the page when scrolling -->
-      <tr fsm-sticky-header scroll-body="'#table'" scroll-stop='0'>
+      <tr>
         <!-- Column header for the point ID -->
         <th class="sortable"
             ng-class="ctrl.getSortingClass('id')"
@@ -258,4 +257,13 @@
 
   </table>
   </div>
+</div>
+
+<div class="col-md-10">
+
+<small>request valid: <code>{{::ctrl.tableForm.$valid}}</code></small>
+<br />
+<small>tasks: <code ng-repeat="task in ctrl.tasks"> {{::task.name}}</code></small>
+<br />
+<small>validation result: <code>{{::ctrl.request.validationResult}}</code></small>
 </div>

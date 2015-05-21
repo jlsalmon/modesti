@@ -129,35 +129,8 @@
       <!-- Request editing page -->
       <div ng-show="ctrl.currentActiveTab == 0">
 
-        <!-- If this is not a parent request, show the table of points -->
-        <div class="details" ng-if="ctrl.children.length == 0">
 
-          <!--
-            This is the main table directive.
-          -->
-          <modesti-table fa-suspendable request="ctrl.request" schema="ctrl.schema" tasks="ctrl.tasks">
-
-            <!-- Show appripriate controls based on the request status -->
-            <div ng-switch="ctrl.request.status">
-              <div ng-switch-when="IN_PROGRESS">
-                <request-creation-controls />
-              </div>
-              <div ng-switch-when="FOR_CORRECTION">
-                <request-creation-controls />
-              </div>
-              <div ng-switch-when="FOR_APPROVAL">
-                <alarm-approval-controls />
-              </div>
-              <div ng-switch-when="FOR_TESTING">
-                <point-testing-controls />
-              </div>
-            </div>
-          </modesti-table>
-
-          tasks: <span ng-repeat="task in ctrl.tasks"> {{::task.name}}</span>
-        </div>
-
-
+        <!-- If this is a parent request, list its children -->
         <div class="details" ng-if="ctrl.children.length > 0">
           children:
           <div ng-repeat="child in ctrl.children">
@@ -165,16 +138,53 @@
           </div>
         </div>
 
+
+        <!-- If this is a child request, reference its parent -->
+        <div class="details" ng-if="ctrl.request.parentRequestId">
+          parent: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
+          </div>
+        </div>
+
+
+        <!--
+          This is the main table directive.
+        -->
+        <modesti-table request="ctrl.request" schema="ctrl.schema" tasks="ctrl.tasks">
+
+          <!-- Show appropriate controls based on the request status -->
+          <div ng-switch="ctrl.request.status">
+            <div ng-switch-when="IN_PROGRESS">
+              <request-creation-controls />
+            </div>
+            <div ng-switch-when="FOR_CORRECTION">
+              <request-creation-controls />
+            </div>
+            <div ng-switch-when="FOR_APPROVAL">
+              <alarm-approval-controls />
+            </div>
+            <div ng-switch-when="FOR_TESTING">
+              <point-testing-controls />
+            </div>
+          </div>
+        </modesti-table>
+
+
       </div>
 
       <!-- Request error report page -->
-      <div ng-show="ctrl.currentActiveTab == 1">stuff</div>
+      <div ng-show="ctrl.currentActiveTab == 1">
+        <div ng-include src="'components/request/error-report.html'"></div>
+      </div>
 
       <!-- Request activity page -->
-      <div ng-show="ctrl.currentActiveTab == 2">more stuff</div>
+      <div ng-show="ctrl.currentActiveTab == 2">
+        <div ng-include src="'components/request/activity.html'"></div>
+      </div>
 
       <!-- Request comments page -->
-      <div ng-show="ctrl.currentActiveTab == 3">too much stuff</div>
+      <div ng-show="ctrl.currentActiveTab == 3">
+        <div ng-include src="'components/request/comments.html'"></div>
+      </div>
     </div>
   </div>
 

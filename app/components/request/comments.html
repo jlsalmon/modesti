@@ -1,0 +1,58 @@
+<style>
+  .comments-box {
+    background: #fbfbfb;
+  }
+
+  .comments-box .box-footer {
+    background: #fbfbfb;
+  }
+
+  .chat .item > .message {
+    margin: inherit;
+  }
+</style>
+
+<div class="box box-solid comments-box">
+  <div class="box-header">
+    <i class="fa fa-comments"></i>
+
+    <h3 class="box-title">Comments on request {{::ctrl.request.requestId}}</h3>
+  </div>
+
+  <div class="box-body chat" id="chat-box">
+    <!-- chat item -->
+    <div class="item">
+      <p class="message">
+        <a href="#" class="name">
+          <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 2:15</small>
+          Justin Salmon
+        </a>
+        I would like to meet you to discuss the latest news about
+        this request. They say it is going to be one of the best requests ever created. We are all very excited about it.
+      </p>
+    </div>
+    <!-- /.item -->
+    <!-- chat item -->
+    <div class="item">
+      <p class="message">
+        <a href="#" class="name">
+          <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:15</small>
+          Robin Martini
+        </a>
+        Okay, great.
+      </p>
+    </div>
+    <!-- /.item -->
+  </div>
+  <!-- /.chat -->
+
+  <div class="box-footer">
+    <div class="input-group">
+      <input class="form-control" placeholder="Write comment...">
+
+      <div class="input-group-btn">
+        <button class="btn btn-primary">Add comment</button>
+      </div>
+    </div>
+  </div>
+</div>

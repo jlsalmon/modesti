@@ -43,6 +43,8 @@ module.exports = function(config) {
       'app/bower_components/angular-http-auth/src/http-auth-interceptor.js',
       'app/bower_components/angular-ui-utils/ui-utils.js',
       'app/bower_components/quick-ngrepeat/quick-ng-repeat.js',
+      'app/bower_components/angu-fixed-header-table/angu-fixed-header-table.js',
+      'app/bower_components/autofill-event/src/autofill-event.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
