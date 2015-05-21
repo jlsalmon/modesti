@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('ModestiTableController', ModestiTableController);
 
-function ModestiTableController($scope, $http, $stateParams, $timeout, NgTableParams, RequestService) {
+function ModestiTableController($scope, $http, $stateParams, NgTableParams, RequestService) {
   var self = this;
 
   self.request = {};
@@ -100,7 +100,6 @@ function ModestiTableController($scope, $http, $stateParams, $timeout, NgTablePa
     // as we might have made unsaved changes.
     var unsavedRequest = self.request ? self.request : undefined;
 
-    $timeout(function() {
     RequestService.getRequest(id, params, unsavedRequest).then(function(request) {
       self.request = request;
       console.log('got request (with ' + request.points.length + ' points)');
@@ -115,8 +114,6 @@ function ModestiTableController($scope, $http, $stateParams, $timeout, NgTablePa
     function(error) {
       console.log('error getting request: ' + error);
     });
-
-    }, 1000);
   }
 
   /**
