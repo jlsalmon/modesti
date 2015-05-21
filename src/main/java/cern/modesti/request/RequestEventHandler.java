@@ -63,7 +63,7 @@ public class RequestEventHandler {
    */
   @HandleBeforeCreate
   public void handleRequestCreate(Request request) {
-    request.setRequestId(counterService.getNextSequence("requests").toString());
+    request.setRequestId(counterService.getNextSequence(CounterService.REQUEST_ID_SEQUENCE).toString());
     LOG.trace("beforeCreate() generated request id: " + request.getRequestId());
 
     // Add some empty points if there aren't any yet

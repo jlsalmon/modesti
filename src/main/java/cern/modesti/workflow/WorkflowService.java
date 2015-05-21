@@ -40,7 +40,7 @@ public class WorkflowService {
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
-    variables.put("containsAlarms", request.containsAlarms());
+    variables.put("requiresApproval", request.requiresApproval());
     variables.put("requiresCabling", request.requiresCabling());
 
     runtimeService.startProcessInstanceByKey("create-tim-points", request.getRequestId(), variables);

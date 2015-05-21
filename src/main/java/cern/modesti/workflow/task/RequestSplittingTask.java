@@ -1,6 +1,7 @@
 package cern.modesti.workflow.task;
 
 import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.repository.mongo.request.counter.CounterService;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Point;
 import com.google.gson.Gson;
@@ -29,6 +30,9 @@ public class RequestSplittingTask {
   @Autowired
   RequestRepository requestRepository;
 
+  @Autowired
+  private CounterService counterService;
+
   /**
    *
    * @param requestId
@@ -49,45 +53,34 @@ public class RequestSplittingTask {
     // Parse the JSON list to a Java object
     Set<Long> pointIdsToSplit = new Gson().fromJson(pointsToSplit, new TypeToken<Set<Long>>() {}.getType());
 
-    List<Point> child1Points = new ArrayList<>();
-    List<Point> child2Points = new ArrayList<>();
+    List<Point> childPoints = new ArrayList<>();
 
-    // Decide which children get which points. Rebase the point IDs back to starting from 1.
+    // Give the split points to the child. Rebase the point IDs back to starting from 1.
     for (Point point : parent.getPoints()) {
       if (pointIdsToSplit.contains(point.getId())) {
-        child1Points.add(point);
-        point.setId((long) (child1Points.indexOf(point) + 1));
-      } else {
-        child2Points.add(point);
-        point.setId((long) (child2Points.indexOf(point) + 1));
+        childPoints.add(point);
+        point.setId((long) (childPoints.indexOf(point) + 1));
       }
     }
 
-    // Figure out request IDs for the new children
-    String child1RequestId = parent.getRequestId() + "a";
-    String child2RequestId = parent.getRequestId() + "b";
+    // Generate a request ID for the new child
+    String childRequestId = counterService.getNextSequence(CounterService.REQUEST_ID_SEQUENCE).toString();
 
-    // Create the new children
-    Request child1 = createChildRequest(child1RequestId, parent, child1Points);
-    Request child2 = createChildRequest(child2RequestId, parent, child2Points);
+    // Create the new child
+    Request child = createChildRequest(childRequestId, parent, childPoints);
 
-    // Remove the points from the parent
-    parent.setPoints(new ArrayList<>());
-
-    // Set back reference to the children
-    parent.setChildRequestIds(Arrays.asList(child1RequestId, child2RequestId));
+    // Set back reference to the child
+    parent.setChildRequestIds(Collections.singletonList(childRequestId));
 
     // Store the requests
     requestRepository.save(parent);
-    requestRepository.insert(child1);
-    requestRepository.insert(child2);
+    requestRepository.insert(child);
 
     // Add variables to the execution so that they are available to the
     // recursive process invocation
-    execution.setVariable("child1RequestId", child1.getRequestId());
-    execution.setVariable("child2RequestId", child2.getRequestId());
-    execution.setVariable("child1ContainsAlarms", child1.containsAlarms());
-    execution.setVariable("child2ContainsAlarms", child2.containsAlarms());
+    execution.setVariable("childRequestId", child.getRequestId());
+    execution.setVariable("childRequiresApproval", child.requiresApproval());
+    execution.setVariable("childRequiresCabling", child.requiresCabling());
   }
 
   /**

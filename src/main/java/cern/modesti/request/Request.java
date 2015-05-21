@@ -331,7 +331,7 @@ public class Request implements Serializable {
    *
    * @return true if this request contains alarms, false otherwise
    */
-  public boolean containsAlarms() {
+  public boolean requiresApproval() {
     // Return a random result for now
     return new Random(System.currentTimeMillis()).nextBoolean();
   }
@@ -341,7 +341,7 @@ public class Request implements Serializable {
    *
    * @return true if this request requires cabling, false otherwise
    */
-  public Object requiresCabling() {
+  public boolean requiresCabling() {
     // Return a random result for now
     return new Random(System.currentTimeMillis()).nextBoolean();
   }

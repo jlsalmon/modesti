@@ -1,6 +1,7 @@
 package cern.modesti.schema;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -49,6 +50,9 @@ public class SchemaService {
    */
   Schema materialiseSchema(Request request, List<String> categories) {
     Schema schema = new Schema(request.getRequestId(), request.getDescription(), request.getDomain());
+
+    // Reverse the categories so they are merged in the order they are given
+    Collections.reverse(categories);
 
     // Merge all sibling schemas
     for (String category : categories) {

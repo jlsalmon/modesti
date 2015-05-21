@@ -9,5 +9,7 @@ package cern.modesti.repository.mongo.request.counter;
  */
 public interface CounterService {
 
+  String REQUEST_ID_SEQUENCE = "requests";
+
   Long getNextSequence(String collectionName);
 }
