@@ -192,35 +192,12 @@
                 </span>
               </a>
               <ul class="dropdown-menu" ng-show="ctrl.storage.authenticated && ctrl.storage.username"  ng-cloak>
-                <!-- User image -->
-                <!--<li class="user-header">-->
-                  <!--<img src="images/no-avatar.png" class="img-circle" alt="User Image" />-->
-                  <!--<p>-->
-                    <!--{{ctrl.storage.username}} &lt;!&ndash;Guest <small>Not signed in</small>&ndash;&gt;-->
-                  <!--</p>-->
-                <!--</li>-->
-                <!-- Menu Body -->
-                <!-- <li class="user-body">
-                  <div class="col-xs-4 text-center">
-                    <a href="#"></a>
-                  </div>
-                </li> -->
-                <!-- Menu Footer-->
-                <!--<li class="user-footer">-->
-                  <!--<div class="pull-left">-->
-                    <!--<a href="#" class="btn btn-default btn-flat">Profile</a>-->
-                  <!--</div>-->
-                  <!--<div class="pull-right">-->
-                    <!--<a ng-click="ctrl.logout()" class="btn btn-default btn-flat">Sign out</a>-->
-                  <!--</div>-->
-                <!--</li>-->
-
-                  <li>
-                    <a href="" class="header" ng-click="ctrl.logout()">
-                      <i class="fa fa-fw fa-sign-out"></i>
-                      Sign out
-                    </a>
-                  </li>
+                <li>
+                  <a href="" class="header" ng-click="ctrl.logout()">
+                    <i class="fa fa-fw fa-sign-out"></i>
+                    Sign out
+                  </a>
+                </li>
               </ul>
             </li>
           </ul>
@@ -276,16 +253,6 @@
               <span>Requests</span>
             </a>
           </li>
-
-          <!--           <li>
-            <a href="about">
-              <i class="fa fa-book"></i>
-              Documentation
-            </a>
-          </li> -->
-<!--           <li ng-show="serverConnectionError">
-            <a>srv conn err</a>
-          </li> -->
         </ul>
       </section>
       <!-- /.sidebar -->
@@ -302,8 +269,8 @@
       <div class="pull-right hidden-xs">Version 0.1</div>
       &copy;
       <script>
-              document.write(new Date().getFullYear());
-            </script>
+        document.write(new Date().getFullYear());
+      </script>
       <a href="http://cern.ch">CERN</a>
 
     </footer>
@@ -357,14 +324,16 @@
   <script src="components/table/modesti-table.directive.js"></script>
   <script src="components/table/input/input-field.js"></script>
   <script src="components/table/input/input-field.directive.js"></script>
-  <script src="components/table/controls/request-creation-controls.js"></script>
-  <script src="components/table/controls/request-creation-controls.directive.js"></script>
-  <script src="components/table/controls/request-correction-controls.js"></script>
-  <script src="components/table/controls/request-correction-controls.directive.js"></script>
-  <script src="components/table/controls/alarm-approval-controls.js"></script>
-  <script src="components/table/controls/alarm-approval-controls.directive.js"></script>
-  <script src="components/table/controls/point-testing-controls.js"></script>
-  <script src="components/table/controls/point-testing-controls.directive.js"></script>
+  <script src="components/table/controls/creation-controls.js"></script>
+  <script src="components/table/controls/creation-controls.directive.js"></script>
+  <script src="components/table/controls/approval-controls.js"></script>
+  <script src="components/table/controls/approval-controls.directive.js"></script>
+  <script src="components/table/controls/addressing-controls.js"></script>
+  <script src="components/table/controls/addressing-controls.directive.js"></script>
+  <script src="components/table/controls/cabling-controls.js"></script>
+  <script src="components/table/controls/cabling-controls.directive.js"></script>
+  <script src="components/table/controls/testing-controls.js"></script>
+  <script src="components/table/controls/testing-controls.directive.js"></script>
   <script src="components/table/filters/enabled.js"></script>
   <script src="components/tasks/tasks.js"></script>
   <script src="components/tasks/task.js"></script>
@@ -372,7 +341,6 @@
   <script src="components/search/search.js"></script>
   <script src="components/services/request-service.js"></script>
   <script src="components/services/task-service.js"></script>
-  <script src="components/services/validation-service.js"></script>
   <!-- endbuild -->
 
 </body>

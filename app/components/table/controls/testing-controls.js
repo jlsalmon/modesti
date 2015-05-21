@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:PointTestingControlsController
- * @description # PointTestingControlsController Controller of the modesti
+ * @name modesti.controller:TestingControlsController
+ * @description # TestingControlsController Controller of the modesti
  */
-angular.module('modesti').controller('PointTestingControlsController', PointTestingControlsController);
+angular.module('modesti').controller('TestingControlsController', TestingControlsController);
 
-function PointTestingControlsController($state, RequestService, TaskService) {
+function TestingControlsController($state, RequestService, TaskService) {
   var self = this;
 
   self.init = init;

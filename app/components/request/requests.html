@@ -261,6 +261,22 @@
                       </button>
                     </span>
 
+                    <span ng-switch-when="FOR_ADDRESSING">
+                      <!-- Only approvers can approve -->
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
+                        <i class="fa fa-fw fa-hand-o-right"></i>
+                        Address
+                      </button>
+                    </span>
+
+                    <span ng-switch-when="FOR_CABLING">
+                      <!-- Only approvers can approve -->
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
+                        <i class="fa fa-fw fa-hand-o-right"></i>
+                        Cable
+                      </button>
+                    </span>
+
                     <span ng-switch-when="FOR_TESTING">
                       <!-- Only testers can test -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">

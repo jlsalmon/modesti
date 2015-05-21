@@ -58,6 +58,12 @@
     border-color: #ADADAD;
     box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   }
+
+  .alert-success {
+    color: #3C763D !important;
+    background-color: #DFF0D8 !important;
+    border-color: #D6E9C6 !important;
+  }
 </style>
 
 <!-- Content Header (Page header) -->
@@ -130,6 +136,14 @@
       <div ng-show="ctrl.currentActiveTab == 0">
 
 
+        <!-- Alerts are shown here -->
+        <alert ng-repeat="alert in ctrl.alerts"
+               type="{{alert.type}}"
+               close="ctrl.closeAlert($index)">
+          {{alert.message}}
+        </alert>
+
+
         <!-- If this is a parent request, list its children -->
         <div class="details" ng-if="ctrl.children.length > 0">
           children:
@@ -142,8 +156,8 @@
         <!-- If this is a child request, reference its parent -->
         <div class="details" ng-if="ctrl.request.parentRequestId">
           parent: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
-          </div>
         </div>
+
 
 
         <!--
@@ -154,20 +168,25 @@
           <!-- Show appropriate controls based on the request status -->
           <div ng-switch="ctrl.request.status">
             <div ng-switch-when="IN_PROGRESS">
-              <request-creation-controls />
+              <creation-controls></creation-controls>
             </div>
             <div ng-switch-when="FOR_CORRECTION">
-              <request-creation-controls />
+              <creation-controls></creation-controls>
             </div>
             <div ng-switch-when="FOR_APPROVAL">
-              <alarm-approval-controls />
+              <approval-controls></approval-controls>
+            </div>
+            <div ng-switch-when="FOR_ADDRESSING">
+              <addressing-controls></addressing-controls>
+            </div>
+            <div ng-switch-when="FOR_CABLING">
+              <cabling-controls></cabling-controls>
             </div>
             <div ng-switch-when="FOR_TESTING">
-              <point-testing-controls />
+              <testing-controls></testing-controls>
             </div>
           </div>
         </modesti-table>
-
 
       </div>
 

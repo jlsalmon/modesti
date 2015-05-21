@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:AlarmApprovalControlsController
- * @description # AlarmApprovalControlsController Controller of the modesti
+ * @name modesti.controller:ApprovalControlsController
+ * @description # ApprovalControlsController Controller of the modesti
  */
-angular.module('modesti').controller('AlarmApprovalControlsController', AlarmApprovalControlsController);
+angular.module('modesti').controller('ApprovalControlsController', ApprovalControlsController);
 
-function AlarmApprovalControlsController($state, RequestService, TaskService) {
+function ApprovalControlsController($state, RequestService, TaskService) {
   var self = this;
 
   self.init = init;
