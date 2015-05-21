@@ -13,28 +13,28 @@ import javax.persistence.Id;
  * @author Justin Lewis Salmon
  *
  */
-public class ValidationResult {
+public class TestResult {
 
   @Id
   private Long id;
 
-  private Boolean valid;
+  private Boolean success;
 
   private List<String> errors;
 
-  public ValidationResult() {
+  public TestResult() {
   }
 
   /**
-   * Constructor to create a dummy validation result for testing.
+   * Constructor to create a dummy test result for testing.
    */
-  public ValidationResult(boolean failed) {
+  public TestResult(boolean failed) {
     this.id = 0L;
     if (failed) {
-      this.valid = false;
-      this.errors = new ArrayList<>(Arrays.asList("Field x is not valid", "Field y is out of range"));
+      this.success = false;
+      this.errors = new ArrayList<>(Arrays.asList("Point 1 failed", "Point 2 failed"));
     } else {
-      this.valid = true;
+      this.success = true;
       this.errors = new ArrayList<>();
     }
   }
@@ -54,17 +54,17 @@ public class ValidationResult {
   }
 
   /**
-   * @return the valid
+   * @return the success
    */
-  public Boolean isValid() {
-    return valid;
+  public Boolean getSuccess() {
+    return success;
   }
 
   /**
-   * @param valid the valid to set
+   * @param success the success to set
    */
-  public void setValid(Boolean valid) {
-    this.valid = valid;
+  public void setSuccess(Boolean success) {
+    this.success = success;
   }
 
   /**

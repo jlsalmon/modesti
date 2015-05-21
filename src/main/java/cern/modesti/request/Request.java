@@ -26,16 +26,17 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import cern.modesti.workflow.AddressingResult;
-import cern.modesti.workflow.ApprovalResult;
-import cern.modesti.workflow.ConfigurationResult;
-import cern.modesti.workflow.ValidationResult;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
 import cern.modesti.model.SubSystem;
 import cern.modesti.request.point.Point;
+import cern.modesti.workflow.AddressingResult;
+import cern.modesti.workflow.ApprovalResult;
+import cern.modesti.workflow.ConfigurationResult;
+import cern.modesti.workflow.TestResult;
+import cern.modesti.workflow.ValidationResult;
 
 /**
  * @author Justin Lewis Salmon
@@ -113,6 +114,11 @@ public class Request implements Serializable {
    *
    */
   private ConfigurationResult configurationResult;
+
+  /**
+   *
+   */
+  private TestResult testResult;
 
   /**
    *
@@ -384,6 +390,20 @@ public class Request implements Serializable {
    */
   public void setConfigurationResult(ConfigurationResult configurationResult) {
     this.configurationResult = configurationResult;
+  }
+
+  /**
+   * @return the testResult
+   */
+  public TestResult getTestResult() {
+    return testResult;
+  }
+
+  /**
+   * @param testResult the testResult to set
+   */
+  public void setTestResult(TestResult testResult) {
+    this.testResult = testResult;
   }
 
   /**

@@ -3,12 +3,16 @@
  */
 package cern.modesti.workflow;
 
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.repository.mongo.request.counter.CounterService;
-import cern.modesti.request.Request;
-import cern.modesti.request.point.Point;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -17,8 +21,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.repository.mongo.request.counter.CounterService;
+import cern.modesti.request.Request;
+import cern.modesti.request.point.Point;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * @author Justin Lewis Salmon
@@ -166,6 +175,9 @@ public class WorkflowService {
     }
 
     execution.setVariable("configurationFailure", failed);
+
+    // Store the request
+    requestRepository.save(request);
   }
 
   /**
