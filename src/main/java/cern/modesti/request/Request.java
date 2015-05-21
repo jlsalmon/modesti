@@ -26,7 +26,10 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import cern.modesti.repository.jpa.validation.ValidationResult;
+import cern.modesti.workflow.AddressingResult;
+import cern.modesti.workflow.ApprovalResult;
+import cern.modesti.workflow.ConfigurationResult;
+import cern.modesti.workflow.ValidationResult;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
@@ -95,6 +98,21 @@ public class Request implements Serializable {
    *
    */
   private ValidationResult validationResult;
+
+  /**
+   *
+   */
+  private ApprovalResult approvalResult;
+
+  /**
+   *
+   */
+  private AddressingResult addressingResult;
+
+  /**
+   *
+   */
+  private ConfigurationResult configurationResult;
 
   /**
    *
@@ -324,6 +342,48 @@ public class Request implements Serializable {
    */
   public void setValidationResult(ValidationResult validationResult) {
     this.validationResult = validationResult;
+  }
+
+  /**
+   * @return the approvalResult
+   */
+  public ApprovalResult getApprovalResult() {
+    return approvalResult;
+  }
+
+  /**
+   * @param approvalResult the approvalResult to set
+   */
+  public void setApprovalResult(ApprovalResult approvalResult) {
+    this.approvalResult = approvalResult;
+  }
+
+  /**
+   * @return the addressingResult
+   */
+  public AddressingResult getAddressingResult() {
+    return addressingResult;
+  }
+
+  /**
+   * @param addressingResult the addressingResult to set
+   */
+  public void setAddressingResult(AddressingResult addressingResult) {
+    this.addressingResult = addressingResult;
+  }
+
+  /**
+   * @return the configurationResult
+   */
+  public ConfigurationResult getConfigurationResult() {
+    return configurationResult;
+  }
+
+  /**
+   * @param configurationResult the configurationResult to set
+   */
+  public void setConfigurationResult(ConfigurationResult configurationResult) {
+    this.configurationResult = configurationResult;
   }
 
   /**

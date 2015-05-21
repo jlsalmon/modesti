@@ -2,6 +2,7 @@ package cern.modesti.config;
 
 
 import cern.modesti.security.ldap.LdapSynchroniser;
+import cern.modesti.workflow.WorkflowService;
 import cern.modesti.workflow.listener.RequestStatusManager;
 import cern.modesti.workflow.task.RequestConfigurationTask;
 import cern.modesti.workflow.task.RequestSplittingTask;
@@ -25,24 +26,29 @@ public class WorkflowConfig {
   Environment env;
 
   @Bean
-  public RequestStatusManager requestStatusManager() {
-    return new RequestStatusManager();
+  public WorkflowService workflowService() {
+    return new WorkflowService();
   }
 
-  @Bean
-  public RequestValidationTask requestValidationTask() {
-    return new RequestValidationTask();
-  }
-
-  @Bean
-  public RequestConfigurationTask requestConfigurationTask() {
-    return new RequestConfigurationTask();
-  }
-
-  @Bean
-  public RequestSplittingTask requestSplittingTask() {
-    return new RequestSplittingTask();
-  }
+//  @Bean
+//  public RequestStatusManager requestStatusManager() {
+//    return new RequestStatusManager();
+//  }
+//
+//  @Bean
+//  public RequestValidationTask requestValidationTask() {
+//    return new RequestValidationTask();
+//  }
+//
+//  @Bean
+//  public RequestConfigurationTask requestConfigurationTask() {
+//    return new RequestConfigurationTask();
+//  }
+//
+//  @Bean
+//  public RequestSplittingTask requestSplittingTask() {
+//    return new RequestSplittingTask();
+//  }
 
   /**
    * Synchronise LDAP users and groups at startup via an InitializingBean.

@@ -5,7 +5,7 @@ package cern.modesti.repository.mongo.validation;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import cern.modesti.repository.jpa.validation.ValidationResult;
+import cern.modesti.workflow.ValidationResult;
 
 /**
  * @author Justin Lewis Salmon

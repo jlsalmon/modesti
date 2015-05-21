@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.repository.jpa.validation;
+package cern.modesti.workflow;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,9 +15,7 @@ import javax.persistence.Id;
  *
  */
 //@Entity
-public class ValidationResult implements Serializable {
-
-  private static final long serialVersionUID = 1215131608580861894L;
+public class ValidationResult {
 
   @Id
   private Long id;
@@ -25,20 +23,6 @@ public class ValidationResult implements Serializable {
   private Boolean valid;
 
   private List<String> errors;
-
-  /**
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public ValidationResult() {
   }
@@ -55,6 +39,20 @@ public class ValidationResult implements Serializable {
       this.valid = true;
       this.errors = new ArrayList<>();
     }
+  }
+
+  /**
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
+
+  /**
+   * @param id the id to set
+   */
+  public void setId(Long id) {
+    this.id = id;
   }
 
   /**
