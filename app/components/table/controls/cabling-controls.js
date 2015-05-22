@@ -10,6 +10,8 @@ angular.module('modesti').controller('CablingControlsController', CablingControl
 function CablingControlsController($state, RequestService, TaskService) {
   var self = this;
 
+  self.submitting = undefined;
+
   self.init = init;
   self.submit = submit;
 
@@ -25,16 +27,27 @@ function CablingControlsController($state, RequestService, TaskService) {
    */
   function submit() {
     var task = self.parent.tasks['cable'];
+    if (!task) {
+      console.log('error cabling request: no task');
+      return;
+    }
+
+    self.submitting = 'started';
 
     TaskService.completeTask(task.id, []).then(function (task) {
-        console.log('completed task');
+        console.log('completed task ' + task.id);
+
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
-        $state.reload();
+
+        $state.reload().then(function() {
+          self.submitting = 'success';
+        });
       },
 
       function (error) {
         console.log('error completing task ' + task.id);
+        self.submitting = 'error';
       });
   }
 }

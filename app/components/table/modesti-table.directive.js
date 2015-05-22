@@ -14,9 +14,9 @@ function modestiTable() {
     transclude: true,
     controller : 'ModestiTableController as ctrl',
     scope: {
-      request: '=request',
-      schema:  '=schema',
-      tasks: '=tasks'
+      request: '=',
+      schema:  '=',
+      tasks:   '=',
     },
 
     link : function(scope, element, attrs, controller) {

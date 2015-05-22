@@ -149,6 +149,20 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
 
         $state.reload().then(function() {
           self.validating = 'success';
+
+          //console.log('closing alert');
+          //AlertService.close();
+          //
+          //$timeout(function() {
+          //  console.log('request valid: ' + self.parent.request.validationResult.valid);
+          //  console.log(self.parent.request.validationResult);
+          //  console.log($scope);
+          //
+          //  if (self.parent.request.validationResult.valid == false) {
+          //    console.log('adding alert');
+          //    AlertService.add('danger', 'Validation failed. Please see the error report for details.');
+          //  }
+          //}, 2000);
         });
       },
 

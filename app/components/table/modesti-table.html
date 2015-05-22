@@ -68,7 +68,29 @@
     opacity: 0.5;
   }
 
+  .table > tbody > tr > td .form-control {
+    transition: none;
+  }
+
+  .table > tbody > tr.success > td .form-control {
+    background-color: #DFF0D8;
+    border-color: #DFF0D8;
+  }
+
 </style>
+
+<!-- Alerts are shown here -->
+<alert ng-repeat="alert in alerts"
+       type="{{alert.type}}"
+       close="ctrl.closeAlert($index)">
+  {{alert.message}}
+</alert>
+
+<alert ng-if="!ctrl.request.validationResult.valid"
+       type="danger"
+       close>
+  Validation failed. Please see the error report for details.
+</alert>
 
 <div class="nav-tabs">
 
@@ -158,7 +180,8 @@
           quick-repeat-list="$data"
           ng-form="ctrl.pointForms.form_{{::$index}}"
           ng-click="point.$selected = !point.$selected"
-          ng-class="{'active': point.$selected}">
+          ng-class="{
+                      'success' : point.approved && ctrl.request.status == 'FOR_APPROVAL' }">
 
 
           <!-- Line number field -->
@@ -166,7 +189,7 @@
               width="30"
               style="text-align: center; vertical-align: middle;"
               ng-class="{ 'bg-danger': (ctrl.pointForms.form_{{::$index}}.$invalid   && ctrl.pointForms.form_{{::$index}}.$dirty)
-                                    || (ctrl.pointForms.form_{{::$index}}.$submitted && ctrl.pointForms.form_{{::$index}}.$invalid) }">
+                                    || (ctrl.pointForms.form_{{::$index}}.$submitted && ctrl.pointForms.form_{{::$index}}.$invalid)}">
             {{point.id}}
           </td>
 
@@ -182,7 +205,7 @@
             <span input-field
                   model="point.properties[field.id]"
                   schema="::field"
-                  editable="::ctrl.activeCategory.editableStates.indexOf(ctrl.request.status) > -1"></span>
+                  editable="{{::ctrl.activeCategory.editableStates.indexOf(ctrl.request.status) > -1}}"></span>
 
 
           </td>
@@ -272,7 +295,9 @@
 </div>
 
 <div class="col-md-10">
-  <small>request valid: <code>{{::ctrl.tableForm.$valid}}</code></small>
+  <small>form valid: <code>{{ctrl.tableForm.$valid}}</code></small>
+  <br />
+  <small>form dirty: <code>{{ctrl.tableForm.$dirty}}</code></small>
   <br />
   <small>tasks: <code ng-repeat="task in ctrl.tasks"> {{::task.name}}</code></small>
   <br />
@@ -285,4 +310,7 @@
   <small>configuration result: <code>{{::ctrl.request.configurationResult}}</code></small>
   <br />
   <small>test result: <code>{{::ctrl.request.testResult}}</code></small>
+  <br />
+  <br />
+  <small>alerts: <code>{{$root.alerts}}</code></small>
 </div>

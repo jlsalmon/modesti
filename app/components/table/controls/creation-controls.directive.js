@@ -13,7 +13,6 @@ function creationControls() {
     restrict : 'AE',
     require : ['^modestiTable', 'creationControls'],
     controller : 'CreationControlsController as ctrl',
-    scope: {},
 
     link : function(scope, element, attrs, controllers) {
       var self = controllers[1];

@@ -10,8 +10,11 @@ angular.module('modesti').controller('ApprovalControlsController', ApprovalContr
 function ApprovalControlsController($state, RequestService, TaskService) {
   var self = this;
 
+  self.submitting = undefined;
+  self.approved = true;
+
   self.init = init;
-  self.approveRequest = approveRequest;
+  self.submit = submit;
 
   /**
    *
@@ -23,24 +26,68 @@ function ApprovalControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function approveRequest(approved) {
+  function submit() {
     var task = self.parent.tasks['approve'];
+    if (!task) {
+      console.log('error approving request: no task');
+      return;
+    }
+
+    self.submitting = 'started';
+
+    var approvalResult;
+
+    if (self.approved) {
+      approvalResult = {
+        approved: true,
+        items: {
+          1: {
+            approved: true,
+            message: ''
+          },
+          2: {
+            approved: true,
+            message: ''
+          }
+        }
+      };
+    } else {
+      approvalResult = {
+        approved: false,
+        items: {
+          1: {
+            approved: false,
+            message: 'Point 1 is rejected because reasons'
+          },
+          2: {
+            approved: false,
+            message: 'Point 2 is rejected because reasons'
+          }
+        }
+      };
+    }
+
+    // Send the approval result as a JSON string
     var variables = [{
-      "name" : "approved",
-      "value" : approved,
-      "type" : "boolean"
+      "name": "approvalResult",
+      "value": JSON.stringify(approvalResult),
+      "type": "string"
     }];
 
-    TaskService.completeTask(task.id, variables).then(function(task) {
-      console.log('completed task ' + task.id);
-      // Clear the cache so that the state reload also pulls a fresh request
-      RequestService.clearCache();
-      $state.reload();
-    },
+    TaskService.completeTask(task.id, variables).then(function (task) {
+        console.log('completed task ' + task.id);
 
-    function(error) {
-      console.log('error completing task ' + task.id);
-    });
+        // Clear the cache so that the state reload also pulls a fresh request
+        RequestService.clearCache();
 
+        $state.reload().then(function() {
+          self.submitting = 'success';
+        });
+      },
+
+      function (error) {
+        console.log('error completing task ' + task.id);
+        self.submitting = 'error';
+      });
   }
 }

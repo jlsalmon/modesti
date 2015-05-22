@@ -7,12 +7,13 @@
  */
 angular.module('modesti').controller('ModestiTableController', ModestiTableController);
 
-function ModestiTableController($scope, $http, $stateParams, NgTableParams, RequestService) {
+function ModestiTableController($scope, $http, $stateParams, NgTableParams, RequestService, AlertService) {
   var self = this;
 
   self.request = {};
   self.schema = {};
   self.tasks = {};
+  self.alerts = {};
   self.tableForm = {};
   self.pointForms = {};
   self.searchText = {};
@@ -75,16 +76,24 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
    * @param request
    * @param schema
    * @param tasks
+   * @param alerts
    */
-  function init(request, schema, tasks) {
+  function init(request, schema, tasks, alerts) {
     self.request = request;
     self.schema = schema;
     self.tasks = tasks;
+    self.alerts = alerts;
 
     // Populate the list of all fields
     getAllFields();
     // Retrieve the list of available extra categories
     getAvailableCategories();
+
+    //if (self.request.validationResult.valid == false) {
+    //  AlertService.close();
+    //  console.log('adding alert');
+    //  AlertService.add('danger', 'Validation failed. Please see the error report for details.');
+    //}
   }
 
   /**

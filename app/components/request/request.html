@@ -64,6 +64,12 @@
     background-color: #DFF0D8 !important;
     border-color: #D6E9C6 !important;
   }
+
+  .alert-danger {
+    color: #A94442 !important;
+    background-color: #F2DEDE !important;
+    border-color: #EBCCD1 !important;
+  }
 </style>
 
 <!-- Content Header (Page header) -->
@@ -137,9 +143,9 @@
 
 
         <!-- Alerts are shown here -->
-        <alert ng-repeat="alert in ctrl.alerts"
+        <alert ng-repeat="alert in alerts"
                type="{{alert.type}}"
-               close="ctrl.closeAlert($index)">
+               close="alert.close()">
           {{alert.message}}
         </alert>
 

@@ -22,7 +22,7 @@ function InputFieldController($compile, $http) {
   self.init = function(scope, element) {
     self.schema = scope.schema;
     self.model = scope.model;
-    self.editable = scope.editable;
+    self.editable = scope.$eval(scope.editable);
 
     element.html(getInput()).show();
     $compile(element.contents())(scope);
@@ -61,7 +61,7 @@ function InputFieldController($compile, $http) {
 
     html += self.schema.minLength ? 'ng-minlength="{{::self.schema.minLength}}" ': '';
     html += self.schema.maxLength ? 'ng-maxlength="{{::self.schema.maxLength}}" ': '';
-    html += self.editable ? '': 'ng-readonly="true" '
+    html += self.editable ? '': 'ng-readonly="true" ';
     return html + (self.schema.required ? 'required' : '') + ' />'
   }
 

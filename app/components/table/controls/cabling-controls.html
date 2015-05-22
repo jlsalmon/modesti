@@ -1,3 +1,20 @@
-<button class="btn btn-primary">Mark selected as cabled</button>
+<div class="btn-group">
+  <button class="btn btn-primary">Mark selected as cabled</button>
+</div>
 
-<button class="btn btn-primary" ng-click="ctrl.submit()">Submit</button>
+<div class="btn-group pull-right">
+
+  <button class="btn btn-default"
+          ng-click="ctrl.submit()"
+          tooltip-append-to-body="true"
+          tooltip="Submit cabling">
+
+    <!--Show icon based on the loading state-->
+    <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
+    <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
+    <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
+    <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
+    Submit
+  </button>
+
+</div>

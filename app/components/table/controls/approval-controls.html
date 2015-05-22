@@ -1,3 +1,21 @@
-<button class="btn btn-primary" ng-click="ctrl.approveRequest(true)">Approve</button>
+<div class="btn-group">
+  <button class="btn btn-success" ng-click="ctrl.approved = true">Approve selected</button>
+  <button class="btn btn-danger"  ng-click="ctrl.approved = false">Reject selected</button>
+</div>
 
-<button class="btn btn-primary" ng-click="ctrl.approveRequest(false)">Disapprove</button>
+<div class="btn-group pull-right">
+
+  <button class="btn btn-default"
+          ng-click="ctrl.submit()"
+          tooltip-append-to-body="true"
+          tooltip="Submit approval">
+
+    <!--Show icon based on the loading state-->
+    <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
+    <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
+    <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
+    <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
+    Submit
+  </button>
+
+</div>
