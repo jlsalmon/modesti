@@ -8,9 +8,17 @@
     <userTask id="sid-42FD37C6-426A-4BE5-9D2A-550E89965F41" name="submit" activiti:candidateGroups="modesti-creators,modesti-administrators"></userTask>
     <userTask id="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB" name="validate" activiti:candidateGroups="modesti-creators,modesti-administrators"></userTask>
     <exclusiveGateway id="sid-3EE35137-D009-429B-95A3-CD79520CB352" name="failure?"></exclusiveGateway>
-    <userTask id="sid-20E5164E-63AD-495D-88D4-53A628D70587" name="approve" activiti:candidateGroups="modesti-approvers,modesti-administrators"></userTask>
+    <userTask id="sid-20E5164E-63AD-495D-88D4-53A628D70587" name="approve" activiti:candidateGroups="modesti-approvers,modesti-administrators">
+      <extensionElements>
+        <activiti:taskListener event="complete" expression="${workflowService.onApprovalCompleted(requestId, execution)}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <serviceTask id="sid-60A69B5E-7A53-4E04-82D7-89650B7A98FC" name="configure" activiti:expression="${workflowService.configureRequest(requestId, execution)}"></serviceTask>
-    <userTask id="sid-DE504C8C-A7E4-4963-B190-1E962CA0C99E" name="test" activiti:candidateGroups="modesti-creators,modesti-approvers,modesti-administrators"></userTask>
+    <userTask id="sid-DE504C8C-A7E4-4963-B190-1E962CA0C99E" name="test" activiti:candidateGroups="modesti-creators,modesti-approvers,modesti-administrators">
+      <extensionElements>
+        <activiti:taskListener event="complete" expression="${workflowService.onTestingCompleted(requestId, execution)}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <exclusiveGateway id="sid-DAA37D17-6D88-4F75-BA67-CB5E4295B4E6" name="failure?"></exclusiveGateway>
     <exclusiveGateway id="sid-EA92A7EB-9AC8-40CA-868E-CB46B68BD55B" name="approved?"></exclusiveGateway>
     <exclusiveGateway id="sid-FE0BB7A1-2135-4BE2-94AB-2F84F935D616" name="accepted?"></exclusiveGateway>
@@ -23,8 +31,16 @@
         <activiti:in source="childRequiresCabling" target="requiresCabling"></activiti:in>
       </extensionElements>
     </callActivity>
-    <userTask id="sid-98765471-E687-4A88-A193-3B974901E636" name="address" activiti:candidateGroups="modesti-creators,modesti-administrators"></userTask>
-    <userTask id="sid-2BE485D4-5AE3-43F4-87A9-4B1B25E341A1" name="cable" activiti:candidateGroups="modesti-creators,modesti-administrators"></userTask>
+    <userTask id="sid-98765471-E687-4A88-A193-3B974901E636" name="address" activiti:candidateGroups="modesti-creators,modesti-administrators">
+      <extensionElements>
+        <activiti:taskListener event="complete" expression="${workflowService.onAddressingCompleted(requestId, execution)}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="sid-2BE485D4-5AE3-43F4-87A9-4B1B25E341A1" name="cable" activiti:candidateGroups="modesti-creators,modesti-administrators">
+      <extensionElements>
+        <activiti:taskListener event="complete" expression="${workflowService.onCablingCompleted(requestId, execution)}"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
     <exclusiveGateway id="sid-51160A2D-281C-4986-A07E-D6F15493EE34" name="failure?"></exclusiveGateway>
     <exclusiveGateway id="sid-D40F5A37-971B-4431-827C-1BFA3F4364D2" name="cabling required?"></exclusiveGateway>
     <boundaryEvent id="sid-A54BBF84-4A14-4124-93D2-0577784EB6AB" name="split" attachedToRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB" cancelActivity="false">
@@ -78,15 +94,6 @@
     <sequenceFlow id="sid-5A2EA930-FE35-4838-AA65-071752D75523" name="no" sourceRef="sid-3EE35137-D009-429B-95A3-CD79520CB352" targetRef="sid-42FD37C6-426A-4BE5-9D2A-550E89965F41">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!containsErrors}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-6ACF7F47-8294-4A47-BF2E-926B6F85AF7A" name="no" sourceRef="sid-EA92A7EB-9AC8-40CA-868E-CB46B68BD55B" targetRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB">
-      <extensionElements>
-        <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;FOR_CORRECTION&quot;)}"></activiti:executionListener>
-      </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approved}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-9CB011CC-51A0-4F57-94DC-3DD71A7B41DE" name="yes" sourceRef="sid-EA92A7EB-9AC8-40CA-868E-CB46B68BD55B" targetRef="sid-D40F5A37-971B-4431-827C-1BFA3F4364D2">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved}]]></conditionExpression>
-    </sequenceFlow>
     <sequenceFlow id="sid-F9E3F9EC-7565-47D6-AF38-3C4780CB6BC6" name="yes" sourceRef="sid-D40F5A37-971B-4431-827C-1BFA3F4364D2" targetRef="sid-98765471-E687-4A88-A193-3B974901E636">
       <extensionElements>
         <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;FOR_ADDRESSING&quot;)}"></activiti:executionListener>
@@ -105,11 +112,10 @@
       </extensionElements>
     </sequenceFlow>
     <sequenceFlow id="sid-D2CC8E6C-4041-44B6-A6B5-FE274C12EA4F" sourceRef="sid-60A69B5E-7A53-4E04-82D7-89650B7A98FC" targetRef="sid-DAA37D17-6D88-4F75-BA67-CB5E4295B4E6"></sequenceFlow>
-    <sequenceFlow id="sid-779DE4F6-92BC-45F6-840C-07123AB530A7" name="yes" sourceRef="sid-DAA37D17-6D88-4F75-BA67-CB5E4295B4E6" targetRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB">
+    <sequenceFlow id="sid-84A3675E-0F75-4565-94DF-05F140CF3A50" sourceRef="sid-8A72E18D-E23D-42D4-9142-FD32B590E1FB" targetRef="sid-6F936BFE-410E-4C80-A2DA-C9B3117FA2A6">
       <extensionElements>
-        <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;FOR_CORRECTION&quot;)}"></activiti:executionListener>
+        <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;CLOSED&quot;)}"></activiti:executionListener>
       </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${configurationFailure}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-8D94B3A8-AA08-45CC-82A9-7E34651159C0" name="no" sourceRef="sid-DAA37D17-6D88-4F75-BA67-CB5E4295B4E6" targetRef="sid-DE504C8C-A7E4-4963-B190-1E962CA0C99E">
       <extensionElements>
@@ -117,22 +123,32 @@
       </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!configurationFailure}]]></conditionExpression>
     </sequenceFlow>
+    <sequenceFlow id="sid-779DE4F6-92BC-45F6-840C-07123AB530A7" name="yes" sourceRef="sid-DAA37D17-6D88-4F75-BA67-CB5E4295B4E6" targetRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB">
+      <extensionElements>
+        <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;FOR_CORRECTION&quot;)}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${configurationFailure}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-6ACF7F47-8294-4A47-BF2E-926B6F85AF7A" name="no" sourceRef="sid-EA92A7EB-9AC8-40CA-868E-CB46B68BD55B" targetRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB">
+      <extensionElements>
+        <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;FOR_CORRECTION&quot;)}"></activiti:executionListener>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!approved}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-9CB011CC-51A0-4F57-94DC-3DD71A7B41DE" name="yes" sourceRef="sid-EA92A7EB-9AC8-40CA-868E-CB46B68BD55B" targetRef="sid-D40F5A37-971B-4431-827C-1BFA3F4364D2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved}]]></conditionExpression>
+    </sequenceFlow>
     <sequenceFlow id="sid-054DA551-85E1-46DD-B44B-8DFD22420AB1" name="no" sourceRef="sid-FE0BB7A1-2135-4BE2-94AB-2F84F935D616" targetRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB">
       <extensionElements>
         <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;FOR_CORRECTION&quot;)}"></activiti:executionListener>
       </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!accepted}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="sid-84A3675E-0F75-4565-94DF-05F140CF3A50" sourceRef="sid-8A72E18D-E23D-42D4-9142-FD32B590E1FB" targetRef="sid-6F936BFE-410E-4C80-A2DA-C9B3117FA2A6">
-      <extensionElements>
-        <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;CLOSED&quot;)}"></activiti:executionListener>
-      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!passed}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-94400848-4914-4873-BD5A-9D175212B836" name="yes" sourceRef="sid-FE0BB7A1-2135-4BE2-94AB-2F84F935D616" targetRef="sid-6F936BFE-410E-4C80-A2DA-C9B3117FA2A6">
       <extensionElements>
         <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;CLOSED&quot;)}"></activiti:executionListener>
       </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${accepted}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${passed}]]></conditionExpression>
     </sequenceFlow>
     <textAnnotation id="sid-5F63E380-0983-4637-91A5-A485B7EC9D48">
       <text>Note: this is a recursive process call.</text>
@@ -249,13 +265,13 @@
         <omgdi:waypoint x="1659.3201339104105" y="251.42272845354734"></omgdi:waypoint>
         <omgdi:waypoint x="1702.0576701532796" y="251.2725662054394"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-8D94B3A8-AA08-45CC-82A9-7E34651159C0" id="BPMNEdge_sid-8D94B3A8-AA08-45CC-82A9-7E34651159C0">
-        <omgdi:waypoint x="1951.2757896389298" y="431.17318629463705"></omgdi:waypoint>
-        <omgdi:waypoint x="2007.3243511035068" y="431.173186294637"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-84A3675E-0F75-4565-94DF-05F140CF3A50" id="BPMNEdge_sid-84A3675E-0F75-4565-94DF-05F140CF3A50">
         <omgdi:waypoint x="639.269376320625" y="636.6285912434869"></omgdi:waypoint>
         <omgdi:waypoint x="2210.575787600901" y="636.6285912434869"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8D94B3A8-AA08-45CC-82A9-7E34651159C0" id="BPMNEdge_sid-8D94B3A8-AA08-45CC-82A9-7E34651159C0">
+        <omgdi:waypoint x="1951.2757896389298" y="431.17318629463705"></omgdi:waypoint>
+        <omgdi:waypoint x="2007.3243511035068" y="431.173186294637"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-07C0C02D-F968-42BA-9121-78E2B722B353" id="BPMNEdge_sid-07C0C02D-F968-42BA-9121-78E2B722B353">
         <omgdi:waypoint x="193.65045853869478" y="450.6731862946372"></omgdi:waypoint>

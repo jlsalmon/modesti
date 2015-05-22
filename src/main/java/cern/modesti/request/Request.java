@@ -413,7 +413,7 @@ public class Request implements Serializable {
    */
   public boolean requiresApproval() {
     // Return a random result for now
-    return new Random(System.currentTimeMillis()).nextBoolean();
+    return true; // new Random(System.currentTimeMillis()).nextBoolean();
   }
 
   /**
@@ -423,6 +423,6 @@ public class Request implements Serializable {
    */
   public boolean requiresCabling() {
     // Return a random result for now
-    return new Random(System.currentTimeMillis()).nextBoolean();
+    return true; // new Random(System.currentTimeMillis()).nextBoolean();
   }
 }

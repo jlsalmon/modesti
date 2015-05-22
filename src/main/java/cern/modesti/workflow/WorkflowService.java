@@ -92,7 +92,23 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-    return request.requiresApproval();
+    boolean approvalRequired = false;
+
+    if (request.requiresApproval()) {
+      // Dirty check: if all the points are clean and have been approved already,
+      // then we don't need to approve again.
+
+      for (Point point : request.getPoints()) {
+
+        // If there is a single dirty or unapproved point, approval is required
+        if (point.isDirty() || !point.isApproved()) {
+          approvalRequired = true;
+          break;
+        }
+      }
+    }
+
+    return approvalRequired;
   }
 
   /**
@@ -125,6 +141,9 @@ public class WorkflowService {
     }
 
 
+    // TODO: add dirty check: don't need to validate if all the points have already been validated
+
+
     /**
      * TODO: perform actual request validation here
      */
@@ -137,10 +156,115 @@ public class WorkflowService {
       request.setValidationResult(new ValidationResult(true));
     } else {
       request.setValidationResult(new ValidationResult(false));
+
+      // Mark all points as clean
+      for (Point point : request.getPoints()) {
+        point.setDirty(false);
+      }
     }
 
     // Set the variable for the next stage to evaluate
     execution.setVariable("containsErrors", failed);
+
+    // Store the request
+    requestRepository.save(request);
+  }
+
+  /**
+   *
+   * @param requestId
+   * @param execution
+   */
+  public void onApprovalCompleted(String requestId, DelegateExecution execution) {
+    LOG.info("processing approval result for request id " + requestId + "...");
+
+    Request request = requestRepository.findOneByRequestId(requestId);
+    if (request == null) {
+      throw new ActivitiException("No request with id " + requestId + " was found");
+    }
+
+    // We will have gotten a JSON serialised representation of an ApprovalResult from the user task.
+    String approvalResultString = execution.getVariable("approvalResult", String.class);
+
+    ApprovalResult approvalResult = new Gson().fromJson(approvalResultString, ApprovalResult.class);
+    List<Point> points = request.getPoints();
+
+    request.setApprovalResult(approvalResult);
+
+    // Mark all the points as approved or not
+    for (Point point : request.getPoints()) {
+      ApprovalResult.ApprovalResultItem item = approvalResult.getItems().get(point.getId());
+
+      if (item != null) {
+        point.setApproved(item.isApproved());
+      }
+    }
+
+    // Set the variable for the next stage to evaluate
+    execution.setVariable("approved", approvalResult.isApproved());
+
+    // Store the request
+    requestRepository.save(request);
+  }
+
+  /**
+   *
+   * @param requestId
+   * @param execution
+   */
+  public void onAddressingCompleted(String requestId, DelegateExecution execution) {
+    LOG.info("processing addressing result for request id " + requestId + "...");
+
+    Request request = requestRepository.findOneByRequestId(requestId);
+    if (request == null) {
+      throw new ActivitiException("No request with id " + requestId + " was found");
+    }
+
+    // We will have gotten a JSON serialised representation of an AddressingResult from the user task.
+    String addressingResultString = execution.getVariable("addressingResult", String.class);
+
+    AddressingResult addressingResult = new Gson().fromJson(addressingResultString, AddressingResult.class);
+    request.setAddressingResult(addressingResult);
+
+    // Set the variable for the next stage to evaluate
+    execution.setVariable("addressed", addressingResult.isAddressed());
+
+    // Store the request
+    requestRepository.save(request);
+  }
+
+  /**
+   *
+   * @param requestId
+   * @param execution
+   */
+  public void onCablingCompleted(String requestId, DelegateExecution execution) {
+    LOG.info("processing cabling result for request id " + requestId + "...");
+
+    // Nothing to do here yet
+  }
+
+  /**
+   *
+   * @param requestId
+   * @param execution
+   */
+  public void onTestingCompleted(String requestId, DelegateExecution execution) {
+    LOG.info("processing testing result for request id " + requestId + "...");
+
+    Request request = requestRepository.findOneByRequestId(requestId);
+    if (request == null) {
+      throw new ActivitiException("No request with id " + requestId + " was found");
+    }
+
+    // We will have gotten a JSON serialised representation of a TestResult from the user task.
+    String testResultString = execution.getVariable("testResult", String.class);
+
+    TestResult testResult = new Gson().fromJson(testResultString, TestResult.class);
+    request.setTestResult(testResult);
+
+    // Set the variable for the next stage to evaluate
+    execution.setVariable("passed", testResult.getPassed());
 
     // Store the request
     requestRepository.save(request);
@@ -184,7 +308,6 @@ public class WorkflowService {
    *
    * @param requestId
    * @param execution
-   * @throws Exception
    */
   public void splitRequest(String requestId, DelegateExecution execution) {
     LOG.info("splitting request id " + requestId + "...");

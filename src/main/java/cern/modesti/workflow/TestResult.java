@@ -18,25 +18,11 @@ public class TestResult {
   @Id
   private Long id;
 
-  private Boolean success;
+  private Boolean passed;
 
   private List<String> errors;
 
   public TestResult() {
-  }
-
-  /**
-   * Constructor to create a dummy test result for testing.
-   */
-  public TestResult(boolean failed) {
-    this.id = 0L;
-    if (failed) {
-      this.success = false;
-      this.errors = new ArrayList<>(Arrays.asList("Point 1 failed", "Point 2 failed"));
-    } else {
-      this.success = true;
-      this.errors = new ArrayList<>();
-    }
   }
 
   /**
@@ -54,17 +40,17 @@ public class TestResult {
   }
 
   /**
-   * @return the success
+   * @return the passed
    */
-  public Boolean getSuccess() {
-    return success;
+  public Boolean getPassed() {
+    return passed;
   }
 
   /**
-   * @param success the success to set
+   * @param passed the passed to set
    */
-  public void setSuccess(Boolean success) {
-    this.success = success;
+  public void setPassed(Boolean passed) {
+    this.passed = passed;
   }
 
   /**

@@ -30,9 +30,32 @@ public class Point implements Serializable {
 
   private static final long serialVersionUID = -6275036449999835583L;
 
+  /**
+   *
+   */
   @Id
   private Long id;
 
+  /**
+   * Flag to check if this point has been modified by the requestor.
+   */
+  private boolean dirty = true;
+
+  private boolean valid = false;
+
+  private boolean approved = false;
+
+  private boolean addressed = false;
+
+  private boolean cabled = false;
+
+  private boolean configured = false;
+
+  private boolean tested = false;
+
+  /**
+   *
+   */
   private Map<String, Object> properties = new HashMap<>();
 
   public Point() {
@@ -55,6 +78,68 @@ public class Point implements Serializable {
    */
   public void setId(Long id) {
     this.id = id;
+  }
+
+  /**
+   * @return the dirty state
+   */
+  public boolean isDirty() {
+    return dirty;
+  }
+
+  /**
+   * @param dirty the dirty state to set
+   */
+  public void setDirty(boolean dirty) {
+    this.dirty = dirty;
+  }
+
+  public boolean isValid() {
+    return valid;
+  }
+
+  public void setValid(boolean valid) {
+    this.valid = valid;
+  }
+
+  public boolean isApproved() {
+    return approved;
+  }
+
+  public void setApproved(boolean approved) {
+    this.approved = approved;
+  }
+
+  public boolean isAddressed() {
+    return addressed;
+  }
+
+  public void setAddressed(boolean addressed) {
+    this.addressed = addressed;
+  }
+
+  public boolean isCabled() {
+    return cabled;
+  }
+
+  public void setCabled(boolean cabled) {
+    this.cabled = cabled;
+  }
+
+  public boolean isConfigured() {
+    return configured;
+  }
+
+  public void setConfigured(boolean configured) {
+    this.configured = configured;
+  }
+
+  public boolean isTested() {
+    return tested;
+  }
+
+  public void setTested(boolean tested) {
+    this.tested = tested;
   }
 
   /**
