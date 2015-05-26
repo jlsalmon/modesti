@@ -9,6 +9,7 @@ import java.util.*;
 import javax.transaction.Transactional;
 
 import cern.modesti.notification.NotificationService;
+import cern.modesti.notification.NotificationType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
@@ -77,8 +78,6 @@ public class WorkflowService {
 
     request.setStatus(Request.RequestStatus.valueOf(status));
     requestRepository.save(request);
-
-    notificationService.sendNotification(request);
   }
 
   /**
@@ -204,7 +203,7 @@ public class WorkflowService {
     }
 
     // Send an email to the original requestor
-    notificationService.sendNotification(request);
+    notificationService.sendNotification(request, NotificationType.APPROVAL_COMPLETED);
 
     // Set the variable for the next stage to evaluate
     execution.setVariable("approved", approvalResult.isApproved());
