@@ -33,7 +33,7 @@
     <button class="btn"
             ng-class="ctrl.parent.tasks['submit'] ? 'btn-success' : ' btn-primary'"
             ng-click="ctrl.validate()"
-            ng-disabled="!ctrl.parent.tasks['validate'] || ctrl.parent.tableForm.$invalid"
+            ng-disabled="!ctrl.canValidate()"
             tooltip-append-to-body="true"
             tooltip="Validate request">
 
@@ -51,7 +51,7 @@
   <!-- Button to submit the request -->
   <button class="btn btn-default"
           ng-click="ctrl.submit()"
-          ng-disabled="!ctrl.parent.tasks['submit']"
+          ng-disabled="!ctrl.canSubmit()"
           tooltip-append-to-body="true"
           tooltip="Submit request">
 

@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($http, $state, RequestService, TaskService) {
+function CreationControlsController($scope, $http, $state, RequestService, TaskService) {
   var self = this;
 
   self.validating = undefined;
@@ -20,6 +20,8 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
   self.deleteSelectedRows = deleteSelectedRows;
   self.validate = validate;
   self.submit = submit;
+  self.canValidate = canValidate;
+  self.canSubmit = canSubmit;
   self.split = split;
 
   /**
@@ -130,6 +132,14 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
   /**
    *
    */
+  function canValidate() {
+    var task = self.parent.tasks['validate'];
+    return task && self.parent.tableForm.$valid;
+  }
+
+  /**
+   *
+   */
   function validate() {
     var task = self.parent.tasks['validate'];
 
@@ -140,36 +150,39 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
 
     self.validating = 'started';
 
-    // Complete the task associated with the request
-    TaskService.completeTask(task.id).then(function (task) {
-        console.log('completed task ' + task.id);
+    // First save the request
+    RequestService.saveRequest(self.parent.request).then(function () {
+        console.log('saved request before validation');
 
-        // Clear the cache so that the state reload also pulls a fresh request
-        RequestService.clearCache();
+        // Complete the task associated with the request
+        TaskService.completeTask(task.id).then(function (task) {
+            console.log('completed task ' + task.id);
 
-        $state.reload().then(function() {
-          self.validating = 'success';
+            // Clear the cache so that the state reload also pulls a fresh request
+            RequestService.clearCache();
 
-          //console.log('closing alert');
-          //AlertService.close();
-          //
-          //$timeout(function() {
-          //  console.log('request valid: ' + self.parent.request.validationResult.valid);
-          //  console.log(self.parent.request.validationResult);
-          //  console.log($scope);
-          //
-          //  if (self.parent.request.validationResult.valid == false) {
-          //    console.log('adding alert');
-          //    AlertService.add('danger', 'Validation failed. Please see the error report for details.');
-          //  }
-          //}, 2000);
-        });
+            $state.reload().then(function () {
+              self.validating = 'success';
+            });
+          },
+
+          function (error) {
+            console.log('error completing task: ' + error);
+            self.validating = 'error';
+          });
       },
 
       function (error) {
-        console.log('error completing task: ' + error);
+        console.log('error saving before validation: ' + error);
         self.validating = 'error';
       });
+  }
+
+  /**
+   *
+   */
+  function canSubmit() {
+    return self.parent.tasks['submit'];
   }
 
   /**
@@ -192,7 +205,7 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
 
-        $state.reload().then(function() {
+        $state.reload().then(function () {
           self.submitting = 'success';
         });
       },
@@ -235,14 +248,47 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
 
-        $state.reload().then(function() {
+        $state.reload().then(function () {
           self.splitting = 'success';
         });
       },
 
       function (error) {
-        console.log('error completing task: ' + error);
+        console.log('error sending signal: ' + error);
         self.splitting = 'error';
       });
   }
+
+  /**
+   * Watch the outer parent form for changes. If we are in the "submit" stage of the workflow and the form is modified,
+   * then it will need to be revalidated. This is done by sending the "requestModified" signal.
+   */
+  $scope.$watch("ctrl.parent.tableForm.$dirty", function (dirty) {
+    var task = self.parent.tasks['submit'];
+
+    if (task && dirty) {
+      console.log('form modified whilst in submit state: sending signal');
+
+      var url = task.executionUrl;
+      var params = {
+        "action": "signalEventReceived",
+        "signalName": "requestModified",
+        "variables": []
+      };
+
+      // TODO refactor this into a service
+      $http.put(url, params).then(function () {
+          console.log('sent modification signal');
+
+          // The "submit" task will have changed to "validate".
+          TaskService.queryTasksForRequest(self.parent.request).then(function (tasks) {
+            self.parent.tasks = tasks;
+          });
+        },
+
+        function (error) {
+          console.log('error sending signal: ' + error);
+        });
+    }
+  });
 }
