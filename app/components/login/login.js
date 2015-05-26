@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('LoginController', LoginController);
 
-function LoginController($http, $localStorage, $location, $modalInstance, authService) {
+function LoginController($http, $localStorage, $modalInstance, authService) {
   var self = this;
 
   self.credentials = {};
@@ -31,9 +31,7 @@ function LoginController($http, $localStorage, $location, $modalInstance, authSe
       console.log('authenticated');
 
       // Set data in local storage for other parts of the app to use
-      $localStorage.authenticated = true;
-      $localStorage.username = data.name;
-
+      $localStorage.user = data;
       self.loginError = false;
 
       // Confirm the login, so that angular-http-auth can resume any ajax requests
@@ -46,9 +44,7 @@ function LoginController($http, $localStorage, $location, $modalInstance, authSe
     }).error(function () {
       console.log('failed to authenticate');
 
-      $localStorage.authenticated = false;
-      $localStorage.username = undefined;
-
+      $localStorage.user = undefined;
       self.loginError = true;
     });
   }

@@ -167,13 +167,13 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
           },
 
           function (error) {
-            console.log('error completing task: ' + error);
+            console.log('error completing task: ' + error.statusText);
             self.validating = 'error';
           });
       },
 
       function (error) {
-        console.log('error saving before validation: ' + error);
+        console.log('error saving before validation: ' + error.statusText);
         self.validating = 'error';
       });
   }

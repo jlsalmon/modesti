@@ -176,22 +176,22 @@
             </li> -->
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
-              <a href="" ng-click="ctrl.login()" ng-show="!ctrl.storage.authenticated" ng-cloak>
+              <a href="" ng-click="ctrl.login()" ng-if="!ctrl.storage.user" ng-cloak>
                 <span class="hidden-xs" >
                   <i class="fa fa-fw fa-sign-in"></i>
                     Sign in
                 </span>
               </a>
 
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-show="ctrl.storage.authenticated && ctrl.storage.username" ng-cloak>
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-if="ctrl.storage.user && ctrl.storage.user.username" ng-cloak>
                 <!--<img src="images/no-avatar.png" class="user-image" alt="User Image" />-->
                 <span class="hidden-xs">
                   <i class="fa fa-fw fa-user"></i>
-                    {{ctrl.storage.username}}
+                    {{ctrl.storage.user.firstName}} {{ctrl.storage.user.lastName}}
                   <span class="caret"></span>
                 </span>
               </a>
-              <ul class="dropdown-menu" ng-show="ctrl.storage.authenticated && ctrl.storage.username"  ng-cloak>
+              <ul class="dropdown-menu" ng-show="ctrl.storage.user && ctrl.storage.user.username"  ng-cloak>
                 <li>
                   <a href="" class="header" ng-click="ctrl.logout()">
                     <i class="fa fa-fw fa-sign-out"></i>

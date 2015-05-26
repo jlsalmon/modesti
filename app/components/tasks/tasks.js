@@ -23,7 +23,7 @@ function TasksController($location, $localStorage, Restangular, RequestService) 
 
     var params = {
       action : 'claim',
-      assignee : $localStorage.username
+      assignee : $localStorage.user.name
     };
 
     Restangular.one('runtime/tasks', id).post('', params).then(function(result) {

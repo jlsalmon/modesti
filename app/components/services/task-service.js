@@ -104,7 +104,7 @@ function TaskService($q, $http, $localStorage, Restangular) {
 
     var params = {
       action: 'claim',
-      assignee: $localStorage.username
+      assignee: $localStorage.user.name
     };
 
     Restangular.one('runtime/tasks', taskId).post('', params).then(function (result) {

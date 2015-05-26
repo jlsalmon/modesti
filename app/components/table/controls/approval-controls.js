@@ -40,30 +40,34 @@ function ApprovalControlsController($state, RequestService, TaskService) {
     if (self.approved) {
       approvalResult = {
         approved: true,
-        items: {
-          1: {
+        items: [
+          {
+            id: 1,
             approved: true,
             message: ''
           },
-          2: {
+          {
+            id: 2,
             approved: true,
             message: ''
           }
-        }
+        ]
       };
     } else {
       approvalResult = {
         approved: false,
-        items: {
-          1: {
+        items: [
+          {
+            id: 1,
             approved: false,
             message: 'Point 1 is rejected because reasons'
           },
-          2: {
+          {
+            id: 2,
             approved: false,
             message: 'Point 2 is rejected because reasons'
           }
-        }
+        ]
       };
     }
 

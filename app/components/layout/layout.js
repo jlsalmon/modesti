@@ -10,12 +10,10 @@ angular.module('modesti').controller('LayoutController', LayoutController);
 function LayoutController($scope, $location, $localStorage, $cookies, $modal) {
   var self = this;
 
-  var username = $localStorage.username;
-  var authenticated = $localStorage.authenticated;
+  var user = $localStorage.user;
 
   self.storage = $localStorage.$default({
-    authenticated : authenticated,
-    username : username
+    user : user
   });
 
   self.isActivePage = isActivePage;
@@ -48,8 +46,7 @@ function LayoutController($scope, $location, $localStorage, $cookies, $modal) {
    *
    */
   function logout() {
-    $localStorage.authenticated = false;
-    $localStorage.username = undefined;
+    $localStorage.user = undefined;
     delete $cookies["JSESSIONID"];
     $location.path("/");
   }

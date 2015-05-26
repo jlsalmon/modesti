@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('NewRequestController', NewRequestController);
 
-function NewRequestController($scope, $http, $location, $filter, $localStorage, RequestService, Restangular) {
+function NewRequestController($http, $location, $localStorage, RequestService, Restangular) {
   var self = this;
 
   self.domains = [];
@@ -22,7 +22,7 @@ function NewRequestController($scope, $http, $location, $filter, $localStorage, 
   self.request = {
     type : 'CREATE',
     description : '',
-    creator : $localStorage.username,
+    creator : $localStorage.user,
     categories: []
   };
 
