@@ -1,16 +1,10 @@
 package cern.modesti;
 
+import cern.modesti.config.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.config.EnableEntityLinks;
-
-import cern.modesti.config.DataSourceConfig;
-import cern.modesti.config.JpaConfig;
-import cern.modesti.config.MongoConfig;
-import cern.modesti.config.RestConfig;
-import cern.modesti.config.WebSecurityConfig;
-import cern.modesti.config.WorkflowConfig;
 
 /**
  * TODO

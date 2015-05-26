@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<div class="container">
+  <p>
+    Dear <span th:text="${request.creator.firstName + ' ' + request.creator.lastName}">Justin</span>,
+  </p>
+
+  <p>
+    This is an automatic email notifying you that your MODESTI request #<b><span
+      th:text="${request.requestId}">42</span>
+    (<span th:text="${request.description}">Very important points to be monitored</span>)</b> has been approved by TI
+    operators.
+  </p>
+
+  <p>
+    The status of your request can be viewed at any time by visiting the following URL:
+    <a href="${url}"><span th:text="${url}">https://modesti.cern.ch/requests/42</span></a>.
+  </p>
+
+  <p>
+    Best regards,
+    <br/>
+    <em>The MODESTI team</em>
+  </p>
+
+</div>
+
+</body>
+</html>

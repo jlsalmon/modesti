@@ -3,6 +3,7 @@
  */
 package cern.modesti.config;
 
+import cern.modesti.security.ldap.LdapUserDetailsMapper;
 import org.apache.catalina.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
@@ -57,7 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   public LdapAuthenticationProvider ldapAuthenticationProvider() {
-    return new LdapAuthenticationProvider(ldapAuthenticator());
+    LdapAuthenticationProvider provider = new LdapAuthenticationProvider(ldapAuthenticator());
+    provider.setUserDetailsContextMapper(new LdapUserDetailsMapper());
+    return provider;
   }
 
   @Bean

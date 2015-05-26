@@ -13,22 +13,33 @@ import javax.persistence.Id;
  */
 public class ApprovalResult {
 
-  @Id
-  private Long id;
-
   private Boolean approved;
 
-  /** Map of point ids to result item */
-  private Map<Long, ApprovalResultItem> items = new HashMap<>();
+  /** List of result items, one per point */
+  private List<ApprovalResultItem> items = new ArrayList<>();
 
   public ApprovalResult() {
   }
 
-  class ApprovalResultItem {
+  static class ApprovalResultItem {
+
+    @Id
+    private Long id;
 
     private boolean approved;
 
     private String message;
+
+    public ApprovalResultItem() {
+    }
+
+    public Long getId() {
+      return id;
+    }
+
+    public void setId(Long id) {
+      this.id = id;
+    }
 
     public boolean isApproved() {
       return approved;
@@ -48,20 +59,6 @@ public class ApprovalResult {
   }
 
   /**
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
    * @return the approved
    */
   public Boolean isApproved() {
@@ -78,14 +75,14 @@ public class ApprovalResult {
   /**
    * @return the items
    */
-  public Map<Long, ApprovalResultItem> getItems() {
+  public List<ApprovalResultItem> getItems() {
     return items;
   }
 
   /**
    * @param items the items to set
    */
-  public void setItems(Map<Long, ApprovalResultItem> items) {
+  public void setItems(List<ApprovalResultItem> items) {
     this.items = items;
   }
 }

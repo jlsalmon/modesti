@@ -3,24 +3,21 @@
  */
 package cern.modesti.legacy;
 
-import java.io.InputStream;
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
-
-import cern.modesti.workflow.WorkflowService;
-import org.activiti.engine.RuntimeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import cern.modesti.legacy.parser.RequestParser;
 import cern.modesti.legacy.parser.RequestParserFactory;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterService;
 import cern.modesti.request.Request;
-import cern.modesti.request.Request.RequestStatus;
+import cern.modesti.security.ldap.User;
+import cern.modesti.workflow.WorkflowService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.stereotype.Service;
+
+import java.io.InputStream;
+import java.security.Principal;
 
 /**
  * @author Justin Lewis Salmon
@@ -44,15 +41,15 @@ public class UploadService {
    *
    * @param filename
    * @param stream
-   * @param user
+   * @param principal
    * @return
    */
-  public Request parseRequestFromExcelSheet(String filename, InputStream stream, Principal user) {
+  public Request parseRequestFromExcelSheet(String filename, InputStream stream, Principal principal) {
     RequestParser parser = RequestParserFactory.createRequestParser(stream);
     Request request = parser.parseRequest();
 
     request.setDescription(filename);
-    request.setCreator(user.getName());
+    request.setCreator((User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
     // Generate a request id
     request.setRequestId(counterService.getNextSequence("requests").toString());

@@ -3,16 +3,13 @@
  */
 package cern.modesti.workflow;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 import javax.transaction.Transactional;
 
+import cern.modesti.notification.NotificationService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -47,6 +44,9 @@ public class WorkflowService {
   @Autowired
   private RuntimeService runtimeService;
 
+  @Autowired
+  NotificationService notificationService;
+
   /**
    *
    * @param request
@@ -77,6 +77,8 @@ public class WorkflowService {
 
     request.setStatus(Request.RequestStatus.valueOf(status));
     requestRepository.save(request);
+
+    notificationService.sendNotification(request);
   }
 
   /**
@@ -175,7 +177,7 @@ public class WorkflowService {
    * @param requestId
    * @param execution
    */
-  public void onApprovalCompleted(String requestId, DelegateExecution execution) {
+  public void onApprovalCompleted(String requestId, DelegateExecution execution) throws IOException {
     LOG.info("processing approval result for request id " + requestId + "...");
 
     Request request = requestRepository.findOneByRequestId(requestId);
@@ -186,19 +188,23 @@ public class WorkflowService {
     // We will have gotten a JSON serialised representation of an ApprovalResult from the user task.
     String approvalResultString = execution.getVariable("approvalResult", String.class);
 
-    ApprovalResult approvalResult = new Gson().fromJson(approvalResultString, ApprovalResult.class);
+    ApprovalResult approvalResult = new ObjectMapper().readValue(approvalResultString, ApprovalResult.class);
     List<Point> points = request.getPoints();
 
     request.setApprovalResult(approvalResult);
 
     // Mark all the points as approved or not
     for (Point point : request.getPoints()) {
-      ApprovalResult.ApprovalResultItem item = approvalResult.getItems().get(point.getId());
 
-      if (item != null) {
-        point.setApproved(item.isApproved());
+      for (ApprovalResult.ApprovalResultItem item : approvalResult.getItems()) {
+        if (Objects.equals(item.getId(), point.getId())) {
+          point.setApproved(item.isApproved());
+        }
       }
     }
+
+    // Send an email to the original requestor
+    notificationService.sendNotification(request);
 
     // Set the variable for the next stage to evaluate
     execution.setVariable("approved", approvalResult.isApproved());

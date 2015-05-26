@@ -1,5 +1,8 @@
 package cern.modesti.security;
 
+import cern.modesti.security.ldap.User;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +17,8 @@ import java.security.Principal;
 public class LoginController {
 
   @RequestMapping(value = "/login")
-  public Principal login(Principal user) {
-    return user;
+  public UserDetails login(Principal principal) {
+    UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
+    return (User) token.getPrincipal();
   }
 }

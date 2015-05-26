@@ -26,6 +26,7 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import cern.modesti.security.ldap.User;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
@@ -73,7 +74,7 @@ public class Request implements Serializable {
 
   @TextIndexed
   @NotNull(message = "Request creator is compulsory")
-  private String creator;
+  private User creator;
 
   @TextIndexed(weight = 2)
   @NotNull(message = "Description is compulsory")
@@ -255,14 +256,14 @@ public class Request implements Serializable {
   /**
    * @return the creator
    */
-  public String getCreator() {
+  public User getCreator() {
     return creator;
   }
 
   /**
    * @param creator the creator to set
    */
-  public void setCreator(String creator) {
+  public void setCreator(User creator) {
     this.creator = creator;
   }
 
