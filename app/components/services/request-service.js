@@ -16,6 +16,7 @@ function RequestService($filter, $rootScope, $q, Restangular) {
   var service = {
     getRequests: getRequests,
     getRequest: getRequest,
+    getChildRequests: getChildRequests,
     saveRequest: saveRequest,
     createRequest: createRequest,
     deleteRequest: deleteRequest,
@@ -104,6 +105,22 @@ function RequestService($filter, $rootScope, $q, Restangular) {
     }
 
     return q.promise;
+  }
+
+  /**
+   *
+   * @param request
+   * @returns {*|{src}}
+   */
+  function getChildRequests(request) {
+    var childRequestIds = request.childRequestIds;
+    var promises = [];
+
+    angular.forEach(childRequestIds, function(childRequestId) {
+      promises.push(service.getRequest(childRequestId));
+    });
+
+    return $q.all(promises);
   }
 
   /**

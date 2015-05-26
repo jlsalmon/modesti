@@ -86,7 +86,7 @@
   {{alert.message}}
 </alert>
 
-<alert ng-if="!ctrl.request.validationResult.valid"
+<alert ng-if="ctrl.request.validationResult && !ctrl.request.validationResult.valid"
        type="danger"
        close>
   Validation failed. Please see the error report for details.
@@ -206,8 +206,6 @@
                   model="point.properties[field.id]"
                   schema="::field"
                   editable="{{::ctrl.activeCategory.editableStates.indexOf(ctrl.request.status) > -1}}"></span>
-
-
           </td>
 
 

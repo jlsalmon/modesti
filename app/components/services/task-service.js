@@ -7,43 +7,87 @@
  */
 angular.module('modesti').service('TaskService', TaskService);
 
-function TaskService($q, $localStorage, Restangular) {
+function TaskService($q, $http, $localStorage, Restangular) {
   var self = this;
 
   /**
    * Public API for the task service.
    */
   var service = {
-    getTaskForRequest: getTaskForRequest,
+    getTasksForRequest: getTasksForRequest,
+    queryTasksForRequest: queryTasksForRequest,
     claimTask: claimTask,
     completeTask: completeTask
   };
 
   /**
    *
-   * @param requestId
+   * @param request
    * @returns {*}
    */
-  function getTaskForRequest(requestId) {
+  function getTasksForRequest(request) {
+    console.log('fetching tasks for request ' + request.requestId);
+
+    var q = $q.defer();
+    var promises = [];
+
+    angular.forEach(request._links.tasks, function (link) {
+      var href = link.href ? link.href : link;
+      var promise = $http.get(href);
+      promises.push(promise);
+    });
+
+    $q.all(promises).then(function (responses) {
+        console.log('fetched ' + responses.length + ' task(s)');
+        var tasks = {};
+
+        angular.forEach(responses, function (response) {
+          tasks[response.data.name] = response.data;
+        });
+
+        q.resolve(tasks);
+      },
+
+      function (error) {
+        console.log('error fetching tasks: ' + error);
+        q.reject(error);
+      });
+
+    return q.promise;
+  }
+
+  /**
+   *
+   * @param request
+   * @returns {*}
+   */
+  function queryTasksForRequest(request) {
+    console.log('querying tasks for request ' + request.requestId);
     var q = $q.defer();
 
     var query = {
       processInstanceVariables: [{
-        name: 'requestId',
-        value: requestId,
-        operation: 'equals'
+        name: "requestId",
+        value: request.requestId,
+        operation: "equals",
+        type: "string"
       }]
     };
 
-    // Find the task related to this request. There should only be one
     Restangular.one('query/tasks').post('', query).then(function (result) {
-        var task = result.data.data[0];
-        console.log('found task ' + task.id + ' for request ' + requestId);
-        q.resolve(task);
+        var taskList = result.data.data;
+        console.log('found ' + taskList.length + ' task(s)');
+        var tasks = {};
+
+        angular.forEach(result.data.data, function (task) {
+          tasks[task.name] = task;
+        });
+
+        q.resolve(tasks);
       },
 
       function (error) {
-        console.log('error querying tasks');
+        console.log('error querying tasks: ' + error);
         q.reject(error);
       });
 
