@@ -11,14 +11,11 @@ function addressingControls() {
   var directive = {
     templateUrl : 'components/table/controls/addressing-controls.html',
     restrict : 'AE',
-    require : ['^modestiTable', 'addressingControls'],
+    require : ['addressingControls'],
     controller : 'AddressingControlsController as ctrl',
-    scope: {},
 
-    link : function(scope, element, attrs, controllers) {
-      var self = controllers[1];
-      var parent = controllers[0];
-      self.init(parent);
+    link : function(scope, element, attrs, controller) {
+      controller.init();
     }
   };
 

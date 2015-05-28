@@ -58,7 +58,7 @@ function TestController($scope) {
   var lastNames = ["Tired", "Johnson", "Moore", "Rocket", "Goodman", "Farewell", "Manson", "Bentley", "Kowalski", "Schmidt", "Tucker", "Fancy"];
   var address = ["Turkey", "Japan", "Michigan", "Russia", "Greece", "France", "USA", "Germany", "Sweden", "Denmark", "Poland", "Belgium"];
 
-  $scope.minSpareRows = 1;
+  $scope.minSpareRows = 100;
   $scope.colHeaders = true;
 
   $scope.db = {};

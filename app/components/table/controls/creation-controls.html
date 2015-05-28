@@ -1,37 +1,37 @@
+<!--<div class="btn-group">-->
+  <!--&lt;!&ndash; Button to add a new row &ndash;&gt;-->
+  <!--<button class="btn btn-default"-->
+          <!--ng-click="ctrl.addRow()"-->
+          <!--tooltip-append-to-body="true"-->
+          <!--tooltip="Add row">-->
+      <!--<i class="fa fa-fw fa-plus"></i>-->
+  <!--</button>-->
+
+  <!--&lt;!&ndash; Button to duplicate selected rows &ndash;&gt;-->
+  <!--<button class="btn btn-default"-->
+          <!--ng-click="ctrl.duplicateSelectedRows()"-->
+          <!--tooltip-append-to-body="true"-->
+          <!--tooltip="Duplicate selected rows"-->
+          <!--ng-disabled="!ctrl.parent.checkboxes.dirty">-->
+      <!--<i class="fa fa-fw fa-copy"></i>-->
+  <!--</button>-->
+
+  <!--&lt;!&ndash; Button to delete selected rows &ndash;&gt;-->
+  <!--<button class="btn btn-default"-->
+          <!--ng-click="ctrl.deleteSelectedRows()"-->
+          <!--tooltip-append-to-body="true"-->
+          <!--tooltip="Delete selected rows"-->
+          <!--ng-disabled="!ctrl.checkboxes.dirty">-->
+      <!--<i class="fa fa-fw fa-trash"></i>-->
+  <!--</button>-->
+<!--</div>-->
+
 <div class="btn-group">
-  <!-- Button to add a new row -->
-  <button class="btn btn-default"
-          ng-click="ctrl.addRow()"
-          tooltip-append-to-body="true"
-          tooltip="Add row">
-      <i class="fa fa-fw fa-plus"></i>
-  </button>
-
-  <!-- Button to duplicate selected rows -->
-  <button class="btn btn-default"
-          ng-click="ctrl.duplicateSelectedRows()"
-          tooltip-append-to-body="true"
-          tooltip="Duplicate selected rows"
-          ng-disabled="!ctrl.parent.checkboxes.dirty">
-      <i class="fa fa-fw fa-copy"></i>
-  </button>
-
-  <!-- Button to delete selected rows -->
-  <button class="btn btn-default"
-          ng-click="ctrl.deleteSelectedRows()"
-          tooltip-append-to-body="true"
-          tooltip="Delete selected rows"
-          ng-disabled="!ctrl.parent.checkboxes.dirty">
-      <i class="fa fa-fw fa-trash"></i>
-  </button>
-</div>
-
-<div class="btn-group pull-right">
   <div class="btn-group">
 
     <!--Button to validate the request-->
     <button class="btn"
-            ng-class="ctrl.parent.tasks['submit'] ? 'btn-success' : ' btn-primary'"
+            ng-class="ctrl.tasks['submit'] ? 'btn-success' : ' btn-primary'"
             ng-click="ctrl.validate()"
             ng-disabled="!ctrl.canValidate()"
             tooltip-append-to-body="true"
@@ -67,9 +67,9 @@
 
 <!-- Button to split the request -->
 <button class="btn btn-danger"
-        ng-if="ctrl.parent.request.status == 'FOR_CORRECTION'"
+        ng-if="ctrl.request.status == 'FOR_CORRECTION'"
         ng-click="ctrl.split()"
-        ng-disabled="!ctrl.parent.checkboxes.dirty"
+        ng-disabled="!ctrl.checkboxes.dirty"
         tooltip="Split selected rows">
 
   <!--Show icon based on the loading state-->

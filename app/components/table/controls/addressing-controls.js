@@ -19,15 +19,14 @@ function AddressingControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function init(parent) {
-    self.parent = parent;
+  function init() {
   }
 
   /**
    *
    */
   function submit() {
-    var task = self.parent.tasks['address'];
+    var task = self.tasks['address'];
     if (!task) {
       console.log('error addressing request: no task');
       return;

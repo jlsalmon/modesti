@@ -10,14 +10,17 @@ angular.module('modesti').controller('CreationControlsController', CreationContr
 function CreationControlsController($scope, $http, $state, RequestService, TaskService) {
   var self = this;
 
+  self.request = {};
+  self.tasks = {};
+
   self.validating = undefined;
   self.submitting = undefined;
   self.splitting = undefined;
 
   self.init = init;
-  self.addRow = addRow;
-  self.duplicateSelectedRows = duplicateSelectedRows;
-  self.deleteSelectedRows = deleteSelectedRows;
+  //self.addRow = addRow;
+  //self.duplicateSelectedRows = duplicateSelectedRows;
+  //self.deleteSelectedRows = deleteSelectedRows;
   self.validate = validate;
   self.submit = submit;
   self.canValidate = canValidate;
@@ -27,121 +30,123 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
   /**
    *
    */
-  function init(parent) {
-    self.parent = parent;
+  function init(request, tasks) {
+    self.request = request;
+    self.tasks = tasks;
   }
 
-  /**
-   *
-   */
-  function addRow() {
-    console.log('adding new row');
-    var request = self.parent.request;
+  ///**
+  // *
+  // */
+  //function addRow() {
+  //  console.log('adding new row');
+  //  var request = self.request;
+  //
+  //  var newRow = {
+  //    'name': '',
+  //    'description': '',
+  //    'domain': request.domain
+  //  };
+  //
+  //  request.points.push(newRow);
+  //
+  //  RequestService.saveRequest(request).then(function (request) {
+  //    console.log('added new row');
+  //    self.request = request;
+  //
+  //    // Reload the table data
+  //    self.tableParams.reload();
+  //
+  //    // Move to the last page
+  //    var pages = self.tableParams.settings().$scope.pages;
+  //    for (var i in pages) {
+  //      if (pages[i].type == "last") {
+  //        self.tableParams.page(pages[i].number);
+  //      }
+  //    }
+  //
+  //  }, function (error) {
+  //    console.log('error adding new row: ' + error);
+  //  });
+  //}
 
-    var newRow = {
-      'name': '',
-      'description': '',
-      'domain': request.domain
-    };
-
-    request.points.push(newRow);
-
-    RequestService.saveRequest(request).then(function (request) {
-      console.log('added new row');
-      self.parent.request = request;
-
-      // Reload the table data
-      self.parent.tableParams.reload();
-
-      // Move to the last page
-      var pages = self.parent.tableParams.settings().$scope.pages;
-      for (var i in pages) {
-        if (pages[i].type == "last") {
-          self.parent.tableParams.page(pages[i].number);
-        }
-      }
-
-    }, function (error) {
-      console.log('error adding new row: ' + error);
-    });
-  }
-
-  /**
-   *
-   */
-  function duplicateSelectedRows() {
-    var points = self.parent.request.points;
-    console.log('duplicating rows (before: ' + points.length + ' points)');
-
-    // Find the selected points and duplicate them
-    for (var i in points) {
-      var point = points[i];
-
-      if (self.parent.checkboxes.items[point.id]) {
-        var duplicate = angular.copy(point);
-        // Remove the ID of the duplicated point, as the backend will generate
-        // us a new one when we save
-        delete duplicate.id;
-        // Add the new duplicate to the original points
-        points.push(duplicate);
-      }
-    }
-
-    // Save the changes
-    RequestService.saveRequest(self.parent.request).then(function (savedRequest) {
-      console.log('saved request after row duplication');
-      console.log('duplicated rows (after: ' + savedRequest.points.length + ' points)');
-
-      // Reload the table data
-      self.parent.tableParams.reload();
-
-    }, function (error) {
-      console.log('error saving request after row duplication: ' + error);
-    });
-  }
-
-  /**
-   *
-   */
-  function deleteSelectedRows() {
-    var points = self.parent.request.points;
-    console.log('deleting rows (before: ' + points.length + ' points)');
-
-    // Find the selected points and mark them as deleted
-    for (var i in points) {
-      var point = points[i];
-
-      if (self.parent.checkboxes.items[point.id]) {
-        point.deleted = true;
-      }
-    }
-
-    // Save the changes
-    RequestService.saveRequest(self.parent.request).then(function (savedRequest) {
-      console.log('saved request after row deletion');
-      console.log('deleted rows (after: ' + savedRequest.points.length + ' points)');
-
-      // Reload the table data
-      self.parent.tableParams.reload();
-
-    }, function (error) {
-      console.log('error saving request after row deletion: ' + error);
-    });
-  }
+  ///**
+  // *
+  // */
+  //function duplicateSelectedRows() {
+  //  var points = self.request.points;
+  //  console.log('duplicating rows (before: ' + points.length + ' points)');
+  //
+  //  // Find the selected points and duplicate them
+  //  for (var i in points) {
+  //    var point = points[i];
+  //
+  //    if (self.checkboxes.items[point.id]) {
+  //      var duplicate = angular.copy(point);
+  //      // Remove the ID of the duplicated point, as the backend will generate
+  //      // us a new one when we save
+  //      delete duplicate.id;
+  //      // Add the new duplicate to the original points
+  //      points.push(duplicate);
+  //    }
+  //  }
+  //
+  //  // Save the changes
+  //  RequestService.saveRequest(self.request).then(function (savedRequest) {
+  //    console.log('saved request after row duplication');
+  //    console.log('duplicated rows (after: ' + savedRequest.points.length + ' points)');
+  //
+  //    // Reload the table data
+  //    self.tableParams.reload();
+  //
+  //  }, function (error) {
+  //    console.log('error saving request after row duplication: ' + error);
+  //  });
+  //}
+  //
+  ///**
+  // *
+  // */
+  //function deleteSelectedRows() {
+  //  var points = self.request.points;
+  //  console.log('deleting rows (before: ' + points.length + ' points)');
+  //
+  //  // Find the selected points and mark them as deleted
+  //  for (var i in points) {
+  //    var point = points[i];
+  //
+  //    if (self.checkboxes.items[point.id]) {
+  //      point.deleted = true;
+  //    }
+  //  }
+  //
+  //  // Save the changes
+  //  RequestService.saveRequest(self.request).then(function (savedRequest) {
+  //    console.log('saved request after row deletion');
+  //    console.log('deleted rows (after: ' + savedRequest.points.length + ' points)');
+  //
+  //    // Reload the table data
+  //    self.tableParams.reload();
+  //
+  //  }, function (error) {
+  //    console.log('error saving request after row deletion: ' + error);
+  //  });
+  //}
 
   /**
    *
    */
   function canValidate() {
-    var task = self.parent.tasks['validate'];
-    return task && self.parent.tableForm.$valid;
+    var task = self.tasks['validate'];
+    // TODO reimplement this
+    return false; //task && self.tableForm.$valid;
   }
 
   /**
    *
    */
   function validate() {
-    var task = self.parent.tasks['validate'];
+    var task = self.tasks['validate'];
 
     if (!task) {
       console.log('warning: no validate task found');
@@ -151,7 +156,7 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
     self.validating = 'started';
 
     // First save the request
-    RequestService.saveRequest(self.parent.request).then(function () {
+    RequestService.saveRequest(self.request).then(function () {
         console.log('saved request before validation');
 
         // Complete the task associated with the request
@@ -182,14 +187,14 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
    *
    */
   function canSubmit() {
-    return self.parent.tasks['submit'];
+    return self.tasks['submit'];
   }
 
   /**
    *
    */
   function submit() {
-    var task = self.parent.tasks['submit'];
+    var task = self.tasks['submit'];
 
     if (!task) {
       console.log('warning: no submit task found');
@@ -220,7 +225,7 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
    * TODO split only selected points
    */
   function split() {
-    var task = self.parent.tasks['validate'];
+    var task = self.tasks['validate'];
     if (!task) {
       console.log('error splitting request: no task');
       return;
@@ -264,7 +269,7 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
    * then it will need to be revalidated. This is done by sending the "requestModified" signal.
    */
   $scope.$watch("ctrl.parent.tableForm.$dirty", function (dirty) {
-    var task = self.parent.tasks['submit'];
+    var task = self.tasks['submit'];
 
     if (task && dirty) {
       console.log('form modified whilst in submit state: sending signal');
@@ -281,8 +286,8 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
           console.log('sent modification signal');
 
           // The "submit" task will have changed to "validate".
-          TaskService.queryTasksForRequest(self.parent.request).then(function (tasks) {
-            self.parent.tasks = tasks;
+          TaskService.queryTasksForRequest(self.request).then(function (tasks) {
+            self.tasks = tasks;
           });
         },
 

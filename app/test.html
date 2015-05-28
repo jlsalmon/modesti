@@ -37,14 +37,15 @@
   }
 </style>
 
-<div ng-controller="TestController as ctrl" style="height: 100%">
+<div ng-controller="TestController as ctrl">
 
+  <div class="table-wrapper" style="height: 1000px; overflow: hidden">
     <hot-table id="table"
                settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange, stretchH: 'all' }"
                rowHeaders="false"
                minSpareRows="minSpareRows"
-               datarows="db.items"
-               width="1300">
+               search="true"
+               datarows="db.items">
       <hot-column data="id" title="'ID'"></hot-column>
       <hot-column data="name.first" title="'First Name'" type="grayedOut" readOnly></hot-column>
       <hot-column data="name.last" title="'Last Name'" type="grayedOut" readOnly></hot-column>
@@ -56,7 +57,30 @@
       <hot-column data="isActive" title="'Is active'" type="'checkbox'" checkedTemplate="'Yes'"
                   uncheckedTemplate="'No'"></hot-column>
     </hot-table>
+  </div>
 
+  <div class="toolbar-wrapper">
+    <!-- Button to save the request -->
+    <button class="btn btn-default" ng-click="ctrl.save()" tooltip-append-to-body="true" tooltip="Save request">
+      <i class="fa fa-fw fa-save saving-state"></i>
+
+      <!-- Saving state indicators -->
+      <span ng-show="$root.saving == 'started'">
+        <i class="fa fa-fw fa-spin fa-cog saving-state"></i>
+      </span>
+      <span ng-show="$root.saving == 'success'">
+        <i class="fa fa-fw fa-check saving-state text-success"></i>
+      </span>
+      <span ng-show="$root.saving == 'error'">
+        <i class="fa fa-fw fa-exclamation-triangle saving-state text-danger"></i>
+      </span>
+    </button>
+
+    <!-- Button to activate the filter text boxes at the top of the table -->
+    <button class="btn btn-default" ng-click="ctrl.toggleFilter()" tooltip-append-to-body="true" tooltip="Filter rows">
+      <i class="fa fa-fw fa-filter"></i>
+    </button>
+  </div>
 </div>
 
 
