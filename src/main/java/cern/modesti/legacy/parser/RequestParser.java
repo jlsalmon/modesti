@@ -25,7 +25,10 @@ public abstract class RequestParser {
 
   private static final Logger LOG = LoggerFactory.getLogger(RequestParser.class);
 
-  private static final Double MINIMUM_SUPPORTED_VERSION = 4.2;
+  /**
+   * Minimum supported version of the legacy Excel MODESTI request sheet
+   */
+  private static final Double MINIMUM_SUPPORTED_VERSION = 4.0;
 
   protected static final int FIRST_DATA_ROW = 7;
 
@@ -77,7 +80,7 @@ public abstract class RequestParser {
    */
   private Double parseVersion() {
     Double version = Double.valueOf(sheet.getRow(0).getCell(3).getStringCellValue());
-    if (version < 4.2) {
+    if (version < MINIMUM_SUPPORTED_VERSION) {
       throw new VersionNotSupportedException("Legacy MODESTI Excel file version " + version + " not supported. Minimum supported version is " + MINIMUM_SUPPORTED_VERSION);
     }
     return version;

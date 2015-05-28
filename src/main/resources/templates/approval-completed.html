@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-</head>
-<body>
+<html layout:decorator="base"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<div class="container">
+<body>
+<div layout:fragment="content">
+
+
   <p>
     Dear <span th:text="${request.creator.firstName + ' ' + request.creator.lastName}">Justin</span>,
   </p>
@@ -18,9 +20,18 @@
   </p>
 
   <p>
-    The status of your request can be viewed at any time by visiting the following URL:
-    <a href="${url}"><span th:text="${url}">https://modesti.cern.ch/requests/42</span></a>.
+    The status of your request can be viewed at any time by visiting the link below.
   </p>
+
+  <table>
+    <tr>
+      <td class="padding">
+        <p>
+          <a th:href="@{${url}}" th:text="${url}" class="btn-primary">(static URL to be replaced)</a>
+        </p>
+      </td>
+    </tr>
+  </table>
 
   <p>
     Best regards,
@@ -28,7 +39,7 @@
     <em>The MODESTI team</em>
   </p>
 
-</div>
 
+</div>
 </body>
 </html>
