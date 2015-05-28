@@ -60,7 +60,7 @@
       <div class="row">
         <div class="col-md-12">
           <h3>Select file</h3>
-    
+
           <div class="input-group">
             <span class="input-group-btn">
               <span class="btn btn-primary btn-file">
@@ -69,19 +69,19 @@
             </span>
             <input type="text" class="form-control" readonly>
           </div>
-          <span class="help-block">Select the legacy MODESTI Excel file you wish to upload. Both .xls and .xlsx formats are supported.<br/>
-          Note: only versions greater than or equal to <strong>4.2</strong> are supported.</span>
-  
-          <!-- Multiple <input type="file" nv-file-select="" uploader="ctrl.uploader" multiple /><br /> --> 
+          <span class="help-block">Select the legacy MODESTI Excel file you wish to upload. Both .xls and .xlsx formats are supported. Max file size 10MB.<br/>
+          Note: only versions greater than or equal to <strong>4.0</strong> are supported.</span>
+
+          <!-- Multiple <input type="file" nv-file-select="" uploader="ctrl.uploader" multiple /><br /> -->
           </div>
       </div>
-      
+
       <div class="row">
         <div class="col-md-12" style="margin-bottom: 40px">
 
           <h3>Upload queue</h3>
           <p>Queue length: {{ ctrl.uploader.queue.length }}</p>
-    
+
           <table class="table">
             <thead>
               <tr>
@@ -117,7 +117,7 @@
               </tr>
             </tbody>
           </table>
-    
+
     <!--       <div>
         <div>
           Queue progress:
@@ -138,7 +138,7 @@
 
         </div>
       </div>
-      
+
     </div>
     <div class="col-md-4">
           <div ng-show="ctrl.uploader.isHTML5">

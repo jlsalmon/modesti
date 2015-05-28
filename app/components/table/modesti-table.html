@@ -8,6 +8,10 @@
     margin-bottom: 0;
   }
 
+  .nav-tabs > li.category-heading:first-child {
+    margin-left: 15px
+  }
+
   li > a.new-tab {
     border-top: 1px dashed #ccc !important;
     border-right: 1px dashed #ccc !important;
@@ -40,8 +44,44 @@
     background-color: rgba(141, 192, 219, 0.05);
   }
 
+  .table-striped>tbody>tr:nth-child(odd) .form-control {
+    background-color: #f9f9f9;
+    border-color: #f9f9f9;
+  }
+
+  .table-striped>tbody>tr:nth-of-type(odd) .form-control {
+    background-color: #f9f9f9;
+    border-color: #f9f9f9;
+  }
+
+  .table-striped>tbody>tr:nth-child(even) .form-control {
+    background-color: #fff;
+    border-color: #fff;
+  }
+
+  .table-striped>tbody>tr:nth-of-type(even) .form-control {
+    background-color: #fff;
+    border-color: #fff;
+  }
+
+  td .form-group {
+    margin-bottom: 0px;
+  }
+
+  .input-field {
+    padding: 0px !important;
+  }
+
+  .form-control {
+    padding: 6px !important;
+  }
+
   select.form-control {
     padding: 0 !important;
+  }
+
+  input.form-control, select.form-control {
+    height: 25px;
   }
 
   .ng-table-rowselected tr {
@@ -77,20 +117,10 @@
     border-color: #DFF0D8;
   }
 
+  .pagination {
+    margin: 0;
+  }
 </style>
-
-<!-- Alerts are shown here -->
-<alert ng-repeat="alert in alerts"
-       type="{{alert.type}}"
-       close="ctrl.closeAlert($index)">
-  {{alert.message}}
-</alert>
-
-<alert ng-if="ctrl.request.validationResult && !ctrl.request.validationResult.valid"
-       type="danger"
-       close>
-  Validation failed. Please see the error report for details.
-</alert>
 
 <div class="nav-tabs">
 
@@ -124,8 +154,8 @@
   <table id="table"
          ng-table="ctrl.tableParams"
          class="table table-bordered table-striped ng-table-rowselected"
-         template-pagination="custom/pager">
-         <!--fixed-header table-height="500px">-->
+         template-pagination="custom/pager"
+         fixed-header table-height="500px">
 
 
     <thead>

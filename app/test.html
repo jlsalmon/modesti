@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!--[if gte IE 10]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+
+  <title>modesti</title>
+  <base href="/">
+
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css(.) styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
+  <link rel="stylesheet" href="bower_components/normalize.css/normalize.css" />
+  <link rel="stylesheet" href="bower_components/pikaday/css/pikaday.css" />
+  <link rel="stylesheet" href="bower_components/handsontable/dist/handsontable.full.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/AdminLTE.css">
+  <link rel="stylesheet" href="styles/skins/_all-skins.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
+
+<body ng-app="test">
+
+<style>
+  body, html {
+    height: 100%;
+    width: 100%;
+  }
+</style>
+
+<div ng-controller="TestController as ctrl" style="height: 100%">
+
+    <hot-table id="table"
+               settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange, stretchH: 'all' }"
+               rowHeaders="false"
+               minSpareRows="minSpareRows"
+               datarows="db.items"
+               width="1300">
+      <hot-column data="id" title="'ID'"></hot-column>
+      <hot-column data="name.first" title="'First Name'" type="grayedOut" readOnly></hot-column>
+      <hot-column data="name.last" title="'Last Name'" type="grayedOut" readOnly></hot-column>
+      <hot-column data="address" title="'Address'"></hot-column>
+      <hot-column data="product.description" title="'Favorite food'" type="'autocomplete'">
+        <hot-autocomplete datarows="description in product.options"></hot-autocomplete>
+      </hot-column>
+      <hot-column data="price" title="'Price'" type="'numeric'" format="'$ 0,0.00'"></hot-column>
+      <hot-column data="isActive" title="'Is active'" type="'checkbox'" checkedTemplate="'Yes'"
+                  uncheckedTemplate="'No'"></hot-column>
+    </hot-table>
+
+</div>
+
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/pikaday/pikaday.js"></script>
+<script src="bower_components/handsontable/dist/handsontable.full.js"></script>
+<script src="bower_components/ngHandsontable/dist/ngHandsontable.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="app.js"></script>
+<script src="app.config.js"></script>
+<script src="app.routes.js"></script>
+<script src="test.js"></script>
+
+<!-- endbuild -->
+
+</body>
+</html>

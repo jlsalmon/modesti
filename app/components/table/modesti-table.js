@@ -295,6 +295,9 @@ function ModestiTableController($scope, $http, $stateParams, NgTableParams, Requ
   }, true);
 }
 
+
+
+
   angular
       .module('modesti')
       .directive('fixedHeader', fixedHeader);

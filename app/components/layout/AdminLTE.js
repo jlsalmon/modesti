@@ -54,7 +54,7 @@ $.AdminLTE.options = {
   BSTooltipSelector: "[data-toggle='tooltip']",
   //Enable Fast Click. Fastclick.js creates a more
   //native touch ecperience with touch devices. If you
-  //choose to enable the plugin, make sure you load the script 
+  //choose to enable the plugin, make sure you load the script
   //before AdminLTE's app.js
   enableFastclick: true,
   //Box Widget Plugin. Enable this plugin
@@ -138,7 +138,7 @@ $(function () {
   if (o.enableBoxWidget) {
     $.AdminLTE.boxWidget.activate();
   }
-  
+
   if(o.enableFastclick && typeof FastClick != 'undefined') {
     FastClick.attach(document.body);
   }
@@ -242,7 +242,7 @@ $.AdminLTE.pushMenu = function (toggleBtn) {
     $("body").toggleClass('sidebar-open');
   });
   $(".content-wrapper").click(function () {
-    //Enable hide menu when clicking on the content-wrapper on small screens    
+    //Enable hide menu when clicking on the content-wrapper on small screens
     if ($(window).width() <= 767 && $("body").hasClass("sidebar-open")) {
       $("body").removeClass('sidebar-open');
     }
