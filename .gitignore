@@ -16,3 +16,4 @@ modesti-api.iml
 # Exclude properties files
 modesti-test.properties
 modesti-prod.properties
+.~lock*
