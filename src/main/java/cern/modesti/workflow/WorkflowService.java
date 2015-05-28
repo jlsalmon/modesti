@@ -58,8 +58,6 @@ public class WorkflowService {
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
-//    variables.put("requiresApproval", request.requiresApproval());
-//    variables.put("requiresCabling", request.requiresCabling());
 
     runtimeService.startProcessInstanceByKey("create-tim-points", request.getRequestId(), variables);
   }
@@ -109,6 +107,12 @@ public class WorkflowService {
       }
     }
 
+    // If approval is required, notify the original requestor and the approval team.
+    if (approvalRequired) {
+      notificationService.sendNotification(request, NotificationType.APPROVAL_STARTED);
+      notificationService.sendNotification(request, NotificationType.NEW_REQUEST_FOR_APPROVAL);
+    }
+
     return approvalRequired;
   }
 
@@ -123,6 +127,25 @@ public class WorkflowService {
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
       throw new ActivitiException("No request with id " + requestId + " was found");
+    }
+
+    boolean requiresCabling = false;
+
+    if (request.requiresCabling()) {
+      requiresCabling = true;
+    }
+
+    // Send appropriate notifications
+    if (requiresCabling) {
+      if (request.getStatus().equals(Request.RequestStatus.FOR_ADDRESSING)) {
+        notificationService.sendNotification(request, NotificationType.ADDRESSING_STARTED);
+        notificationService.sendNotification(request, NotificationType.NEW_REQUEST_FOR_ADDRESSING);
+      }
+
+      else if (request.getStatus().equals(Request.RequestStatus.FOR_CABLING)) {
+        notificationService.sendNotification(request, NotificationType.CABLING_STARTED);
+        notificationService.sendNotification(request, NotificationType.NEW_REQUEST_FOR_CABLING);
+      }
     }
 
     return request.requiresCabling();

@@ -13,6 +13,8 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -40,14 +42,25 @@ public class NotificationService {
    */
   public void sendNotification(Request request, NotificationType type) {
 
-    String to = request.getCreator().getEmail();
+    List<String> to = new ArrayList<>();
+
+    // Build the list of recipient addresses based on the notification type
+    for (String recipient : type.getRecipients()) {
+      if (recipient.equals("creator")) {
+        to.add(request.getCreator().getEmail());
+      }
+
+      else {
+        String[] addresses = env.getRequiredProperty(recipient, String[].class);
+        for (String address : addresses) {
+          to.add(address + "@cern.ch");
+        }
+      }
+    }
+
     String from = env.getRequiredProperty("spring.mail.from");
     String subject = type.getSubject();
     String template = type.getTemplate();
-
-    // Need to know: involved people
-
-    // TODO: create notification factory
 
     // Prepare the evaluation context
     final Context ctx = new Context(Locale.UK);
@@ -62,7 +75,7 @@ public class NotificationService {
       message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
       message.setSubject(subject);
 
-      message.setTo(to);
+      message.setTo(to.toArray(new String[to.size()]));
       message.setFrom(from);
 
       // Create the HTML body using Thymeleaf

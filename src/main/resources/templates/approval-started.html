@@ -17,16 +17,11 @@
     This is an automatic email notifying you that your MODESTI request
   </p>
   <p>
-    #<b th:text="${request.requestId} + '(' + ${request.description} + ')'"></b>
+    #<b><span th:text="${request.requestId}"></span> (<span th:text="${request.description}"></span>)</b>
   </p>
   <p>
-    has been <b th:text="${request.getApprovalResult().isApproved()} ? 'approved' : 'rejected'"></b> by TI operators.
-  </p>
-
-  <p th:if="${!request.getApprovalResult().isApproved()}">
-    You can see the detailed reasons as to why your request was rejected by visiting the link below. Once you have
-    taken into consideration the operator comments and modified your request accordingly, you can re-submit your
-    request for approval.
+    has been <b>submitted for approval</b> by TI operators. We will notify you again when a TI operator has
+    approved your request.
   </p>
 
   <p>

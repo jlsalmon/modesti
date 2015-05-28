@@ -47,11 +47,11 @@ public class LdapSynchroniser {
     LOG.debug("synchronising users and groups with LDAP server");
     Set<String> groupIds = new HashSet<>();
 
-    groupIds.addAll(env.getRequiredProperty("modesti.groups.creators", List.class));
-    groupIds.addAll(env.getRequiredProperty("modesti.groups.approvers", List.class));
-    groupIds.addAll(env.getRequiredProperty("modesti.groups.testers", List.class));
-    groupIds.addAll(env.getRequiredProperty("modesti.groups.addressers", List.class));
-    groupIds.addAll(env.getRequiredProperty("modesti.groups.cablers", List.class));
+    groupIds.addAll(env.getRequiredProperty("modesti.role.creators", List.class));
+    groupIds.addAll(env.getRequiredProperty("modesti.role.approvers", List.class));
+    groupIds.addAll(env.getRequiredProperty("modesti.role.cablers", List.class));
+    groupIds.addAll(env.getRequiredProperty("modesti.role.administrators", List.class));
+
 
     for (String groupId : groupIds) {
       if (identityService.createGroupQuery().groupId(groupId).singleResult() == null) {
