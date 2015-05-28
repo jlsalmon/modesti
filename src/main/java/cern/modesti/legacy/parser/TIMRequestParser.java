@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cern.modesti.model.Site;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -77,6 +78,12 @@ public class TIMRequestParser extends RequestParser {
     properties.put("subsystem", subsystem);
 
     // Special case: composite Location object
+    // TODO
+
+    // Special case: composite Site object
+    Site site = new Site();
+    site.setName((String) properties.get("site"));
+    properties.put("site", site);
 
     point.setProperties(properties);
     return point;
