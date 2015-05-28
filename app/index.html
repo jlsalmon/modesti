@@ -41,7 +41,7 @@
   <!--</div>-->
 
 
-  <div class="wrapper" ng-controller="LayoutController as ctrl">
+  <div ng-controller="LayoutController as ctrl">
 
     <header class="main-header">
       <a ui-sref="requests" class="logo"> modesti </a>
@@ -262,20 +262,19 @@
 
     <!-- =============================================== -->
 
-    <div class="content-wrapper">
-      <div ui-view></div>
-    </div>
-    <!-- /.content-wrapper -->
 
-    <footer class="main-footer">
-      <div class="pull-right hidden-xs">Version 0.1</div>
+    <div ui-view></div>
+
+
+<!--     <footer class="main-footer">
+      <div class="pull-right hidden-xs">modesti v0.1</div>
       &copy;
       <script>
         document.write(new Date().getFullYear());
       </script>
       <a href="http://cern.ch">CERN</a>
 
-    </footer>
+    </footer> -->
   </div>
   <!-- ./wrapper -->
 

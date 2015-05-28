@@ -30,12 +30,12 @@ function RequestController($http, request, children, schema, tasks) {
     contextMenu: true,
     stretchH: 'all',
     columnSorting: true,
-    fixedColumnsLeft: 1,
     comments: true,
     minSpareRows: 10,
     search: true,
     manualColumnResize: true,
-    afterInit: afterInit
+    afterInit: afterInit,
+    afterChange: afterChange
   };
 
   self.columns = [];
@@ -114,7 +114,7 @@ function RequestController($http, request, children, schema, tasks) {
             });
 
             process(items);
-          })
+          });
         }
       }
 
@@ -136,7 +136,7 @@ function RequestController($http, request, children, schema, tasks) {
             });
 
             process(items);
-          })
+          });
         }
       }
 
@@ -145,15 +145,34 @@ function RequestController($http, request, children, schema, tasks) {
   }
 
   /**
-   *
+   * AAAAAARRRGGGHHHHHHHHH
+   * 
+   * 16 is a magic number
    */
   function calculateTableHeight() {
+    //Get window height and the wrapper height
+    var neg = $('.main-header').outerHeight() + $('.main-footer').outerHeight();
+    var window_height = $(window).height();
+
+    //Set the height of the content based on the the height of the document.
+    $(".content-wrapper").css('height', window_height - neg);
+
     var table = $('#table-wrapper');
     var footer = $('.main-footer');
-    var offset;
-
-    offset = table.offset();
-    var availableHeight = $(window).outerHeight() - offset.top - (footer.outerHeight() * 2);
+    var offset = table.offset();
+    
+    console.log('.content-wrapper:' + $('.content-wrapper').height());
+    var availableHeight = $(".content-wrapper").height() - $('#request-header').outerHeight(true) - $('.toolbar-wrapper').outerHeight(true) - $('.nav-tabs').outerHeight(true) - 16;
+    
+    console.log('window.height:' + $(window).height());
+    console.log('offset.top:' + offset.top);
+    console.log('.main-header:' + $('.main-header').outerHeight());
+    console.log('#request-header:' + $('#request-header').outerHeight());
+    console.log('.toolbar-wrapper:' + $('.toolbar-wrapper').outerHeight());
+    console.log('.nav-tabs:' + $('.nav-tabs').outerHeight());
+    console.log('footer.height:' + footer.outerHeight());
+    console.log('neg:' + neg);
+    console.log('calculated height:' + availableHeight);
 
     table.height(availableHeight + 'px');
   }
@@ -175,9 +194,14 @@ function RequestController($http, request, children, schema, tasks) {
    *
    */
   function afterInit() {
+    console.log('afterInit()');
     self.hot = this;
 
     calculateTableHeight();
+  }
+  
+  function afterChange() {
+    console.log('afterChange()');
   }
 
 }

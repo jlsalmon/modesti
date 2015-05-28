@@ -131,6 +131,8 @@
 
 </style>
 
+<div class="content-wrapper">
+
 <!-- Content Header (Page header) -->
 <section id="request-header" class="content-header">
 <!--   <h1>
@@ -138,18 +140,13 @@
     requests <span class="text-muted">/</span> {{ctrl.request.requestId}} <small>{{ctrl.request.description}}</small>
   </h1> -->
 
-  <div class="request-icon">
-  <h1>
-    <i class="fa fa-list-ol fa-fw text-muted" style="vertical-align: middle;"></i>
-    </h1>
-  </div>
-  <div class="request-title">
-    <h1>
-      requests <span class="text-muted">/</span> {{::ctrl.request.requestId}} <small>{{::ctrl.request.description}}</small>
+  <div class="request-title" style="display: inline-block">
+    <h1 class="pull-left">
+      <i class="fa fa-list-ol fa-fw text-muted" style="vertical-align: middle;"></i>
+      requests <span class="text-muted">/</span> {{::ctrl.request.requestId}}
     </h1>
 
-    <div class="request-details">
-      <span class="label request-status" ng-class="'{{::ctrl.request.status}}'">{{::ctrl.request.status.replace('_', ' ')}}</span>
+    <div class="request-details pull-right">
       <!-- <span class="text-muted">
         {{ctrl.request.type | uppercase}}
       </span> -->
@@ -169,7 +166,11 @@
         <i class="fa fa-fw fa-user"></i>
         {{::ctrl.request.creator.username}}
       </span>
+      <span class="label request-status" style="margin-left: 10px !important;" ng-class="'{{::ctrl.request.status}}'">{{::ctrl.request.status.replace('_', ' ')}}</span>
     </div>
+  </div>
+  <div>
+    <h1 style="margin: 0;margin-left: 10px;"><small>{{::ctrl.request.description}}</small></h1>
   </div>
 
   <div id="request-main-nav">
@@ -194,177 +195,166 @@
 <!-- Main content -->
 <section class="content">
 
-  <div class="row">
-    <div class="col-lg-12">
-
-      <!-- Request editing page -->
-      <div ng-show="ctrl.currentActiveTab == 0">
+  <!-- Request editing page -->
+  <div ng-show="ctrl.currentActiveTab == 0">
 
 
-        <!-- Alerts are shown here -->
-        <alert ng-repeat="alert in alerts"
-               type="{{alert.type}}"
-               close="alert.close()">
-          {{alert.message}}
-        </alert>
+    <!-- Alerts are shown here -->
+    <alert ng-repeat="alert in alerts"
+           type="{{alert.type}}"
+           close="alert.close()">
+      {{alert.message}}
+    </alert>
 
 
-        <!-- If this is a parent request, list its children -->
-        <div class="details" ng-if="ctrl.children.length > 0">
-          children:
-          <div ng-repeat="child in ctrl.children">
-            <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a> {{::child.status}}
-          </div>
-        </div>
-
-
-        <!-- If this is a child request, reference its parent -->
-        <div class="details" ng-if="ctrl.request.parentRequestId">
-          parent: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
-        </div>
-
-
-
-        <div class="toolbar-wrapper">
-
-            <!-- Button to save the request -->
-            <button class="btn btn-default" ng-click="ctrl.save()"  tooltip-append-to-body="true" tooltip="Save request">
-              <i class="fa fa-fw fa-save saving-state"></i>
-
-              <!-- Saving state indicators -->
-              <span ng-show="$root.saving == 'started'">
-                <i class="fa fa-fw fa-spin fa-cog saving-state"></i>
-              </span>
-              <span ng-show="$root.saving == 'success'">
-                <i class="fa fa-fw fa-check saving-state text-success"></i>
-              </span>
-              <span ng-show="$root.saving == 'error'">
-                <i class="fa fa-fw fa-exclamation-triangle saving-state text-danger"></i>
-              </span>
-            </button>
-
-            <!-- Button to reset column sorting -->
-            <button class="btn btn-default" ng-click="ctrl.resetSorting()" tooltip-append-to-body="true" tooltip="Reset sorting">
-              <span class="glyphicon glyphicon-erase"></span>
-            </button>
-
-            <!-- Undo/redo buttons -->
-            <div class="btn-group">
-              <button class="btn btn-default" tooltip-append-to-body="true" tooltip="Undo">
-                <i class="fa fa-fw fa-undo"></i>
-              </button>
-              <button class="btn btn-default" tooltip-append-to-body="true" tooltip="Redo">
-                <i class="fa fa-fw fa-repeat"></i>
-              </button>
-            </div>
-
-            <!-- Show appropriate extra controls based on the request status -->
-            <span ng-switch="ctrl.request.status">
-              <span ng-switch-when="IN_PROGRESS">
-                <creation-controls></creation-controls>
-              </span>
-              <span ng-switch-when="FOR_CORRECTION">
-                <creation-controls></creation-controls>
-              </span>
-              <span ng-switch-when="FOR_APPROVAL">
-                <approval-controls></approval-controls>
-              </span>
-              <span ng-switch-when="FOR_ADDRESSING">
-                <addressing-controls></addressing-controls>
-              </span>
-              <span ng-switch-when="FOR_CABLING">
-                <cabling-controls></cabling-controls>
-              </span>
-              <span ng-switch-when="FOR_TESTING">
-                <testing-controls></testing-controls>
-              </span>
-            </span>
-
-            <!-- Search form -->
-            <form class="navbar-form navbar-right sidebar-form" style="margin-top: 0;">
-              <div class="form-group input-group">
-                <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search...">
-                <span class="input-group-btn">
-                  <button type="submit" name="search" id="search-btn" class="btn btn-flat navbar-btn" ng-click="ctrl.search(q)">
-                    <i class="fa fa-search"></i>
-                  </button>
-                </span>
-              </div>
-            </form>
-
-        </div>
-        <div class="clearfix"></div>
-
-
-        <div class="nav-tabs">
-          <!-- Create a new tab for each category -->
-          <tabset class="category-headings">
-            <!-- Categories are only shown if they are enabled for the current workflow state -->
-            <tab ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status track by category.name"
-                 heading="{{::category.name}}"
-                 select="ctrl.activateCategory(category)"
-                 class="category-heading"></tab>
-
-            <!-- Button to dynamically add a new tab category -->
-            <li dropdown ng-show="::ctrl.request.status == 'IN_PROGRESS'">
-              <a dropdown-toggle class="new-tab dropdown-toggle" href="">
-                <i class="fa fa-plus-square-o"></i>
-              </a>
-              <ul class="new-tab-menu dropdown-menu" role="menu">
-                <li ng-repeat="tab in ctrl.availableCategories">
-                  <a ng-click="ctrl.addNewCategory(tab)">{{::tab}}</a>
-                </li>
-                <li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">
-                  No categories available
-                </li>
-              </ul>
-            </li>
-          </tabset>
-        </div>
-
-
-
-
-        <div id="table-wrapper" class="table-wrapper" style="height: 600px; overflow: hidden">
-          <hot-table id="table" settings="ctrl.settings"
-                     datarows="ctrl.request.points"
-                     columns="ctrl.columns">
-          </hot-table>
-        </div>
-
-
-
-
-
-        <!--
-          This is the main table directive.
-        -->
-        <!--<modesti-table request="ctrl.request" schema="ctrl.schema" tasks="ctrl.tasks">-->
-
-
-        <!--</modesti-table>-->
-
-
-
-
-      </div>
-
-      <!-- Request error report page -->
-      <div ng-show="ctrl.currentActiveTab == 1">
-        <div ng-include src="'components/request/error-report.html'"></div>
-      </div>
-
-      <!-- Request activity page -->
-      <div ng-show="ctrl.currentActiveTab == 2">
-        <div ng-include src="'components/request/activity.html'"></div>
-      </div>
-
-      <!-- Request comments page -->
-      <div ng-show="ctrl.currentActiveTab == 3">
-        <div ng-include src="'components/request/comments.html'"></div>
+    <!-- If this is a parent request, list its children -->
+    <div class="details" ng-if="ctrl.children.length > 0">
+      children:
+      <div ng-repeat="child in ctrl.children">
+        <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a> {{::child.status}}
       </div>
     </div>
+
+
+    <!-- If this is a child request, reference its parent -->
+    <div class="details" ng-if="ctrl.request.parentRequestId">
+      parent: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
+    </div>
+
+
+
+    <div class="toolbar-wrapper" style="height:34px;">
+
+        <!-- Button to save the request -->
+        <button class="btn btn-default" ng-click="ctrl.save()"  tooltip-append-to-body="true" tooltip="Save request">
+          <i class="fa fa-fw fa-save saving-state"></i>
+
+          <!-- Saving state indicators -->
+          <span ng-show="$root.saving == 'started'">
+            <i class="fa fa-fw fa-spin fa-cog saving-state"></i>
+          </span>
+          <span ng-show="$root.saving == 'success'">
+            <i class="fa fa-fw fa-check saving-state text-success"></i>
+          </span>
+          <span ng-show="$root.saving == 'error'">
+            <i class="fa fa-fw fa-exclamation-triangle saving-state text-danger"></i>
+          </span>
+        </button>
+
+        <!-- Button to reset column sorting -->
+        <button class="btn btn-default" ng-click="ctrl.resetSorting()" tooltip-append-to-body="true" tooltip="Reset sorting">
+          <span class="glyphicon glyphicon-erase"></span>
+        </button>
+
+        <!-- Undo/redo buttons -->
+        <div class="btn-group">
+          <button class="btn btn-default" tooltip-append-to-body="true" tooltip="Undo">
+            <i class="fa fa-fw fa-undo"></i>
+          </button>
+          <button class="btn btn-default" tooltip-append-to-body="true" tooltip="Redo">
+            <i class="fa fa-fw fa-repeat"></i>
+          </button>
+        </div>
+
+        <!-- Show appropriate extra controls based on the request status -->
+        <span ng-switch="ctrl.request.status">
+          <span ng-switch-when="IN_PROGRESS">
+            <creation-controls></creation-controls>
+          </span>
+          <span ng-switch-when="FOR_CORRECTION">
+            <creation-controls></creation-controls>
+          </span>
+          <span ng-switch-when="FOR_APPROVAL">
+            <approval-controls></approval-controls>
+          </span>
+          <span ng-switch-when="FOR_ADDRESSING">
+            <addressing-controls></addressing-controls>
+          </span>
+          <span ng-switch-when="FOR_CABLING">
+            <cabling-controls></cabling-controls>
+          </span>
+          <span ng-switch-when="FOR_TESTING">
+            <testing-controls></testing-controls>
+          </span>
+        </span>
+
+        <!-- Search form -->
+        <form class="navbar-form navbar-right sidebar-form" style="margin-top: 0;">
+          <div class="form-group input-group">
+            <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search...">
+            <span class="input-group-btn">
+              <button type="submit" name="search" id="search-btn" class="btn btn-flat navbar-btn" ng-click="ctrl.search(q)">
+                <i class="fa fa-search"></i>
+              </button>
+            </span>
+          </div>
+        </form>
+
+    </div>
+    <div class="clearfix"></div>
+
+
+    <div class="nav-tabs" style="height:28px">
+      <!-- Create a new tab for each category -->
+      <tabset class="category-headings">
+        <!-- Categories are only shown if they are enabled for the current workflow state -->
+        <tab ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status track by category.name"
+             heading="{{::category.name}}"
+             select="ctrl.activateCategory(category)"
+             class="category-heading"></tab>
+
+        <!-- Button to dynamically add a new tab category -->
+        <li dropdown ng-show="::ctrl.request.status == 'IN_PROGRESS'">
+          <a dropdown-toggle class="new-tab dropdown-toggle" href="">
+            <i class="fa fa-plus-square-o"></i>
+          </a>
+          <ul class="new-tab-menu dropdown-menu" role="menu">
+            <li ng-repeat="tab in ctrl.availableCategories">
+              <a ng-click="ctrl.addNewCategory(tab)">{{::tab}}</a>
+            </li>
+            <li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">
+              No categories available
+            </li>
+          </ul>
+        </li>
+      </tabset>
+    </div>
+
+
+
+    <div id="table-wrapper" class="table-wrapper" style="height: 600px; overflow: hidden">
+      <hot-table id="table" settings="ctrl.settings"
+                 datarows="ctrl.request.points"
+                 columns="ctrl.columns">
+      </hot-table>
+    </div>
+
+
   </div>
+
+  <!-- Request error report page -->
+  <div ng-show="ctrl.currentActiveTab == 1">
+    <div ng-include src="'components/request/error-report.html'"></div>
+  </div>
+
+  <!-- Request activity page -->
+  <div ng-show="ctrl.currentActiveTab == 2">
+    <div ng-include src="'components/request/activity.html'"></div>
+  </div>
+
+  <!-- Request comments page -->
+  <div ng-show="ctrl.currentActiveTab == 3">
+    <div ng-include src="'components/request/comments.html'"></div>
+  </div>
+
 
 </section>
 <!-- /.content -->
+
+</div>
+<!-- /.content-wrapper -->
+    
+<footer class="main-footer">
+  <div class="pull-right hidden-xs">modesti v0.1</div>
+  <div>&nbsp;</div>
+</footer>

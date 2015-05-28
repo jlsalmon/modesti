@@ -139,7 +139,7 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
   function canValidate() {
     var task = self.tasks['validate'];
     // TODO reimplement this
-    return false; //task && self.tableForm.$valid;
+    return task; //task && self.tableForm.$valid;
   }
 
   /**
