@@ -16,14 +16,14 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     templateUrl : 'components/request/requests.html',
     controller : 'UserRequestsController as ctrl'
 
-  }).state('requests/new', {
+  }).state('new', {
     url : '/requests/new',
-    templateUrl : 'components/request/new-request.html',
+    templateUrl : 'components/request/request.new.html',
     controller : 'NewRequestController as ctrl'
 
-  }).state('requests/upload', {
+  }).state('upload', {
     url : '/requests/upload',
-    templateUrl : 'components/request/upload/upload.html',
+    templateUrl : 'components/request/request.upload.html',
     controller : 'UploadController as ctrl'
 
   }).state('request', {
@@ -49,10 +49,20 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
       }
     }
 
-  }).state('about', {
-    url : '/about',
-    templateUrl : 'components/about/about.html',
-    controller : 'AboutController as ctrl'
+  }).state('request.errors', {
+    url : '/requests/:id/errors',
+    templateUrl : 'components/request/request.errors.html',
+    controller : 'RequestErrorsController as ctrl'
+
+  }).state('request.activity', {
+    url : '/requests/:id/activity',
+    templateUrl : 'components/request/request.activity.html',
+    controller : 'RequestActivityController as ctrl'
+
+  }).state('request.comments', {
+    url : '/requests/:id/comments',
+    templateUrl : 'components/request/request.comments.html',
+    controller : 'RequestCommentsController as ctrl'
 
   }).state('search', {
     url : '/search/:q',

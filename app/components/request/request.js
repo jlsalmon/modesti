@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($http, request, children, schema, tasks, RequestService) {
+function RequestController($http, $timeout, request, children, schema, tasks, RequestService) {
   var self = this;
 
   self.request = request;
@@ -74,8 +74,11 @@ function RequestController($http, request, children, schema, tasks, RequestServi
     // Retrieve the list of available extra categories
     getAvailableExtraCategories();
 
-    // Activate the first category
-    activateCategory(self.schema.categories[0]);
+    $timeout(function() {
+      // Activate the first category
+      activateCategory(self.schema.categories[0]);
+    })
+
   }
 
   /**

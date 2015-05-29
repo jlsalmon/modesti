@@ -58,15 +58,15 @@
 
             <!-- Include the separate parts of the form -->
             <div ng-if="ctrl.request.type == 'CREATE'">
-              <div ng-include src="'components/request/create.html'"></div>
+              <div ng-include src="'components/request/request.new.create.html'"></div>
             </div>
 
             <div ng-if="ctrl.request.type == 'UPDATE'">
-              <div ng-include src="'components/request/update.html'"></div>
+              <div ng-include src="'components/request/request.new.update.html'"></div>
             </div>
 
             <div ng-if="ctrl.request.type == 'DELETE'">
-              <div ng-include src="'components/request/delete.html'"></div>
+              <div ng-include src="'components/request/request.new.delete.html'"></div>
             </div>
 
 
