@@ -30,6 +30,16 @@
   .request-header .request-id i {
     vertical-align: middle;
   }
+  
+  .request-header .request-id .request-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 400px;
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 5px;
+  }
 
   .request-header .request-detail-item {
     padding: 10px;
@@ -87,7 +97,8 @@
       <div class="pull-left">
         <h4 class="request-id">
           <i class="fa fa-list-ol fa-fw text-muted"></i>
-          requests <span class="text-muted">/</span> {{::ctrl.request.requestId}}
+          requests <span class="text-muted">/</span> {{::ctrl.request.requestId}} 
+          <small class="request-description">{{::ctrl.request.description}}</small>
         </h4>
       </div>
 
