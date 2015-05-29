@@ -23,28 +23,25 @@
 <!-- endbuild -->
 <!-- build:css(.tmp) styles/main.css -->
 <link rel="stylesheet" href="styles/AdminLTE.css">
-<link rel="stylesheet" href="styles/skins/_all-skins.css">
+<link rel="stylesheet" href="styles/skins/skin-blue-light.css">
 <link rel="stylesheet" href="styles/main.css">
 <!-- endbuild -->
 </head>
 
-<body ng-app="modesti" class="skin-blue sidebar-collapse">
+<body ng-app="modesti" class="skin-blue-light sidebar-collapse">
 
   <!--[if lt IE 10]>
+  <div class="col-lg-12">
+    <div class="alert alert-info" style="margin-top: 20px; z-index: 1000;">
+      <p>You are using an <strong>unsupported</strong> browser. Some parts of this site will not work properly.
+         Please <a class="alert-link" href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    </div>
+    <div class="clearfix"></div>
+  </div>
   <![endif]-->
-  <!--<div class="col-lg-12">-->
-    <!--<div class="alert alert-info" style="margin-top: 20px; z-index: 1000;">-->
-      <!--<p>You are using an <strong>unsupported</strong> browser. Some parts of this site will not work properly.-->
-         <!--Please <a class="alert-link" href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>-->
-    <!--</div>-->
-    <!--<div class="clearfix"></div>-->
-  <!--</div>-->
 
-
-  <div ng-controller="LayoutController as ctrl">
-
-    <header class="main-header">
-      <a ui-sref="requests" class="logo"> modesti </a>
+    <header class="main-header" ng-controller="LayoutController as ctrl">
+      <a ui-sref="requests" class="logo"> modesti <small style="font-size: 50%">v0.1</small></a>
       <!-- Header Navbar: style can be found in header.less -->
       <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
@@ -77,16 +74,16 @@
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
 
-          <form class="navbar-form navbar-left sidebar-form" role="search">
-            <div class="form-group input-group">
-              <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search...">
-              <span class="input-group-btn">
-                <button type='submit' name='search' id='search-btn' class="btn btn-flat navbar-btn" ng-click="ctrl.search(q)">
-                  <i class="fa fa-search"></i>
-                </button>
-              </span>
-            </div>
-          </form>
+          <!--<form class="navbar-form navbar-left sidebar-form" role="search">-->
+            <!--<div class="form-group input-group">-->
+              <!--<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search...">-->
+              <!--<span class="input-group-btn">-->
+                <!--<button type='submit' name='search' id='search-btn' class="btn btn-flat navbar-btn" ng-click="ctrl.search(q)">-->
+                  <!--<i class="fa fa-search"></i>-->
+                <!--</button>-->
+              <!--</span>-->
+            <!--</div>-->
+          <!--</form>-->
 
             <!-- Messages: style can be found in dropdown.less-->
 <!--             <li class="dropdown messages-menu">
@@ -209,61 +206,61 @@
 
     <!-- =============================================== -->
 
-    <!-- Left side column. contains the sidebar -->
-    <aside class="main-sidebar">
-      <!-- sidebar: style can be found in sidebar.less -->
-      <section class="sidebar">
-        <!-- Sidebar user panel -->
-        <!--         <div class="user-panel">
-          <div class="pull-left image">
-            <img src="images/no-avatar.png" class="img-circle" alt="User Image" />
-          </div>
-          <div class="pull-left info">
-            <p>Guest</p>
+    <!--&lt;!&ndash; Left side column. contains the sidebar &ndash;&gt;-->
+    <!--<aside class="main-sidebar">-->
+      <!--&lt;!&ndash; sidebar: style can be found in sidebar.less &ndash;&gt;-->
+      <!--<section class="sidebar">-->
+        <!--&lt;!&ndash; Sidebar user panel &ndash;&gt;-->
+        <!--&lt;!&ndash;         <div class="user-panel">-->
+          <!--<div class="pull-left image">-->
+            <!--<img src="images/no-avatar.png" class="img-circle" alt="User Image" />-->
+          <!--</div>-->
+          <!--<div class="pull-left info">-->
+            <!--<p>Guest</p>-->
 
-                        <a href="#">
-              <i class="fa fa-circle text-success"></i>
-              Online
-            </a>
-          </div>
-        </div> -->
-        <!-- search form -->
-        <form class="sidebar-form">
-          <div class="input-group">
-            <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search..." />
-            <span class="input-group-btn">
-              <button type='submit' name='search' id='search-btn' class="btn btn-flat" ng-click="ctrl.search(q)">
-                <i class="fa fa-search"></i>
-              </button>
-            </span>
-          </div>
-        </form>
-        <!-- /.search form -->
-        <!-- sidebar menu: : style can be found in sidebar.less -->
-        <ul class="sidebar-menu">
-          <!-- <li class="header">MAIN NAVIGATION</li> -->
-          <li ng-class="{ active : ctrl.isActivePage('/new')}">
-            <a ui-sref="new">
-              <i class="fa fa-plus"></i>
-              <span>New Request</span>
-            </a>
-          </li>
+                        <!--<a href="#">-->
+              <!--<i class="fa fa-circle text-success"></i>-->
+              <!--Online-->
+            <!--</a>-->
+          <!--</div>-->
+        <!--</div> &ndash;&gt;-->
+        <!--&lt;!&ndash; search form &ndash;&gt;-->
+        <!--<form class="sidebar-form">-->
+          <!--<div class="input-group">-->
+            <!--<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search..." />-->
+            <!--<span class="input-group-btn">-->
+              <!--<button type='submit' name='search' id='search-btn' class="btn btn-flat" ng-click="ctrl.search(q)">-->
+                <!--<i class="fa fa-search"></i>-->
+              <!--</button>-->
+            <!--</span>-->
+          <!--</div>-->
+        <!--</form>-->
+        <!--&lt;!&ndash; /.search form &ndash;&gt;-->
+        <!--&lt;!&ndash; sidebar menu: : style can be found in sidebar.less &ndash;&gt;-->
+        <!--<ul class="sidebar-menu">-->
+          <!--&lt;!&ndash; <li class="header">MAIN NAVIGATION</li> &ndash;&gt;-->
+          <!--<li ng-class="{ active : ctrl.isActivePage('/new')}">-->
+            <!--<a ui-sref="new">-->
+              <!--<i class="fa fa-plus"></i>-->
+              <!--<span>New Request</span>-->
+            <!--</a>-->
+          <!--</li>-->
 
-          <li ng-class="{ active : ctrl.isActivePage('/requests')}">
-            <a ui-sref="requests">
-              <i class="fa fa-list"></i>
-              <span>Requests</span>
-            </a>
-          </li>
-        </ul>
-      </section>
-      <!-- /.sidebar -->
-    </aside>
+          <!--<li ng-class="{ active : ctrl.isActivePage('/requests')}">-->
+            <!--<a ui-sref="requests">-->
+              <!--<i class="fa fa-list"></i>-->
+              <!--<span>Requests</span>-->
+            <!--</a>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</section>-->
+      <!--&lt;!&ndash; /.sidebar &ndash;&gt;-->
+    <!--</aside>-->
 
     <!-- =============================================== -->
 
 
-    <div ui-view></div>
+    <div class="view-wrapper" ui-view></div>
 
 
 <!--     <footer class="main-footer">
@@ -275,7 +272,7 @@
       <a href="http://cern.ch">CERN</a>
 
     </footer> -->
-  </div>
+
   <!-- ./wrapper -->
 
   <!-- build:js(.) scripts/vendor.js -->
@@ -318,7 +315,7 @@
   <script src="app.js"></script>
   <script src="app.config.js"></script>
   <script src="app.routes.js"></script>
-  <script src="components/layout/AdminLTE.js"></script>
+  <!--<script src="components/layout/AdminLTE.js"></script>-->
   <script src="components/layout/layout.js"></script>
   <script src="components/login/login.js"></script>
   <script src="components/errors/interceptor.js"></script>

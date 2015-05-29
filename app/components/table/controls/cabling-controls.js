@@ -10,6 +10,9 @@ angular.module('modesti').controller('CablingControlsController', CablingControl
 function CablingControlsController($state, RequestService, TaskService) {
   var self = this;
 
+  self.request = {};
+  self.tasks = {};
+
   self.submitting = undefined;
 
   self.init = init;
@@ -18,15 +21,16 @@ function CablingControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function init(parent) {
-    self.parent = parent;
+  function init(request, tasks) {
+    self.request = request;
+    self.tasks = tasks;
   }
 
   /**
    *
    */
   function submit() {
-    var task = self.parent.tasks['cable'];
+    var task = self.tasks['cable'];
     if (!task) {
       console.log('error cabling request: no task');
       return;

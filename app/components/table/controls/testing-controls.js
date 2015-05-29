@@ -10,6 +10,9 @@ angular.module('modesti').controller('TestingControlsController', TestingControl
 function TestingControlsController($state, RequestService, TaskService) {
   var self = this;
 
+  self.request = {};
+  self.tasks = {};
+
   self.submitting = undefined;
   self.tested = true;
 
@@ -19,15 +22,16 @@ function TestingControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function init(parent) {
-    self.parent = parent;
+  function init(request, tasks) {
+    self.request = request;
+    self.tasks = tasks;
   }
 
   /**
    *
    */
   function submit() {
-    var task = self.parent.tasks['test'];
+    var task = self.tasks['test'];
     if (!task) {
       console.log('error testibg request: no task');
       return;

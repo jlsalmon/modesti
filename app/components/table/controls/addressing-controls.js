@@ -10,6 +10,9 @@ angular.module('modesti').controller('AddressingControlsController', AddressingC
 function AddressingControlsController($state, RequestService, TaskService) {
   var self = this;
 
+  self.request = {};
+  self.tasks = {};
+
   self.submitting = undefined;
   self.addressed = true;
 
@@ -19,7 +22,9 @@ function AddressingControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function init() {
+  function init(request, tasks) {
+    self.request = request;
+    self.tasks = tasks;
   }
 
   /**

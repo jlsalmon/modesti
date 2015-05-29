@@ -1,51 +1,26 @@
-<!--<div class="btn-group">-->
-  <!--&lt;!&ndash; Button to add a new row &ndash;&gt;-->
-  <!--<button class="btn btn-default"-->
-          <!--ng-click="ctrl.addRow()"-->
-          <!--tooltip-append-to-body="true"-->
-          <!--tooltip="Add row">-->
-      <!--<i class="fa fa-fw fa-plus"></i>-->
-  <!--</button>-->
-
-  <!--&lt;!&ndash; Button to duplicate selected rows &ndash;&gt;-->
-  <!--<button class="btn btn-default"-->
-          <!--ng-click="ctrl.duplicateSelectedRows()"-->
-          <!--tooltip-append-to-body="true"-->
-          <!--tooltip="Duplicate selected rows"-->
-          <!--ng-disabled="!ctrl.parent.checkboxes.dirty">-->
-      <!--<i class="fa fa-fw fa-copy"></i>-->
-  <!--</button>-->
-
-  <!--&lt;!&ndash; Button to delete selected rows &ndash;&gt;-->
-  <!--<button class="btn btn-default"-->
-          <!--ng-click="ctrl.deleteSelectedRows()"-->
-          <!--tooltip-append-to-body="true"-->
-          <!--tooltip="Delete selected rows"-->
-          <!--ng-disabled="!ctrl.checkboxes.dirty">-->
-      <!--<i class="fa fa-fw fa-trash"></i>-->
-  <!--</button>-->
-<!--</div>-->
+<style>
+creation-controls .btn-group {
+  padding-top: 7px;
+}
+</style>
 
 <div class="btn-group">
-  <div class="btn-group">
 
-    <!--Button to validate the request-->
-    <button class="btn"
-            ng-class="ctrl.tasks['submit'] ? 'btn-success' : ' btn-primary'"
-            ng-click="ctrl.validate()"
-            ng-disabled="!ctrl.canValidate()"
-            tooltip-append-to-body="true"
-            tooltip="Validate request">
+  <!--Button to validate the request-->
+  <button class="btn"
+          ng-class="ctrl.tasks['submit'] ? 'btn-success' : ' btn-primary'"
+          ng-click="ctrl.validate()"
+          ng-disabled="!ctrl.canValidate()"
+          tooltip-append-to-body="true"
+          tooltip="Validate request">
 
-      <!--Show icon based on the loading state-->
-      <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
-      <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
-      <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
-      <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
-      Validate
-    </button>
-  </div>
-
+    <!--Show icon based on the loading state-->
+    <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
+    <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
+    <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
+    <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
+    Validate
+  </button>
 
 
   <!-- Button to submit the request -->

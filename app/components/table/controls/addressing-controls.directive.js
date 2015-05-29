@@ -11,11 +11,10 @@ function addressingControls() {
   var directive = {
     templateUrl : 'components/table/controls/addressing-controls.html',
     restrict : 'AE',
-    require : ['addressingControls'],
     controller : 'AddressingControlsController as ctrl',
 
     link : function(scope, element, attrs, controller) {
-      controller.init();
+      controller.init(scope.$parent.ctrl.request, scope.$parent.ctrl.tasks);
     }
   };
 

@@ -12,9 +12,6 @@ function creationControls() {
     templateUrl : 'components/table/controls/creation-controls.html',
     restrict : 'AE',
     controller : 'CreationControlsController as ctrl',
-    //scope: {
-    //  parent: '='
-    //},
 
     link : function(scope, element, attrs, controller) {
       controller.init(scope.$parent.ctrl.request, scope.$parent.ctrl.tasks);

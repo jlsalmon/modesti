@@ -10,6 +10,9 @@ angular.module('modesti').controller('ApprovalControlsController', ApprovalContr
 function ApprovalControlsController($state, RequestService, TaskService) {
   var self = this;
 
+  self.request = {};
+  self.tasks = {};
+
   self.submitting = undefined;
   self.approved = true;
 
@@ -19,15 +22,16 @@ function ApprovalControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function init(parent) {
-    self.parent = parent;
+  function init(request, tasks) {
+    self.request = request;
+    self.tasks = tasks;
   }
 
   /**
    *
    */
   function submit() {
-    var task = self.parent.tasks['approve'];
+    var task = self.tasks['approve'];
     if (!task) {
       console.log('error approving request: no task');
       return;
