@@ -119,7 +119,7 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
     for (var i = 0; i < self.activeCategory.fields.length; i++) {
-      let field = self.activeCategory.fields[i];
+      var field = self.activeCategory.fields[i];
 
       var column = {
         data: 'properties.' + field.id,
