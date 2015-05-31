@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($http, $timeout, request, children, schema, tasks, RequestService) {
+function RequestController($http, $timeout, request, children, schema, tasks, RequestService, ColumnService) {
   var self = this;
 
   self.request = request;
@@ -59,6 +59,7 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
   self.addNewCategory = addNewCategory;
   self.getAvailableExtraCategories = getAvailableExtraCategories;
   self.save = save;
+  self.search = search;
   self.resetSorting = resetSorting;
   self.afterInit = afterInit;
 
@@ -114,74 +115,16 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
     console.log(category);
     self.activeCategory = category;
 
+    // Remove existing columns
     self.columns.length = 0;
 
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
     for (var i = 0; i < self.activeCategory.fields.length; i++) {
       var field = self.activeCategory.fields[i];
-
-      var column = {
-        data: 'properties.' + field.id,
-        title: field.name
-      };
-
-      if (field.type == 'typeahead') {
-        column.type = 'autocomplete';
-        column.strict = true;
-        column.allowInvalid = true;
-
-        if (field.model) {
-          column.data = 'properties.' + field.id + '.' + field.model;
-        }
-
-        column.source = function(query, process) {
-
-          if (field.minLength && query.length < field.minLength) {
-            return;
-          }
-
-          var params = {};
-          for (var i in field.params) {
-            params[field.params[i]] = query;
-          }
-
-          // TODO refactor this into a service
-          $http.get(field.url, {params : params}).then(function(response) {
-            if (!response.data.hasOwnProperty('_embedded')) {
-              return [];
-            }
-
-            var items = response.data._embedded[field.returnPropertyName].map(function(item) {
-              return item[field.model];
-            });
-
-            process(items);
-          });
-        }
-      }
-
-      if (field.type == 'select') {
-        column.type = 'dropdown';
-        column.strict = true;
-        column.allowInvalid = true;
-
-        column.source = function(query, process) {
-
-          // TODO refactor this into a service
-          $http.get(field.options).then(function(response) {
-            if (!response.data.hasOwnProperty('_embedded')) {
-              return [];
-            }
-
-            var items = response.data._embedded[field.returnPropertyName].map(function(item) {
-              return item[field.model];
-            });
-
-            process(items);
-          });
-        }
-      }
+      
+      // Build the right type of column based on the schema
+      var column = ColumnService.getColumn(field);
 
       self.columns.push(column);
     }
@@ -243,6 +186,12 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
       function(error) {
         console.log('error fetching schema: ' + error);
       });
+  }
+  
+  function search(query) {
+    
+    var result = self.hot.search.query(query);
+    //self.hot.loadData(result);
   }
 
   /**

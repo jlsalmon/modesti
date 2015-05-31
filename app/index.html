@@ -74,16 +74,16 @@
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
 
-          <!--<form class="navbar-form navbar-left sidebar-form" role="search">-->
-            <!--<div class="form-group input-group">-->
-              <!--<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search...">-->
-              <!--<span class="input-group-btn">-->
-                <!--<button type='submit' name='search' id='search-btn' class="btn btn-flat navbar-btn" ng-click="ctrl.search(q)">-->
-                  <!--<i class="fa fa-search"></i>-->
-                <!--</button>-->
-              <!--</span>-->
-            <!--</div>-->
-          <!--</form>-->
+          <form class="navbar-form navbar-left sidebar-form" role="search">
+            <div class="form-group input-group">
+              <input type="text" name="q" ng-model="q" class="form-control input-sm" placeholder="Search...">
+              <span class="input-group-btn">
+                <button type='submit' name='search' id='search-btn' class="btn btn-sm btn-flat navbar-btn" ng-click="ctrl.search(q)">
+                  <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+          </form>
 
             <!-- Messages: style can be found in dropdown.less-->
 <!--             <li class="dropdown messages-menu">
@@ -346,6 +346,7 @@
   <script src="components/services/schema-service.js"></script>
   <script src="components/services/task-service.js"></script>
   <script src="components/services/alert-service.js"></script>
+  <script src="components/services/column-service.js"></script>
   <!-- endbuild -->
 
 </body>
