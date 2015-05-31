@@ -62,6 +62,73 @@
     width: 200px;
   }
 
+  .toolbar .search-form {
+    padding: 0px;
+  }
+  
+  .toolbar .search-form {
+    margin-right: 3px;
+    border-radius: 3px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: 1px solid #dbdbdb;
+  }
+  
+  .toolbar .search-form button#search-btn {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  
+  .toolbar .search-form input[type="text"], .toolbar .search-form .btn
+    {
+    box-shadow: none;
+    background-color: #fafafa;
+    border: 1px solid #fafafa !important;
+  }
+  
+  .toolbar .search-form input[type="text"] {
+    color: #666;
+    -webkit-border-top-left-radius: 2px !important;
+    -webkit-border-top-right-radius: 0 !important;
+    -webkit-border-bottom-right-radius: 0 !important;
+    -webkit-border-bottom-left-radius: 2px !important;
+    -moz-border-radius-topleft: 2px !important;
+    -moz-border-radius-topright: 0 !important;
+    -moz-border-radius-bottomright: 0 !important;
+    -moz-border-radius-bottomleft: 2px !important;
+    border-top-left-radius: 2px !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 2px !important;
+  }
+  
+  .toolbar .search-form input[type="text"]:focus, .toolbar .search-form input[type="text"]:focus+.input-group-btn .btn
+    {
+    background-color: #fff;
+    color: #666;
+  }
+  
+  .toolbar .search-form input[type="text"]:focus+.input-group-btn .btn
+    {
+    border-left-color: #fff !important;
+  }
+  
+  .toolbar .search-form .btn {
+    color: #999;
+    -webkit-border-top-left-radius: 0 !important;
+    -webkit-border-top-right-radius: 2px !important;
+    -webkit-border-bottom-right-radius: 2px !important;
+    -webkit-border-bottom-left-radius: 0 !important;
+    -moz-border-radius-topleft: 0 !important;
+    -moz-border-radius-topright: 2px !important;
+    -moz-border-radius-bottomright: 2px !important;
+    -moz-border-radius-bottomleft: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 2px !important;
+    border-bottom-right-radius: 2px !important;
+    border-bottom-left-radius: 0 !important;
+  }
   .table {
     margin-bottom: 0px;
   }
@@ -238,11 +305,11 @@
       </div>
 
       <!-- Search form -->
-      <form class="form-inline pull-right toolbar-item">
+      <form class="search-form toolbar-item form-inline pull-right">
         <div class="form-group input-group">
-          <input type="text" name="q" ng-model="q" class="form-control input-sm" placeholder="Search...">
+          <input type="text" name="query" ng-model="query" class="form-control input-sm" placeholder="This request...">
           <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-sm btn-flat" ng-click="ctrl.search(q)">
+            <button type="submit" name="search" id="search-btn" class="btn btn-sm btn-flat" ng-click="ctrl.search(query)">
               <i class="fa fa-search"></i>
             </button>
           </span>
