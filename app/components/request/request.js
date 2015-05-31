@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($http, $timeout, request, children, schema, tasks, RequestService, ColumnService) {
+function RequestController($http, $timeout, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
   var self = this;
 
   self.request = request;
@@ -131,6 +131,8 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
 
     // Checkbox column
     //self.columns.push({data: 'approved', type: 'checkbox'})
+    
+    AlertService.add('danger', 'This is a warning')
   }
 
   /**

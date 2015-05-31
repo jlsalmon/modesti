@@ -154,6 +154,18 @@
     padding: 15px;
     padding-left: 0;
   }
+  
+  .alert-success {
+    color: #3C763D !important;
+    background-color: #DFF0D8 !important;
+    border-color: #D6E9C6 !important;
+  }
+
+  .alert-danger {
+    color: #A94442 !important;
+    background-color: #F2DEDE !important;
+    border-color: #EBCCD1 !important;
+  }
 </style>
 
 
@@ -201,13 +213,25 @@
   </div>
 </section>
 
+<style>
+.alert-messages {
+position: fixed;
+  top: 60px;
+  right: 0;
+  z-index: 7000;
+  width: 350px;
+  margin-right: 10px;
+}
+</style>
 
 <!-- Alerts are shown here -->
-<alert ng-repeat="alert in alerts"
-       type="{{alert.type}}"
-       close="alert.close()">
-  {{alert.message}}
-</alert>
+<div class="alert-messages">
+  <alert ng-repeat="alert in alerts"
+         type="{{alert.type}}"
+         close="alert.close()">
+    {{alert.message}}
+  </alert>
+</div>
 
 
 <!-- If this is a parent request, list its children -->
@@ -467,19 +491,7 @@
     <!--border-color: #ADADAD;-->
     <!--box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);-->
   <!--}-->
-
-  <!--.alert-success {-->
-    <!--color: #3C763D !important;-->
-    <!--background-color: #DFF0D8 !important;-->
-    <!--border-color: #D6E9C6 !important;-->
-  <!--}-->
-
-  <!--.alert-danger {-->
-    <!--color: #A94442 !important;-->
-    <!--background-color: #F2DEDE !important;-->
-    <!--border-color: #EBCCD1 !important;-->
-  <!--}-->
-<!--</style>-->
+</style>
 
 <!--<style>-->
 
