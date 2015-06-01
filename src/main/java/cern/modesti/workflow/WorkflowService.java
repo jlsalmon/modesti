@@ -353,10 +353,27 @@ public class WorkflowService {
 
     List<Point> childPoints = new ArrayList<>();
 
-    // Give the split points to the child. Rebase the point IDs back to starting from 1.
+    // Give the split points to the child.
+    for (Long pointId : pointIdsToSplit) {
+      Point pointToSplit = null;
+
+      for (Point point : parent.getPoints()) {
+        if (point.getId().equals(pointId)) {
+          pointToSplit = point;
+          break;
+        }
+      }
+
+      if (pointToSplit != null) {
+        childPoints.add(pointToSplit);
+        parent.getPoints().remove(pointToSplit);
+        pointToSplit.setId((long) (childPoints.indexOf(pointToSplit) + 1));
+      }
+    }
+
+    // Rebase the point IDs back to starting from 1.
     for (Point point : parent.getPoints()) {
       if (pointIdsToSplit.contains(point.getId())) {
-        childPoints.add(point);
         point.setId((long) (childPoints.indexOf(point) + 1));
       }
     }
@@ -368,7 +385,7 @@ public class WorkflowService {
     Request child = createChildRequest(childRequestId, parent, childPoints);
 
     // Set back reference to the child
-    parent.setChildRequestIds(Collections.singletonList(childRequestId));
+    parent.getChildRequestIds().add(childRequestId);
 
     // Store the requests
     requestRepository.save(parent);
@@ -392,6 +409,7 @@ public class WorkflowService {
     Request request = new Request(parent);
     request.setRequestId(requestId);
     request.setParentRequestId(parent.getRequestId());
+    request.setChildRequestIds(new ArrayList<>());
     request.setPoints(points);
     return request;
   }

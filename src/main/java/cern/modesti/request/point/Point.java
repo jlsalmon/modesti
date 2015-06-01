@@ -41,6 +41,8 @@ public class Point implements Serializable {
    */
   private boolean dirty = true;
 
+  private boolean selected = false;
+
   private boolean valid = false;
 
   private boolean approved = false;
@@ -92,6 +94,14 @@ public class Point implements Serializable {
    */
   public void setDirty(boolean dirty) {
     this.dirty = dirty;
+  }
+
+  public boolean isSelected() {
+    return selected;
+  }
+
+  public void setSelected(boolean selected) {
+    this.selected = selected;
   }
 
   public boolean isValid() {
