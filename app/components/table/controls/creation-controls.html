@@ -1,8 +1,3 @@
-<style>
-creation-controls .btn-group {
-  padding-top: 7px;
-}
-</style>
 
 <div class="btn-group">
 
@@ -44,7 +39,8 @@ creation-controls .btn-group {
 <button class="btn btn-danger"
         ng-if="ctrl.request.status == 'FOR_CORRECTION'"
         ng-click="ctrl.split()"
-        ng-disabled="!ctrl.checkboxes.dirty"
+        ng-disabled="!ctrl.canSplit()"
+        tooltip-append-to-body="true"
         tooltip="Split selected rows">
 
   <!--Show icon based on the loading state-->

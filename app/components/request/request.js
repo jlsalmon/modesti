@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($http, $timeout, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
+function RequestController($scope, $http, $timeout, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
   var self = this;
 
   self.request = request;
@@ -25,20 +25,21 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
    * Settings object for handsontable
    */
   self.settings = {
-    colHeaders: true,
+    //colHeaders: true,
     rowHeaders: true,
     contextMenu: true,
     stretchH: 'all',
-    columnSorting: true,
+    // To enable sorting, a mapping needs to be done from the source array to the displayed array
+    columnSorting: false,
+    currentRowClassName: 'currentRow',
     comments: true,
-    minSpareRows: 10,
+    minSpareRows: 0,
     search: true,
     pasteMode: 'shift_down',
     outsideClickDeselects: false,
     manualColumnResize: true,
     manualRowMove: true,
-    afterInit: afterInit,
-    afterChange: afterChange
+    afterInit: afterInit
   };
 
   /**
@@ -75,18 +76,10 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
     // Retrieve the list of available extra categories
     getAvailableExtraCategories();
 
-    $timeout(function() {
+    $timeout(function () {
       // Activate the first category
       activateCategory(self.schema.categories[0]);
-    })
-
-  }
-
-  /**
-   *
-   */
-  function afterChange() {
-    console.log('afterChange()');
+    });
   }
 
   /**
@@ -118,21 +111,35 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
     // Remove existing columns
     self.columns.length = 0;
 
+    var colHeaders = [];
+
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
     for (var i = 0; i < self.activeCategory.fields.length; i++) {
       var field = self.activeCategory.fields[i];
-      
+
       // Build the right type of column based on the schema
       var column = ColumnService.getColumn(field);
 
       self.columns.push(column);
+      colHeaders.push(field.name);
     }
 
-    // Checkbox column
-    //self.columns.push({data: 'approved', type: 'checkbox'})
-    
-    AlertService.add('danger', 'This is a warning')
+    //// Checkbox column
+    self.columns.push({data: 'selected', type: 'checkbox'});
+    //colHeaders.push('<input type="checkbox" class="select-all"  style="margin: 0" ' + (isChecked() ? 'checked="checked"' : '') + '>');
+    colHeaders.push('&nbsp;');
+
+    // Set the column headers
+    self.hot.updateSettings({ colHeaders: colHeaders });
+  }
+
+  function checkboxRenderer(instance, td, row, col, prop, value, cellProperties) {
+    var html = '<input type="checkbox">';
+    td.innerHTML = html;
+    td.style.textAlign = 'center';
+    td.style.width = '10px';
+    return td;
   }
 
   /**
@@ -140,13 +147,15 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
    */
   function getAvailableExtraCategories() {
     // TODO refactor this into a service
-    $http.get('http://localhost:8080/domains/' + self.request.domain).then(function(response) {
+    $http.get('http://localhost:8080/domains/' + self.request.domain).then(function (response) {
       self.availableCategories = [];
 
-      response.data.datasources.map(function(category) {
+      response.data.datasources.map(function (category) {
 
         // Only add the category if we aren't already using it
-        if ($.grep(self.schema.categories, function(item){ return item.name == category.name; }).length == 0) {
+        if ($.grep(self.schema.categories, function (item) {
+            return item.name == category.name;
+          }).length == 0) {
           self.availableCategories.push(category.name);
         }
       });
@@ -162,14 +171,14 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
 
     var schemaLink = self.request._links.schema.href;
 
-    if(schemaLink.indexOf('?categories') > -1) {
+    if (schemaLink.indexOf('?categories') > -1) {
       schemaLink += ',' + categoryName;
     } else {
       schemaLink += '?categories=' + categoryName;
     }
 
     // TODO refactor this into a service
-    $http.get(schemaLink).then(function(response) {
+    $http.get(schemaLink).then(function (response) {
         console.log('fetched new schema: ' + response.data.name);
         self.schema = response.data;
         self.request._links.schema.href = schemaLink;
@@ -185,13 +194,17 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
         }
       },
 
-      function(error) {
+      function (error) {
         console.log('error fetching schema: ' + error);
       });
   }
-  
+
+  /**
+   *
+   * @param query
+   */
   function search(query) {
-    
+
     var result = self.hot.search.query(query);
     //self.hot.loadData(result);
   }
@@ -202,17 +215,17 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
   function save() {
     var request = self.request;
 
-    RequestService.saveRequest(request).then(function() {
+    RequestService.saveRequest(request).then(function () {
       console.log('saved request');
-    }, function(error) {
+    }, function (error) {
       console.log('error saving request');
     });
+
+    AlertService.add('danger', 'This is a warning')
   }
 
   /**
-   * AAAAAARRRGGGHHHHHHHHH
    *
-   * 16 is a magic number
    */
   function calculateTableHeight() {
     var mainHeader = $('.main-header');
@@ -230,7 +243,8 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
     console.log('table:' + table.outerHeight());
     console.log('footer:' + footer.outerHeight());
 
-    var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight() - footer.outerHeight();
+    var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight()
+      - footer.outerHeight();
 
     table.height(height + 'px');
   }

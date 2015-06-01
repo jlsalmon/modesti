@@ -7,131 +7,44 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($scope, $http, $state, RequestService, TaskService) {
+function CreationControlsController($http, $state, RequestService, TaskService) {
   var self = this;
 
+  self.parent = {};
   self.request = {};
   self.tasks = {};
+  self.hot = {};
+
+  self.selection = [];
 
   self.validating = undefined;
   self.submitting = undefined;
   self.splitting = undefined;
 
   self.init = init;
-  //self.addRow = addRow;
-  //self.duplicateSelectedRows = duplicateSelectedRows;
-  //self.deleteSelectedRows = deleteSelectedRows;
   self.validate = validate;
   self.submit = submit;
+  self.split = split;
   self.canValidate = canValidate;
   self.canSubmit = canSubmit;
-  self.split = split;
+  self.canSplit = canSplit;
 
   /**
    *
    */
-  function init(request, tasks) {
+  function init(request, tasks, parent) {
     self.request = request;
     self.tasks = tasks;
+    self.hot = parent.hot;
+    self.parent = parent;
+
+    // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
+    // state and the user makes a modification
+    parent.hot.addHook('afterChange', afterChange);
+
+    // Register the afterSelectionEnd() hook so that we can get the selected rows for splitting
+    parent.hot.addHook('afterSelectionEnd', afterSelectionEnd);
   }
-
-  ///**
-  // *
-  // */
-  //function addRow() {
-  //  console.log('adding new row');
-  //  var request = self.request;
-  //
-  //  var newRow = {
-  //    'name': '',
-  //    'description': '',
-  //    'domain': request.domain
-  //  };
-  //
-  //  request.points.push(newRow);
-  //
-  //  RequestService.saveRequest(request).then(function (request) {
-  //    console.log('added new row');
-  //    self.request = request;
-  //
-  //    // Reload the table data
-  //    self.tableParams.reload();
-  //
-  //    // Move to the last page
-  //    var pages = self.tableParams.settings().$scope.pages;
-  //    for (var i in pages) {
-  //      if (pages[i].type == "last") {
-  //        self.tableParams.page(pages[i].number);
-  //      }
-  //    }
-  //
-  //  }, function (error) {
-  //    console.log('error adding new row: ' + error);
-  //  });
-  //}
-
-  ///**
-  // *
-  // */
-  //function duplicateSelectedRows() {
-  //  var points = self.request.points;
-  //  console.log('duplicating rows (before: ' + points.length + ' points)');
-  //
-  //  // Find the selected points and duplicate them
-  //  for (var i in points) {
-  //    var point = points[i];
-  //
-  //    if (self.checkboxes.items[point.id]) {
-  //      var duplicate = angular.copy(point);
-  //      // Remove the ID of the duplicated point, as the backend will generate
-  //      // us a new one when we save
-  //      delete duplicate.id;
-  //      // Add the new duplicate to the original points
-  //      points.push(duplicate);
-  //    }
-  //  }
-  //
-  //  // Save the changes
-  //  RequestService.saveRequest(self.request).then(function (savedRequest) {
-  //    console.log('saved request after row duplication');
-  //    console.log('duplicated rows (after: ' + savedRequest.points.length + ' points)');
-  //
-  //    // Reload the table data
-  //    self.tableParams.reload();
-  //
-  //  }, function (error) {
-  //    console.log('error saving request after row duplication: ' + error);
-  //  });
-  //}
-  //
-  ///**
-  // *
-  // */
-  //function deleteSelectedRows() {
-  //  var points = self.request.points;
-  //  console.log('deleting rows (before: ' + points.length + ' points)');
-  //
-  //  // Find the selected points and mark them as deleted
-  //  for (var i in points) {
-  //    var point = points[i];
-  //
-  //    if (self.checkboxes.items[point.id]) {
-  //      point.deleted = true;
-  //    }
-  //  }
-  //
-  //  // Save the changes
-  //  RequestService.saveRequest(self.request).then(function (savedRequest) {
-  //    console.log('saved request after row deletion');
-  //    console.log('deleted rows (after: ' + savedRequest.points.length + ' points)');
-  //
-  //    // Reload the table data
-  //    self.tableParams.reload();
-  //
-  //  }, function (error) {
-  //    console.log('error saving request after row deletion: ' + error);
-  //  });
-  //}
 
   /**
    *
@@ -140,6 +53,21 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
     var task = self.tasks['validate'];
     // TODO reimplement this
     return task; //task && self.tableForm.$valid;
+  }
+
+  /**
+   *
+   */
+  function canSubmit() {
+    return self.tasks['submit'];
+  }
+
+  /**
+   *
+   */
+  function canSplit() {
+    var selection = self.hot.getSelected();
+    return selection && selection.length > 0;
   }
 
   /**
@@ -186,13 +114,6 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
   /**
    *
    */
-  function canSubmit() {
-    return self.tasks['submit'];
-  }
-
-  /**
-   *
-   */
   function submit() {
     var task = self.tasks['submit'];
 
@@ -233,10 +154,26 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
 
     self.splitting = 'started';
 
+    var checkboxes = self.hot.getDataAtCol(self.parent.columns.length - 1);
+    var pointIds = [];
+
+    for (var i = 0, len = checkboxes.length; i < len; i++) {
+      if (checkboxes[i]) {
+        // Point IDs are 1-based
+        pointIds.push(i + 1);
+      }
+    }
+
+    if (!pointIds.length) {
+      return;
+    }
+
+    console.log('splitting points: ' + pointIds);
+
     var url = task.executionUrl;
     var variables = [{
       "name": "points",
-      "value": JSON.stringify([1, 2, 3]),
+      "value": JSON.stringify(pointIds),
       "type": "string"
     }];
 
@@ -265,35 +202,50 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
   }
 
   /**
-   * Watch the outer parent form for changes. If we are in the "submit" stage of the workflow and the form is modified,
+   *
+   * @param startRow
+   * @param startCol
+   * @param endRow
+   * @param endCol
+   */
+  function afterSelectionEnd(startRow, startCol, endRow, endCol) {
+    self.selection = [startRow, startCol, endRow, endCol];
+  }
+
+  /**
+   * Watch the outer table for changes. If we are in the "submit" stage of the workflow and the form is modified,
    * then it will need to be revalidated. This is done by sending the "requestModified" signal.
    */
-  $scope.$watch("ctrl.parent.tableForm.$dirty", function (dirty) {
-    var task = self.tasks['submit'];
+  function afterChange() {
+    // Save the request
+    RequestService.saveRequest(self.request).then(function() {
+      console.log('afterChange()');
+      var task = self.tasks['submit'];
 
-    if (task && dirty) {
-      console.log('form modified whilst in submit state: sending signal');
+      if (task) {
+        console.log('form modified whilst in submit state: sending signal');
 
-      var url = task.executionUrl;
-      var params = {
-        "action": "signalEventReceived",
-        "signalName": "requestModified",
-        "variables": []
-      };
+        var url = task.executionUrl;
+        var params = {
+          "action": "signalEventReceived",
+          "signalName": "requestModified",
+          "variables": []
+        };
 
-      // TODO refactor this into a service
-      $http.put(url, params).then(function () {
-          console.log('sent modification signal');
+        // TODO refactor this into a service
+        $http.put(url, params).then(function () {
+            console.log('sent modification signal');
 
-          // The "submit" task will have changed to "validate".
-          TaskService.queryTasksForRequest(self.request).then(function (tasks) {
-            self.tasks = tasks;
+            // The "submit" task will have changed to "validate".
+            TaskService.queryTasksForRequest(self.request).then(function (tasks) {
+              self.tasks = tasks;
+            });
+          },
+
+          function (error) {
+            console.log('error sending signal: ' + error);
           });
-        },
-
-        function (error) {
-          console.log('error sending signal: ' + error);
-        });
-    }
-  });
+      }
+    });
+  }
 }

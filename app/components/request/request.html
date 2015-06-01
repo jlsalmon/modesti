@@ -9,10 +9,7 @@
     margin-bottom: 50px;
   }
 
-  .view-wrapper {
-
-  }
-
+  /** Header styles */
   .request-header {
     height: 40px;
     border-bottom: 1px solid #CCC;
@@ -30,7 +27,7 @@
   .request-header .request-id i {
     vertical-align: middle;
   }
-  
+
   .request-header .request-id .request-description {
     white-space: nowrap;
     overflow: hidden;
@@ -47,10 +44,11 @@
     display: table-cell;
   }
 
+  /** Toolbar styles */
   .toolbar {
     height: 50px;
     padding: 10px;
-    border-bottom: 1px solid #CCC;
+    /*border-bottom: 1px solid #CCC;*/
     background-color: #F5F5F5;
   }
 
@@ -63,30 +61,30 @@
   }
 
   .toolbar .search-form {
-    padding: 0px;
+    padding: 0;
   }
-  
+
   .toolbar .search-form {
-    margin-right: 3px;
+    margin-right: 5px;
     border-radius: 3px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
     border: 1px solid #dbdbdb;
   }
-  
+
   .toolbar .search-form button#search-btn {
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
   }
-  
+
   .toolbar .search-form input[type="text"], .toolbar .search-form .btn
     {
     box-shadow: none;
     background-color: #fafafa;
     border: 1px solid #fafafa !important;
   }
-  
+
   .toolbar .search-form input[type="text"] {
     color: #666;
     -webkit-border-top-left-radius: 2px !important;
@@ -102,18 +100,18 @@
     border-bottom-right-radius: 0 !important;
     border-bottom-left-radius: 2px !important;
   }
-  
+
   .toolbar .search-form input[type="text"]:focus, .toolbar .search-form input[type="text"]:focus+.input-group-btn .btn
     {
     background-color: #fff;
     color: #666;
   }
-  
+
   .toolbar .search-form input[type="text"]:focus+.input-group-btn .btn
     {
     border-left-color: #fff !important;
   }
-  
+
   .toolbar .search-form .btn {
     color: #999;
     -webkit-border-top-left-radius: 0 !important;
@@ -129,8 +127,32 @@
     border-bottom-right-radius: 2px !important;
     border-bottom-left-radius: 0 !important;
   }
+
+  /** Table styles */
   .table {
-    margin-bottom: 0px;
+    margin-bottom: 0;
+  }
+
+  /*.table .ht_clone_left {*/
+    /*/!** Hide the duplicate header rows *!/*/
+    /*display: none;*/
+  /*}*/
+
+  .table .ht_master.handsontable {
+     /*padding-top: 1px;*/
+  }
+
+  .table input.htCheckboxRendererInput {
+    margin: 0;
+  }
+
+  /** Centre the last row (checkboxes */
+  .table td:last-child {
+    /*text-align: center;*/
+  }
+
+  .table .currentRow {
+    background-color: #F9F9FB !important;
   }
 
   /** Remove shadow from column headers */
@@ -140,6 +162,7 @@
     border-bottom: 1px solid #ccc;
   }
 
+  /** Footer styles */
   .footer {
     position: absolute;
     bottom: 0;
@@ -154,7 +177,21 @@
     padding: 15px;
     padding-left: 0;
   }
-  
+
+  .footer button.btn {
+    margin-top: 8px;
+  }
+
+  /** Alert styles */
+  .alert-messages {
+    position: fixed;
+    top: 60px;
+    right: 0;
+    z-index: 7000;
+    width: 350px;
+    margin-right: 10px;
+  }
+
   .alert-success {
     color: #3C763D !important;
     background-color: #DFF0D8 !important;
@@ -176,7 +213,7 @@
       <div class="pull-left">
         <h4 class="request-id">
           <i class="fa fa-list-ol fa-fw text-muted"></i>
-          requests <span class="text-muted">/</span> {{::ctrl.request.requestId}} 
+          requests <span class="text-muted">/</span> {{::ctrl.request.requestId}}
           <small class="request-description">{{::ctrl.request.description}}</small>
         </h4>
       </div>
@@ -213,17 +250,6 @@
   </div>
 </section>
 
-<style>
-.alert-messages {
-position: fixed;
-  top: 60px;
-  right: 0;
-  z-index: 7000;
-  width: 350px;
-  margin-right: 10px;
-}
-</style>
-
 <!-- Alerts are shown here -->
 <div class="alert-messages">
   <alert ng-repeat="alert in alerts"
@@ -231,21 +257,6 @@ position: fixed;
          close="alert.close()">
     {{alert.message}}
   </alert>
-</div>
-
-
-<!-- If this is a parent request, list its children -->
-<div class="details" ng-if="ctrl.children.length > 0">
-  children:
-  <div ng-repeat="child in ctrl.children">
-    <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a> {{::child.status}}
-  </div>
-</div>
-
-
-<!-- If this is a child request, reference its parent -->
-<div class="details" ng-if="ctrl.request.parentRequestId">
-  parent: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
 </div>
 
 
@@ -358,8 +369,22 @@ position: fixed;
   <div class="container-fluid">
 
     <div class="request-description pull-left">
-      <span>#{{ctrl.request.requestId}}: {{::ctrl.request.description}}</span>
+      <span>{{ctrl.request.points.length}} points &middot;</span>
+
+      <!-- If this is a child request, reference its parent -->
+      <span class="details" ng-if="ctrl.request.parentRequestId">
+        parent: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a> &middot;
+      </span>
+
+      <!-- If this is a parent request, list its children -->
+      <span class="details" ng-if="ctrl.children.length > 0">
+        children:
+        <span ng-repeat="child in ctrl.children">
+          <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
+        </span>
+      </span>
     </div>
+
 
     <!-- Show appropriate extra controls based on the request status -->
     <div class="pull-right">

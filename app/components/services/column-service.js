@@ -16,7 +16,7 @@ function ColumnService($http) {
   };
 
   /**
-   * 
+   *
    */
   function getColumn(field) {
     var column = {
@@ -31,12 +31,12 @@ function ColumnService($http) {
     if (field.type == 'select') {
       column = getDropdownColumn(column, field);
     }
-    
+
     return column;
   }
 
   /**
-   * 
+   *
    */
   function getDropdownColumn(column, field) {
     column.type = 'dropdown';
@@ -57,18 +57,18 @@ function ColumnService($http) {
 
         process(items);
       });
-    }
-    
+    };
+
     return column;
   }
 
   /**
-   * 
+   *
    */
   function getAutocompleteColumn(column, field) {
     column.type = 'autocomplete';
-    column.strict = true;
-    column.allowInvalid = true;
+    //column.strict = true;
+    //column.allowInvalid = true;
 
     if (field.model) {
       column.data = 'properties.' + field.id + '.' + field.model;
@@ -100,7 +100,7 @@ function ColumnService($http) {
         process(items);
       });
     }
-    
+
     return column;
   }
 

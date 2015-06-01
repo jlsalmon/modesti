@@ -42,20 +42,12 @@
   <div class="table-wrapper" style="height: 1000px; overflow: hidden">
     <hot-table id="table"
                settings="{colHeaders: colHeaders, contextMenu: ['row_above', 'row_below', 'remove_row'], afterChange: afterChange, stretchH: 'all' }"
-               rowHeaders="false"
-               minSpareRows="minSpareRows"
                search="true"
                datarows="db.items">
-      <hot-column data="id" title="'ID'"></hot-column>
       <hot-column data="name.first" title="'First Name'" type="grayedOut" readOnly></hot-column>
       <hot-column data="name.last" title="'Last Name'" type="grayedOut" readOnly></hot-column>
-      <hot-column data="address" title="'Address'"></hot-column>
-      <hot-column data="product.description" title="'Favorite food'" type="'autocomplete'">
-        <hot-autocomplete datarows="description in product.options"></hot-autocomplete>
-      </hot-column>
-      <hot-column data="price" title="'Price'" type="'numeric'" format="'$ 0,0.00'"></hot-column>
-      <hot-column data="isActive" title="'Is active'" type="'checkbox'" checkedTemplate="'Yes'"
-                  uncheckedTemplate="'No'"></hot-column>
+      <!--<hot-column data="isActive" title="'Is active'" type="'checkbox'" checkedTemplate="'Yes'"-->
+                  <!--uncheckedTemplate="'No'"></hot-column>-->
     </hot-table>
   </div>
 
