@@ -39,21 +39,21 @@ public class Point implements Serializable {
   /**
    * Flag to check if this point has been modified by the requestor.
    */
-  private boolean dirty = true;
+  private Boolean dirty = true;
 
-  private boolean selected = false;
+  private Boolean selected = false;
 
-  private boolean valid = false;
+  private Boolean valid;
 
-  private boolean approved = false;
+  private Boolean approved;
 
-  private boolean addressed = false;
+  private Boolean addressed;
 
-  private boolean cabled = false;
+  private Boolean cabled;
 
-  private boolean configured = false;
+  private Boolean configured;
 
-  private boolean tested = false;
+  private Boolean tested;
 
   /**
    *
@@ -85,70 +85,70 @@ public class Point implements Serializable {
   /**
    * @return the dirty state
    */
-  public boolean isDirty() {
+  public Boolean isDirty() {
     return dirty;
   }
 
   /**
    * @param dirty the dirty state to set
    */
-  public void setDirty(boolean dirty) {
+  public void setDirty(Boolean dirty) {
     this.dirty = dirty;
   }
 
-  public boolean isSelected() {
+  public Boolean isSelected() {
     return selected;
   }
 
-  public void setSelected(boolean selected) {
+  public void setSelected(Boolean selected) {
     this.selected = selected;
   }
 
-  public boolean isValid() {
+  public Boolean isValid() {
     return valid;
   }
 
-  public void setValid(boolean valid) {
+  public void setValid(Boolean valid) {
     this.valid = valid;
   }
 
-  public boolean isApproved() {
+  public Boolean isApproved() {
     return approved;
   }
 
-  public void setApproved(boolean approved) {
+  public void setApproved(Boolean approved) {
     this.approved = approved;
   }
 
-  public boolean isAddressed() {
+  public Boolean isAddressed() {
     return addressed;
   }
 
-  public void setAddressed(boolean addressed) {
+  public void setAddressed(Boolean addressed) {
     this.addressed = addressed;
   }
 
-  public boolean isCabled() {
+  public Boolean isCabled() {
     return cabled;
   }
 
-  public void setCabled(boolean cabled) {
+  public void setCabled(Boolean cabled) {
     this.cabled = cabled;
   }
 
-  public boolean isConfigured() {
+  public Boolean isConfigured() {
     return configured;
   }
 
-  public void setConfigured(boolean configured) {
+  public void setConfigured(Boolean configured) {
     this.configured = configured;
   }
 
-  public boolean isTested() {
+  public Boolean isTested() {
     return tested;
   }
 
-  public void setTested(boolean tested) {
+  public void setTested(Boolean tested) {
     this.tested = tested;
   }
 

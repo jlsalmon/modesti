@@ -100,7 +100,7 @@ public class WorkflowService {
       for (Point point : request.getPoints()) {
 
         // If there is a single dirty or unapproved point, approval is required
-        if (point.isDirty() || !point.isApproved()) {
+        if (point.isDirty() || point.isApproved() == null || !point.isApproved()) {
           approvalRequired = true;
           break;
         }
@@ -219,7 +219,7 @@ public class WorkflowService {
     for (Point point : request.getPoints()) {
 
       for (ApprovalResult.ApprovalResultItem item : approvalResult.getItems()) {
-        if (Objects.equals(item.getId(), point.getId())) {
+        if (Objects.equals(item.getPointId(), point.getId())) {
           point.setApproved(item.isApproved());
         }
       }
@@ -373,9 +373,9 @@ public class WorkflowService {
 
     // Rebase the point IDs back to starting from 1.
     for (Point point : parent.getPoints()) {
-      if (pointIdsToSplit.contains(point.getId())) {
-        point.setId((long) (childPoints.indexOf(point) + 1));
-      }
+      //if (pointIdsToSplit.contains(point.getId())) {
+        point.setId((long) (parent.getPoints().indexOf(point) + 1));
+      //}
     }
 
     // Generate a request ID for the new child

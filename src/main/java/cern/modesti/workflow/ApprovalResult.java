@@ -3,6 +3,8 @@
  */
 package cern.modesti.workflow;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.*;
 
 import javax.persistence.Id;
@@ -21,10 +23,10 @@ public class ApprovalResult {
   public ApprovalResult() {
   }
 
+  @JsonIgnoreProperties(ignoreUnknown = true)
   static class ApprovalResultItem {
 
-    @Id
-    private Long id;
+    private Long pointId;
 
     private boolean approved;
 
@@ -33,12 +35,12 @@ public class ApprovalResult {
     public ApprovalResultItem() {
     }
 
-    public Long getId() {
-      return id;
+    public Long getPointId() {
+      return pointId;
     }
 
-    public void setId(Long id) {
-      this.id = id;
+    public void setPointId(Long pointId) {
+      this.pointId = pointId;
     }
 
     public boolean isApproved() {
