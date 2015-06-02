@@ -26,12 +26,12 @@ function RequestController($scope, $http, $timeout, request, children, schema, t
    */
   self.settings = {
     //colHeaders: true,
-    rowHeaders: true,
+    //rowHeaders: true,
     contextMenu: true,
     stretchH: 'all',
     // To enable sorting, a mapping needs to be done from the source array to the displayed array
     columnSorting: false,
-    currentRowClassName: 'currentRow',
+    //currentRowClassName: 'currentRow',
     comments: true,
     minSpareRows: 0,
     search: true,
@@ -61,7 +61,9 @@ function RequestController($scope, $http, $timeout, request, children, schema, t
   self.getAvailableExtraCategories = getAvailableExtraCategories;
   self.save = save;
   self.search = search;
+  self.getSelectedPointIds = getSelectedPointIds;
   self.resetSorting = resetSorting;
+  self.dangerCellRenderer = dangerCellRenderer;
   self.afterInit = afterInit;
 
   /**
@@ -132,14 +134,18 @@ function RequestController($scope, $http, $timeout, request, children, schema, t
 
     // Set the column headers
     self.hot.updateSettings({ colHeaders: colHeaders });
-  }
 
-  function checkboxRenderer(instance, td, row, col, prop, value, cellProperties) {
-    var html = '<input type="checkbox">';
-    td.innerHTML = html;
-    td.style.textAlign = 'center';
-    td.style.width = '10px';
-    return td;
+    var rowHeaders = [], rowHeader, point;
+
+    for (var i = 0, len = self.request.points.length; i < len; i++) {
+      point = self.request.points[i];
+
+      rowHeader = point.id + ' <i class="fa fa-exclamation-circle text-danger"></i>';
+      rowHeaders.push(rowHeader);
+    }
+
+    // Set the row headers
+    self.hot.updateSettings({ rowHeaders: rowHeaders });
   }
 
   /**
@@ -212,6 +218,23 @@ function RequestController($scope, $http, $timeout, request, children, schema, t
   /**
    *
    */
+  function getSelectedPointIds() {
+    var checkboxes = self.hot.getDataAtCol(self.columns.length - 1);
+    var pointIds = [];
+
+    for (var i = 0, len = checkboxes.length; i < len; i++) {
+      if (checkboxes[i]) {
+        // Point IDs are 1-based
+        pointIds.push(i + 1);
+      }
+    }
+
+    return pointIds;
+  }
+
+  /**
+   *
+   */
   function save() {
     var request = self.request;
 
@@ -247,6 +270,31 @@ function RequestController($scope, $http, $timeout, request, children, schema, t
       - footer.outerHeight();
 
     table.height(height + 'px');
+  }
+
+  /**
+   *
+   * @param instance
+   * @param td
+   * @param row
+   * @param col
+   * @param prop
+   * @param value
+   * @param cellProperties
+   */
+  function dangerCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+    // Make sure to render the last column as a checkbox
+    if (prop == 'selected') {
+      Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
+    }
+
+    // All the other columns can be rendered as text boxes at this point
+    else {
+      Handsontable.renderers.TextRenderer.apply(this, arguments);
+    }
+
+    // Make the background red
+    td.style.background = '#F2DEDE';
   }
 
   /**

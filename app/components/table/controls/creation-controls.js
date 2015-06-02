@@ -40,10 +40,19 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
 
     // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
     // state and the user makes a modification
-    parent.hot.addHook('afterChange', afterChange);
+    self.hot.addHook('afterChange', afterChange);
 
-    // Register the afterSelectionEnd() hook so that we can get the selected rows for splitting
-    parent.hot.addHook('afterSelectionEnd', afterSelectionEnd);
+    // Update the table settings to paint the row backgrounds depending on if they have already been approved
+    // or rejected
+    if (self.request.approvalResult) {
+      self.hot.updateSettings({
+        cells: function (row, col, prop) {
+          if (self.request.approvalResult.items[row].approved == false) {
+            return {renderer: self.parent.dangerCellRenderer};
+          }
+        }
+      });
+    }
   }
 
   /**
@@ -66,8 +75,7 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
    *
    */
   function canSplit() {
-    var selection = self.hot.getSelected();
-    return selection && selection.length > 0;
+    return self.parent.getSelectedPointIds().length > 0;
   }
 
   /**
@@ -154,15 +162,7 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
 
     self.splitting = 'started';
 
-    var checkboxes = self.hot.getDataAtCol(self.parent.columns.length - 1);
-    var pointIds = [];
-
-    for (var i = 0, len = checkboxes.length; i < len; i++) {
-      if (checkboxes[i]) {
-        // Point IDs are 1-based
-        pointIds.push(i + 1);
-      }
-    }
+    var pointIds = self.parent.getSelectedPointIds();
 
     if (!pointIds.length) {
       return;
@@ -202,50 +202,77 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
   }
 
   /**
+   * Called after a change is made to the table (edit, paste, etc.)
    *
-   * @param startRow
-   * @param startCol
-   * @param endRow
-   * @param endCol
+   * @param changes a 2D array containing information about each of the edited cells [ [row, prop, oldVal, newVal], ... ]
+   * @param source one of the strings: "alter", "empty", "edit", "populateFromArray", "loadData", "autofill", "paste"
    */
-  function afterSelectionEnd(startRow, startCol, endRow, endCol) {
-    self.selection = [startRow, startCol, endRow, endCol];
+  function afterChange(changes, source) {
+    console.log('afterChange()');
+
+    // When the table is initially loaded, this callback is invoked with source == 'loadData'. In that case, we don't
+    // want to save the request or send the modification signal.
+    if (source == 'loadData') {
+      return;
+    }
+
+    // Loop over the changes and check if anything actually changed. Mark any changed points as dirty.
+    var change, index, property, oldValue, newValue, dirty = false;
+    for (var i = 0, len = changes.length; i < len; i++) {
+      change = changes[i];
+      index = change[0];
+      property = change[1];
+      oldValue = change[2];
+      newValue = change[3];
+
+      // Mark the point as dirty.
+      if (newValue != oldValue) {
+        dirty = true;
+        self.request.points[index].dirty = true;
+      }
+    }
+
+    // If nothing changed, there's nothing to do! Otherwise, save the request.
+    if (dirty) {
+      RequestService.saveRequest(self.request).then(function() {
+        // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
+        // revalidated. This is done by sending the "requestModified" signal.
+        if (self.tasks['submit']) {
+          sendModificationSignal();
+        }
+      });
+    }
   }
 
   /**
-   * Watch the outer table for changes. If we are in the "submit" stage of the workflow and the form is modified,
-   * then it will need to be revalidated. This is done by sending the "requestModified" signal.
+   * Sends the "requestModified" signal when in the "submit" stage of the workflow in order to force the request
+   * back to the "validate" stage.
    */
-  function afterChange() {
-    // Save the request
-    RequestService.saveRequest(self.request).then(function() {
-      console.log('afterChange()');
-      var task = self.tasks['submit'];
+  function sendModificationSignal() {
+    var task = self.tasks['submit'];
+    if (task) {
+      console.log('form modified whilst in submit state: sending signal');
 
-      if (task) {
-        console.log('form modified whilst in submit state: sending signal');
+      var url = task.executionUrl;
+      var params = {
+        "action": "signalEventReceived",
+        "signalName": "requestModified",
+        "variables": []
+      };
 
-        var url = task.executionUrl;
-        var params = {
-          "action": "signalEventReceived",
-          "signalName": "requestModified",
-          "variables": []
-        };
+      // TODO refactor this into a service
+      $http.put(url, params).then(function () {
+          console.log('sent modification signal');
 
-        // TODO refactor this into a service
-        $http.put(url, params).then(function () {
-            console.log('sent modification signal');
-
-            // The "submit" task will have changed to "validate".
-            TaskService.queryTasksForRequest(self.request).then(function (tasks) {
-              self.tasks = tasks;
-            });
-          },
-
-          function (error) {
-            console.log('error sending signal: ' + error);
+          // The "submit" task will have changed to "validate".
+          TaskService.queryTasksForRequest(self.request).then(function (tasks) {
+            self.tasks = tasks;
           });
-      }
-    });
+        },
+
+        function (error) {
+          console.log('error sending signal: ' + error);
+        });
+    }
   }
 }

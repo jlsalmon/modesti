@@ -66,6 +66,7 @@
 
   .toolbar .search-form {
     margin-right: 5px;
+    margin-left: 3px;
     border-radius: 3px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -156,11 +157,11 @@
   }
 
   /** Remove shadow from column headers */
-  .handsontable .handsontable:not(.ht_master) table {
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    border-bottom: 1px solid #ccc;
-  }
+  /*.handsontable .handsontable:not(.ht_master) table {*/
+    /*-webkit-box-shadow: none;*/
+    /*box-shadow: none;*/
+    /*border-bottom: 1px solid #ccc;*/
+  /*}*/
 
   /** Footer styles */
   .footer {
@@ -222,23 +223,23 @@
         <!-- <span class="text-muted">
         {{ctrl.request.type | uppercase}}
         </span> -->
-        <span class="request-detail-item text-muted">
+        <span class="request-detail-item text-muted" tooltip="System/Subsystem" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-sitemap"></i>
           {{::ctrl.request.subsystem.name}}
         </span>
-        <span class="request-detail-item text-muted">
+        <span class="request-detail-item text-muted" tooltip="Target Domain" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-crosshairs"></i>
           {{::ctrl.request.domain}}
         </span>
-        <span class="request-detail-item text-muted">
+        <span class="request-detail-item text-muted" tooltip="Categories" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-cogs"></i>
           {{ctrl.request.categories.join(', ')}}
         </span>
-        <span class="request-detail-item text-muted">
+        <span class="request-detail-item text-muted" tooltip="Creator" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-user"></i>
           {{::ctrl.request.creator.username}}
         </span>
-        <span class="request-detail-item">
+        <span class="request-detail-item"  tooltip="Status" tooltip-append-to-body="true" tooltip-placement="bottom">
           <span class="label request-status" ng-class="'{{::ctrl.request.status}}'">
             {{::ctrl.request.status.replace('_', ' ')}}
           </span>
@@ -339,17 +340,28 @@
         </button>
       </div>
 
-      <!-- Search form -->
-      <form class="search-form toolbar-item form-inline pull-right">
-        <div class="form-group input-group">
-          <input type="text" name="query" ng-model="query" class="form-control input-sm" placeholder="This request...">
-          <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-sm btn-flat" ng-click="ctrl.search(query)">
-              <i class="fa fa-search"></i>
-            </button>
-          </span>
-        </div>
-      </form>
+      <div class="pull-right">
+
+        <button class="btn btn-sm btn-default toolbar-item" tooltip-append-to-body="true" tooltip="Comments">
+          <i class="fa fa-fw fa-comments"></i>
+        </button>
+
+        <button class="btn btn-sm btn-default toolbar-item" tooltip-append-to-body="true" tooltip="Activity">
+          <i class="fa fa-fw fa-heartbeat"></i>
+        </button>
+
+        <!-- Search form -->
+        <form class="search-form toolbar-item form-inline pull-right">
+          <div class="form-group input-group">
+            <input type="text" name="query" ng-model="query" class="form-control input-sm" placeholder="This request...">
+            <span class="input-group-btn">
+              <button type="submit" name="search" id="search-btn" class="btn btn-sm btn-flat" ng-click="ctrl.search(query)">
+                <i class="fa fa-search"></i>
+              </button>
+            </span>
+          </div>
+        </form>
+      </div>
 
     </div>
   </div>
@@ -357,7 +369,7 @@
 
 
 
-<section class="table" style="overflow: hidden; height: 600px;">
+<section class="table" style="overflow: hidden; height: 600px;" ng-cloak>
   <hot-table id="table" settings="ctrl.settings"
              datarows="ctrl.request.points"
              columns="ctrl.columns">
@@ -369,7 +381,7 @@
   <div class="container-fluid">
 
     <div class="request-description pull-left">
-      <span>{{ctrl.request.points.length}} points &middot;</span>
+      <span>{{ctrl.request.points.length}} {{ctrl.request.points.length == 1 ? 'point' : 'points'}} &middot;</span>
 
       <!-- If this is a child request, reference its parent -->
       <span class="details" ng-if="ctrl.request.parentRequestId">

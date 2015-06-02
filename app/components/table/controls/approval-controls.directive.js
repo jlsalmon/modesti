@@ -14,7 +14,7 @@ function approvalControls() {
     controller : 'ApprovalControlsController as ctrl',
 
     link : function(scope, element, attrs, controller) {
-      controller.init(scope.$parent.ctrl.request, scope.$parent.ctrl.tasks);
+      controller.init(scope.$parent.ctrl.request, scope.$parent.ctrl.tasks, scope.$parent.ctrl);
     }
   };
 

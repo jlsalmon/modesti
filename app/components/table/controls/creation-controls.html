@@ -1,3 +1,17 @@
+<!-- Button to split the request -->
+<button class="btn btn-danger"
+        ng-if="ctrl.request.status == 'FOR_CORRECTION'"
+        ng-click="ctrl.split()"
+        ng-disabled="!ctrl.canSplit()"
+        tooltip-append-to-body="true"
+        tooltip="Split selected rows">
+
+  <!--Show icon based on the loading state-->
+  <i class="fa fa-fw fa-share-alt"            ng-show="ctrl.splitting == undefined"></i>
+  <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.splitting == 'started'"></i>
+  <i class="fa fa-fw fa-share-alt"            ng-show="ctrl.splitting == 'success'"></i>
+  <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.splitting == 'error'"></i>
+</button>
 
 <div class="btn-group">
 
@@ -34,18 +48,3 @@
   </button>
 
 </div>
-
-<!-- Button to split the request -->
-<button class="btn btn-danger"
-        ng-if="ctrl.request.status == 'FOR_CORRECTION'"
-        ng-click="ctrl.split()"
-        ng-disabled="!ctrl.canSplit()"
-        tooltip-append-to-body="true"
-        tooltip="Split selected rows">
-
-  <!--Show icon based on the loading state-->
-  <i class="fa fa-fw fa-share-alt"            ng-show="ctrl.splitting == undefined"></i>
-  <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.splitting == 'started'"></i>
-  <i class="fa fa-fw fa-share-alt"            ng-show="ctrl.splitting == 'success'"></i>
-  <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.splitting == 'error'"></i>
-</button>

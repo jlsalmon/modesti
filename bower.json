@@ -28,7 +28,7 @@
     "angu-fixed-header-table": "~1.2.0",
     "autofill-event": "~1.0.0",
     "ng-infinite-scroll": "~0.0.1",
-    "handsontable": "~0.14.1",
+    "handsontable": "0.15.0-beta3",
     "ngHandsontable": "~0.5.2"
   },
   "devDependencies": {

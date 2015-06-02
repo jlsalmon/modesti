@@ -23,7 +23,6 @@ var app = angular.module('modesti',
     'ui.unique',
     'restangular',
     'angularFileUpload',
-    'fsm',
     'http-auth-interceptor',
     'QuickList',
     'ngHandsontable'
