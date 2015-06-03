@@ -45,7 +45,7 @@ public class Point implements Serializable {
 
   private Boolean valid;
 
-  private Boolean approved;
+  private Approval approval;
 
   private Boolean addressed;
 
@@ -112,12 +112,12 @@ public class Point implements Serializable {
     this.valid = valid;
   }
 
-  public Boolean isApproved() {
-    return approved;
+  public Approval getApproval() {
+    return this.approval;
   }
 
-  public void setApproved(Boolean approved) {
-    this.approved = approved;
+  public void setApproval(Approval approval) {
+    this.approval = approval;
   }
 
   public Boolean isAddressed() {

@@ -104,7 +104,7 @@ public class Request implements Serializable {
   /**
    *
    */
-  private ApprovalResult approvalResult;
+  private Boolean approved;
 
   /**
    *
@@ -352,17 +352,17 @@ public class Request implements Serializable {
   }
 
   /**
-   * @return the approvalResult
+   * @return the approved
    */
-  public ApprovalResult getApprovalResult() {
-    return approvalResult;
+  public Boolean isApproved() {
+    return approved;
   }
 
   /**
    * @param approvalResult the approvalResult to set
    */
-  public void setApprovalResult(ApprovalResult approvalResult) {
-    this.approvalResult = approvalResult;
+  public void setApproved(Boolean approved) {
+    this.approved = approved;
   }
 
   /**

@@ -100,7 +100,7 @@ public class WorkflowService {
       for (Point point : request.getPoints()) {
 
         // If there is a single dirty or unapproved point, approval is required
-        if (point.isDirty() || point.isApproved() == null || !point.isApproved()) {
+        if (point.isDirty() || point.getApproval() == null || !point.getApproval().isApproved()) {
           approvalRequired = true;
           break;
         }
@@ -207,29 +207,38 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-    // We will have gotten a JSON serialised representation of an ApprovalResult from the user task.
-    String approvalResultString = execution.getVariable("approvalResult", String.class);
+//    // We will have gotten a JSON serialised representation of an ApprovalResult from the user task.
+//    String approvalResultString = execution.getVariable("approvalResult", String.class);
+//
+//    ApprovalResult approvalResult = new ObjectMapper().readValue(approvalResultString, ApprovalResult.class);
+//    List<Point> points = request.getPoints();
 
-    ApprovalResult approvalResult = new ObjectMapper().readValue(approvalResultString, ApprovalResult.class);
-    List<Point> points = request.getPoints();
 
-    request.setApprovalResult(approvalResult);
+//    // If any of the points are rejected, the whole request is rejected
+//    boolean approved = true;
+//    for (Point point : request.getPoints()) {
+//      if (!point.getApproval().isApproved()) {
+//        approved = false;
+//      }
+//    }
+//
+//    request.setApproved(approved);
 
-    // Mark all the points as approved or not
-    for (Point point : request.getPoints()) {
-
-      for (ApprovalResult.ApprovalResultItem item : approvalResult.getItems()) {
-        if (Objects.equals(item.getPointId(), point.getId())) {
-          point.setApproved(item.isApproved());
-        }
-      }
-    }
+//    // Mark all the points as approved or not
+//    for (Point point : request.getPoints()) {
+//
+//      for (ApprovalResult.ApprovalResultItem item : approvalResult.getItems()) {
+//        if (Objects.equals(item.getPointId(), point.getId())) {
+//          point.setApproved(item.isApproved());
+//        }
+//      }
+//    }
 
     // Send an email to the original requestor
     notificationService.sendNotification(request, NotificationType.APPROVAL_COMPLETED);
 
     // Set the variable for the next stage to evaluate
-    execution.setVariable("approved", approvalResult.isApproved());
+    execution.setVariable("approved", request.isApproved());
 
     // Store the request
     requestRepository.save(request);
