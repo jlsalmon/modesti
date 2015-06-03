@@ -359,7 +359,7 @@ public class Request implements Serializable {
   }
 
   /**
-   * @param approvalResult the approvalResult to set
+   * @param approved the approved to set
    */
   public void setApproved(Boolean approved) {
     this.approved = approved;
@@ -408,13 +408,16 @@ public class Request implements Serializable {
   }
 
   /**
-   * TODO: implement this properly
-   *
-   * @return true if this request contains alarms, false otherwise
+   * @return true if this request requires approval (i.e. contains alarms), false otherwise
    */
   public boolean requiresApproval() {
-    // Return a random result for now
-    return true; // new Random(System.currentTimeMillis()).nextBoolean();
+    for (Point point : points) {
+      if (point.isAlarm()) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**

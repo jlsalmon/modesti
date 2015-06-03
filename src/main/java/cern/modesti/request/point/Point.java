@@ -152,6 +152,12 @@ public class Point implements Serializable {
     this.tested = tested;
   }
 
+  public Boolean isAlarm() {
+    // An alarm must have a priority code, therefore if it has a priority code it is an alarm.
+    return properties.get("priorityCode") != null;
+
+  }
+
   /**
    * @return the properties
    */

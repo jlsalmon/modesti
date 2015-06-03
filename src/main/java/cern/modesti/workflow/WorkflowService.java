@@ -96,13 +96,14 @@ public class WorkflowService {
     if (request.requiresApproval()) {
       // Dirty check: if all the points are clean and have been approved already,
       // then we don't need to approve again.
-
       for (Point point : request.getPoints()) {
 
-        // If there is a single dirty or unapproved point, approval is required
-        if (point.isDirty() || point.getApproval() == null || !point.getApproval().isApproved()) {
-          approvalRequired = true;
-          break;
+        if (point.isAlarm()) {
+          // If there is a single dirty or unapproved point, approval is required
+          if (point.isDirty() || point.getApproval() == null || !point.getApproval().isApproved()) {
+            approvalRequired = true;
+            break;
+          }
         }
       }
     }
@@ -174,16 +175,23 @@ public class WorkflowService {
 
 
     // Randomly fail the validation
-    boolean failed = new Random(System.currentTimeMillis()).nextBoolean();
+    boolean failed = false; //new Random(System.currentTimeMillis()).nextBoolean();
 
     if (failed) {
       request.setValidationResult(new ValidationResult(true));
     } else {
       request.setValidationResult(new ValidationResult(false));
 
-      // Mark all points as clean
       for (Point point : request.getPoints()) {
-        point.setDirty(false);
+
+        if (point.getApproval() != null && point.getApproval().isApproved() && point.isDirty()) {
+          // If a point is dirty and has already been approved, it will need re-approval
+          point.setApproval(null);
+
+        } else {
+          // Mark point as clean
+          point.setDirty(false);
+        }
       }
     }
 
