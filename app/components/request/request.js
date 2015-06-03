@@ -21,13 +21,6 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
   self.hot = {};
 
   /**
-   * The data rows that will be given to the table
-   *
-   * @type {Array}
-   */
-  self.rows = getRows();
-
-  /**
    * Settings object for handsontable
    */
   self.settings = {
@@ -49,6 +42,13 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
     afterRender: afterRender
   };
 
+  /**
+   * The data rows that will be given to the table
+   *
+   * @type {Array}
+   */
+  self.rows = getRows();
+  
   /**
    * The columns that will be displayed for the currently active category. See getColumns().
    * @type {Array}
@@ -181,11 +181,13 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
       for (var i = 0, len = self.request.points.length; i < len; i++) {
         point = self.request.points[i];
 
-
         if (point.properties['priorityCode']) {
           rows.push(point);
         }
       }
+      
+      // Also set maxRows to prevent new rows being added
+      self.settings.maxRows = rows.length;
     }
 
     else {
@@ -366,9 +368,10 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
         if (self.request.status == 'FOR_APPROVAL') {
           if (point.approval && point.approval.approved == false) {
             return {renderer: dangerCellRenderer};
-          } else if (point.approval && point.approval.approved == true) {
-            return {renderer: successCellRenderer};
-          }
+          } 
+//          else if (point.approval && point.approval.approved == true) {
+//            return {renderer: successCellRenderer};
+//          }
         }
       }
     });
