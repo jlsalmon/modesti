@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $http, $timeout, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
+function RequestController($scope, $http, $timeout, $compile, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
   var self = this;
 
   self.request = request;
@@ -26,20 +26,21 @@ function RequestController($scope, $http, $timeout, request, children, schema, t
    */
   self.settings = {
     //colHeaders: true,
-    //rowHeaders: true,
+    rowHeaders: getRowHeaders,
     contextMenu: true,
     stretchH: 'all',
     // To enable sorting, a mapping needs to be done from the source array to the displayed array
     columnSorting: false,
     //currentRowClassName: 'currentRow',
-    comments: true,
+    //comments: true,
     minSpareRows: 0,
     search: true,
     pasteMode: 'shift_down',
     outsideClickDeselects: false,
     manualColumnResize: true,
-    manualRowMove: true,
-    afterInit: afterInit
+    //manualRowMove: true,
+    afterInit: afterInit,
+    afterRender: afterRender
   };
 
   /**
@@ -62,8 +63,9 @@ function RequestController($scope, $http, $timeout, request, children, schema, t
   self.save = save;
   self.search = search;
   self.getSelectedPointIds = getSelectedPointIds;
+  self.getRowHeaders = getRowHeaders;
   self.resetSorting = resetSorting;
-  self.dangerCellRenderer = dangerCellRenderer;
+  self.updateCells = updateCells;
   self.afterInit = afterInit;
 
   /**
@@ -134,18 +136,53 @@ function RequestController($scope, $http, $timeout, request, children, schema, t
 
     // Set the column headers
     self.hot.updateSettings({ colHeaders: colHeaders });
+  }
 
-    var rowHeaders = [], rowHeader, point;
+  /**
+   *
+   * @param row
+   * @returns {*}
+   */
+  function getRowHeaders(row) {
+    var point = self.request.points[row];
 
-    for (var i = 0, len = self.request.points.length; i < len; i++) {
-      point = self.request.points[i];
+    if (point.approval && point.approval.approved == false) {
+      var html =
+        '<i class="fa fa-exclamation-circle text-danger"\
+            data-container="body" \
+            data-toggle="popover" \
+            data-placement="right" \
+            data-content="' + 'Operator comment: ' + point.approval.message + '"> \
+         </i>';
 
-      rowHeader = point.id + ' <i class="fa fa-exclamation-circle text-danger"></i>';
-      rowHeaders.push(rowHeader);
+      return point.id + ' ' + html;
     }
 
-    // Set the row headers
-    self.hot.updateSettings({ rowHeaders: rowHeaders });
+    else {
+      return point.id;
+    }
+  }
+
+  /**
+   *
+   */
+  function afterRender() {
+    // Initialise the popovers in the row headers
+    $('[data-toggle="popover"]').popover({ trigger: "manual" , html: true, animation:false})
+      .on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(".popover").on("mouseleave", function () {
+          $(_this).popover('hide');
+        });
+      }).on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+          if (!$(".popover:hover").length) {
+            $(_this).popover("hide");
+          }
+        }, 300);
+      });
   }
 
   /**
@@ -270,6 +307,23 @@ function RequestController($scope, $http, $timeout, request, children, schema, t
       - footer.outerHeight();
 
     table.height(height + 'px');
+  }
+
+  /**
+   *
+   */
+  function updateCells() {
+    var point;
+
+    self.hot.updateSettings({
+      cells: function (row, col, prop) {
+        point = self.request.points[row];
+
+        if (point.approval && point.approval.approved == false) {
+          return {renderer: dangerCellRenderer};
+        }
+      }
+    });
   }
 
   /**

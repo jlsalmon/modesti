@@ -13,12 +13,11 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   self.request = {};
   self.tasks = {};
   self.parent = {};
-  self.approvalResult = {};
 
   self.submitting = undefined;
 
   self.init = init;
-  //self.approveSelectedPoints = approveSelectedPoints;
+  self.approveSelectedPoints = approveSelectedPoints;
   self.rejectSelectedPoints = rejectSelectedPoints;
   self.canSubmit = canSubmit;
   self.submit = submit;
@@ -31,51 +30,9 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     self.tasks = tasks;
     self.parent = parent;
 
-    // If the request already has an approval result, use it
-    if (self.request.approvalResult) {
-      self.approvalResult = self.request.approvalResult;
-
-      // Add in the descriptions
-      for (var i = 0, len = self.approvalResult.items.length; i < len; i++) {
-        var approvalResultItem = self.approvalResult.items[i];
-        approvalResultItem.description = self.request.points[i].properties.pointDescription;
-      }
-    }
-
-    // Build the initial approval result object if it doesn't exist
-    else {
-      self.approvalResult = {
-        approved: true,
-        items: []
-      };
-
-      for (var i = 0, len = self.request.points.length; i < len; i++) {
-        var point = self.request.points[i];
-
-        var approvalResultItem = {
-          pointId: point.id,
-          description: point.properties.pointDescription,
-          approved: true,
-          message: ''
-        };
-
-        self.approvalResult.items.push(approvalResultItem);
-      }
-    }
-
-
-    // Update the table settings to paint the row backgrounds depending on if they have already been approved
-    // or rejected
-    self.parent.hot.updateSettings({
-      cells: function (row, col, prop) {
-        if (self.approvalResult.items[row].approved == false) {
-          return {renderer: self.parent.dangerCellRenderer};
-        }
-      }
-    });
-
-    var points = [self.request.points[0], self.request.points[1]];
-    self.parent.hot.loadData(points);
+    // Update the table settings to paint the row backgrounds depending on
+    // if they have already been approved or rejected
+    self.parent.updateCells();
   }
 
   /**
@@ -84,7 +41,24 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   function rejectSelectedPoints() {
     var selectedPointIds = self.parent.getSelectedPointIds();
 
-    // The user must supply a comment for each rejected point
+    var point;
+    for (var i = 0, len = self.request.points.length; i < len; i++) {
+      point = self.request.points[i];
+
+      if (selectedPointIds.indexOf(point.id) > -1) {
+        if (!point.approval) {
+          point.approval = {
+            approved: false,
+            message: ''
+          };
+        } else {
+          point.approval.approved = false;
+        }
+      }
+    }
+
+    // The user must supply a comment for each rejected point. Display a modal
+    // with a text field for each selected point.
     var modalInstance = $modal.open({
       animation: false,
       templateUrl: 'components/table/controls/rejection/rejection-modal.html',
@@ -93,40 +67,48 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
         selectedPointIds: function() {
           return selectedPointIds;
         },
-        approvalResult: function() {
-          return self.approvalResult;
+        request: function() {
+          return self.request;
         }
       }
     });
 
-    modalInstance.result.then(function(rejectedPoints) {
-      console.log(rejectedPoints);
-      self.approvalResult.approved = false;
-
-      //for (var i = 0, len = selectedPointIds.length; i < len; i++) {
-      //  self.request.points[selectedPointIds[i]].approved = false;
-      //}
-
-      for (var i = 0, len = self.approvalResult.items.length; i < len; i++) {
-        var approvalResultItem = self.approvalResult.items[i];
-
-        if (selectedPointIds.indexOf(approvalResultItem.pointId) > -1) {
-          approvalResultItem.approved = false;
-        }
-      }
+    // Callback fired when the user clicks 'ok'. Not fired if 'cancel' clicked.
+    modalInstance.result.then(function() {
+      self.request.approved = false;
 
       // Save the request
       RequestService.saveRequest(self.request).then(function () {
 
         // Update the table settings to paint the approved rows with a red background
-        self.parent.hot.updateSettings({
-          cells: function (row, col, prop) {
-            if (self.approvalResult.items[row].approved == false) {
-              return {renderer: self.parent.dangerCellRenderer};
-            }
-          }
-        })
+        self.parent.updateCells();
       });
+    });
+  }
+
+  /**
+   * Mark the currently selected points as rejected.
+   */
+  function approveSelectedPoints() {
+    var selectedPointIds = self.parent.getSelectedPointIds();
+
+    var point;
+    for (var i = 0, len = self.request.points.length; i < len; i++) {
+      point = self.request.points[i];
+
+      if (selectedPointIds.indexOf(point.id) > -1) {
+        point.approval = {
+          approved: true,
+          message: ''
+        };
+      }
+    }
+
+    // Save the request
+    RequestService.saveRequest(self.request).then(function () {
+
+      // Update the table settings to paint the approved rows with a red background
+      self.parent.updateCells();
     });
   }
 
@@ -150,27 +132,37 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
 
     self.submitting = 'started';
 
-    // Send the approval result as a JSON string
-    var variables = [{
-      "name": "approvalResult",
-      "value": JSON.stringify(self.approvalResult),
-      "type": "string"
-    }];
+    // Determine whether the entire request is approved or not
+    var point, entireRequestApproved = true;
+    for (var i = 0, len = self.request.points.length; i < len; i++) {
+      point = self.request.points[i];
 
-    TaskService.completeTask(task.id, variables).then(function (task) {
-        console.log('completed task ' + task.id);
+      if (point.approval && point.approval.approved == false) {
+        entireRequestApproved = false;
+      }
+    }
 
-        // Clear the cache so that the state reload also pulls a fresh request
-        RequestService.clearCache();
+    self.request.approved = entireRequestApproved;
 
-        $state.reload().then(function () {
-          self.submitting = 'success';
+    // Save the request
+    RequestService.saveRequest(self.request).then(function () {
+
+      // Complete the task
+      TaskService.completeTask(task.id, []).then(function (task) {
+          console.log('completed task ' + task.id);
+
+          // Clear the cache so that the state reload also pulls a fresh request
+          RequestService.clearCache();
+
+          $state.reload().then(function () {
+            self.submitting = 'success';
+          });
+        },
+
+        function (error) {
+          console.log('error completing task ' + task.id);
+          self.submitting = 'error';
         });
-      },
-
-      function (error) {
-        console.log('error completing task ' + task.id);
-        self.submitting = 'error';
-      });
+    });
   }
 }

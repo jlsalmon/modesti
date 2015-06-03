@@ -13,15 +13,15 @@
   reason for the rejection.</p>
 
   <form class="form-horizontal" name="rejectionReasonsForm">
-    <div ng-repeat="item in ctrl.approvalResult.items track by item.pointId">
+    <div ng-repeat="point in ctrl.request.points track by point.id">
 
-      <div ng-if="ctrl.selectedPointIds.indexOf(item.pointId) > -1">
+      <div ng-if="ctrl.selectedPointIds.indexOf(point.id) > -1">
 
         <div class="form-group no-bottom-margin">
           <label class="col-sm-2 control-label">Point</label>
           <div class="col-sm-10">
             <p class="form-control-static">
-              #{{::item.pointId}}: {{::item.description}}
+              #{{::point.id}}: {{::point.properties.pointDescription}}
             </p>
           </div>
         </div>
@@ -31,7 +31,8 @@
             <input type="text"
                    class="form-control"
                    id="rejectionReason"
-                   ng-model="item.message"
+                   ng-model="point.approval.message"
+                   ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
                    placeholder="Reason for rejection"
                    required>
           </div>
