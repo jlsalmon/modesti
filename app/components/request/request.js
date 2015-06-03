@@ -7,19 +7,25 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $http, $timeout, $compile, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
+function RequestController($http, $timeout, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
   var self = this;
 
   self.request = request;
   self.children = children;
   self.schema = schema;
   self.tasks = tasks;
-  self.currentActiveTab = 0;
 
   /**
    * The handsontable instance
    */
   self.hot = {};
+
+  /**
+   * The data rows that will be given to the table
+   *
+   * @type {Array}
+   */
+  self.rows = getRows();
 
   /**
    * Settings object for handsontable
@@ -44,7 +50,7 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
   };
 
   /**
-   *
+   * The columns that will be displayed for the currently active category. See getColumns().
    * @type {Array}
    */
   self.columns = [];
@@ -56,20 +62,25 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
    */
   self.availableExtraCategories = [];
 
-  self.activateTab = activateTab;
+  /**
+   * Public function definitions.
+   */
+  self.afterInit = afterInit;
+  self.getRows = getRows;
+  self.getRowHeaders = getRowHeaders;
+  self.getColumns = getColumns;
+  self.getColumnHeaders = getColumnHeaders;
   self.activateCategory = activateCategory;
-  self.addNewCategory = addNewCategory;
+  self.addExtraCategory = addExtraCategory;
   self.getAvailableExtraCategories = getAvailableExtraCategories;
   self.save = save;
   self.search = search;
   self.getSelectedPointIds = getSelectedPointIds;
-  self.getRowHeaders = getRowHeaders;
   self.resetSorting = resetSorting;
-  self.updateCells = updateCells;
-  self.afterInit = afterInit;
+  self.renderRowBackgrounds = renderRowBackgrounds;
 
   /**
-   *
+   * Called when the handsontable table has finished initialising.
    */
   function afterInit() {
     console.log('afterInit()');
@@ -83,14 +94,9 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
     $timeout(function () {
       // Activate the first category
       activateCategory(self.schema.categories[0]);
-    });
-  }
 
-  /**
-   * Activate a particular tab
-   */
-  function activateTab(tab) {
-    self.currentActiveTab = tab;
+      renderRowBackgrounds();
+    });
   }
 
   /**
@@ -112,10 +118,19 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
     console.log(category);
     self.activeCategory = category;
 
-    // Remove existing columns
-    self.columns.length = 0;
 
-    var colHeaders = [];
+    getColumns();
+    getColumnHeaders();
+  }
+
+  /**
+   * Note: currently ngHandsontable requires that columns be pushed into the array after the table has been initialised.
+   * It does not accept a function, nor will it accept an array returned from a function call.
+   * See https://github.com/handsontable/handsontable/issues/590. Hopefully this will be fixed in a later release.
+   */
+  function getColumns() {
+    // Get the columns
+    self.columns.length = 0;
 
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
@@ -124,18 +139,60 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
 
       // Build the right type of column based on the schema
       var column = ColumnService.getColumn(field);
-
       self.columns.push(column);
+    }
+
+    // Checkbox column
+    self.columns.push({data: 'selected', type: 'checkbox'});
+  }
+
+  /**
+   *
+   */
+  function getColumnHeaders() {
+    var colHeaders = [];
+
+    for (var i = 0; i < self.activeCategory.fields.length; i++) {
+      var field = self.activeCategory.fields[i];
       colHeaders.push(field.name);
     }
 
-    //// Checkbox column
-    self.columns.push({data: 'selected', type: 'checkbox'});
-    //colHeaders.push('<input type="checkbox" class="select-all"  style="margin: 0" ' + (isChecked() ? 'checked="checked"' : '') + '>');
+    //colHeaders.push('<input type="checkbox" class="select-all"  style="margin: 0" ' + (isChecked() ?
+    // 'checked="checked"' : '') + '>');
     colHeaders.push('&nbsp;');
 
     // Set the column headers
     self.hot.updateSettings({ colHeaders: colHeaders });
+  }
+
+  /**
+   * Requests with certain statuses require that only some types points be displayed, i.e. requests in state
+   * 'FOR_APPROVAL' should only display alarms. So we disconnect the data given to the table from the request and
+   * include in it only those points which must be displayed.
+   *
+   * @returns {Array}
+   */
+  function getRows() {
+    var rows = [];
+
+    if (self.request.status == 'FOR_APPROVAL') {
+
+      var point;
+      for (var i = 0, len = self.request.points.length; i < len; i++) {
+        point = self.request.points[i];
+
+
+        if (point.properties['priorityCode']) {
+          rows.push(point);
+        }
+      }
+    }
+
+    else {
+      rows = self.request.points;
+    }
+
+    return rows;
   }
 
   /**
@@ -144,7 +201,7 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
    * @returns {*}
    */
   function getRowHeaders(row) {
-    var point = self.request.points[row];
+    var point = self.rows[row];
 
     if (point.approval && point.approval.approved == false) {
       var html =
@@ -161,28 +218,6 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
     else {
       return point.id;
     }
-  }
-
-  /**
-   *
-   */
-  function afterRender() {
-    // Initialise the popovers in the row headers
-    $('[data-toggle="popover"]').popover({ trigger: "manual" , html: true, animation:false})
-      .on("mouseenter", function () {
-        var _this = this;
-        $(this).popover("show");
-        $(".popover").on("mouseleave", function () {
-          $(_this).popover('hide');
-        });
-      }).on("mouseleave", function () {
-        var _this = this;
-        setTimeout(function () {
-          if (!$(".popover:hover").length) {
-            $(_this).popover("hide");
-          }
-        }, 300);
-      });
   }
 
   /**
@@ -209,7 +244,7 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
    *
    * @param categoryName
    */
-  function addNewCategory(categoryName) {
+  function addExtraCategory(categoryName) {
     console.log("adding category " + categoryName);
 
     var schemaLink = self.request._links.schema.href;
@@ -244,16 +279,6 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
 
   /**
    *
-   * @param query
-   */
-  function search(query) {
-
-    var result = self.hot.search.query(query);
-    //self.hot.loadData(result);
-  }
-
-  /**
-   *
    */
   function getSelectedPointIds() {
     var checkboxes = self.hot.getDataAtCol(self.columns.length - 1);
@@ -262,11 +287,21 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
     for (var i = 0, len = checkboxes.length; i < len; i++) {
       if (checkboxes[i]) {
         // Point IDs are 1-based
-        pointIds.push(i + 1);
+        pointIds.push(self.rows[i].id);
       }
     }
 
     return pointIds;
+  }
+
+  /**
+   *
+   * @param query
+   */
+  function search(query) {
+
+    var result = self.hot.search.query(query);
+    //self.hot.loadData(result);
   }
 
   /**
@@ -282,6 +317,15 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
     });
 
     AlertService.add('danger', 'This is a warning')
+  }
+
+  /**
+   *
+   */
+  function resetSorting() {
+    // Hack to clear sorting
+    self.hot.updateSettings({columnSorting: false});
+    self.hot.updateSettings({columnSorting: true});
   }
 
   /**
@@ -312,15 +356,19 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
   /**
    *
    */
-  function updateCells() {
+  function renderRowBackgrounds() {
     var point;
 
     self.hot.updateSettings({
       cells: function (row, col, prop) {
-        point = self.request.points[row];
+        point = self.rows[row];
 
-        if (point.approval && point.approval.approved == false) {
-          return {renderer: dangerCellRenderer};
+        if (self.request.status == 'FOR_APPROVAL') {
+          if (point.approval && point.approval.approved == false) {
+            return {renderer: dangerCellRenderer};
+          } else if (point.approval && point.approval.approved == true) {
+            return {renderer: successCellRenderer};
+          }
         }
       }
     });
@@ -353,14 +401,49 @@ function RequestController($scope, $http, $timeout, $compile, request, children,
 
   /**
    *
+   * @param instance
+   * @param td
+   * @param row
+   * @param col
+   * @param prop
+   * @param value
+   * @param cellProperties
    */
-  function resetSorting() {
-    // Hack to clear sorting
-    self.hot.updateSettings({
-      columnSorting: false
-    });
-    self.hot.updateSettings({
-      columnSorting: true
-    });
+  function successCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+    // Make sure to render the last column as a checkbox
+    if (prop == 'selected') {
+      Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
+    }
+
+    // All the other columns can be rendered as text boxes at this point
+    else {
+      Handsontable.renderers.TextRenderer.apply(this, arguments);
+    }
+
+    // Make the background red
+    td.style.background = '#DFF0D8';
+  }
+  /**
+   *
+   */
+  function afterRender() {
+
+    // Initialise the popovers in the row headers
+    $('[data-toggle="popover"]').popover({trigger: "manual", html: true, animation: false})
+      .on("mouseenter", function () {
+        var _this = this;
+        $(this).popover("show");
+        $(".popover").on("mouseleave", function () {
+          $(_this).popover('hide');
+        });
+      })
+      .on("mouseleave", function () {
+        var _this = this;
+        setTimeout(function () {
+          if (!$(".popover:hover").length) {
+            $(_this).popover("hide");
+          }
+        }, 300);
+      });
   }
 }

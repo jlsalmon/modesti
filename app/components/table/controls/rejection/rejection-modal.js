@@ -7,11 +7,11 @@
  */
 angular.module('modesti').controller('CommentsController', CommentsController);
 
-function CommentsController($modalInstance, selectedPointIds, request) {
+function CommentsController($modalInstance, selectedPointIds, rows) {
   var self = this;
 
   self.selectedPointIds = selectedPointIds;
-  self.request = request;
+  self.rows = rows;
 
   self.ok = ok;
   self.cancel = cancel;

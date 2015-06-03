@@ -11,6 +11,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   var self = this;
 
   self.request = {};
+  self.rows = {};
   self.tasks = {};
   self.parent = {};
 
@@ -25,14 +26,35 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   /**
    *
    */
-  function init(request, tasks, parent) {
-    self.request = request;
-    self.tasks = tasks;
+  function init(parent) {
+    self.request = parent.request;
+    self.rows = parent.rows;
+    self.tasks = parent.tasks;
     self.parent = parent;
+
+    // By default, all points are approved.
+    initialiseApprovalState();
 
     // Update the table settings to paint the row backgrounds depending on
     // if they have already been approved or rejected
-    self.parent.updateCells();
+    self.parent.renderRowBackgrounds();
+  }
+
+  /**
+   *
+   */
+  function initialiseApprovalState() {
+    var point;
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      point = self.rows[i];
+
+      if (!point.approval) {
+        point.approval = {
+          approved: true,
+          message: ''
+        };
+      }
+    }
   }
 
   /**
@@ -42,17 +64,12 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     var selectedPointIds = self.parent.getSelectedPointIds();
 
     var point;
-    for (var i = 0, len = self.request.points.length; i < len; i++) {
-      point = self.request.points[i];
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      point = self.rows[i];
 
       if (selectedPointIds.indexOf(point.id) > -1) {
         if (!point.approval) {
-          point.approval = {
-            approved: false,
-            message: ''
-          };
-        } else {
-          point.approval.approved = false;
+          point.approval = {};
         }
       }
     }
@@ -67,8 +84,8 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
         selectedPointIds: function() {
           return selectedPointIds;
         },
-        request: function() {
-          return self.request;
+        rows: function() {
+          return self.rows;
         }
       }
     });
@@ -77,11 +94,20 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     modalInstance.result.then(function() {
       self.request.approved = false;
 
+      var point;
+      for (var i = 0, len = self.rows.length; i < len; i++) {
+        point = self.rows[i];
+
+        if (selectedPointIds.indexOf(point.id) > -1) {
+          point.approval.approved = false;
+        }
+      }
+
       // Save the request
       RequestService.saveRequest(self.request).then(function () {
 
         // Update the table settings to paint the approved rows with a red background
-        self.parent.updateCells();
+        self.parent.renderRowBackgrounds();
       });
     });
   }
@@ -93,8 +119,8 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     var selectedPointIds = self.parent.getSelectedPointIds();
 
     var point;
-    for (var i = 0, len = self.request.points.length; i < len; i++) {
-      point = self.request.points[i];
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      point = self.rows[i];
 
       if (selectedPointIds.indexOf(point.id) > -1) {
         point.approval = {
@@ -108,7 +134,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     RequestService.saveRequest(self.request).then(function () {
 
       // Update the table settings to paint the approved rows with a red background
-      self.parent.updateCells();
+      self.parent.renderRowBackgrounds();
     });
   }
 
@@ -134,8 +160,8 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
 
     // Determine whether the entire request is approved or not
     var point, entireRequestApproved = true;
-    for (var i = 0, len = self.request.points.length; i < len; i++) {
-      point = self.request.points[i];
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      point = self.rows[i];
 
       if (point.approval && point.approval.approved == false) {
         entireRequestApproved = false;

@@ -288,7 +288,7 @@
           </button>
           <ul class="new-tab-menu dropdown-menu" role="menu">
             <li ng-repeat="tab in ctrl.availableCategories">
-              <a ng-click="ctrl.addNewCategory(tab)">{{::tab}}</a>
+              <a ng-click="ctrl.addExtraCategory(tab)">{{::tab}}</a>
             </li>
             <li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">
               No categories available
@@ -371,7 +371,7 @@
 
 <section class="table" style="overflow: hidden; height: 600px;" ng-cloak>
   <hot-table id="table" settings="ctrl.settings"
-             datarows="ctrl.request.points"
+             datarows="ctrl.rows"
              columns="ctrl.columns">
   </hot-table>
 </section>

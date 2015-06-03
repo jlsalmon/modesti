@@ -12,8 +12,10 @@
   <p>You are about to reject <b>n</b> points. It is necessary to add a comment to each rejected point, specifying the
   reason for the rejection.</p>
 
+  {{ctrl.selectedPointIds}}
+
   <form class="form-horizontal" name="rejectionReasonsForm">
-    <div ng-repeat="point in ctrl.request.points track by point.id">
+    <div ng-repeat="point in ctrl.rows track by point.id">
 
       <div ng-if="ctrl.selectedPointIds.indexOf(point.id) > -1">
 

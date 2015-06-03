@@ -12,10 +12,9 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
 
   self.parent = {};
   self.request = {};
+  self.rows = {};
   self.tasks = {};
   self.hot = {};
-
-  self.selection = [];
 
   self.validating = undefined;
   self.submitting = undefined;
@@ -32,11 +31,13 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
   /**
    *
    */
-  function init(request, tasks, parent) {
-    self.request = request;
-    self.tasks = tasks;
-    self.hot = parent.hot;
+  function init(parent) {
     self.parent = parent;
+    self.request = parent.request;
+    self.rows = parent.rows;
+    self.tasks = parent.tasks;
+    self.hot = parent.hot;
+
 
     // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
     // state and the user makes a modification
@@ -227,8 +228,9 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
 
       // Mark the point as dirty.
       if (newValue != oldValue) {
+        console.log('dirty point: ' + self.rows[index].id);
         dirty = true;
-        self.request.points[index].dirty = true;
+        self.rows[index].dirty = true;
       }
     }
 
