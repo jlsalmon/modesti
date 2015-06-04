@@ -45,7 +45,8 @@ function ColumnService($http) {
    * @returns {string}
    */
   function getColumnHeader(field) {
-    var html = '<span data-container="body" data-toggle="popover" data-placement="top" data-content="Helpful text">';
+    var html = '<span class="help-text" data-container="body" data-toggle="popover" data-placement="top" ' +
+               'data-content="Helpful text">';
     html += field.name;
     html += '</span>';
     return html;

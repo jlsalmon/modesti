@@ -172,7 +172,7 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
 
     if (point.approval && point.approval.approved == false) {
       var html =
-        '<i class="fa fa-exclamation-circle text-danger"\
+        '<i class="fa fa-exclamation-circle text-danger error-indicator"\
             data-container="body" \
             data-toggle="popover" \
             data-placement="right" \
@@ -494,7 +494,7 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
   function afterRender() {
 
     // Initialise the popovers in the row headers
-    $('[data-toggle="popover"]').popover({trigger: "manual", html: true, animation: false})
+    $('.error-indicator').popover({trigger: "manual", html: true, animation: false})
       .on("mouseenter", function () {
         var _this = this;
         $(this).popover("show");
@@ -510,6 +510,9 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
           }
         }, 300);
       });
+
+    // Initialise the help text popovers on the column headers
+    $('.help-text').popover({trigger: 'hover', delay: { "show": 500, "hide": 100 }});
 
     // Fix the width of the last column and add the surplus to the first column
     var firstColumnHeader = $('.htCore colgroup col.rowHeader');
