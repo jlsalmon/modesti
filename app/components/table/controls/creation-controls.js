@@ -7,141 +7,83 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($scope, $http, $state, RequestService, TaskService) {
+function CreationControlsController($http, $state, RequestService, TaskService) {
   var self = this;
+
+  self.parent = {};
+  self.request = {};
+  self.rows = {};
+  self.tasks = {};
+  self.hot = {};
 
   self.validating = undefined;
   self.submitting = undefined;
   self.splitting = undefined;
 
   self.init = init;
-  self.addRow = addRow;
-  self.duplicateSelectedRows = duplicateSelectedRows;
-  self.deleteSelectedRows = deleteSelectedRows;
   self.validate = validate;
   self.submit = submit;
+  self.split = split;
   self.canValidate = canValidate;
   self.canSubmit = canSubmit;
-  self.split = split;
+  self.canSplit = canSplit;
 
   /**
    *
    */
   function init(parent) {
     self.parent = parent;
-  }
+    self.request = parent.request;
+    self.rows = parent.rows;
+    self.tasks = parent.tasks;
+    self.hot = parent.hot;
 
-  /**
-   *
-   */
-  function addRow() {
-    console.log('adding new row');
-    var request = self.parent.request;
 
-    var newRow = {
-      'name': '',
-      'description': '',
-      'domain': request.domain
-    };
+    // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
+    // state and the user makes a modification
+    self.hot.addHook('afterChange', afterChange);
 
-    request.points.push(newRow);
-
-    RequestService.saveRequest(request).then(function (request) {
-      console.log('added new row');
-      self.parent.request = request;
-
-      // Reload the table data
-      self.parent.tableParams.reload();
-
-      // Move to the last page
-      var pages = self.parent.tableParams.settings().$scope.pages;
-      for (var i in pages) {
-        if (pages[i].type == "last") {
-          self.parent.tableParams.page(pages[i].number);
+    // Update the table settings to paint the row backgrounds depending on if they have already been approved
+    // or rejected
+    if (self.request.approvalResult) {
+      self.hot.updateSettings({
+        cells: function (row, col, prop) {
+          if (self.request.approvalResult.items[row].approved == false) {
+            return {renderer: self.parent.dangerCellRenderer};
+          }
         }
-      }
-
-    }, function (error) {
-      console.log('error adding new row: ' + error);
-    });
-  }
-
-  /**
-   *
-   */
-  function duplicateSelectedRows() {
-    var points = self.parent.request.points;
-    console.log('duplicating rows (before: ' + points.length + ' points)');
-
-    // Find the selected points and duplicate them
-    for (var i in points) {
-      var point = points[i];
-
-      if (self.parent.checkboxes.items[point.id]) {
-        var duplicate = angular.copy(point);
-        // Remove the ID of the duplicated point, as the backend will generate
-        // us a new one when we save
-        delete duplicate.id;
-        // Add the new duplicate to the original points
-        points.push(duplicate);
-      }
+      });
     }
-
-    // Save the changes
-    RequestService.saveRequest(self.parent.request).then(function (savedRequest) {
-      console.log('saved request after row duplication');
-      console.log('duplicated rows (after: ' + savedRequest.points.length + ' points)');
-
-      // Reload the table data
-      self.parent.tableParams.reload();
-
-    }, function (error) {
-      console.log('error saving request after row duplication: ' + error);
-    });
-  }
-
-  /**
-   *
-   */
-  function deleteSelectedRows() {
-    var points = self.parent.request.points;
-    console.log('deleting rows (before: ' + points.length + ' points)');
-
-    // Find the selected points and mark them as deleted
-    for (var i in points) {
-      var point = points[i];
-
-      if (self.parent.checkboxes.items[point.id]) {
-        point.deleted = true;
-      }
-    }
-
-    // Save the changes
-    RequestService.saveRequest(self.parent.request).then(function (savedRequest) {
-      console.log('saved request after row deletion');
-      console.log('deleted rows (after: ' + savedRequest.points.length + ' points)');
-
-      // Reload the table data
-      self.parent.tableParams.reload();
-
-    }, function (error) {
-      console.log('error saving request after row deletion: ' + error);
-    });
   }
 
   /**
    *
    */
   function canValidate() {
-    var task = self.parent.tasks['validate'];
-    return task && self.parent.tableForm.$valid;
+    var task = self.tasks['validate'];
+    // TODO reimplement this
+    return task; //task && self.tableForm.$valid;
+  }
+
+  /**
+   *
+   */
+  function canSubmit() {
+    return self.tasks['submit'];
+  }
+
+  /**
+   *
+   */
+  function canSplit() {
+    return self.parent.getSelectedPointIds().length > 0;
   }
 
   /**
    *
    */
   function validate() {
-    var task = self.parent.tasks['validate'];
+    var task = self.tasks['validate'];
 
     if (!task) {
       console.log('warning: no validate task found');
@@ -151,7 +93,7 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
     self.validating = 'started';
 
     // First save the request
-    RequestService.saveRequest(self.parent.request).then(function () {
+    RequestService.saveRequest(self.request).then(function () {
         console.log('saved request before validation');
 
         // Complete the task associated with the request
@@ -181,15 +123,8 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
   /**
    *
    */
-  function canSubmit() {
-    return self.parent.tasks['submit'];
-  }
-
-  /**
-   *
-   */
   function submit() {
-    var task = self.parent.tasks['submit'];
+    var task = self.tasks['submit'];
 
     if (!task) {
       console.log('warning: no submit task found');
@@ -220,7 +155,7 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
    * TODO split only selected points
    */
   function split() {
-    var task = self.parent.tasks['validate'];
+    var task = self.tasks['validate'];
     if (!task) {
       console.log('error splitting request: no task');
       return;
@@ -228,10 +163,18 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
 
     self.splitting = 'started';
 
+    var pointIds = self.parent.getSelectedPointIds();
+
+    if (!pointIds.length) {
+      return;
+    }
+
+    console.log('splitting points: ' + pointIds);
+
     var url = task.executionUrl;
     var variables = [{
       "name": "points",
-      "value": JSON.stringify([1, 2, 3]),
+      "value": JSON.stringify(pointIds),
       "type": "string"
     }];
 
@@ -260,13 +203,56 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
   }
 
   /**
-   * Watch the outer parent form for changes. If we are in the "submit" stage of the workflow and the form is modified,
-   * then it will need to be revalidated. This is done by sending the "requestModified" signal.
+   * Called after a change is made to the table (edit, paste, etc.)
+   *
+   * @param changes a 2D array containing information about each of the edited cells [ [row, prop, oldVal, newVal], ... ]
+   * @param source one of the strings: "alter", "empty", "edit", "populateFromArray", "loadData", "autofill", "paste"
    */
-  $scope.$watch("ctrl.parent.tableForm.$dirty", function (dirty) {
-    var task = self.parent.tasks['submit'];
+  function afterChange(changes, source) {
+    console.log('afterChange()');
 
-    if (task && dirty) {
+    // When the table is initially loaded, this callback is invoked with source == 'loadData'. In that case, we don't
+    // want to save the request or send the modification signal.
+    if (source == 'loadData') {
+      return;
+    }
+
+    // Loop over the changes and check if anything actually changed. Mark any changed points as dirty.
+    var change, index, property, oldValue, newValue, dirty = false;
+    for (var i = 0, len = changes.length; i < len; i++) {
+      change = changes[i];
+      index = change[0];
+      property = change[1];
+      oldValue = change[2];
+      newValue = change[3];
+
+      // Mark the point as dirty.
+      if (newValue != oldValue) {
+        console.log('dirty point: ' + self.rows[index].id);
+        dirty = true;
+        self.rows[index].dirty = true;
+      }
+    }
+
+    // If nothing changed, there's nothing to do! Otherwise, save the request.
+    if (dirty) {
+      RequestService.saveRequest(self.request).then(function() {
+        // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
+        // revalidated. This is done by sending the "requestModified" signal.
+        if (self.tasks['submit']) {
+          sendModificationSignal();
+        }
+      });
+    }
+  }
+
+  /**
+   * Sends the "requestModified" signal when in the "submit" stage of the workflow in order to force the request
+   * back to the "validate" stage.
+   */
+  function sendModificationSignal() {
+    var task = self.tasks['submit'];
+    if (task) {
       console.log('form modified whilst in submit state: sending signal');
 
       var url = task.executionUrl;
@@ -281,8 +267,8 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
           console.log('sent modification signal');
 
           // The "submit" task will have changed to "validate".
-          TaskService.queryTasksForRequest(self.parent.request).then(function (tasks) {
-            self.parent.tasks = tasks;
+          TaskService.queryTasksForRequest(self.request).then(function (tasks) {
+            self.tasks = tasks;
           });
         },
 
@@ -290,5 +276,5 @@ function CreationControlsController($scope, $http, $state, RequestService, TaskS
           console.log('error sending signal: ' + error);
         });
     }
-  });
+  }
 }

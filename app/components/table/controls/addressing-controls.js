@@ -10,6 +10,9 @@ angular.module('modesti').controller('AddressingControlsController', AddressingC
 function AddressingControlsController($state, RequestService, TaskService) {
   var self = this;
 
+  self.request = {};
+  self.tasks = {};
+
   self.submitting = undefined;
   self.addressed = true;
 
@@ -19,15 +22,16 @@ function AddressingControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function init(parent) {
-    self.parent = parent;
+  function init(request, tasks) {
+    self.request = request;
+    self.tasks = tasks;
   }
 
   /**
    *
    */
   function submit() {
-    var task = self.parent.tasks['address'];
+    var task = self.tasks['address'];
     if (!task) {
       console.log('error addressing request: no task');
       return;

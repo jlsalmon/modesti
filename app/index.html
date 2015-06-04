@@ -15,7 +15,6 @@
 <!-- bower:css -->
 <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
 <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-<link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
 <link rel="stylesheet" href="bower_components/normalize.css/normalize.css" />
 <link rel="stylesheet" href="bower_components/pikaday/css/pikaday.css" />
 <link rel="stylesheet" href="bower_components/handsontable/dist/handsontable.full.css" />
@@ -23,28 +22,25 @@
 <!-- endbuild -->
 <!-- build:css(.tmp) styles/main.css -->
 <link rel="stylesheet" href="styles/AdminLTE.css">
-<link rel="stylesheet" href="styles/skins/_all-skins.css">
+<link rel="stylesheet" href="styles/skins/skin-blue-light.css">
 <link rel="stylesheet" href="styles/main.css">
 <!-- endbuild -->
 </head>
 
-<body ng-app="modesti" class="skin-blue sidebar-collapse">
+<body ng-app="modesti" class="skin-blue-light sidebar-collapse">
 
   <!--[if lt IE 10]>
+  <div class="col-lg-12">
+    <div class="alert alert-info" style="margin-top: 20px; z-index: 1000;">
+      <p>You are using an <strong>unsupported</strong> browser. Some parts of this site will not work properly.
+         Please <a class="alert-link" href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    </div>
+    <div class="clearfix"></div>
+  </div>
   <![endif]-->
-  <!--<div class="col-lg-12">-->
-    <!--<div class="alert alert-info" style="margin-top: 20px; z-index: 1000;">-->
-      <!--<p>You are using an <strong>unsupported</strong> browser. Some parts of this site will not work properly.-->
-         <!--Please <a class="alert-link" href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>-->
-    <!--</div>-->
-    <!--<div class="clearfix"></div>-->
-  <!--</div>-->
 
-
-  <div class="wrapper" ng-controller="LayoutController as ctrl">
-
-    <header class="main-header">
-      <a ui-sref="requests" class="logo"> modesti </a>
+    <header class="main-header" ng-controller="LayoutController as ctrl">
+      <a ui-sref="requests" class="logo"> modesti <small style="font-size: 50%">v0.1</small></a>
       <!-- Header Navbar: style can be found in header.less -->
       <nav class="navbar navbar-static-top" role="navigation">
         <!-- Sidebar toggle button-->
@@ -62,12 +58,12 @@
               </a>
             </li>
             <li>
-              <a ui-sref="requests/new" tooltip="New Request" tooltip-placement="bottom">
+              <a ui-sref="new" tooltip="New Request" tooltip-placement="bottom">
                 <i class="fa fa-plus"></i>
               </a>
             </li>
             <li>
-              <a ui-sref="requests/upload" tooltip="Upload" tooltip-placement="bottom">
+              <a ui-sref="upload" tooltip="Upload" tooltip-placement="bottom">
                 <i class="fa fa-upload"></i>
               </a>
             </li>
@@ -79,9 +75,9 @@
 
           <form class="navbar-form navbar-left sidebar-form" role="search">
             <div class="form-group input-group">
-              <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search...">
+              <input type="text" name="q" ng-model="q" class="form-control input-sm" placeholder="Search...">
               <span class="input-group-btn">
-                <button type='submit' name='search' id='search-btn' class="btn btn-flat navbar-btn" ng-click="ctrl.search(q)">
+                <button type='submit' name='search' id='search-btn' class="btn btn-sm btn-flat navbar-btn" ng-click="ctrl.search(q)">
                   <i class="fa fa-search"></i>
                 </button>
               </span>
@@ -209,74 +205,73 @@
 
     <!-- =============================================== -->
 
-    <!-- Left side column. contains the sidebar -->
-    <aside class="main-sidebar">
-      <!-- sidebar: style can be found in sidebar.less -->
-      <section class="sidebar">
-        <!-- Sidebar user panel -->
-        <!--         <div class="user-panel">
-          <div class="pull-left image">
-            <img src="images/no-avatar.png" class="img-circle" alt="User Image" />
-          </div>
-          <div class="pull-left info">
-            <p>Guest</p>
+    <!--&lt;!&ndash; Left side column. contains the sidebar &ndash;&gt;-->
+    <!--<aside class="main-sidebar">-->
+      <!--&lt;!&ndash; sidebar: style can be found in sidebar.less &ndash;&gt;-->
+      <!--<section class="sidebar">-->
+        <!--&lt;!&ndash; Sidebar user panel &ndash;&gt;-->
+        <!--&lt;!&ndash;         <div class="user-panel">-->
+          <!--<div class="pull-left image">-->
+            <!--<img src="images/no-avatar.png" class="img-circle" alt="User Image" />-->
+          <!--</div>-->
+          <!--<div class="pull-left info">-->
+            <!--<p>Guest</p>-->
 
-                        <a href="#">
-              <i class="fa fa-circle text-success"></i>
-              Online
-            </a>
-          </div>
-        </div> -->
-        <!-- search form -->
-        <form class="sidebar-form">
-          <div class="input-group">
-            <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search..." />
-            <span class="input-group-btn">
-              <button type='submit' name='search' id='search-btn' class="btn btn-flat" ng-click="ctrl.search(q)">
-                <i class="fa fa-search"></i>
-              </button>
-            </span>
-          </div>
-        </form>
-        <!-- /.search form -->
-        <!-- sidebar menu: : style can be found in sidebar.less -->
-        <ul class="sidebar-menu">
-          <!-- <li class="header">MAIN NAVIGATION</li> -->
-          <li ng-class="{ active : ctrl.isActivePage('/new')}">
-            <a ui-sref="new">
-              <i class="fa fa-plus"></i>
-              <span>New Request</span>
-            </a>
-          </li>
+                        <!--<a href="#">-->
+              <!--<i class="fa fa-circle text-success"></i>-->
+              <!--Online-->
+            <!--</a>-->
+          <!--</div>-->
+        <!--</div> &ndash;&gt;-->
+        <!--&lt;!&ndash; search form &ndash;&gt;-->
+        <!--<form class="sidebar-form">-->
+          <!--<div class="input-group">-->
+            <!--<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search..." />-->
+            <!--<span class="input-group-btn">-->
+              <!--<button type='submit' name='search' id='search-btn' class="btn btn-flat" ng-click="ctrl.search(q)">-->
+                <!--<i class="fa fa-search"></i>-->
+              <!--</button>-->
+            <!--</span>-->
+          <!--</div>-->
+        <!--</form>-->
+        <!--&lt;!&ndash; /.search form &ndash;&gt;-->
+        <!--&lt;!&ndash; sidebar menu: : style can be found in sidebar.less &ndash;&gt;-->
+        <!--<ul class="sidebar-menu">-->
+          <!--&lt;!&ndash; <li class="header">MAIN NAVIGATION</li> &ndash;&gt;-->
+          <!--<li ng-class="{ active : ctrl.isActivePage('/new')}">-->
+            <!--<a ui-sref="new">-->
+              <!--<i class="fa fa-plus"></i>-->
+              <!--<span>New Request</span>-->
+            <!--</a>-->
+          <!--</li>-->
 
-          <li ng-class="{ active : ctrl.isActivePage('/requests')}">
-            <a ui-sref="requests">
-              <i class="fa fa-list"></i>
-              <span>Requests</span>
-            </a>
-          </li>
-        </ul>
-      </section>
-      <!-- /.sidebar -->
-    </aside>
+          <!--<li ng-class="{ active : ctrl.isActivePage('/requests')}">-->
+            <!--<a ui-sref="requests">-->
+              <!--<i class="fa fa-list"></i>-->
+              <!--<span>Requests</span>-->
+            <!--</a>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</section>-->
+      <!--&lt;!&ndash; /.sidebar &ndash;&gt;-->
+    <!--</aside>-->
 
     <!-- =============================================== -->
 
-    <div class="content-wrapper">
-      <div ui-view></div>
-    </div>
-    <!-- /.content-wrapper -->
 
-    <footer class="main-footer">
-      <div class="pull-right hidden-xs">Version 0.1</div>
+    <div class="view-wrapper" ui-view></div>
+
+
+<!--     <footer class="main-footer">
+      <div class="pull-right hidden-xs">modesti v0.1</div>
       &copy;
       <script>
         document.write(new Date().getFullYear());
       </script>
       <a href="http://cern.ch">CERN</a>
 
-    </footer>
-  </div>
+    </footer> -->
+
   <!-- ./wrapper -->
 
   <!-- build:js(.) scripts/vendor.js -->
@@ -285,29 +280,20 @@
   <script src="bower_components/modernizr/modernizr.js"></script>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/angular/angular.js"></script>
-  <script src="bower_components/angular-animate/angular-animate.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-  <script src="bower_components/angular-resource/angular-resource.js"></script>
-  <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-  <script src="bower_components/angular-touch/angular-touch.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/slimscroll/jquery.slimscroll.min.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
   <script src="bower_components/lodash/dist/lodash.compat.js"></script>
   <script src="bower_components/restangular/dist/restangular.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
   <script src="bower_components/angular-file-upload/angular-file-upload.js"></script>
-  <script src="bower_components/fsm-sticky-header/src/fsm-sticky-header.js"></script>
   <script src="bower_components/ngstorage/ngStorage.js"></script>
   <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
   <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
   <script src="bower_components/angular-ui-utils/ui-utils.js"></script>
-  <script src="bower_components/quick-ngrepeat/quick-ng-repeat.js"></script>
-  <script src="bower_components/angu-fixed-header-table/angu-fixed-header-table.js"></script>
   <script src="bower_components/autofill-event/src/autofill-event.js"></script>
-  <script src="bower_components/ng-infinite-scroll/ng-infinite-scroll.js"></script>
   <script src="bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
   <script src="bower_components/moment/moment.js"></script>
   <script src="bower_components/pikaday/pikaday.js"></script>
@@ -320,14 +306,16 @@
   <script src="app.js"></script>
   <script src="app.config.js"></script>
   <script src="app.routes.js"></script>
-  <script src="components/layout/AdminLTE.js"></script>
+  <!--<script src="components/layout/AdminLTE.js"></script>-->
   <script src="components/layout/layout.js"></script>
   <script src="components/login/login.js"></script>
   <script src="components/errors/interceptor.js"></script>
-  <script src="components/request/new-request.js"></script>
-  <script src="components/request/upload/upload.js"></script>
+  <script src="components/request/request.new.js"></script>
+  <script src="components/request/request.upload.js"></script>
   <script src="components/request/request.js"></script>
   <script src="components/request/requests.js"></script>
+  <script src="components/request/modals/comments-modal.js"></script>
+  <script src="components/request/modals/history-modal.js"></script>
   <script src="components/table/modesti-table.js"></script>
   <script src="components/table/modesti-table.directive.js"></script>
   <script src="components/table/input/input-field.js"></script>
@@ -342,6 +330,7 @@
   <script src="components/table/controls/cabling-controls.directive.js"></script>
   <script src="components/table/controls/testing-controls.js"></script>
   <script src="components/table/controls/testing-controls.directive.js"></script>
+  <script src="components/table/controls/modals/rejection-modal.js"></script>
   <script src="components/table/filters/enabled.js"></script>
   <script src="components/tasks/tasks.js"></script>
   <script src="components/tasks/task.js"></script>
@@ -351,6 +340,8 @@
   <script src="components/services/schema-service.js"></script>
   <script src="components/services/task-service.js"></script>
   <script src="components/services/alert-service.js"></script>
+  <script src="components/services/column-service.js"></script>
+  <script src="components/services/history-service.js"></script>
   <!-- endbuild -->
 
 </body>

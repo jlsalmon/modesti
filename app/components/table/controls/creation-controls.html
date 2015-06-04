@@ -1,51 +1,35 @@
+<!-- Button to split the request -->
+<button class="btn btn-danger"
+        ng-if="ctrl.request.status == 'FOR_CORRECTION'"
+        ng-click="ctrl.split()"
+        ng-disabled="!ctrl.canSplit()"
+        tooltip-append-to-body="true"
+        tooltip="Split selected rows">
+
+  <!--Show icon based on the loading state-->
+  <i class="fa fa-fw fa-share-alt"            ng-show="ctrl.splitting == undefined"></i>
+  <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.splitting == 'started'"></i>
+  <i class="fa fa-fw fa-share-alt"            ng-show="ctrl.splitting == 'success'"></i>
+  <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.splitting == 'error'"></i>
+</button>
+
 <div class="btn-group">
-  <!-- Button to add a new row -->
-  <button class="btn btn-default"
-          ng-click="ctrl.addRow()"
+
+  <!--Button to validate the request-->
+  <button class="btn"
+          ng-class="ctrl.tasks['submit'] ? 'btn-success' : ' btn-primary'"
+          ng-click="ctrl.validate()"
+          ng-disabled="!ctrl.canValidate()"
           tooltip-append-to-body="true"
-          tooltip="Add row">
-      <i class="fa fa-fw fa-plus"></i>
+          tooltip="Validate request">
+
+    <!--Show icon based on the loading state-->
+    <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
+    <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
+    <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
+    <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
+    Validate
   </button>
-
-  <!-- Button to duplicate selected rows -->
-  <button class="btn btn-default"
-          ng-click="ctrl.duplicateSelectedRows()"
-          tooltip-append-to-body="true"
-          tooltip="Duplicate selected rows"
-          ng-disabled="!ctrl.parent.checkboxes.dirty">
-      <i class="fa fa-fw fa-copy"></i>
-  </button>
-
-  <!-- Button to delete selected rows -->
-  <button class="btn btn-default"
-          ng-click="ctrl.deleteSelectedRows()"
-          tooltip-append-to-body="true"
-          tooltip="Delete selected rows"
-          ng-disabled="!ctrl.parent.checkboxes.dirty">
-      <i class="fa fa-fw fa-trash"></i>
-  </button>
-</div>
-
-<div class="btn-group pull-right">
-  <div class="btn-group">
-
-    <!--Button to validate the request-->
-    <button class="btn"
-            ng-class="ctrl.parent.tasks['submit'] ? 'btn-success' : ' btn-primary'"
-            ng-click="ctrl.validate()"
-            ng-disabled="!ctrl.canValidate()"
-            tooltip-append-to-body="true"
-            tooltip="Validate request">
-
-      <!--Show icon based on the loading state-->
-      <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
-      <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
-      <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
-      <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
-      Validate
-    </button>
-  </div>
-
 
 
   <!-- Button to submit the request -->
@@ -64,17 +48,3 @@
   </button>
 
 </div>
-
-<!-- Button to split the request -->
-<button class="btn btn-danger"
-        ng-if="ctrl.parent.request.status == 'FOR_CORRECTION'"
-        ng-click="ctrl.split()"
-        ng-disabled="!ctrl.parent.checkboxes.dirty"
-        tooltip="Split selected rows">
-
-  <!--Show icon based on the loading state-->
-  <i class="fa fa-fw fa-share-alt"            ng-show="ctrl.splitting == undefined"></i>
-  <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.splitting == 'started'"></i>
-  <i class="fa fa-fw fa-share-alt"            ng-show="ctrl.splitting == 'success'"></i>
-  <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.splitting == 'error'"></i>
-</button>

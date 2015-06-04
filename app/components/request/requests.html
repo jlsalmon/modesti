@@ -3,34 +3,48 @@
     background-color: #f4f4f4;
     color: #444;
 }
-  .tasklist-controls {
-    margin-bottom: 10px;
-  }
 
-  .tasklist-controls .search-form input[type="text"] {
-    box-shadow: none;
-    border-right: none;
-  }
+.tasklist-controls {
+  margin-bottom: 10px;
+}
 
-  .tasklist-controls .search-form input[type="text"]:focus {
-    border-color: #D2D6DE !important;
-    /*/border-left: none;*/
-  }
+.tasklist-controls .search-form input[type="text"] {
+  box-shadow: none;
+  border-right: none;
+}
 
-  .tasklist-controls .search-form .btn {
-    box-shadow: none;
-    background-color: #fff;
-    border-color: #D2D6DE;
-    border-left: none;
-  }
+.tasklist-controls .search-form input[type="text"]:focus {
+  border-color: #D2D6DE !important;
+  /*/border-left: none;*/
+}
 
-  .todo-list > li .tools {
-    display: inline-block;
-  }
+.tasklist-controls .search-form .btn {
+  box-shadow: none;
+  background-color: #fff;
+  border-color: #D2D6DE;
+  border-left: none;
+}
 
-  .todo-list > li .label {
-    font-size: 12px;
-  }
+.todo-list > li .tools {
+  display: inline-block;
+}
+
+.todo-list > li .label {
+  font-size: 12px;
+}
+
+.todo-list .request-icon {
+  display: table-cell;
+}
+
+.todo-list .request-title {
+  display: table-cell;
+  width: 100%;
+}
+
+.todo-list .request-title .label {
+  margin-left: 2px !important;
+}
 </style>
 
 
@@ -252,6 +266,9 @@
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-edit"></i>
                         Edit
+                      </button>
+                      <button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">
+                        <i class="fa fa-trash"></i>
                       </button>
                     </span>
 

@@ -16,14 +16,14 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     templateUrl : 'components/request/requests.html',
     controller : 'UserRequestsController as ctrl'
 
-  }).state('requests/new', {
+  }).state('new', {
     url : '/requests/new',
-    templateUrl : 'components/request/new-request.html',
+    templateUrl : 'components/request/request.new.html',
     controller : 'NewRequestController as ctrl'
 
-  }).state('requests/upload', {
+  }).state('upload', {
     url : '/requests/upload',
-    templateUrl : 'components/request/upload/upload.html',
+    templateUrl : 'components/request/request.upload.html',
     controller : 'UploadController as ctrl'
 
   }).state('request', {
@@ -48,11 +48,6 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
         return TaskService.getTasksForRequest(request);
       }
     }
-
-  }).state('about', {
-    url : '/about',
-    templateUrl : 'components/about/about.html',
-    controller : 'AboutController as ctrl'
 
   }).state('search', {
     url : '/search/:q',
