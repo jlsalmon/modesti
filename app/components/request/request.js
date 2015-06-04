@@ -68,7 +68,6 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
   self.getRows = getRows;
   self.getRowHeaders = getRowHeaders;
   self.getColumns = getColumns;
-  self.getColumnHeaders = getColumnHeaders;
 
   self.activateCategory = activateCategory;
   self.addExtraCategory = addExtraCategory;
@@ -128,7 +127,7 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
 
 
     getColumns();
-    getColumnHeaders();
+    //getColumnHeaders();
   }
 
   /**
@@ -211,25 +210,6 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
 
     // Checkbox column
     self.columns.push({data: 'selected', type: 'checkbox'});
-  }
-
-  /**
-   *
-   */
-  function getColumnHeaders() {
-    var colHeaders = [];
-
-    for (var i = 0; i < self.activeCategory.fields.length; i++) {
-      var field = self.activeCategory.fields[i];
-      colHeaders.push(field.name);
-    }
-
-    //colHeaders.push('<input type="checkbox" class="select-all"  style="margin: 0" ' + (isChecked() ?
-    // 'checked="checked"' : '') + '>');
-    colHeaders.push('&nbsp;');
-
-    // Set the column headers
-    self.hot.updateSettings({ colHeaders: colHeaders });
   }
 
   /**

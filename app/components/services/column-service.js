@@ -17,11 +17,14 @@ function ColumnService($http) {
 
   /**
    *
+   * @param field
+   * @param editable
+   * @returns {{data: string, title: string, readOnly: boolean}}
    */
   function getColumn(field, editable) {
     var column = {
       data : 'properties.' + field.id,
-      title : field.name,
+      title : getColumnHeader(field),
       readOnly : !editable
     };
 
@@ -38,6 +41,21 @@ function ColumnService($http) {
 
   /**
    *
+   * @param field
+   * @returns {string}
+   */
+  function getColumnHeader(field) {
+    var html = '<span data-container="body" data-toggle="popover" data-placement="top" data-content="Helpful text">';
+    html += field.name;
+    html += '</span>';
+    return html;
+  }
+
+  /**
+   *
+   * @param column
+   * @param field
+   * @returns {*}
    */
   function getDropdownColumn(column, field) {
     column.type = 'dropdown';
@@ -65,6 +83,9 @@ function ColumnService($http) {
 
   /**
    *
+   * @param column
+   * @param field
+   * @returns {*}
    */
   function getAutocompleteColumn(column, field) {
     column.type = 'autocomplete';
