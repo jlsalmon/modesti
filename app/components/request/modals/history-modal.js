@@ -2,24 +2,20 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:ActivityModalController
- * @description # ActivityModalController Controller of the modesti
+ * @name modesti.controller:HistoryModalController
+ * @description # HistoryModalController Controller of the modesti
  */
-angular.module('modesti').controller('ActivityModalController', ActivityModalController);
+angular.module('modesti').controller('HistoryModalController', HistoryModalController);
 
-function ActivityModalController($modalInstance, request) {
+function HistoryModalController($modalInstance, request, history) {
   var self = this;
 
   self.request = request;
+  self.history = history;
 
-  self.ok = ok;
-  self.cancel = cancel;
+  self.close = close;
 
-  function ok() {
+  function close() {
     $modalInstance.close();
-  }
-
-  function cancel() {
-    $modalInstance.dismiss('cancel');
   }
 }

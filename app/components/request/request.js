@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($http, $timeout, $modal, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
+function RequestController($http, $timeout, $modal, request, children, schema, tasks, RequestService, ColumnService, AlertService, HistoryService) {
   var self = this;
 
   self.request = request;
@@ -82,7 +82,7 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
   self.paste = paste;
   self.search = search;
   self.showComments = showComments;
-  self.showActivity = showActivity;
+  self.showHistory = showHistory;
 
   self.getSelectedPointIds = getSelectedPointIds;
   self.renderRowBackgrounds = renderRowBackgrounds;
@@ -394,14 +394,18 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
   /**
    *
    */
-  function showActivity() {
+  function showHistory() {
     var modalInstance = $modal.open({
       animation: false,
-      templateUrl: 'components/request/modals/activity-modal.html',
-      controller: 'ActivityModalController as ctrl',
+      size: 'lg',
+      templateUrl: 'components/request/modals/history-modal.html',
+      controller: 'HistoryModalController as ctrl',
       resolve: {
         request: function() {
           return self.request;
+        },
+        history: function() {
+          return HistoryService.getHistory(self.request.requestId);
         }
       }
     });
