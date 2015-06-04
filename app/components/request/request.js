@@ -48,7 +48,7 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
    * @type {Array}
    */
   self.rows = getRows();
-  
+
   /**
    * The columns that will be displayed for the currently active category. See getColumns().
    * @type {Array}
@@ -74,6 +74,11 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
   self.addExtraCategory = addExtraCategory;
   self.getAvailableExtraCategories = getAvailableExtraCategories;
   self.save = save;
+  self.undo = undo;
+  self.redo = redo;
+  self.cut = cut;
+  self.copy = copy;
+  self.paste = paste;
   self.search = search;
   self.getSelectedPointIds = getSelectedPointIds;
   self.resetSorting = resetSorting;
@@ -185,7 +190,7 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
           rows.push(point);
         }
       }
-      
+
       // Also set maxRows to prevent new rows being added
       self.settings.maxRows = rows.length;
     }
@@ -298,16 +303,6 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
 
   /**
    *
-   * @param query
-   */
-  function search(query) {
-
-    var result = self.hot.search.query(query);
-    //self.hot.loadData(result);
-  }
-
-  /**
-   *
    */
   function save() {
     var request = self.request;
@@ -319,6 +314,51 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
     });
 
     AlertService.add('danger', 'This is a warning')
+  }
+
+  /**
+   *
+   */
+  function undo() {
+    self.hot.undo();
+  }
+
+  /**
+   *
+   */
+  function redo() {
+    self.hot.redo();
+  }
+
+  /**
+   *
+   */
+  function cut() {
+    self.hot.copyPaste.triggerCut();
+  }
+
+  /**
+   *
+   */
+  function copy() {
+    self.hot.copyPaste.setCopyableText();
+  }
+
+  /**
+   *
+   */
+  function paste() {
+    self.hot.copyPaste.triggerPaste();
+  }
+
+  /**
+   *
+   * @param query
+   */
+  function search(query) {
+
+    var result = self.hot.search.query(query);
+    //self.hot.loadData(result);
   }
 
   /**
@@ -368,7 +408,7 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
         if (self.request.status == 'FOR_APPROVAL') {
           if (point.approval && point.approval.approved == false) {
             return {renderer: dangerCellRenderer};
-          } 
+          }
 //          else if (point.approval && point.approval.approved == true) {
 //            return {renderer: successCellRenderer};
 //          }

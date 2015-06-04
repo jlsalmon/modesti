@@ -322,20 +322,23 @@
 
       <!-- Undo/redo buttons -->
       <div class="btn-group">
-        <button class="btn btn-sm btn-default" tooltip-append-to-body="true" tooltip="Undo">
+        <button class="btn btn-sm btn-default" ng-click="ctrl.undo()" ng-disabled="!ctrl.hot.isUndoAvailable()" tooltip-append-to-body="true" tooltip="Undo">
           <i class="fa fa-fw fa-undo"></i>
         </button>
-        <button class="btn btn-sm btn-default" tooltip-append-to-body="true" tooltip="Redo">
+        <button class="btn btn-sm btn-default" ng-click="ctrl.redo()" ng-disabled="!ctrl.hot.isRedoAvailable()" tooltip-append-to-body="true" tooltip="Redo">
           <i class="fa fa-fw fa-repeat"></i>
         </button>
       </div>
 
-      <!-- Copy/paste buttons -->
+      <!-- Cut/copy/paste buttons -->
       <div class="btn-group toolbar-item">
-        <button class="btn btn-sm btn-default" tooltip-append-to-body="true" tooltip="Copy">
+        <button class="btn btn-sm btn-default" ng-click="ctrl.cut()" tooltip-append-to-body="true" tooltip="Cut">
+          <i class="fa fa-fw fa-scissors"></i>
+        </button>
+        <button class="btn btn-sm btn-default" ng-click="ctrl.copy()" tooltip-append-to-body="true" tooltip="Copy">
           <i class="fa fa-fw fa-copy"></i>
         </button>
-        <button class="btn btn-sm btn-default" tooltip-append-to-body="true" tooltip="Paste">
+        <button class="btn btn-sm btn-default" ng-click="ctrl.paste()" tooltip-append-to-body="true" tooltip="Paste">
           <i class="fa fa-fw fa-paste"></i>
         </button>
       </div>
