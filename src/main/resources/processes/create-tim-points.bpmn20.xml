@@ -4,10 +4,14 @@
   <signal id="requestModified" name="requestModified"></signal>
   <process id="create-tim-points" name="Workflow for the creation of points to be monitored in TIM" isExecutable="true">
     <documentation>Workflow for the creation of points to be monitored in TIM</documentation>
-    <startEvent id="sid-0FCADCD6-C63A-449C-89D9-1EC26E404227"></startEvent>
+    <startEvent id="sid-0FCADCD6-C63A-449C-89D9-1EC26E404227">
+      <documentation>Request created</documentation>
+    </startEvent>
     <serviceTask id="sid-E2A6EF4E-3C45-4F8A-BE89-66986994AC76" name="validate request" activiti:expression="${workflowService.validateRequest(requestId, execution)}"></serviceTask>
     <userTask id="sid-42FD37C6-426A-4BE5-9D2A-550E89965F41" name="submit" activiti:candidateGroups="modesti-creators,modesti-administrators"></userTask>
-    <userTask id="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB" name="validate" activiti:candidateGroups="modesti-creators,modesti-administrators"></userTask>
+    <userTask id="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB" name="validate" activiti:candidateGroups="modesti-creators,modesti-administrators">
+      <documentation>Validate task</documentation>
+    </userTask>
     <exclusiveGateway id="sid-3EE35137-D009-429B-95A3-CD79520CB352" name="failure?"></exclusiveGateway>
     <userTask id="sid-20E5164E-63AD-495D-88D4-53A628D70587" name="approve" activiti:candidateGroups="modesti-approvers,modesti-administrators">
       <extensionElements>
@@ -49,14 +53,7 @@
     </boundaryEvent>
     <exclusiveGateway id="sid-A33AF6BB-B8B9-4F99-89D7-FB25E5DF94DF" name="approval required?"></exclusiveGateway>
     <sequenceFlow id="sid-741445CF-5102-4CF1-9061-8CDAD867BE7E" sourceRef="sid-AB947816-3916-4FB7-832D-AA862A780624" targetRef="sid-8A72E18D-E23D-42D4-9142-FD32B590E1FB"></sequenceFlow>
-    <sequenceFlow id="sid-8A38A4BE-7C96-47E2-AD55-0607DF1B7707" sourceRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB" targetRef="sid-E2A6EF4E-3C45-4F8A-BE89-66986994AC76"></sequenceFlow>
-    <sequenceFlow id="sid-05E14DBD-D238-47B7-B1D4-824092DB363C" sourceRef="sid-E2A6EF4E-3C45-4F8A-BE89-66986994AC76" targetRef="sid-3EE35137-D009-429B-95A3-CD79520CB352">
-      <extensionElements>
-        <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;IN_PROGRESS&quot;)}"></activiti:executionListener>
-      </extensionElements>
-    </sequenceFlow>
     <sequenceFlow id="sid-EF2D9D68-DDBA-47B5-8620-04356906188A" sourceRef="sid-42FD37C6-426A-4BE5-9D2A-550E89965F41" targetRef="sid-A33AF6BB-B8B9-4F99-89D7-FB25E5DF94DF"></sequenceFlow>
-    <sequenceFlow id="sid-3067B825-F7C0-49CC-9765-59EBB9D62EEB" sourceRef="sid-20E5164E-63AD-495D-88D4-53A628D70587" targetRef="sid-EA92A7EB-9AC8-40CA-868E-CB46B68BD55B"></sequenceFlow>
     <sequenceFlow id="sid-0E4019A0-C728-440D-BD5A-0AFC822D24A5" sourceRef="sid-98765471-E687-4A88-A193-3B974901E636" targetRef="sid-51160A2D-281C-4986-A07E-D6F15493EE34"></sequenceFlow>
     <sequenceFlow id="sid-8C7CB496-0B5A-4085-B68A-2E0DB55F80DC" sourceRef="sid-DE504C8C-A7E4-4963-B190-1E962CA0C99E" targetRef="sid-FE0BB7A1-2135-4BE2-94AB-2F84F935D616"></sequenceFlow>
     <sequenceFlow id="sid-E73603E5-618D-4878-BDAB-B8142E521673" name="no" sourceRef="sid-A33AF6BB-B8B9-4F99-89D7-FB25E5DF94DF" targetRef="sid-D40F5A37-971B-4431-827C-1BFA3F4364D2">
@@ -145,12 +142,19 @@
       </extensionElements>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${workflowService.requiresCabling(requestId)}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-44DEDBBF-3C5E-479D-BDAB-5A9130A25AA3" sourceRef="sid-0FCADCD6-C63A-449C-89D9-1EC26E404227" targetRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB"></sequenceFlow>
     <sequenceFlow id="sid-8F658E30-780A-4716-B4B5-1BF9F8020A8F" sourceRef="sid-B54BBF84-4A14-4124-93D2-0577784EB6AB" targetRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB"></sequenceFlow>
     <sequenceFlow id="sid-39B11229-9E49-4183-AA9C-63A5DEE2646D" sourceRef="sid-A54BBF84-4A14-4124-93D2-0577784EB6AB" targetRef="sid-AB947816-3916-4FB7-832D-AA862A780624"></sequenceFlow>
-    <boundaryEvent id="sid-B54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-42FD37C6-426A-4BE5-9D2A-550E89965F41" cancelActivity="true">
+    <boundaryEvent id="sid-B54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-42FD37C6-426A-4BE5-9D2A-550E89965F41" cancelActivity="false">
       <signalEventDefinition signalRef="requestModified"></signalEventDefinition>
     </boundaryEvent>
+    <sequenceFlow id="sid-3067B825-F7C0-49CC-9765-59EBB9D62EEB" sourceRef="sid-20E5164E-63AD-495D-88D4-53A628D70587" targetRef="sid-EA92A7EB-9AC8-40CA-868E-CB46B68BD55B"></sequenceFlow>
+    <sequenceFlow id="sid-44DEDBBF-3C5E-479D-BDAB-5A9130A25AA3" sourceRef="sid-0FCADCD6-C63A-449C-89D9-1EC26E404227" targetRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB"></sequenceFlow>
+    <sequenceFlow id="sid-8A38A4BE-7C96-47E2-AD55-0607DF1B7707" sourceRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB" targetRef="sid-E2A6EF4E-3C45-4F8A-BE89-66986994AC76"></sequenceFlow>
+    <sequenceFlow id="sid-05E14DBD-D238-47B7-B1D4-824092DB363C" sourceRef="sid-E2A6EF4E-3C45-4F8A-BE89-66986994AC76" targetRef="sid-3EE35137-D009-429B-95A3-CD79520CB352">
+      <extensionElements>
+        <activiti:executionListener event="take" expression="${workflowService.setRequestStatus(requestId, &quot;IN_PROGRESS&quot;)}"></activiti:executionListener>
+      </extensionElements>
+    </sequenceFlow>
     <textAnnotation id="sid-5F63E380-0983-4637-91A5-A485B7EC9D48">
       <text>Note: this is a recursive process call.</text>
     </textAnnotation>
@@ -293,13 +297,13 @@
         <omgdi:waypoint x="1863.0576701532796" y="431.4429256542989"></omgdi:waypoint>
         <omgdi:waypoint x="1911.7085483368303" y="431.60594499253756"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-05E14DBD-D238-47B7-B1D4-824092DB363C" id="BPMNEdge_sid-05E14DBD-D238-47B7-B1D4-824092DB363C">
-        <omgdi:waypoint x="642.7071248618674" y="431.1731862946368"></omgdi:waypoint>
-        <omgdi:waypoint x="689.6134767456031" y="431.1731862946368"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-216D3518-8F03-41F5-A3BE-1220F666B043" id="BPMNEdge_sid-216D3518-8F03-41F5-A3BE-1220F666B043">
         <omgdi:waypoint x="1391.2104637910388" y="431.65000823552083"></omgdi:waypoint>
         <omgdi:waypoint x="1702.0576701532796" y="431.2712684212426"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-05E14DBD-D238-47B7-B1D4-824092DB363C" id="BPMNEdge_sid-05E14DBD-D238-47B7-B1D4-824092DB363C">
+        <omgdi:waypoint x="642.7071248618674" y="431.1731862946368"></omgdi:waypoint>
+        <omgdi:waypoint x="689.6134767456031" y="431.1731862946368"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-8F658E30-780A-4716-B4B5-1BF9F8020A8F" id="BPMNEdge_sid-8F658E30-780A-4716-B4B5-1BF9F8020A8F">
         <omgdi:waypoint x="861.5015225358214" y="490.0073497902687"></omgdi:waypoint>
@@ -330,13 +334,13 @@
         <omgdi:waypoint x="171.87831739808638" y="431.6447036710965"></omgdi:waypoint>
         <omgdi:waypoint x="260.0" y="431.3982887145588"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-8A38A4BE-7C96-47E2-AD55-0607DF1B7707" id="BPMNEdge_sid-8A38A4BE-7C96-47E2-AD55-0607DF1B7707">
-        <omgdi:waypoint x="421.00000000000006" y="431.17318629463693"></omgdi:waypoint>
-        <omgdi:waypoint x="481.7071248618673" y="431.17318629463693"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-EF2D9D68-DDBA-47B5-8620-04356906188A" id="BPMNEdge_sid-EF2D9D68-DDBA-47B5-8620-04356906188A">
         <omgdi:waypoint x="940.9237607351422" y="431.4532882606246"></omgdi:waypoint>
         <omgdi:waypoint x="984.0515976437043" y="431.6033527563623"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8A38A4BE-7C96-47E2-AD55-0607DF1B7707" id="BPMNEdge_sid-8A38A4BE-7C96-47E2-AD55-0607DF1B7707">
+        <omgdi:waypoint x="421.00000000000006" y="431.17318629463693"></omgdi:waypoint>
+        <omgdi:waypoint x="481.7071248618673" y="431.17318629463693"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-3067B825-F7C0-49CC-9765-59EBB9D62EEB" id="BPMNEdge_sid-3067B825-F7C0-49CC-9765-59EBB9D62EEB">
         <omgdi:waypoint x="1210.0399073281478" y="250.98972208209094"></omgdi:waypoint>
