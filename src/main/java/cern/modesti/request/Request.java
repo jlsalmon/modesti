@@ -96,6 +96,9 @@ public class Request implements Serializable {
   @Valid
   private List<Point> points = new ArrayList<>();
 
+  @TextIndexed
+  private List<Comment> comments = new ArrayList<>();
+
   /**
    *
    */
@@ -335,6 +338,20 @@ public class Request implements Serializable {
    */
   public void setPoints(List<Point> points) {
     this.points = points;
+  }
+
+  /**
+   * @return the comments
+   */
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  /**
+   * @param comments the comments to set
+   */
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
   }
 
   /**
