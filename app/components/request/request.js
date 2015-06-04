@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($http, $timeout, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
+function RequestController($http, $timeout, $modal, request, children, schema, tasks, RequestService, ColumnService, AlertService) {
   var self = this;
 
   self.request = request;
@@ -70,9 +70,11 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
   self.getRowHeaders = getRowHeaders;
   self.getColumns = getColumns;
   self.getColumnHeaders = getColumnHeaders;
+
   self.activateCategory = activateCategory;
   self.addExtraCategory = addExtraCategory;
   self.getAvailableExtraCategories = getAvailableExtraCategories;
+  self.resetSorting = resetSorting;
   self.save = save;
   self.undo = undo;
   self.redo = redo;
@@ -80,8 +82,10 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
   self.copy = copy;
   self.paste = paste;
   self.search = search;
+  self.showComments = showComments;
+  self.showActivity = showActivity;
+
   self.getSelectedPointIds = getSelectedPointIds;
-  self.resetSorting = resetSorting;
   self.renderRowBackgrounds = renderRowBackgrounds;
 
   /**
@@ -139,11 +143,13 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
 
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
+    var field, editable;
     for (var i = 0; i < self.activeCategory.fields.length; i++) {
-      var field = self.activeCategory.fields[i];
+      field = self.activeCategory.fields[i];
+      editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
 
       // Build the right type of column based on the schema
-      var column = ColumnService.getColumn(field);
+      var column = ColumnService.getColumn(field, editable);
       self.columns.push(column);
     }
 
@@ -368,6 +374,38 @@ function RequestController($http, $timeout, request, children, schema, tasks, Re
     // Hack to clear sorting
     self.hot.updateSettings({columnSorting: false});
     self.hot.updateSettings({columnSorting: true});
+  }
+
+  /**
+   *
+   */
+  function showComments() {
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/request/modals/comments-modal.html',
+      controller: 'CommentsModalController as ctrl',
+      resolve: {
+        request: function() {
+          return self.request;
+        }
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  function showActivity() {
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/request/modals/activity-modal.html',
+      controller: 'ActivityModalController as ctrl',
+      resolve: {
+        request: function() {
+          return self.request;
+        }
+      }
+    });
   }
 
   /**

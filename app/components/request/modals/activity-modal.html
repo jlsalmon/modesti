@@ -1,0 +1,73 @@
+<style>
+  .comments-box {
+    background: #fbfbfb;
+  }
+
+  .comments-box .box-footer {
+    background: #fbfbfb;
+  }
+
+  .chat .item > .message {
+    margin: inherit;
+  }
+</style>
+
+<div class="modal-header">
+  <h3 class="modal-title"><i class="fa fa-fw fa-heartbeat"></i> Activity for request {{::ctrl.request.requestId}}</h3>
+</div>
+
+<div class="modal-body">
+
+  <style>
+    .timeline > li > .timeline-item {
+      background: #fbfbfb;
+    }
+  </style>
+
+  <ul class="timeline">
+    <!-- timeline time label -->
+    <li class="time-label">
+    <span class="bg-gray">
+      10 Feb. 2014
+    </span>
+    </li>
+    <!-- /.timeline-label -->
+    <!-- timeline item -->
+    <li>
+      <i class="fa fa-envelope bg-blue"></i>
+
+      <div class="timeline-item">
+        <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+
+        <h3 class="timeline-header"><a href="#">jusalmon</a> validated request</h3>
+
+        <div class="timeline-body">
+          Result: success
+        </div>
+
+      </div>
+    </li>
+    <!-- END timeline item -->
+    <!-- timeline item -->
+    <li>
+      <i class="fa fa-user bg-blue"></i>
+
+      <div class="timeline-item">
+        <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
+
+        <h3 class="timeline-header no-border"><a href="#">jusalmon</a> created request</h3>
+      </div>
+    </li>
+    <!-- END timeline item -->
+
+    <li>
+      <i class="fa fa-clock-o bg-gray"></i>
+    </li>
+  </ul>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="ctrl.cancel()">Cancel</button>
+  <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="rejectionReasonsForm.$invalid">OK</button>
+</div>

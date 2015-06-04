@@ -18,10 +18,11 @@ function ColumnService($http) {
   /**
    *
    */
-  function getColumn(field) {
+  function getColumn(field, editable) {
     var column = {
       data : 'properties.' + field.id,
-      title : field.name
+      title : field.name,
+      readOnly : !editable
     };
 
     if (field.type == 'typeahead') {

@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:CommentsController
- * @description # CommentsController Controller of the modesti
+ * @name modesti.controller:RejectionModalController
+ * @description # RejectionModalController Controller of the modesti
  */
-angular.module('modesti').controller('CommentsController', CommentsController);
+angular.module('modesti').controller('RejectionModalController', RejectionModalController);
 
-function CommentsController($modalInstance, selectedPointIds, rows) {
+function RejectionModalController($modalInstance, selectedPointIds, rows) {
   var self = this;
 
   self.selectedPointIds = selectedPointIds;
