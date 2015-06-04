@@ -24,7 +24,6 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
    * Settings object for handsontable
    */
   self.settings = {
-    //colHeaders: true,
     rowHeaders: getRowHeaders,
     contextMenu: true,
     stretchH: 'all',
@@ -133,50 +132,6 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
   }
 
   /**
-   * Note: currently ngHandsontable requires that columns be pushed into the array after the table has been initialised.
-   * It does not accept a function, nor will it accept an array returned from a function call.
-   * See https://github.com/handsontable/handsontable/issues/590. Hopefully this will be fixed in a later release.
-   */
-  function getColumns() {
-    // Get the columns
-    self.columns.length = 0;
-
-    //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
-
-    var field, editable;
-    for (var i = 0; i < self.activeCategory.fields.length; i++) {
-      field = self.activeCategory.fields[i];
-      editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
-
-      // Build the right type of column based on the schema
-      var column = ColumnService.getColumn(field, editable);
-      self.columns.push(column);
-    }
-
-    // Checkbox column
-    self.columns.push({data: 'selected', type: 'checkbox'});
-  }
-
-  /**
-   *
-   */
-  function getColumnHeaders() {
-    var colHeaders = [];
-
-    for (var i = 0; i < self.activeCategory.fields.length; i++) {
-      var field = self.activeCategory.fields[i];
-      colHeaders.push(field.name);
-    }
-
-    //colHeaders.push('<input type="checkbox" class="select-all"  style="margin: 0" ' + (isChecked() ?
-    // 'checked="checked"' : '') + '>');
-    colHeaders.push('&nbsp;');
-
-    // Set the column headers
-    self.hot.updateSettings({ colHeaders: colHeaders });
-  }
-
-  /**
    * Requests with certain statuses require that only some types points be displayed, i.e. requests in state
    * 'FOR_APPROVAL' should only display alarms. So we disconnect the data given to the table from the request and
    * include in it only those points which must be displayed.
@@ -231,6 +186,50 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
     else {
       return point.id;
     }
+  }
+
+  /**
+   * Note: currently ngHandsontable requires that columns be pushed into the array after the table has been initialised.
+   * It does not accept a function, nor will it accept an array returned from a function call.
+   * See https://github.com/handsontable/handsontable/issues/590. Hopefully this will be fixed in a later release.
+   */
+  function getColumns() {
+    // Get the columns
+    self.columns.length = 0;
+
+    //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
+
+    var field, editable;
+    for (var i = 0; i < self.activeCategory.fields.length; i++) {
+      field = self.activeCategory.fields[i];
+      editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
+
+      // Build the right type of column based on the schema
+      var column = ColumnService.getColumn(field, editable);
+      self.columns.push(column);
+    }
+
+    // Checkbox column
+    self.columns.push({data: 'selected', type: 'checkbox'});
+  }
+
+  /**
+   *
+   */
+  function getColumnHeaders() {
+    var colHeaders = [];
+
+    for (var i = 0; i < self.activeCategory.fields.length; i++) {
+      var field = self.activeCategory.fields[i];
+      colHeaders.push(field.name);
+    }
+
+    //colHeaders.push('<input type="checkbox" class="select-all"  style="margin: 0" ' + (isChecked() ?
+    // 'checked="checked"' : '') + '>');
+    colHeaders.push('&nbsp;');
+
+    // Set the column headers
+    self.hot.updateSettings({ colHeaders: colHeaders });
   }
 
   /**
@@ -504,6 +503,7 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
     // Make the background red
     td.style.background = '#DFF0D8';
   }
+
   /**
    *
    */
@@ -526,5 +526,21 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
           }
         }, 300);
       });
+
+    // Fix the width of the last column and add the surplus to the first column
+    var firstColumnHeader = $('.htCore colgroup col.rowHeader');
+    var secondColumnHeader = $('.htCore colgroup col:nth-child(2)');
+    var secondColumnHeaderWidth = secondColumnHeader.width();
+    var checkboxHeader = $('.htCore colgroup col:last-child');
+    var checkboxHeaderWidth = checkboxHeader.width();
+    secondColumnHeaderWidth = secondColumnHeaderWidth + (checkboxHeaderWidth - 30);
+    secondColumnHeader.width(secondColumnHeaderWidth);
+    checkboxHeader.width('30px');
+    firstColumnHeader.width('45px');
+
+    // Centre the checkbox in the last column
+    var checkboxCell = $('.htCore input.htCheckboxRendererInput').parent();
+    checkboxCell.css('text-align', 'center');
+    //checkboxTd.css('width', '20px');
   }
 }

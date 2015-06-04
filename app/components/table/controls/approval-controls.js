@@ -79,7 +79,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     var modalInstance = $modal.open({
       animation: false,
       templateUrl: 'components/table/controls/modals/rejection-modal.html',
-      controller: 'CommentsController as ctrl',
+      controller: 'RejectionModalController as ctrl',
       resolve: {
         selectedPointIds: function() {
           return selectedPointIds;
