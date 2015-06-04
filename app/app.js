@@ -10,20 +10,14 @@
  */
 var app = angular.module('modesti',
   [
-    //'ngAnimate',
     'ngCookies',
-    //'ngResource',
-    //'ngRoute',
-    //'ngSanitize',
-    //'ngTouch',
-    'ngTable',
+    'ngSanitize',
     'ngStorage',
+    'ngHandsontable',
     'ui.bootstrap',
     'ui.router',
     'ui.unique',
     'restangular',
     'angularFileUpload',
-    'http-auth-interceptor',
-    'QuickList',
-    'ngHandsontable'
+    'http-auth-interceptor'
   ]);
