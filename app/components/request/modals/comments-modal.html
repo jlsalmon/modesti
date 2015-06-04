@@ -26,26 +26,24 @@
     <!--</div>-->
 
     <div class="box-body chat" id="chat-box">
-      <!-- chat item -->
-      <div class="item">
-        <p class="message">
-          <a href="#" class="name">
-            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 2:15</small>
-            Justin Salmon
-          </a>
-          I would like to meet you to discuss the latest news about
-          this request. They say it is going to be one of the best requests ever created. We are all very excited about it.
-        </p>
+
+      <div class="item" ng-if="ctrl.request.comments.length == 0">
+        No comments
       </div>
-      <!-- /.item -->
+
       <!-- chat item -->
-      <div class="item">
+      <div class="item" ng-repeat="comment in ctrl.request.comments" ng-if="ctrl.request.comments.length > 0">
         <p class="message">
           <a href="#" class="name">
-            <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:15</small>
-            Robin Martini
+            <small class="text-muted pull-right">
+              {{::comment.timestamp | date:'medium'}}
+              <i class="fa fa-fw fa-clock-o"></i>
+            </small>
+
+            {{::comment.user.firstName}} {{::comment.user.lastName}} ({{::comment.user.username}})
           </a>
-          Okay, great.
+
+          {{::comment.text}}
         </p>
       </div>
       <!-- /.item -->
@@ -54,10 +52,13 @@
 
     <div class="box-footer">
       <div class="input-group">
-        <input class="form-control" placeholder="Write comment...">
+        <input class="form-control" ng-model="ctrl.text" placeholder="Write comment...">
 
         <div class="input-group-btn">
-          <button class="btn btn-primary">Add comment</button>
+          <button class="btn btn-default" ng-click="ctrl.addComment()">
+            <i class="fa fa-fw fa-plus"></i>
+            Add comment
+          </button>
         </div>
       </div>
     </div>
@@ -66,6 +67,5 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-default" ng-click="ctrl.cancel()">Cancel</button>
-  <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="rejectionReasonsForm.$invalid">OK</button>
+  <button class="btn btn-primary" ng-click="ctrl.close()">OK</button>
 </div>
