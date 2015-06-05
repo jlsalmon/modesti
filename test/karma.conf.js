@@ -42,6 +42,10 @@ module.exports = function(config) {
       'app/bower_components/pikaday/pikaday.js',
       'app/bower_components/handsontable/dist/handsontable.full.js',
       'app/bower_components/ngHandsontable/dist/ngHandsontable.js',
+      'app/bower_components/angular-translate/angular-translate.js',
+      'app/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
+      'app/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
+      'app/bower_components/angular-translate-storage-local/angular-translate-storage-local.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

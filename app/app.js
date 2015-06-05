@@ -19,5 +19,6 @@ var app = angular.module('modesti',
     'ui.unique',
     'restangular',
     'angularFileUpload',
-    'http-auth-interceptor'
+    'http-auth-interceptor',
+    'pascalprecht.translate'
   ]);

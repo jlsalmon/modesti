@@ -20,7 +20,12 @@
     "angular-ui-utils": "~0.2.3",
     "autofill-event": "~1.0.0",
     "handsontable": "0.15.0-beta5",
-    "ngHandsontable": "~0.5.2"
+    "ngHandsontable": "~0.5.2",
+    "angular-translate": "~2.7.2",
+    "angular-translate-loader-static-files": "~2.7.2",
+    "famfamfam-flags": "~0.3.3",
+    "angular-translate-storage-local": "~2.7.2",
+    "famfamfam-flags-sprite": "~1.0.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.3.0"

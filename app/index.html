@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="bower_components/normalize.css/normalize.css" />
 <link rel="stylesheet" href="bower_components/pikaday/css/pikaday.css" />
 <link rel="stylesheet" href="bower_components/handsontable/dist/handsontable.full.css" />
+<link rel="stylesheet" href="bower_components/famfamfam-flags-sprite/src/flags-sprite.min.css" />
 <!-- endbower -->
 <!-- endbuild -->
 <!-- build:css(.tmp) styles/main.css -->
@@ -72,6 +73,30 @@
 
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
+
+            <li class="dropdown user user-menu">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-cloak>
+                <span class="hidden-xs">
+                  <div class="flag-icon {{ctrl.getCurrentLanguage() == 'en' ? 'gb' : 'fr'}}"
+                       style="vertical-align: middle"></div>
+                  {{ctrl.getCurrentLanguage()}}
+                </span>
+              </a>
+              <ul class="dropdown-menu"  ng-cloak>
+                <li>
+                  <a href="" ng-click="ctrl.changeLanguage('en')" class="header">
+                    <div class="flag-icon gb" style="vertical-align: middle"></div>
+                    English
+                  </a>
+                </li>
+                <li>
+                  <a href="" ng-click="ctrl.changeLanguage('fr')" class="header">
+                    <div class="flag-icon fr" style="vertical-align: middle"></div>
+                    Français
+                  </a>
+                </li>
+              </ul>
+            </li>
 
           <form class="navbar-form navbar-left sidebar-form" role="search">
             <div class="form-group input-group">
@@ -198,6 +223,7 @@
                 </li>
               </ul>
             </li>
+
           </ul>
         </div>
       </nav>
@@ -299,6 +325,10 @@
   <script src="bower_components/pikaday/pikaday.js"></script>
   <script src="bower_components/handsontable/dist/handsontable.full.js"></script>
   <script src="bower_components/ngHandsontable/dist/ngHandsontable.js"></script>
+  <script src="bower_components/angular-translate/angular-translate.js"></script>
+  <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+  <script src="bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
+  <script src="bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
 

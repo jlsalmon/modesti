@@ -11,7 +11,7 @@ angular.module('modesti').config(configure);
 
 var BACKEND_BASE_URL = 'http://localhost:8080';
 
-function configure($httpProvider, RestangularProvider) {
+function configure($httpProvider, $translateProvider, RestangularProvider) {
 
   // Needed so that Spring Security sends us back a WWW-Authenticate header,
   // which will prevent th browser from showing a basic auth popup
@@ -21,6 +21,7 @@ function configure($httpProvider, RestangularProvider) {
   $httpProvider.defaults.withCredentials = true;
 
   configureRestangular(RestangularProvider);
+  configureTranslations($translateProvider);
   configureErrorInterceptors($httpProvider);
 }
 
@@ -56,6 +57,20 @@ function configureRestangular(RestangularProvider) {
   RestangularProvider.setRestangularFields({
     selfLink : "_links.self.href"
   });
+}
+
+/**
+ *
+ * @param $translateProvider
+ */
+function configureTranslations($translateProvider) {
+  $translateProvider.useStaticFilesLoader({
+    prefix: 'translations/locale-',
+    suffix: '.json'
+  });
+  $translateProvider.useSanitizeValueStrategy('sanitize');
+  $translateProvider.useLocalStorage();
+  $translateProvider.preferredLanguage('en');
 }
 
 /**

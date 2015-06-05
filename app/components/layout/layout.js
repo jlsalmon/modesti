@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('LayoutController', LayoutController);
 
-function LayoutController($scope, $location, $localStorage, $cookies, $modal) {
+function LayoutController($scope, $location, $translate, $localStorage, $cookies, $modal) {
   var self = this;
 
   var user = $localStorage.user;
@@ -17,6 +17,8 @@ function LayoutController($scope, $location, $localStorage, $cookies, $modal) {
   });
 
   self.isActivePage = isActivePage;
+  self.getCurrentLanguage = getCurrentLanguage;
+  self.changeLanguage = changeLanguage;
   self.search = search;
   self.login = login;
   self.logout = logout;
@@ -26,6 +28,23 @@ function LayoutController($scope, $location, $localStorage, $cookies, $modal) {
    */
   function isActivePage(page) {
     return $location.path().lastIndexOf(page, 0) === 0;
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getCurrentLanguage() {
+    return $translate.use();
+  }
+
+  /**
+   *
+   * @param language
+   * @returns {*}
+   */
+  function changeLanguage(language) {
+    return $translate.use(language);
   }
 
   /**
