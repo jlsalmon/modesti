@@ -68,7 +68,7 @@ function configureTranslations($translateProvider) {
     prefix: 'translations/locale-',
     suffix: '.json'
   });
-  $translateProvider.useSanitizeValueStrategy('sanitize');
+  $translateProvider.useSanitizeValueStrategy('escape');
   $translateProvider.useLocalStorage();
   $translateProvider.preferredLanguage('en');
 }
