@@ -86,28 +86,30 @@
                 <li>
                   <a href="" ng-click="ctrl.changeLanguage('en')" class="header">
                     <div class="flag-icon gb" style="vertical-align: middle"></div>
-                    {{ 'LANG_EN' | translate }}
+                    English
                   </a>
                 </li>
                 <li>
                   <a href="" ng-click="ctrl.changeLanguage('fr')" class="header">
                     <div class="flag-icon fr" style="vertical-align: middle"></div>
-                    {{ 'LANG_FR' | translate }}
+                    Français
                   </a>
                 </li>
               </ul>
             </li>
 
-          <form class="navbar-form navbar-left sidebar-form" role="search">
-            <div class="form-group input-group">
-              <input type="text" name="q" ng-model="q" class="form-control input-sm" placeholder="Search...">
-              <span class="input-group-btn">
-                <button type='submit' name='search' id='search-btn' class="btn btn-sm btn-flat navbar-btn" ng-click="ctrl.search(q)">
-                  <i class="fa fa-search"></i>
-                </button>
-              </span>
-            </div>
-          </form>
+            <li style="margin-left: 10px">
+              <form class="navbar-form navbar-left sidebar-form" role="search">
+                <div class="form-group input-group">
+                  <input type="text" name="q" ng-model="q" class="form-control input-sm" placeholder="Search...">
+                  <span class="input-group-btn">
+                    <button type='submit' name='search' id='search-btn' class="btn btn-sm btn-flat navbar-btn" ng-click="ctrl.search(q)">
+                      <i class="fa fa-search"></i>
+                    </button>
+                  </span>
+                </div>
+              </form>
+            </li>
 
             <!-- Messages: style can be found in dropdown.less-->
 <!--             <li class="dropdown messages-menu">

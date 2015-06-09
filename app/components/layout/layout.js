@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('LayoutController', LayoutController);
 
-function LayoutController($scope, $location, $translate, $localStorage, $cookies, $modal) {
+function LayoutController($scope, $rootScope, $location, $translate, $localStorage, $cookies, $modal) {
   var self = this;
 
   var user = $localStorage.user;
@@ -44,7 +44,10 @@ function LayoutController($scope, $location, $translate, $localStorage, $cookies
    * @returns {*}
    */
   function changeLanguage(language) {
-    return $translate.use(language);
+    $translate.use(language);
+    // Broadcast that the language changed for any parts of the application
+    // that may be interested
+    $rootScope.$broadcast('event:languageChanged')
   }
 
   /**

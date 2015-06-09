@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($http, $timeout, $modal, request, children, schema, tasks, RequestService, ColumnService, AlertService, HistoryService) {
+function RequestController($scope, $http, $timeout, $modal, request, children, schema, tasks, RequestService, ColumnService, AlertService, HistoryService) {
   var self = this;
 
   self.request = request;
@@ -489,7 +489,8 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
   }
 
   /**
-   *
+   * Slightly hacky little function to make sure all the elements on the page are properly
+   * initialised.
    */
   function afterRender() {
 
@@ -530,4 +531,15 @@ function RequestController($http, $timeout, $modal, request, children, schema, t
     checkboxCell.css('text-align', 'center');
     //checkboxTd.css('width', '20px');
   }
+
+  /**
+   * When the global language is changed, this event will be fired. We catch it here and
+   * update the columns to make sure the help text etc. is in the right language.
+   */
+  $scope.$on('event:languageChanged', function() {
+    $timeout(function () {
+      console.log('language changed: refreshing columns');
+      getColumns();
+    }, 100);
+  });
 }

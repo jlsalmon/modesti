@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('ColumnService', ColumnService);
 
-function ColumnService($http) {
+function ColumnService($http, $translate) {
   var self = this;
 
   // Public API
@@ -45,9 +45,9 @@ function ColumnService($http) {
    * @returns {string}
    */
   function getColumnHeader(field) {
-    var html = '<span class="help-text" data-container="body" data-toggle="popover" data-placement="top" ' +
-               'data-content="Helpful text">';
-    html += field.name;
+    var html = '<span class="help-text" data-container="body" data-toggle="popover" data-placement="bottom" ';
+    html += 'data-content="' + ($translate.use() == 'en' ? field.help_en : field.help_fr) + '">';
+    html += $translate.use() == 'en' ? field.name_en : field.name_fr;
     html += '</span>';
     return html;
   }
