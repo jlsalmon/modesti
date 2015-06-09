@@ -540,6 +540,6 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     $timeout(function () {
       console.log('language changed: refreshing columns');
       getColumns();
-    }, 100);
+    }, 50);
   });
 }

@@ -114,11 +114,12 @@
               <div class="btn-group" dropdown>
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
                   <i class="fa fa-fw fa-square"></i>
-                  <span class="text-muted">system: </span>{{ctrl.filter.subsystem.system != '' ? ctrl.filter.subsystem.system : 'Any'}} <span class="caret"></span>
+                  <span class="text-muted">{{'SYSTEM'|translate|lowercase}}:
+                  </span>{{ctrl.filter.subsystem.system != '' ? ctrl.filter.subsystem.system : ('ANY'|translate)}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
                   <li>
-                    <a href="" ng-click="ctrl.filter.subsystem.system = ''; ctrl.filter.subsystem.subsystem = ''">Any</a>
+                    <a href="" ng-click="ctrl.filter.subsystem.system = ''; ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
                   </li>
                   <li class="divider"></li>
                   <li ng-repeat="request in ctrl.requests | unique:'subsystem.system'">
@@ -129,11 +130,12 @@
               <div class="btn-group" dropdown>
                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle ng-disabled="ctrl.filter.subsystem.system == ''">
                   <i class="fa fa-fw fa-sitemap"></i>
-                  <span class="text-muted">subsystem: </span>{{ctrl.filter.subsystem.subsystem != '' ? ctrl.filter.subsystem.subsystem : 'Any'}} <span class="caret"></span>
+                  <span class="text-muted">{{'SUBSYSTEM'|translate|lowercase}}:
+                  </span>{{ctrl.filter.subsystem.subsystem != '' ? ctrl.filter.subsystem.subsystem : ('ANY'|translate)}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
                   <li>
-                    <a href="" ng-click="ctrl.filter.subsystem.subsystem = ''">Any</a>
+                    <a href="" ng-click="ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
                   </li>
                   <li class="divider"></li>
                   <li ng-repeat="request in ctrl.requests | filter:ctrl.filter.subsystem.system | unique:'subsystem.subsystem'">
@@ -146,11 +148,12 @@
             <div class="btn-group" dropdown>
               <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
                 <i class="fa fa-fw fa-crosshairs"></i>
-                <span class="text-muted">domain: </span>{{ctrl.filter.domain != '' ? ctrl.filter.domain : 'Any'}} <span class="caret"></span>
+                <span class="text-muted">{{'DOMAIN'|translate|lowercase}}:
+                </span>{{ctrl.filter.domain != '' ? ctrl.filter.domain : ('ANY'|translate)}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a href="" ng-click="ctrl.filter.domain = ''">Any</a>
+                  <a href="" ng-click="ctrl.filter.domain = ''">{{'ANY'|translate}}</a>
                 </li>
                 <li class="divider"></li>
                 <li ng-repeat="request in ctrl.requests | unique:'domain'"><a href="" ng-click="ctrl.filter.domain = request.domain">{{request.domain}}</a></li>
@@ -174,11 +177,12 @@
             <div class="btn-group" dropdown>
               <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
                 <i class="fa fa-fw fa-user"></i>
-                <span class="text-muted">creator: </span>{{ctrl.filter.creator.username != '' ? ctrl.filter.creator.username : 'Any'}} <span class="caret"></span>
+                <span class="text-muted">{{'CREATOR'|translate|lowercase}}:
+                </span>{{ctrl.filter.creator.username != '' ? ctrl.filter.creator.username : ('ANY'|translate)}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a href="" ng-click="ctrl.filter.creator.username = ''">Any</a>
+                  <a href="" ng-click="ctrl.filter.creator.username = ''">{{'ANY'|translate}}</a>
                 </li>
                 <li class="divider"></li>
                 <li ng-repeat="request in ctrl.requests | unique:'creator.username'">
@@ -189,11 +193,11 @@
 
             <div class="btn-group" dropdown>
               <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-                <span class="text-muted">type: </span>{{ctrl.filter.type != '' ? ctrl.filter.type : 'Any'}} <span class="caret"></span>
+                <span class="text-muted">type: </span>{{ctrl.filter.type != '' ? ctrl.filter.type : ('ANY'|translate)}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a href="" ng-click="ctrl.filter.type = ''">Any</a>
+                  <a href="" ng-click="ctrl.filter.type = ''">{{'ANY'|translate}}</a>
                 </li>
                 <li class="divider"></li>
                 <li ng-repeat="request in ctrl.requests | unique:'type'"><a href="" ng-click="ctrl.filter.type = request.type">{{request.type}}</a></li>
@@ -225,7 +229,7 @@
                 <span class="label request-status pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
                 <br/>
                 <span class="text-muted" style="margin-left: 5px;">
-                  #{{request.requestId}} by <!-- <i class="fa fa-fw fa-user"></i> --> {{request.creator.username}}
+                  #{{request.requestId}} {{'BY'|translate}} <!-- <i class="fa fa-fw fa-user"></i> --> {{request.creator.username}}
                 </span>
 
 <!--                 <span class="text-muted">
@@ -254,7 +258,7 @@
                       <!-- Only the request owner can edit the request -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-edit"></i>
-                        Edit
+                        {{'EDIT'|translate}}
                       </button>
                       <button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">
                         <i class="fa fa-trash"></i>
@@ -265,7 +269,7 @@
                       <!-- Only the request owner can correct the errors -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-edit"></i>
-                        Edit
+                        {{'EDIT'|translate}}
                       </button>
                       <button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">
                         <i class="fa fa-trash"></i>
@@ -276,7 +280,7 @@
                       <!-- Only approvers can approve -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
-                        Approve
+                        {{'APPROVE'|translate}}
                       </button>
                     </span>
 
@@ -284,7 +288,7 @@
                       <!-- Only approvers can approve -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
-                        Address
+                        {{'ADDRESS'|translate}}
                       </button>
                     </span>
 
@@ -292,7 +296,7 @@
                       <!-- Only approvers can approve -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
-                        Cable
+                        {{'CABLE'|translate}}
                       </button>
                     </span>
 
@@ -300,7 +304,7 @@
                       <!-- Only testers can test -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-hand-o-right"></i>
-                        Test
+                        {{'TEST'|translate}}
                       </button>
                     </span>
 
@@ -308,7 +312,7 @@
                       <!-- Everyone can view a closed request -->
                       <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
                         <i class="fa fa-fw fa-eye"></i>
-                        View
+                        {{'VIEW'|translate}}
                       </button>
                     </span>
                   </span>

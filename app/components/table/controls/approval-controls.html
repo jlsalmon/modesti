@@ -4,14 +4,14 @@
           ng-click="ctrl.approveSelectedPoints()"
           ng-disabled="!ctrl.parent.getSelectedPointIds().length">
     <i class="fa fa-fw fa-thumbs-o-up"></i>
-    Approve selected
+    {{'APPROVE_SELECTED'|translate}}
   </button>
 
   <button class="btn btn-danger"
           ng-click="ctrl.rejectSelectedPoints()"
           ng-disabled="!ctrl.parent.getSelectedPointIds().length">
     <i class="fa fa-fw fa-thumbs-o-down"></i>
-    Reject selected
+    {{'REJECT_SELECTED'|translate}}
   </button>
 </div>
 
@@ -21,14 +21,14 @@
           ng-click="ctrl.submit()"
           ng-disabled="!ctrl.canSubmit()"
           tooltip-append-to-body="true"
-          tooltip="Submit approval">
+          tooltip="{{'SUBMIT_APPROVAL'|translate}}">
 
     <!--Show icon based on the loading state-->
     <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
     <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
     <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
     <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
-    Submit
+    {{'SUBMIT'|translate}}
   </button>
 
 </div>

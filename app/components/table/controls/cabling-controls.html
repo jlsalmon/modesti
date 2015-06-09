@@ -1,5 +1,5 @@
 <div class="btn-group">
-  <button class="btn btn-primary">Mark selected as cabled</button>
+  <button class="btn btn-primary" translate>CABLE_SELECTED</button>
 </div>
 
 <div class="btn-group pull-right">
@@ -7,14 +7,14 @@
   <button class="btn btn-default"
           ng-click="ctrl.submit()"
           tooltip-append-to-body="true"
-          tooltip="Submit cabling">
+          tooltip="{{ 'SUBMIT_CABLING' | translate}}">
 
     <!--Show icon based on the loading state-->
     <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
     <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
     <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
     <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
-    Submit
+    {{ 'SUBMIT' | translate}}
   </button>
 
 </div>

@@ -216,7 +216,7 @@
       <div class="pull-left">
         <h4 class="request-id">
           <i class="fa fa-list-ol fa-fw text-muted"></i>
-          requests <span class="text-muted">/</span> {{::ctrl.request.requestId}}
+          {{ 'REQUESTS' | translate | lowercase }} <span class="text-muted">/</span> {{::ctrl.request.requestId}}
           <small class="request-description">{{::ctrl.request.description}}</small>
         </h4>
       </div>
@@ -225,23 +225,23 @@
         <!-- <span class="text-muted">
         {{ctrl.request.type | uppercase}}
         </span> -->
-        <span class="request-detail-item text-muted" tooltip="System/Subsystem" tooltip-append-to-body="true" tooltip-placement="bottom">
+        <span class="request-detail-item text-muted" tooltip="{{'SYSTEM_SUBSYSTEM'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-sitemap"></i>
           {{::ctrl.request.subsystem.name}}
         </span>
-        <span class="request-detail-item text-muted" tooltip="Target Domain" tooltip-append-to-body="true" tooltip-placement="bottom">
+        <span class="request-detail-item text-muted" tooltip="{{'DOMAIN'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-crosshairs"></i>
           {{::ctrl.request.domain}}
         </span>
-        <span class="request-detail-item text-muted" tooltip="Categories" tooltip-append-to-body="true" tooltip-placement="bottom">
+        <span class="request-detail-item text-muted" tooltip="{{'CATEGORIES'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-cogs"></i>
           {{ctrl.request.categories.join(', ')}}
         </span>
-        <span class="request-detail-item text-muted" tooltip="Creator" tooltip-append-to-body="true" tooltip-placement="bottom">
+        <span class="request-detail-item text-muted" tooltip="{{'CREATOR'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-user"></i>
           {{::ctrl.request.creator.username}}
         </span>
-        <span class="request-detail-item"  tooltip="Status" tooltip-append-to-body="true" tooltip-placement="bottom">
+        <span class="request-detail-item"  tooltip="{{'STATUS'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <span class="label request-status" ng-class="'{{::ctrl.request.status}}'">
             {{::ctrl.request.status.replace('_', ' ')}}
           </span>
@@ -272,7 +272,7 @@
         <!-- Dropdown button to select category -->
         <div class="btn-group toolbar-item" dropdown>
           <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-            <span class="text-muted">category:</span>
+            <span class="text-muted">{{'CATEGORY'|translate}}:</span>
             {{ctrl.activeCategory.name}} <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
@@ -285,7 +285,7 @@
 
         <!-- Button to dynamically add a new tab category -->
         <div class="btn-group toolbar-item" dropdown ng-show="::ctrl.request.status == 'IN_PROGRESS'">
-          <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle tooltip="Add category">
+          <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle tooltip="{{'ADD_CATEGORY'|translate}}">
             <i class="fa fa-plus"></i>
           </button>
           <ul class="new-tab-menu dropdown-menu" role="menu">
@@ -293,7 +293,7 @@
               <a ng-click="ctrl.addExtraCategory(tab)">{{::tab}}</a>
             </li>
             <li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">
-              No categories available
+              {{'NO_CATEGORIES_AVAILABLE'|translate}}
             </li>
           </ul>
         </div>
@@ -301,7 +301,7 @@
 
 
       <!-- Button to save the request -->
-      <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.save()" tooltip-append-to-body="true" tooltip="Save request">
+      <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.save()" tooltip-append-to-body="true" tooltip="{{'SAVE'|translate}}">
         <i class="fa fa-fw fa-save saving-state"></i>
 
         <!-- Saving state indicators -->
@@ -318,47 +318,47 @@
 
       <!-- Button to reset column sorting -->
       <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.resetSorting()" tooltip-append-to-body="true"
-              tooltip="Reset sorting">
+              tooltip="{{'RESET_SORTING'|translate}}">
         <span class="glyphicon glyphicon-erase"></span>
       </button>
 
       <!-- Undo/redo buttons -->
       <div class="btn-group">
-        <button class="btn btn-sm btn-default" ng-click="ctrl.undo()" ng-disabled="!ctrl.hot.isUndoAvailable()" tooltip-append-to-body="true" tooltip="Undo">
+        <button class="btn btn-sm btn-default" ng-click="ctrl.undo()" ng-disabled="!ctrl.hot.isUndoAvailable()" tooltip-append-to-body="true" tooltip="{{'UNDO'|translate}}">
           <i class="fa fa-fw fa-undo"></i>
         </button>
-        <button class="btn btn-sm btn-default" ng-click="ctrl.redo()" ng-disabled="!ctrl.hot.isRedoAvailable()" tooltip-append-to-body="true" tooltip="Redo">
+        <button class="btn btn-sm btn-default" ng-click="ctrl.redo()" ng-disabled="!ctrl.hot.isRedoAvailable()" tooltip-append-to-body="true" tooltip="{{'REDO'|translate}}">
           <i class="fa fa-fw fa-repeat"></i>
         </button>
       </div>
 
       <!-- Cut/copy/paste buttons -->
       <div class="btn-group toolbar-item">
-        <button class="btn btn-sm btn-default" ng-click="ctrl.cut()" tooltip-append-to-body="true" tooltip="Cut">
+        <button class="btn btn-sm btn-default" ng-click="ctrl.cut()" tooltip-append-to-body="true" tooltip="{{'CUT'|translate}}">
           <i class="fa fa-fw fa-scissors"></i>
         </button>
-        <button class="btn btn-sm btn-default" ng-click="ctrl.copy()" tooltip-append-to-body="true" tooltip="Copy">
+        <button class="btn btn-sm btn-default" ng-click="ctrl.copy()" tooltip-append-to-body="true" tooltip="{{'COPY'|translate}}">
           <i class="fa fa-fw fa-copy"></i>
         </button>
-        <button class="btn btn-sm btn-default" ng-click="ctrl.paste()" tooltip-append-to-body="true" tooltip="Paste">
+        <button class="btn btn-sm btn-default" ng-click="ctrl.paste()" tooltip-append-to-body="true" tooltip="{{'PASTE'|translate}}">
           <i class="fa fa-fw fa-paste"></i>
         </button>
       </div>
 
       <div class="pull-right">
 
-        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showComments()" tooltip-append-to-body="true" tooltip="Comments">
+        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showComments()" tooltip-append-to-body="true" tooltip="{{'COMMENTS'|translate}}">
           <i class="fa fa-fw fa-comments"></i>
         </button>
 
-        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHistory()" tooltip-append-to-body="true" tooltip="History">
+        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHistory()" tooltip-append-to-body="true" tooltip="{{'HISTORY'|translate}}">
           <i class="fa fa-fw fa-history"></i>
         </button>
 
         <!-- Search form -->
         <form class="search-form toolbar-item form-inline pull-right">
           <div class="form-group input-group">
-            <input type="text" name="query" ng-model="query" class="form-control input-sm" placeholder="This request...">
+            <input type="text" name="query" ng-model="query" class="form-control input-sm" placeholder="{{'THIS_REQUEST'|translate}}">
             <span class="input-group-btn">
               <button type="submit" name="search" id="search-btn" class="btn btn-sm btn-flat" ng-click="ctrl.search(query)">
                 <i class="fa fa-search"></i>
@@ -390,12 +390,12 @@
 
       <!-- If this is a child request, reference its parent -->
       <span class="details" ng-if="ctrl.request.parentRequestId">
-        parent: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a> &middot;
+        {{'PARENT'|translate}}: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a> &middot;
       </span>
 
       <!-- If this is a parent request, list its children -->
       <span class="details" ng-if="ctrl.children.length > 0">
-        children:
+        {{'CHILDREN'|translate}}:
         <span ng-repeat="child in ctrl.children">
           <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
         </span>
@@ -429,423 +429,3 @@
 
   </div>
 </footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<style>-->
-  <!--.content-header > .request-title {-->
-    <!--/*padding-left: 5px;*/-->
-  <!--}-->
-
-  <!--.content-header > .request-title > .request-details {-->
-    <!--margin-top: 6px;-->
-  <!--}-->
-
-  <!--.content-header > .request-title > .request-details > .request-detail-item {-->
-    <!--margin-left: 10px;-->
-  <!--}-->
-
-  <!--.content-header > .request-title h1 {-->
-    <!--margin: 0;-->
-  <!--}-->
-
-  <!--.content-header > .request-icon h1 {-->
-    <!--margin: 0;-->
-  <!--}-->
-
-  <!--div.details {-->
-    <!--width: 100%;-->
-    <!--display: table;-->
-    <!--content: " ";-->
-    <!--clear: both;-->
-    <!--margin-bottom: 20px;-->
-  <!--}-->
-
-  <!--div.details div.details-header {-->
-    <!--background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAADCAYAAABS3WWCAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NEQ5RDgxQzc2RjQ5MTFFMjhEMUNENzFGRUMwRjhBRTciIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NEQ5RDgxQzg2RjQ5MTFFMjhEMUNENzFGRUMwRjhBRTciPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0RDlEODFDNTZGNDkxMUUyOEQxQ0Q3MUZFQzBGOEFFNyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0RDlEODFDNjZGNDkxMUUyOEQxQ0Q3MUZFQzBGOEFFNyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PvXFWFAAAAAYSURBVHjaYvj//z8D0/Pnz/8zgFgAAQYAS5UJscReGMIAAAAASUVORK5CYII=) repeat-x scroll 0 17px;-->
-  <!--}-->
-
-  <!--div.details div.details-header > h5 {-->
-    <!--background-color: #fff;-->
-    <!--display: inline-block;-->
-    <!--padding-right: 5px;-->
-    <!--font-weight: bold;-->
-  <!--}-->
-
-  <!--div.details div.property-list > span {-->
-    <!--margin-top: 1px;-->
-  <!--}-->
-
-  <!--li > a.new-tab {-->
-    <!--border-top: 1px dashed #ccc !important;-->
-    <!--border-right: 1px dashed #ccc !important;-->
-    <!--border-left: 1px;-->
-    <!--border-bottom: 1px !important;-->
-    <!--border-top-right-radius: 5px;-->
-    <!--border-top-left-radius: 0;-->
-    <!--padding: 4px 10px 3px;-->
-  <!--}-->
-
-  <!--li > a.new-tab:hover, li > a.new-tab:focus {-->
-    <!--background: #EEEEEE;-->
-    <!--border-top: 1px solid #CCC !important;-->
-    <!--border-right: 1px solid #CCC !important;-->
-    <!--border-left: 1px;-->
-    <!--border-bottom: 1px !important;-->
-  <!--}-->
-
-  <!--li > ul.new-tab-menu {-->
-    <!--margin-top: 1px !important;-->
-    <!--margin-left: -1px;-->
-  <!--}-->
-
-  <!--.pagination > li > a {-->
-    <!--background: #fafafa;-->
-    <!--color: #666;-->
-  <!--}-->
-
-  <!--.pagination > .active > a,-->
-  <!--.pagination > .active > span,-->
-  <!--.pagination > .active > a:hover,-->
-  <!--.pagination > .active > span:hover,-->
-  <!--.pagination > .active > a:focus,-->
-  <!--.pagination > .active > span:focus {-->
-    <!--color: #333;-->
-    <!--background-color: #E6E6E6;-->
-    <!--border-color: #ADADAD;-->
-    <!--box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);-->
-  <!--}-->
-</style>
-
-<!--<style>-->
-
-  <!--.toolbar-wrapper {-->
-    <!--margin-bottom: 15px;-->
-  <!--}-->
-
-  <!--/** Remove the border from the bottom of the category tabs */-->
-  <!--.nav-tabs {-->
-    <!--border-bottom: none;-->
-  <!--}-->
-
-  <!--.table-wrapper {-->
-    <!--/** Make the table fill the entire width  */-->
-    <!--margin-left: -15px;-->
-    <!--margin-right: -15px;-->
-    <!--margin-bottom: -15px;-->
-    <!--border-bottom: 1px solid #ccc;-->
-  <!--}-->
-
-  <!--/** Remove shadow from column headers */-->
-  <!--.handsontable .handsontable:not(.ht_master) table {-->
-    <!-&#45;&#45;webkit-box-shadow: none;-->
-    <!--box-shadow: none;-->
-    <!--border-bottom:1px solid #ccc;-->
-  <!--}-->
-
-  <!--/** Make striped rows */-->
-  <!--.handsontable table > tbody > tr:nth-child(2n) > td {-->
-    <!--background-color: #f9f9f9;-->
-  <!--}-->
-  <!--.handsontable table > tbody > tr:nth-child(2n+1) > td {-->
-    <!--background-color: #fff;-->
-  <!--}-->
-
-<!--</style>-->
-
-<!--<div class="content-wrapper">-->
-
-<!--&lt;!&ndash; Content Header (Page header) &ndash;&gt;-->
-<!--<section id="request-header" class="content-header">-->
-<!--&lt;!&ndash;   <h1>-->
-    <!--<i class="fa fa-list-ol fa-fw text-muted" style="vertical-align: middle;"></i>-->
-    <!--requests <span class="text-muted">/</span> {{ctrl.request.requestId}} <small>{{ctrl.request.description}}</small>-->
-  <!--</h1> &ndash;&gt;-->
-
-  <!--<div class="request-title" style="display: inline-block; width: 100%">-->
-
-    <!--<h1 class="pull-left" style="min-width: 210px;">-->
-      <!--<i class="fa fa-list-ol fa-fw text-muted" style="vertical-align: middle;"></i>-->
-      <!--requests <span class="text-muted">/</span> {{::ctrl.request.requestId}}-->
-    <!--</h1>-->
-
-    <!--<div class="request-details pull-right">-->
-      <!--&lt;!&ndash; <span class="text-muted">-->
-        <!--{{ctrl.request.type | uppercase}}-->
-      <!--</span> &ndash;&gt;-->
-      <!--<span class="request-detail-item text-muted">-->
-        <!--<i class="fa fa-fw fa-sitemap"></i>-->
-        <!--{{::ctrl.request.subsystem.name}}-->
-      <!--</span>-->
-      <!--<span class="request-detail-item text-muted">-->
-        <!--<i class="fa fa-fw fa-crosshairs"></i>-->
-        <!--{{::ctrl.request.domain}}-->
-      <!--</span>-->
-      <!--<span class="request-detail-item text-muted">-->
-        <!--<i class="fa fa-fw fa-cogs"></i>-->
-        <!--{{ctrl.request.categories.join(', ')}}-->
-      <!--</span>-->
-      <!--<span class="request-detail-item text-muted">-->
-        <!--<i class="fa fa-fw fa-user"></i>-->
-        <!--{{::ctrl.request.creator.username}}-->
-      <!--</span>-->
-      <!--<span class="label request-status" style="margin-left: 10px !important;" ng-class="'{{::ctrl.request.status}}'">{{::ctrl.request.status.replace('_', ' ')}}</span>-->
-    <!--</div>-->
-
-  <!--</div>-->
-
-
-  <!--&lt;!&ndash;<div id="request-main-nav">&ndash;&gt;-->
-    <!--&lt;!&ndash;<tabset justified="false">&ndash;&gt;-->
-      <!--&lt;!&ndash;<tab ng-click="ctrl.activateTab(0)">&ndash;&gt;-->
-        <!--&lt;!&ndash;<tab-heading> <i class="fa fa-fw fa-edit"></i>Edit</tab-heading>&ndash;&gt;-->
-      <!--&lt;!&ndash;</tab>&ndash;&gt;-->
-      <!--&lt;!&ndash;<tab ng-click="ctrl.activateTab(1)">&ndash;&gt;-->
-        <!--&lt;!&ndash;<tab-heading> <i class="fa fa-fw fa-exclamation-triangle"></i>Error report</tab-heading>&ndash;&gt;-->
-      <!--&lt;!&ndash;</tab>&ndash;&gt;-->
-      <!--&lt;!&ndash;<tab ng-click="ctrl.activateTab(2)">&ndash;&gt;-->
-        <!--&lt;!&ndash;<tab-heading> <i class="fa fa-fw fa-heartbeat"></i>Activity</tab-heading>&ndash;&gt;-->
-      <!--&lt;!&ndash;</tab>&ndash;&gt;-->
-      <!--&lt;!&ndash;<tab ng-click="ctrl.activateTab(3)">&ndash;&gt;-->
-        <!--&lt;!&ndash;<tab-heading><i class="fa fa-fw fa-comments"></i>Comments</tab-heading>&ndash;&gt;-->
-      <!--&lt;!&ndash;</tab>&ndash;&gt;-->
-    <!--&lt;!&ndash;</tabset>&ndash;&gt;-->
-  <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-<!--</section>-->
-
-<!--&lt;!&ndash; Main content &ndash;&gt;-->
-<!--<section class="content">-->
-
-  <!--&lt;!&ndash; Request editing page &ndash;&gt;-->
-  <!--<div ng-show="ctrl.currentActiveTab == 0">-->
-
-
-    <!--&lt;!&ndash; Alerts are shown here &ndash;&gt;-->
-    <!--<alert ng-repeat="alert in alerts"-->
-           <!--type="{{alert.type}}"-->
-           <!--close="alert.close()">-->
-      <!--{{alert.message}}-->
-    <!--</alert>-->
-
-
-    <!--&lt;!&ndash; If this is a parent request, list its children &ndash;&gt;-->
-    <!--<div class="details" ng-if="ctrl.children.length > 0">-->
-      <!--children:-->
-      <!--<div ng-repeat="child in ctrl.children">-->
-        <!--<a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a> {{::child.status}}-->
-      <!--</div>-->
-    <!--</div>-->
-
-
-    <!--&lt;!&ndash; If this is a child request, reference its parent &ndash;&gt;-->
-    <!--<div class="details" ng-if="ctrl.request.parentRequestId">-->
-      <!--parent: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>-->
-    <!--</div>-->
-
-
-
-    <!--<div class="toolbar-wrapper">-->
-
-      <!--<div class="row">-->
-        <!--<div class="col-md-3">-->
-          <!--<div class="btn-group" dropdown>-->
-            <!--<button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>-->
-              <!--<span class="text-muted">category:</span>-->
-              <!--{{ctrl.activeCategory.name}} <span class="caret"></span>-->
-            <!--</button>-->
-            <!--<ul class="dropdown-menu">-->
-              <!--<li ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status track by category.name"-->
-                  <!--ng-click="ctrl.activateCategory(category)">-->
-                <!--<a>{{::category.name}}</a>-->
-              <!--</li>-->
-            <!--</ul>-->
-          <!--</div>-->
-
-          <!--&lt;!&ndash; Button to dynamically add a new tab category &ndash;&gt;-->
-          <!--<div class="btn-group" dropdown ng-show="::ctrl.request.status == 'IN_PROGRESS'">-->
-            <!--<button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle tooltip="Add category">-->
-                <!--<i class="fa fa-plus"></i>-->
-            <!--</button>-->
-            <!--<ul class="new-tab-menu dropdown-menu" role="menu">-->
-              <!--<li ng-repeat="tab in ctrl.availableCategories">-->
-                <!--<a ng-click="ctrl.addNewCategory(tab)">{{::tab}}</a>-->
-              <!--</li>-->
-              <!--<li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">-->
-                <!--No categories available-->
-              <!--</li>-->
-            <!--</ul>-->
-          <!--</div>-->
-        <!--</div>-->
-
-        <!--&lt;!&ndash; Button to save the request &ndash;&gt;-->
-        <!--<button class="btn btn-default" ng-click="ctrl.save()"  tooltip-append-to-body="true" tooltip="Save request">-->
-          <!--<i class="fa fa-fw fa-save saving-state"></i>-->
-
-          <!--&lt;!&ndash; Saving state indicators &ndash;&gt;-->
-          <!--<span ng-show="$root.saving == 'started'">-->
-            <!--<i class="fa fa-fw fa-spin fa-cog saving-state"></i>-->
-          <!--</span>-->
-          <!--<span ng-show="$root.saving == 'success'">-->
-            <!--<i class="fa fa-fw fa-check saving-state text-success"></i>-->
-          <!--</span>-->
-          <!--<span ng-show="$root.saving == 'error'">-->
-            <!--<i class="fa fa-fw fa-exclamation-triangle saving-state text-danger"></i>-->
-          <!--</span>-->
-        <!--</button>-->
-
-        <!--&lt;!&ndash; Button to reset column sorting &ndash;&gt;-->
-        <!--<button class="btn btn-default" ng-click="ctrl.resetSorting()" tooltip-append-to-body="true" tooltip="Reset sorting">-->
-          <!--<span class="glyphicon glyphicon-erase"></span>-->
-        <!--</button>-->
-
-        <!--&lt;!&ndash; Undo/redo buttons &ndash;&gt;-->
-        <!--<div class="btn-group">-->
-          <!--<button class="btn btn-default" tooltip-append-to-body="true" tooltip="Undo">-->
-            <!--<i class="fa fa-fw fa-undo"></i>-->
-          <!--</button>-->
-          <!--<button class="btn btn-default" tooltip-append-to-body="true" tooltip="Redo">-->
-            <!--<i class="fa fa-fw fa-repeat"></i>-->
-          <!--</button>-->
-        <!--</div>-->
-
-      <!--&lt;!&ndash; Copy/paste buttons &ndash;&gt;-->
-      <!--<div class="btn-group">-->
-        <!--<button class="btn btn-default" tooltip-append-to-body="true" tooltip="Copy">-->
-          <!--<i class="fa fa-fw fa-copy"></i>-->
-        <!--</button>-->
-        <!--<button class="btn btn-default" tooltip-append-to-body="true" tooltip="Paste">-->
-          <!--<i class="fa fa-fw fa-paste"></i>-->
-        <!--</button>-->
-      <!--</div>-->
-
-
-        <!--&lt;!&ndash; Search form &ndash;&gt;-->
-        <!--<form class="navbar-form navbar-right sidebar-form" style="margin-top: 0;">-->
-          <!--<div class="form-group input-group">-->
-            <!--<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search...">-->
-            <!--<span class="input-group-btn">-->
-              <!--<button type="submit" name="search" id="search-btn" class="btn btn-flat navbar-btn" ng-click="ctrl.search(q)">-->
-                <!--<i class="fa fa-search"></i>-->
-              <!--</button>-->
-            <!--</span>-->
-          <!--</div>-->
-        <!--</form>-->
-      <!--</div>-->
-    <!--</div>-->
-    <!--<div class="clearfix"></div>-->
-
-
-    <!--&lt;!&ndash;<div class="nav-tabs" style="height:28px">&ndash;&gt;-->
-      <!--&lt;!&ndash;&lt;!&ndash; Create a new tab for each category &ndash;&gt;&ndash;&gt;-->
-      <!--&lt;!&ndash;<tabset class="category-headings">&ndash;&gt;-->
-        <!--&lt;!&ndash;&lt;!&ndash; Categories are only shown if they are enabled for the current workflow state &ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;<tab ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status track by category.name"&ndash;&gt;-->
-             <!--&lt;!&ndash;heading="{{::category.name}}"&ndash;&gt;-->
-             <!--&lt;!&ndash;select="ctrl.activateCategory(category)"&ndash;&gt;-->
-             <!--&lt;!&ndash;class="category-heading"></tab>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;&lt;!&ndash; Button to dynamically add a new tab category &ndash;&gt;&ndash;&gt;-->
-        <!--&lt;!&ndash;<li dropdown ng-show="::ctrl.request.status == 'IN_PROGRESS'">&ndash;&gt;-->
-          <!--&lt;!&ndash;<a dropdown-toggle class="new-tab dropdown-toggle" href="">&ndash;&gt;-->
-            <!--&lt;!&ndash;<i class="fa fa-plus-square-o"></i>&ndash;&gt;-->
-          <!--&lt;!&ndash;</a>&ndash;&gt;-->
-          <!--&lt;!&ndash;<ul class="new-tab-menu dropdown-menu" role="menu">&ndash;&gt;-->
-            <!--&lt;!&ndash;<li ng-repeat="tab in ctrl.availableCategories">&ndash;&gt;-->
-              <!--&lt;!&ndash;<a ng-click="ctrl.addNewCategory(tab)">{{::tab}}</a>&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-            <!--&lt;!&ndash;<li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">&ndash;&gt;-->
-              <!--&lt;!&ndash;No categories available&ndash;&gt;-->
-            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-          <!--&lt;!&ndash;</ul>&ndash;&gt;-->
-        <!--&lt;!&ndash;</li>&ndash;&gt;-->
-      <!--&lt;!&ndash;</tabset>&ndash;&gt;-->
-    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-
-
-    <!--<div id="table-wrapper" class="table-wrapper" style="height: 600px; overflow: hidden">-->
-      <!--<hot-table id="table" settings="ctrl.settings"-->
-                 <!--datarows="ctrl.request.points"-->
-                 <!--columns="ctrl.columns">-->
-      <!--</hot-table>-->
-    <!--</div>-->
-
-
-  <!--</div>-->
-
-  <!--&lt;!&ndash;&lt;!&ndash; Request error report page &ndash;&gt;&ndash;&gt;-->
-  <!--&lt;!&ndash;<div ng-show="ctrl.currentActiveTab == 1">&ndash;&gt;-->
-    <!--&lt;!&ndash;<div ng-include src="'components/request/error-report.html'"></div>&ndash;&gt;-->
-  <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-  <!--&lt;!&ndash;&lt;!&ndash; Request activity page &ndash;&gt;&ndash;&gt;-->
-  <!--&lt;!&ndash;<div ng-show="ctrl.currentActiveTab == 2">&ndash;&gt;-->
-    <!--&lt;!&ndash;<div ng-include src="'components/request/activity.html'"></div>&ndash;&gt;-->
-  <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-  <!--&lt;!&ndash;&lt;!&ndash; Request comments page &ndash;&gt;&ndash;&gt;-->
-  <!--&lt;!&ndash;<div ng-show="ctrl.currentActiveTab == 3">&ndash;&gt;-->
-    <!--&lt;!&ndash;<div ng-include src="'components/request/comments.html'"></div>&ndash;&gt;-->
-  <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-
-<!--</section>-->
-<!--&lt;!&ndash; /.content &ndash;&gt;-->
-
-<!--</div>-->
-<!--&lt;!&ndash; /.content-wrapper &ndash;&gt;-->
-
-<!--<footer class="main-footer" style="border-top: 1px solid #ccc; height: 51px; padding-top: 0px;">-->
-
-  <!--<div class="pull-left" style="padding-top: 15px;">-->
-    <!--<span class="">#{{ctrl.request.requestId}}: {{::ctrl.request.description}}</span>-->
-  <!--</div>-->
-
-  <!--&lt;!&ndash;<div class="pull-right hidden-xs">&ndash;&gt;-->
-    <!--&lt;!&ndash;<span class="text-muted">modesti v0.1</span>&ndash;&gt;-->
-  <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-  <!--&lt;!&ndash; Show appropriate extra controls based on the request status &ndash;&gt;-->
-  <!--<div class="pull-right" style="padding-top: 8px;">-->
-      <!--<span ng-switch="ctrl.request.status">-->
-        <!--<span ng-switch-when="IN_PROGRESS">-->
-          <!--<creation-controls></creation-controls>-->
-        <!--</span>-->
-        <!--<span ng-switch-when="FOR_CORRECTION">-->
-          <!--<creation-controls></creation-controls>-->
-        <!--</span>-->
-        <!--<span ng-switch-when="FOR_APPROVAL">-->
-          <!--<approval-controls></approval-controls>-->
-        <!--</span>-->
-        <!--<span ng-switch-when="FOR_ADDRESSING">-->
-          <!--<addressing-controls></addressing-controls>-->
-        <!--</span>-->
-        <!--<span ng-switch-when="FOR_CABLING">-->
-          <!--<cabling-controls></cabling-controls>-->
-        <!--</span>-->
-        <!--<span ng-switch-when="FOR_TESTING">-->
-          <!--<testing-controls></testing-controls>-->
-        <!--</span>-->
-      <!--</span>-->
-  <!--</div>-->
-
-<!--</footer>-->

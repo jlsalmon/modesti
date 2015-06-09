@@ -4,7 +4,7 @@
         ng-click="ctrl.split()"
         ng-disabled="!ctrl.canSplit()"
         tooltip-append-to-body="true"
-        tooltip="Split selected rows">
+        tooltip="{{'SPLIT_SELECTED'|translate}}">
 
   <!--Show icon based on the loading state-->
   <i class="fa fa-fw fa-share-alt"            ng-show="ctrl.splitting == undefined"></i>
@@ -21,14 +21,14 @@
           ng-click="ctrl.validate()"
           ng-disabled="!ctrl.canValidate()"
           tooltip-append-to-body="true"
-          tooltip="Validate request">
+          tooltip="{{'VALIDATE_REQUEST'|translate}}">
 
     <!--Show icon based on the loading state-->
     <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
     <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
     <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
     <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
-    Validate
+    {{'VALIDATE'|translate}}
   </button>
 
 
@@ -37,14 +37,14 @@
           ng-click="ctrl.submit()"
           ng-disabled="!ctrl.canSubmit()"
           tooltip-append-to-body="true"
-          tooltip="Submit request">
+          tooltip="{{'SUBMIT_REQUEST'|translate}}">
 
     <!--Show icon based on the loading state-->
     <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
     <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
     <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
     <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
-    Submit
+    {{'SUBMIT'|translate}}
   </button>
 
 </div>

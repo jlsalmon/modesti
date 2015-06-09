@@ -1,13 +1,13 @@
 
 <!-- Content Header (Page header) -->
-<section class="content-header">
-  <h1>Upload request</h1>
-  <ol class="breadcrumb">
-    <li><a href="#/"> <i class="fa fa-home"></i> Home
-    </a></li>
-    <li class="active">Upload request</li>
-  </ol>
-</section>
+<!--<section class="content-header">-->
+  <!--<h1>Upload request</h1>-->
+  <!--<ol class="breadcrumb">-->
+    <!--<li><a href="#/"> <i class="fa fa-home"></i> Home-->
+    <!--</a></li>-->
+    <!--<li class="active">Upload request</li>-->
+  <!--</ol>-->
+<!--</section>-->
 
 <style>
 .drop-zone {
@@ -55,41 +55,37 @@
 <section class="content">
 
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-10 col-md-offset-1">
 
       <div class="row">
         <div class="col-md-12">
-          <h3>Select file</h3>
+          <h3 translate>UPLOAD_REQUEST</h3>
 
           <div class="input-group">
             <span class="input-group-btn">
               <span class="btn btn-primary btn-file">
-                <i class="fa fa-folder-open"></i> Browse&hellip; <input type="file" nv-file-select="" uploader="ctrl.uploader" />
+                <i class="fa fa-folder-open"></i> {{'SELECT_FILE'|translate}}&hellip; <input type="file" nv-file-select="" uploader="ctrl.uploader" />
               </span>
             </span>
             <input type="text" class="form-control" readonly>
           </div>
-          <span class="help-block">Select the legacy MODESTI Excel file you wish to upload. Both .xls and .xlsx formats are supported. Max file size 10MB.<br/>
-          Note: only versions greater than or equal to <strong>4.0</strong> are supported.</span>
+          <span class="help-block" translate>SELECT_FILE_HELP</span>
 
           <!-- Multiple <input type="file" nv-file-select="" uploader="ctrl.uploader" multiple /><br /> -->
           </div>
       </div>
 
-      <div class="row">
+      <div class="row" ng-if="ctrl.uploader.queue.length > 0">
         <div class="col-md-12" style="margin-bottom: 40px">
-
-          <h3>Upload queue</h3>
-          <p>Queue length: {{ ctrl.uploader.queue.length }}</p>
 
           <table class="table">
             <thead>
               <tr>
-                <th width="50%">Name</th>
-                <th ng-show="ctrl.uploader.isHTML5">Size</th>
-                <th ng-show="ctrl.uploader.isHTML5">Progress</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th width="50%" translate>NAME</th>
+                <th ng-show="ctrl.uploader.isHTML5" translate>SIZE</th>
+                <th ng-show="ctrl.uploader.isHTML5" translate>PROGRESS</th>
+                <th translate>STATUS</th>
+                <th translate>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -105,13 +101,13 @@
                     class="glyphicon glyphicon-ban-circle"></i></span> <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span></td>
                 <td nowrap>
                   <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                    <span class="glyphicon glyphicon-upload"></span> Upload
+                    <span class="glyphicon glyphicon-upload"></span> {{'UPLOAD'|translate}}
                   </button>
                   <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                    <span class="glyphicon glyphicon-ban-circle"></span> {{'CANCEL'|translate}}
                   </button>
                   <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                    <span class="glyphicon glyphicon-trash"></span> Remove
+                    <span class="glyphicon glyphicon-trash"></span> {{'REMOVE'|translate}}
                   </button>
                 </td>
               </tr>
@@ -140,13 +136,13 @@
       </div>
 
     </div>
-    <div class="col-md-4">
-          <div ng-show="ctrl.uploader.isHTML5">
-            <div class="well drop-zone" nv-file-over="" uploader="ctrl.uploader">
-              <span class="text-muted">Drop file here</span>
-            </div>
-          </div>
-    </div>
+    <!--<div class="col-md-4">-->
+          <!--<div ng-show="ctrl.uploader.isHTML5">-->
+            <!--<div class="well drop-zone" nv-file-over="" uploader="ctrl.uploader">-->
+              <!--<span class="text-muted">Drop file here</span>-->
+            <!--</div>-->
+          <!--</div>-->
+    <!--</div>-->
 
 
 

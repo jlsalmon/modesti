@@ -5,12 +5,11 @@
 </style>
 
 <div class="modal-header">
-  <h3 class="modal-title">Reject points</h3>
+  <h3 class="modal-title" translate>REJECT_POINTS</h3>
 </div>
 
 <div class="modal-body">
-  <p>You are about to reject <b>{{::ctrl.selectedPointIds.length}}</b> points. It is necessary to add a comment to each rejected point, specifying the
-  reason for the rejection.</p>
+  <p translate translate-values='{ n: ctrl.selectedPointIds.length}'>REJECT_POINTS_HELP</p>
 
   <form class="form-horizontal" name="rejectionReasonsForm">
     <div ng-repeat="point in ctrl.rows track by point.id">
@@ -26,14 +25,14 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="rejectionReason" class="col-sm-2 control-label">Reason</label>
+          <label for="rejectionReason" class="col-sm-2 control-label" translate>REASON</label>
           <div class="col-sm-10">
             <input type="text"
                    class="form-control"
                    id="rejectionReason"
                    ng-model="point.approval.message"
                    ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-                   placeholder="Reason for rejection"
+                   placeholder="{{'REJECTION_REASON'|translate}}"
                    required>
           </div>
         </div>
@@ -44,6 +43,6 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-default" ng-click="ctrl.cancel()">Cancel</button>
+  <button class="btn btn-default" ng-click="ctrl.cancel()" translate>CANCEL</button>
   <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="rejectionReasonsForm.$invalid">OK</button>
 </div>

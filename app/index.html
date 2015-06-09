@@ -33,8 +33,7 @@
   <!--[if lt IE 10]>
   <div class="col-lg-12">
     <div class="alert alert-info" style="margin-top: 20px; z-index: 1000;">
-      <p>You are using an <strong>unsupported</strong> browser. Some parts of this site will not work properly.
-         Please <a class="alert-link" href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+      <p translate>UNSUPPORTED_BROWSER_WARNING</p>
     </div>
     <div class="clearfix"></div>
   </div>
@@ -54,17 +53,17 @@
         <div class="navbar-custom-menu pull-left">
           <ul class="nav navbar-nav">
             <li>
-              <a ui-sref="requests"  tooltip="Requests" tooltip-placement="bottom">
+              <a ui-sref="requests"  tooltip="{{'REQUESTS'|translate}}" tooltip-placement="bottom">
                 <i class="fa fa-list-ol"></i>
               </a>
             </li>
             <li>
-              <a ui-sref="new" tooltip="New Request" tooltip-placement="bottom">
+              <a ui-sref="new" tooltip="{{'NEW_REQUEST'|translate}}" tooltip-placement="bottom">
                 <i class="fa fa-plus"></i>
               </a>
             </li>
             <li>
-              <a ui-sref="upload" tooltip="Upload" tooltip-placement="bottom">
+              <a ui-sref="upload" tooltip="{{'UPLOAD_REQUEST'|translate}}" tooltip-placement="bottom">
                 <i class="fa fa-upload"></i>
               </a>
             </li>
@@ -101,7 +100,7 @@
             <li style="margin-left: 10px">
               <form class="navbar-form navbar-left sidebar-form" role="search">
                 <div class="form-group input-group">
-                  <input type="text" name="q" ng-model="q" class="form-control input-sm" placeholder="Search...">
+                  <input type="text" name="q" ng-model="q" class="form-control input-sm" placeholder="{{'SEARCH_REQUESTS'|translate}}">
                   <span class="input-group-btn">
                     <button type='submit' name='search' id='search-btn' class="btn btn-sm btn-flat navbar-btn" ng-click="ctrl.search(q)">
                       <i class="fa fa-search"></i>
@@ -204,7 +203,7 @@
               <a href="" ng-click="ctrl.login()" ng-if="!ctrl.storage.user" ng-cloak>
                 <span class="hidden-xs" >
                   <i class="fa fa-fw fa-sign-in"></i>
-                    Sign in
+                    {{'SIGN_IN'|translate}}
                 </span>
               </a>
 
@@ -220,7 +219,7 @@
                 <li>
                   <a href="" class="header" ng-click="ctrl.logout()">
                     <i class="fa fa-fw fa-sign-out"></i>
-                    Sign out
+                    {{'SIGN_OUT'|translate}}
                   </a>
                 </li>
               </ul>

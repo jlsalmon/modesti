@@ -1,34 +1,42 @@
 
 <div class="form-group" ng-class="{ 'has-error': (form.domain.$invalid && form.domain.$dirty)
                                               || (form.$submitted && form.domain.$invalid) }">
-  <label for="domain" class="col-sm-2 control-label">Domain</label>
-  <div class="col-sm-10">
+  <label for="domain" class="col-sm-3 control-label">
+    <i class="fa fa-fw fa-crosshairs"></i>
+    {{'DOMAIN'|translate}}
+  </label>
+  <div class="col-sm-9">
     <select class="form-control" ng-model="ctrl.request.domain"
             ng-options="domain.name as domain.name for domain in ctrl.domains"
             ng-change="ctrl.updateCategories()" name="domain" required ></select>
-    <span class="help-block">Select the target domain of the request.</span>
+    <span class="help-block" translate>SELECT_DOMAIN</span>
   </div>
 </div>
 
 <div class="form-group" ng-show="ctrl.request.domain"
   ng-class="{ 'has-error': (form.$submitted && ctrl.request.categories.length == 0) }">
-  <label for="categories" class="col-sm-2 control-label">Categories</label>
-  <div class="col-sm-10">
+  <label for="categories" class="col-sm-3 control-label">
+    <i class="fa fa-fw fa-gears"></i>
+    {{'CATEGORIES'|translate}}
+  </label>
+  <div class="col-sm-9">
 
     <label class="checkbox-inline" ng-repeat="category in ctrl.categories">
       <input type="checkbox" value="{{category}}" ng-checked="ctrl.request.categories.indexOf(category) > -1"
              ng-click="ctrl.toggleCategory(category)" name="categories"> {{category}}
     </label>
 
-    <span class="help-block">Select the categories (one or more) of which the points in your request will be.<br/>
-    Note: you can always add new categories later.</span>
+    <span class="help-block" translate>SELECT_CATEGORIES</span>
   </div>
 </div>
 
 <div class="form-group has-feedback" ng-show="ctrl.request.domain"
   ng-class="{ 'has-error': (form.$submitted && form.system.$invalid) }">
-  <label for="System/Subsystem" class="col-sm-2 control-label">System/Subsystem</label>
-  <div class="col-sm-10">
+  <label for="System/Subsystem" class="col-sm-3 control-label">
+    <i class="fa fa-fw fa-sitemap"></i>
+    {{'SYSTEM_SUBSYSTEM'|translate}}
+  </label>
+  <div class="col-sm-9">
 
   <!-- TODO: use input-field directive to replace this -->
 
@@ -37,6 +45,6 @@
       typeahead-loading="loadingSubsystems"
       typeahead-editable="false" class="form-control" name="system" required>
     <i ng-show="loadingSubsystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
-    <span class="help-block">Type the system/subsystem to which this request relates.</span>
+    <span class="help-block" translate>SELECT_SUBSYSTEM</span>
   </div>
 </div>
