@@ -2,8 +2,8 @@
 <div class="form-group" ng-class="{ 'has-error': (form.domain.$invalid && form.domain.$dirty)
                                               || (form.$submitted && form.domain.$invalid) }">
   <label for="domain" class="col-sm-3 control-label">
-    <i class="fa fa-fw fa-crosshairs"></i>
     {{'DOMAIN'|translate}}
+    <i class="fa fa-fw fa-crosshairs"></i>
   </label>
   <div class="col-sm-9">
     <select class="form-control" ng-model="ctrl.request.domain"
@@ -16,8 +16,8 @@
 <div class="form-group" ng-show="ctrl.request.domain"
   ng-class="{ 'has-error': (form.$submitted && ctrl.request.categories.length == 0) }">
   <label for="categories" class="col-sm-3 control-label">
-    <i class="fa fa-fw fa-gears"></i>
     {{'CATEGORIES'|translate}}
+    <i class="fa fa-fw fa-gears"></i>
   </label>
   <div class="col-sm-9">
 
@@ -33,8 +33,8 @@
 <div class="form-group has-feedback" ng-show="ctrl.request.domain"
   ng-class="{ 'has-error': (form.$submitted && form.system.$invalid) }">
   <label for="System/Subsystem" class="col-sm-3 control-label">
-    <i class="fa fa-fw fa-sitemap"></i>
     {{'SYSTEM_SUBSYSTEM'|translate}}
+    <i class="fa fa-fw fa-sitemap"></i>
   </label>
   <div class="col-sm-9">
 
