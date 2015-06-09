@@ -39,7 +39,7 @@ public interface SubSystemRepository extends ReadOnlyRepository<SubSystem, Strin
    */
   @Query(value = "SELECT tes_system_name || ' ' || tess_subsystem_name as name, tes_system_name as system, tess_subsystem_name as subsystem "
                + "FROM   vpts_sysdet "
-               + "WHERE  tes_system_name || ' ' || tess_subsystem_name LIKE UPPER(:name || '%') " , nativeQuery = true)
+               + "WHERE  tes_system_name || ' ' || tess_subsystem_name LIKE UPPER('%' || :name || '%') " , nativeQuery = true)
   public List<SubSystem> findByName(@Param("name") String name);
 
 //  @Override

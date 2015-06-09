@@ -13,6 +13,7 @@ import cern.modesti.workflow.WorkflowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,9 @@ public class UploadService {
   @Autowired
   private WorkflowService workflowService;
 
+  @Autowired
+  private ApplicationContext context;
+
   /**
    *
    * @param filename
@@ -45,7 +49,7 @@ public class UploadService {
    * @return
    */
   public Request parseRequestFromExcelSheet(String filename, InputStream stream, Principal principal) {
-    RequestParser parser = RequestParserFactory.createRequestParser(stream);
+    RequestParser parser = RequestParserFactory.createRequestParser(stream, context);
     Request request = parser.parseRequest();
 
     request.setDescription(filename);

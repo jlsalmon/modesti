@@ -30,6 +30,11 @@ public class PVSSRequestParser extends RequestParser {
   }
 
   @Override
+  protected String parseColumnTitle(String title, int column) {
+    return null;
+  }
+
+  @Override
   protected SubSystem parseSubsystem(List<Point> points) {
     throw new UnsupportedOperationException("Not implemented yet");
   }
@@ -37,6 +42,26 @@ public class PVSSRequestParser extends RequestParser {
   @Override
   protected List<String> parseCategories(List<Point> points) {
     throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  @Override
+  protected Double getMinimumSupportedVersion() {
+    return null;
+  }
+
+  @Override
+  protected int getFirstDataColumn() {
+    return 0;
+  }
+
+  @Override
+  protected int getLastDataColumn() {
+    return 0;
+  }
+
+  @Override
+  protected int getPointIdColumn() {
+    return 0;
   }
 
 }

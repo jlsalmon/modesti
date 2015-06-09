@@ -3,13 +3,17 @@
  */
 package cern.modesti.legacy.parser;
 
-import java.util.List;
-
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-
+import cern.modesti.legacy.exception.RequestParseException;
 import cern.modesti.model.SubSystem;
+import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import cern.modesti.request.point.Point;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.springframework.context.ApplicationContext;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Justin Lewis Salmon
@@ -18,24 +22,182 @@ import cern.modesti.request.point.Point;
 public class CSAMRequestParser extends RequestParser {
 
   /**
-   * @param sheet
+   * Minimum supported version of the legacy Excel MODESTI request sheet
    */
-  public CSAMRequestParser(Sheet sheet) {
+  private static final Double MINIMUM_SUPPORTED_VERSION = 5.2;
+
+  public static final int FIRST_DATA_COLUMN = 3;
+  public static final int LAST_DATA_COLUMN = 56;
+  public static final int POINT_ID_COLUMN = 2;
+
+  //private SubSystemRepository subSystemRepository;
+
+  private Map<String, String> columnTitleMappings = new HashMap<>();
+
+  /**
+   * @param sheet
+   * @param context
+   */
+  public CSAMRequestParser(Sheet sheet, ApplicationContext context) {
     super(sheet);
+
+    //subSystemRepository = context.getBean(SubSystemRepository.class);
+
+    // General mappings
+    columnTitleMappings.put("equipementCse", "gmaoCode");
+    columnTitleMappings.put("equipementCapteur", "otherCode");
+    columnTitleMappings.put("typeDetectionSubSystem", "subSystemName");
+    columnTitleMappings.put("identifiant", "responsiblePersonId");
+    columnTitleMappings.put("nom", "responsiblePersonName");
+    columnTitleMappings.put("attribut", "attribute");
+
+    // Alarm mappings
+    columnTitleMappings.put("etatActif", "alarmValue");
+    columnTitleMappings.put("niveauAlarme", "priorityCode");
+
+    // Location mappings
+    columnTitleMappings.put("numero", "buildingNumber");
+    columnTitleMappings.put("sigle", "buildingName");
+    columnTitleMappings.put("etage", "floor");
+    columnTitleMappings.put("piece", "room");
+
+    // Monitoring mappings
+    columnTitleMappings.put("equipementSurveillance", "monitoringEquipmentName");
+
+    // Analogue mappings
+    columnTitleMappings.put("min", "lowLimit");
+    columnTitleMappings.put("max", "highLimit");
+    columnTitleMappings.put("zoneMorte", "valueDeadBand");
+    columnTitleMappings.put("unite", "units");
+
+    // Logging mappings
+    columnTitleMappings.put("valeurZoneMorte", "valueDeadBand");
+    columnTitleMappings.put("zoneMorteTemps", "timeDeadBand");
+
+    // Alarm Help mappings
+    columnTitleMappings.put("actionHeuresOuvrables", "taskDuringWorkingHoursActionHo");
+    columnTitleMappings.put("actionHorsHeuresOuvrables", "taskDuringWorkingHoursActionHho");
   }
 
   @Override
-  protected Point parseDataPoint(Row row) {
-    throw new UnsupportedOperationException("Not implemented yet");
+  protected String parseColumnTitle(String title, int column) {
+    // Fix the French column titles back to English to match the schema
+    String mapping = columnTitleMappings.get(title);
+    if (mapping != null) {
+      title = mapping;
+    }
+
+    // PLC - APIMMD special cases
+    if (title.equals("block") && column == 26) {
+      title = "blockType";
+    } else if (title.equals("word") && column == 27) {
+      title = "wordId";
+    } else if (title.equals("bit") && column == 28) {
+      title = "bitId";
+    }
+
+    // PLC - OPC special cases
+    if (title.equals("byte") && column == 32) {
+      title = "opcByte";
+    } else if (title.equals("bit") && column == 33) {
+      title = "opcBit";
+    }
+
+    // WINTER special cases
+    if (title.equals("voie")) {
+      title = "winterStatus";
+    } else if (title.equals("bit") && column == 35) {
+      title = "winterBit";
+    }
+
+    // SECURITON special cases
+    if (title.equals("group") && column == 37) {
+      title = "securitonGroup";
+    } else if (title.equals("detecteur") && column == 38) {
+      title = "securitonDetecteur";
+    } else if (title.equals("status") && column == 39) {
+      title = "securitonStatus";
+    }
+
+    // SECURIFIRE special cases
+    if (title.equals("group") && column == 41) {
+      title = "securifireGroup";
+    } else if (title.equals("detecteur") && column == 42) {
+      title = "securifireDetecteur";
+    } else if (title.equals("status") && column == 43) {
+      title = "securifireStatus";
+    } else if (title.equals("type") && column == 44) {
+      title = "securifireType";
+    }
+
+    // OPCDEF special cases
+    if (title.equals("status") && column == 48) {
+      title = "opcdefStatus";
+    }
+
+    return title;
   }
 
   @Override
   protected SubSystem parseSubsystem(List<Point> points) {
-    throw new UnsupportedOperationException("Not implemented yet");
+//    List<SubSystem> subsystems = subSystemRepository.findByName(((SubSystem) points.get(0).getProperties().get("subsystem")).getName())
+//
+//    // If there are zero or more than 1 subsystem, bail out
+//    if (subsystems.size() == 0 || subsystems.size() > 1) {
+//      throw new RequestParseException("Could not determine request subsystem");
+//    }
+//
+//    return subsystems.get(0);
+
+    return (SubSystem) points.get(0).getProperties().get("subsystem");
   }
 
   @Override
   protected List<String> parseCategories(List<Point> points) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    List<String> categories = new ArrayList<>();
+
+    for (Point point : points) {
+      if (point.getProperties().containsKey("rack")) {
+        if (!categories.contains("LSAC")) categories.add("LSAC");
+      } else if (point.getProperties().containsKey("blockType")) {
+        if (!categories.contains("PLC - APIMMD")) categories.add("PLC - APIMMD");
+      } else if (point.getProperties().containsKey("opcByte")) {
+        if (!categories.contains("PLC - OPC")) categories.add("PLC - OPC");
+      } else if (point.getProperties().containsKey("winterStatus")) {
+        if (!categories.contains("WINTER")) categories.add("WINTER");
+      } else if (point.getProperties().containsKey("securitonGroup")) {
+        if (!categories.contains("SECIRITON")) categories.add("SECIRITON");
+      } else if (point.getProperties().containsKey("securifireGroup")) {
+        if (!categories.contains("SECURIFIRE")) categories.add("SECURIFIRE");
+      } else if (point.getProperties().containsKey("module")) {
+        if (!categories.contains("OPCDEF")) categories.add("OPCDEF");
+      }
+    }
+
+    if (categories.isEmpty()) {
+      throw new RequestParseException("Could not determine request categories");
+    }
+
+    return categories;
+  }
+
+  @Override
+  protected Double getMinimumSupportedVersion() {
+    return MINIMUM_SUPPORTED_VERSION;
+  }
+
+  @Override
+  protected int getFirstDataColumn() {
+    return FIRST_DATA_COLUMN;
+  }
+
+  @Override
+  protected int getLastDataColumn() {
+    return LAST_DATA_COLUMN;
+  }
+
+  @Override
+  protected int getPointIdColumn() {
+    return POINT_ID_COLUMN;
   }
 }

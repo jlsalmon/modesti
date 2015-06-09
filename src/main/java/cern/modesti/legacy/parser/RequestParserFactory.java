@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cern.modesti.legacy.exception.RequestParseException;
+import org.springframework.context.ApplicationContext;
 
 /**
  * @author Justin Lewis Salmon
@@ -25,9 +26,10 @@ public class RequestParserFactory {
 
   /**
    * @param stream
+   * @param context
    * @return
    */
-  public static RequestParser createRequestParser(InputStream stream) {
+  public static RequestParser createRequestParser(InputStream stream, ApplicationContext context) {
     Workbook workbook;
     try {
       workbook = WorkbookFactory.create(stream);
@@ -43,7 +45,7 @@ public class RequestParserFactory {
     if (domain.equals(RequestType.Domain.TIM.toString())) {
       return new TIMRequestParser(sheet);
     } else if (domain.equals(RequestType.Domain.CSAM.toString())) {
-      return new CSAMRequestParser(sheet);
+      return new CSAMRequestParser(sheet, context);
     } else if (domain.equals(RequestType.Domain.PVSS.toString())) {
       return new PVSSRequestParser(sheet);
     } else {
