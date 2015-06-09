@@ -14,7 +14,7 @@
                 "name_en": "Description",
                 "name_fr": "Description",
                 "help_en": "The description of the point to be integrated, for an alarm this is the text presented to the operator. This text must be in French, but should not contain characters with accents. The description must not make reference to the location nor the equipment concerned.",
-                "help_fr": "La description du point a integrer, pour une alarme c'est le texte presente a l'operateur. Ce texte doit etre en francais mais ne doit pas comporter de carateres a accents. La description ne devrait par faire reference ni a la localisation ni a l'equipement concerne."
+                "help_fr": "La description du point à intégrer, pour une alarme c'est le texte présente à l'operateur. Ce texte doit être en français mais ne doit pas comporter de carateres à accents. La description ne devrait pas faire référence ni à la localisation ni à l'equipement concerne."
             },
             {
                 "id": "pointDataType",
@@ -26,7 +26,7 @@
                 "name_en": "Data Type",
                 "name_fr": "Type de point",
                 "help_en": "Select the data type of the point from the list",
-                "help_fr": "Entrez la type du point suggere dans la liste"
+                "help_fr": "Entrez la type du point suggère dans la liste"
             },
             {
                 "id": "gmaoCode",
@@ -35,7 +35,7 @@
                 "name_en": "GMAO Code",
                 "name_fr": "Code GMAO",
                 "help_en": "The equipment code known by the GMAO system",
-                "help_fr": "Le code de l'equipement connu par le systeme GMAO"
+                "help_fr": "Le code de l'equipement connu par le système GMAO"
             },
             {
                 "id": "subsystem",
@@ -50,7 +50,7 @@
                 "name_en": "System/Subsystem",
                 "name_fr": "Systeme/Sous-systeme",
                 "help_en": "The name of the System/Subsystem concerned",
-                "help_fr": "Le nom du Systeme/Sous-systeme concerne"
+                "help_fr": "Le nom du Système/Sous-système concerné"
             },
             {
                 "id": "responsiblePerson",
@@ -67,7 +67,7 @@
                 "name_en": "Responsible Person",
                 "name_fr": "Responsable",
                 "help_en": "Enter the name or CERN ID of the responsible person",
-                "help_fr": "Entrez le nom ou le numero CERN du responsable"
+                "help_fr": "Entrez le nom ou le numéro CERN du responsable"
             },
             {
                 "id": "pointAttribute",
@@ -97,7 +97,7 @@
                 "name_en": "Site",
                 "name_fr": "Site",
                 "help_en": "Enter the functionality or the site where the point is found",
-                "help_fr": "Entrez la fonctionalite ou le site ou se trouve le point"
+                "help_fr": "Entrez la fonctionnalité ou le site ou se trouve le point"
             },
             {
                 "id": "location",
@@ -112,7 +112,7 @@
                 "name_en": "Location",
                 "name_fr": "Location",
                 "help_en": "Enter the building number related to the point. Optionally also enter the floor and room within the building",
-                "help_fr": "Entrez le numero du batiment concerne par le point. Eventuellement egalement entrer l'etage et la piece dans le batiment"
+                "help_fr": "Entrez le numéro du bâtiment concerne par le point. Éventuellement également entrer l'etage et la pièce dans le bâtiment"
             },
             {
                 "id": "zone",
