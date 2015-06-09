@@ -10,8 +10,11 @@
         "fields": [
             {
                 "id": "tagname",
-                "name": "Tagname",
-                "type": "text"
+                "type": "text",
+                "name_en": "Tagname",
+                "name_fr": "Nom du tag",
+                "help_en": "For items sent to TIM by a SCADA (eg WIZCON, ENS), the name of the tag to be read by TIM",
+                "help_fr": "Pour les points transmis a TIM par un SCADA (e.g. WIZCON, ENS), le nom du tag qui sera lu par TIM"
             }
         ]
     }

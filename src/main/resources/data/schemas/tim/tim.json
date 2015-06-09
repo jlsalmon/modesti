@@ -8,9 +8,12 @@
         "fields": [
             {
                 "id": "autoCallNumber",
-                "name": "Autocall",
-                "type": "text"
-            }
+                "type": "text",
+                "name_en": "Autocall",
+                "name_fr": "Autocall",
+                "help_en": "Enter '1' to indicate that an automatic call will be made by the alarm, or the Mobicall number (even number between 7000 and 7998) if known",
+                "help_fr": "Entrez '1' pour indiquer qu'un appel automatique sera effectua par l'alarme, ou le numero Mobicall (nombre pair entre 7000 et 7998) si connu"
+              }
         ]
     }
 ]

@@ -10,13 +10,15 @@
         "fields": [
             {
                 "id": "status",
-                "name": "Status",
                 "type": "select",
                 "options": "http://localhost:8080/winterStatuses",
                 "model": "status",
                 "returnPropertyName": "winterStatuses",
-                "placeholder": "Status",
-                "required": true
+                "required": true,
+                "name_en": "Status",
+                "name_fr": "Bit",
+                "help_en": "For points managed by the Winter system, the bit number that stores the point value",
+                "help_fr": "Pour les points geres par le systeme Winter, le numero du bit qui stocke la valleur du point"
             }
         ]
     }

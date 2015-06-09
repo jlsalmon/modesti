@@ -10,18 +10,19 @@
         "fields": [
             {
                 "id": "blockType",
-                "name": "Block Type",
-                "type": "text"
+                "type": "text",
+                "name_en": "Block Type",
+                "name_fr": "Code du block",
+                "help_en": "For PLC cabled points, the block type.",
+                "help_fr": "Pour les points cables sur PLC, le code du block."
             },
             {
                 "id": "wordId",
-                "name": "Word ID",
-                "type": "text"
-            },
-            {
-                "id": "abc",
-                "name": "Anna's Field",
-                "type": "text"
+                "type": "text",
+                "name_en": "Word ID",
+                "name_fr": "Numero du mot",
+                "help_en": "For PLC cabled points, the word number that stores the value of the point",
+                "help_fr": "Pour les points cables sur PLC, le numero du mot qui stocke la valeur du point"
             }
         ]
     }

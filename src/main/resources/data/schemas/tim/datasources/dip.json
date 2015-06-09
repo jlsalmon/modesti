@@ -10,8 +10,11 @@
         "fields": [
             {
                 "id": "item",
-                "name": "Item",
-                "type": "text"
+                "type": "text",
+                "name_en": "Item",
+                "name_fr": "Item",
+                "help_en": "For points sent by the DIP system, the name of the data transmitted",
+                "help_fr": "Pour les points transmis par le systeme DIP, le nom de la donnee transmise"
             }
         ]
     }

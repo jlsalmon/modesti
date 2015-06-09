@@ -44,7 +44,9 @@ public class Field {
   @Id
   private String id;
 
-  private String name;
+  private String name_en;
+
+  private String name_fr;
 
   private String type;
 
@@ -54,9 +56,11 @@ public class Field {
 
   private Integer maxLength;
 
-  private String placeholder;
-
   private Boolean required;
+
+  private String help_en = "";
+
+  private String help_fr = "";
 
   /**
    * @return the id
@@ -73,17 +77,31 @@ public class Field {
   }
 
   /**
-   * @return the name
+   * @return the name_en
    */
-  public String getName() {
-    return name;
+  public String getName_en() {
+    return name_en;
   }
 
   /**
-   * @param name the name to set
+   * @param name_en the name_en to set
    */
-  public void setName(String name) {
-    this.name = name;
+  public void setName_en(String name_en) {
+    this.name_en = name_en;
+  }
+
+  /**
+   * @return the name_fr
+   */
+  public String getName_fr() {
+    return name_fr;
+  }
+
+  /**
+   * @param name_fr the name_fr to set
+   */
+  public void setName_fr(String name_fr) {
+    this.name_fr = name_fr;
   }
 
   /**
@@ -143,20 +161,6 @@ public class Field {
   }
 
   /**
-   * @return the placeholder
-   */
-  public String getPlaceholder() {
-    return placeholder;
-  }
-
-  /**
-   * @param placeholder the placeholder to set
-   */
-  public void setPlaceholder(String placeholder) {
-    this.placeholder = placeholder;
-  }
-
-  /**
    * @return the required
    */
   public Boolean getRequired() {
@@ -168,6 +172,22 @@ public class Field {
    */
   public void setRequired(Boolean required) {
     this.required = required;
+  }
+
+  public String getHelp_en() {
+    return help_en;
+  }
+
+  public void setHelp_en(String help_en) {
+    this.help_en = help_en;
+  }
+
+  public String getHelp_fr() {
+    return help_fr;
+  }
+
+  public void setHelp_fr(String help_fr) {
+    this.help_fr = help_fr;
   }
 
   @Override

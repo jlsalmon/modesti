@@ -3,29 +3,42 @@
   "categories":
 [
     {
-        "name": "Basic details",
+        "name": "General",
         "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
         "fields": [
             {
                 "id": "pointDescription",
-                "name": "Description",
                 "type": "text",
                 "maxLength": 10,
-                "required": true
+                "required": true,
+                "name_en": "Description",
+                "name_fr": "Description",
+                "help_en": "The description of the point to be integrated, for an alarm this is the text presented to the operator. This text must be in French, but should not contain characters with accents. The description must not make reference to the location nor the equipment concerned.",
+                "help_fr": "La description du point a integrer, pour une alarme c'est le texte presente a l'operateur. Ce texte doit etre en francais mais ne doit pas comporter de carateres a accents. La description ne devrait par faire reference ni a la localisation ni a l'equipement concerne."
             },
             {
                 "id": "pointDataType",
-                "name": "Data Type",
                 "type": "select",
                 "options": "http://localhost:8080/datatypes",
                 "model": "name",
                 "returnPropertyName": "datatypes",
-                "placeholder": "Data Type",
-                "required": true
+                "required": true,
+                "name_en": "Data Type",
+                "name_fr": "Type de point",
+                "help_en": "Select the data type of the point from the list",
+                "help_fr": "Entrez la type du point suggere dans la liste"
+            },
+            {
+                "id": "gmaoCode",
+                "type": "text",
+                "required": true,
+                "name_en": "GMAO Code",
+                "name_fr": "Code GMAO",
+                "help_en": "The equipment code known by the GMAO system",
+                "help_fr": "Le code de l'equipement connu par le systeme GMAO"
             },
             {
                 "id": "subsystem",
-                "name": "System/Subsystem",
                 "type": "typeahead",
                 "url": "http://localhost:8080/subsystems/search/findByName",
                 "params": [
@@ -33,18 +46,14 @@
                 ],
                 "model": "name",
                 "returnPropertyName": "subsystems",
-                "placeholder": "System/Subsystem",
-                "required": true
-            },
-            {
-                "id": "gmaoCode",
-                "name": "GMAO Code",
-                "type": "text",
-                "required": true
+                "required": true,
+                "name_en": "System/Subsystem",
+                "name_fr": "Systeme/Sous-systeme",
+                "help_en": "The name of the System/Subsystem concerned",
+                "help_fr": "Le nom du Systeme/Sous-systeme concerne"
             },
             {
                 "id": "responsiblePerson",
-                "name": "Responsible Person",
                 "type": "typeahead",
                 "url": "http://localhost:8080/persons/search/findByIdOrName",
                 "params": [
@@ -53,15 +62,20 @@
                 ],
                 "minLength": 2,
                 "model": "name",
-                "template": "<span> ({{match.model.id}})</span>",
                 "returnPropertyName": "persons",
-                "placeholder": "Start typing name or ID",
-                "required": true
+                "required": true,
+                "name_en": "Responsible Person",
+                "name_fr": "Responsable",
+                "help_en": "Enter the name or CERN ID of the responsible person",
+                "help_fr": "Entrez le nom ou le numero CERN du responsable"
             },
             {
                 "id": "pointAttribute",
-                "name": "Point Attribute",
-                "type": "text"
+                "type": "text",
+                "name_en": "Point Attribute",
+                "name_fr": "Attribut",
+                "help_en": "A shortened version of the description",
+                "help_fr": "Un raccourci de la description"
             }
         ]
     },
@@ -73,7 +87,6 @@
         "fields": [
             {
                 "id": "site",
-                "name": "Site",
                 "type": "typeahead",
                 "url": "http://localhost:8080/sites/search/findByName",
                 "params": [
@@ -81,11 +94,13 @@
                 ],
                 "model": "name",
                 "returnPropertyName": "sites",
-                "placeholder": "Site"
+                "name_en": "Site",
+                "name_fr": "Site",
+                "help_en": "Enter the functionality or the site where the point is found",
+                "help_fr": "Entrez la fonctionalite ou le site ou se trouve le point"
             },
             {
                 "id": "location",
-                "name": "Location",
                 "type": "typeahead",
                 "url": "http://localhost:8080/locations/search/find",
                 "params": [
@@ -94,11 +109,13 @@
                 "minLength": 2,
                 "model": "location",
                 "returnPropertyName": "locations",
-                "placeholder": "Start typing a building number..."
+                "name_en": "Location",
+                "name_fr": "Location",
+                "help_en": "Enter the building number related to the point. Optionally also enter the floor and room within the building",
+                "help_fr": "Entrez le numero du batiment concerne par le point. Eventuellement egalement entrer l'etage et la piece dans le batiment"
             },
             {
                 "id": "zone",
-                "name": "Zone",
                 "type": "typeahead",
                 "url": "http://localhost:8080/zones/search/findByName",
                 "params": [
@@ -106,12 +123,18 @@
                 ],
                 "model": "name",
                 "returnPropertyName": "zones",
-                "placeholder": "Zone"
+                "name_en": "Zone",
+                "name_fr": "Zone",
+                "help_en": "Enter the security zone related to the point",
+                "help_fr": "Entrez le zone secu concerne par le point"
             },
             {
                 "id": "detail",
-                "name": "Detail",
-                "type": "text"
+                "type": "text",
+                "name_en": "Detail",
+                "name_fr": "Detail",
+                "help_en": "Supplementary details of the localisation (e.g. Racks)",
+                "help_fr": "Details supplementaire de la localisation (e.g. Racks)"
             }
         ]
     },
@@ -124,7 +147,6 @@
         "fields": [
             {
                 "id": "alarmCategory",
-                "name": "Category",
                 "type": "typeahead",
                 "url": "http://localhost:8080/alarmCategories/search/findByName",
                 "params": [
@@ -132,15 +154,21 @@
                 ],
                 "model": "name",
                 "returnPropertyName": "alarmCategories",
-                "placeholder": "Category"
+                "name_en": "Category",
+                "name_fr": "Categorie",
+                "help_en": "The alarm class in which the alarm will be active",
+                "help_fr": "La categorie d'alarme dans laquelle l'alarme sera diffusee"
             },
             {
                 "id": "priorityCode",
-                "name": "Priority",
                 "type": "select",
                 "options": "http://localhost:8080/alarmPriorities",
                 "model": "priority",
-                "returnPropertyName": "alarmPriorities"
+                "returnPropertyName": "alarmPriorities",
+                "name_en": "Priority",
+                "name_fr": "Niveau",
+                "help_en": "Enter the priority of the alarm between 0 and 3",
+                "help_fr": "Entrez la priorite de l'alarme entre 0 et 3"
             }
         ]
     }

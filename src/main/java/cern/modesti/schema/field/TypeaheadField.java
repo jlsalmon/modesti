@@ -31,8 +31,6 @@ public class TypeaheadField extends Field {
 
   private String returnPropertyName;
 
-  private String template;
-
   /**
    * @return the url
    */
@@ -73,19 +71,5 @@ public class TypeaheadField extends Field {
    */
   public void setReturnPropertyName(String returnPropertyName) {
     this.returnPropertyName = returnPropertyName;
-  }
-
-  /**
-   * @return the template
-   */
-  public String getTemplate() {
-    return template;
-  }
-
-  /**
-   * @param template the template to set
-   */
-  public void setTemplate(String template) {
-    this.template = template;
   }
 }

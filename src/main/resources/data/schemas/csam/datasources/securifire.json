@@ -10,13 +10,15 @@
         "fields": [
             {
                 "id": "type",
-                "name": "Type",
                 "type": "select",
                 "options": "http://localhost:8080/securifireTypes",
                 "model": "type",
                 "returnPropertyName": "securifireTypes",
-                "placeholder": "Type",
-                "required": true
+                "required": true,
+                "name_en": "Type",
+                "name_fr": "Type",
+                "help_en": "",
+                "help_fr": ""
             }
         ]
     }
