@@ -48,13 +48,13 @@ public class TIMRequestParser extends RequestParser {
     else if (title.equals("category") && column == 25) {
       title = "alarmCategory";
     }
-    if (title.equals("value")) {
+    else if (title.equals("value")) {
       title = "alarmValue";
     }
-    if (title.equals("number")) {
+    else if (title.equals("number")) {
       title = "buildingNumber";
     }
-    if (title.equals("name")) {
+    else if (title.equals("name")) {
       title = "buildingName";
     }
 

@@ -103,7 +103,6 @@ public class RequestParserTest {
       assertTrue(point.getId() != null);
       assertFalse(point.getProperties().isEmpty());
     }
-
   }
 
   @Test
@@ -124,6 +123,24 @@ public class RequestParserTest {
       assertTrue(point.getId() != null);
       assertFalse(point.getProperties().isEmpty());
     }
+  }
 
+  @Test
+  public void pvssRequestWithAlarmsIsAccepted() throws IOException {
+    Resource sheet = sheets.get("pvss-alarms.xlsx");
+    Request request = RequestParserFactory.createRequestParser(sheet.getInputStream(), null).parseRequest();
+
+    assertTrue(request.getDomain().equals("PVSS"));
+    assertTrue(request.getType().equals(RequestType.CREATE));
+    assertTrue(request.getCategories().size() == 1);
+    assertTrue(request.getCategories().contains("PVSS"));
+
+    List<Point> points = request.getPoints();
+    assertTrue(points.size() == 43);
+
+    for (Point point : points) {
+      assertTrue(point.getId() != null);
+      assertFalse(point.getProperties().isEmpty());
+    }
   }
 }

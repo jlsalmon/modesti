@@ -1,0 +1,20 @@
+{
+  "name": "pvss",
+  "extends": "core",
+  "categories":
+  [
+    {
+      "name": "General",
+      "fields": [
+        {
+          "id": "pvssReferenceId",
+          "type": "text",
+          "name_en": "PVSS Reference ID",
+          "name_fr": "PVSS Reference ID",
+          "help_en": "Address or identifier of tag in the PVSS system",
+          "help_fr": "Addresse ou identifiant du tag das le systeme PVSS"
+        }
+      ]
+    }
+  ]
+}
