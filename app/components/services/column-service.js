@@ -28,11 +28,11 @@ function ColumnService($http, $translate) {
       readOnly : !editable
     };
 
-    if (field.type == 'typeahead') {
+    if (field.type == 'autocomplete') {
       column = getAutocompleteColumn(column, field);
     }
 
-    if (field.type == 'select') {
+    if (field.type == 'options') {
       column = getDropdownColumn(column, field);
     }
 
