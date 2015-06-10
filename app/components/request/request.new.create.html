@@ -13,7 +13,7 @@
   </div>
 </div>
 
-<div class="form-group" ng-show="ctrl.request.domain"
+<div class="form-group" ng-show="ctrl.request.domain" ng-if="ctrl.categories.length > 0"
   ng-class="{ 'has-error': (form.$submitted && ctrl.request.categories.length == 0) }">
   <label for="categories" class="col-sm-3 control-label">
     {{'CATEGORIES'|translate}}

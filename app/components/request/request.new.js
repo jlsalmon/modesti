@@ -95,7 +95,7 @@ function NewRequestController($http, $location, $localStorage, RequestService, R
    */
   function submit(form) {
     console.log(form);
-    if (form.$invalid || self.request.categories.length == 0) {
+    if (form.$invalid || (self.categories.length > 0 && self.request.categories.length == 0)) {
       console.log('form invalid');
       return;
     }
