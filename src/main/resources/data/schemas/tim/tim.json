@@ -7,6 +7,20 @@
         "name": "Alarm details",
         "fields": [
             {
+              "id": "alarmCategory",
+              "type": "autocomplete",
+              "url": "http://localhost:8080/alarmCategories/search/findByName",
+              "params": [
+                "name"
+              ],
+              "model": "name",
+              "returnPropertyName": "alarmCategories",
+              "name_en": "Category",
+              "name_fr": "Categorie",
+              "help_en": "The alarm class in which the alarm will be active",
+              "help_fr": "La categorie d'alarme dans laquelle l'alarme sera diffusee"
+            },
+            {
                 "id": "autoCallNumber",
                 "type": "text",
                 "name_en": "Autocall",

@@ -5,8 +5,10 @@ package cern.modesti.legacy.parser;
 
 import java.util.*;
 
-import cern.modesti.model.Person;
-import cern.modesti.model.Site;
+import cern.modesti.model.*;
+import cern.modesti.repository.jpa.location.LocationRepository;
+import cern.modesti.repository.jpa.person.PersonRepository;
+import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -17,10 +19,10 @@ import org.slf4j.LoggerFactory;
 
 import cern.modesti.legacy.exception.RequestParseException;
 import cern.modesti.legacy.exception.VersionNotSupportedException;
-import cern.modesti.model.SubSystem;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
 import cern.modesti.request.point.Point;
+import org.springframework.context.ApplicationContext;
 
 /**
  * @author Justin Lewis Salmon
@@ -32,6 +34,9 @@ public abstract class RequestParser {
   protected static final int FIRST_DATA_ROW = 7;
 
   protected Sheet sheet;
+
+  private SubSystemRepository subSystemRepository;
+  private PersonRepository personRepository;
 
   /**
    * @param sheet
@@ -62,8 +67,8 @@ public abstract class RequestParser {
     // Figure out the data sources
     request.setCategories(parseCategories(points));
 
-    // Figure out the subsystem
-    request.setSubsystem(parseSubsystem(points));
+    // Figure out the subsystem: assume first
+    request.setSubsystem((SubSystem) points.get(0).getProperties().get("subsystem"));
 
     return request;
   }
@@ -159,38 +164,25 @@ public abstract class RequestParser {
       return null;
     }
 
-    // Special case: composite Person object
-    Long responsiblePersonId = ((Double) properties.get("responsiblePersonId")).longValue();
-    String responsiblePersonName = (String) properties.get("responsiblePersonName");
-    properties.put("responsiblePerson", new Person(responsiblePersonId, responsiblePersonName));
 
-    // Special case: composite System/Subsystem
-    SubSystem subsystem = new SubSystem();
-    subsystem.setSystem((String) properties.get("systemName"));
-    subsystem.setSubsystem((String) properties.get("subSystemName"));
-    subsystem.setName(subsystem.getSystem() + " " + subsystem.getSubsystem());
-    properties.put("subsystem", subsystem);
+    properties.put("responsiblePerson", parseResponsiblePerson(properties));
+    properties.put("subsystem", parseSubsystem(properties));
+    properties.put("location", parseLocation(properties));
+    properties.put("site", parseSite(properties));
+    properties.put("zone", parseZone(properties));
 
-    // Special case: composite Location object
-    // TODO
-
-    // Special case: composite Site object
-    Site site = new Site();
-    site.setName((String) properties.get("site"));
-    properties.put("site", site);
 
     point.setProperties(properties);
     return point;
   }
 
-  protected abstract String parseColumnTitle(String title, int column);
-
   /**
-   * @param points
    *
+   * @param title
+   * @param column
    * @return
    */
-  protected abstract SubSystem parseSubsystem(List<Point> points);
+  protected abstract String parseColumnTitle(String title, int column);
 
   /**
    * @param points
@@ -201,27 +193,108 @@ public abstract class RequestParser {
 
   /**
    *
+   * @param properties
    * @return
    */
-  protected abstract Double getMinimumSupportedVersion();
+  protected Person parseResponsiblePerson(Map<String, Object> properties) {
+    Person person = null;
+    Long responsiblePersonId = ((Double) properties.get("responsiblePersonId")).longValue();
+    String responsiblePersonName = (String) properties.get("responsiblePersonName");
+
+    // Look for the responsible by ID
+    List<Person> people = personRepository.findByIdOrName(String.valueOf(responsiblePersonId), String.valueOf(responsiblePersonId));
+
+    // If there are zero or more than 1 person, try to find by name
+    if (people.size() == 0 || people.size() > 1) {
+      people = personRepository.findByIdOrName(responsiblePersonName, responsiblePersonName);
+    }
+
+    if (people.size() == 0 || people.size() > 1) {
+      LOG.warn("Could not determine responsible person for point");
+    } else {
+      person = people.get(0);
+      properties.put("responsiblePerson", person);
+    }
+
+    return person;
+  }
 
   /**
+   * @param properties
    *
    * @return
    */
-  protected abstract int getFirstDataColumn();
+  protected SubSystem parseSubsystem(Map<String, Object> properties) {
+    SubSystem subsystem = null;
+    String systemName = (String) properties.get("systemName");
+    String subSystemName = (String) properties.get("subSystemName");
+
+    // CSAM requests specify only the subsystem
+    if (systemName == null) {
+      // Find the subsystem by name (avoiding the "null" string literal)
+      List<SubSystem> subsystems = subSystemRepository.findByName(subSystemName);
+      if (subsystems.size() == 0 || subsystems.size() > 1) {
+        LOG.warn("Could not determine subsystem for point");
+      } else {
+        subsystem = subsystems.get(0);
+      }
+    } else {
+      subsystem = new SubSystem();
+      subsystem.setSystem(systemName);
+      subsystem.setSubsystem(subSystemName);
+      subsystem.setName(systemName + " " + subSystemName);
+    }
+
+    return subsystem;
+  }
 
   /**
    *
+   * @param properties
    * @return
    */
-  protected abstract int getLastDataColumn();
+  private Location parseLocation(Map<String, Object> properties) {
+    Location location = new Location();
+    String buildingNumber = String.valueOf(((Double) properties.get("buildingNumber")).intValue());
+    String floor = properties.get("floor") != null ? String.valueOf(properties.get("floor")) : null;
+    Integer room = properties.get("room") != null ? ((Double) properties.get("room")).intValue() : null;
+
+    location.setLocation(buildingNumber + (floor == null ? "" : ("/" + floor + (room == null ? "" : ("-" + String.format("%03d", room))))));
+    //    List<Location> locations = locationRepository.find(query);
+    //LOG.debug("found " + locations.size() + " locations with query: " + query);
+
+    //    if (locations.size() == 0) {
+    //      //LOG.warn("Could not determine location for point");
+    //    } else {
+    //      // Otherwise, find the least-specific option, which should be the first in the list
+    //      Location location = locations.get(0);
+    //      properties.put("location", location);
+    //    }
+
+    return location;
+  }
 
   /**
    *
+   * @param properties
    * @return
    */
-  protected abstract int getPointIdColumn();
+  private Site parseSite(Map<String, Object> properties) {
+    Site site = new Site();
+    site.setName((String) properties.get("site"));
+    return site;
+  }
+
+  /**
+   *
+   * @param properties
+   * @return
+   */
+  private Zone parseZone(Map<String, Object> properties) {
+    Zone zone = new Zone();
+    zone.setName(properties.get("zone") != null ? String.valueOf(((Double) properties.get("zone")).intValue()) : "");
+    return zone;
+  }
 
   /**
    * This function is horrible. Don't read it unless you really have to.
@@ -295,5 +368,38 @@ public abstract class RequestParser {
       return null;
     }
     return cell.getNumericCellValue();
+  }
+
+  /**
+   *
+   * @return
+   */
+  protected abstract Double getMinimumSupportedVersion();
+
+  /**
+   *
+   * @return
+   */
+  protected abstract int getFirstDataColumn();
+
+  /**
+   *
+   * @return
+   */
+  protected abstract int getLastDataColumn();
+
+  /**
+   *
+   * @return
+   */
+  protected abstract int getPointIdColumn();
+
+  /**
+   *
+   * @param context
+   */
+  public void setApplicationContext(ApplicationContext context) {
+    this.subSystemRepository = context.getBean(SubSystemRepository.class);
+    this.personRepository = context.getBean(PersonRepository.class);
   }
 }

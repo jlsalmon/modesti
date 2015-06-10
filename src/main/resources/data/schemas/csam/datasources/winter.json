@@ -10,7 +10,7 @@
         "fields": [
             {
                 "id": "status",
-                "type": "select",
+                "type": "options",
                 "options": "http://localhost:8080/winterStatuses",
                 "model": "status",
                 "returnPropertyName": "winterStatuses",

@@ -19,6 +19,7 @@ package cern.modesti.repository.jpa.location.site;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -45,5 +46,6 @@ public interface SiteRepository extends ReadOnlyRepository<Site, String> {
    * @return
    */
   @RestResource(rel = "findByName", path = "findByName")
+  @Cacheable("sites")
   List<Site> findByNameStartsWithIgnoreCase(@Param("name") String name);
 }

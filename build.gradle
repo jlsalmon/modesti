@@ -34,8 +34,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-mongodb:1.2.3.RELEASE")
     compile("org.springframework.boot:spring-boot-starter-data-jpa:1.2.3.RELEASE")
     compile("org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE")
-    compile("org.springframework.boot:spring-boot-starter-mail")
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework.boot:spring-boot-starter-mail:1.2.3.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf:1.2.3.RELEASE")
 
     compile("org.springframework.security:spring-security-ldap")
     compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
@@ -62,7 +62,7 @@ dependencies {
     compile("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
 
     testCompile("junit:junit:4.11")
-    testCompile("org.springframework:spring-test")
+    testCompile("org.springframework:spring-test:4.1.6.RELEASE")
     testCompile("org.mockito:mockito-core")
 }
 

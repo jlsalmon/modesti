@@ -23,7 +23,7 @@ import cern.modesti.model.csam.SecurifireType;
 import cern.modesti.model.csam.WinterStatus;
 import cern.modesti.schema.field.OptionsField;
 import cern.modesti.schema.field.TextField;
-import cern.modesti.schema.field.TypeaheadField;
+import cern.modesti.schema.field.AutocompleteField;
 import cern.modesti.request.SearchTextConverter;
 
 @Configuration
@@ -45,7 +45,7 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
     // Tell Spring Data REST to expose IDs for the following classes in JSON
     // responses.
     config.exposeIdsFor(Point.class, Person.class, Site.class, Location.class, Zone.class, SubSystem.class, DataType.class, AlarmCategory.class,
-        AlarmPriority.class, Field.class, TextField.class, OptionsField.class, TypeaheadField.class, WinterStatus.class, SecurifireType.class);
+        AlarmPriority.class, Field.class, TextField.class, OptionsField.class, AutocompleteField.class, WinterStatus.class, SecurifireType.class);
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);

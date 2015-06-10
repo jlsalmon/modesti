@@ -10,7 +10,7 @@
         "fields": [
             {
                 "id": "type",
-                "type": "select",
+                "type": "options",
                 "options": "http://localhost:8080/securifireTypes",
                 "model": "type",
                 "returnPropertyName": "securifireTypes",

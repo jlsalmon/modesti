@@ -19,6 +19,7 @@ package cern.modesti.repository.jpa.subsystem;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -40,6 +41,7 @@ public interface SubSystemRepository extends ReadOnlyRepository<SubSystem, Strin
   @Query(value = "SELECT tes_system_name || ' ' || tess_subsystem_name as name, tes_system_name as system, tess_subsystem_name as subsystem "
                + "FROM   vpts_sysdet "
                + "WHERE  tes_system_name || ' ' || tess_subsystem_name LIKE UPPER('%' || :name || '%') " , nativeQuery = true)
+  @Cacheable("subsystems")
   public List<SubSystem> findByName(@Param("name") String name);
 
 //  @Override

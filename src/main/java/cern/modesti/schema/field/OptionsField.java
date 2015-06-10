@@ -23,21 +23,21 @@ package cern.modesti.schema.field;
  */
 public class OptionsField extends Field {
 
-  private String options;
+  private Object options;
 
   private String returnPropertyName;
 
   /**
    * @return the options
    */
-  public String getOptions() {
+  public Object getOptions() {
     return options;
   }
 
   /**
    * @param options the options to set
    */
-  public void setOptions(String options) {
+  public void setOptions(Object options) {
     this.options = options;
   }
 

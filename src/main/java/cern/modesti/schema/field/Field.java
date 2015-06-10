@@ -36,8 +36,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     visible = true)
 @JsonSubTypes({
     @Type(value = TextField.class, name = "text"),
-    @Type(value = OptionsField.class, name = "select"),
-    @Type(value = TypeaheadField.class, name = "typeahead")})
+    @Type(value = OptionsField.class, name = "options"),
+    @Type(value = AutocompleteField.class, name = "autocomplete")})
 @JsonInclude(Include.NON_NULL)
 public class Field {
 

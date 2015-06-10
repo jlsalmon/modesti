@@ -30,6 +30,7 @@ public class RequestParserFactory {
    * @return
    */
   public static RequestParser createRequestParser(InputStream stream, ApplicationContext context) {
+    RequestParser requestParser;
     Workbook workbook;
     try {
       workbook = WorkbookFactory.create(stream);
@@ -43,13 +44,16 @@ public class RequestParserFactory {
 
     String domain = header.getCell(0).getStringCellValue().trim();
     if (domain.equals(RequestType.Domain.TIM.toString())) {
-      return new TIMRequestParser(sheet);
+      requestParser = new TIMRequestParser(sheet);
     } else if (domain.equals(RequestType.Domain.CSAM.toString())) {
-      return new CSAMRequestParser(sheet, context);
+      requestParser = new CSAMRequestParser(sheet);
     } else if (domain.equals(RequestType.Domain.PVSS.toString())) {
-      return new PVSSRequestParser(sheet);
+      requestParser = new PVSSRequestParser(sheet);
     } else {
       throw new RequestParseException("Domain " + domain + " is not valid and/or supported");
     }
+
+    requestParser.setApplicationContext(context);
+    return requestParser;
   }
 }

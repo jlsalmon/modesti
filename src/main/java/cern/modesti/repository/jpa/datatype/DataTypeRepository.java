@@ -19,6 +19,7 @@ package cern.modesti.repository.jpa.datatype;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -33,5 +34,6 @@ public interface DataTypeRepository extends ReadOnlyRepository<DataType, String>
 
   @Override
   @Query(value = "SELECT rv_low_value as name FROM cg_ref_codes WHERE rv_domain = 'PTDATATYPES'", nativeQuery = true)
+  @Cacheable("datatypes")
   public List<DataType> findAll();
 }

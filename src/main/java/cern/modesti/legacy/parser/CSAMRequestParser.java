@@ -5,10 +5,8 @@ package cern.modesti.legacy.parser;
 
 import cern.modesti.legacy.exception.RequestParseException;
 import cern.modesti.model.SubSystem;
-import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import cern.modesti.request.point.Point;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,26 +28,23 @@ public class CSAMRequestParser extends RequestParser {
   public static final int LAST_DATA_COLUMN = 56;
   public static final int POINT_ID_COLUMN = 2;
 
-  //private SubSystemRepository subSystemRepository;
-
   private Map<String, String> columnTitleMappings = new HashMap<>();
 
   /**
    * @param sheet
-   * @param context
    */
-  public CSAMRequestParser(Sheet sheet, ApplicationContext context) {
+  public CSAMRequestParser(Sheet sheet) {
     super(sheet);
 
-    //subSystemRepository = context.getBean(SubSystemRepository.class);
-
     // General mappings
+    columnTitleMappings.put("description", "pointDescription");
+    columnTitleMappings.put("dataType", "pointDataType");
     columnTitleMappings.put("equipementCse", "gmaoCode");
     columnTitleMappings.put("equipementCapteur", "otherCode");
     columnTitleMappings.put("typeDetectionSubSystem", "subSystemName");
     columnTitleMappings.put("identifiant", "responsiblePersonId");
     columnTitleMappings.put("nom", "responsiblePersonName");
-    columnTitleMappings.put("attribut", "attribute");
+    columnTitleMappings.put("attribut", "pointAttribute");
 
     // Alarm mappings
     columnTitleMappings.put("etatActif", "alarmValue");
@@ -139,20 +134,6 @@ public class CSAMRequestParser extends RequestParser {
   }
 
   @Override
-  protected SubSystem parseSubsystem(List<Point> points) {
-//    List<SubSystem> subsystems = subSystemRepository.findByName(((SubSystem) points.get(0).getProperties().get("subsystem")).getName())
-//
-//    // If there are zero or more than 1 subsystem, bail out
-//    if (subsystems.size() == 0 || subsystems.size() > 1) {
-//      throw new RequestParseException("Could not determine request subsystem");
-//    }
-//
-//    return subsystems.get(0);
-
-    return (SubSystem) points.get(0).getProperties().get("subsystem");
-  }
-
-  @Override
   protected List<String> parseCategories(List<Point> points) {
     List<String> categories = new ArrayList<>();
 
@@ -160,9 +141,9 @@ public class CSAMRequestParser extends RequestParser {
       if (point.getProperties().containsKey("rack")) {
         if (!categories.contains("LSAC")) categories.add("LSAC");
       } else if (point.getProperties().containsKey("blockType")) {
-        if (!categories.contains("PLC - APIMMD")) categories.add("PLC - APIMMD");
+        if (!categories.contains("APIMMD")) categories.add("APIMMD");
       } else if (point.getProperties().containsKey("opcByte")) {
-        if (!categories.contains("PLC - OPC")) categories.add("PLC - OPC");
+        if (!categories.contains("OPC")) categories.add("OPC");
       } else if (point.getProperties().containsKey("winterStatus")) {
         if (!categories.contains("WINTER")) categories.add("WINTER");
       } else if (point.getProperties().containsKey("securitonGroup")) {

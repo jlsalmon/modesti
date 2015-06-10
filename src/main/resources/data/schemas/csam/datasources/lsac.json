@@ -1,0 +1,24 @@
+{
+  "name": "lsac",
+  "domain": "csam",
+  "categories":
+  [
+    {
+      "name": "LSAC",
+      "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
+      "disabledStates": ["FOR_APPROVAL"],
+      "fields": [
+        {
+          "id": "type",
+          "type": "options",
+          "options": ["IN", "OUT"],
+          "required": true,
+          "name_en": "Type",
+          "name_fr": "Type",
+          "help_en": "Type of the point (IN = entry, OUT = exit)",
+          "help_fr": "Type de point (IN = entre, OUT = sortie)"
+        }
+      ]
+    }
+  ]
+}

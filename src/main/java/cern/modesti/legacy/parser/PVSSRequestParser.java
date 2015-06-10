@@ -4,6 +4,7 @@
 package cern.modesti.legacy.parser;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -32,11 +33,6 @@ public class PVSSRequestParser extends RequestParser {
   @Override
   protected String parseColumnTitle(String title, int column) {
     return null;
-  }
-
-  @Override
-  protected SubSystem parseSubsystem(List<Point> points) {
-    throw new UnsupportedOperationException("Not implemented yet");
   }
 
   @Override

@@ -18,7 +18,7 @@
             },
             {
                 "id": "pointDataType",
-                "type": "select",
+                "type": "options",
                 "options": "http://localhost:8080/datatypes",
                 "model": "name",
                 "returnPropertyName": "datatypes",
@@ -48,7 +48,7 @@
             },
             {
                 "id": "subsystem",
-                "type": "typeahead",
+                "type": "autocomplete",
                 "url": "http://localhost:8080/subsystems/search/findByName",
                 "params": [
                   "name"
@@ -63,7 +63,7 @@
             },
             {
                 "id": "responsiblePerson",
-                "type": "typeahead",
+                "type": "autocomplete",
                 "url": "http://localhost:8080/persons/search/findByIdOrName",
                 "params": [
                   "id",
@@ -96,7 +96,7 @@
         "fields": [
             {
                 "id": "site",
-                "type": "typeahead",
+                "type": "autocomplete",
                 "url": "http://localhost:8080/sites/search/findByName",
                 "params": [
                   "name"
@@ -110,7 +110,7 @@
             },
             {
                 "id": "location",
-                "type": "typeahead",
+                "type": "autocomplete",
                 "url": "http://localhost:8080/locations/search/find",
                 "params": [
                   "q"
@@ -125,7 +125,7 @@
             },
             {
                 "id": "zone",
-                "type": "typeahead",
+                "type": "autocomplete",
                 "url": "http://localhost:8080/zones/search/findByName",
                 "params": [
                   "name"
@@ -155,22 +155,8 @@
         "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
         "fields": [
             {
-                "id": "alarmCategory",
-                "type": "typeahead",
-                "url": "http://localhost:8080/alarmCategories/search/findByName",
-                "params": [
-                  "name"
-                ],
-                "model": "name",
-                "returnPropertyName": "alarmCategories",
-                "name_en": "Category",
-                "name_fr": "Categorie",
-                "help_en": "The alarm class in which the alarm will be active",
-                "help_fr": "La categorie d'alarme dans laquelle l'alarme sera diffusee"
-            },
-            {
                 "id": "priorityCode",
-                "type": "select",
+                "type": "options",
                 "options": "http://localhost:8080/alarmPriorities",
                 "model": "priority",
                 "returnPropertyName": "alarmPriorities",
@@ -178,6 +164,14 @@
                 "name_fr": "Niveau",
                 "help_en": "Enter the priority of the alarm between 0 and 3",
                 "help_fr": "Entrez la priorite de l'alarme entre 0 et 3"
+            },
+            {
+                "id": "alarmValue",
+                "type": "text",
+                "name_en": "Value",
+                "name_fr": "Valeur",
+                "help_en": "The value indicating the presence of the alarm",
+                "help_fr": "La valeur qui indique la présence de l'alarme"
             }
         ]
     }

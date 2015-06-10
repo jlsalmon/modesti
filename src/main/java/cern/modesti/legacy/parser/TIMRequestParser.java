@@ -5,6 +5,7 @@ package cern.modesti.legacy.parser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -47,14 +48,17 @@ public class TIMRequestParser extends RequestParser {
     else if (title.equals("category") && column == 25) {
       title = "alarmCategory";
     }
+    if (title.equals("value")) {
+      title = "alarmValue";
+    }
+    if (title.equals("number")) {
+      title = "buildingNumber";
+    }
+    if (title.equals("name")) {
+      title = "buildingName";
+    }
 
     return title;
-  }
-
-  @Override
-  protected SubSystem parseSubsystem(List<Point> points) {
-    // Naive implementation: look at the first point and assume the rest are the same.
-    return (SubSystem) points.get(0).getProperties().get("subsystem");
   }
 
   @Override

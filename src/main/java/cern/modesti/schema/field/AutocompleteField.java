@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * @author Justin Lewis Salmon
  */
-public class TypeaheadField extends Field {
+public class AutocompleteField extends Field {
 
   private String url;
 
