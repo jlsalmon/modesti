@@ -38,8 +38,6 @@
   </label>
   <div class="col-sm-9">
 
-  <!-- TODO: use input-field directive to replace this -->
-
     <input type="text" ng-model="ctrl.request.subsystem" placeholder="System/Subsystem"
       typeahead="subsystem as subsystem.name for subsystem in ctrl.getSubsystems($viewValue)"
       typeahead-loading="loadingSubsystems"

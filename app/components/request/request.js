@@ -38,7 +38,8 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     manualColumnResize: true,
     //manualRowMove: true,
     afterInit: afterInit,
-    afterRender: afterRender
+    afterRender: afterRender,
+    afterCreateRow: afterCreateRow
   };
 
   /**
@@ -267,6 +268,20 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       function (error) {
         console.log('error fetching schema: ' + error);
       });
+  }
+
+  /**
+   *
+   * @param index
+   * @param amount
+   */
+  function afterCreateRow(index, amount) {
+    // Fix the point IDs
+    self.rows[index].id = index + 1;
+
+    for (var i = index, len = self.rows.length; i < len; i++) {
+      self.rows[i].id = i + 1;
+    }
   }
 
   /**

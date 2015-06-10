@@ -109,13 +109,9 @@ function NewRequestController($http, $location, $localStorage, RequestService, R
         var id = location.substring(location.lastIndexOf('/') + 1);
         // Redirect to point entry page.
         $location.path("/requests/" + id);
-      },
-
-      function(error) {
-        // what do do here?
       });
     }
-  };
+  }
 
 
   // TODO: move everything below here to another page ------------------------------------------------------------------------
