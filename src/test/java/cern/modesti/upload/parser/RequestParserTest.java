@@ -14,13 +14,22 @@ import java.util.List;
 import java.util.Map;
 
 import cern.modesti.Application;
+import cern.modesti.repository.jpa.person.PersonRepository;
+import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import cern.modesti.request.RequestType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.ConfigFileApplicationContextInitializer;
+import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -30,12 +39,14 @@ import cern.modesti.request.Request;
 import cern.modesti.legacy.exception.RequestParseException;
 import cern.modesti.legacy.exception.VersionNotSupportedException;
 import cern.modesti.legacy.parser.RequestParserFactory;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 /**
  * @author Justin Lewis Salmon
  */
+@RunWith(MockitoJUnitRunner.class)
 public class RequestParserTest {
 
   /**
@@ -43,8 +54,14 @@ public class RequestParserTest {
    */
   static Map<String, Resource> sheets = new HashMap<>();
 
-  @Autowired
-  ApplicationContext context;
+  @InjectMocks
+  RequestParserFactory requestParserFactory;
+
+  @Mock
+  private PersonRepository personRepository;
+
+  @Mock
+  private SubSystemRepository subSystemRepository;
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
@@ -59,37 +76,37 @@ public class RequestParserTest {
   @Test(expected = RequestParseException.class)
   public void invalidRequestDomainIsRejected() throws IOException {
     Resource sheet = sheets.get("invalid-domain.xlsx");
-    RequestParserFactory.createRequestParser(sheet.getInputStream(), null).parseRequest();
+    requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
   }
 
   @Test(expected = RequestParseException.class)
   public void invalidRequestTypeIsRejected() throws IOException {
     Resource sheet = sheets.get("invalid-request-type.xlsx");
-    RequestParserFactory.createRequestParser(sheet.getInputStream(), null).parseRequest();
+    requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
   }
 
   @Test(expected = VersionNotSupportedException.class)
   public void unsupportedExcelSheetVersionIsRejected() throws IOException {
     Resource sheet = sheets.get("unsupported-version.xlsx");
-    RequestParserFactory.createRequestParser(sheet.getInputStream(), null).parseRequest();
+    requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
   }
 
   @Test(expected = RequestParseException.class)
   public void invalidFileTypeIsRejected() {
     InputStream stream = new ByteArrayInputStream("spam".getBytes());
-    RequestParserFactory.createRequestParser(stream, null).parseRequest();
+    requestParserFactory.createRequestParser(stream).parseRequest();
   }
 
   @Test(expected = RequestParseException.class)
   public void emptyExcelSheetIsRejected() throws IOException {
     Resource sheet = sheets.get("tim-empty.xls");
-    RequestParserFactory.createRequestParser(sheet.getInputStream(), null).parseRequest();
+    requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
   }
 
   @Test
   public void timPlcRequestWithAlarmsIsAccepted() throws IOException {
     Resource sheet = sheets.get("tim-plc-with-alarms.xls");
-    Request request = RequestParserFactory.createRequestParser(sheet.getInputStream(), null).parseRequest();
+    Request request = requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
 
     assertTrue(request.getDomain().equals("TIM"));
     assertTrue(request.getType().equals(RequestType.CREATE));
@@ -108,13 +125,13 @@ public class RequestParserTest {
   @Test
   public void csamPlcLsacRequestWithAlarmsIsAccepted() throws IOException {
     Resource sheet = sheets.get("csam-plc-lsac-alarms.xlsx");
-    Request request = RequestParserFactory.createRequestParser(sheet.getInputStream(), null).parseRequest();
+    Request request = requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
 
     assertTrue(request.getDomain().equals("CSAM"));
     assertTrue(request.getType().equals(RequestType.CREATE));
     assertTrue(request.getCategories().size() == 2); // has PLC and LSAC points
     assertTrue(request.getCategories().contains("LSAC"));
-    assertTrue(request.getCategories().contains("PLC - APIMMD"));
+    assertTrue(request.getCategories().contains("APIMMD"));
 
     List<Point> points = request.getPoints();
     assertTrue(points.size() == 14);
@@ -128,7 +145,7 @@ public class RequestParserTest {
   @Test
   public void pvssRequestWithAlarmsIsAccepted() throws IOException {
     Resource sheet = sheets.get("pvss-alarms.xlsx");
-    Request request = RequestParserFactory.createRequestParser(sheet.getInputStream(), null).parseRequest();
+    Request request = requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
 
     assertTrue(request.getDomain().equals("PVSS"));
     assertTrue(request.getType().equals(RequestType.CREATE));
