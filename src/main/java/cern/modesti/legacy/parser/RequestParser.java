@@ -396,10 +396,17 @@ public abstract class RequestParser {
 
   /**
    *
-   * @param context
+   * @param personRepository
    */
-  public void setApplicationContext(ApplicationContext context) {
-    this.subSystemRepository = context.getBean(SubSystemRepository.class);
-    this.personRepository = context.getBean(PersonRepository.class);
+  public void setPersonRepository(PersonRepository personRepository) {
+    this.personRepository = personRepository;
+  }
+
+  /**
+   *
+   * @param subSystemRepository
+   */
+  public void setSubSystemRepository(SubSystemRepository subSystemRepository) {
+    this.subSystemRepository = subSystemRepository;
   }
 }

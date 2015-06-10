@@ -5,6 +5,8 @@ package cern.modesti.legacy.parser;
 
 import java.io.InputStream;
 
+import cern.modesti.repository.jpa.person.PersonRepository;
+import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import cern.modesti.request.RequestType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -14,22 +16,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cern.modesti.legacy.exception.RequestParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Justin Lewis Salmon
  *
  */
+@Component
 public class RequestParserFactory {
 
   private static final Logger LOG = LoggerFactory.getLogger(RequestParserFactory.class);
 
+  @Autowired
+  private PersonRepository personRepository;
+
+  @Autowired
+  private SubSystemRepository subSystemRepository;
+
   /**
    * @param stream
-   * @param context
+   *
    * @return
    */
-  public static RequestParser createRequestParser(InputStream stream, ApplicationContext context) {
+  public RequestParser createRequestParser(InputStream stream) {
     RequestParser requestParser;
     Workbook workbook;
     try {
@@ -53,7 +64,8 @@ public class RequestParserFactory {
       throw new RequestParseException("Domain " + domain + " is not valid and/or supported");
     }
 
-    requestParser.setApplicationContext(context);
+    requestParser.setPersonRepository(personRepository);
+    requestParser.setSubSystemRepository(subSystemRepository);
     return requestParser;
   }
 }

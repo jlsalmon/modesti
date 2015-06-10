@@ -15,5 +15,12 @@
       "WINTER",
       "SECURIFIRE"
     ]
+  },
+  {
+    "name": "PVSS",
+    "datasources":
+    [
+      "PVSS"
+    ]
   }
 ]

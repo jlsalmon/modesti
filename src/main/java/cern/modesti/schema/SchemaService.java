@@ -234,7 +234,7 @@ public class SchemaService {
       }
     }
 
-    newCategories.addAll(schema.getCategories());
+    newCategories.addAll(0, schema.getCategories());
     schema.setCategories(newCategories);
 
     return schema;

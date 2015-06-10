@@ -5,6 +5,8 @@ package cern.modesti.legacy;
 
 import cern.modesti.legacy.parser.RequestParser;
 import cern.modesti.legacy.parser.RequestParserFactory;
+import cern.modesti.repository.jpa.person.PersonRepository;
+import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterService;
 import cern.modesti.request.Request;
@@ -33,13 +35,13 @@ public class UploadService {
   private RequestRepository requestRepository;
 
   @Autowired
+  private RequestParserFactory requestParserFactory;
+
+  @Autowired
   private CounterService counterService;
 
   @Autowired
   private WorkflowService workflowService;
-
-  @Autowired
-  private ApplicationContext context;
 
   /**
    *
@@ -49,7 +51,7 @@ public class UploadService {
    * @return
    */
   public Request parseRequestFromExcelSheet(String filename, InputStream stream, Principal principal) {
-    RequestParser parser = RequestParserFactory.createRequestParser(stream, context);
+    RequestParser parser = requestParserFactory.createRequestParser(stream);
     Request request = parser.parseRequest();
 
     request.setDescription(filename);
