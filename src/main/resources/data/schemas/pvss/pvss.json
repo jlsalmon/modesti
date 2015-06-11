@@ -4,7 +4,9 @@
   "categories":
   [
     {
-      "name": "General",
+      "name": "PVSS",
+      "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
+      "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
           "id": "pvssReferenceId",

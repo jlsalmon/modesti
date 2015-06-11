@@ -29,4 +29,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface SchemaRepository extends MongoRepository<Schema, String> {
 
   Schema findOneByNameIgnoreCase(@Param("name") String name);
+
+  Schema findOneByNameIgnoreCaseAndDomainIgnoreCase(@Param("name") String name, @Param("domain") String domain);
 }

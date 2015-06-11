@@ -58,7 +58,7 @@ public class SchemaService {
     for (String category : categories) {
       LOG.info("finding and merging schema for category " + category);
 
-      Schema categorySchema = schemaRepository.findOneByNameIgnoreCase(category);
+      Schema categorySchema = schemaRepository.findOneByNameIgnoreCaseAndDomainIgnoreCase(category, request.getDomain());
       if (categorySchema == null) {
         throw new IllegalStateException("Schema for category \"" + category + "\" was not found");
       }
@@ -81,38 +81,6 @@ public class SchemaService {
     schema = mergeParentSchema(schema, parent);
 
     return schema;
-
-
-//    for (String category : categories) {
-//      Schema categorySchema = schemaRepository.findOneByName(category);
-//
-//      if (categorySchema == null) {
-//        return categorySchema;
-//      }
-//
-//      // Merge in the domain schema and all parent schemas.
-//      //
-//      // The merged schema is not saved back to the repository, it is generated
-//      // fresh each time. This is because we don't want to duplicate the
-//      // categories/fields defined in the parent schemas, and because it makes
-//      // editing schemas cleaner.
-//
-//      Schema domain = schemaRepository.findOneByName(categorySchema.getDomain());
-//      if (domain == null) {
-//        throw new IllegalStateException("Schema \"" + categorySchema.getName() + "\" specifies non-existent domain schema \"" + categorySchema.getDomain() + "\"");
-//      }
-//
-//      categorySchema = mergeDomainSchema(categorySchema, domain);
-//
-//      Schema parent = schemaRepository.findOneByName(domain.getParent());
-//      if (parent == null) {
-//        throw new IllegalStateException("Schema \"" + categorySchema.getName() + "\" specifies non-existent parent schema \"" + categorySchema.getParent() + "\"");
-//      }
-//
-//      categorySchema = mergeParentSchema(categorySchema, parent);
-//    }
-//
-//    return null;
   }
 
   /**
@@ -144,9 +112,7 @@ public class SchemaService {
       }
     }
 
-    newCategories.addAll(schema.getCategories());
-    schema.setCategories(newCategories);
-
+    schema.getCategories().addAll(0, newCategories);
     return schema;
   }
 
@@ -189,9 +155,7 @@ public class SchemaService {
       }
     }
 
-    newCategories.addAll(schema.getCategories());
-    schema.setCategories(newCategories);
-
+    schema.getCategories().addAll(0, newCategories);
     return schema;
   }
 
@@ -234,9 +198,7 @@ public class SchemaService {
       }
     }
 
-    newCategories.addAll(0, schema.getCategories());
-    schema.setCategories(newCategories);
-
+    schema.getCategories().addAll(0, newCategories);
     return schema;
   }
 }
