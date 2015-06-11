@@ -349,6 +349,7 @@
 
         <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showComments()" tooltip-append-to-body="true" tooltip="{{'COMMENTS'|translate}}">
           <i class="fa fa-fw fa-comments"></i>
+          {{ctrl.request.comments.length}}
         </button>
 
         <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHistory()" tooltip-append-to-body="true" tooltip="{{'HISTORY'|translate}}">
@@ -380,7 +381,8 @@
              columns="ctrl.columns">
   </hot-table>
 </section>
-{{ctrl.request}}
+
+
 
 <footer class="footer">
   <div class="container-fluid">

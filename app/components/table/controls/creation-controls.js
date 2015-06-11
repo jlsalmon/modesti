@@ -217,6 +217,11 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
       return;
     }
 
+    // Make sure the point IDs are consecutive
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      self.rows[i].id = i + 1;
+    }
+
     // Loop over the changes and check if anything actually changed. Mark any changed points as dirty.
     var change, index, property, oldValue, newValue, dirty = false;
     for (var i = 0, len = changes.length; i < len; i++) {

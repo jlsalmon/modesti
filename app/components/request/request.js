@@ -39,7 +39,9 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     //manualRowMove: true,
     afterInit: afterInit,
     afterRender: afterRender,
-    afterCreateRow: afterCreateRow
+    afterChange: afterChange,
+    afterCreateRow: afterCreateRow,
+    afterRemoveRow: afterRemoveRow
   };
 
   /**
@@ -199,6 +201,12 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
+    if (self.activeCategory.name != 'General') {
+      // Tagname column
+      self.columns.push({title: 'Tagname', readOnly: true, data: 'properties.tagname'});
+      //generateTagnames();
+    }
+
     var field, editable;
     for (var i = 0; i < self.activeCategory.fields.length; i++) {
       field = self.activeCategory.fields[i];
@@ -272,14 +280,52 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
   /**
    *
+   */
+  function afterChange() {
+    console.log('afterChange()');
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      self.rows[i].id = i + 1;
+    }
+
+    generateTagnames();
+  }
+
+  /**
+   *
+   */
+  function generateTagnames() {
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      var point = self.rows[i];
+      point.properties.tagname = point.properties.site.name + '.' + point.properties.gmaoCode + ':' + point.properties.pointAttribute;
+    }
+
+    //self.hot.render();
+  }
+
+  /**
+   *
    * @param index
    * @param amount
    */
   function afterCreateRow(index, amount) {
     // Fix the point IDs
-    self.rows[index].id = index + 1;
+    //self.rows[index].id = index + 1;
+    //
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      self.rows[i].id = i + 1;
+    }
+  }
 
-    for (var i = index, len = self.rows.length; i < len; i++) {
+  /**
+   *
+   * @param index
+   * @param amount
+   */
+  function afterRemoveRow(index, amount) {
+    // Fix the point IDs
+    //self.rows[index].id = index + 1;
+    //
+    for (var i = 0, len = self.rows.length; i < len; i++) {
       self.rows[i].id = i + 1;
     }
   }

@@ -108,6 +108,11 @@ function ColumnService($http, $translate) {
         params[field.params[i]] = query;
       }
 
+      if (this.prop == 'properties.location.buildingName') {
+        var point = this.instance.getSourceDataAtRow(this.row);
+        params['']
+      }
+
       // TODO refactor this into a service
       $http.get(field.url, {
         params : params
@@ -122,7 +127,7 @@ function ColumnService($http, $translate) {
 
         process(items);
       });
-    }
+    };
 
     return column;
   }
