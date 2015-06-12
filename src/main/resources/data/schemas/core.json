@@ -1,168 +1,214 @@
 {
   "name": "core",
-  "categories":
-[
+  "categories": [
     {
-        "name": "General",
-        "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
-        "fields": [
-            {
-                "id": "pointDescription",
-                "type": "text",
-                "maxLength": 10,
-                "required": true,
-                "name_en": "Description",
-                "name_fr": "Description",
-                "help_en": "The description of the point to be integrated, for an alarm this is the text presented to the operator. This text must be in French, but should not contain characters with accents. The description must not make reference to the location nor the equipment concerned.",
-                "help_fr": "La description du point à intégrer, pour une alarme c'est le texte présente à l'operateur. Ce texte doit être en français mais ne doit pas comporter de carateres à accents. La description ne devrait pas faire référence ni à la localisation ni à l'equipement concerne."
-            },
-            {
-                "id": "pointDataType",
-                "type": "options",
-                "options": "datatypes",
-                "required": true,
-                "name_en": "Data Type",
-                "name_fr": "Type de point",
-                "help_en": "Select the data type of the point from the list",
-                "help_fr": "Entrez la type du point suggère dans la liste"
-            },
-            {
-                "id": "gmaoCode",
-                "type": "text",
-                "required": true,
-                "name_en": "GMAO Code",
-                "name_fr": "Code GMAO",
-                "help_en": "The equipment code known by the GMAO system",
-                "help_fr": "Le code de l'equipement connu par le système GMAO"
-            },
-            {
-                "id": "otherCode",
-                "type": "text",
-                "required": true,
-                "name_en": "Other Code",
-                "name_fr": "Autre Code",
-                "help_en": "A code identifying the equipment concerned if no GMAO code exists, or sub-equipment code that complements the GMAO code",
-                "help_fr": "Un code identifiant l'equipement concerne si aucun code GMAO existe, ou le code du sous-équipement qui complète le code GMAO"
-            },
-            {
-                "id": "subsystem",
-                "type": "autocomplete",
-                "url": "subsystems/search/find",
-                "required": true,
-                "name_en": "System/Subsystem",
-                "name_fr": "Systeme/Sous-systeme",
-                "help_en": "The name of the System/Subsystem concerned",
-                "help_fr": "Le nom du Système/Sous-système concerné"
-            },
-            {
-                "id": "responsiblePerson",
-                "type": "autocomplete",
-                "url": "persons/search/findByIdOrName",
-                "params": [
-                  "id",
-                  "name"
-                ],
-                "model": "name",
-                "minLength": 2,
-                "required": true,
-                "name_en": "Responsible Person",
-                "name_fr": "Responsable",
-                "help_en": "Enter the name or CERN ID of the responsible person",
-                "help_fr": "Entrez le nom ou le numéro CERN du responsable"
-            },
-            {
-                "id": "pointAttribute",
-                "type": "text",
-                "name_en": "Point Attribute",
-                "name_fr": "Attribut",
-                "help_en": "A shortened version of the description",
-                "help_fr": "Un raccourci de la description"
-            }
-        ]
+      "name": "General",
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "fields": [
+        {
+          "id": "pointDescription",
+          "type": "text",
+          "maxLength": 10,
+          "required": true,
+          "name_en": "Description",
+          "name_fr": "Description",
+          "help_en": "The description of the point to be integrated, for an alarm this is the text presented to the operator. This text must be in French, but should not contain characters with accents. The description must not make reference to the location nor the equipment concerned.",
+          "help_fr": "La description du point à intégrer, pour une alarme c'est le texte présente à l'operateur. Ce texte doit être en français mais ne doit pas comporter de carateres à accents. La description ne devrait pas faire référence ni à la localisation ni à l'equipement concerne."
+        },
+        {
+          "id": "pointDataType",
+          "type": "options",
+          "options": "datatypes",
+          "required": true,
+          "name_en": "Data Type",
+          "name_fr": "Type de point",
+          "help_en": "Select the data type of the point from the list",
+          "help_fr": "Entrez la type du point suggère dans la liste"
+        },
+        {
+          "id": "gmaoCode",
+          "type": "text",
+          "required": true,
+          "name_en": "GMAO Code",
+          "name_fr": "Code GMAO",
+          "help_en": "The equipment code known by the GMAO system",
+          "help_fr": "Le code de l'equipement connu par le système GMAO"
+        },
+        {
+          "id": "otherCode",
+          "type": "text",
+          "required": true,
+          "name_en": "Other Code",
+          "name_fr": "Autre Code",
+          "help_en": "A code identifying the equipment concerned if no GMAO code exists, or sub-equipment code that complements the GMAO code",
+          "help_fr": "Un code identifiant l'equipement concerne si aucun code GMAO existe, ou le code du sous-équipement qui complète le code GMAO"
+        },
+        {
+          "id": "subsystem",
+          "type": "autocomplete",
+          "url": "subsystems/search/find",
+          "required": true,
+          "name_en": "System/Subsystem",
+          "name_fr": "Systeme/Sous-systeme",
+          "help_en": "The name of the System/Subsystem concerned",
+          "help_fr": "Le nom du Système/Sous-système concerné"
+        },
+        {
+          "id": "responsiblePerson",
+          "type": "autocomplete",
+          "url": "persons/search/findByIdOrName",
+          "params": [
+            "id",
+            "name"
+          ],
+          "model": "name",
+          "minLength": 2,
+          "required": true,
+          "name_en": "Responsible Person",
+          "name_fr": "Responsable",
+          "help_en": "Enter the name or CERN ID of the responsible person",
+          "help_fr": "Entrez le nom ou le numéro CERN du responsable"
+        },
+        {
+          "id": "pointAttribute",
+          "type": "text",
+          "name_en": "Point Attribute",
+          "name_fr": "Attribut",
+          "help_en": "A shortened version of the description",
+          "help_fr": "Un raccourci de la description"
+        }
+      ]
     },
-
-
     {
-        "name": "Location",
-        "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
-        "fields": [
-            {
-                "id": "site",
-                "type": "autocomplete",
-                "url": "sites/search/find",
-                "name_en": "Site",
-                "name_fr": "Site",
-                "help_en": "Enter the functionality or the site where the point is found",
-                "help_fr": "Entrez la fonctionnalité ou le site ou se trouve le point"
-            },
-            {
-                "id": "location",
-                "type": "autocomplete",
-                "url": "locations/search/find",
-                "minLength": 2,
-                "name_en": "Location",
-                "name_fr": "Location",
-                "help_en": "Enter the building number related to the point. Optionally also enter the floor and room within the building",
-                "help_fr": "Entrez le numéro du bâtiment concerne par le point. Éventuellement également entrer l'etage et la pièce dans le bâtiment"
-            },
-            {
-                "id": "buildingName",
-                "type": "autocomplete",
-                "url": "locations/search/findByBuildingNumber",
-                "params": [
-                    "query",
-                    "location.buildingNumber"
-                ],
-                "model": "location.buildingName",
-                "name_en": "Building Name",
-                "name_fr": "Sigle",
-                "help_en": "",
-                "help_fr": ""
-            },
-            {
-                "id": "zone",
-                "type": "autocomplete",
-                "url": "zones/search/find",
-                "name_en": "Zone",
-                "name_fr": "Zone",
-                "help_en": "Enter the security zone related to the point",
-                "help_fr": "Entrez le zone secu concerne par le point"
-            },
-            {
-                "id": "detail",
-                "type": "text",
-                "name_en": "Detail",
-                "name_fr": "Detail",
-                "help_en": "Supplementary details of the localisation (e.g. Racks)",
-                "help_fr": "Details supplementaire de la localisation (e.g. Racks)"
-            }
-        ]
+      "name": "Location",
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "fields": [
+        {
+          "id": "site",
+          "type": "autocomplete",
+          "url": "sites/search/find",
+          "name_en": "Site",
+          "name_fr": "Site",
+          "help_en": "Enter the functionality or the site where the point is found",
+          "help_fr": "Entrez la fonctionnalité ou le site ou se trouve le point"
+        },
+        {
+          "id": "location",
+          "type": "autocomplete",
+          "url": "locations/search/find",
+          "minLength": 2,
+          "name_en": "Location",
+          "name_fr": "Location",
+          "help_en": "Enter the building number related to the point. Optionally also enter the floor and room within the building",
+          "help_fr": "Entrez le numéro du bâtiment concerne par le point. Éventuellement également entrer l'etage et la pièce dans le bâtiment"
+        },
+        {
+          "id": "buildingName",
+          "type": "autocomplete",
+          "url": "locations/search/findByBuildingNumber",
+          "params": [
+            "query",
+            "location.buildingNumber"
+          ],
+          "model": "location.buildingName",
+          "name_en": "Building Name",
+          "name_fr": "Sigle",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "zone",
+          "type": "autocomplete",
+          "url": "zones/search/find",
+          "name_en": "Zone",
+          "name_fr": "Zone",
+          "help_en": "Enter the security zone related to the point",
+          "help_fr": "Entrez le zone secu concerne par le point"
+        },
+        {
+          "id": "detail",
+          "type": "text",
+          "name_en": "Detail",
+          "name_fr": "Detail",
+          "help_en": "Supplementary details of the localisation (e.g. Racks)",
+          "help_fr": "Details supplementaire de la localisation (e.g. Racks)"
+        }
+      ]
     },
-
-
     {
-        "name": "Alarm details",
-        "disabledStates": [],
-        "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
-        "fields": [
-            {
-                "id": "priorityCode",
-                "type": "options",
-                "options": "alarmPriorities",
-                "name_en": "Priority",
-                "name_fr": "Niveau",
-                "help_en": "Enter the priority of the alarm between 0 and 3",
-                "help_fr": "Entrez la priorite de l'alarme entre 0 et 3"
-            },
-            {
-                "id": "alarmValue",
-                "type": "numeric",
-                "name_en": "Value",
-                "name_fr": "Valeur",
-                "help_en": "The value indicating the presence of the alarm",
-                "help_fr": "La valeur qui indique la présence de l'alarme"
-            }
-        ]
+      "name": "Alarms",
+      "disabledStates": [],
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "fields": [
+        {
+          "id": "priorityCode",
+          "type": "options",
+          "options": "alarmPriorities",
+          "name_en": "Priority",
+          "name_fr": "Niveau",
+          "help_en": "Enter the priority of the alarm between 0 and 3",
+          "help_fr": "Entrez la priorite de l'alarme entre 0 et 3"
+        },
+        {
+          "id": "alarmValue",
+          "type": "numeric",
+          "name_en": "Value",
+          "name_fr": "Valeur",
+          "help_en": "The value indicating the presence of the alarm",
+          "help_fr": "La valeur qui indique la présence de l'alarme"
+        }
+      ]
+    },
+    {
+      "name": "Alarm Help",
+      "disabledStates": [],
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "fields": [
+        {
+          "id": "alarmCauses",
+          "type": "text",
+          "name_en": "Alarm Causes",
+          "name_fr": "Alarm Causes",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "alarmConsequences",
+          "type": "text",
+          "name_en": "Alarm Consequences",
+          "name_fr": "Alarm Consequences",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "taskDuringWorkingHours",
+          "type": "text",
+          "name_en": "Task During Working Hours",
+          "name_fr": "Action Heures Ouvrables",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "taskOutsideWorkingHours",
+          "type": "text",
+          "name_en": "Task During Working Hours",
+          "name_fr": "Action Hors Heures Ouvrables",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
     }
-]
+  ]
 }

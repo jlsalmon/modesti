@@ -1,24 +1,26 @@
 {
   "name": "winter",
   "domain": "csam",
-  "categories":
-[
+  "categories": [
     {
-        "name": "WINTER",
-        "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
-        "disabledStates": ["FOR_APPROVAL"],
-        "fields": [
-            {
-                "id": "status",
-                "type": "options",
-                "options": "winterStatuses",
-                "required": true,
-                "name_en": "Status",
-                "name_fr": "Bit",
-                "help_en": "For points managed by the Winter system, the bit number that stores the point value",
-                "help_fr": "Pour les points geres par le systeme Winter, le numero du bit qui stocke la valleur du point"
-            }
-        ]
+      "name": "WINTER",
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "disabledStates": ["FOR_APPROVAL"],
+      "fields": [
+        {
+          "id": "status",
+          "type": "options",
+          "options": "winterStatuses",
+          "required": true,
+          "name_en": "Status",
+          "name_fr": "Bit",
+          "help_en": "For points managed by the Winter system, the bit number that stores the point value",
+          "help_fr": "Pour les points geres par le systeme Winter, le numero du bit qui stocke la valleur du point"
+        }
+      ]
     }
-]
+  ]
 }

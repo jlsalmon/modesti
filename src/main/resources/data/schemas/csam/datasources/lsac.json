@@ -1,17 +1,22 @@
 {
   "name": "lsac",
   "domain": "csam",
-  "categories":
-  [
+  "categories": [
     {
       "name": "LSAC",
-      "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
           "id": "lsacType",
           "type": "options",
-          "options": ["IN", "OUT"],
+          "options": [
+            "IN",
+            "OUT"
+          ],
           "required": true,
           "name_en": "Type",
           "name_fr": "Type",

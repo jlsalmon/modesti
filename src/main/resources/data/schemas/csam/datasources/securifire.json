@@ -1,24 +1,26 @@
 {
   "name": "securifire",
   "domain": "csam",
-  "categories":
-[
+  "categories": [
     {
-        "name": "SECURIFIRE",
-        "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
-        "disabledStates": ["FOR_APPROVAL"],
-        "fields": [
-            {
-                "id": "securifireType",
-                "type": "options",
-                "options": "securifireTypes",
-                "required": true,
-                "name_en": "Type",
-                "name_fr": "Type",
-                "help_en": "",
-                "help_fr": ""
-            }
-        ]
+      "name": "SECURIFIRE",
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "disabledStates": ["FOR_APPROVAL"],
+      "fields": [
+        {
+          "id": "securifireType",
+          "type": "options",
+          "options": "securifireTypes",
+          "required": true,
+          "name_en": "Type",
+          "name_fr": "Type",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
     }
-]
+  ]
 }

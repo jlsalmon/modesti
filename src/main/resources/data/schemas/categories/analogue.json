@@ -1,0 +1,67 @@
+{
+  "name": "analogue",
+  "categories": [
+    {
+      "name": "Analogue Points",
+      "disabledStates": [],
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "fields": [
+        {
+          "id": "lowLimit",
+          "type": "text",
+          "name_en": "Low Limit",
+          "name_fr": "Low Limit",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "highLimit",
+          "type": "text",
+          "name_en": "High Limit",
+          "name_fr": "High Limit",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "valueDeadBand",
+          "type": "text",
+          "name_en": "Value Deadband",
+          "name_fr": "Value Deadband",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "deadBandType",
+          "type": "options",
+          "options": [
+            "ABS",
+            "PCT"
+          ],
+          "name_en": "Deadband Type",
+          "name_fr": "Deadband Type",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "units",
+          "type": "text",
+          "name_en": "Units",
+          "name_fr": "Units",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "conversionFactor",
+          "type": "text",
+          "name_en": "Conversion Factor",
+          "name_fr": "Conversion Factor",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
+    }
+  ]
+}

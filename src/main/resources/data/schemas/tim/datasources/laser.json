@@ -1,0 +1,48 @@
+{
+  "name": "laser",
+  "domain": "tim",
+  "categories": [
+    {
+      "name": "LASER",
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "disabledStates": ["FOR_APPROVAL"],
+      "fields": [
+        {
+          "id": "category",
+          "type": "text",
+          "name_en": "Category",
+          "name_fr": "Category",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "family",
+          "type": "text",
+          "name_en": "Family",
+          "name_fr": "Family",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "member",
+          "type": "text",
+          "name_en": "Member",
+          "name_fr": "Member",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "code",
+          "type": "text",
+          "name_en": "Code",
+          "name_fr": "Code",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
+    }
+  ]
+}

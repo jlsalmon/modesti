@@ -1,0 +1,24 @@
+{
+  "name": "database",
+  "domain": "tim",
+  "categories": [
+    {
+      "name": "DATABASE",
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "disabledStates": ["FOR_APPROVAL"],
+      "fields": [
+        {
+          "id": "dbTagname",
+          "type": "text",
+          "name_en": "DB Tagname",
+          "name_fr": "DB Tagname",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
+    }
+  ]
+}

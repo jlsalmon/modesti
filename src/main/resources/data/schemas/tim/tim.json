@@ -2,52 +2,52 @@
   "name": "tim",
   "extends": "core",
   "categories":
-[
+  [
     {
-        "name": "Alarm details",
-        "fields": [
-            {
-              "id": "alarmCategory",
-              "type": "autocomplete",
-              "url": "alarmCategories/search/find",
-              "name_en": "Category",
-              "name_fr": "Categorie",
-              "help_en": "The alarm class in which the alarm will be active",
-              "help_fr": "La categorie d'alarme dans laquelle l'alarme sera diffusee"
-            },
-            {
-              "id": "autoCallNumber",
-              "type": "numeric",
-              "name_en": "Autocall",
-              "name_fr": "Autocall",
-              "help_en": "Enter '1' to indicate that an automatic call will be made by the alarm, or the Mobicall number (even number between 7000 and 7998) if known",
-              "help_fr": "Entrez '1' pour indiquer qu'un appel automatique sera effectua par l'alarme, ou le numero Mobicall (nombre pair entre 7000 et 7998) si connu"
-            },
-            {
-              "id": "multiplicityValue",
-              "type": "numeric",
-              "name_en": "Multiplicity Value",
-              "name_fr": "Valeur Multiplicité",
-              "help_en": "",
-              "help_fr": ""
-            },
-            {
-              "id": "parentAlarm",
-              "type": "numeric",
-              "name_en": "Parent Alarm",
-              "name_fr": "Autocall",
-              "help_en": "",
-              "help_fr": ""
-            },
-            {
-              "id": "electricityFaultFamily",
-              "type": "text",
-              "name_en": "Electricity Fault Family",
-              "name_fr": "Famille Défaut électricité",
-              "help_en": "",
-              "help_fr": ""
-            }
-        ]
+      "name": "Alarms",
+      "fields": [
+        {
+          "id": "alarmCategory",
+          "type": "autocomplete",
+          "url": "alarmCategories/search/find",
+          "name_en": "Category",
+          "name_fr": "Categorie",
+          "help_en": "The alarm class in which the alarm will be active",
+          "help_fr": "La categorie d'alarme dans laquelle l'alarme sera diffusee"
+        },
+        {
+          "id": "autoCallNumber",
+          "type": "numeric",
+          "name_en": "Autocall",
+          "name_fr": "Autocall",
+          "help_en": "Enter '1' to indicate that an automatic call will be made by the alarm, or the Mobicall number (even number between 7000 and 7998) if known",
+          "help_fr": "Entrez '1' pour indiquer qu'un appel automatique sera effectua par l'alarme, ou le numero Mobicall (nombre pair entre 7000 et 7998) si connu"
+        },
+        {
+          "id": "multiplicityValue",
+          "type": "numeric",
+          "name_en": "Multiplicity Value",
+          "name_fr": "Valeur Multiplicité",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "parentAlarm",
+          "type": "numeric",
+          "name_en": "Parent Alarm",
+          "name_fr": "Autocall",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "electricityFaultFamily",
+          "type": "text",
+          "name_en": "Electricity Fault Family",
+          "name_fr": "Famille Défaut électricité",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
     }
-]
+  ]
 }

@@ -1,0 +1,43 @@
+{
+  "name": "logging",
+  "categories": [
+    {
+      "name": "Logging",
+      "disabledStates": [],
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "fields": [
+        {
+          "id": "valueDeadBand",
+          "type": "text",
+          "name_en": "Value Deadband",
+          "name_fr": "Value Deadband",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "deadBandType",
+          "type": "options",
+          "options": [
+            "ABS",
+            "PCT"
+          ],
+          "name_en": "Deadband Type",
+          "name_fr": "Deadband Type",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "timeDeadBand",
+          "type": "text",
+          "name_en": "Time Deadband",
+          "name_fr": "Time Deadband",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
+    }
+  ]
+}

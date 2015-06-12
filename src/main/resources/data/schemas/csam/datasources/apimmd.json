@@ -1,11 +1,13 @@
 {
   "name": "apimmd",
   "domain": "csam",
-  "categories":
-  [
+  "categories": [
     {
       "name": "APIMMD",
-      "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {

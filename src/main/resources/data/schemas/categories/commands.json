@@ -1,0 +1,35 @@
+{
+  "name": "commands",
+  "categories": [
+    {
+      "name": "Commands",
+      "disabledStates": [],
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "fields": [
+        {
+          "id": "type",
+          "type": "options",
+          "options": [
+            "bi-stable",
+            "pulsed"
+          ],
+          "name_en": "Type",
+          "name_fr": "Type",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "pulseLength",
+          "type": "numeric",
+          "name_en": "Pulse Length",
+          "name_fr": "Pulse Length",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
+    }
+  ]
+}

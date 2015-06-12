@@ -1,26 +1,48 @@
 [
   {
     "name": "TIM",
-    "datasources":
-    [
-      "PLC",
+    "datasources": [
       "OPC",
-      "DIP"
+      "DIP",
+      "PLC",
+      "LASER",
+      "JAPC",
+      "DIAMON",
+      "DATABASE"
+    ],
+    "categories": [
+      "Commands",
+      "Binary Points",
+      "Analogue Points",
+      "Logging",
+      "DIP Client",
+      "JAPC Client"
     ]
   },
   {
     "name": "CSAM",
-    "datasources":
-    [
+    "datasources": [
+      "LSAC",
+      "APIMMD",
+      "OPC",
       "WINTER",
-      "SECURIFIRE"
+      "SECURITON",
+      "SECURIFIRE",
+      "OPCDEF"
+    ],
+    "categories": [
+      "Analogue Points",
+      "Logging"
     ]
   },
   {
     "name": "PVSS",
-    "datasources":
-    [
-      "PVSS"
+    "datasources": [
+      "JAPC"
+    ],
+    "categories": [
+      "Binary Points",
+      "Analogue Points"
     ]
   }
 ]

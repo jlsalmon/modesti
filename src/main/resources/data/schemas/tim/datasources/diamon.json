@@ -1,0 +1,24 @@
+{
+  "name": "diamon",
+  "domain": "tim",
+  "categories": [
+    {
+      "name": "DIAMON",
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "disabledStates": ["FOR_APPROVAL"],
+      "fields": [
+        {
+          "id": "hostName",
+          "type": "text",
+          "name_en": "Host Name",
+          "name_fr": "Host Name",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
+    }
+  ]
+}
