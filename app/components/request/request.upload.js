@@ -11,7 +11,7 @@ function UploadController($location, $cookies, FileUploader) {
   var self = this;
 
   self.uploader = new FileUploader({
-    url : 'http://localhost:8080/requests/upload',
+    url : BACKEND_BASE_URL + '/requests/upload',
     withCredentials: true
   });
 

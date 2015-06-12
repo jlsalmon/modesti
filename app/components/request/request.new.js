@@ -32,7 +32,7 @@ function NewRequestController($http, $location, $localStorage, RequestService, R
    *
    */
   function getDomains() {
-    $http.get('http://localhost:8080/domains').then(function(response) {
+    $http.get(BACKEND_BASE_URL + '/domains').then(function(response) {
       response.data._embedded.domains.map(function(item) {
         self.domains.push(item);
       });
@@ -43,9 +43,9 @@ function NewRequestController($http, $location, $localStorage, RequestService, R
    *
    */
   function getSubsystems(value) {
-    return $http.get('http://localhost:8080/subsystems/search/findByName', {
+    return $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
       params : {
-        name : value
+        query : value
       }
     }).then(function(response) {
       if (!response.data.hasOwnProperty('_embedded')) {
@@ -66,7 +66,7 @@ function NewRequestController($http, $location, $localStorage, RequestService, R
     for (var i in self.domains) {
       if (self.domains[i].name == domain) {
         self.domains[i].datasources.map(function(item) {
-          self.categories.push(item.name);
+          self.categories.push(item.value);
         });
       }
     }

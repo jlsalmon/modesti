@@ -39,7 +39,7 @@
   <div class="col-sm-9">
 
     <input type="text" ng-model="ctrl.request.subsystem" placeholder="System/Subsystem"
-      typeahead="subsystem as subsystem.name for subsystem in ctrl.getSubsystems($viewValue)"
+      typeahead="subsystem as subsystem.value for subsystem in ctrl.getSubsystems($viewValue)"
       typeahead-loading="loadingSubsystems"
       typeahead-editable="false" class="form-control" name="system" required>
     <i ng-show="loadingSubsystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>

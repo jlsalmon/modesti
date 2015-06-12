@@ -224,18 +224,31 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   /**
    *
    */
+  function generateTagnames() {
+    var point;
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      point = self.rows[i];
+      point.properties.tagname = point.properties.site.value + '.'
+      + point.properties.gmaoCode + ':'
+      + point.properties.pointAttribute;
+    }
+  }
+
+  /**
+   *
+   */
   function getAvailableExtraCategories() {
     // TODO refactor this into a service
-    $http.get('http://localhost:8080/domains/' + self.request.domain).then(function (response) {
+    $http.get(BACKEND_BASE_URL + '/domains/' + self.request.domain).then(function (response) {
       self.availableCategories = [];
 
       response.data.datasources.map(function (category) {
 
         // Only add the category if we aren't already using it
         if ($.grep(self.schema.categories, function (item) {
-            return item.name == category.name;
+            return item.name == category.value;
           }).length == 0) {
-          self.availableCategories.push(category.name);
+          self.availableCategories.push(category.value);
         }
       });
     });
@@ -288,18 +301,6 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     }
 
     generateTagnames();
-  }
-
-  /**
-   *
-   */
-  function generateTagnames() {
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      var point = self.rows[i];
-      point.properties.tagname = point.properties.site.name + '.' + point.properties.gmaoCode + ':' + point.properties.pointAttribute;
-    }
-
-    //self.hot.render();
   }
 
   /**

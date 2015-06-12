@@ -36,6 +36,10 @@ function ColumnService($http, $translate) {
       column = getDropdownColumn(column, field);
     }
 
+    if (field.type == 'numeric') {
+      column.type = 'numeric'
+    }
+
     return column;
   }
 
@@ -66,13 +70,23 @@ function ColumnService($http, $translate) {
     column.source = function(query, process) {
 
       // TODO refactor this into a service
-      $http.get(field.options).then(function(response) {
+      $http.get(BACKEND_BASE_URL + '/' + field.options).then(function(response) {
         if (!response.data.hasOwnProperty('_embedded')) {
           return [];
         }
 
-        var items = response.data._embedded[field.returnPropertyName].map(function(item) {
-          return item[field.model];
+        // Relies on the fact that the property name inside the JSON response is the same
+        // as the first part of the URL, before the first forward slash
+        var returnPropertyName = field.options.split('/')[0];
+        var items = response.data._embedded[returnPropertyName].map(function(item) {
+
+          // For fields that are objects but have no 'model' attribute defined, assume that
+          // the object has only a single property called 'value'.
+          if (field.model == undefined && typeof item == 'object') {
+            return item.value;
+          } else {
+            return item[field.model];
+          }
         });
 
         process(items);
@@ -95,6 +109,8 @@ function ColumnService($http, $translate) {
 
     if (field.model) {
       column.data = 'properties.' + field.id + '.' + field.model;
+    } else {
+      column.data = 'properties.' + field.id + '.value';
     }
 
     column.source = function(query, process) {
@@ -104,8 +120,13 @@ function ColumnService($http, $translate) {
       }
 
       var params = {};
-      for ( var i in field.params) {
-        params[field.params[i]] = query;
+      if (field.params == undefined) {
+        // By default, searches are done via parameter called 'query'
+        params.query = query;
+      } else {
+        for (var i in field.params) {
+          params[field.params[i]] = query;
+        }
       }
 
       if (this.prop == 'properties.location.buildingName') {
@@ -114,15 +135,25 @@ function ColumnService($http, $translate) {
       }
 
       // TODO refactor this into a service
-      $http.get(field.url, {
+      $http.get(BACKEND_BASE_URL + '/' + field.url, {
         params : params
       }).then(function(response) {
         if (!response.data.hasOwnProperty('_embedded')) {
           return [];
         }
 
-        var items = response.data._embedded[field.returnPropertyName].map(function(item) {
-          return item[field.model];
+        // Relies on the fact that the property name inside the JSON response is the same
+        // as the first part of the URL, before the first forward slash
+        var returnPropertyName = field.url.split('/')[0];
+        var items = response.data._embedded[returnPropertyName].map(function(item) {
+
+          // For fields that are objects but have no 'model' attribute defined, assume that
+          // the object has only a single property called 'value'.
+          if (field.model == undefined && typeof item == 'object') {
+            return item.value;
+          } else {
+            return item[field.model];
+          }
         });
 
         process(items);

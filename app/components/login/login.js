@@ -27,7 +27,7 @@ function LoginController($http, $localStorage, $modalInstance, authService) {
 
     // Set ignoreAuthModule so that angular-http-auth doesn't show another modal
     // if the authentication fails
-    $http.get('http://localhost:8080/login', {headers: headers, ignoreAuthModule: true}).success(function (data) {
+    $http.get(BACKEND_BASE_URL + '/login', {headers: headers, ignoreAuthModule: true}).success(function (data) {
       console.log('authenticated');
 
       // Set data in local storage for other parts of the app to use
