@@ -55,7 +55,7 @@ public class SchemaController {
   }
 
   /**
-   * GET /requests/{id}/schema?categories=lsac,plc,securiton
+   * GET /requests/{id}/schema?datasources=lsac,apimmd&categories=logging
    *
    * @param categories
    * @return

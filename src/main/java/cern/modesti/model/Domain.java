@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.Id;
 
 /**
- * 
+ *
  * @author Justin Lewis Salmon
  *
  */
@@ -15,8 +15,10 @@ public class Domain {
   private String id;
 
   private String name;
-  
-  private List<Datasource> datasources;
+
+  private List<String> datasources;
+
+  private List<String> categories;
 
   public Domain() {
   }
@@ -55,14 +57,22 @@ public class Domain {
   /**
    * @return the datasources
    */
-  public List<Datasource> getDatasources() {
+  public List<String> getDatasources() {
     return datasources;
   }
-  
+
   /**
    * @param datasources the datasources to set
    */
-  public void setDatasources(List<Datasource> datasources) {
+  public void setDatasources(List<String> datasources) {
     this.datasources = datasources;
+  }
+
+  public List<String> getCategories() {
+    return categories;
+  }
+
+  public void setCategories(List<String> categories) {
+    this.categories = categories;
   }
 }
