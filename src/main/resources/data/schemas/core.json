@@ -19,9 +19,7 @@
             {
                 "id": "pointDataType",
                 "type": "options",
-                "options": "http://localhost:8080/datatypes",
-                "model": "name",
-                "returnPropertyName": "datatypes",
+                "options": "datatypes",
                 "required": true,
                 "name_en": "Data Type",
                 "name_fr": "Type de point",
@@ -49,12 +47,7 @@
             {
                 "id": "subsystem",
                 "type": "autocomplete",
-                "url": "http://localhost:8080/subsystems/search/findByName",
-                "params": [
-                  "name"
-                ],
-                "model": "name",
-                "returnPropertyName": "subsystems",
+                "url": "subsystems/search/find",
                 "required": true,
                 "name_en": "System/Subsystem",
                 "name_fr": "Systeme/Sous-systeme",
@@ -64,14 +57,13 @@
             {
                 "id": "responsiblePerson",
                 "type": "autocomplete",
-                "url": "http://localhost:8080/persons/search/findByIdOrName",
+                "url": "persons/search/findByIdOrName",
                 "params": [
                   "id",
                   "name"
                 ],
-                "minLength": 2,
                 "model": "name",
-                "returnPropertyName": "persons",
+                "minLength": 2,
                 "required": true,
                 "name_en": "Responsible Person",
                 "name_fr": "Responsable",
@@ -97,12 +89,7 @@
             {
                 "id": "site",
                 "type": "autocomplete",
-                "url": "http://localhost:8080/sites/search/findByName",
-                "params": [
-                  "name"
-                ],
-                "model": "name",
-                "returnPropertyName": "sites",
+                "url": "sites/search/find",
                 "name_en": "Site",
                 "name_fr": "Site",
                 "help_en": "Enter the functionality or the site where the point is found",
@@ -111,27 +98,31 @@
             {
                 "id": "location",
                 "type": "autocomplete",
-                "url": "http://localhost:8080/locations/search/find",
-                "params": [
-                  "q"
-                ],
+                "url": "locations/search/find",
                 "minLength": 2,
-                "model": "location",
-                "returnPropertyName": "locations",
                 "name_en": "Location",
                 "name_fr": "Location",
                 "help_en": "Enter the building number related to the point. Optionally also enter the floor and room within the building",
                 "help_fr": "Entrez le numéro du bâtiment concerne par le point. Éventuellement également entrer l'etage et la pièce dans le bâtiment"
             },
             {
+                "id": "buildingName",
+                "type": "autocomplete",
+                "url": "locations/search/findByBuildingNumber",
+                "params": [
+                    "query",
+                    "location.buildingNumber"
+                ],
+                "model": "location.buildingName",
+                "name_en": "Building Name",
+                "name_fr": "Sigle",
+                "help_en": "",
+                "help_fr": ""
+            },
+            {
                 "id": "zone",
                 "type": "autocomplete",
-                "url": "http://localhost:8080/zones/search/findByName",
-                "params": [
-                  "name"
-                ],
-                "model": "name",
-                "returnPropertyName": "zones",
+                "url": "zones/search/find",
                 "name_en": "Zone",
                 "name_fr": "Zone",
                 "help_en": "Enter the security zone related to the point",
@@ -157,9 +148,7 @@
             {
                 "id": "priorityCode",
                 "type": "options",
-                "options": "http://localhost:8080/alarmPriorities",
-                "model": "priority",
-                "returnPropertyName": "alarmPriorities",
+                "options": "alarmPriorities",
                 "name_en": "Priority",
                 "name_fr": "Niveau",
                 "help_en": "Enter the priority of the alarm between 0 and 3",
@@ -167,7 +156,7 @@
             },
             {
                 "id": "alarmValue",
-                "type": "text",
+                "type": "numeric",
                 "name_en": "Value",
                 "name_fr": "Valeur",
                 "help_en": "The value indicating the presence of the alarm",

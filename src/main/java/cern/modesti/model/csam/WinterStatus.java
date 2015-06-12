@@ -14,19 +14,19 @@ import javax.persistence.Id;
 public class WinterStatus {
 
   @Id
-  private String status;
+  private String value;
 
   /**
-   * @return the status
+   * @return the value
    */
-  public String getStatus() {
-    return status;
+  public String getValue() {
+    return value;
   }
 
   /**
-   * @param status the status to set
+   * @param value the value to set
    */
-  public void setStatus(String status) {
-    this.status = status;
+  public void setValue(String value) {
+    this.value = value;
   }
 }

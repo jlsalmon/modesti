@@ -10,7 +10,7 @@
         "fields": [
             {
                 "id": "blockType",
-                "type": "text",
+                "type": "numeric",
                 "name_en": "Block Type",
                 "name_fr": "Code du block",
                 "help_en": "For PLC cabled points, the block type.",
@@ -18,11 +18,43 @@
             },
             {
                 "id": "wordId",
-                "type": "text",
+                "type": "numeric",
                 "name_en": "Word ID",
                 "name_fr": "Numero du mot",
                 "help_en": "For PLC cabled points, the word number that stores the value of the point",
                 "help_fr": "Pour les points cables sur PLC, le numero du mot qui stocke la valeur du point"
+            },
+            {
+                "id": "bitId",
+                "type": "numeric",
+                "name_en": "Bit ID",
+                "name_fr": "Numero du bit",
+                "help_en": "",
+                "help_fr": ""
+            },
+            {
+                "id": "nativePrefix",
+                "type": "text",
+                "name_en": "Native Prefix",
+                "name_fr": "Native Prefix",
+                "help_en": "",
+                "help_fr": ""
+            },
+            {
+                "id": "slaveAddress",
+                "type": "numeric",
+                "name_en": "Slave Address",
+                "name_fr": "Slave Address",
+                "help_en": "",
+                "help_fr": ""
+            },
+            {
+                "id": "connectId",
+                "type": "text",
+                "name_en": "Connect ID",
+                "name_fr": "Connect ID",
+                "help_en": "",
+                "help_fr": ""
             }
         ]
     }

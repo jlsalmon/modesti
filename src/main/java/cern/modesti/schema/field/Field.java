@@ -36,6 +36,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     visible = true)
 @JsonSubTypes({
     @Type(value = TextField.class, name = "text"),
+    @Type(value = NumericField.class, name = "numeric"),
     @Type(value = OptionsField.class, name = "options"),
     @Type(value = AutocompleteField.class, name = "autocomplete")})
 @JsonInclude(Include.NON_NULL)
@@ -50,6 +51,9 @@ public class Field {
 
   private String type;
 
+  /**
+   * If a field is an object, this specifies the property of the object to display
+   */
   private String model;
 
   private Integer minLength;

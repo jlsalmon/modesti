@@ -30,6 +30,6 @@ import cern.modesti.repository.base.ReadOnlyRepository;
  */
 public interface AlarmCategoryRepository extends ReadOnlyRepository<AlarmCategory, String>{
 
-  @RestResource(rel = "findByName", path = "findByName")
-  List<AlarmCategory> findByNameContainingIgnoreCase(@Param("name") String name);
+  @RestResource(rel = "find", path = "find")
+  List<AlarmCategory> findByValueContainingIgnoreCase(@Param("query") String name);
 }

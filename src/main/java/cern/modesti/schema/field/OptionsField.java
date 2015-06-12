@@ -25,8 +25,6 @@ public class OptionsField extends Field {
 
   private Object options;
 
-  private String returnPropertyName;
-
   /**
    * @return the options
    */
@@ -39,19 +37,5 @@ public class OptionsField extends Field {
    */
   public void setOptions(Object options) {
     this.options = options;
-  }
-
-  /**
-   * @return the returnPropertyName
-   */
-  public String getReturnPropertyName() {
-    return returnPropertyName;
-  }
-
-  /**
-   * @param returnPropertyName the returnPropertyName to set
-   */
-  public void setReturnPropertyName(String returnPropertyName) {
-    this.returnPropertyName = returnPropertyName;
   }
 }

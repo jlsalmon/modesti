@@ -30,6 +30,6 @@ import cern.modesti.repository.base.ReadOnlyRepository;
 public interface AlarmPriorityRepository extends ReadOnlyRepository<AlarmPriority, String> {
 
   @Override
-  @Query(value = "SELECT rv_low_value as priority FROM cg_ref_codes WHERE rv_domain = 'ALARMPRI'", nativeQuery = true)
-  public List<AlarmPriority> findAll();
+  @Query(value = "SELECT rv_low_value as value FROM cg_ref_codes WHERE rv_domain = 'ALARMPRI'", nativeQuery = true)
+  List<AlarmPriority> findAll();
 }

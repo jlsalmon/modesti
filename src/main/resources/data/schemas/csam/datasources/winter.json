@@ -11,9 +11,7 @@
             {
                 "id": "status",
                 "type": "options",
-                "options": "http://localhost:8080/winterStatuses",
-                "model": "status",
-                "returnPropertyName": "winterStatuses",
+                "options": "winterStatuses",
                 "required": true,
                 "name_en": "Status",
                 "name_fr": "Bit",

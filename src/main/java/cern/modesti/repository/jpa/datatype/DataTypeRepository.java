@@ -33,7 +33,7 @@ import cern.modesti.repository.base.ReadOnlyRepository;
 public interface DataTypeRepository extends ReadOnlyRepository<DataType, String> {
 
   @Override
-  @Query(value = "SELECT rv_low_value as name FROM cg_ref_codes WHERE rv_domain = 'PTDATATYPES'", nativeQuery = true)
+  @Query(value = "SELECT rv_low_value as value FROM cg_ref_codes WHERE rv_domain = 'PTDATATYPES'", nativeQuery = true)
   @Cacheable("datatypes")
-  public List<DataType> findAll();
+  List<DataType> findAll();
 }

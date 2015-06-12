@@ -27,26 +27,26 @@ import javax.persistence.Id;
 public class DataType {
 
   @Id
-  private String name;
+  private String value;
 
   public DataType() {
   }
 
-  public DataType(final String name) {
-    this.name = name;
+  public DataType(final String value) {
+    this.value = value;
   }
 
   /**
-   * @return the name
+   * @return the value
    */
-  public String getName() {
-    return name;
+  public String getValue() {
+    return value;
   }
 
   /**
-   * @param name the name to set
+   * @param value the value to set
    */
-  public void setName(String name) {
-    this.name = name;
+  public void setValue(String value) {
+    this.value = value;
   }
 }

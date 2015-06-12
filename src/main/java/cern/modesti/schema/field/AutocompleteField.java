@@ -27,9 +27,7 @@ public class AutocompleteField extends Field {
 
   private String url;
 
-  private List<String> params = new ArrayList<String>();
-
-  private String returnPropertyName;
+  private List<String> params;
 
   /**
    * @return the url
@@ -57,19 +55,5 @@ public class AutocompleteField extends Field {
    */
   public void setParams(List<String> params) {
     this.params = params;
-  }
-
-  /**
-   * @return the returnPropertyName
-   */
-  public String getReturnPropertyName() {
-    return returnPropertyName;
-  }
-
-  /**
-   * @param returnPropertyName the returnPropertyName to set
-   */
-  public void setReturnPropertyName(String returnPropertyName) {
-    this.returnPropertyName = returnPropertyName;
   }
 }

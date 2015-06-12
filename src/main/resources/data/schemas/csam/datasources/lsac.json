@@ -9,7 +9,7 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
-          "id": "type",
+          "id": "lsacType",
           "type": "options",
           "options": ["IN", "OUT"],
           "required": true,

@@ -27,26 +27,26 @@ import javax.persistence.Id;
 public class AlarmPriority {
 
   @Id
-  private String priority;
+  private String value;
 
   public AlarmPriority() {
   }
 
-  public AlarmPriority(final String priority) {
-    this.priority = priority;
+  public AlarmPriority(final String value) {
+    this.value = value;
   }
 
   /**
    * @return the priority
    */
-  public String getPriority() {
-    return priority;
+  public String getValue() {
+    return value;
   }
 
   /**
-   * @param priority the priority to set
+   * @param value the value to set
    */
-  public void setPriority(String priority) {
-    this.priority = priority;
+  public void setValue(String value) {
+    this.value = value;
   }
 }

@@ -14,19 +14,19 @@ import javax.persistence.Id;
 public class Zone {
 
   @Id
-  private String name;
+  private String value;
 
   /**
-   * @return the name
+   * @return the value
    */
-  public String getName() {
-    return name;
+  public String getValue() {
+    return value;
   }
 
   /**
-   * @param name the name to set
+   * @param value the value to set
    */
-  public void setName(String name) {
-    this.name = name;
+  public void setValue(String value) {
+    this.value = value;
   }
 }

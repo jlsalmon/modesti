@@ -6,7 +6,6 @@ package cern.modesti.legacy.parser;
 import java.util.*;
 
 import cern.modesti.model.*;
-import cern.modesti.repository.jpa.location.LocationRepository;
 import cern.modesti.repository.jpa.person.PersonRepository;
 import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import com.google.common.base.CaseFormat;
@@ -22,7 +21,6 @@ import cern.modesti.legacy.exception.VersionNotSupportedException;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
 import cern.modesti.request.point.Point;
-import org.springframework.context.ApplicationContext;
 
 /**
  * @author Justin Lewis Salmon
@@ -170,6 +168,7 @@ public abstract class RequestParser {
     properties.put("location", parseLocation(properties));
     properties.put("site", parseSite(properties));
     properties.put("zone", parseZone(properties));
+    properties.put("alarmCategory", parseAlarmCategory(properties));
 
 
     point.setProperties(properties);
@@ -232,7 +231,7 @@ public abstract class RequestParser {
     // CSAM requests specify only the subsystem
     if (systemName == null) {
       // Find the subsystem by name (avoiding the "null" string literal)
-      List<SubSystem> subsystems = subSystemRepository.findByName(subSystemName);
+      List<SubSystem> subsystems = subSystemRepository.find(subSystemName);
       if (subsystems.size() == 0 || subsystems.size() > 1) {
         LOG.warn("Could not determine subsystem for point");
       } else {
@@ -242,7 +241,7 @@ public abstract class RequestParser {
       subsystem = new SubSystem();
       subsystem.setSystem(systemName);
       subsystem.setSubsystem(subSystemName);
-      subsystem.setName(systemName + " " + subSystemName);
+      subsystem.setValue(systemName + " " + subSystemName);
     }
 
     return subsystem;
@@ -259,7 +258,7 @@ public abstract class RequestParser {
     String floor = properties.get("floor") != null ? String.valueOf(properties.get("floor")) : null;
     Integer room = properties.get("room") != null ? ((Double) properties.get("room")).intValue() : null;
 
-    location.setLocation(buildingNumber + (floor == null ? "" : ("/" + floor + (room == null ? "" : ("-" + String.format("%03d", room))))));
+    location.setBuildingNumber(buildingNumber + (floor == null ? "" : ("/" + floor + (room == null ? "" : ("-" + String.format("%03d", room))))));
     //    List<Location> locations = locationRepository.find(query);
     //LOG.debug("found " + locations.size() + " locations with query: " + query);
 
@@ -281,7 +280,7 @@ public abstract class RequestParser {
    */
   private Site parseSite(Map<String, Object> properties) {
     Site site = new Site();
-    site.setName((String) properties.get("site"));
+    site.setValue((String) properties.get("site"));
     return site;
   }
 
@@ -292,8 +291,19 @@ public abstract class RequestParser {
    */
   private Zone parseZone(Map<String, Object> properties) {
     Zone zone = new Zone();
-    zone.setName(properties.get("zone") != null ? String.valueOf(((Double) properties.get("zone")).intValue()) : "");
+    zone.setValue(properties.get("zone") != null ? String.valueOf(((Double) properties.get("zone")).intValue()) : "");
     return zone;
+  }
+
+  /**
+   *
+   * @param properties
+   * @return
+   */
+  private AlarmCategory parseAlarmCategory(Map<String, Object> properties) {
+    AlarmCategory category = new AlarmCategory();
+    category.setValue((String) properties.get("alarmCategory"));
+    return category;
   }
 
   /**
@@ -403,7 +413,7 @@ public abstract class RequestParser {
   }
 
   /**
-   * 
+   *
    * @param subSystemRepository
    */
   public void setSubSystemRepository(SubSystemRepository subSystemRepository) {

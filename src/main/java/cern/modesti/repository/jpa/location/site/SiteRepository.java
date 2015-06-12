@@ -42,10 +42,10 @@ public interface SiteRepository extends ReadOnlyRepository<Site, String> {
    * We also rename the REST endpoint for this resource via the
    * {@link RestResource} annotation to make things nicer.
    *
-   * @param name
+   * @param query
    * @return
    */
-  @RestResource(rel = "findByName", path = "findByName")
+  @RestResource(rel = "find", path = "find")
   @Cacheable("sites")
-  List<Site> findByNameStartsWithIgnoreCase(@Param("name") String name);
+  List<Site> findByValueStartsWithIgnoreCase(@Param("query") String query);
 }

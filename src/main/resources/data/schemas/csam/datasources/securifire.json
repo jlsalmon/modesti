@@ -9,11 +9,9 @@
         "disabledStates": ["FOR_APPROVAL"],
         "fields": [
             {
-                "id": "type",
+                "id": "securifireType",
                 "type": "options",
-                "options": "http://localhost:8080/securifireTypes",
-                "model": "type",
-                "returnPropertyName": "securifireTypes",
+                "options": "securifireTypes",
                 "required": true,
                 "name_en": "Type",
                 "name_fr": "Type",

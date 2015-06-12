@@ -14,19 +14,52 @@ import javax.persistence.Id;
 public class Location {
 
   @Id
-  private String location;
+  private String buildingNumber;
+
+  private String floor;
+
+  private String room;
 
   /**
-   * @return the location
+   * Combined string of the location in the format NUMBER/FLOOR-ROOM (e.g. 104/R-A01)
    */
-  public String getLocation() {
-    return location;
+  private String value;
+
+  /**
+   * @return the buildingNumber
+   */
+  public String getBuildingNumber() {
+    return buildingNumber;
   }
 
   /**
-   * @param location the location to set
+   * @param buildingNumber the buildingNumber to set
    */
-  public void setLocation(String location) {
-    this.location = location;
+  public void setBuildingNumber(String buildingNumber) {
+    this.buildingNumber = buildingNumber;
+  }
+
+  public String getFloor() {
+    return floor;
+  }
+
+  public void setFloor(String floor) {
+    this.floor = floor;
+  }
+
+  public String getRoom() {
+    return room;
+  }
+
+  public void setRoom(String room) {
+    this.room = room;
+  }
+
+  public String getValue() {
+    return value;
+  }
+
+  public void setValue(String value) {
+    this.value = value;
   }
 }

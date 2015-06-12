@@ -32,7 +32,6 @@ public class CSAMRequestParser extends RequestParser {
 
   /**
    * @param sheet
-   * @param context
    */
   public CSAMRequestParser(Sheet sheet) {
     super(sheet);
@@ -81,6 +80,11 @@ public class CSAMRequestParser extends RequestParser {
     String mapping = columnTitleMappings.get(title);
     if (mapping != null) {
       title = mapping;
+    }
+
+    // LSAC special cases
+    if (title.equals("type") && column == 22) {
+      title = "lsacType";
     }
 
     // PLC - APIMMD special cases

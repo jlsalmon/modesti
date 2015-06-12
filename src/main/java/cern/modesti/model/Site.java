@@ -31,26 +31,26 @@ public class Site {
 
   @Id
   @Column(name = "func_code")
-  private String name;
+  private String value;
 
   public Site() {
   }
 
-  public Site(final String name) {
-    this.name = name;
+  public Site(final String value) {
+    this.value = value;
   }
 
   /**
-   * @return the name
+   * @return the value
    */
-  public String getName() {
-    return name;
+  public String getValue() {
+    return value;
   }
 
   /**
-   * @param name the name to set
+   * @param value the value to set
    */
-  public void setName(String name) {
-    this.name = name;
+  public void setValue(String value) {
+    this.value = value;
   }
 }

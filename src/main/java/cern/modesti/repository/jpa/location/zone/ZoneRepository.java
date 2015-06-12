@@ -18,9 +18,9 @@ import cern.modesti.repository.base.ReadOnlyRepository;
  */
 public interface ZoneRepository extends ReadOnlyRepository<Zone, String> {
 
-  @Query(value = "SELECT DISTINCT zone_secu as name FROM ouvrage "
-               + "WHERE zone_secu LIKE :name || '%' "
+  @Query(value = "SELECT DISTINCT zone_secu as value FROM ouvrage "
+               + "WHERE zone_secu LIKE :query || '%' "
                + "ORDER BY 1", nativeQuery = true)
   @Cacheable("zones")
-  public List<Zone> findByName(@Param("name") String name);
+  List<Zone> find(@Param("query") String query);
 }
