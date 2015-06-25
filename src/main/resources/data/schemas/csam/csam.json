@@ -1,8 +1,27 @@
 {
   "name": "csam",
   "extends": "core",
-  "categories":
-  [
-
+  "categories": [
+    {
+      "name": "General",
+      "fields": [
+        {
+          "id": "monitoringEquipmentName",
+          "type": "text",
+          "name_en": "Equipment Name",
+          "name_fr": "Equipment Name",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "cabling",
+          "type": "checkbox",
+          "name_en": "Cabling",
+          "name_fr": "Cablage",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
+    }
   ]
 }

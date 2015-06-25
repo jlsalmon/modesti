@@ -11,7 +11,7 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
-          "id": "device",
+          "id": "japcDevice",
           "type": "text",
           "name_en": "Device",
           "name_fr": "Device",
@@ -19,7 +19,7 @@
           "help_fr": ""
         },
         {
-          "id": "property",
+          "id": "japcProperty",
           "type": "text",
           "name_en": "Property",
           "name_fr": "Property",

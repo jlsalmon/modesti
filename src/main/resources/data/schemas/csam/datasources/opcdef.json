@@ -2,5 +2,52 @@
   "name": "opcdef",
   "domain": "csam",
   "categories": [
+    {
+      "name": "OPCDEF",
+      "editableStates": [
+        "IN_PROGRESS",
+        "FOR_CORRECTION"
+      ],
+      "disabledStates": ["FOR_APPROVAL"],
+      "fields": [
+        {
+          "id": "module",
+          "type": "text",
+          "required": true,
+          "name_en": "Module",
+          "name_fr": "Module",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "line",
+          "type": "text",
+          "required": true,
+          "name_en": "Line",
+          "name_fr": "Line",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "required": true,
+          "name_en": "Address",
+          "name_fr": "Address",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "opcdefStatus",
+          "type": "options",
+          "options": [1, 2, 3, 4, 5],
+          "required": true,
+          "name_en": "Status",
+          "name_fr": "Status",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
+    }
   ]
 }

@@ -11,6 +11,34 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
+          "id": "securifireGroup",
+          "type": "text",
+          "required": true,
+          "name_en": "Group",
+          "name_fr": "Group",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "securifireDetecteur",
+          "type": "text",
+          "required": true,
+          "name_en": "Detecteur",
+          "name_fr": "Detecteur",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "securifireStatus",
+          "type": "options",
+          "options": [1, 2, 3, 4, 5, 6, 7],
+          "required": true,
+          "name_en": "Status",
+          "name_fr": "Status",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
           "id": "securifireType",
           "type": "options",
           "options": "securifireTypes",

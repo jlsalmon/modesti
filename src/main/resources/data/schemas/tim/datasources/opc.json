@@ -33,6 +33,38 @@
           "name_fr": "Redundant Address",
           "help_en": "",
           "help_fr": ""
+        },
+        {
+          "id": "addressType",
+          "type": "text",
+          "name_en": "Address Type",
+          "name_fr": "Address Type",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "nameSpace",
+          "type": "text",
+          "name_en": "Namespace",
+          "name_fr": "Namespace",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "cmdType",
+          "type": "text",
+          "name_en": "CMD Type",
+          "name_fr": "CMD Type",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "sampleRate",
+          "type": "text",
+          "name_en": "Sample Rate",
+          "name_fr": "Sample Rate",
+          "help_en": "",
+          "help_fr": ""
         }
       ]
     }

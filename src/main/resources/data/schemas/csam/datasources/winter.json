@@ -11,11 +11,20 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
-          "id": "status",
-          "type": "options",
-          "options": "winterStatuses",
+          "id": "voie",
+          "type": "numeric",
           "required": true,
-          "name_en": "Status",
+          "name_en": "Voie",
+          "name_fr": "Voie",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "winterBit",
+          "type": "options",
+          "options": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+          "required": true,
+          "name_en": "Bit",
           "name_fr": "Bit",
           "help_en": "For points managed by the Winter system, the bit number that stores the point value",
           "help_fr": "Pour les points geres par le systeme Winter, le numero du bit qui stocke la valleur du point"

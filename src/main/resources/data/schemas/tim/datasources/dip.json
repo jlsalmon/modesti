@@ -17,6 +17,22 @@
           "name_fr": "Item",
           "help_en": "For points sent by the DIP system, the name of the data transmitted",
           "help_fr": "Pour les points transmis par le systeme DIP, le nom de la donnee transmise"
+        },
+        {
+          "id": "field",
+          "type": "text",
+          "name_en": "Field",
+          "name_fr": "Field",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "index",
+          "type": "numeric",
+          "name_en": "Index",
+          "name_fr": "Index",
+          "help_en": "",
+          "help_fr": ""
         }
       ]
     }

@@ -1,5 +1,5 @@
 {
-  "name": "analogue",
+  "name": "Analogue Points",
   "categories": [
     {
       "name": "Analogue Points",
@@ -12,6 +12,7 @@
         {
           "id": "lowLimit",
           "type": "text",
+          "required": true,
           "name_en": "Low Limit",
           "name_fr": "Low Limit",
           "help_en": "",
@@ -20,6 +21,7 @@
         {
           "id": "highLimit",
           "type": "text",
+          "required": true,
           "name_en": "High Limit",
           "name_fr": "High Limit",
           "help_en": "",
@@ -28,6 +30,7 @@
         {
           "id": "valueDeadBand",
           "type": "text",
+          "required": true,
           "name_en": "Value Deadband",
           "name_fr": "Value Deadband",
           "help_en": "",
@@ -40,6 +43,7 @@
             "ABS",
             "PCT"
           ],
+          "required": true,
           "name_en": "Deadband Type",
           "name_fr": "Deadband Type",
           "help_en": "",
@@ -48,6 +52,7 @@
         {
           "id": "units",
           "type": "text",
+          "required": true,
           "name_en": "Units",
           "name_fr": "Units",
           "help_en": "",

@@ -22,6 +22,33 @@
           "name_fr": "Type",
           "help_en": "Type of the point (IN = entry, OUT = exit)",
           "help_fr": "Type de point (IN = entre, OUT = sortie)"
+        },
+        {
+          "id": "rack",
+          "type": "numeric",
+          "required": true,
+          "name_en": "Rack",
+          "name_fr": "Rack",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "card",
+          "type": "numeric",
+          "required": true,
+          "name_en": "Card",
+          "name_fr": "Card",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "port",
+          "type": "numeric",
+          "required": true,
+          "name_en": "Port",
+          "name_fr": "Port",
+          "help_en": "",
+          "help_fr": ""
         }
       ]
     }

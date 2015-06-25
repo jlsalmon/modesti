@@ -111,12 +111,11 @@
         {
           "id": "buildingName",
           "type": "autocomplete",
-          "url": "locations/search/findByBuildingNumber",
+          "url": "buildingNames/search/findByBuildingNumber",
           "params": [
             "query",
             "location.buildingNumber"
           ],
-          "model": "location.buildingName",
           "name_en": "Building Name",
           "name_fr": "Sigle",
           "help_en": "",
@@ -203,7 +202,7 @@
         {
           "id": "taskOutsideWorkingHours",
           "type": "text",
-          "name_en": "Task During Working Hours",
+          "name_en": "Task Outside Working Hours",
           "name_fr": "Action Hors Heures Ouvrables",
           "help_en": "",
           "help_fr": ""

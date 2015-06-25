@@ -1,8 +1,52 @@
 {
   "name": "tim",
   "extends": "core",
-  "categories":
-  [
+  "categories": [
+    {
+      "name": "General",
+      "fields": [
+        {
+          "id": "timeDeadBand",
+          "type": "text",
+          "name_en": "Time Deadband",
+          "name_fr": "Time Deadband",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "pointComplementaryInfo",
+          "type": "text",
+          "name_en": "Complementary Info",
+          "name_fr": "Complementary Info",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "userApplicationData",
+          "type": "text",
+          "name_en": "User Application Data",
+          "name_fr": "User Application Data",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "monitoringEquipmentName",
+          "type": "text",
+          "name_en": "Equipment Name",
+          "name_fr": "Equipment Name",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "cabling",
+          "type": "checkbox",
+          "name_en": "Cabling",
+          "name_fr": "Cablage",
+          "help_en": "",
+          "help_fr": ""
+        }
+      ]
+    },
     {
       "name": "Alarms",
       "fields": [
@@ -18,8 +62,8 @@
         {
           "id": "autoCallNumber",
           "type": "numeric",
-          "name_en": "Autocall",
-          "name_fr": "Autocall",
+          "name_en": "Autocall Number",
+          "name_fr": "Autocall Number",
           "help_en": "Enter '1' to indicate that an automatic call will be made by the alarm, or the Mobicall number (even number between 7000 and 7998) if known",
           "help_fr": "Entrez '1' pour indiquer qu'un appel automatique sera effectua par l'alarme, ou le numero Mobicall (nombre pair entre 7000 et 7998) si connu"
         },
@@ -35,7 +79,7 @@
           "id": "parentAlarm",
           "type": "numeric",
           "name_en": "Parent Alarm",
-          "name_fr": "Autocall",
+          "name_fr": "Alarme Parent",
           "help_en": "",
           "help_fr": ""
         },
