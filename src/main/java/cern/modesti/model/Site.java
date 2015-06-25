@@ -33,6 +33,9 @@ public class Site {
   @Column(name = "func_code")
   private String value;
 
+  @Column(name = "func_gen")
+  private String generalFunctionality;
+
   public Site() {
   }
 
@@ -52,5 +55,13 @@ public class Site {
    */
   public void setValue(String value) {
     this.value = value;
+  }
+
+  public String getGeneralFunctionality() {
+    return generalFunctionality;
+  }
+
+  public void setGeneralFunctionality(String generalFunctionality) {
+    this.generalFunctionality = generalFunctionality;
   }
 }

@@ -9,5 +9,5 @@
     <logger name="org.hibernate.type" level="TRACE"/>
     <logger name="org.hibernate.jdbc" level="TRACE"/>
     <logger name="org.hibernate.engine.query" level="TRACE"/>
-    <!-- <logger name="jdbc.resultsettable" level="TRACE"/> -->
+    <logger name="jdbc.resultsettable" level="TRACE"/>
 </configuration>

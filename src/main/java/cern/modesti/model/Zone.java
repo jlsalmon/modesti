@@ -16,6 +16,13 @@ public class Zone {
   @Id
   private String value;
 
+  public Zone() {
+  }
+
+  public Zone(String value) {
+    this.value = value;
+  }
+
   /**
    * @return the value
    */

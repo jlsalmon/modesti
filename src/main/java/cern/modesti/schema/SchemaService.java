@@ -58,7 +58,7 @@ public class SchemaService {
     for (String category : categories) {
       LOG.info("finding and merging schema for category " + category);
 
-      Schema categorySchema = schemaRepository.findOneByNameIgnoreCaseAndDomainIgnoreCase(category, request.getDomain());
+      Schema categorySchema = schemaRepository.findOneByNameIgnoreCase(category);
       if (categorySchema == null) {
         throw new IllegalStateException("Schema for category \"" + category + "\" was not found");
       }

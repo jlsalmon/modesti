@@ -32,7 +32,11 @@ public class SubSystem {
 
   private String system;
 
+  private String systemCode;
+
   private String subsystem;
+
+  private String subsystemCode;
 
   /**
    * @return the value
@@ -62,6 +66,14 @@ public class SubSystem {
     this.system = system;
   }
 
+  public String getSystemCode() {
+    return systemCode;
+  }
+
+  public void setSystemCode(String systemCode) {
+    this.systemCode = systemCode;
+  }
+
   /**
    * @return the subsystem
    */
@@ -74,5 +86,13 @@ public class SubSystem {
    */
   public void setSubsystem(String subsystem) {
     this.subsystem = subsystem;
+  }
+
+  public String getSubsystemCode() {
+    return subsystemCode;
+  }
+
+  public void setSubsystemCode(String subsystemCode) {
+    this.subsystemCode = subsystemCode;
   }
 }

@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * ****************************************************************************
  * This file is part of the Technical Infrastructure Monitoring (TIM) project.
  * See http://ts-project-tim.web.cern.ch
  *
@@ -14,7 +15,8 @@
  * Boston, MA 02111-1307, USA.
  *
  * Author: TIM team, tim.support@cern.ch
- ******************************************************************************/
+ * ****************************************************************************
+ */
 package cern.modesti.repository.jpa.subsystem;
 
 import java.util.List;
@@ -34,17 +36,23 @@ import cern.modesti.repository.base.ReadOnlyRepository;
 public interface SubSystemRepository extends ReadOnlyRepository<SubSystem, String> {
 
   /**
-   *
    * @param query
+   *
    * @return
    */
-  @Query(value = "SELECT tes_system_name || ' ' || tess_subsystem_name as value, tes_system_name as system, tess_subsystem_name as subsystem "
-               + "FROM   vpts_sysdet "
-               + "WHERE  tes_system_name || ' ' || tess_subsystem_name LIKE UPPER('%' || :query || '%') " , nativeQuery = true)
+  @Query(value = "" +
+      "SELECT tes_system_name || ' ' || tess_subsystem_name as value,                        " +
+      "       tes_system_name as system,                                                     " +
+      "       tes_system_code as systemCode,                                                 " +
+      "       tess_subsystem_name as subsystem,                                              " +
+      "       tess_subsystem_code as subsystemCode                                           " +
+      "FROM   vpts_sysdet " +
+      "WHERE  tes_system_name || ' ' || tess_subsystem_name LIKE UPPER('%' || :query || '%') ",
+      nativeQuery = true)
   @Cacheable("subsystems")
   List<SubSystem> find(@Param("query") String query);
 
-//  @Override
-//  @Query(value = "SELECT rv_low_value as name FROM cg_ref_codes WHERE rv_domain = 'PTDATATYPES'", nativeQuery = true)
-//  public List<SubSystem> findAll();
+  //  @Override
+  //  @Query(value = "SELECT rv_low_value as name FROM cg_ref_codes WHERE rv_domain = 'PTDATATYPES'", nativeQuery = true)
+  //  public List<SubSystem> findAll();
 }

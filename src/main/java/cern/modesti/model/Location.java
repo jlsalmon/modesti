@@ -13,17 +13,17 @@ import javax.persistence.Id;
 @Entity
 public class Location {
 
+  /**
+   * Combined string of the location in the format NUMBER/FLOOR-ROOM (e.g. 104/R-A01)
+   */
   @Id
+  private String value;
+
   private String buildingNumber;
 
   private String floor;
 
   private String room;
-
-  /**
-   * Combined string of the location in the format NUMBER/FLOOR-ROOM (e.g. 104/R-A01)
-   */
-  private String value;
 
   /**
    * @return the buildingNumber
