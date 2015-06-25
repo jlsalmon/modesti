@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($http, $state, RequestService, TaskService) {
+function CreationControlsController($http, $state, RequestService, TaskService, ValidationService) {
   var self = this;
 
   self.parent = {};
@@ -61,8 +61,7 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
    */
   function canValidate() {
     var task = self.tasks['validate'];
-    // TODO reimplement this
-    return task; //task && self.tableForm.$valid;
+    return task;
   }
 
   /**
@@ -83,6 +82,70 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
    *
    */
   function validate() {
+
+    ValidationService.validateRequest().then(function(valid) {
+
+    });
+
+    // First validate client-side. Might need to go row-by-row and col-by-col?
+
+
+    // First scan column by column
+
+
+
+    var category, field, col;
+    for (var i = 0; i < self.parent.schema.categories.length; i++) {
+      category = self.parent.schema.categories[i];
+
+      for (var j = 0; j < category.fields.length; j++) {
+        field = category.fields[k];
+
+        if (field.type === 'autocomplete') {
+          col = self.hot.getDataAtProp('properties.' + field.id + '.' + (field.model ? field.model : 'value'));
+        } else {
+          col = self.hot.getDataAtProp('properties.' + field.id);
+        }
+
+        console.log('col: ' + col);
+
+
+
+
+        //for (var row = 0, len = self.rows.length; row < len; i++) {
+        //
+        //  var col = self.hot.propToCol('properties.' + field.id);
+        //  console.log('col: ' + col);
+        //  var value = self.hot.getDataAtCell(row, col);
+        //
+        //  var valid = true;
+        //
+        //  // Required fields
+        //  if (field.required) {
+        //    if (value === '' || value === undefined || value === null) {
+        //      valid = false;
+        //      console.log('required field validation failed')
+        //    }
+        //  }
+
+          // TODO: Min/max length validation
+
+          // TODO: Unique columns validation
+
+          // TODO: Unique tagnames, fault states, address parameter validations
+
+          // TODO: Mutually exclusive field validation
+
+        //}
+
+      }
+    }
+
+
+
+    self.hot.render();
+    return;
+
     var task = self.tasks['validate'];
 
     if (!task) {
@@ -118,6 +181,8 @@ function CreationControlsController($http, $state, RequestService, TaskService) 
         console.log('error saving before validation: ' + error.statusText);
         self.validating = 'error';
       });
+
+
   }
 
   /**

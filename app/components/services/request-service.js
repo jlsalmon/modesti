@@ -138,26 +138,26 @@ function RequestService($filter, $rootScope, $q, Restangular) {
     // Merge the given request with the cached request. This is because
     // the given request may have been filtered, and thus contain less
     // points. We don't want to accidentally delete points!
-    if (request.points.length < self.cache[request.requestId].points.length) {
-      for (var i in self.cache[request.requestId].points) {
-        var point = self.cache[request.requestId].points[i];
-        // If the cached point isn't in the given request, add it
-        if (!contains(request.points, point)) {
-          request.points.push(point);
-        }
-      }
-    }
-
-
-    // Remove points that have been marked as deleted. Note that points
-    // that have been filtered out will not be deleted.
-    var i = request.points.length;
-    while (i--) {
-      var point = request.points[i];
-      if (point.deleted) {
-        request.points.splice(request.points.indexOf(point), 1);
-      }
-    }
+    //if (request.points.length < self.cache[request.requestId].points.length) {
+    //  for (var i in self.cache[request.requestId].points) {
+    //    var point = self.cache[request.requestId].points[i];
+    //    // If the cached point isn't in the given request, add it
+    //    if (!contains(request.points, point)) {
+    //      request.points.push(point);
+    //    }
+    //  }
+    //}
+    //
+    //
+    //// Remove points that have been marked as deleted. Note that points
+    //// that have been filtered out will not be deleted.
+    //var i = request.points.length;
+    //while (i--) {
+    //  var point = request.points[i];
+    //  if (point.deleted) {
+    //    request.points.splice(request.points.indexOf(point), 1);
+    //  }
+    //}
 
     request.save().then(function (savedRequest) {
       console.log('saved request');

@@ -98,7 +98,7 @@
             </li>
 
             <li style="margin-left: 10px">
-              <form class="navbar-form navbar-left sidebar-form" role="search">
+              <form class="navbar-form navbar-left sidebar-form" role="search" ng-cloak>
                 <div class="form-group input-group">
                   <input type="text" name="q" ng-model="q" class="form-control input-sm" placeholder="{{'SEARCH_REQUESTS'|translate}}">
                   <span class="input-group-btn">
@@ -372,6 +372,7 @@
   <script src="components/services/task-service.js"></script>
   <script src="components/services/alert-service.js"></script>
   <script src="components/services/column-service.js"></script>
+  <script src="components/services/validation-service.js"></script>
   <script src="components/services/history-service.js"></script>
   <!-- endbuild -->
 

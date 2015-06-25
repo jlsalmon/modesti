@@ -66,7 +66,11 @@ function NewRequestController($http, $location, $localStorage, RequestService, R
     for (var i in self.domains) {
       if (self.domains[i].name == domain) {
         self.domains[i].datasources.map(function(item) {
-          self.categories.push(item.value);
+          self.categories.push(item);
+        });
+
+        self.domains[i].categories.map(function(item) {
+          self.categories.push(item);
         });
       }
     }

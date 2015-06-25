@@ -12,14 +12,16 @@ function ColumnService($http, $translate) {
 
   // Public API
   var service = {
-    getColumn : getColumn
-  };
+    getColumn : getColumn,
+    getTagnameColumn: getTagnameColumn,
+    getFaultStateColumn: getFaultStateColumn
+};
 
   /**
    *
    * @param field
    * @param editable
-   * @returns {{data: string, title: string, readOnly: boolean}}
+   * @returns {*}
    */
   function getColumn(field, editable) {
     var column = {
@@ -40,7 +42,45 @@ function ColumnService($http, $translate) {
       column.type = 'numeric'
     }
 
+    if (field.type == 'checkbox') {
+      column.type = 'checkbox';
+    }
+
     return column;
+  }
+
+  function getTagnameColumn() {
+    return {
+      title: 'Tagname',
+      readOnly: true,
+      data: 'properties.tagname',
+      validator: function(value, callback) {
+        var data = this.instance.getDataAtCol(this.col);
+        var valid = ValidationService.validateUnique(value, data);
+        if (!valid) {
+          console.log('unique column validation failed');
+          callback(false);
+        }
+        callback(true);
+      }
+    }
+  }
+
+  function getFaultStateColumn() {
+    return {
+      title: 'Fault State',
+      readOnly: true,
+      data: 'properties.faultState',
+      validator: function(value, callback) {
+        var data = this.instance.getDataAtCol(this.col);
+        var valid = ValidationService.validateUnique(value, data);
+        if (!valid) {
+          console.log('unique column validation failed');
+          callback(false);
+        }
+        callback(true);
+      }
+    }
   }
 
   /**
@@ -64,34 +104,42 @@ function ColumnService($http, $translate) {
    */
   function getDropdownColumn(column, field) {
     column.type = 'dropdown';
-    column.strict = true;
-    column.allowInvalid = true;
+    //column.strict = true;
+    //column.allowInvalid = true;
 
-    column.source = function(query, process) {
+    // Dropdown options given as list
+    if (field.options instanceof Array) {
+      column.source = field.options;
+    }
 
-      // TODO refactor this into a service
-      $http.get(BACKEND_BASE_URL + '/' + field.options).then(function(response) {
-        if (!response.data.hasOwnProperty('_embedded')) {
-          return [];
-        }
+    // Dropdown options given as URL
+    else if (typeof field.options === 'string') {
+      column.source = function (query, process) {
 
-        // Relies on the fact that the property name inside the JSON response is the same
-        // as the first part of the URL, before the first forward slash
-        var returnPropertyName = field.options.split('/')[0];
-        var items = response.data._embedded[returnPropertyName].map(function(item) {
-
-          // For fields that are objects but have no 'model' attribute defined, assume that
-          // the object has only a single property called 'value'.
-          if (field.model == undefined && typeof item == 'object') {
-            return item.value;
-          } else {
-            return item[field.model];
+        // TODO refactor this into a service
+        $http.get(BACKEND_BASE_URL + '/' + field.options, {cache: true}).then(function (response) {
+          if (!response.data.hasOwnProperty('_embedded')) {
+            return [];
           }
-        });
 
-        process(items);
-      });
-    };
+          // Relies on the fact that the property name inside the JSON response is the same
+          // as the first part of the URL, before the first forward slash
+          var returnPropertyName = field.options.split('/')[0];
+          var items = response.data._embedded[returnPropertyName].map(function (item) {
+
+            // For fields that are objects but have no 'model' attribute defined, assume that
+            // the object has only a single property called 'value'.
+            if (field.model == undefined && typeof item == 'object') {
+              return item.value;
+            } else {
+              return item[field.model];
+            }
+          });
+
+          process(items);
+        });
+      };
+    }
 
     return column;
   }
@@ -103,9 +151,78 @@ function ColumnService($http, $translate) {
    * @returns {*}
    */
   function getAutocompleteColumn(column, field) {
+
+
+    //var CustomAutocompleteEditor = Handsontable.editors.AutocompleteEditor.prototype.extend();
+    //
+    //CustomAutocompleteEditor.prototype.beginEditing = function(initialValue, event) {
+    //  Handsontable.editors.BaseEditor.prototype.beginEditing.call(this, initialValue, event);
+    //  if (this.originalValue === undefined || this.originalValue[this.cellProperties.viewModel] === null) {
+    //    this.setValue('');
+    //  } else {
+    //    this.setValue(this.originalValue);
+    //  }
+    //
+    //};
+    //
+    //CustomAutocompleteEditor.prototype.getValue = function() {
+    //  return this.customValue === undefined ? '' : this.customValue;
+    //};
+    //
+    //CustomAutocompleteEditor.prototype.setValue = function(value) {
+    //  if (this.cellProperties.viewModel && typeof value === 'object' && value[this.cellProperties.viewModel]) {
+    //    this.TEXTAREA.value = value[this.cellProperties.viewModel];
+    //    this.customValue = value;
+    //  } else {
+    //    this.TEXTAREA.value = value;
+    //  }
+    //};
+    //
+    //Handsontable.editors.registerEditor('CustomAutocompleteEditor', CustomAutocompleteEditor);
+    //
+    //
+    //var CustomAutocompleteRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+    //  if (cellProperties.viewModel && value && typeof value === 'object' && value.hasOwnProperty(cellProperties.viewModel)) {
+    //    td.innerHTML = value[cellProperties.viewModel] == null ? '' : value[cellProperties.viewModel];
+    //  } else if (value !== undefined) {
+    //    td.innerHTML = value;
+    //  }
+    //};
+    //
+    //Handsontable.CustomAutocompleteCell = {
+    //  editor: CustomAutocompleteEditor,
+    //  renderer: CustomAutocompleteRenderer,
+    //  validator: Handsontable.AutocompleteValidator,
+    //  dataType: 'customAutocomplete'
+    //};
+    //
+    //Handsontable.cellTypes.customAutocomplete = Handsontable.CustomAutocompleteCell;
+
+
+
+
+
     column.type = 'autocomplete';
     //column.strict = true;
     //column.allowInvalid = true;
+
+    //column.renderer = function autocompleteCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+    //  Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+    //
+    //  var point = instance.getSourceDataAtRow(row);
+    //  var val;
+    //
+    //  if (field.model) {
+    //    val = point.properties[field.id][field.model];
+    //  } else {
+    //    val =  point.properties[field.id].value;
+    //  }
+    //
+    //  td.innerHTML = val;
+    //  return td;
+    //};
+
+    //column.editor =
 
     if (field.model) {
       column.data = 'properties.' + field.id + '.' + field.model;
@@ -113,7 +230,56 @@ function ColumnService($http, $translate) {
       column.data = 'properties.' + field.id + '.value';
     }
 
+    //column.data = 'properties.' + field.id;
+    //if (field.model) {
+    //  column.viewModel = field.model;
+    //} else {
+    //  column.viewModel = 'value';
+    //}
+
     column.source = function(query, process) {
+      var instance = this.instance;
+      var row = this.row;
+
+      instance.addHook('beforeChange', function(change, source) {
+        console.log('beforeChange()');
+      });
+
+      instance.addHook('afterChange', function(change, source) {
+        if (source == 'loadData') {
+          return;
+        }
+
+        // hacky hacky hack hack
+        console.log('afterChange()');
+
+        var row = change[0][0], prop = change[0][1], oldVal = change[0][2], newVal = change[0][3];
+
+        var point = instance.getSourceDataAtRow(row);
+        // get the outer object i.e. properties.location.value -> location
+        prop = prop.split('.')[1];
+
+        if (prop == 'location') {
+          var parts = newVal.split('/');
+          var buildingNumber  = parts[0];
+          if (parts.length > 1) {
+            parts = parts[1].split('-');
+            var floor = parts[0];
+            if (parts.length > 1) {
+              var room = parts[1];
+            }
+          }
+
+          var location = {
+            buildingNumber: buildingNumber,
+            floor: floor,
+            room: room,
+            value: newVal
+          };
+
+          point.properties.location = location;
+        }
+      });
 
       if (field.minLength && query.length < field.minLength) {
         return;
@@ -125,18 +291,28 @@ function ColumnService($http, $translate) {
         params.query = query;
       } else {
         for (var i in field.params) {
-          params[field.params[i]] = query;
+          var param = field.params[i];
+
+          // The parameter might be a sub-property of another property (i.e. contains a dot). In
+          // that case, find the property of the point and add it as a search parameter. This
+          // acts like a filter for a search, based on another property.
+          // TODO: add "filter" parameter to schema instead of this?
+          if (param.indexOf('.') > -1) {
+            var props = param.split('.');
+            var point = instance.getSourceDataAtRow(row);
+            params[props[1]] = point.properties[props[0]][props[1]];
+          }
+          else {
+            params[param] = query;
+          }
         }
       }
 
-      if (this.prop == 'properties.location.buildingName') {
-        var point = this.instance.getSourceDataAtRow(this.row);
-        params['']
-      }
 
       // TODO refactor this into a service
       $http.get(BACKEND_BASE_URL + '/' + field.url, {
-        params : params
+        params : params,
+        cache: true
       }).then(function(response) {
         if (!response.data.hasOwnProperty('_embedded')) {
           return [];
@@ -147,6 +323,9 @@ function ColumnService($http, $translate) {
         var returnPropertyName = field.url.split('/')[0];
         var items = response.data._embedded[returnPropertyName].map(function(item) {
 
+          //var point = instance.getSourceDataAtRow(row);
+          //point.properties[field.id] = item;
+
           // For fields that are objects but have no 'model' attribute defined, assume that
           // the object has only a single property called 'value'.
           if (field.model == undefined && typeof item == 'object') {
@@ -154,6 +333,9 @@ function ColumnService($http, $translate) {
           } else {
             return item[field.model];
           }
+
+          //delete item._links;
+          //return item;
         });
 
         process(items);
@@ -162,6 +344,8 @@ function ColumnService($http, $translate) {
 
     return column;
   }
+
+
 
   return service;
 }
