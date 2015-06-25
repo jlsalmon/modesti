@@ -40,6 +40,7 @@
   "THIS_REQUEST": "This request...",
   "PARENT": "Parent",
   "CHILDREN": "Children",
+  "SELECTED": "selected",
 
   "HISTORY": "History",
   "HISTORY_FOR_REQUEST": "History for request",

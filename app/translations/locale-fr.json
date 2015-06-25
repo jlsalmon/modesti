@@ -4,7 +4,7 @@
   "NEW_REQUEST": "Nouvelle demande",
   "SIGN_IN": "Se connecter",
   "SIGN_IN_MSG": "Connectez-vous avec vos identifiants NICE",
-  "SIGN_IN_ERROR": "Il y avait un problème dans la signature. S'il vous plaît réessayer.",
+  "SIGN_IN_ERROR": "Problème d'identifiant, veuillez réessayer",
   "SIGN_OUT": "Se déconnecter",
   "USERNAME": "Nom d'utilisateur",
   "PASSWORD": "Mot de passe",
@@ -28,31 +28,32 @@
   "VIEW": "Voir",
 
   "ADD_CATEGORY": "Ajouter une catégorie",
-  "NO_CATEGORIES_AVAILABLE": "Pas de catégories supplémentaires disponibles",
+  "NO_CATEGORIES_AVAILABLE": "Pas de catégories disponibles",
 
   "SAVE": "Enregistrer la demande",
-  "RESET_SORTING": "Réinitialiser le tri",
-  "UNDO": "Défaire",
-  "REDO": "Refaire",
+  "RESET_SORTING": "Réinitialiser le filtre",
+  "UNDO": "Annuler la dernière opération",
+  "REDO": "Répéter la dernière opération",
   "CUT": "Couper",
   "COPY": "Copier",
   "PASTE": "Coller",
   "THIS_REQUEST": "Cette demande...",
-  "PARENT": "Mère",
+  "PARENT": "Parent",
   "CHILDREN": "Enfants",
+  "SELECTED": "choisi",
 
-  "HISTORY": "Histoire",
-  "HISTORY_FOR_REQUEST": "Histoire de la demande",
+  "HISTORY": "Historique",
+  "HISTORY_FOR_REQUEST": "Historique de la demande",
   "NAME": "Nom",
   "DESCRIPTION": "Description",
   "START_TIME": "Heure de début",
   "END_TIME": "Heure de fin",
 
   "COMMENTS": "Commentaires",
-  "COMMENTS_ON_REQUEST": "Commentaires sur demande",
+  "COMMENTS_ON_REQUEST": "Commentaire à propos de la demande",
   "NO_COMMENTS": "Aucun commentaires",
-  "ADD_COMMENT": "Laisser un commentaire",
-  "WRITE_COMMENT": "Écrire...",
+  "ADD_COMMENT": "Ajouter un commentaire",
+  "WRITE_COMMENT": "Écrire un commentaire",
 
   "HOME": "Accueil",
   "CREATE_NEW_REQUEST": "Créer une nouvelle demande MODESTI",
@@ -63,13 +64,13 @@
   "SELECT_REQUEST_TYPE": "Sélectionner le type de demande que vous souhaitez (créer, modifier ou supprimer des points).",
   "ENTER_DESCRIPTION": "Entrez une description générale de votre demande.",
   "SELECT_DOMAIN": "Sélectionnez le domaine de destination de la demande.",
-  "SELECT_CATEGORIES": "Sélectionnez les catégories (une ou plusieurs) dont les points de votre demande sera. <br/>Remarque: vous pouvez toujours ajouter de nouvelles catégories plus tard.",
-  "SELECT_SUBSYSTEM": "Entrez le système/sous-système auquel cette demande se rapporte.",
+  "SELECT_CATEGORIES": "Sélectionnez les catégories (une ou plusieurs) concernees par les points de votre demande. <br/>Remarque: vous pouvez toujours ajouter de nouvelles catégories plus tard.",
+  "SELECT_SUBSYSTEM": "Entrez le système/sous-système concerne par cette demande.",
   "NEXT": "Suivant",
 
   "UPLOAD_REQUEST": "Télécharger une demande",
   "SELECT_FILE": "Sélectionnez le fichier",
-  "SELECT_FILE_HELP": "Sélectionnez le fichier Excel MODESTI que vous souhaitez télécharger. Les deux formats .xls et .xlsx sont supportés. Max la taille du fichier de 10 Mo. <br/><br />Pour les demandes TIM, seules les versions supérieures ou égales à <strong>4.0</strong> sont supportés. <br/>Pour les demandes CSAM, seules les versions supérieures ou égales à <strong>5.2</strong> sont supportés. <br />Pour les demandes PVSS, seules les versions supérieures ou égales à <strong>1.1</strong> sont supportés.",
+  "SELECT_FILE_HELP": "Sélectionnez le fichier Excel MODESTI que vous souhaitez télécharger. Les deux formats .xls et .xlsx sont supportés. La taille maximum du fichier doit etre inferieure ou egalle a 10 Mo. <br/><br />Pour les demandes TIM, seules les versions supérieures ou égales à <strong>4.0</strong> sont supportées. <br/>Pour les demandes CSAM, seules les versions supérieures ou égales à <strong>5.2</strong> sont supportées. <br />Pour les demandes PVSS, seules les versions supérieures ou égales à <strong>1.1</strong> sont supportées.",
   "SIZE": "Taille",
   "PROGRESS": "Progrès",
   "ACTIONS": "Actions",
@@ -95,7 +96,7 @@
 
   "APPROVE_SELECTED": "Approuver la sélection",
   "REJECT_SELECTED": "Rejeter la sélection",
-  "SUBMIT_APPROVAL": "Soumettre l'approbation",
+  "SUBMIT_APPROVAL": "Soumettre à l'approbation",
   "SUBMIT": "Soumettre",
 
   "ADDRESS_SELECTED": "Addresser la sélection",
@@ -106,5 +107,5 @@
   "FAIL_SELECTED": "Échouer la sélection",
   "SUBMIT_TESTING": "Soumettre les résultats des tests",
 
-  "UNSUPPORTED_BROWSER_WARNING": "Vous utilisez un navigateur non reconnu. Certaines parties de ce site ne fonctionnera pas correctement. Les navigateurs supportés sont Google Chrome, Firefox, Safari et Internet Explorer (versions 10 et ci-dessus). S'il vous plaît mettre à jour votre navigateur pour améliorer votre expérience."
+  "UNSUPPORTED_BROWSER_WARNING": "Vous utilisez un navigateur non reconnu. Certaines parties de ce site ne fonctionneront pas correctement. Les navigateurs supportés sont Google Chrome, Firefox, Safari et Internet Explorer (versions 10 et superieures). Veuillez mettre à jour votre navigateur pour améliorer votre expérience."
 }
