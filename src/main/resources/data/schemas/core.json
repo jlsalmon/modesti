@@ -92,6 +92,7 @@
         {
           "id": "site",
           "type": "autocomplete",
+          "required": true,
           "url": "sites/search/find",
           "name_en": "Site",
           "name_fr": "Site",
@@ -101,6 +102,7 @@
         {
           "id": "location",
           "type": "autocomplete",
+          "required": true,
           "url": "locations/search/find",
           "minLength": 2,
           "name_en": "Location",
