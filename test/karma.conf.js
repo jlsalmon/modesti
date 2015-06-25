@@ -40,7 +40,7 @@ module.exports = function(config) {
       'app/bower_components/zeroclipboard/dist/ZeroClipboard.js',
       'app/bower_components/moment/moment.js',
       'app/bower_components/pikaday/pikaday.js',
-      'app/bower_components/handsontable/dist/handsontable.full.js',
+      'app/bower_components/handsontable/dist/handsontable.js',
       'app/bower_components/ngHandsontable/dist/ngHandsontable.js',
       'app/bower_components/angular-translate/angular-translate.js',
       'app/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',

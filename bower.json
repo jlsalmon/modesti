@@ -19,7 +19,7 @@
     "angular-http-auth": "~1.2.2",
     "angular-ui-utils": "~0.2.3",
     "autofill-event": "~1.0.0",
-    "handsontable": "0.15.0-beta6",
+    "handsontable": "0.15.1",
     "ngHandsontable": "~0.5.2",
     "angular-translate": "~2.7.2",
     "angular-translate-loader-static-files": "~2.7.2",

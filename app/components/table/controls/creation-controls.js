@@ -82,99 +82,50 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
    *
    */
   function validate() {
-
-    ValidationService.validateRequest().then(function(valid) {
-
-    });
-
-    // First validate client-side. Might need to go row-by-row and col-by-col?
-
-
-    // First scan column by column
-
-
-
-    var category, field, col;
-    for (var i = 0; i < self.parent.schema.categories.length; i++) {
-      category = self.parent.schema.categories[i];
-
-      for (var j = 0; j < category.fields.length; j++) {
-        field = category.fields[k];
-
-        if (field.type === 'autocomplete') {
-          col = self.hot.getDataAtProp('properties.' + field.id + '.' + (field.model ? field.model : 'value'));
-        } else {
-          col = self.hot.getDataAtProp('properties.' + field.id);
-        }
-
-        console.log('col: ' + col);
-
-
-
-
-        //for (var row = 0, len = self.rows.length; row < len; i++) {
-        //
-        //  var col = self.hot.propToCol('properties.' + field.id);
-        //  console.log('col: ' + col);
-        //  var value = self.hot.getDataAtCell(row, col);
-        //
-        //  var valid = true;
-        //
-        //  // Required fields
-        //  if (field.required) {
-        //    if (value === '' || value === undefined || value === null) {
-        //      valid = false;
-        //      console.log('required field validation failed')
-        //    }
-        //  }
-
-          // TODO: Min/max length validation
-
-          // TODO: Unique columns validation
-
-          // TODO: Unique tagnames, fault states, address parameter validations
-
-          // TODO: Mutually exclusive field validation
-
-        //}
-
-      }
-    }
-
-
-
-    self.hot.render();
-    return;
-
-    var task = self.tasks['validate'];
-
-    if (!task) {
-      console.log('warning: no validate task found');
-      return;
-    }
-
     self.validating = 'started';
 
-    // First save the request
-    RequestService.saveRequest(self.request).then(function () {
+    ValidationService.validateRequest(self.rows, self.parent.schema, self.hot).then(function (result) {
+      var valid = result.valid;
+      self.parent.errors = result.errors;
+
+      // Render the table to show the error highlights
+      self.hot.render();
+
+      if (!valid) {
+        self.validating = 'error';
+        return;
+      }
+
+      // Validate server-side
+      var task = self.tasks['validate'];
+
+      if (!task) {
+        console.log('warning: no validate task found');
+        return;
+      }
+
+
+
+      // First save the request
+      RequestService.saveRequest(self.request).then(function () {
         console.log('saved request before validation');
 
         // Complete the task associated with the request
         TaskService.completeTask(task.id).then(function (task) {
-            console.log('completed task ' + task.id);
+          console.log('completed task ' + task.id);
 
-            // Clear the cache so that the state reload also pulls a fresh request
-            RequestService.clearCache();
+          // Clear the cache so that the state reload also pulls a fresh request
+          RequestService.clearCache();
 
-            $state.reload().then(function () {
-              self.validating = 'success';
-            });
-          },
-
-          function (error) {
-            console.log('error completing task: ' + error.statusText);
-            self.validating = 'error';
+          $state.reload().then(function () {
+            self.validating = 'success';
           });
+        },
+
+        function (error) {
+          console.log('error completing task: ' + error.statusText);
+          self.validating = 'error';
+        });
       },
 
       function (error) {
@@ -183,7 +134,12 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
       });
 
 
+    });
   }
+
+
+
+
 
   /**
    *

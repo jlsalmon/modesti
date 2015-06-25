@@ -12,9 +12,7 @@ function ColumnService($http, $translate) {
 
   // Public API
   var service = {
-    getColumn : getColumn,
-    getTagnameColumn: getTagnameColumn,
-    getFaultStateColumn: getFaultStateColumn
+    getColumn : getColumn
 };
 
   /**
@@ -27,7 +25,7 @@ function ColumnService($http, $translate) {
     var column = {
       data : 'properties.' + field.id,
       title : getColumnHeader(field),
-      readOnly : !editable
+      readOnly : !editable || field.editable === false
     };
 
     if (field.type == 'autocomplete') {
@@ -43,44 +41,13 @@ function ColumnService($http, $translate) {
     }
 
     if (field.type == 'checkbox') {
-      column.type = 'checkbox';
+      // Just use true/false dropdown until copy/paste issues are fixed.
+      // See https://github.com/handsontable/handsontable/issues/2497
+      field.options = ['true', 'false'];
+      column = getDropdownColumn(column, field);
     }
 
     return column;
-  }
-
-  function getTagnameColumn() {
-    return {
-      title: 'Tagname',
-      readOnly: true,
-      data: 'properties.tagname',
-      validator: function(value, callback) {
-        var data = this.instance.getDataAtCol(this.col);
-        var valid = ValidationService.validateUnique(value, data);
-        if (!valid) {
-          console.log('unique column validation failed');
-          callback(false);
-        }
-        callback(true);
-      }
-    }
-  }
-
-  function getFaultStateColumn() {
-    return {
-      title: 'Fault State',
-      readOnly: true,
-      data: 'properties.faultState',
-      validator: function(value, callback) {
-        var data = this.instance.getDataAtCol(this.col);
-        var valid = ValidationService.validateUnique(value, data);
-        if (!valid) {
-          console.log('unique column validation failed');
-          callback(false);
-        }
-        callback(true);
-      }
-    }
   }
 
   /**

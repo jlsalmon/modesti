@@ -202,18 +202,6 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
-    if (self.activeCategory.name != 'General' && self.activeCategory.name != 'Alarms') {
-      // Tagname column
-      self.columns.push(ColumnService.getTagnameColumn());
-      //generateTagnames();
-    }
-
-    if (self.activeCategory.name == 'Alarms') {
-      // Tagname column
-      self.columns.push(ColumnService.getFaultStateColumn());
-      //generateTagnames();
-    }
-
     var field, editable;
     for (var i = 0; i < self.activeCategory.fields.length; i++) {
       field = self.activeCategory.fields[i];

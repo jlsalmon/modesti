@@ -411,6 +411,11 @@
     border-left: none;
     border-right: none;
   }
+
+  .log .panel-body {
+    max-height: 300px;
+    overflow-y: auto;
+  }
 </style>
 
 <section class="log">
@@ -418,18 +423,22 @@
     <accordion class="accordion">
       <accordion-group is-open="status.open">
         <accordion-heading>
-          <div>
-            <span class="label bg-red">
-              <i class="fa fa-fw fa-exclamation-triangle"></i> 4
+          <div ng-if="ctrl.errors">
+            <span class="label"
+                  ng-class="ctrl.errors ? 'bg-red' : 'bg-gray'"
+                  tooltip="{{ctrl.errors.length}} error(s) found. Click to view details."
+                  tooltip-placement="right">
+              <i class="fa fa-fw fa-exclamation-triangle"></i> {{ctrl.errors.length}}
             </span>
             <i class="pull-right fa" ng-class="{'fa-chevron-down': status.open, 'fa-chevron-up': !status.open}"></i>
           </div>
+          <div ng-if="!ctrl.errors"> &nbsp; </div>
         </accordion-heading>
 
-        Line 1: Error message <br />
-        Line 2: Another error message <br />
-        Line 3: Serious error here <br />
-        Line 4: Best check yo self! <br />
+        <div ng-repeat="error in ctrl.errors track by $index">
+          <i class="fa fa-fw fa-exclamation-triangle text-danger"></i> {{error}}
+        </div>
+
       </accordion-group>
     </accordion>
   </div>
