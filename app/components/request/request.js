@@ -40,6 +40,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     afterInit: afterInit,
     afterRender: afterRender,
     afterChange: afterChange,
+    afterValidate: afterValidate,
     afterCreateRow: afterCreateRow,
     afterRemoveRow: afterRemoveRow
   };
@@ -201,9 +202,15 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
-    if (self.activeCategory.name != 'General') {
+    if (self.activeCategory.name != 'General' && self.activeCategory.name != 'Alarms') {
       // Tagname column
-      self.columns.push({title: 'Tagname', readOnly: true, data: 'properties.tagname'});
+      self.columns.push(ColumnService.getTagnameColumn());
+      //generateTagnames();
+    }
+
+    if (self.activeCategory.name == 'Alarms') {
+      // Tagname column
+      self.columns.push(ColumnService.getFaultStateColumn());
       //generateTagnames();
     }
 
@@ -217,21 +224,128 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       self.columns.push(column);
     }
 
-    // Checkbox column
-    self.columns.push({data: 'selected', type: 'checkbox'});
+    if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
+      // Checkbox column not shown when preparing
+      self.columns.push({data: 'selected', type: 'checkbox'});
+    }
   }
 
   /**
+   * TODO clean this up and refactor it out!!!
    *
+   * Tagname format: system_code|subsystem_code|’.’|functionality_code|’.’|equipment_identifier|’:’|point_attribute
    */
   function generateTagnames() {
-    var point;
+
     for (var i = 0, len = self.rows.length; i < len; i++) {
-      point = self.rows[i];
-      point.properties.tagname = point.properties.site.value + '.'
-      + point.properties.gmaoCode + ':'
-      + point.properties.pointAttribute;
+      var point = self.rows[i];
+
+      if (!point.properties.subsystem) {
+        return;
+      }
+
+      (function(point) {
+        $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
+          params: {query: point.properties.subsystem.value},
+          cache: true
+        }).then(function (response) {
+
+          if (!response.data.hasOwnProperty('_embedded')) {
+            return;
+          }
+
+          var subsystemCode;
+
+          if (response.data._embedded.subsystems.length == 1) {
+            var subsystem = response.data._embedded.subsystems[0];
+            subsystemCode = subsystem.systemCode + subsystem.subsystemCode;
+          } else {
+            subsystemCode = '?';
+          }
+
+          var site = (point.properties.site.value ? point.properties.site.value : '?');
+          var equipmentIdentifier = getEquipmentIdentifier(point);
+          var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
+
+          point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
+        });
+      })(point);
     }
+
+    generateFaultStates();
+  }
+
+  /**
+   * TODO clean this up and refactor it out!!!
+   *
+   * Fault state format: system_name|’_’|subsystem_name|’_’|general_functionality|’:’|equipment_identifier|’:’|point_description
+   */
+  function generateFaultStates() {
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      var point = self.rows[i];
+
+      if (!point.properties.subsystem) {
+        return;
+      }
+
+      (function(point) {
+        $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
+          params: {query: point.properties.subsystem.value},
+          cache: true
+        }).then(function (response) {
+
+          if (!response.data.hasOwnProperty('_embedded')) {
+            return;
+          }
+
+          var systemName = '?', subsystemName = '?';
+
+          if (response.data._embedded.subsystems.length == 1) {
+            var subsystem = response.data._embedded.subsystems[0];
+            systemName = subsystem.system;
+            subsystemName = subsystem.subsystem;
+          }
+
+          if (point.properties.site.value) {
+            $http.get(BACKEND_BASE_URL + '/sites/search/find', {
+              params: {query: point.properties.site.value},
+              cache: true
+            }).then(function (response) {
+              if (!response.data.hasOwnProperty('_embedded')) {
+                return;
+              }
+
+              var func = '?';
+              if (response.data._embedded.sites.length == 1) {
+                var site = response.data._embedded.sites[0];
+                func = site.generalFunctionality;
+              }
+
+              var equipmentIdentifier = getEquipmentIdentifier(point);
+              var description = point.properties.pointDescription ? point.properties.pointDescription : '?';
+
+              point.properties.faultState = systemName + '_' + subsystemName + '_' + func + ':' + equipmentIdentifier + ':' + description;
+            });
+          }
+        });
+      })(point);
+    }
+  }
+
+  function getEquipmentIdentifier(point) {
+    var equipmentIdentifier, gmaoCode = point.properties.gmaoCode, otherCode = point.properties.otherCode;
+
+    if (gmaoCode && otherCode) {
+      equipmentIdentifier = gmaoCode + '_' + otherCode;
+    } else if (gmaoCode && !otherCode) {
+      equipmentIdentifier = gmaoCode;
+    } else if (!gmaoCode && otherCode) {
+      equipmentIdentifier = otherCode;
+    } else {
+      equipmentIdentifier = '?'
+    }
+
+    return equipmentIdentifier;
   }
 
   /**
@@ -242,13 +356,23 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     $http.get(BACKEND_BASE_URL + '/domains/' + self.request.domain).then(function (response) {
       self.availableCategories = [];
 
+      response.data.categories.map(function (category) {
+
+        // Only add the category if we aren't already using it
+        if ($.grep(self.schema.categories, function (item) {
+          return item.name == category;
+        }).length == 0) {
+          self.availableCategories.push(category);
+        }
+      });
+
       response.data.datasources.map(function (category) {
 
         // Only add the category if we aren't already using it
         if ($.grep(self.schema.categories, function (item) {
-            return item.name == category.value;
+            return item.name == category;
           }).length == 0) {
-          self.availableCategories.push(category.value);
+          self.availableCategories.push(category);
         }
       });
     });
@@ -293,14 +417,28 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
   /**
    *
+   * @param changes
+   * @param source
    */
-  function afterChange() {
+  function afterChange(changes, source) {
     console.log('afterChange()');
     for (var i = 0, len = self.rows.length; i < len; i++) {
       self.rows[i].id = i + 1;
     }
 
     generateTagnames();
+  }
+
+  /**
+   *
+   * @param isValid
+   * @param value
+   * @param row
+   * @param prop
+   * @param source
+   */
+  function afterValidate(isValid, value, row, prop, source) {
+    self.request.valid = isValid;
   }
 
   /**
@@ -360,7 +498,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       console.log('error saving request');
     });
 
-    AlertService.add('danger', 'This is a warning')
+    //AlertService.add('danger', 'This is a warning')
   }
 
   /**
@@ -461,6 +599,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     var requestHeader = $('.request-header');
     var toolbar = $('.toolbar');
     var table = $('.table');
+    var log = $('.log');
     var footer = $('.footer');
 
     var offset = table.offset();
@@ -470,10 +609,11 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     console.log('requestHeader:' + requestHeader.outerHeight());
     console.log('toolbar:' + toolbar.outerHeight());
     console.log('table:' + table.outerHeight());
+    console.log('log:' + log.outerHeight());
     console.log('footer:' + footer.outerHeight());
 
     var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight()
-      - footer.outerHeight();
+      - log.outerHeight() - footer.outerHeight();
 
     table.height(height + 'px');
   }
@@ -577,21 +717,24 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     // Initialise the help text popovers on the column headers
     $('.help-text').popover({trigger: 'hover', delay: { "show": 500, "hide": 100 }});
 
-    // Fix the width of the last column and add the surplus to the first column
-    var firstColumnHeader = $('.htCore colgroup col.rowHeader');
-    var secondColumnHeader = $('.htCore colgroup col:nth-child(2)');
-    var secondColumnHeaderWidth = secondColumnHeader.width();
-    var checkboxHeader = $('.htCore colgroup col:last-child');
-    var checkboxHeaderWidth = checkboxHeader.width();
-    secondColumnHeaderWidth = secondColumnHeaderWidth + (checkboxHeaderWidth - 30);
-    secondColumnHeader.width(secondColumnHeaderWidth);
-    checkboxHeader.width('30px');
-    firstColumnHeader.width('45px');
+    if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
+      // Fix the width of the last column and add the surplus to the first column
+      var firstColumnHeader = $('.htCore colgroup col.rowHeader');
+      var secondColumnHeader = $('.htCore colgroup col:nth-child(2)');
+      var secondColumnHeaderWidth = secondColumnHeader.width();
+      var checkboxHeader = $('.htCore colgroup col:last-child');
+      var checkboxHeaderWidth = checkboxHeader.width();
+      secondColumnHeaderWidth = secondColumnHeaderWidth + (checkboxHeaderWidth - 30);
+      secondColumnHeader.width(secondColumnHeaderWidth);
+      checkboxHeader.width('30px');
+      firstColumnHeader.width('45px');
 
-    // Centre the checkbox in the last column
+      //checkboxTd.css('width', '20px');
+    }
+
+    // Centre checkbox columns
     var checkboxCell = $('.htCore input.htCheckboxRendererInput').parent();
     checkboxCell.css('text-align', 'center');
-    //checkboxTd.css('width', '20px');
   }
 
   /**

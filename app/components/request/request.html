@@ -57,7 +57,7 @@
   }
 
   .toolbar .request-category-selector {
-    width: 200px;
+    width: 210px;
   }
 
   .toolbar .search-form {
@@ -158,6 +158,11 @@
     background-color: #F9F9FB !important;
   }
 
+  .handsontable td.htInvalid {
+    background-color: #F2DEDE !important;
+    border-color: #EBCCD1 !important;
+  }
+
   /** Remove shadow from column headers */
   /*.handsontable .handsontable:not(.ht_master) table {*/
     /*-webkit-box-shadow: none;*/
@@ -227,7 +232,7 @@
         </span> -->
         <span class="request-detail-item text-muted" tooltip="{{'SYSTEM_SUBSYSTEM'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-sitemap"></i>
-          {{::ctrl.request.subsystem.name}}
+          {{::ctrl.request.subsystem.value}}
         </span>
         <span class="request-detail-item text-muted" tooltip="{{'DOMAIN'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-crosshairs"></i>
@@ -382,13 +387,60 @@
   </hot-table>
 </section>
 
+<style>
+  .log {
+    height: 38px;
+  }
 
+  .log .accordion  {
+    position: absolute;
+    width: 100%;
+    bottom: 50px;
+    z-index: 999;
+    left: 0;
+    right: 0;
+  }
+
+  .log .panel-group {
+    margin-bottom: 0;
+  }
+
+  .log .panel-heading, .log .panel-group .panel, .log .panel {
+    border-radius: 0;
+    box-shadow: none;
+    border-left: none;
+    border-right: none;
+  }
+</style>
+
+<section class="log">
+  <div class="container-fluid">
+    <accordion class="accordion">
+      <accordion-group is-open="status.open">
+        <accordion-heading>
+          <div>
+            <span class="label bg-red">
+              <i class="fa fa-fw fa-exclamation-triangle"></i> 4
+            </span>
+            <i class="pull-right fa" ng-class="{'fa-chevron-down': status.open, 'fa-chevron-up': !status.open}"></i>
+          </div>
+        </accordion-heading>
+
+        Line 1: Error message <br />
+        Line 2: Another error message <br />
+        Line 3: Serious error here <br />
+        Line 4: Best check yo self! <br />
+      </accordion-group>
+    </accordion>
+  </div>
+</section>
 
 <footer class="footer">
   <div class="container-fluid">
 
     <div class="request-description pull-left">
       <span>{{ctrl.request.points.length}} {{ctrl.request.points.length == 1 ? 'point' : 'points'}} &middot;</span>
+      <!--<span>{{ctrl.getSelectedPointIds().length}} {{ctrl.getSelectedPointIds().length  == 1 ? 'point' : 'points'}} {{'SELECTED'|translate}}</span>-->
 
       <!-- If this is a child request, reference its parent -->
       <span class="details" ng-if="ctrl.request.parentRequestId">
