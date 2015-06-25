@@ -6,6 +6,7 @@ package cern.modesti.legacy.parser;
 import java.util.*;
 
 import cern.modesti.model.*;
+import cern.modesti.repository.jpa.location.BuildingName;
 import cern.modesti.repository.jpa.person.PersonRepository;
 import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import com.google.common.base.CaseFormat;
@@ -166,9 +167,10 @@ public abstract class RequestParser {
     properties.put("responsiblePerson", parseResponsiblePerson(properties));
     properties.put("subsystem", parseSubsystem(properties));
     properties.put("location", parseLocation(properties));
-    properties.put("site", parseSite(properties));
-    properties.put("zone", parseZone(properties));
-    properties.put("alarmCategory", parseAlarmCategory(properties));
+    properties.put("buildingName", new BuildingName((String) properties.get("buildingName")));
+    properties.put("site", new Site((String) properties.get("site")));
+    properties.put("zone", new Zone(String.valueOf((Double) properties.get("zone"))));
+    properties.put("alarmCategory", new AlarmCategory((String) properties.get("alarmCategory")));
 
 
     point.setProperties(properties);
@@ -215,6 +217,8 @@ public abstract class RequestParser {
       properties.put("responsiblePerson", person);
     }
 
+    properties.remove("responsiblePersonId");
+    properties.remove("responsiblePersonName");
     return person;
   }
 
@@ -244,6 +248,8 @@ public abstract class RequestParser {
       subsystem.setValue(systemName + " " + subSystemName);
     }
 
+    properties.remove("systemName");
+    properties.remove("subSystemName");
     return subsystem;
   }
 
@@ -254,56 +260,26 @@ public abstract class RequestParser {
    */
   private Location parseLocation(Map<String, Object> properties) {
     Location location = new Location();
+
     String buildingNumber = String.valueOf(((Double) properties.get("buildingNumber")).intValue());
-    String floor = properties.get("floor") != null ? String.valueOf(properties.get("floor")) : null;
-    Integer room = properties.get("room") != null ? ((Double) properties.get("room")).intValue() : null;
+    location.setBuildingNumber(buildingNumber);
 
-    location.setBuildingNumber(buildingNumber + (floor == null ? "" : ("/" + floor + (room == null ? "" : ("-" + String.format("%03d", room))))));
-    //    List<Location> locations = locationRepository.find(query);
-    //LOG.debug("found " + locations.size() + " locations with query: " + query);
+    if (properties.get("floor") != null) {
+      location.setFloor(String.valueOf(properties.get("floor")));
+    }
 
-    //    if (locations.size() == 0) {
-    //      //LOG.warn("Could not determine location for point");
-    //    } else {
-    //      // Otherwise, find the least-specific option, which should be the first in the list
-    //      Location location = locations.get(0);
-    //      properties.put("location", location);
-    //    }
+    if (properties.get("room") != null) {
+      String room = String.format("%03d", ((Double) properties.get("room")).intValue());
+    }
 
+    String value = buildingNumber + (location.getFloor() == null ? "" : "/" + location.getFloor());
+    value += location.getRoom() == null ? "" : ("-" +  location.getRoom());
+    location.setValue(value);
+
+    properties.remove("buildingNumber");
+    properties.remove("floor");
+    properties.remove("room");
     return location;
-  }
-
-  /**
-   *
-   * @param properties
-   * @return
-   */
-  private Site parseSite(Map<String, Object> properties) {
-    Site site = new Site();
-    site.setValue((String) properties.get("site"));
-    return site;
-  }
-
-  /**
-   *
-   * @param properties
-   * @return
-   */
-  private Zone parseZone(Map<String, Object> properties) {
-    Zone zone = new Zone();
-    zone.setValue(properties.get("zone") != null ? String.valueOf(((Double) properties.get("zone")).intValue()) : "");
-    return zone;
-  }
-
-  /**
-   *
-   * @param properties
-   * @return
-   */
-  private AlarmCategory parseAlarmCategory(Map<String, Object> properties) {
-    AlarmCategory category = new AlarmCategory();
-    category.setValue((String) properties.get("alarmCategory"));
-    return category;
   }
 
   /**

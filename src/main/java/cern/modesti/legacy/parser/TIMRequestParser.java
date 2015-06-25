@@ -57,6 +57,9 @@ public class TIMRequestParser extends RequestParser {
     else if (title.equals("name")) {
       title = "buildingName";
     }
+    else if (title.equals("tagname")) {
+      title = "opcTagname";
+    }
 
     return title;
   }
