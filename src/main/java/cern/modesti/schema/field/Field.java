@@ -37,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
     @Type(value = TextField.class, name = "text"),
     @Type(value = NumericField.class, name = "numeric"),
+    @Type(value = CheckboxField.class, name = "checkbox"),
     @Type(value = OptionsField.class, name = "options"),
     @Type(value = AutocompleteField.class, name = "autocomplete")})
 @JsonInclude(Include.NON_NULL)

@@ -1,6 +1,7 @@
 package cern.modesti.config;
 
-import cern.modesti.schema.field.Field;
+import cern.modesti.repository.jpa.location.BuildingName;
+import cern.modesti.schema.field.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.rest.SpringBootRepositoryRestMvcConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -21,9 +22,6 @@ import cern.modesti.model.SubSystem;
 import cern.modesti.model.Zone;
 import cern.modesti.model.csam.SecurifireType;
 import cern.modesti.model.csam.WinterStatus;
-import cern.modesti.schema.field.OptionsField;
-import cern.modesti.schema.field.TextField;
-import cern.modesti.schema.field.AutocompleteField;
 import cern.modesti.request.SearchTextConverter;
 
 @Configuration
@@ -42,10 +40,10 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
   protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
     super.configureRepositoryRestConfiguration(config);
 
-    // Tell Spring Data REST to expose IDs for the following classes in JSON
-    // responses.
+    // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
     config.exposeIdsFor(Point.class, Person.class, Site.class, Location.class, Zone.class, SubSystem.class, DataType.class, AlarmCategory.class,
-        AlarmPriority.class, Field.class, TextField.class, OptionsField.class, AutocompleteField.class, WinterStatus.class, SecurifireType.class);
+        AlarmPriority.class, Field.class, TextField.class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class, WinterStatus
+            .class, SecurifireType.class, BuildingName.class);
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);
