@@ -13,7 +13,7 @@
         {
           "id": "area",
           "type": "text",
-          "required": true,
+          "required": "group",
           "name_en": "Area",
           "name_fr": "Area",
           "help_en": "",
@@ -22,7 +22,7 @@
         {
           "id": "securitonGroup",
           "type": "text",
-          "required": true,
+          "required": "group",
           "name_en": "Group",
           "name_fr": "Group",
           "help_en": "",
@@ -31,7 +31,7 @@
         {
           "id": "securitonDetecteur",
           "type": "text",
-          "required": true,
+          "required": "group",
           "name_en": "Detecteur",
           "name_fr": "Detecteur",
           "help_en": "",
@@ -41,7 +41,7 @@
           "id": "securitonStatus",
           "type": "options",
           "options": [0, 1, 2, 3, 4, 5, 6],
-          "required": true,
+          "required": "group",
           "name_en": "Status",
           "name_fr": "Status",
           "help_en": "",

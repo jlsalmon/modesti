@@ -11,7 +11,8 @@
         {
           "id": "pointDescription",
           "type": "text",
-          "maxLength": 10,
+          "minLength": 5,
+          "maxLength": 50,
           "required": true,
           "name_en": "Description",
           "name_fr": "Description",
@@ -31,7 +32,7 @@
         {
           "id": "gmaoCode",
           "type": "text",
-          "required": true,
+          "required": "group",
           "name_en": "GMAO Code",
           "name_fr": "Code GMAO",
           "help_en": "The equipment code known by the GMAO system",
@@ -127,6 +128,7 @@
           "id": "zone",
           "type": "autocomplete",
           "url": "zones/search/find",
+          "required": true,
           "name_en": "Zone",
           "name_fr": "Zone",
           "help_en": "Enter the security zone related to the point",
@@ -154,6 +156,7 @@
           "id": "priorityCode",
           "type": "options",
           "options": "alarmPriorities",
+          "required": "group",
           "name_en": "Priority",
           "name_fr": "Niveau",
           "help_en": "Enter the priority of the alarm between 0 and 3",
@@ -162,6 +165,7 @@
         {
           "id": "alarmValue",
           "type": "numeric",
+          "required": "group",
           "name_en": "Value",
           "name_fr": "Valeur",
           "help_en": "The value indicating the presence of the alarm",
