@@ -20,8 +20,8 @@ public interface BuildingNameRepository extends ReadOnlyRepository<BuildingName,
       "       sigle s                                                                          " +
       "WHERE  o.numero = l.numbat                                                              " +
       "AND    o.numero = s.numero                                                              " +
-      "AND    o.actif = 'Y'                                                                    " +
-      "AND    o.numero LIKE LOWER(:buildingNumber || '%')                                      " +
+      "AND    o.actif  = 'Y'                                                                   " +
+      "AND    o.numero = :buildingNumber                                                       " +
       "AND    s.sigle  LIKE UPPER(:query || '%')                                               " +
       "ORDER BY 1", nativeQuery = true)
   List<BuildingName> findByBuildingNumber(@Param("query") String query, @Param("buildingNumber") String buildingNumber);
