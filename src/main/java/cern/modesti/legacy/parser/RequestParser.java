@@ -169,7 +169,9 @@ public abstract class RequestParser {
     properties.put("location", parseLocation(properties));
     properties.put("buildingName", new BuildingName((String) properties.get("buildingName")));
     properties.put("site", new Site((String) properties.get("site")));
-    properties.put("zone", new Zone(String.valueOf(((Double) properties.get("zone")).intValue())));
+    if (properties.get("zone") != null) {
+      properties.put("zone", new Zone(String.valueOf(((Double) properties.get("zone")).intValue())));
+    }
     properties.put("alarmCategory", new AlarmCategory((String) properties.get("alarmCategory")));
 
 

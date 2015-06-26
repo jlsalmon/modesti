@@ -51,8 +51,20 @@ public class SchemaService {
   Schema materialiseSchema(Request request, List<String> categories) {
     Schema schema = new Schema(request.getRequestId(), request.getDescription(), request.getDomain());
 
-    // Reverse the categories so they are merged in the order they are given
-    Collections.reverse(categories);
+    Schema domainSchema = schemaRepository.findOneByNameIgnoreCase(request.getDomain());
+    Schema parentSchema = schemaRepository.findOneByNameIgnoreCase(domainSchema.getParent());
+
+    // Merge the core schema
+    if (parentSchema == null) {
+      throw new IllegalStateException("Parent schema \"" + domainSchema.getParent() + "\" for domain " + domainSchema.getName() + " was not found");
+    }
+    schema = mergeParentSchema(schema, parentSchema);
+
+    // Merge the domain schema
+    if (domainSchema == null) {
+      throw new IllegalStateException("Schema for domain \"" + request.getDomain() + "\" was not found");
+    }
+    schema = mergeDomainSchema(schema, domainSchema);
 
     // Merge all sibling schemas
     for (String category : categories) {
@@ -65,20 +77,6 @@ public class SchemaService {
 
       schema = mergeSiblingSchema(schema, categorySchema);
     }
-
-    // Merge the domain schema
-    Schema domainSchema = schemaRepository.findOneByNameIgnoreCase(request.getDomain());
-    if (domainSchema == null) {
-      throw new IllegalStateException("Schema for domain \"" + request.getDomain() + "\" was not found");
-    }
-    schema = mergeDomainSchema(schema, domainSchema);
-
-    // Merge the core schema
-    Schema parent = schemaRepository.findOneByNameIgnoreCase(domainSchema.getParent());
-    if (parent == null) {
-      throw new IllegalStateException("Parent schema \"" + domainSchema.getParent() + "\" for domain " + domainSchema.getName() + " was not found");
-    }
-    schema = mergeParentSchema(schema, parent);
 
     return schema;
   }
@@ -107,12 +105,11 @@ public class SchemaService {
           }
         }
 
-        newFields.addAll(category.getFields());
-        category.setFields(newFields);
+        category.getFields().addAll(newFields);
       }
     }
 
-    schema.getCategories().addAll(0, newCategories);
+    schema.getCategories().addAll(newCategories);
     return schema;
   }
 
@@ -150,12 +147,11 @@ public class SchemaService {
           category.setEditableStates(domainCategory.getEditableStates());
         }
 
-        newFields.addAll(category.getFields());
-        category.setFields(newFields);
+        category.getFields().addAll(newFields);
       }
     }
 
-    schema.getCategories().addAll(0, newCategories);
+    schema.getCategories().addAll(newCategories);
     return schema;
   }
 
@@ -193,12 +189,11 @@ public class SchemaService {
           category.setEditableStates(parentCategory.getEditableStates());
         }
 
-        newFields.addAll(category.getFields());
-        category.setFields(newFields);
+        category.getFields().addAll(newFields);
       }
     }
 
-    schema.getCategories().addAll(0, newCategories);
+    schema.getCategories().addAll(newCategories);
     return schema;
   }
 }
