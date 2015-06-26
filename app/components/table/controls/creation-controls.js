@@ -238,6 +238,11 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
       return;
     }
 
+    if (source == 'spliceCol') {
+      console.log('paste');
+      return;
+    }
+
     // Make sure the point IDs are consecutive
     for (var i = 0, len = self.rows.length; i < len; i++) {
       self.rows[i].id = i + 1;

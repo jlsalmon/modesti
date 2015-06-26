@@ -329,12 +329,12 @@
 
       <!-- Undo/redo buttons -->
       <div class="btn-group">
-        <button class="btn btn-sm btn-default" ng-click="ctrl.undo()" ng-disabled="!ctrl.hot.isUndoAvailable()" tooltip-append-to-body="true" tooltip="{{'UNDO'|translate}}">
+        <a class="btn btn-sm btn-default" ng-click="ctrl.undo()" ng-disabled="!ctrl.hot.isUndoAvailable()" tooltip-append-to-body="true" tooltip="{{'UNDO'|translate}}">
           <i class="fa fa-fw fa-undo"></i>
-        </button>
-        <button class="btn btn-sm btn-default" ng-click="ctrl.redo()" ng-disabled="!ctrl.hot.isRedoAvailable()" tooltip-append-to-body="true" tooltip="{{'REDO'|translate}}">
+        </a>
+        <a class="btn btn-sm btn-default" ng-click="ctrl.redo()" ng-disabled="!ctrl.hot.isRedoAvailable()" tooltip-append-to-body="true" tooltip="{{'REDO'|translate}}">
           <i class="fa fa-fw fa-repeat"></i>
-        </button>
+        </a>
       </div>
 
       <!-- Cut/copy/paste buttons -->

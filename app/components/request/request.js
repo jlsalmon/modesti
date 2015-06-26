@@ -251,7 +251,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
             subsystemCode = '?';
           }
 
-          var site = (point.properties.site.value ? point.properties.site.value : '?');
+          var site = (point.properties.site && point.properties.site.value ? point.properties.site.value : '?');
           var equipmentIdentifier = getEquipmentIdentifier(point);
           var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
 
@@ -531,6 +531,11 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    */
   function paste() {
     self.hot.copyPaste.triggerPaste();
+    self.hot.copyPaste.copyPasteInstance.onPaste(function(value) {
+      console.log('onPaste(): ' + value);
+      // Hack alert: if the value contains more whitespaces than there are fields in the category, then assume the
+      // entire row has been pasted. Then
+    })
   }
 
   /**

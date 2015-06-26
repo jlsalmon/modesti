@@ -40,6 +40,7 @@ function ValidationService($q) {
         column.forEach(function (value, row) {
           var col = hot.propToCol('properties.' + columnName);
           var cell = hot.getCellMeta(row, col);
+          cell.valid = true;
 
           // Required fields
           if (field.required === true) {
@@ -48,6 +49,24 @@ function ValidationService($q) {
               console.log('required field validation failed');
               cell.valid = false;
               errors.push('Line ' + (row + 1) + ': Column "' + field.name_en + '" is mandatory');
+            }
+          }
+
+          // Min length
+          if (field.minLength) {
+            if (value && value.length < field.minLength) {
+              valid = false;
+              cell.valid = false;
+              errors.push('Line ' + (row + 1) + ': Column "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
+            }
+          }
+
+          // Max length
+          if (field.maxLength) {
+            if (value && value.length > field.maxLength) {
+              valid = false;
+              cell.valid = false;
+              errors.push('Line ' + (row + 1) + ': Column "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
             }
           }
 
@@ -67,7 +86,6 @@ function ValidationService($q) {
             }
           }
 
-          // TODO: Min/max length validation
 
           // TODO: Unique columns validation
 
@@ -142,12 +160,20 @@ function ValidationService($q) {
    * @param propertyName
    */
   function getValueByPropertyName(point, propertyName) {
+    var value;
+
     if (propertyName.indexOf('.') > -1) {
       var props = propertyName.split('.');
-      return point.properties[props[0]][props[1]];
+      if (point.properties.hasOwnProperty(props[0]) && point.properties[props[0]].hasOwnProperty(props[1])) {
+        value = point.properties[props[0]][props[1]];
+      }
     } else {
-      return point.properties[propertyName]
+      if (point.properties.hasOwnProperty(propertyName)) {
+        value = point.properties[propertyName]
+      }
     }
+
+      return value;
   }
 
   /**

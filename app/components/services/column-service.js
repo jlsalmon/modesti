@@ -71,8 +71,8 @@ function ColumnService($http, $translate) {
    */
   function getDropdownColumn(column, field) {
     column.type = 'dropdown';
-    //column.strict = true;
-    //column.allowInvalid = true;
+    column.strict = false;
+    column.allowInvalid = true;
 
     // Dropdown options given as list
     if (field.options instanceof Array) {
