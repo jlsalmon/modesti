@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.workflow;
+package cern.modesti.repository.jpa.validation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
