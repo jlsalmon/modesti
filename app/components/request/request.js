@@ -88,6 +88,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   self.showHistory = showHistory;
 
   self.getSelectedPointIds = getSelectedPointIds;
+  self.getNumValidationErrors = getNumValidationErrors;
   self.renderRowBackgrounds = renderRowBackgrounds;
 
   /**
@@ -176,11 +177,11 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
     if (point.approval && point.approval.approved == false) {
       var html =
-        '<i class="fa fa-exclamation-circle text-danger error-indicator"\
-            data-container="body" \
-            data-toggle="popover" \
-            data-placement="right" \
-            data-content="' + 'Operator comment: ' + point.approval.message + '"> \
+      '<i class="fa fa-exclamation-circle text-danger error-indicator"\
+          data-container="body" \
+          data-toggle="popover" \
+          data-placement="right" \
+          data-content="' + 'Operator comment: ' + point.approval.message + '"> \
          </i>';
 
       return point.id + ' ' + html;
@@ -209,6 +210,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
       // Build the right type of column based on the schema
       var column = ColumnService.getColumn(field, editable);
+      column.renderer = customRenderer;
       self.columns.push(column);
     }
 
@@ -232,7 +234,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
         return;
       }
 
-      (function(point) {
+      (function (point) {
         $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
           params: {query: point.properties.subsystem.value},
           cache: true
@@ -276,7 +278,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
         return;
       }
 
-      (function(point) {
+      (function (point) {
         $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
           params: {query: point.properties.subsystem.value},
           cache: true
@@ -367,8 +369,8 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
         // Only add the category if we aren't already using it
         if ($.grep(self.schema.categories, function (item) {
-            return item.name == category;
-          }).length == 0) {
+          return item.name == category;
+        }).length == 0) {
           self.availableCategories.push(category);
         }
       });
@@ -392,24 +394,24 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
     // TODO refactor this into a service
     $http.get(schemaLink).then(function (response) {
-        console.log('fetched new schema: ' + response.data.name);
-        self.schema = response.data;
-        self.request._links.schema.href = schemaLink;
+      console.log('fetched new schema: ' + response.data.name);
+      self.schema = response.data;
+      self.request._links.schema.href = schemaLink;
 
-        getAvailableExtraCategories();
+      getAvailableExtraCategories();
 
-        // Find the new category and activate it
-        for (var i in self.schema.categories) {
-          var category = self.schema.categories[i];
-          if (category.name == categoryName) {
-            activateCategory(category);
-          }
+      // Find the new category and activate it
+      for (var i in self.schema.categories) {
+        var category = self.schema.categories[i];
+        if (category.name == categoryName) {
+          activateCategory(category);
         }
-      },
+      }
+    },
 
-      function (error) {
-        console.log('error fetching schema: ' + error);
-      });
+    function (error) {
+      console.log('error fetching schema: ' + error);
+    });
   }
 
   /**
@@ -485,6 +487,28 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
   /**
    *
+   * @returns {number}
+   */
+  function getNumValidationErrors() {
+    var n = 0;
+
+    for (var i in self.rows) {
+      var point = self.rows[i];
+
+      for (var property in point.errors) {
+        if (point.errors.hasOwnProperty(property)) {
+          if (point.errors[property]) {
+            n += point.errors[property].length;
+          }
+        }
+      }
+    }
+
+    return n;
+  }
+
+  /**
+   *
    */
   function save() {
     var request = self.request;
@@ -531,10 +555,8 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    */
   function paste() {
     self.hot.copyPaste.triggerPaste();
-    self.hot.copyPaste.copyPasteInstance.onPaste(function(value) {
+    self.hot.copyPaste.copyPasteInstance.onPaste(function (value) {
       console.log('onPaste(): ' + value);
-      // Hack alert: if the value contains more whitespaces than there are fields in the category, then assume the
-      // entire row has been pasted. Then
     })
   }
 
@@ -566,7 +588,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       templateUrl: 'components/request/modals/comments-modal.html',
       controller: 'CommentsModalController as ctrl',
       resolve: {
-        request: function() {
+        request: function () {
           return self.request;
         }
       }
@@ -583,10 +605,10 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       templateUrl: 'components/request/modals/history-modal.html',
       controller: 'HistoryModalController as ctrl',
       resolve: {
-        request: function() {
+        request: function () {
           return self.request;
         },
-        history: function() {
+        history: function () {
           return HistoryService.getHistory(self.request.requestId);
         }
       }
@@ -594,7 +616,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   }
 
   /**
-   *
+   * Calculate the required height for the table so tha tit fills the screen.
    */
   function calculateTableHeight() {
     var mainHeader = $('.main-header');
@@ -604,18 +626,8 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     var log = $('.log');
     var footer = $('.footer');
 
-    var offset = table.offset();
-    console.log('window:' + $(window).height());
-    console.log('table offset top:' + offset.top);
-    console.log('mainHeader:' + mainHeader.outerHeight());
-    console.log('requestHeader:' + requestHeader.outerHeight());
-    console.log('toolbar:' + toolbar.outerHeight());
-    console.log('table:' + table.outerHeight());
-    console.log('log:' + log.outerHeight());
-    console.log('footer:' + footer.outerHeight());
-
     var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight()
-      - log.outerHeight() - footer.outerHeight();
+    - log.outerHeight() - footer.outerHeight();
 
     table.height(height + 'px');
   }
@@ -692,6 +704,49 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     td.style.background = '#DFF0D8';
   }
 
+
+  /**
+   *
+   * @param instance
+   * @param td
+   * @param row
+   * @param col
+   * @param prop
+   * @param value
+   * @param cellProperties
+   */
+  function customRenderer(instance, td, row, col, prop, value, cellProperties) {
+    switch (cellProperties.type) {
+      case 'text':
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        break;
+      case 'numeric':
+        Handsontable.renderers.NumericRenderer.apply(this, arguments);
+        break;
+      case 'autocomplete':
+        Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+        break;
+      case 'dropdown':
+        Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+        break;
+      case 'checkbox':
+        Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
+        break;
+    }
+
+    if (typeof prop !== 'string') {
+      return;
+    }
+
+    var point = self.rows[row];
+    prop = prop.replace('properties.', '');
+
+    if (point.errors && point.errors[prop] && point.errors[prop].length > 0) {
+      td.style.background = '#F2DEDE';
+    }
+  }
+
+
   /**
    * Slightly hacky little function to make sure all the elements on the page are properly
    * initialised.
@@ -700,24 +755,24 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
     // Initialise the popovers in the row headers
     $('.error-indicator').popover({trigger: "manual", html: true, animation: false})
-      .on("mouseenter", function () {
-        var _this = this;
-        $(this).popover("show");
-        $(".popover").on("mouseleave", function () {
-          $(_this).popover('hide');
-        });
-      })
-      .on("mouseleave", function () {
-        var _this = this;
-        setTimeout(function () {
-          if (!$(".popover:hover").length) {
-            $(_this).popover("hide");
-          }
-        }, 300);
+    .on("mouseenter", function () {
+      var _this = this;
+      $(this).popover("show");
+      $(".popover").on("mouseleave", function () {
+        $(_this).popover('hide');
       });
+    })
+    .on("mouseleave", function () {
+      var _this = this;
+      setTimeout(function () {
+        if (!$(".popover:hover").length) {
+          $(_this).popover("hide");
+        }
+      }, 300);
+    });
 
     // Initialise the help text popovers on the column headers
-    $('.help-text').popover({trigger: 'hover', delay: { "show": 500, "hide": 100 }});
+    $('.help-text').popover({trigger: 'hover', delay: {"show": 500, "hide": 100}});
 
     if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
       // Fix the width of the last column and add the surplus to the first column
@@ -743,7 +798,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    * When the global language is changed, this event will be fired. We catch it here and
    * update the columns to make sure the help text etc. is in the right language.
    */
-  $scope.$on('event:languageChanged', function() {
+  $scope.$on('event:languageChanged', function () {
     $timeout(function () {
       console.log('language changed: refreshing columns');
       getColumns();

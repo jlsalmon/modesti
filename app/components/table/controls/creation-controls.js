@@ -84,10 +84,7 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
   function validate() {
     self.validating = 'started';
 
-    ValidationService.validateRequest(self.rows, self.parent.schema, self.hot).then(function (result) {
-      var valid = result.valid;
-      self.parent.errors = result.errors;
-
+    ValidationService.validateRequest(self.rows, self.parent.schema).then(function (valid) {
       // Render the table to show the error highlights
       self.hot.render();
 
@@ -103,8 +100,6 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
         console.log('warning: no validate task found');
         return;
       }
-
-
 
       // First save the request
       RequestService.saveRequest(self.request).then(function () {
@@ -132,14 +127,8 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
         console.log('error saving before validation: ' + error.statusText);
         self.validating = 'error';
       });
-
-
     });
   }
-
-
-
-
 
   /**
    *

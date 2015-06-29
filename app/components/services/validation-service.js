@@ -15,60 +15,137 @@ function ValidationService($q) {
     validateRequest: validateRequest
   };
 
-  function validateRequest(rows, schema, hot) {
+  /**
+   *
+   * @param points
+   * @param schema
+   * @returns {*}
+   */
+  function validateRequest(points, schema) {
     var q = $q.defer();
-    var valid = true, errors = [], checkedColumns = [];
-    var category, field, column;
 
-    schema.categories.forEach(function(category) {
+    // Reset all categories to valid
+    for (var i in schema.categories) {
+      schema.categories[i].valid = true;
+    }
 
-      // First scan column by column
-      category.fields.forEach(function(field) {
+    var valid = true;
 
-        var columnName = getPropertyName(field);
+    // Validate row by row
+    if (!validateRows(points, schema)) valid = false;
+    // Validate column by column
+    if (!validateColumns(points, schema)) valid = false;
 
-        if (checkedColumns.indexOf(columnName) > -1) {
-          return;
-        }
+    q.resolve(valid);
+    return q.promise;
+  }
 
+  /**
+   *
+   * @param points
+   * @param schema
+   * @returns {boolean}
+   */
+  function validateRows(points, schema) {
+    var point, valid = true;
 
-        column = getColumnByProperty(rows, columnName);
+    for (var i in points) {
+      point = points[i];
+      point.valid = true;
+      point.errors = {};
 
-        //column =  hot.getDataAtProp(property);
-        console.log('col: ' + column);
+      // Empty rows are valid
+      if (Object.keys(point.properties).length <= 1) {
+        continue;
+      }
 
-        column.forEach(function (value, row) {
-          var col = hot.propToCol('properties.' + columnName);
-          var cell = hot.getCellMeta(row, col);
-          cell.valid = true;
+      var category;
+      for (var j in schema.categories) {
+        category = schema.categories[j];
+
+        var groupActive = false;
+
+        var field;
+        for (var k in category.fields) {
+          field = category.fields[k];
+
+          var propertyName = getPropertyName(field);
+          point.errors[propertyName] = [];
+
+          var value = getValueByPropertyName(point, propertyName);
 
           // Required fields
           if (field.required === true) {
             if (value === '' || value === undefined || value === null) {
-              valid = false;
-              console.log('required field validation failed');
-              cell.valid = false;
-              errors.push('Line ' + (row + 1) + ': Column "' + field.name_en + '" is mandatory');
+              point.valid = category.valid = valid = false;
+              point.errors[propertyName].push('Line ' + (point.id) + ': Column "' + field.name_en + '" is mandatory');
             }
           }
 
           // Min length
           if (field.minLength) {
             if (value && value.length < field.minLength) {
-              valid = false;
-              cell.valid = false;
-              errors.push('Line ' + (row + 1) + ': Column "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
+              point.valid = category.valid = valid = false;
+              point.errors[propertyName].push('Line ' + (point.id) + ': Column "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
             }
           }
 
           // Max length
           if (field.maxLength) {
             if (value && value.length > field.maxLength) {
-              valid = false;
-              cell.valid = false;
-              errors.push('Line ' + (row + 1) + ': Column "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
+              //cell.valid = false;
+              point.valid = category.valid = valid = false;
+              point.errors[propertyName].push('Line ' + (point.id) + ': Column "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
             }
           }
+
+          // Column group validation
+          if (typeof field.required === 'string' && field.required === 'group') {
+            if (groupActive && (value === undefined || value === '' || value === null)) {
+              point.valid = category.valid = valid = false;
+              point.errors[propertyName].push('Line ' + (point.id) + ': Field "' + field.name_en + '" is required for category "' + category.name + '"');
+            }
+
+            if (value !== undefined && value !== '' && value !== null) {
+              groupActive = true;
+            }
+          }
+        }
+      }
+    }
+
+    return valid;
+  }
+
+
+  /**
+   *
+   * @param points
+   * @param schema
+   * @returns {boolean}
+   */
+  function validateColumns(points, schema) {
+    var valid = true, checkedColumns = [];
+
+    var category;
+    for (var i in schema.categories) {
+      category = schema.categories[i];
+
+      var field;
+      for (var j in category.fields) {
+        field = category.fields[j];
+
+        var columnName = getPropertyName(field);
+        if (checkedColumns.indexOf(columnName) > -1) {
+          continue;
+        }
+
+        var column = getColumnByProperty(points, columnName);
+
+        var value, point;
+        for (var row in column) {
+          value = column[row];
+          point = points[row];
 
           // Unique columns
           if (field.unique) {
@@ -76,13 +153,12 @@ function ValidationService($q) {
             var index = data.indexOf(value);
             data.splice(index, 1);
             var second_index = data.indexOf(value);
-            cell.valid = !(index > -1 && second_index > -1);
 
-            if (!cell.valid) {
-              valid = false;
-              console.log('cell failed uniqueness validation: [' + row + ', ' + col + ']');
-              var error = 'Line ' + (row + 1) + ': Column "' + field.name_en + '" must be unique. Check for duplicate descriptions and attributes.';
-              errors.push(error);
+            point.valid = category.valid = valid = !(index > -1 && second_index > -1);
+
+            if (!point.valid) {
+              category.valid = false;
+              point.errors[columnName].push('Line ' + (point.id) + ': Column "' + field.name_en + '" must be unique. Check for duplicate descriptions and attributes.');
             }
           }
 
@@ -94,45 +170,13 @@ function ValidationService($q) {
           // TODO: column groups validation
 
           // TODO: Mutually exclusive groups validation
-
-        });
+        }
 
         checkedColumns.push(columnName);
-      });
+      }
+    }
 
-      // Scan row by row
-      rows.forEach(function(point, row) {
-
-        var groupActive = false;
-        category.fields.forEach(function(field) {
-
-
-          var propertyName = getPropertyName(field);
-          var col = hot.propToCol('properties.' + propertyName);
-          var cell = hot.getCellMeta(row, col);
-
-
-          // Column group validation
-          if (typeof field.required === 'string' && field.required === 'group') {
-            var value = getValueByPropertyName(point, propertyName);
-
-            if (groupActive && (value === undefined || value === '' || value === null)) {
-              valid = false;
-              cell.valid = false;
-              errors.push('Line ' + (row + 1) + ': Field "' + field.name_en + '" is required for points of type "' + category.name + '"');
-            }
-
-            if (value !== undefined && value !== '' && value !== null) {
-              groupActive = true;
-            }
-          }
-        });
-      });
-
-    });
-
-    q.resolve({valid: valid, errors: errors});
-    return q.promise;
+    return valid;
   }
 
   /**
@@ -173,7 +217,7 @@ function ValidationService($q) {
       }
     }
 
-      return value;
+    return value;
   }
 
   /**
