@@ -10,7 +10,7 @@ import javax.transaction.Transactional;
 
 import cern.modesti.notification.NotificationService;
 import cern.modesti.notification.NotificationType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cern.modesti.repository.jpa.validation.ValidationResult;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -47,6 +47,9 @@ public class WorkflowService {
 
   @Autowired
   NotificationService notificationService;
+
+  @Autowired
+  ValidationService validationService;
 
   /**
    *
@@ -167,6 +170,8 @@ public class WorkflowService {
 
 
     // TODO: add dirty check: don't need to validate if all the points have already been validated
+    ValidationResult result = validationService.validateRequest(request);
+
 
 
     /**
@@ -175,13 +180,10 @@ public class WorkflowService {
 
 
     // Randomly fail the validation
-    boolean failed = false; //new Random(System.currentTimeMillis()).nextBoolean();
+    boolean failed = result.getExitcode() > 0; //new Random(System.currentTimeMillis()).nextBoolean();
+    request.setValidationResult(result);
 
-    if (failed) {
-      request.setValidationResult(new ValidationResult(true));
-    } else {
-      request.setValidationResult(new ValidationResult(false));
-
+    if (!failed) {
       for (Point point : request.getPoints()) {
 
         if (point.getApproval() != null && point.getApproval().isApproved() && point.isDirty()) {

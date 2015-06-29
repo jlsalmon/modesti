@@ -1,5 +1,7 @@
 package cern.modesti.repository.jpa.validation;
 
+import cern.modesti.request.Request;
+
 /**
  * TODO
  *
@@ -7,5 +9,10 @@ package cern.modesti.repository.jpa.validation;
  */
 public interface ValidationRepositoryCustom {
 
-  public void validate();
+  /**
+   *
+   * @param request
+   * @return
+   */
+  ValidationResult validate(Request request);
 }

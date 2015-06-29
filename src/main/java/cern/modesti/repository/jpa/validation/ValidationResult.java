@@ -3,81 +3,44 @@
  */
 package cern.modesti.repository.jpa.validation;
 
+import oracle.net.aso.e;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * @author Justin Lewis Salmon
- *
  */
+@Entity
+@NamedStoredProcedureQuery(name = "ValidationResult.STP_CHECK_REQUEST", procedureName = "TIMPKREQCHECK.STP_CHECK_REQUEST", parameters = {
+    @StoredProcedureParameter(mode = ParameterMode.IN, name = "request_id", type = Long.class),
+    @StoredProcedureParameter(mode = ParameterMode.OUT, name = "exitcode", type = Integer.class)
+})
 public class ValidationResult {
 
   @Id
-  private Long id;
+  @GeneratedValue
+  private Integer exitcode;
 
-  private Boolean valid;
-
-  private List<String> errors;
+  @GeneratedValue
+  private String exittext;
 
   public ValidationResult() {
   }
 
-  /**
-   * Constructor to create a dummy validation result for testing.
-   */
-  public ValidationResult(boolean failed) {
-    this.id = 0L;
-    if (failed) {
-      this.valid = false;
-      this.errors = new ArrayList<>(Arrays.asList("Field x is not valid", "Field y is out of range"));
-    } else {
-      this.valid = true;
-      this.errors = new ArrayList<>();
-    }
+  public ValidationResult(Integer exitcode, String exittext) {
+    this.exitcode = exitcode;
+    this.exittext = exittext;
   }
 
-  /**
-   * @return the id
-   */
-  public Long getId() {
-    return id;
+  public Integer getExitcode() {
+    return exitcode;
   }
 
-  /**
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the valid
-   */
-  public Boolean isValid() {
-    return valid;
-  }
-
-  /**
-   * @param valid the valid to set
-   */
-  public void setValid(Boolean valid) {
-    this.valid = valid;
-  }
-
-  /**
-   * @return the errors
-   */
-  public List<String> getErrors() {
-    return errors;
-  }
-
-  /**
-   * @param errors the errors to set
-   */
-  public void setErrors(List<String> errors) {
-    this.errors = errors;
+  public String getExittext() {
+    return exittext;
   }
 }

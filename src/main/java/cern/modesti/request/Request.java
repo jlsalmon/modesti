@@ -20,7 +20,6 @@ package cern.modesti.request;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.persistence.Id;
 import javax.validation.Valid;
@@ -34,10 +33,9 @@ import org.springframework.data.mongodb.core.mapping.TextScore;
 import cern.modesti.model.SubSystem;
 import cern.modesti.request.point.Point;
 import cern.modesti.workflow.AddressingResult;
-import cern.modesti.workflow.ApprovalResult;
 import cern.modesti.workflow.ConfigurationResult;
 import cern.modesti.workflow.TestResult;
-import cern.modesti.workflow.ValidationResult;
+import cern.modesti.repository.jpa.validation.ValidationResult;
 
 /**
  * @author Justin Lewis Salmon
