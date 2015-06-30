@@ -7,6 +7,12 @@
         "IN_PROGRESS",
         "FOR_CORRECTION"
       ],
+      "constraints": [
+        {
+          "type": "or",
+          "members": ["gmaoCode", "otherCode"]
+        }
+      ],
       "fields": [
         {
           "id": "pointDescription",
@@ -32,7 +38,6 @@
         {
           "id": "gmaoCode",
           "type": "text",
-          "required": "group",
           "name_en": "GMAO Code",
           "name_fr": "Code GMAO",
           "help_en": "The equipment code known by the GMAO system",
@@ -41,7 +46,6 @@
         {
           "id": "otherCode",
           "type": "text",
-          "required": "group",
           "name_en": "Other Code",
           "name_fr": "Autre Code",
           "help_en": "A code identifying the equipment concerned if no GMAO code exists, or sub-equipment code that complements the GMAO code",
@@ -152,12 +156,17 @@
         "IN_PROGRESS",
         "FOR_CORRECTION"
       ],
+      "constraints": [
+        {
+          "type": "xnor",
+          "members": ["priorityCode", "alarmValue"]
+        }
+      ],
       "fields": [
         {
           "id": "priorityCode",
           "type": "options",
           "options": "alarmPriorities",
-          "required": "group",
           "name_en": "Priority",
           "name_fr": "Niveau",
           "help_en": "Enter the priority of the alarm between 0 and 3",
@@ -166,7 +175,6 @@
         {
           "id": "alarmValue",
           "type": "numeric",
-          "required": "group",
           "name_en": "Value",
           "name_fr": "Valeur",
           "help_en": "The value indicating the presence of the alarm",

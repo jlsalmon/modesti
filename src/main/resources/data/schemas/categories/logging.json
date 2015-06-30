@@ -8,11 +8,16 @@
         "IN_PROGRESS",
         "FOR_CORRECTION"
       ],
+      "constraints": [
+        {
+          "type": "xnor",
+          "members": ["valueDeadBand", "deadBandType"]
+        }
+      ],
       "fields": [
         {
           "id": "valueDeadBand",
           "type": "text",
-          "required": "group",
           "name_en": "Value Deadband",
           "name_fr": "Value Deadband",
           "help_en": "",
@@ -25,7 +30,6 @@
             "ABS",
             "PCT"
           ],
-          "required": "group",
           "name_en": "Deadband Type",
           "name_fr": "Deadband Type",
           "help_en": "",

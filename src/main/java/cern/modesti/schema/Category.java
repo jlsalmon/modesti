@@ -47,6 +47,11 @@ public class Category {
   /**
    *
    */
+  private List<Constraint> constraints;
+
+  /**
+   *
+   */
   private List<Field> fields;
 
   /**
@@ -89,6 +94,14 @@ public class Category {
    */
   public void setEditableStates(List<String> editableStates) {
     this.editableStates = editableStates;
+  }
+
+  public List<Constraint> getConstraints() {
+    return constraints;
+  }
+
+  public void setConstraints(List<Constraint> constraints) {
+    this.constraints = constraints;
   }
 
   /**

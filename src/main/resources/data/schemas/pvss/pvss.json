@@ -24,7 +24,7 @@
         {
           "id": "pvssAlarmSource",
           "type": "text",
-          "required": "group",
+          "required": true,
           "name_en": "PVSS Alarm Source",
           "name_fr": "PVSS Alarm Source",
           "help_en": "",

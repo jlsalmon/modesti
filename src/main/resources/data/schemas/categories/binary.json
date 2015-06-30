@@ -8,11 +8,16 @@
         "IN_PROGRESS",
         "FOR_CORRECTION"
       ],
+      "constraints": [
+        {
+          "type": "xnor",
+          "members": ["trueMeaning", "falseMeaning"]
+        }
+      ],
       "fields": [
         {
           "id": "trueMeaning",
           "type": "text",
-          "required": "group",
           "name_en": "True Meaning (1)",
           "name_fr": "True Meaning (1)",
           "help_en": "",
@@ -21,7 +26,6 @@
         {
           "id": "falseMeaning",
           "type": "text",
-          "required": "group",
           "name_en": "False Meaning (0)",
           "name_fr": "False Meaning (0)",
           "help_en": "",

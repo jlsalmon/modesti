@@ -9,11 +9,16 @@
         "FOR_CORRECTION"
       ],
       "disabledStates": ["FOR_APPROVAL"],
+      "constraints": [
+        {
+          "type": "xnor",
+          "members": ["module", "line", "address", "opcdefStatus"]
+        }
+      ],
       "fields": [
         {
           "id": "module",
           "type": "text",
-          "required": "group",
           "name_en": "Module",
           "name_fr": "Module",
           "help_en": "",
@@ -22,7 +27,6 @@
         {
           "id": "line",
           "type": "text",
-          "required": "group",
           "name_en": "Line",
           "name_fr": "Line",
           "help_en": "",
@@ -31,7 +35,6 @@
         {
           "id": "address",
           "type": "text",
-          "required": "group",
           "name_en": "Address",
           "name_fr": "Address",
           "help_en": "",
@@ -41,7 +44,6 @@
           "id": "opcdefStatus",
           "type": "options",
           "options": [1, 2, 3, 4, 5],
-          "required": "group",
           "name_en": "Status",
           "name_fr": "Status",
           "help_en": "",

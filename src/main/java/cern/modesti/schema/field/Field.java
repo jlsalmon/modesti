@@ -61,11 +61,7 @@ public class Field {
 
   private Integer maxLength;
 
-  /**
-   * Can be true, false or "group" to specify that a field is mandatory if any of
-   * the other fields in the group are filled in
-   */
-  private Object required;
+  private Boolean required;
 
   private String help_en = "";
 
@@ -172,14 +168,14 @@ public class Field {
   /**
    * @return the required
    */
-  public Object getRequired() {
+  public Boolean getRequired() {
     return required;
   }
 
   /**
    * @param required the required to set
    */
-  public void setRequired(Object required) {
+  public void setRequired(Boolean required) {
     this.required = required;
   }
 

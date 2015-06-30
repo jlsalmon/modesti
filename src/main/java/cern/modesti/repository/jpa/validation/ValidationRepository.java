@@ -12,6 +12,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  *
  */
 @RepositoryRestResource(exported = false)
-public interface ValidationRepository extends CrudRepository<ValidationResult, Long>, ValidationRepositoryCustom {
+public interface ValidationRepository extends CrudRepository<DraftPoint, Long>, ValidationRepositoryCustom {
 
 }

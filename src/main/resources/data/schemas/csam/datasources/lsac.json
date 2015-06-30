@@ -9,6 +9,12 @@
         "FOR_CORRECTION"
       ],
       "disabledStates": ["FOR_APPROVAL"],
+      "constraints": [
+        {
+          "type": "xnor",
+          "members": ["lsacType", "rack", "card", "port"]
+        }
+      ],
       "fields": [
         {
           "id": "lsacType",
@@ -17,7 +23,6 @@
             "IN",
             "OUT"
           ],
-          "required": "group",
           "name_en": "Type",
           "name_fr": "Type",
           "help_en": "Type of the point (IN = entry, OUT = exit)",
@@ -26,7 +31,6 @@
         {
           "id": "rack",
           "type": "numeric",
-          "required": "group",
           "name_en": "Rack",
           "name_fr": "Rack",
           "help_en": "",
@@ -35,7 +39,6 @@
         {
           "id": "card",
           "type": "numeric",
-          "required": "group",
           "name_en": "Card",
           "name_fr": "Card",
           "help_en": "",
@@ -44,7 +47,6 @@
         {
           "id": "port",
           "type": "numeric",
-          "required": "group",
           "name_en": "Port",
           "name_fr": "Port",
           "help_en": "",

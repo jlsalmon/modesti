@@ -9,12 +9,17 @@
         "FOR_CORRECTION"
       ],
       "disabledStates": ["FOR_APPROVAL"],
+      "constraints": [
+        {
+          "type": "xnor",
+          "members": ["blockType", "wordId", "bitId", "nativePrefix", "slaveAddress", "connectId"]
+        }
+      ],
       "fields": [
         {
           "id": "blockType",
           "type": "options",
           "options": [1, 2, 3, 4],
-          "required": "group",
           "name_en": "Block Type",
           "name_fr": "Code du block",
           "help_en": "For PLC cabled points, the block type.",
@@ -23,7 +28,6 @@
         {
           "id": "wordId",
           "type": "numeric",
-          "required": "group",
           "name_en": "Word ID",
           "name_fr": "Numero du mot",
           "help_en": "For PLC cabled points, the word number that stores the value of the point",
@@ -33,7 +37,6 @@
           "id": "bitId",
           "type": "options",
           "options": [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-          "required": "group",
           "name_en": "Bit ID",
           "name_fr": "Bit ID",
           "help_en": "",
@@ -43,7 +46,6 @@
           "id": "nativePrefix",
           "type": "options",
           "options": ["PET", "PES", "PWA", "OBI", "OBO", "INT"],
-          "required": "group",
           "name_en": "Native Prefix",
           "name_fr": "Native Prefix",
           "help_en": "",
@@ -52,7 +54,6 @@
         {
           "id": "slaveAddress",
           "type": "numeric",
-          "required": "group",
           "name_en": "Slave Address",
           "name_fr": "Slave Address",
           "help_en": "",
@@ -61,7 +62,6 @@
         {
           "id": "connectId",
           "type": "text",
-          "required": "group",
           "name_en": "Connect ID",
           "name_fr": "Connect ID",
           "help_en": "",
