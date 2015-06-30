@@ -1,6 +1,5 @@
 <!-- Button to split the request -->
 <button class="btn btn-danger"
-        ng-if="ctrl.request.status == 'FOR_CORRECTION'"
         ng-click="ctrl.split()"
         ng-disabled="!ctrl.canSplit()"
         tooltip-append-to-body="true"

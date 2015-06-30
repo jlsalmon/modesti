@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($http, $state, RequestService, TaskService, ValidationService) {
+function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService) {
   var self = this;
 
   self.parent = {};
@@ -75,7 +75,8 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
    *
    */
   function canSplit() {
-    return self.parent.getSelectedPointIds().length > 0;
+    return self.parent.getNumValidationErrors() > 0;
+    //return self.parent.getSelectedPointIds().length > 0;
   }
 
   /**
@@ -84,50 +85,55 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
   function validate() {
     self.validating = 'started';
 
-    ValidationService.validateRequest(self.rows, self.parent.schema).then(function (valid) {
-      // Render the table to show the error highlights
-      self.hot.render();
+    $timeout(function () {
 
-      if (!valid) {
-        self.validating = 'error';
-        return;
-      }
 
-      // Validate server-side
-      var task = self.tasks['validate'];
+      ValidationService.validateRequest(self.rows, self.parent.schema).then(function (valid) {
+        // Render the table to show the error highlights
+        self.hot.render();
 
-      if (!task) {
-        console.log('warning: no validate task found');
-        return;
-      }
+        if (!valid) {
+          self.validating = 'error';
+          return;
+        }
 
-      // First save the request
-      RequestService.saveRequest(self.request).then(function () {
-        console.log('saved request before validation');
+        // Validate server-side
+        var task = self.tasks['validate'];
 
-        // Complete the task associated with the request
-        TaskService.completeTask(task.id).then(function (task) {
-          console.log('completed task ' + task.id);
+        if (!task) {
+          console.log('warning: no validate task found');
+          return;
+        }
 
-          // Clear the cache so that the state reload also pulls a fresh request
-          RequestService.clearCache();
+        // First save the request
+        RequestService.saveRequest(self.request).then(function () {
+          console.log('saved request before validation');
 
-          $state.reload().then(function () {
-            self.validating = 'success';
+          // Complete the task associated with the request
+          TaskService.completeTask(task.id).then(function (task) {
+            console.log('completed task ' + task.id);
+
+            // Clear the cache so that the state reload also pulls a fresh request
+            RequestService.clearCache();
+
+            $state.reload().then(function () {
+              self.validating = 'success';
+            });
+          },
+
+          function (error) {
+            console.log('error completing task: ' + error.statusText);
+            self.validating = 'error';
           });
         },
 
         function (error) {
-          console.log('error completing task: ' + error.statusText);
+          console.log('error saving before validation: ' + error.statusText);
           self.validating = 'error';
         });
-      },
-
-      function (error) {
-        console.log('error saving before validation: ' + error.statusText);
-        self.validating = 'error';
       });
-    });
+
+    })
   }
 
   /**
@@ -145,24 +151,24 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
 
     // Complete the task associated with the request
     TaskService.completeTask(task.id).then(function (task) {
-        console.log('completed task ' + task.id);
+      console.log('completed task ' + task.id);
 
-        // Clear the cache so that the state reload also pulls a fresh request
-        RequestService.clearCache();
+      // Clear the cache so that the state reload also pulls a fresh request
+      RequestService.clearCache();
 
-        $state.reload().then(function () {
-          self.submitting = 'success';
-        });
-      },
-
-      function (error) {
-        console.log('error completing task: ' + error);
-        self.submitting = 'error';
+      $state.reload().then(function () {
+        self.submitting = 'success';
       });
+    },
+
+    function (error) {
+      console.log('error completing task: ' + error);
+      self.submitting = 'error';
+    });
   }
 
   /**
-   * TODO split only selected points
+   *
    */
   function split() {
     var task = self.tasks['validate'];
@@ -171,31 +177,47 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
       return;
     }
 
-    self.splitting = 'started';
+    var selectedPointIds = self.parent.getSelectedPointIds();
 
-    var pointIds = self.parent.getSelectedPointIds();
-
-    if (!pointIds.length) {
+    if (!selectedPointIds.length) {
       return;
     }
 
-    console.log('splitting points: ' + pointIds);
+    console.log('splitting points: ' + selectedPointIds);
 
-    var url = task.executionUrl;
-    var variables = [{
-      "name": "points",
-      "value": JSON.stringify(pointIds),
-      "type": "string"
-    }];
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/table/controls/modals/splitting-modal.html',
+      controller: 'SplittingModalController as ctrl',
+      resolve: {
+        selectedPointIds: function () {
+          return selectedPointIds;
+        },
+        rows: function () {
+          return self.rows;
+        }
+      }
+    });
 
-    var params = {
-      "action": "signalEventReceived",
-      "signalName": "splitRequest",
-      "variables": variables
-    };
+    // Callback fired when the user clicks 'ok'. Not fired if 'cancel' clicked.
+    modalInstance.result.then(function () {
+      self.splitting = 'started';
 
-    // TODO refactor this into a service
-    $http.put(url, params).then(function () {
+      var url = task.executionUrl;
+      var variables = [{
+        "name": "points",
+        "value": JSON.stringify(selectedPointIds),
+        "type": "string"
+      }];
+
+      var params = {
+        "action": "signalEventReceived",
+        "signalName": "splitRequest",
+        "variables": variables
+      };
+
+      // TODO refactor this into a service
+      $http.put(url, params).then(function () {
         console.log('sent split signal');
 
         // Clear the cache so that the state reload also pulls a fresh request
@@ -210,6 +232,7 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
         console.log('error sending signal: ' + error);
         self.splitting = 'error';
       });
+    });
   }
 
   /**
@@ -227,7 +250,7 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
       return;
     }
 
-    if (source == 'spliceCol') {
+    if (source == 'paste') {
       console.log('paste');
       return;
     }
@@ -256,7 +279,7 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
 
     // If nothing changed, there's nothing to do! Otherwise, save the request.
     if (dirty) {
-      RequestService.saveRequest(self.request).then(function() {
+      RequestService.saveRequest(self.request).then(function () {
         // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
         // revalidated. This is done by sending the "requestModified" signal.
         if (self.tasks['submit']) {
@@ -284,17 +307,17 @@ function CreationControlsController($http, $state, RequestService, TaskService, 
 
       // TODO refactor this into a service
       $http.put(url, params).then(function () {
-          console.log('sent modification signal');
+        console.log('sent modification signal');
 
-          // The "submit" task will have changed to "validate".
-          TaskService.queryTasksForRequest(self.request).then(function (tasks) {
-            self.tasks = tasks;
-          });
-        },
-
-        function (error) {
-          console.log('error sending signal: ' + error);
+        // The "submit" task will have changed to "validate".
+        TaskService.queryTasksForRequest(self.request).then(function (tasks) {
+          self.tasks = tasks;
         });
+      },
+
+      function (error) {
+        console.log('error sending signal: ' + error);
+      });
     }
   }
 }
