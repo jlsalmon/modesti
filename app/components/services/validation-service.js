@@ -63,8 +63,6 @@ function ValidationService($q) {
       for (var j in schema.categories) {
         category = schema.categories[j];
 
-        var groupActive = false;
-
         var field;
         for (var k in category.fields) {
           field = category.fields[k];
@@ -78,7 +76,7 @@ function ValidationService($q) {
           if (field.required === true) {
             if (value === '' || value === undefined || value === null) {
               point.valid = category.valid = valid = false;
-              point.errors[propertyName].push('Line ' + (point.id) + ': Column "' + field.name_en + '" is mandatory');
+              point.errors[propertyName].push('Line ' + (point.id) + ': Field "' + field.name_en + '" is mandatory');
             }
           }
 
@@ -86,7 +84,7 @@ function ValidationService($q) {
           if (field.minLength) {
             if (value && value.length < field.minLength) {
               point.valid = category.valid = valid = false;
-              point.errors[propertyName].push('Line ' + (point.id) + ': Column "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
+              point.errors[propertyName].push('Line ' + (point.id) + ': Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
             }
           }
 
@@ -95,19 +93,60 @@ function ValidationService($q) {
             if (value && value.length > field.maxLength) {
               //cell.valid = false;
               point.valid = category.valid = valid = false;
-              point.errors[propertyName].push('Line ' + (point.id) + ': Column "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
+              point.errors[propertyName].push('Line ' + (point.id) + ': Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
+            }
+          }
+        }
+
+        // Validate additional constraints
+        for (var l in category.constraints) {
+          var constraint = category.constraints[l];
+
+          // Get all the fields specified as members of the constraint
+          var fields = [];
+          for (var n in category.fields) {
+            var field = category.fields[n];
+            if (constraint.members.indexOf(field.id) > -1) {
+              fields.push(field);
             }
           }
 
-          // Column group validation
-          if (typeof field.required === 'string' && field.required === 'group') {
-            if (groupActive && (value === undefined || value === '' || value === null)) {
-              point.valid = category.valid = valid = false;
-              point.errors[propertyName].push('Line ' + (point.id) + ': Field "' + field.name_en + '" is required for category "' + category.name + '"');
+          // Check the values of all fields for this point
+          var emptyFields = [], columnNames = [];
+          for (var m in fields) {
+            var field = fields[m];
+            columnNames.push(field.name_en);
+            var value = getValueByPropertyName(point, getPropertyName(field));
+            if (value === undefined || value === '' || value === null) {
+              emptyFields.push(field);
             }
+          }
 
-            if (value !== undefined && value !== '' && value !== null) {
-              groupActive = true;
+          switch (constraint.type) {
+            case 'or':
+            {
+              if (emptyFields.length == constraint.members.length) {
+                point.valid = category.valid = valid = false;
+                for (var o in emptyFields) {
+                  var field = emptyFields[o];
+                  point.errors[field.id].push('Line ' + point.id + ': At least one of "' + columnNames.join(', ') + '" is required for category "' + category.name + '"');
+                }
+
+              }
+              break;
+            }
+            case 'xnor':
+            {
+              if (emptyFields.length != 0 && emptyFields.length != constraint.members.length) {
+                point.valid = category.valid = valid = false;
+
+                for (var o in emptyFields) {
+                  var field = emptyFields[o];
+                  point.errors[field.id].push('Line ' + point.id + ': Field "' + field.name_en + '" is required for points of category "' + category.name
+                  + '" if other fields of that category have been specified');
+                }
+              }
+              break;
             }
           }
         }
@@ -154,10 +193,8 @@ function ValidationService($q) {
             data.splice(index, 1);
             var second_index = data.indexOf(value);
 
-            point.valid = category.valid = valid = !(index > -1 && second_index > -1);
-
-            if (!point.valid) {
-              category.valid = false;
+            if (index > -1 && second_index > -1) {
+              point.valid = category.valid = valid = false;
               point.errors[columnName].push('Line ' + (point.id) + ': Column "' + field.name_en + '" must be unique. Check for duplicate descriptions and attributes.');
             }
           }

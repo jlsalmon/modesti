@@ -33,7 +33,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     //comments: true,
     minSpareRows: 0,
     search: true,
-    pasteMode: 'shift_down',
+    // pasteMode: 'shift_down', // problematic
     outsideClickDeselects: false,
     manualColumnResize: true,
     //manualRowMove: true,
@@ -214,10 +214,10 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       self.columns.push(column);
     }
 
-    if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
-      // Checkbox column not shown when preparing
+    //if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
+    //  // Checkbox column not shown when preparing
       self.columns.push({data: 'selected', type: 'checkbox'});
-    }
+    //}
   }
 
   /**
@@ -774,7 +774,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     // Initialise the help text popovers on the column headers
     $('.help-text').popover({trigger: 'hover', delay: {"show": 500, "hide": 100}});
 
-    if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
+    //if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
       // Fix the width of the last column and add the surplus to the first column
       var firstColumnHeader = $('.htCore colgroup col.rowHeader');
       var secondColumnHeader = $('.htCore colgroup col:nth-child(2)');
@@ -787,7 +787,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       firstColumnHeader.width('45px');
 
       //checkboxTd.css('width', '20px');
-    }
+    //}
 
     // Centre checkbox columns
     var checkboxCell = $('.htCore input.htCheckboxRendererInput').parent();
