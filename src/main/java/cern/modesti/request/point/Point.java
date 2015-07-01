@@ -17,11 +17,13 @@
  ******************************************************************************/
 package cern.modesti.request.point;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.data.annotation.Id;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Justin Lewis Salmon
@@ -44,6 +46,11 @@ public class Point implements Serializable {
   private Boolean selected = false;
 
   private Boolean valid;
+
+  /**
+   * Map of property names -> errors
+   */
+  private List<Error> errors = new ArrayList<>();
 
   private Approval approval;
 
@@ -110,6 +117,14 @@ public class Point implements Serializable {
 
   public void setValid(Boolean valid) {
     this.valid = valid;
+  }
+
+  public List<Error> getErrors() {
+    return errors;
+  }
+
+  public void setErrors(List<Error> errors) {
+    this.errors = errors;
   }
 
   public Approval getApproval() {

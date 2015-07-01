@@ -17,25 +17,22 @@
  ******************************************************************************/
 package cern.modesti.request;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Id;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
+import cern.modesti.model.SubSystem;
+import cern.modesti.request.point.Point;
 import cern.modesti.security.ldap.User;
+import cern.modesti.workflow.AddressingResult;
+import cern.modesti.workflow.ConfigurationResult;
+import cern.modesti.workflow.TestResult;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
-import cern.modesti.model.SubSystem;
-import cern.modesti.request.point.Point;
-import cern.modesti.workflow.AddressingResult;
-import cern.modesti.workflow.ConfigurationResult;
-import cern.modesti.workflow.TestResult;
-import cern.modesti.repository.jpa.validation.ValidationResult;
+import javax.persistence.Id;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Justin Lewis Salmon
@@ -100,7 +97,7 @@ public class Request implements Serializable {
   /**
    *
    */
-  private ValidationResult validationResult;
+  private Boolean valid;
 
   /**
    *
@@ -355,15 +352,15 @@ public class Request implements Serializable {
   /**
    * @return the validationResult
    */
-  public ValidationResult getValidationResult() {
-    return validationResult;
+  public Boolean isValid() {
+    return valid;
   }
 
   /**
-   * @param validationResult the validationResult to set
+   * @param valid the valid to set
    */
-  public void setValidationResult(ValidationResult validationResult) {
-    this.validationResult = validationResult;
+  public void setValid(Boolean valid) {
+    this.valid = valid;
   }
 
   /**

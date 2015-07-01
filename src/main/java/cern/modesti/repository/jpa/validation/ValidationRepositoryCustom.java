@@ -1,8 +1,10 @@
 package cern.modesti.repository.jpa.validation;
 
 import cern.modesti.request.Request;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 
 /**
  * TODO
@@ -16,6 +18,5 @@ public interface ValidationRepositoryCustom {
    * @param request
    * @return
    */
-  //@Transactional
-  ValidationResult validate(Request request);
+  boolean validate(Request request);
 }

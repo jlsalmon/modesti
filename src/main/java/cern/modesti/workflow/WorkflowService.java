@@ -3,14 +3,14 @@
  */
 package cern.modesti.workflow;
 
-import java.io.IOException;
-import java.util.*;
-
-import javax.transaction.Transactional;
-
 import cern.modesti.notification.NotificationService;
 import cern.modesti.notification.NotificationType;
-import cern.modesti.repository.jpa.validation.ValidationResult;
+import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.repository.mongo.request.counter.CounterService;
+import cern.modesti.request.Request;
+import cern.modesti.request.point.Point;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -19,13 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.repository.mongo.request.counter.CounterService;
-import cern.modesti.request.Request;
-import cern.modesti.request.point.Point;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Justin Lewis Salmon
@@ -170,20 +166,9 @@ public class WorkflowService {
 
 
     // TODO: add dirty check: don't need to validate if all the points have already been validated
-    ValidationResult result = validationService.validateRequest(request);
+    boolean valid = validationService.validateRequest(request);
 
-
-
-    /**
-     * TODO: perform actual request validation here
-     */
-
-
-    // Randomly fail the validation
-    boolean failed = result.getExitcode() > 0; //new Random(System.currentTimeMillis()).nextBoolean();
-    request.setValidationResult(result);
-
-    if (!failed) {
+    if (valid) {
       for (Point point : request.getPoints()) {
 
         if (point.getApproval() != null && point.getApproval().isApproved() && point.isDirty()) {
@@ -198,7 +183,7 @@ public class WorkflowService {
     }
 
     // Set the variable for the next stage to evaluate
-    execution.setVariable("containsErrors", failed);
+    execution.setVariable("containsErrors", !valid);
 
     // Store the request
     requestRepository.save(request);
