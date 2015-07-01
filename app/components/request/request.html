@@ -425,7 +425,7 @@
 <section class="log">
   <div class="container-fluid">
     <accordion class="accordion">
-      <accordion-group is-open="status.open">
+      <accordion-group is-open="ctrl.errorLogOpen">
 
         <accordion-heading>
           <div>
@@ -435,15 +435,15 @@
                   tooltip-placement="right">
               <i class="fa fa-fw fa-exclamation-triangle"></i> {{ctrl.getNumValidationErrors()}}
             </span>
-            <i class="pull-right fa" ng-class="{'fa-chevron-down': status.open, 'fa-chevron-up': !status.open}"></i>
+            <i class="pull-right fa" ng-class="{'fa-chevron-down': ctrl.errorLogOpen, 'fa-chevron-up': !ctrl.errorLogOpen}"></i>
           </div>
         </accordion-heading>
 
         <div ng-if="ctrl.getNumValidationErrors() > 0">
           <div ng-repeat="point in ctrl.rows track by point.id">
-            <div ng-repeat="(property, errors) in point.errors track by $index">
-              <div ng-repeat="error in errors">
-                <i class="fa fa-fw fa-exclamation-triangle text-danger"></i> {{error}}
+            <div ng-repeat="error in point.errors track by $index">
+              <div ng-repeat="error in error.errors">
+                <i class="fa fa-fw fa-exclamation-triangle text-danger"></i> Line {{point.id}}: {{error}}
               </div>
             </div>
           </div>

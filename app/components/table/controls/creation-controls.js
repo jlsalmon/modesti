@@ -86,8 +86,6 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     self.validating = 'started';
 
     $timeout(function () {
-
-
       ValidationService.validateRequest(self.rows, self.parent.schema).then(function (valid) {
         // Render the table to show the error highlights
         self.hot.render();

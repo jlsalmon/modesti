@@ -52,7 +52,7 @@ function ValidationService($q) {
     for (var i in points) {
       point = points[i];
       point.valid = true;
-      point.errors = {};
+      point.errors = [];
 
       // Empty rows are valid
       if (Object.keys(point.properties).length <= 1) {
@@ -68,7 +68,7 @@ function ValidationService($q) {
           field = category.fields[k];
 
           var propertyName = getPropertyName(field);
-          point.errors[propertyName] = [];
+          //point.errors[propertyName] = [];
 
           var value = getValueByPropertyName(point, propertyName);
 
@@ -76,7 +76,7 @@ function ValidationService($q) {
           if (field.required === true) {
             if (value === '' || value === undefined || value === null) {
               point.valid = category.valid = valid = false;
-              point.errors[propertyName].push('Line ' + (point.id) + ': Field "' + field.name_en + '" is mandatory');
+              point.errors.push({property: propertyName, errors: ['Field "' + field.name_en + '" is mandatory']});
             }
           }
 
@@ -84,7 +84,7 @@ function ValidationService($q) {
           if (field.minLength) {
             if (value && value.length < field.minLength) {
               point.valid = category.valid = valid = false;
-              point.errors[propertyName].push('Line ' + (point.id) + ': Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
+              point.errors.push({property: propertyName, errors: ['Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length']});
             }
           }
 
@@ -93,7 +93,7 @@ function ValidationService($q) {
             if (value && value.length > field.maxLength) {
               //cell.valid = false;
               point.valid = category.valid = valid = false;
-              point.errors[propertyName].push('Line ' + (point.id) + ': Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
+              point.errors.push({property: propertyName, errors: ['Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length']});
             }
           }
         }
@@ -129,7 +129,7 @@ function ValidationService($q) {
                 point.valid = category.valid = valid = false;
                 for (var o in emptyFields) {
                   var field = emptyFields[o];
-                  point.errors[field.id].push('Line ' + point.id + ': At least one of "' + columnNames.join(', ') + '" is required for category "' + category.name + '"');
+                  point.errors.push({property: propertyName, errors: ['At least one of "' + columnNames.join(', ') + '" is required for category "' + category.name + '"']});
                 }
 
               }
@@ -142,8 +142,8 @@ function ValidationService($q) {
 
                 for (var o in emptyFields) {
                   var field = emptyFields[o];
-                  point.errors[field.id].push('Line ' + point.id + ': Field "' + field.name_en + '" is required for points of category "' + category.name
-                  + '" if other fields of that category have been specified');
+                  point.errors.push({property: propertyName, errors: ['Field "' + field.name_en + '" is required for points of category "' + category.name
+                  + '" if other fields of that category have been specified']});
                 }
               }
               break;
@@ -195,7 +195,7 @@ function ValidationService($q) {
 
             if (index > -1 && second_index > -1) {
               point.valid = category.valid = valid = false;
-              point.errors[columnName].push('Line ' + (point.id) + ': Column "' + field.name_en + '" must be unique. Check for duplicate descriptions and attributes.');
+              point.errors.push({property: columnName, errors: ['Column "' + field.name_en + '" must be unique. Check for duplicate descriptions and attributes.']});
             }
           }
 

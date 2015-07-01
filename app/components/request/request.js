@@ -65,6 +65,8 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    */
   self.availableExtraCategories = [];
 
+  self.errorLogOpen = false;
+
   /**
    * Public function definitions.
    */
@@ -495,12 +497,8 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     for (var i in self.rows) {
       var point = self.rows[i];
 
-      for (var property in point.errors) {
-        if (point.errors.hasOwnProperty(property)) {
-          if (point.errors[property]) {
-            n += point.errors[property].length;
-          }
-        }
+      for (var j in point.errors) {
+        n += point.errors[j].errors.length;
       }
     }
 
@@ -741,8 +739,13 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     var point = self.rows[row];
     prop = prop.replace('properties.', '');
 
-    if (point.errors && point.errors[prop] && point.errors[prop].length > 0) {
-      td.style.background = '#F2DEDE';
+    for (var i in point.errors) {
+      var error = point.errors[i];
+
+      // If the property name isn't specified, then the error applies to the whole point.
+      if (error.property === prop || error.property === '') {
+        td.style.background = '#F2DEDE';
+      }
     }
   }
 
