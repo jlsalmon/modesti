@@ -17,9 +17,9 @@
       ],
       "fields": [
         {
-          "id": "voie",
+          "id": "winterChannel",
           "type": "numeric",
-          "name_en": "Voie",
+          "name_en": "Channel",
           "name_fr": "Voie",
           "help_en": "",
           "help_fr": ""

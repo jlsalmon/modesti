@@ -104,9 +104,9 @@ public class CSAMRequestParser extends RequestParser {
     }
 
     // WINTER special cases
-//    if (title.equals("voie")) {
-//      title = "winterStatus";
-//    } else
+    if (title.equals("voie")) {
+      title = "winterChannel";
+    } else
     if (title.equals("bit") && column == 35) {
       title = "winterBit";
     }
