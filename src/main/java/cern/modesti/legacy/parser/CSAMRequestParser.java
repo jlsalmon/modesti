@@ -143,7 +143,7 @@ public class CSAMRequestParser extends RequestParser {
     List<String> categories = new ArrayList<>();
 
     for (Point point : points) {
-      if (point.getProperties().containsKey("rack")) {
+      if (point.getProperties().containsKey("lsacRack")) {
         if (!categories.contains("LSAC")) categories.add("LSAC");
       } else if (point.getProperties().containsKey("blockType")) {
         if (!categories.contains("APIMMD")) categories.add("APIMMD");

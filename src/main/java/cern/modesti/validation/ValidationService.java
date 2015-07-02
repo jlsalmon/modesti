@@ -38,6 +38,12 @@ public class ValidationService {
 
     for (Point point : request.getPoints()) {
       Map<String, Object> properties = point.getProperties();
+
+      // Don't include empty points
+      if (isEmptyPoint(point)) {
+        continue;
+      }
+
       DraftPoint draftPoint = new DraftPoint(Long.valueOf(request.getRequestId()), point.getId(),
           (String) properties.get("pointDataType"),
           (String) properties.get("pointDescription"),
@@ -79,5 +85,30 @@ public class ValidationService {
     }
 
     return valid;
+  }
+
+  /**
+   *
+   * @param point
+   * @return
+   */
+  private boolean isEmptyPoint(Point point) {
+    if (point.getProperties().size() == 0) {
+      return true;
+    }
+
+    for (Object subProperty : point.getProperties().values()) {
+      if (subProperty instanceof Map) {
+        for (Object subSubProperty : ((Map) subProperty).values()) {
+          if (subSubProperty != null && !subSubProperty.equals("")) {
+            return false;
+          }
+        }
+      } else if (subProperty != null && !subProperty.equals("")) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
