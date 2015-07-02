@@ -259,7 +259,11 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
           var equipmentIdentifier = getEquipmentIdentifier(point);
           var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
 
-          point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
+          if (subsystemCode == '?' && site == '?' && equipmentIdentifier == '?' && attribute == '?') {
+            point.properties.tagname = '';
+          } else {
+            point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
+          }
         });
       })(point);
     }
@@ -316,7 +320,11 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
               var equipmentIdentifier = getEquipmentIdentifier(point);
               var description = point.properties.pointDescription ? point.properties.pointDescription : '?';
 
-              point.properties.faultState = systemName + '_' + subsystemName + '_' + func + ':' + equipmentIdentifier + ':' + description;
+              if (systemName == '?' && subsystemName == '?' && func == '?' && equipmentIdentifier == '?' && description == '?') {
+                point.properties.faultState = '';
+              } else {
+                point.properties.faultState = systemName + '_' + subsystemName + '_' + func + ':' + equipmentIdentifier + ':' + description;
+              }
             });
           }
         });
