@@ -54,8 +54,8 @@ function ValidationService($q) {
       point.valid = true;
       point.errors = [];
 
-      // Empty rows are valid
-      if (Object.keys(point.properties).length <= 1) {
+      // Ignore empty points
+      if (isEmptyPoint(point)) {
         continue;
       }
 
@@ -76,7 +76,7 @@ function ValidationService($q) {
           if (field.required === true) {
             if (value === '' || value === undefined || value === null) {
               point.valid = category.valid = valid = false;
-              point.errors.push({property: propertyName, errors: ['Field "' + field.name_en + '" is mandatory']});
+              setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" is mandatory');
             }
           }
 
@@ -84,7 +84,7 @@ function ValidationService($q) {
           if (field.minLength) {
             if (value && value.length < field.minLength) {
               point.valid = category.valid = valid = false;
-              point.errors.push({property: propertyName, errors: ['Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length']});
+              setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
             }
           }
 
@@ -93,7 +93,7 @@ function ValidationService($q) {
             if (value && value.length > field.maxLength) {
               //cell.valid = false;
               point.valid = category.valid = valid = false;
-              point.errors.push({property: propertyName, errors: ['Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length']});
+              setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
             }
           }
         }
@@ -129,7 +129,7 @@ function ValidationService($q) {
                 point.valid = category.valid = valid = false;
                 for (var o in emptyFields) {
                   var field = emptyFields[o];
-                  point.errors.push({property: propertyName, errors: ['At least one of "' + columnNames.join(', ') + '" is required for category "' + category.name + '"']});
+                  setErrorMessage(point, field.id, 'At least one of "' + columnNames.join(', ') + '" is required for category "' + category.name + '"');
                 }
 
               }
@@ -142,8 +142,8 @@ function ValidationService($q) {
 
                 for (var o in emptyFields) {
                   var field = emptyFields[o];
-                  point.errors.push({property: propertyName, errors: ['Field "' + field.name_en + '" is required for points of category "' + category.name
-                  + '" if other fields of that category have been specified']});
+                  setErrorMessage(point, field.id, 'Field "' + field.name_en + '" is required for points of category "' + category.name
+                  + '" if other fields of that category have been specified');
                 }
               }
               break;
@@ -186,6 +186,11 @@ function ValidationService($q) {
           value = column[row];
           point = points[row];
 
+          // Ignore empty points
+          if (isEmptyPoint(point)) {
+            continue;
+          }
+
           // Unique columns
           if (field.unique) {
             var data = $.extend([], column);
@@ -193,9 +198,9 @@ function ValidationService($q) {
             data.splice(index, 1);
             var second_index = data.indexOf(value);
 
-            if (index > -1 && second_index > -1) {
+            if (value && index > -1 && second_index > -1) {
               point.valid = category.valid = valid = false;
-              point.errors.push({property: columnName, errors: ['Column "' + field.name_en + '" must be unique. Check for duplicate descriptions and attributes.']});
+              setErrorMessage(point, columnName, 'Column "' + field.name_en + '" must be unique. Check for duplicate descriptions and attributes.');
             }
           }
 
@@ -214,6 +219,26 @@ function ValidationService($q) {
     }
 
     return valid;
+  }
+
+  /**
+   *
+   * @param point
+   * @param propertyName
+   * @param error
+   */
+  function setErrorMessage(point, propertyName, message) {
+    var error;
+
+    for (var i in point.errors) {
+      if (point.errors[i].property === 'propertyName') {
+        error = point.errors[i];
+      }
+    }
+
+    if (!error) {
+      point.errors.push({property: propertyName, errors: [message]});
+    }
   }
 
   /**
@@ -268,6 +293,40 @@ function ValidationService($q) {
     } else {
       return field.id;
     }
+  }
+
+  /**
+   * Check if a point is empty. A point is considered to be empty if it contains no properties, or if the values of all
+   * its properties are either null, undefined or empty strings.
+   *
+   * @param point the point to check
+   * @returns {boolean} true if the point is empty, false otherwise
+   */
+  function isEmptyPoint(point) {
+    if (Object.keys(point.properties).length == 0) {
+      return true;
+    }
+
+    var property;
+    for (var key in point.properties) {
+      if (point.properties.hasOwnProperty(key)) {
+        property = point.properties[key];
+
+        if (typeof property === 'object') {
+          for (var subproperty in property) {
+            if (property.hasOwnProperty(subproperty)) {
+              if (property[subproperty] !== null && property[subproperty] !== undefined && property[subproperty] != '') {
+                return false;
+              }
+            }
+          }
+        } else if (property !== null && property !== undefined && property !== '') {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   return service;
