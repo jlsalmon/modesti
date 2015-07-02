@@ -12,7 +12,7 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["lsacType", "rack", "card", "port"]
+          "members": ["lsacType", "lsacRack", "lsacCard", "lsacPort"]
         }
       ],
       "fields": [
@@ -29,7 +29,7 @@
           "help_fr": "Type de point (IN = entre, OUT = sortie)"
         },
         {
-          "id": "rack",
+          "id": "lsacRack",
           "type": "numeric",
           "name_en": "Rack",
           "name_fr": "Rack",
@@ -37,7 +37,7 @@
           "help_fr": ""
         },
         {
-          "id": "card",
+          "id": "lsacCard",
           "type": "numeric",
           "name_en": "Card",
           "name_fr": "Card",
@@ -45,7 +45,7 @@
           "help_fr": ""
         },
         {
-          "id": "port",
+          "id": "lsacPort",
           "type": "numeric",
           "name_en": "Port",
           "name_fr": "Port",
