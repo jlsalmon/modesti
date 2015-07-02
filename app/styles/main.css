@@ -431,6 +431,12 @@ ul.category-headings {
   text-transform: uppercase;
 }
 
+.label.request-status.small {
+  line-height: 90%;
+  font-size: 80%;
+  margin-top: 3px;
+}
+
   /*
     lightBlue: "#3c8dbc",
     red: "#f56954",

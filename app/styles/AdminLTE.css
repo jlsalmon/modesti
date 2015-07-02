@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic);
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,600,700,300italic,400italic,600italic);
 /*!
  *   AdminLTE v2.1.0
  *   Author: Almsaeed Studio
@@ -2333,43 +2334,43 @@ a:focus {
   background: #f7f7f7;
 }
 /* NAV PILLS */
-.nav-pills > li > a {
-  border-radius: 0;
-  border-top: 3px solid transparent;
-  color: #444;
-}
-.nav-pills > li > a > .fa,
-.nav-pills > li > a > .glyphicon,
-.nav-pills > li > a > .ion {
-  margin-right: 5px;
-}
-.nav-pills > li.active > a,
-.nav-pills > li.active > a:hover,
-.nav-pills > li.active > a:focus {
-  border-top-color: #3c8dbc;
-}
-.nav-pills > li.active > a {
-  font-weight: 600;
-}
-/* NAV STACKED */
+/*.nav-pills > li > a {*/
+  /*border-radius: 0;*/
+  /*border-top: 3px solid transparent;*/
+  /*color: #444;*/
+/*}*/
+/*.nav-pills > li > a > .fa,*/
+/*.nav-pills > li > a > .glyphicon,*/
+/*.nav-pills > li > a > .ion {*/
+  /*margin-right: 5px;*/
+/*}*/
+/*.nav-pills > li.active > a,*/
+/*.nav-pills > li.active > a:hover,*/
+/*.nav-pills > li.active > a:focus {*/
+  /*border-top-color: #3c8dbc;*/
+/*}*/
+/*.nav-pills > li.active > a {*/
+  /*font-weight: 600;*/
+/*}*/
+/*/!* NAV STACKED *!/*/
 .nav-stacked > li > a {
-  border-radius: 0;
-  border-top: 0;
-  border-left: 3px solid transparent;
+  /*border-radius: 0;*/
+  /*border-top: 0;*/
+  /*border-left: 3px solid transparent;*/
   color: #444;
 }
-.nav-stacked > li.active > a,
-.nav-stacked > li.active > a:hover {
-  border-top: 0;
-  border-left-color: #3c8dbc;
-}
-.nav-stacked > li.header {
-  border-bottom: 1px solid #ddd;
-  color: #777;
-  margin-bottom: 10px;
-  padding: 5px 10px;
-  text-transform: uppercase;
-}
+/*.nav-stacked > li.active > a,*/
+/*.nav-stacked > li.active > a:hover {*/
+  /*border-top: 0;*/
+  /*border-left-color: #3c8dbc;*/
+/*}*/
+/*.nav-stacked > li.header {*/
+  /*border-bottom: 1px solid #ddd;*/
+  /*color: #777;*/
+  /*margin-bottom: 10px;*/
+  /*padding: 5px 10px;*/
+  /*text-transform: uppercase;*/
+/*}*/
 /* NAV TABS */
 .nav-tabs-custom {
   margin-bottom: 20px;

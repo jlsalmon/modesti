@@ -1,68 +1,97 @@
 <style>
-.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-    background-color: #f4f4f4;
-    color: #444;
-}
+  .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    background-color: #3C8DBC;
+    /*color: #444;*/
+  }
 
-.tasklist-controls {
-  margin-bottom: 10px;
-}
+  .tasklist-controls {
+    margin-bottom: 10px;
+  }
 
-.tasklist-controls .search-form input[type="text"] {
-  box-shadow: none;
-  border-right: none;
-}
+  .tasklist-controls .search-form input[type="text"] {
+    box-shadow: none;
+    border-right: none;
+  }
 
-.tasklist-controls .search-form input[type="text"]:focus {
-  border-color: #D2D6DE !important;
-  /*/border-left: none;*/
-}
+  .tasklist-controls .search-form input[type="text"]:focus {
+    border-color: #D2D6DE !important;
+    /*/border-left: none;*/
+  }
 
-.tasklist-controls .search-form .btn {
-  box-shadow: none;
-  background-color: #fff;
-  border-color: #D2D6DE;
-  border-left: none;
-}
+  .tasklist-controls .search-form .btn {
+    box-shadow: none;
+    background-color: #fff;
+    border-color: #D2D6DE;
+    border-left: none;
+  }
 
-.todo-list > li .tools {
-  display: inline-block;
-}
+  .todo-list > li .tools {
+    display: inline-block;
+  }
 
-.todo-list > li .label {
-  font-size: 12px;
-}
+  .todo-list > li .label {
+    font-size: 12px;
+  }
 
-.todo-list .request-icon {
-  display: table-cell;
-}
+  .todo-list .request-icon {
+    display: table-cell;
+  }
 
-.todo-list .request-title {
-  display: table-cell;
-  width: 100%;
-}
+  .todo-list .request-title {
+    display: table-cell;
+    width: 100%;
+  }
 
-.todo-list .request-title .label {
-  margin-left: 2px !important;
-}
+  .todo-list .request-title .label {
+    margin-left: 2px !important;
+  }
 </style>
 
 
 <!-- Main content -->
 <section class="content">
   <div class="row">
-    <div class="col-md-3" style="min-width: 200px;">
-      <div class="box box-solid">
-        <div class="box-body no-padding">
+
+
+
+
+
+
+
+
+
+
+
+
+    <style>
+      .list-group-item:first-child {
+        border-top-right-radius: 0px;
+        border-top-left-radius: 0px;
+      }
+
+      .list-group-item:last-child {
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+      }
+
+      .sidebar-menu {;
+      }
+    </style>
+
+
+    <div class="container">
+
+      <div class="col-md-3">
+        <div class="sidebar-menu">
           <ul class="nav nav-pills nav-stacked">
             <li ng-class="{active: ctrl.filter.status == ''}">
-              <a href="" ng-click="ctrl.filter.status = ''" >
+              <a href="" ng-click="ctrl.filter.status = ''">
                 <i class="fa fa-fw fa-circle-o"></i> All </a>
-              </li>
+            </li>
             <li ng-class="{active: ctrl.filter.status == 'IN_PROGRESS'}">
-              <a href="" ng-click="ctrl.filter.status = 'IN_PROGRESS'" >
-              <i class="fa fa-fw fa-inbox"></i> In Progress
-              <span class="label request-status pull-right" ng-class="'IN_PROGRESS'">{{(ctrl.requests | filter:{status: 'IN_PROGRESS'}).length}}</span>
+              <a href="" ng-click="ctrl.filter.status = 'IN_PROGRESS'">
+                <i class="fa fa-fw fa-inbox"></i> In Progress
+                <span class="label request-status pull-right" ng-class="'IN_PROGRESS'">{{(ctrl.requests | filter:{status: 'IN_PROGRESS'}).length}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_CORRECTION'}">
@@ -102,228 +131,340 @@
               </a>
             </li>
           </ul>
-        </div><!-- /.box-body -->
-      </div><!-- /. box -->
-    </div><!-- /.col -->
-    <div class="col-md-9">
-      <div class="box box-solid">
-        <div class="box-body no-padding">
+        </div>
+      </div>
 
-          <div class="tasklist-controls">
-            <div class="btn-group">
-              <div class="btn-group" dropdown>
-                <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-                  <i class="fa fa-fw fa-square"></i>
+
+      <div class="col-md-9">
+
+        <div class="tasklist-controls">
+          <div class="btn-group">
+            <div class="btn-group" dropdown>
+              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+                <i class="fa fa-fw fa-square"></i>
                   <span class="text-muted">{{'SYSTEM'|translate|lowercase}}:
-                  </span>{{ctrl.filter.subsystem.system != '' ? ctrl.filter.subsystem.system : ('ANY'|translate)}} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li>
-                    <a href="" ng-click="ctrl.filter.subsystem.system = ''; ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
-                  </li>
-                  <li class="divider"></li>
-                  <li ng-repeat="request in ctrl.requests | unique:'subsystem.system'">
-                    <a href="" ng-click="ctrl.filter.subsystem.system = request.subsystem.system">{{request.subsystem.system}}</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="btn-group" dropdown>
-                <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle ng-disabled="ctrl.filter.subsystem.system == ''">
-                  <i class="fa fa-fw fa-sitemap"></i>
-                  <span class="text-muted">{{'SUBSYSTEM'|translate|lowercase}}:
-                  </span>{{ctrl.filter.subsystem.subsystem != '' ? ctrl.filter.subsystem.subsystem : ('ANY'|translate)}} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li>
-                    <a href="" ng-click="ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
-                  </li>
-                  <li class="divider"></li>
-                  <li ng-repeat="request in ctrl.requests | filter:ctrl.filter.subsystem.system | unique:'subsystem.subsystem'">
-                    <a href="" ng-click="ctrl.filter.subsystem.subsystem = request.subsystem.subsystem">{{request.subsystem.subsystem}}</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-                <i class="fa fa-fw fa-crosshairs"></i>
-                <span class="text-muted">{{'DOMAIN'|translate|lowercase}}:
-                </span>{{ctrl.filter.domain != '' ? ctrl.filter.domain : ('ANY'|translate)}} <span class="caret"></span>
+                  </span>{{ctrl.filter.subsystem.system != '' ? ctrl.filter.subsystem.system : ('ANY'|translate)}} <span
+                  class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a href="" ng-click="ctrl.filter.domain = ''">{{'ANY'|translate}}</a>
+                  <a href="" ng-click="ctrl.filter.subsystem.system = ''; ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
                 </li>
                 <li class="divider"></li>
-                <li ng-repeat="request in ctrl.requests | unique:'domain'"><a href="" ng-click="ctrl.filter.domain = request.domain">{{request.domain}}</a></li>
+                <li ng-repeat="request in ctrl.requests | unique:'subsystem.system'">
+                  <a href="" ng-click="ctrl.filter.subsystem.system = request.subsystem.system">{{request.subsystem.system}}</a>
+                </li>
               </ul>
             </div>
-
-<!--             <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+            <div class="btn-group" dropdown>
+              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle
+                      ng-disabled="ctrl.filter.subsystem.system == ''">
                 <i class="fa fa-fw fa-sitemap"></i>
-                <span class="text-muted">categories: </span>{{ctrl.filter.categories != '' ? ctrl.filter.categories : 'Any'}} <span class="caret"></span>
+                  <span class="text-muted">{{'SUBSYSTEM'|translate|lowercase}}:
+                  </span>{{ctrl.filter.subsystem.subsystem != '' ? ctrl.filter.subsystem.subsystem : ('ANY'|translate)}}
+                <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li>
-                  <a href="" ng-click="ctrl.filter.categories = ''">Any</a>
+                  <a href="" ng-click="ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
                 </li>
                 <li class="divider"></li>
-                <li ng-repeat="request in ctrl.requests | unique:'categories'"><a href="" ng-click="ctrl.filter.categories = request.categories">{{request.categories}}</a></li>
-              </ul>
-            </div> -->
-
-            <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-                <i class="fa fa-fw fa-user"></i>
-                <span class="text-muted">{{'CREATOR'|translate|lowercase}}:
-                </span>{{ctrl.filter.creator.username != '' ? ctrl.filter.creator.username : ('ANY'|translate)}} <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li>
-                  <a href="" ng-click="ctrl.filter.creator.username = ''">{{'ANY'|translate}}</a>
-                </li>
-                <li class="divider"></li>
-                <li ng-repeat="request in ctrl.requests | unique:'creator.username'">
-                  <a href="" ng-click="ctrl.filter.creator.username = request.creator.username">{{request.creator.username}}</a>
+                <li ng-repeat="request in ctrl.requests | filter:ctrl.filter.subsystem.system | unique:'subsystem.subsystem'">
+                  <a href="" ng-click="ctrl.filter.subsystem.subsystem = request.subsystem.subsystem">{{request.subsystem.subsystem}}</a>
                 </li>
               </ul>
             </div>
-
-            <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-                <span class="text-muted">type: </span>{{ctrl.filter.type != '' ? ctrl.filter.type : ('ANY'|translate)}} <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li>
-                  <a href="" ng-click="ctrl.filter.type = ''">{{'ANY'|translate}}</a>
-                </li>
-                <li class="divider"></li>
-                <li ng-repeat="request in ctrl.requests | unique:'type'"><a href="" ng-click="ctrl.filter.type = request.type">{{request.type}}</a></li>
-              </ul>
-            </div>
-
-            <!--<div class="pull-right">-->
-              <!--<form class="form-inline search-form">-->
-                <!--<div class="form-group input-group">-->
-                  <!--<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search requests...">-->
-                  <!--<span class="input-group-btn">-->
-                    <!--<button type="submit" name="search" id="search-btn" class="btn btn-flat">-->
-                      <!--<i class="fa fa-search"></i>-->
-                    <!--</button>-->
-                  <!--</span>-->
-                <!--</div>-->
-              <!--</form>-->
-            <!--</div>-->
           </div>
 
-          <ul class="todo-list">
+          <div class="btn-group" dropdown>
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+              <i class="fa fa-fw fa-crosshairs"></i>
+                <span class="text-muted">{{'DOMAIN'|translate|lowercase}}:
+                </span>{{ctrl.filter.domain != '' ? ctrl.filter.domain : ('ANY'|translate)}} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="" ng-click="ctrl.filter.domain = ''">{{'ANY'|translate}}</a>
+              </li>
+              <li class="divider"></li>
+              <li ng-repeat="request in ctrl.requests | unique:'domain'"><a href=""
+                                                                            ng-click="ctrl.filter.domain = request.domain">{{request.domain}}</a>
+              </li>
+            </ul>
+          </div>
 
-            <li ng-repeat="request in ctrl.requests | filter: ctrl.filter">
-              <div class="request-icon">
-                <i class="fa fa-list-ol fa-fw text-muted vcenter"></i>
-              </div>
-              <div class="request-title">
-                <span class="text">{{request.description}}</span>
-                <span class="label request-status pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
-                <br/>
-                <span class="text-muted" style="margin-left: 5px;">
-                  #{{request.requestId}} {{'BY'|translate}} <!-- <i class="fa fa-fw fa-user"></i> --> {{request.creator.username}}
-                </span>
+          <!--             <div class="btn-group" dropdown>
+                        <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+                          <i class="fa fa-fw fa-sitemap"></i>
+                          <span class="text-muted">categories: </span>{{ctrl.filter.categories != '' ? ctrl.filter.categories : 'Any'}} <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                          <li>
+                            <a href="" ng-click="ctrl.filter.categories = ''">Any</a>
+                          </li>
+                          <li class="divider"></li>
+                          <li ng-repeat="request in ctrl.requests | unique:'categories'"><a href="" ng-click="ctrl.filter.categories = request.categories">{{request.categories}}</a></li>
+                        </ul>
+                      </div> -->
 
-<!--                 <span class="text-muted">
-                  <i class="fa fa-fw fa-user"></i>
-                  {{request.type}}
-                </span> -->
-                <span class="text-muted" style="margin-left: 5px;">
-                  <!-- <i class="fa fa-fw fa-crosshairs"></i> -->
-                  {{request.domain}} &middot;
-                </span>
-                <span class="text-muted">
-                  <!-- <i class="fa fa-fw fa-sitemap"></i> -->
-                  {{request.subsystem.value}} &middot;
-                </span>
-                <span class="text-muted">
-                  <!-- <i class="fa fa-fw fa-cogs"></i> -->
-                  {{request.categories.join(', ')}}
-                </span>
+          <div class="btn-group" dropdown>
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+              <i class="fa fa-fw fa-user"></i>
+                <span class="text-muted">{{'CREATOR'|translate|lowercase}}:
+                </span>{{ctrl.filter.creator.username != '' ? ctrl.filter.creator.username : ('ANY'|translate)}} <span
+                class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="" ng-click="ctrl.filter.creator.username = ''">{{'ANY'|translate}}</a>
+              </li>
+              <li class="divider"></li>
+              <li ng-repeat="request in ctrl.requests | unique:'creator.username'">
+                <a href="" ng-click="ctrl.filter.creator.username = request.creator.username">{{request.creator.username}}</a>
+              </li>
+            </ul>
+          </div>
 
-                <div class="tools">
+          <div class="btn-group" dropdown>
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+              <span class="text-muted">type: </span>{{ctrl.filter.type != '' ? ctrl.filter.type : ('ANY'|translate)}}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="" ng-click="ctrl.filter.type = ''">{{'ANY'|translate}}</a>
+              </li>
+              <li class="divider"></li>
+              <li ng-repeat="request in ctrl.requests | unique:'type'"><a href=""
+                                                                          ng-click="ctrl.filter.type = request.type">{{request.type}}</a>
+              </li>
+            </ul>
+          </div>
 
-                  <!-- Show different options based on the request status -->
-                  <span ng-switch="request.status">
+          <!--<div class="pull-right">-->
+          <!--<form class="form-inline search-form">-->
+          <!--<div class="form-group input-group">-->
+          <!--<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search requests...">-->
+          <!--<span class="input-group-btn">-->
+          <!--<button type="submit" name="search" id="search-btn" class="btn btn-flat">-->
+          <!--<i class="fa fa-search"></i>-->
+          <!--</button>-->
+          <!--</span>-->
+          <!--</div>-->
+          <!--</form>-->
+          <!--</div>-->
+        </div>
 
-                    <span ng-switch-when="IN_PROGRESS">
-                      <!-- Only the request owner can edit the request -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                        <i class="fa fa-fw fa-edit"></i>
-                        {{'EDIT'|translate}}
-                      </button>
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </span>
+        <div class="list-group">
+          <a ng-repeat="request in ctrl.requests | filter: ctrl.filter"
+             ng-click="ctrl.editRequest(request)" href=""
+             class="list-group-item">
 
-                    <span ng-switch-when="FOR_CORRECTION">
-                      <!-- Only the request owner can correct the errors -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                        <i class="fa fa-fw fa-edit"></i>
-                        {{'EDIT'|translate}}
-                      </button>
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </span>
+            <i class="fa fa-list-ol fa-fw text-muted"></i>
+            <span class="">{{request.description}}</span>
 
-                    <span ng-switch-when="FOR_APPROVAL">
-                      <!-- Only approvers can approve -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                        <i class="fa fa-fw fa-hand-o-right"></i>
-                        {{'APPROVE'|translate}}
-                      </button>
-                    </span>
+            <span class="" style="font-size: 11px;">
+              <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} &middot;</span>
+              <span class="text-muted"> {{request.domain}} &middot; </span>
+              <span class="text-muted"> {{request.subsystem.value}} &middot; </span>
+            </span>
 
-                    <span ng-switch-when="FOR_ADDRESSING">
-                      <!-- Only approvers can approve -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                        <i class="fa fa-fw fa-hand-o-right"></i>
-                        {{'ADDRESS'|translate}}
-                      </button>
-                    </span>
+            <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
 
-                    <span ng-switch-when="FOR_CABLING">
-                      <!-- Only approvers can approve -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                        <i class="fa fa-fw fa-hand-o-right"></i>
-                        {{'CABLE'|translate}}
-                      </button>
-                    </span>
+          </a>
+        </div>
+      </div>
+    </div>
 
-                    <span ng-switch-when="FOR_TESTING">
-                      <!-- Only testers can test -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                        <i class="fa fa-fw fa-hand-o-right"></i>
-                        {{'TEST'|translate}}
-                      </button>
-                    </span>
 
-                    <span ng-switch-when="CLOSED">
-                      <!-- Everyone can view a closed request -->
-                      <button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">
-                        <i class="fa fa-fw fa-eye"></i>
-                        {{'VIEW'|translate}}
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </li>
+    <!--<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>-->
 
-          </ul>
 
-        </div><!-- /.box-body -->
-      </div><!-- /. box -->
-    </div><!-- /.col -->
-  </div><!-- /.row -->
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--<div class="col-md-3" style="min-width: 200px;">-->
+      <!--<div class="box box-solid">-->
+        <!--<div class="box-body no-padding">-->
+          <!--<ul class="nav nav-pills nav-stacked">-->
+            <!--<li ng-class="{active: ctrl.filter.status == ''}">-->
+              <!--<a href="" ng-click="ctrl.filter.status = ''">-->
+                <!--<i class="fa fa-fw fa-circle-o"></i> All </a>-->
+            <!--</li>-->
+            <!--<li ng-class="{active: ctrl.filter.status == 'IN_PROGRESS'}">-->
+              <!--<a href="" ng-click="ctrl.filter.status = 'IN_PROGRESS'">-->
+                <!--<i class="fa fa-fw fa-inbox"></i> In Progress-->
+                <!--<span class="label request-status pull-right" ng-class="'IN_PROGRESS'">{{(ctrl.requests | filter:{status: 'IN_PROGRESS'}).length}}</span>-->
+              <!--</a>-->
+            <!--</li>-->
+            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_CORRECTION'}">-->
+              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_CORRECTION'">-->
+                <!--<i class="fa fa-fw fa-exclamation-circle"></i> For Correction-->
+                <!--<span class="label request-status pull-right" ng-class="'FOR_CORRECTION'">{{(ctrl.requests | filter:{status: 'FOR_CORRECTION'}).length}}</span>-->
+              <!--</a>-->
+            <!--</li>-->
+            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_APPROVAL'}">-->
+              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_APPROVAL'">-->
+                <!--<i class="fa fa-fw fa-bell-o"></i> For Approval-->
+                <!--<span class="label request-status pull-right" ng-class="'FOR_APPROVAL'">{{(ctrl.requests | filter:{status: 'FOR_APPROVAL'}).length}}</span>-->
+              <!--</a>-->
+            <!--</li>-->
+            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_ADDRESSING'}">-->
+              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_ADDRESSING'">-->
+                <!--<i class="fa fa-fw fa-tasks"></i> For Addressing-->
+                <!--<span class="label request-status pull-right" ng-class="'FOR_ADDRESSING'">{{(ctrl.requests | filter:{status: 'FOR_ADDRESSING'}).length}}</span>-->
+              <!--</a>-->
+            <!--</li>-->
+            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_CABLING'}">-->
+              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_CABLING'">-->
+                <!--<i class="fa fa-fw fa-plug"></i> For Cabling-->
+                <!--<span class="label request-status pull-right" ng-class="'FOR_CABLING'">{{(ctrl.requests | filter:{status: 'FOR_CABLING'}).length}}</span>-->
+              <!--</a>-->
+            <!--</li>-->
+            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_TESTING'}">-->
+              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_TESTING'">-->
+                <!--<i class="fa fa-fw fa-check-square-o"></i> For Testing-->
+                <!--<span class="label request-status pull-right" ng-class="'FOR_TESTING'">{{(ctrl.requests | filter:{status: 'FOR_TESTING'}).length}}</span>-->
+              <!--</a>-->
+            <!--</li>-->
+            <!--<li ng-class="{active: ctrl.filter.status == 'CLOSED'}">-->
+              <!--<a href="" ng-click="ctrl.filter.status = 'CLOSED'">-->
+                <!--<i class="fa fa-fw fa-lock"></i> Closed-->
+                <!--<span class="label request-status pull-right" ng-class="'CLOSED'">{{(ctrl.requests | filter:{status: 'CLOSED'}).length}}</span>-->
+              <!--</a>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
+        <!--&lt;!&ndash; /.box-body &ndash;&gt;-->
+      <!--</div>-->
+      <!--&lt;!&ndash; /. box &ndash;&gt;-->
+    <!--</div>-->
+    <!--&lt;!&ndash; /.col &ndash;&gt;-->
+    <!--<div class="col-md-9">-->
+      <!--<div class="box box-solid">-->
+        <!--<div class="box-body no-padding">-->
+
+
+
+          <!--<ul class="todo-list">-->
+
+            <!--<li ng-repeat="request in ctrl.requests | filter: ctrl.filter">-->
+              <!--<div class="request-icon">-->
+                <!--<i class="fa fa-list-ol fa-fw text-muted vcenter"></i>-->
+              <!--</div>-->
+              <!--<div class="request-title">-->
+                <!--<span class="text">{{request.description}}</span>-->
+                <!--<span class="label request-status pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>-->
+                <!--<br/>-->
+                <!--<span class="text-muted" style="margin-left: 5px;">-->
+                  <!--#{{request.requestId}} {{'BY'|translate}} &lt;!&ndash; <i class="fa fa-fw fa-user"></i> &ndash;&gt; {{request.creator.username}}-->
+                <!--</span>-->
+
+                <!--&lt;!&ndash;                 <span class="text-muted">-->
+                                  <!--<i class="fa fa-fw fa-user"></i>-->
+                                  <!--{{request.type}}-->
+                                <!--</span> &ndash;&gt;-->
+                <!--<span class="text-muted" style="margin-left: 5px;">-->
+                  <!--&lt;!&ndash; <i class="fa fa-fw fa-crosshairs"></i> &ndash;&gt;-->
+                  <!--{{request.domain}} &middot;-->
+                <!--</span>-->
+                <!--<span class="text-muted">-->
+                  <!--&lt;!&ndash; <i class="fa fa-fw fa-sitemap"></i> &ndash;&gt;-->
+                  <!--{{request.subsystem.value}} &middot;-->
+                <!--</span>-->
+                <!--<span class="text-muted">-->
+                  <!--&lt;!&ndash; <i class="fa fa-fw fa-cogs"></i> &ndash;&gt;-->
+                  <!--{{request.categories.join(', ')}}-->
+                <!--</span>-->
+
+                <!--<div class="tools">-->
+
+                  <!--&lt;!&ndash; Show different options based on the request status &ndash;&gt;-->
+                  <!--<span ng-switch="request.status">-->
+
+                    <!--<span ng-switch-when="IN_PROGRESS">-->
+                      <!--&lt;!&ndash; Only the request owner can edit the request &ndash;&gt;-->
+                      <!--<button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">-->
+                        <!--<i class="fa fa-fw fa-edit"></i>-->
+                        <!--{{'EDIT'|translate}}-->
+                      <!--</button>-->
+                      <!--<button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">-->
+                        <!--<i class="fa fa-trash"></i>-->
+                      <!--</button>-->
+                    <!--</span>-->
+
+                    <!--<span ng-switch-when="FOR_CORRECTION">-->
+                      <!--&lt;!&ndash; Only the request owner can correct the errors &ndash;&gt;-->
+                      <!--<button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">-->
+                        <!--<i class="fa fa-fw fa-edit"></i>-->
+                        <!--{{'EDIT'|translate}}-->
+                      <!--</button>-->
+                      <!--<button class="btn btn-default btn-xs" ng-click="ctrl.deleteRequest(request)">-->
+                        <!--<i class="fa fa-trash"></i>-->
+                      <!--</button>-->
+                    <!--</span>-->
+
+                    <!--<span ng-switch-when="FOR_APPROVAL">-->
+                      <!--&lt;!&ndash; Only approvers can approve &ndash;&gt;-->
+                      <!--<button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">-->
+                        <!--<i class="fa fa-fw fa-hand-o-right"></i>-->
+                        <!--{{'APPROVE'|translate}}-->
+                      <!--</button>-->
+                    <!--</span>-->
+
+                    <!--<span ng-switch-when="FOR_ADDRESSING">-->
+                      <!--&lt;!&ndash; Only approvers can approve &ndash;&gt;-->
+                      <!--<button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">-->
+                        <!--<i class="fa fa-fw fa-hand-o-right"></i>-->
+                        <!--{{'ADDRESS'|translate}}-->
+                      <!--</button>-->
+                    <!--</span>-->
+
+                    <!--<span ng-switch-when="FOR_CABLING">-->
+                      <!--&lt;!&ndash; Only approvers can approve &ndash;&gt;-->
+                      <!--<button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">-->
+                        <!--<i class="fa fa-fw fa-hand-o-right"></i>-->
+                        <!--{{'CABLE'|translate}}-->
+                      <!--</button>-->
+                    <!--</span>-->
+
+                    <!--<span ng-switch-when="FOR_TESTING">-->
+                      <!--&lt;!&ndash; Only testers can test &ndash;&gt;-->
+                      <!--<button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">-->
+                        <!--<i class="fa fa-fw fa-hand-o-right"></i>-->
+                        <!--{{'TEST'|translate}}-->
+                      <!--</button>-->
+                    <!--</span>-->
+
+                    <!--<span ng-switch-when="CLOSED">-->
+                      <!--&lt;!&ndash; Everyone can view a closed request &ndash;&gt;-->
+                      <!--<button class="btn btn-default btn-xs" ng-click="ctrl.editRequest(request)">-->
+                        <!--<i class="fa fa-fw fa-eye"></i>-->
+                        <!--{{'VIEW'|translate}}-->
+                      <!--</button>-->
+                    <!--</span>-->
+                  <!--</span>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</li>-->
+
+          <!--</ul>-->
+
+        <!--</div>-->
+        <!--&lt;!&ndash; /.box-body &ndash;&gt;-->
+      <!--</div>-->
+      <!-- /. box -->
+    <!--</div>-->
+    <!-- /.col -->
+  </div>
+  <!-- /.row -->
 </section><!-- /.content -->
