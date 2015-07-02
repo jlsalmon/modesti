@@ -1,9 +1,9 @@
 package cern.modesti.schema;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import cern.modesti.schema.category.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,8 @@ public class SchemaService {
 
   /**
    * TODO rewrite this and explain it better
+   *
+   * TODO the three merge methods can be combined into one
    *
    * The schema hierarchy looks like the following:
    *

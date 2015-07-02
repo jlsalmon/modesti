@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.persistence.Id;
 
-import oracle.net.aso.d;
+import cern.modesti.schema.category.Category;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

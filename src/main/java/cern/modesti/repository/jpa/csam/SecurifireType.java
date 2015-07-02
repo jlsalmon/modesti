@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.model.csam;
+package cern.modesti.repository.jpa.csam;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,7 +11,7 @@ import javax.persistence.Id;
  *
  */
 @Entity
-public class WinterStatus {
+public class SecurifireType {
 
   @Id
   private String value;

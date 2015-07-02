@@ -1,29 +1,23 @@
 /**
  *
  */
-package cern.modesti.model;
+package cern.modesti.repository.jpa.csam;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- *
  * @author Justin Lewis Salmon
  *
  */
-public class Datasource {
+@Entity
+public class WinterStatus {
 
   @Id
   private String value;
 
-  public Datasource() {
-  }
-
-  public Datasource(String value) {
-    this.value = value;
-  }
-
   /**
-   * @return the name
+   * @return the value
    */
   public String getValue() {
     return value;

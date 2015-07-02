@@ -22,7 +22,6 @@ import java.util.List;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import cern.modesti.model.AlarmCategory;
 import cern.modesti.repository.base.ReadOnlyRepository;
 
 /**

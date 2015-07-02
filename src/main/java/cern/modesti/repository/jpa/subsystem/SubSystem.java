@@ -15,33 +15,28 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.model;
+package cern.modesti.repository.jpa.subsystem;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
+
 
 /**
  * @author Justin Lewis Salmon
  */
 @Entity
-@Table(name = "functionalities")
-public class Site {
+public class SubSystem {
 
   @Id
-  @Column(name = "func_code")
   private String value;
 
-  @Column(name = "func_gen")
-  private String generalFunctionality;
+  private String system;
 
-  public Site() {
-  }
+  private String systemCode;
 
-  public Site(final String value) {
-    this.value = value;
-  }
+  private String subsystem;
+
+  private String subsystemCode;
 
   /**
    * @return the value
@@ -57,11 +52,47 @@ public class Site {
     this.value = value;
   }
 
-  public String getGeneralFunctionality() {
-    return generalFunctionality;
+  /**
+   * @return the system
+   */
+  public String getSystem() {
+    return system;
   }
 
-  public void setGeneralFunctionality(String generalFunctionality) {
-    this.generalFunctionality = generalFunctionality;
+  /**
+   * @param system the system to set
+   */
+  public void setSystem(String system) {
+    this.system = system;
+  }
+
+  public String getSystemCode() {
+    return systemCode;
+  }
+
+  public void setSystemCode(String systemCode) {
+    this.systemCode = systemCode;
+  }
+
+  /**
+   * @return the subsystem
+   */
+  public String getSubsystem() {
+    return subsystem;
+  }
+
+  /**
+   * @param subsystem the subsystem to set
+   */
+  public void setSubsystem(String subsystem) {
+    this.subsystem = subsystem;
+  }
+
+  public String getSubsystemCode() {
+    return subsystemCode;
+  }
+
+  public void setSubsystemCode(String subsystemCode) {
+    this.subsystemCode = subsystemCode;
   }
 }

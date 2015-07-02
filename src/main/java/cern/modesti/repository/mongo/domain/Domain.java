@@ -1,4 +1,4 @@
-package cern.modesti.model;
+package cern.modesti.repository.mongo.domain;
 
 import java.util.List;
 

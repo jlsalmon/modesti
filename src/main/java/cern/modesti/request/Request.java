@@ -17,12 +17,12 @@
  ******************************************************************************/
 package cern.modesti.request;
 
-import cern.modesti.model.SubSystem;
+import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.request.point.Point;
 import cern.modesti.security.ldap.User;
-import cern.modesti.workflow.AddressingResult;
-import cern.modesti.workflow.ConfigurationResult;
-import cern.modesti.workflow.TestResult;
+import cern.modesti.workflow.result.AddressingResult;
+import cern.modesti.workflow.result.ConfigurationResult;
+import cern.modesti.workflow.result.TestResult;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;

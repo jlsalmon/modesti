@@ -5,7 +5,7 @@ package cern.modesti.request;
 
 import java.io.Serializable;
 
-import cern.modesti.model.Domain;
+import cern.modesti.repository.mongo.domain.Domain;
 import cern.modesti.repository.mongo.domain.DomainRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

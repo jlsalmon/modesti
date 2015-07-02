@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.model;
+package cern.modesti.repository.jpa.person;
 
 import java.io.Serializable;
 

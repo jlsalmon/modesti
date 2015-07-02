@@ -4,7 +4,6 @@
 package cern.modesti.legacy.parser;
 
 import cern.modesti.legacy.exception.RequestParseException;
-import cern.modesti.model.SubSystem;
 import cern.modesti.request.point.Point;
 import org.apache.poi.ss.usermodel.Sheet;
 

@@ -33,9 +33,6 @@ public class UploadController {
   private static final Logger LOG = LoggerFactory.getLogger(UploadController.class);
 
   @Autowired
-  private EntityLinks entityLinks;
-
-  @Autowired
   private UploadService service;
 
   @RequestMapping(value = "/requests/upload", method = POST)
@@ -63,5 +60,4 @@ public class UploadController {
     headers.setLocation(uriComponents.toUri());
     return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
   }
-
 }

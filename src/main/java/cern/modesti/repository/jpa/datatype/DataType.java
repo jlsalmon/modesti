@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.model;
+package cern.modesti.repository.jpa.datatype;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.model.csam;
+package cern.modesti.repository.jpa.location.zone;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,10 +11,17 @@ import javax.persistence.Id;
  *
  */
 @Entity
-public class SecurifireType {
+public class Zone {
 
   @Id
   private String value;
+
+  public Zone() {
+  }
+
+  public Zone(String value) {
+    this.value = value;
+  }
 
   /**
    * @return the value

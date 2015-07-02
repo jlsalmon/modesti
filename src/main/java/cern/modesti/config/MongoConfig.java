@@ -13,7 +13,6 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 
 @Configuration
-//@EnableMongoRepositories(basePackageClasses = { RequestRepository.class, SchemaRepository.class })
 public class MongoConfig extends AbstractMongoConfiguration {
 
   @Autowired

@@ -23,7 +23,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import cern.modesti.model.Person;
 import cern.modesti.repository.base.ReadOnlyRepository;
 
 /**

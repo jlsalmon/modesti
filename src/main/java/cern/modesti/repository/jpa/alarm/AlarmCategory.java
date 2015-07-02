@@ -15,29 +15,33 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.model;
+package cern.modesti.repository.jpa.alarm;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author Justin Lewis Salmon
  */
 @Entity
-public class AlarmPriority {
+@Table(name="valm_leafcats")
+public class AlarmCategory {
 
   @Id
+  @Column(name = "cat_name")
   private String value;
 
-  public AlarmPriority() {
+  public AlarmCategory() {
   }
 
-  public AlarmPriority(final String value) {
+  public AlarmCategory(final String value) {
     this.value = value;
   }
 
   /**
-   * @return the priority
+   * @return the value
    */
   public String getValue() {
     return value;

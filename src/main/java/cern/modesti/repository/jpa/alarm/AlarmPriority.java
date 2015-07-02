@@ -15,31 +15,29 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.model;
+package cern.modesti.repository.jpa.alarm;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
 
 /**
  * @author Justin Lewis Salmon
  */
 @Entity
-public class SubSystem {
+public class AlarmPriority {
 
   @Id
   private String value;
 
-  private String system;
+  public AlarmPriority() {
+  }
 
-  private String systemCode;
-
-  private String subsystem;
-
-  private String subsystemCode;
+  public AlarmPriority(final String value) {
+    this.value = value;
+  }
 
   /**
-   * @return the value
+   * @return the priority
    */
   public String getValue() {
     return value;
@@ -50,49 +48,5 @@ public class SubSystem {
    */
   public void setValue(String value) {
     this.value = value;
-  }
-
-  /**
-   * @return the system
-   */
-  public String getSystem() {
-    return system;
-  }
-
-  /**
-   * @param system the system to set
-   */
-  public void setSystem(String system) {
-    this.system = system;
-  }
-
-  public String getSystemCode() {
-    return systemCode;
-  }
-
-  public void setSystemCode(String systemCode) {
-    this.systemCode = systemCode;
-  }
-
-  /**
-   * @return the subsystem
-   */
-  public String getSubsystem() {
-    return subsystem;
-  }
-
-  /**
-   * @param subsystem the subsystem to set
-   */
-  public void setSubsystem(String subsystem) {
-    this.subsystem = subsystem;
-  }
-
-  public String getSubsystemCode() {
-    return subsystemCode;
-  }
-
-  public void setSubsystemCode(String subsystemCode) {
-    this.subsystemCode = subsystemCode;
   }
 }

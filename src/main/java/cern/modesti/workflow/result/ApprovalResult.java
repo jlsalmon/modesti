@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.workflow;
+package cern.modesti.workflow.result;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

@@ -1,4 +1,4 @@
-package cern.modesti.workflow;
+package cern.modesti.workflow.result;
 
 import javax.persistence.Id;
 import java.util.ArrayList;

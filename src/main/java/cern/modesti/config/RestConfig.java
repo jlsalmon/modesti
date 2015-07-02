@@ -11,17 +11,17 @@ import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
 import org.springframework.validation.Validator;
 
-import cern.modesti.model.AlarmCategory;
-import cern.modesti.model.AlarmPriority;
-import cern.modesti.model.DataType;
-import cern.modesti.model.Location;
-import cern.modesti.model.Person;
+import cern.modesti.repository.jpa.alarm.AlarmCategory;
+import cern.modesti.repository.jpa.alarm.AlarmPriority;
+import cern.modesti.repository.jpa.datatype.DataType;
+import cern.modesti.repository.jpa.location.Location;
+import cern.modesti.repository.jpa.person.Person;
 import cern.modesti.request.point.Point;
-import cern.modesti.model.Site;
-import cern.modesti.model.SubSystem;
-import cern.modesti.model.Zone;
-import cern.modesti.model.csam.SecurifireType;
-import cern.modesti.model.csam.WinterStatus;
+import cern.modesti.repository.jpa.location.site.Site;
+import cern.modesti.repository.jpa.subsystem.SubSystem;
+import cern.modesti.repository.jpa.location.zone.Zone;
+import cern.modesti.repository.jpa.csam.SecurifireType;
+import cern.modesti.repository.jpa.csam.WinterStatus;
 import cern.modesti.request.SearchTextConverter;
 
 @Configuration

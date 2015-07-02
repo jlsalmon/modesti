@@ -5,9 +5,14 @@ package cern.modesti.legacy.parser;
 
 import java.util.*;
 
-import cern.modesti.model.*;
+import cern.modesti.repository.jpa.alarm.AlarmCategory;
 import cern.modesti.repository.jpa.location.BuildingName;
+import cern.modesti.repository.jpa.location.Location;
+import cern.modesti.repository.jpa.location.site.Site;
+import cern.modesti.repository.jpa.location.zone.Zone;
+import cern.modesti.repository.jpa.person.Person;
 import cern.modesti.repository.jpa.person.PersonRepository;
+import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.text.WordUtils;

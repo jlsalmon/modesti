@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.schema;
+package cern.modesti.schema.category;
 
 import java.util.List;
 

@@ -27,26 +27,6 @@ public class WorkflowConfig {
     return new WorkflowService();
   }
 
-//  @Bean
-//  public RequestStatusManager requestStatusManager() {
-//    return new RequestStatusManager();
-//  }
-//
-//  @Bean
-//  public RequestValidationTask requestValidationTask() {
-//    return new RequestValidationTask();
-//  }
-//
-//  @Bean
-//  public RequestConfigurationTask requestConfigurationTask() {
-//    return new RequestConfigurationTask();
-//  }
-//
-//  @Bean
-//  public RequestSplittingTask requestSplittingTask() {
-//    return new RequestSplittingTask();
-//  }
-
   /**
    * Synchronise LDAP users and groups at startup via an InitializingBean.
    *

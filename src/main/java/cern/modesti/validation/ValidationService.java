@@ -1,4 +1,4 @@
-package cern.modesti.workflow;
+package cern.modesti.validation;
 
 import cern.modesti.repository.jpa.validation.DraftPoint;
 import cern.modesti.repository.jpa.validation.ValidationRepository;
@@ -38,8 +38,11 @@ public class ValidationService {
 
     for (Point point : request.getPoints()) {
       Map<String, Object> properties = point.getProperties();
-      DraftPoint draftPoint = new DraftPoint(Long.valueOf(request.getRequestId()), point.getId(), (String) properties.get("pointDataType"), (String)
-          properties.get("pointDescription"), (String) properties.get("gmaoCode"), (String) properties.get("otherCode"));
+      DraftPoint draftPoint = new DraftPoint(Long.valueOf(request.getRequestId()), point.getId(),
+          (String) properties.get("pointDataType"),
+          (String) properties.get("pointDescription"),
+          (String) properties.get("gmaoCode"),
+          (String) properties.get("otherCode"));
 
       draftPoints.add(draftPoint);
     }
@@ -64,8 +67,11 @@ public class ValidationService {
         // Set the error messages on the points
         for (Point point : points) {
           if (point.getId().equals(draftPoint.getLineNumber())) {
-            if (draftPoint.getExitCode() > 0) {
-              point.setErrors(Collections.singletonList(new Error("", Collections.singletonList(draftPoint.getExitText()))));
+            Long exitCode = draftPoint.getExitCode();
+            String exitText = draftPoint.getExitText();
+
+            if (exitCode != null && exitCode > 0) {
+              point.setErrors(Collections.singletonList(new Error("", Collections.singletonList(exitText != null ? exitText : "unknown error"))));
             }
           }
         }

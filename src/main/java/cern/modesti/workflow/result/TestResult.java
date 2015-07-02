@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.workflow;
+package cern.modesti.workflow.result;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,16 +13,16 @@ import javax.persistence.Id;
  * @author Justin Lewis Salmon
  *
  */
-public class AddressingResult {
+public class TestResult {
 
   @Id
   private Long id;
 
-  private Boolean addressed;
+  private Boolean passed;
 
   private List<String> errors;
 
-  public AddressingResult() {
+  public TestResult() {
   }
 
   /**
@@ -40,17 +40,17 @@ public class AddressingResult {
   }
 
   /**
-   * @return the ${workflowService.onApprovalCompleted(requestId, execution)}
+   * @return the passed
    */
-  public Boolean isAddressed() {
-    return addressed;
+  public Boolean getPassed() {
+    return passed;
   }
 
   /**
-   * @param addressed the addressed to set
+   * @param passed the passed to set
    */
-  public void setAddressed(Boolean addressed) {
-    this.addressed = addressed;
+  public void setPassed(Boolean passed) {
+    this.passed = passed;
   }
 
   /**

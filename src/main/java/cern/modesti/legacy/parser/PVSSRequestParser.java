@@ -5,12 +5,9 @@ package cern.modesti.legacy.parser;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
-import cern.modesti.model.SubSystem;
 import cern.modesti.request.point.Point;
 
 /**

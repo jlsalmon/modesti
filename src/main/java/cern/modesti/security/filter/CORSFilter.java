@@ -1,7 +1,6 @@
-package cern.modesti.filter;
+package cern.modesti.security.filter;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

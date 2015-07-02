@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 
-import cern.modesti.model.AlarmPriority;
 import cern.modesti.repository.base.ReadOnlyRepository;
 
 /**

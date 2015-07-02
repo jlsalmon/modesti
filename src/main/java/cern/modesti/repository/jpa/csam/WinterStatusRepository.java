@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 
-import cern.modesti.model.csam.WinterStatus;
 import cern.modesti.repository.base.ReadOnlyRepository;
 
 /**

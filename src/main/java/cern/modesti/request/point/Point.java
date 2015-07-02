@@ -72,7 +72,7 @@ public class Point implements Serializable {
 
   public Point(Long id) {
     this.id = id;
-    this.properties.put("pointDescription", "");
+    //this.properties.put("pointDescription", "");
   }
 
   /**

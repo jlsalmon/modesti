@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.model;
+package cern.modesti.repository.jpa.location;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

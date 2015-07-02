@@ -3,7 +3,6 @@
  */
 package cern.modesti.repository.mongo.domain;
 
-import cern.modesti.model.Domain;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 

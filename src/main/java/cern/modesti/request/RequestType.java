@@ -1,7 +1,9 @@
 package cern.modesti.request;
 
 /**
- * Created by jsalmon on 4/28/15.
+ * TODO
+ *
+ * @author Justin Lewis Salmon
  */
 public enum RequestType {
   CREATE,

@@ -23,7 +23,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import cern.modesti.model.Site;
 import cern.modesti.repository.base.ReadOnlyRepository;
 
 /**

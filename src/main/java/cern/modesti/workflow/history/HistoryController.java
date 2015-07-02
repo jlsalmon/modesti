@@ -31,8 +31,8 @@ public class HistoryController {
    * @return
    */
   @RequestMapping(value = "/requests/{id}/history", method = GET)
-  public HttpEntity<Resources<HistoryService.HistoricEvent>> getHistory(@PathVariable("id") String id) {
-    Resources<HistoryService.HistoricEvent> history = new Resources<>(historyService.getHistoryForRequest(id));
+  public HttpEntity<Resources<HistoricEvent>> getHistory(@PathVariable("id") String id) {
+    Resources<HistoricEvent> history = new Resources<>(historyService.getHistoryForRequest(id));
     return new ResponseEntity<>(history, HttpStatus.OK);
   }
 }

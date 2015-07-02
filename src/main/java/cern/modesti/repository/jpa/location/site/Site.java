@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.model;
+package cern.modesti.repository.jpa.location.site;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,17 +26,20 @@ import javax.persistence.Table;
  * @author Justin Lewis Salmon
  */
 @Entity
-@Table(name="valm_leafcats")
-public class AlarmCategory {
+@Table(name = "functionalities")
+public class Site {
 
   @Id
-  @Column(name = "cat_name")
+  @Column(name = "func_code")
   private String value;
 
-  public AlarmCategory() {
+  @Column(name = "func_gen")
+  private String generalFunctionality;
+
+  public Site() {
   }
 
-  public AlarmCategory(final String value) {
+  public Site(final String value) {
     this.value = value;
   }
 
@@ -52,5 +55,13 @@ public class AlarmCategory {
    */
   public void setValue(String value) {
     this.value = value;
+  }
+
+  public String getGeneralFunctionality() {
+    return generalFunctionality;
+  }
+
+  public void setGeneralFunctionality(String generalFunctionality) {
+    this.generalFunctionality = generalFunctionality;
   }
 }
