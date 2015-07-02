@@ -12,7 +12,7 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["voie", "winterBit"]
+          "members": ["winterChannel", "winterBit"]
         }
       ],
       "fields": [
