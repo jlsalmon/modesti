@@ -30,7 +30,7 @@ function RequestService($filter, $rootScope, $q, Restangular) {
   function getRequests() {
     var q = $q.defer();
 
-    Restangular.all('requests').getList().then(function (requests) {
+    Restangular.all('requests').getList({'sort': 'requestId', 'requestId.dir': 'desc'}).then(function (requests) {
         q.resolve(requests.data);
       },
 
