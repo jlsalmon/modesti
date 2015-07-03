@@ -36,7 +36,9 @@
         },
         {
           "id": "gmaoCode",
-          "type": "text",
+          "type": "autocomplete",
+          "minLength": 4,
+          "url": "gmaoCodes/search/find",
           "name_en": "GMAO Code",
           "name_fr": "Code GMAO",
           "help_en": "The equipment code known by the GMAO system",

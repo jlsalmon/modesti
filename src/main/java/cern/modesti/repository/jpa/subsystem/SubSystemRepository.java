@@ -43,6 +43,7 @@ public interface SubSystemRepository extends ReadOnlyRepository<SubSystem, Strin
       "SELECT tes_system_name || ' ' || tess_subsystem_name as value,                        " +
       "       tes_system_name as system,                                                     " +
       "       tes_system_code as systemCode,                                                 " +
+      "       tess_subsystem_id as id,                                                       " +
       "       tess_subsystem_name as subsystem,                                              " +
       "       tess_subsystem_code as subsystemCode                                           " +
       "FROM   vpts_sysdet " +

@@ -28,6 +28,8 @@ import javax.persistence.Id;
 public class SubSystem {
 
   @Id
+  private Long id;
+
   private String value;
 
   private String system;
@@ -37,6 +39,14 @@ public class SubSystem {
   private String subsystem;
 
   private String subsystemCode;
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   /**
    * @return the value

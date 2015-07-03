@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * TODO
@@ -44,11 +41,33 @@ public class ValidationService {
         continue;
       }
 
+      // Unfortunately the JSON object doesn't give us the Site, Location, Subsystem etc. objects back, but Maps instead.
+      // Not sure of the best way to solve that problem.
+      String gmaoCode = (String) ((Map) properties.get("gmaoCode")).get("value");
+      String functionalityCode = (String) ((Map) properties.get("site")).get("value");
+      String buildingName = (String) ((Map) properties.get("buildingName")).get("value");
+      String buildingNumber = (String) ((Map) properties.get("location")).get("buildingNumber");
+      String buildingFloor = (String) ((Map) properties.get("location")).get("floor");
+      String buildingRoom = (String) ((Map) properties.get("location")).get("room");
+      Integer responsibleId = (Integer) ((Map) properties.get("responsiblePerson")).get("id");
+      Integer subsystemId = (Integer) ((Map) properties.get("subsystem")).get("id");
+      Integer monitoringEquipmentId = (Integer) ((Map) properties.get("monitoringEquipment")).get("id");
+
+
       DraftPoint draftPoint = new DraftPoint(Long.valueOf(request.getRequestId()), point.getId(),
           (String) properties.get("pointDataType"),
           (String) properties.get("pointDescription"),
-          (String) properties.get("gmaoCode"),
-          (String) properties.get("otherCode"));
+          gmaoCode,
+          (String) properties.get("otherCode"),
+          functionalityCode,
+          buildingName,
+          buildingNumber,
+          buildingFloor,
+          buildingRoom,
+          (String) properties.get("pointAttribute"),
+          responsibleId,
+          subsystemId,
+          monitoringEquipmentId);
 
       draftPoints.add(draftPoint);
     }

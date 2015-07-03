@@ -33,6 +33,33 @@ public class DraftPoint {
   @Column(name = "drp_other_equip_code")
   String otherCode;
 
+  @Column(name = "drp_func_code")
+  String functionalityCode;
+
+  @Column(name = "drp_bld_name")
+  String buildingName;
+
+  @Column(name = "drp_bld_number")
+  String buildingNumber;
+
+  @Column(name = "drp_bld_floor")
+  String buildingFloor;
+
+  @Column(name = "drp_bld_room")
+  String buildingRoom;
+
+  @Column(name = "drp_pt_attribute")
+  String pointAttribute;
+
+  @Column(name = "drp_resp_id")
+  Integer responsibleId;
+
+  @Column(name = "drp_subsystem_id")
+  Integer subsystemId;
+
+  @Column(name = "drp_moneq_id")
+  Integer monitoringEquipmentId;
+
   @Column(name = "drp_exitcode")
   Long exitCode;
 
@@ -42,13 +69,24 @@ public class DraftPoint {
   public DraftPoint() {
   }
 
-  public DraftPoint(Long requestId, Long lineNumber, String datatype, String pointDescription, String gmaoCode, String otherCode) {
+  public DraftPoint(Long requestId, Long lineNumber, String datatype, String pointDescription, String gmaoCode, String otherCode, String functionalityCode,
+                    String buildingName, String buildingNumber, String buildingFloor, String buildingRoom, String pointAttribute, Integer responsibleId,
+                    Integer subsystemId, Integer monitoringEquipmentId) {
     this.requestId = requestId;
     this.lineNumber = lineNumber;
     this.datatype = datatype;
     this.pointDescription = pointDescription;
     this.gmaoCode = gmaoCode;
     this.otherCode = otherCode;
+    this.functionalityCode = functionalityCode;
+    this.buildingName = buildingName;
+    this.buildingNumber = buildingNumber;
+    this.buildingFloor = buildingFloor;
+    this.buildingRoom = buildingRoom;
+    this.pointAttribute = pointAttribute;
+    this.responsibleId = responsibleId;
+    this.subsystemId = subsystemId;
+    this.monitoringEquipmentId = monitoringEquipmentId;
   }
 
   public Long getLineNumber() {
@@ -73,6 +111,14 @@ public class DraftPoint {
 
   public String getOtherCode() {
     return otherCode;
+  }
+
+  public String getFunctionalityCode() {
+    return functionalityCode;
+  }
+
+  public String getPointAttribute() {
+    return pointAttribute;
   }
 
   public Long getExitCode() {

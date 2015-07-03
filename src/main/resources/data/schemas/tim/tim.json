@@ -30,8 +30,9 @@
           "help_fr": ""
         },
         {
-          "id": "monitoringEquipmentName",
-          "type": "text",
+          "id": "monitoringEquipment",
+          "type": "autocomplete",
+          "url": "monitoringEquipments/search/find",
           "name_en": "Equipment Name",
           "name_fr": "Equipment Name",
           "help_en": "",

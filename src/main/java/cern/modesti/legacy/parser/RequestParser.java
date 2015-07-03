@@ -5,7 +5,11 @@ package cern.modesti.legacy.parser;
 
 import java.util.*;
 
+import cern.modesti.config.MongoConfig;
 import cern.modesti.repository.jpa.alarm.AlarmCategory;
+import cern.modesti.repository.jpa.equipment.MonitoringEquipment;
+import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
+import cern.modesti.repository.jpa.gmao.GmaoCode;
 import cern.modesti.repository.jpa.location.BuildingName;
 import cern.modesti.repository.jpa.location.Location;
 import cern.modesti.repository.jpa.location.site.Site;
@@ -41,6 +45,7 @@ public abstract class RequestParser {
 
   private SubSystemRepository subSystemRepository;
   private PersonRepository personRepository;
+  private MonitoringEquipmentRepository monitoringEquipmentRepository;
 
   /**
    * @param sheet
@@ -173,11 +178,15 @@ public abstract class RequestParser {
     properties.put("subsystem", parseSubsystem(properties));
     properties.put("location", parseLocation(properties));
     properties.put("buildingName", new BuildingName((String) properties.get("buildingName")));
+    properties.put("gmaoCode", new GmaoCode((String) properties.get("gmaoCode")));
     properties.put("site", new Site((String) properties.get("site")));
+    properties.put("alarmCategory", new AlarmCategory((String) properties.get("alarmCategory")));
     if (properties.get("zone") != null) {
       properties.put("zone", new Zone(String.valueOf(((Double) properties.get("zone")).intValue())));
     }
-    properties.put("alarmCategory", new AlarmCategory((String) properties.get("alarmCategory")));
+    if (properties.get("monitoringEquipmentName") != null) {
+      properties.put("monitoringEquipment", parseMonitoringEquipment(properties));
+    }
 
 
     point.setProperties(properties);
@@ -287,6 +296,30 @@ public abstract class RequestParser {
     properties.remove("floor");
     properties.remove("room");
     return location;
+  }
+
+  /**
+   *
+   * @param properties
+   * @return
+   */
+  private MonitoringEquipment parseMonitoringEquipment(Map<String, Object> properties) {
+    String monitoringEquipmentName = (String) properties.get("monitoringEquipmentName");
+    MonitoringEquipment monitoringEquipment = monitoringEquipmentRepository.findOneByValue(monitoringEquipmentName);
+
+    if (monitoringEquipment == null) {
+      // Try to find by the "impname" property
+      monitoringEquipment = monitoringEquipmentRepository.findOneByImpname(monitoringEquipmentName);
+
+      if (monitoringEquipment == null) {
+        LOG.warn("Could not determine monitoring equipment for point");
+        monitoringEquipment = new MonitoringEquipment();
+        monitoringEquipment.setValue(monitoringEquipmentName);
+      }
+    }
+
+    properties.remove("monitoringEquipmentName");
+    return monitoringEquipment;
   }
 
   /**
@@ -401,5 +434,9 @@ public abstract class RequestParser {
    */
   public void setSubSystemRepository(SubSystemRepository subSystemRepository) {
     this.subSystemRepository = subSystemRepository;
+  }
+
+  public void setMonitoringEquipmentRepository(MonitoringEquipmentRepository monitoringEquipmentRepository) {
+    this.monitoringEquipmentRepository = monitoringEquipmentRepository;
   }
 }
