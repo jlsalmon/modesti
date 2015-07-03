@@ -41,9 +41,8 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
     super.configureRepositoryRestConfiguration(config);
 
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
-    config.exposeIdsFor(Point.class, Person.class, Site.class, Location.class, Zone.class, SubSystem.class, DataType.class, AlarmCategory.class,
-        AlarmPriority.class, Field.class, TextField.class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class, WinterStatus
-            .class, SecurifireType.class, BuildingName.class);
+    config.exposeIdsFor(Point.class, Person.class, Site.class, Location.class, Zone.class, SubSystem.class, AlarmCategory.class, Field.class, TextField
+        .class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class, BuildingName.class);
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);
