@@ -338,7 +338,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    * @returns {*}
    */
   function getEquipmentIdentifier(point) {
-    var equipmentIdentifier, gmaoCode = point.properties.gmaoCode, otherCode = point.properties.otherCode;
+    var equipmentIdentifier, gmaoCode = point.properties.gmaoCode.value, otherCode = point.properties.otherCode;
 
     if (gmaoCode && otherCode) {
       if (gmaoCode === otherCode) {
