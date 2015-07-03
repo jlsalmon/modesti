@@ -26,10 +26,6 @@
         {
           "id": "deadBandType",
           "type": "options",
-          "options": [
-            "ABS",
-            "PCT"
-          ],
           "name_en": "Deadband Type",
           "name_fr": "Deadband Type",
           "help_en": "",

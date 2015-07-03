@@ -18,7 +18,7 @@
       "fields": [
         {
           "id": "winterChannel",
-          "type": "numeric",
+          "type": "options",
           "name_en": "Channel",
           "name_fr": "Voie",
           "help_en": "",
@@ -27,7 +27,6 @@
         {
           "id": "winterBit",
           "type": "options",
-          "options": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
           "name_en": "Bit",
           "name_fr": "Bit",
           "help_en": "For points managed by the Winter system, the bit number that stores the point value",

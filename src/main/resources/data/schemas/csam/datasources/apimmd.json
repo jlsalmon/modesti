@@ -19,7 +19,6 @@
         {
           "id": "blockType",
           "type": "options",
-          "options": [1, 2, 3, 4],
           "name_en": "Block Type",
           "name_fr": "Code du block",
           "help_en": "For PLC cabled points, the block type.",
@@ -36,7 +35,6 @@
         {
           "id": "bitId",
           "type": "options",
-          "options": [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
           "name_en": "Bit ID",
           "name_fr": "Bit ID",
           "help_en": "",
@@ -45,7 +43,6 @@
         {
           "id": "nativePrefix",
           "type": "options",
-          "options": ["PET", "PES", "PWA", "OBI", "OBO", "INT"],
           "name_en": "Native Prefix",
           "name_fr": "Native Prefix",
           "help_en": "",

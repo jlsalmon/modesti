@@ -12,7 +12,7 @@
       "fields": [
         {
           "id": "blockType",
-          "type": "numeric",
+          "type": "options",
           "name_en": "Block Type",
           "name_fr": "Code du block",
           "help_en": "For PLC cabled points, the block type.",
@@ -28,7 +28,7 @@
         },
         {
           "id": "bitId",
-          "type": "numeric",
+          "type": "options",
           "name_en": "Bit ID",
           "name_fr": "Numero du bit",
           "help_en": "",

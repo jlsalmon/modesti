@@ -12,12 +12,12 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["area", "securitonGroup", "securitonDetecteur", "securitonStatus"]
+          "members": ["securitonArea", "securitonGroup", "securitonDetecteur", "securitonStatus"]
         }
       ],
       "fields": [
         {
-          "id": "area",
+          "id": "securitonArea",
           "type": "text",
           "name_en": "Area",
           "name_fr": "Area",
@@ -43,15 +43,14 @@
         {
           "id": "securitonStatus",
           "type": "options",
-          "options": [0, 1, 2, 3, 4, 5, 6],
           "name_en": "Status",
           "name_fr": "Status",
           "help_en": "",
           "help_fr": ""
         },
         {
-          "id": "mcu",
-          "type": "numeric",
+          "id": "securitonMcu",
+          "type": "options",
           "name_en": "MCU",
           "name_fr": "MCU",
           "help_en": "",

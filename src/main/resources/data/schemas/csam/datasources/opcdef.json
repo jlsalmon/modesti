@@ -43,7 +43,6 @@
         {
           "id": "opcdefStatus",
           "type": "options",
-          "options": [1, 2, 3, 4, 5],
           "name_en": "Status",
           "name_fr": "Status",
           "help_en": "",

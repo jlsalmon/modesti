@@ -28,7 +28,6 @@
         {
           "id": "pointDataType",
           "type": "options",
-          "options": "datatypes",
           "required": true,
           "name_en": "Data Type",
           "name_fr": "Type de point",
@@ -166,7 +165,6 @@
         {
           "id": "priorityCode",
           "type": "options",
-          "options": "alarmPriorities",
           "name_en": "Priority",
           "name_fr": "Niveau",
           "help_en": "Enter the priority of the alarm between 0 and 3",

@@ -84,6 +84,12 @@ public class CSAMRequestParser extends RequestParser {
     // LSAC special cases
     if (title.equals("type") && column == 22) {
       title = "lsacType";
+    } else if (title.equals("rack")) {
+      title = "lsacRack";
+    } else if (title.equals("card")) {
+      title = "lsacCard";
+    } else if (title.equals("port")) {
+      title = "lsacPort";
     }
 
     // PLC - APIMMD special cases
@@ -113,10 +119,14 @@ public class CSAMRequestParser extends RequestParser {
     // SECURITON special cases
     if (title.equals("group") && column == 37) {
       title = "securitonGroup";
+    } else if (title.equals("area")) {
+      title = "securitonArea";
     } else if (title.equals("detecteur") && column == 38) {
       title = "securitonDetecteur";
     } else if (title.equals("status") && column == 39) {
       title = "securitonStatus";
+    } else if (title.equals("mcu")) {
+      title = "securitonMcu";
     }
 
     // SECURIFIRE special cases

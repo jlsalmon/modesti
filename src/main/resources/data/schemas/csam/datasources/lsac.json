@@ -19,10 +19,6 @@
         {
           "id": "lsacType",
           "type": "options",
-          "options": [
-            "IN",
-            "OUT"
-          ],
           "name_en": "Type",
           "name_fr": "Type",
           "help_en": "Type of the point (IN = entry, OUT = exit)",
@@ -30,7 +26,7 @@
         },
         {
           "id": "lsacRack",
-          "type": "numeric",
+          "type": "options",
           "name_en": "Rack",
           "name_fr": "Rack",
           "help_en": "",
@@ -38,7 +34,7 @@
         },
         {
           "id": "lsacCard",
-          "type": "numeric",
+          "type": "options",
           "name_en": "Card",
           "name_fr": "Card",
           "help_en": "",
@@ -46,7 +42,7 @@
         },
         {
           "id": "lsacPort",
-          "type": "numeric",
+          "type": "options",
           "name_en": "Port",
           "name_fr": "Port",
           "help_en": "",

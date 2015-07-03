@@ -3,6 +3,7 @@ package cern.modesti.schema;
 import java.util.ArrayList;
 import java.util.List;
 
+import cern.modesti.schema.options.OptionService;
 import cern.modesti.schema.category.Category;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,9 @@ public class SchemaService {
 
   @Autowired
   private SchemaRepository schemaRepository;
+
+  @Autowired
+  private OptionService optionService;
 
   /**
    * TODO rewrite this and explain it better
@@ -60,13 +64,13 @@ public class SchemaService {
     if (parentSchema == null) {
       throw new IllegalStateException("Parent schema \"" + domainSchema.getParent() + "\" for domain " + domainSchema.getName() + " was not found");
     }
-    schema = mergeParentSchema(schema, parentSchema);
+    schema = mergeSchema(schema, parentSchema);
 
     // Merge the domain schema
     if (domainSchema == null) {
       throw new IllegalStateException("Schema for domain \"" + request.getDomain() + "\" was not found");
     }
-    schema = mergeDomainSchema(schema, domainSchema);
+    schema = mergeSchema(schema, domainSchema);
 
     // Merge all sibling schemas
     for (String category : categories) {
@@ -77,125 +81,56 @@ public class SchemaService {
         throw new IllegalStateException("Schema for category \"" + category + "\" was not found");
       }
 
-      schema = mergeSiblingSchema(schema, categorySchema);
+      schema = mergeSchema(schema, categorySchema);
     }
+
+    // Inject options
+    optionService.injectOptions(schema);
 
     return schema;
   }
 
   /**
+   * Merge schema b into schema a.
    *
-   * @param schema
-   * @param sibling
+   * @param a
+   * @param b
+   *
    * @return
    */
-  Schema mergeSiblingSchema(Schema schema, Schema sibling) {
-    List<Category> categories = schema.getCategories();
+  Schema mergeSchema(Schema a, Schema b) {
+    List<Category> categories = a.getCategories();
     List<Category> newCategories = new ArrayList<>();
 
-    for (Category siblingCategory : sibling.getCategories()) {
-      if (!categories.contains(siblingCategory)) {
-        newCategories.add(siblingCategory);
+    for (Category newCategory : b.getCategories()) {
+      if (!categories.contains(newCategory)) {
+        newCategories.add(newCategory);
 
       } else {
-        Category category = categories.get(categories.indexOf(siblingCategory));
+        Category category = categories.get(categories.indexOf(newCategory));
         List<Field> newFields = new ArrayList<>();
 
-        for (Field siblingField : siblingCategory.getFields()) {
-          if (!category.getFields().contains(siblingField)) {
-            newFields.add(siblingField);
+        for (Field newField : newCategory.getFields()) {
+          if (!category.getFields().contains(newField)) {
+            newFields.add(newField);
           }
+        }
+
+        // Copy the disabled state list if the child doesn't specify it.
+        if (newCategory.getDisabledStates() != null && category.getDisabledStates() == null) {
+          category.setDisabledStates(newCategory.getDisabledStates());
+        }
+
+        // Copy the editable state list if the child doesn't specify it.
+        if (newCategory.getEditableStates() != null && category.getEditableStates() == null) {
+          category.setEditableStates(newCategory.getEditableStates());
         }
 
         category.getFields().addAll(newFields);
       }
     }
 
-    schema.getCategories().addAll(newCategories);
-    return schema;
-  }
-
-  /**
-   * @param schema
-   * @param domain
-   *
-   * @return
-   */
-  Schema mergeDomainSchema(Schema schema, Schema domain) {
-    List<Category> categories = schema.getCategories();
-    List<Category> newCategories = new ArrayList<>();
-
-    for (Category domainCategory : domain.getCategories()) {
-      if (!categories.contains(domainCategory)) {
-        newCategories.add(domainCategory);
-
-      } else {
-        Category category = categories.get(categories.indexOf(domainCategory));
-        List<Field> newFields = new ArrayList<>();
-
-        for (Field domainField : domainCategory.getFields()) {
-          if (!category.getFields().contains(domainField)) {
-            newFields.add(domainField);
-          }
-        }
-
-        // Copy the parent disabled state list if the child doesn't specify it.
-        if (domainCategory.getDisabledStates() != null && category.getDisabledStates() == null) {
-          category.setDisabledStates(domainCategory.getDisabledStates());
-        }
-
-        // Copy the parent editable state list if the child doesn't specify it.
-        if (domainCategory.getEditableStates() != null && category.getEditableStates() == null) {
-          category.setEditableStates(domainCategory.getEditableStates());
-        }
-
-        category.getFields().addAll(newFields);
-      }
-    }
-
-    schema.getCategories().addAll(newCategories);
-    return schema;
-  }
-
-  /**
-   * @param schema
-   * @param parent
-   *
-   * @return
-   */
-  Schema mergeParentSchema(Schema schema, Schema parent) {
-    List<Category> categories = schema.getCategories();
-    List<Category> newCategories = new ArrayList<>();
-
-    for (Category parentCategory : parent.getCategories()) {
-      if (!categories.contains(parentCategory)) {
-        newCategories.add(parentCategory);
-
-      } else {
-        Category category = categories.get(categories.indexOf(parentCategory));
-        List<Field> newFields = new ArrayList<>();
-
-        for (Field parentField : parentCategory.getFields()) {
-          if (!category.getFields().contains(parentField)) {
-            newFields.add(parentField);
-          }
-        }
-
-        // Copy the parent disabled state list if the child doesn't specify it.
-        if (parentCategory.getDisabledStates() != null && category.getDisabledStates() == null) {
-          category.setDisabledStates(parentCategory.getDisabledStates());
-        }
-
-        // Copy the parent editable state list if the child doesn't specify it.
-        if (parentCategory.getEditableStates() != null && category.getEditableStates() == null) {
-          category.setEditableStates(parentCategory.getEditableStates());
-        }
-
-        category.getFields().addAll(newFields);
-      }
-    }
-
-    schema.getCategories().addAll(newCategories);
-    return schema;
+    a.getCategories().addAll(newCategories);
+    return a;
   }
 }
