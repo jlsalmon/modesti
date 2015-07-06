@@ -20,5 +20,5 @@ public interface MonitoringEquipmentRepository extends ReadOnlyRepository<Monito
   MonitoringEquipment findOneByValue(@Param("query") String query);
 
   @RestResource(exported = false)
-  MonitoringEquipment findOneByImpname(@Param("query") String query);
+  MonitoringEquipment findOneByName(@Param("query") String query);
 }

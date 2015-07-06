@@ -313,7 +313,7 @@ public abstract class RequestParser {
 
     if (monitoringEquipment == null) {
       // Try to find by the "impname" property
-      monitoringEquipment = monitoringEquipmentRepository.findOneByImpname(monitoringEquipmentName);
+      monitoringEquipment = monitoringEquipmentRepository.findOneByName(monitoringEquipmentName);
 
       if (monitoringEquipment == null) {
         LOG.warn("Could not determine monitoring equipment for point");

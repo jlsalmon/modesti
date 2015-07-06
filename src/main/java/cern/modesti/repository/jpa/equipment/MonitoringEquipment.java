@@ -19,7 +19,7 @@ public class MonitoringEquipment {
   private Integer id;
 
   @Column(name = "moe_impname")
-  private String impname;
+  private String name;
 
   @Column(name = "moe_moneq_name")
   private String value;
@@ -27,9 +27,9 @@ public class MonitoringEquipment {
   public MonitoringEquipment() {
   }
 
-  public MonitoringEquipment(Integer id, String impname, String value) {
+  public MonitoringEquipment(Integer id, String name, String value) {
     this.id = id;
-    this.impname = impname;
+    this.name = name;
     this.value = value;
   }
 
@@ -41,12 +41,12 @@ public class MonitoringEquipment {
     this.id = id;
   }
 
-  public String getImpname() {
-    return impname;
+  public String getName() {
+    return name;
   }
 
-  public void setImpname(String impname) {
-    this.impname = impname;
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getValue() {
