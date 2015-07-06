@@ -3,9 +3,21 @@
  */
 package cern.modesti.legacy.parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import cern.modesti.config.MongoConfig;
+import org.apache.commons.lang3.text.WordUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cern.modesti.legacy.exception.RequestParseException;
+import cern.modesti.legacy.exception.VersionNotSupportedException;
 import cern.modesti.repository.jpa.alarm.AlarmCategory;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipment;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
@@ -18,19 +30,11 @@ import cern.modesti.repository.jpa.person.Person;
 import cern.modesti.repository.jpa.person.PersonRepository;
 import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
-import com.google.common.base.CaseFormat;
-import org.apache.commons.lang3.text.WordUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import cern.modesti.legacy.exception.RequestParseException;
-import cern.modesti.legacy.exception.VersionNotSupportedException;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
 import cern.modesti.request.point.Point;
+
+import com.google.common.base.CaseFormat;
 
 /**
  * @author Justin Lewis Salmon
@@ -313,8 +317,6 @@ public abstract class RequestParser {
 
       if (monitoringEquipment == null) {
         LOG.warn("Could not determine monitoring equipment for point");
-        monitoringEquipment = new MonitoringEquipment();
-        monitoringEquipment.setValue(monitoringEquipmentName);
       }
     }
 
