@@ -3,14 +3,15 @@
  */
 package cern.modesti.legacy.parser;
 
-import cern.modesti.legacy.exception.RequestParseException;
-import cern.modesti.request.point.Point;
-import org.apache.poi.ss.usermodel.Sheet;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.poi.ss.usermodel.Sheet;
+
+import cern.modesti.legacy.exception.RequestParseException;
+import cern.modesti.request.point.Point;
 
 /**
  * @author Justin Lewis Salmon
@@ -37,9 +38,9 @@ public class CSAMRequestParser extends RequestParser {
 
     // General mappings
     columnTitleMappings.put("description", "pointDescription");
-    columnTitleMappings.put("dataType", "pointDataType");
-    columnTitleMappings.put("equipementCse", "gmaoCode");
-    columnTitleMappings.put("equipementCapteur", "otherCode");
+    columnTitleMappings.put("dataType", "pointDatatype");
+    columnTitleMappings.put("equipementCse", "gmaoCode"); // TODO this is wrong
+    columnTitleMappings.put("equipementCapteur", "otherCode"); // TODO this is wrong
     columnTitleMappings.put("typeDetectionSubSystem", "subSystemName");
     columnTitleMappings.put("identifiant", "responsiblePersonId");
     columnTitleMappings.put("nom", "responsiblePersonName");

@@ -12,12 +12,12 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["safeplcByte", "safeplcBit"]
+          "members": ["safeplcByteId", "safeplcBitId"]
         }
       ],
       "fields": [
         {
-          "id": "safeplcByte",
+          "id": "safeplcByteId",
           "type": "numeric",
           "name_en": "Byte",
           "name_fr": "Byte",
@@ -25,7 +25,7 @@
           "help_fr": ""
         },
         {
-          "id": "safeplcBit",
+          "id": "safeplcBitId",
           "type": "options",
           "name_en": "Bit",
           "name_fr": "Bit",

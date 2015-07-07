@@ -1,5 +1,5 @@
 {
-  "name": "opcdef",
+  "name": "safedef",
   "domain": "csam",
   "categories": [
     {
@@ -12,12 +12,12 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["module", "line", "address", "opcdefStatus"]
+          "members": ["safedefModule", "safedefLine", "safedefAddress", "safedefStatus"]
         }
       ],
       "fields": [
         {
-          "id": "module",
+          "id": "safedefModule",
           "type": "text",
           "name_en": "Module",
           "name_fr": "Module",
@@ -25,7 +25,7 @@
           "help_fr": ""
         },
         {
-          "id": "line",
+          "id": "safedefLine",
           "type": "text",
           "name_en": "Line",
           "name_fr": "Line",
@@ -33,7 +33,7 @@
           "help_fr": ""
         },
         {
-          "id": "address",
+          "id": "safedefAddress",
           "type": "text",
           "name_en": "Address",
           "name_fr": "Address",
@@ -41,7 +41,7 @@
           "help_fr": ""
         },
         {
-          "id": "opcdefStatus",
+          "id": "safedefStatus",
           "type": "options",
           "name_en": "Status",
           "name_fr": "Status",

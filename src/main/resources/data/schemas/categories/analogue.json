@@ -32,7 +32,7 @@
           "help_fr": ""
         },
         {
-          "id": "valueDeadBand",
+          "id": "valueDeadband",
           "type": "text",
           "name_en": "Value Deadband",
           "name_fr": "Value Deadband",
@@ -40,7 +40,7 @@
           "help_fr": ""
         },
         {
-          "id": "deadBandType",
+          "id": "deadbandType",
           "type": "options",
           "name_en": "Deadband Type",
           "name_fr": "Deadband Type",

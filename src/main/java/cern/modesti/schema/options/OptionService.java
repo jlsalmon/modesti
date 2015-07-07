@@ -1,16 +1,21 @@
 package cern.modesti.schema.options;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Service;
+
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.field.Field;
 import cern.modesti.schema.field.OptionsField;
-import com.google.common.base.CaseFormat;
-import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.*;
-import java.util.stream.IntStream;
+import com.google.common.base.CaseFormat;
 
 /**
  * TODO
@@ -57,7 +62,7 @@ public class OptionService {
   }
 
   /**
-   * Take an option string and convert it to a list of options. The option string may be in list format already (e.g. "a, b, c") or it may be in range
+   * Take an option string and convert it to a list of options. The option string may be in list format already (e.g. "a,b,c") or it may be in range
    * format (e.g. "0:9").
    *
    * @param optionString
@@ -85,6 +90,6 @@ public class OptionService {
    * @return
    */
   private String propertyToColumnName(String fieldId) {
-    return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, fieldId);
+    return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, fieldId);
   }
 }

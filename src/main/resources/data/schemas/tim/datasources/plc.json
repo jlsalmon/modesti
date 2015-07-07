@@ -11,7 +11,7 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
-          "id": "blockType",
+          "id": "plcBlockType",
           "type": "options",
           "name_en": "Block Type",
           "name_fr": "Code du block",
@@ -19,7 +19,7 @@
           "help_fr": "Pour les points cables sur PLC, le code du block."
         },
         {
-          "id": "wordId",
+          "id": "plcWordId",
           "type": "numeric",
           "name_en": "Word ID",
           "name_fr": "Numero du mot",
@@ -27,7 +27,7 @@
           "help_fr": "Pour les points cables sur PLC, le numero du mot qui stocke la valeur du point"
         },
         {
-          "id": "bitId",
+          "id": "plcBitId",
           "type": "options",
           "name_en": "Bit ID",
           "name_fr": "Numero du bit",
@@ -35,7 +35,7 @@
           "help_fr": ""
         },
         {
-          "id": "nativePrefix",
+          "id": "plcNativePrefix",
           "type": "text",
           "name_en": "Native Prefix",
           "name_fr": "Native Prefix",
@@ -43,7 +43,7 @@
           "help_fr": ""
         },
         {
-          "id": "slaveAddress",
+          "id": "plcSlaveAddress",
           "type": "numeric",
           "name_en": "Slave Address",
           "name_fr": "Slave Address",
@@ -51,7 +51,7 @@
           "help_fr": ""
         },
         {
-          "id": "connectId",
+          "id": "plcConnectId",
           "type": "text",
           "name_en": "Connect ID",
           "name_fr": "Connect ID",

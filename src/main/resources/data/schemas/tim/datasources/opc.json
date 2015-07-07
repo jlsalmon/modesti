@@ -11,7 +11,7 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
-          "id": "tagname",
+          "id": "opcTagname",
           "type": "text",
           "name_en": "Tagname",
           "name_fr": "Nom du tag",
@@ -19,7 +19,7 @@
           "help_fr": "Pour les points transmis a TIM par un SCADA (e.g. WIZCON, ENS), le nom du tag qui sera lu par TIM"
         },
         {
-          "id": "tagtype",
+          "id": "opcTagtype",
           "type": "text",
           "name_en": "Tagtype",
           "name_fr": "Tagtype",
@@ -27,7 +27,7 @@
           "help_fr": ""
         },
         {
-          "id": "redundantAddress",
+          "id": "opcRedundantAddress",
           "type": "text",
           "name_en": "Redundant Address",
           "name_fr": "Redundant Address",
@@ -35,7 +35,7 @@
           "help_fr": ""
         },
         {
-          "id": "addressType",
+          "id": "opcAddressType",
           "type": "text",
           "name_en": "Address Type",
           "name_fr": "Address Type",
@@ -43,7 +43,7 @@
           "help_fr": ""
         },
         {
-          "id": "nameSpace",
+          "id": "opcNamespace",
           "type": "text",
           "name_en": "Namespace",
           "name_fr": "Namespace",
@@ -51,15 +51,15 @@
           "help_fr": ""
         },
         {
-          "id": "cmdType",
+          "id": "opcCommandType",
           "type": "text",
-          "name_en": "CMD Type",
-          "name_fr": "CMD Type",
+          "name_en": "Command Type",
+          "name_fr": "Command Type",
           "help_en": "",
           "help_fr": ""
         },
         {
-          "id": "sampleRate",
+          "id": "opcSampleRate",
           "type": "text",
           "name_en": "Sample Rate",
           "name_fr": "Sample Rate",

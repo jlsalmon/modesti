@@ -10,7 +10,7 @@
       ],
       "fields": [
         {
-          "id": "dipApplication",
+          "id": "dipClientApp",
           "type": "text",
           "name_en": "Application",
           "name_fr": "Application",

@@ -11,7 +11,7 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
-          "id": "item",
+          "id": "dipItem",
           "type": "text",
           "name_en": "Item",
           "name_fr": "Item",
@@ -19,7 +19,7 @@
           "help_fr": "Pour les points transmis par le systeme DIP, le nom de la donnee transmise"
         },
         {
-          "id": "field",
+          "id": "dipField",
           "type": "text",
           "name_en": "Field",
           "name_fr": "Field",
@@ -27,7 +27,7 @@
           "help_fr": ""
         },
         {
-          "id": "index",
+          "id": "dipIndex",
           "type": "numeric",
           "name_en": "Index",
           "name_fr": "Index",

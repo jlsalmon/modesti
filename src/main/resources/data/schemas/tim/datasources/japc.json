@@ -11,7 +11,7 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
-          "id": "protocol",
+          "id": "japcProtocol",
           "type": "text",
           "name_en": "Protocol",
           "name_fr": "Protocol",
@@ -19,7 +19,7 @@
           "help_fr": ""
         },
         {
-          "id": "service",
+          "id": "japcService",
           "type": "text",
           "name_en": "Service",
           "name_fr": "Service",
@@ -27,7 +27,7 @@
           "help_fr": ""
         },
         {
-          "id": "deviceName",
+          "id": "japcDeviceName",
           "type": "text",
           "name_en": "Device Name",
           "name_fr": "Device Name",
@@ -35,7 +35,7 @@
           "help_fr": ""
         },
         {
-          "id": "propertyName",
+          "id": "japcPropertyName",
           "type": "text",
           "name_en": "Property Name",
           "name_fr": "Property Name",
@@ -43,7 +43,7 @@
           "help_fr": ""
         },
         {
-          "id": "indexFieldName",
+          "id": "japcIndexFieldName",
           "type": "text",
           "name_en": "Index Field Name",
           "name_fr": "Index Field Name",
@@ -51,7 +51,7 @@
           "help_fr": ""
         },
         {
-          "id": "indexName",
+          "id": "japcIndexName",
           "type": "text",
           "name_en": "Index Name",
           "name_fr": "Index Name",
@@ -59,7 +59,7 @@
           "help_fr": ""
         },
         {
-          "id": "dataFieldName",
+          "id": "japcDataFieldName",
           "type": "text",
           "name_en": "Data Field Name",
           "name_fr": "Data Field Name",
@@ -67,7 +67,7 @@
           "help_fr": ""
         },
         {
-          "id": "columnIndex",
+          "id": "japcColumnIndex",
           "type": "numeric",
           "name_en": "Column Index",
           "name_fr": "Column Index",
@@ -75,7 +75,7 @@
           "help_fr": ""
         },
         {
-          "id": "rowIndex",
+          "id": "japcRowIndex",
           "type": "numeric",
           "name_en": "Row Index",
           "name_fr": "Row Index",

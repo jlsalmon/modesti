@@ -6,7 +6,7 @@
       "name": "General",
       "fields": [
         {
-          "id": "timeDeadBand",
+          "id": "timeDeadband",
           "type": "text",
           "name_en": "Time Deadband",
           "name_fr": "Time Deadband",
@@ -14,18 +14,10 @@
           "help_fr": ""
         },
         {
-          "id": "pointComplementaryInfo",
+          "id": "pointCompInfo",
           "type": "text",
           "name_en": "Complementary Info",
           "name_fr": "Complementary Info",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "userApplicationData",
-          "type": "text",
-          "name_en": "User Application Data",
-          "name_fr": "User Application Data",
           "help_en": "",
           "help_fr": ""
         },
@@ -61,7 +53,7 @@
           "help_fr": "La categorie d'alarme dans laquelle l'alarme sera diffusee"
         },
         {
-          "id": "autoCallNumber",
+          "id": "autocallNumber",
           "type": "numeric",
           "name_en": "Autocall Number",
           "name_fr": "Autocall Number",

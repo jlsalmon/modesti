@@ -22,7 +22,7 @@
       "name": "Alarms",
       "fields": [
         {
-          "id": "pvssAlarmSource",
+          "id": "laserSource",
           "type": "text",
           "required": true,
           "name_en": "PVSS Alarm Source",
@@ -40,7 +40,7 @@
           "help_fr": "La categorie d'alarme dans laquelle l'alarme sera diffusee"
         },
         {
-          "id": "autoCallNumber",
+          "id": "autocallNumber",
           "type": "numeric",
           "name_en": "Autocall Number",
           "name_fr": "Autocall Number",

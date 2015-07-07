@@ -11,12 +11,12 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["valueDeadBand", "deadBandType"]
+          "members": ["logValueDeadband", "logDeadbandType"]
         }
       ],
       "fields": [
         {
-          "id": "valueDeadBand",
+          "id": "logValueDeadband",
           "type": "text",
           "name_en": "Value Deadband",
           "name_fr": "Value Deadband",
@@ -24,7 +24,7 @@
           "help_fr": ""
         },
         {
-          "id": "deadBandType",
+          "id": "logDeadbandType",
           "type": "options",
           "name_en": "Deadband Type",
           "name_fr": "Deadband Type",
@@ -32,7 +32,7 @@
           "help_fr": ""
         },
         {
-          "id": "timeDeadBand",
+          "id": "logTimeDeadband",
           "type": "text",
           "name_en": "Time Deadband",
           "name_fr": "Time Deadband",
