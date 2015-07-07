@@ -1,5 +1,5 @@
 {
-  "name": "opc",
+  "name": "safeplc",
   "domain": "csam",
   "categories": [
     {
@@ -12,12 +12,12 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["opcByte", "opcBit"]
+          "members": ["safeplcByte", "safeplcBit"]
         }
       ],
       "fields": [
         {
-          "id": "opcByte",
+          "id": "safeplcByte",
           "type": "numeric",
           "name_en": "Byte",
           "name_fr": "Byte",
@@ -25,9 +25,8 @@
           "help_fr": ""
         },
         {
-          "id": "opcBit",
+          "id": "safeplcBit",
           "type": "options",
-          "options": [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
           "name_en": "Bit",
           "name_fr": "Bit",
           "help_en": "",

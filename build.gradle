@@ -61,6 +61,8 @@ dependencies {
     compile("org.slf4j:slf4j-api:1.7.+")
     compile("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
 
+    compile("org.projectlombok:lombok:1.16.4")
+
     testCompile("junit:junit:4.11")
     testCompile("org.springframework:spring-test:4.1.6.RELEASE")
     testCompile("org.mockito:mockito-core")

@@ -5,12 +5,15 @@ import cern.modesti.repository.jpa.validation.ValidationRepository;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Error;
 import cern.modesti.request.point.Point;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.base.CaseFormat;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * TODO
@@ -18,8 +21,8 @@ import java.util.*;
  * @author Justin Lewis Salmon
  */
 @Service
+@Slf4j
 public class ValidationService {
-  private static final Logger LOG = LoggerFactory.getLogger(ValidationService.class);
 
   @Autowired
   ValidationRepository repository;
@@ -41,33 +44,51 @@ public class ValidationService {
         continue;
       }
 
-      // Unfortunately the JSON object doesn't give us the Site, Location, Subsystem etc. objects back, but Maps instead.
-      // Not sure of the best way to solve that problem.
-      String gmaoCode = (String) ((Map) properties.get("gmaoCode")).get("value");
-      String functionalityCode = (String) ((Map) properties.get("site")).get("value");
-      String buildingName = (String) ((Map) properties.get("buildingName")).get("value");
-      String buildingNumber = (String) ((Map) properties.get("location")).get("buildingNumber");
-      String buildingFloor = (String) ((Map) properties.get("location")).get("floor");
-      String buildingRoom = (String) ((Map) properties.get("location")).get("room");
-      Integer responsibleId = (Integer) ((Map) properties.get("responsiblePerson")).get("id");
-      Integer subsystemId = (Integer) ((Map) properties.get("subsystem")).get("id");
-      Integer monitoringEquipmentId = (Integer) ((Map) properties.get("monitoringEquipment")).get("id");
-
-
+      // Create a DraftPoint object. Pull out all the objects into their scalar values ready for validation. Unfortunately the JSON object doesn't give us
+      // the Site, Location, Subsystem etc. objects back, but Maps instead. So we have to cast. Not sure of the best way to solve that problem.
       DraftPoint draftPoint = new DraftPoint(Long.valueOf(request.getRequestId()), point.getId(),
-          (String) properties.get("pointDataType"),
-          (String) properties.get("pointDescription"),
-          gmaoCode,
-          (String) properties.get("otherCode"),
-          functionalityCode,
-          buildingName,
-          buildingNumber,
-          buildingFloor,
-          buildingRoom,
-          (String) properties.get("pointAttribute"),
-          responsibleId,
-          subsystemId,
-          monitoringEquipmentId);
+
+          // General
+          getProperty(properties, "pointDatatype", String.class),
+          getProperty(properties, "pointDescription", String.class),
+          getObjectProperty(properties, "gmaoCode", "value", String.class),
+          getProperty(properties, "otherCode", String.class),
+          getProperty(properties, "pointAttribute", String.class),
+          getObjectProperty(properties, "responsiblePerson", "id", Integer.class),
+          getObjectProperty(properties, "subsystem", "id", Integer.class),
+          getObjectProperty(properties, "monitoringEquipment", "id", Integer.class),
+          getProperty(properties, "pointComplementaryInfo", String.class),
+
+          // Location
+          getObjectProperty(properties, "buildingName", "value", String.class),
+          getObjectProperty(properties, "location", "buildingNumber", String.class),
+          getObjectProperty(properties, "location", "floor", String.class),
+          getObjectProperty(properties, "location", "room", String.class),
+          getObjectProperty(properties, "site", "value", String.class),
+          getObjectProperty(properties, "zone", "value", String.class),
+
+          // Alarms
+          getProperty(properties, "alarmValue", Integer.class),
+          getProperty(properties, "priorityCode", Integer.class),
+          getObjectProperty(properties, "alarmCategory", "value", String.class),
+
+          // Alarm Help
+          getProperty(properties, "alarmCauses", String.class),
+          getProperty(properties, "alarmConsequences", String.class),
+          getProperty(properties, "workHoursTask", String.class),
+          getProperty(properties, "outsideHoursTask", String.class),
+
+          // PLC (APIMMD)
+          getProperty(properties, "blockType", Integer.class),
+          getProperty(properties, "wordId", Integer.class),
+          getProperty(properties, "bitId", Integer.class),
+          getProperty(properties, "nativePrefix", String.class),
+          getProperty(properties, "slaveAddress", Integer.class),
+          getProperty(properties, "connectId", String.class),
+
+          // Exit parameters
+          null, null
+      );
 
       draftPoints.add(draftPoint);
     }
@@ -87,7 +108,7 @@ public class ValidationService {
       List<Point> points = request.getPoints();
 
       for (DraftPoint draftPoint : draftPoints) {
-        LOG.debug("draft point exit: " + draftPoint);
+        log.debug("draft point exit: " + draftPoint);
 
         // Set the error messages on the points
         for (Point point : points) {
@@ -104,6 +125,54 @@ public class ValidationService {
     }
 
     return valid;
+  }
+
+  /**
+   *
+   * @param properties
+   * @param property
+   * @param klass
+   * @param <T>
+   * @return
+   */
+  private <T> T getProperty(Map<String, Object> properties, String property, Class<T> klass) {
+    return klass.cast(properties.get(property));
+  }
+
+  /**
+   *
+   * @param properties
+   * @param objectName
+   * @param property
+   * @param klass
+   * @param <T>
+   * @return
+   */
+  private <T> T getObjectProperty(Map<String, Object> properties, String objectName, String property, Class<T> klass) {
+    Object o = null;
+    T t = null;
+
+    Map map = (Map) properties.get(objectName);
+    if (map != null) {
+      o = map.get(property);
+    }
+
+    if (o != null) {
+      t = klass.cast(o);
+    }
+
+    return t;
+  }
+
+  /**
+   *
+   * @param property
+   * @return
+   */
+  private String propertyToColumnName(String property) {
+    String columnName = "drp_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, property);
+    log.debug(String.format("converted property name %s to column name %s", property, columnName));
+    return columnName;
   }
 
   /**

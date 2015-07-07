@@ -3,21 +3,9 @@
  */
 package cern.modesti.legacy.parser;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.apache.commons.lang3.text.WordUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import cern.modesti.legacy.exception.RequestParseException;
-import cern.modesti.legacy.exception.VersionNotSupportedException;
+import cern.modesti.config.MongoConfig;
 import cern.modesti.repository.jpa.alarm.AlarmCategory;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipment;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
@@ -30,11 +18,19 @@ import cern.modesti.repository.jpa.person.Person;
 import cern.modesti.repository.jpa.person.PersonRepository;
 import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
+import com.google.common.base.CaseFormat;
+import org.apache.commons.lang3.text.WordUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cern.modesti.legacy.exception.RequestParseException;
+import cern.modesti.legacy.exception.VersionNotSupportedException;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
 import cern.modesti.request.point.Point;
-
-import com.google.common.base.CaseFormat;
 
 /**
  * @author Justin Lewis Salmon
@@ -232,6 +228,7 @@ public abstract class RequestParser {
 
     if (people.size() == 0 || people.size() > 1) {
       LOG.warn("Could not determine responsible person for point");
+      person = new Person();
     } else {
       person = people.get(0);
       properties.put("responsiblePerson", person);
@@ -258,6 +255,7 @@ public abstract class RequestParser {
       List<SubSystem> subsystems = subSystemRepository.find(subSystemName);
       if (subsystems.size() == 0 || subsystems.size() > 1) {
         LOG.warn("Could not determine subsystem for point");
+        subsystem = new SubSystem();
       } else {
         subsystem = subsystems.get(0);
       }
@@ -317,6 +315,7 @@ public abstract class RequestParser {
 
       if (monitoringEquipment == null) {
         LOG.warn("Could not determine monitoring equipment for point");
+        monitoringEquipment = new MonitoringEquipment();
       }
     }
 

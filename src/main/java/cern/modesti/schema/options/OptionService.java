@@ -4,6 +4,7 @@ import cern.modesti.schema.Schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.field.Field;
 import cern.modesti.schema.field.OptionsField;
+import com.google.common.base.CaseFormat;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -18,35 +19,6 @@ import java.util.stream.IntStream;
  */
 @Service
 public class OptionService {
-
-  private static final Map<String, String> fieldToColumnNames = new HashMap<>();
-
-  /**
-   * TODO: the column names from CG_REF_CODES should be standardised to match the field names of the schema. This will remove the need for this explicit
-   * mapping.
-   */
-  static {
-    fieldToColumnNames.put("pointDataType", "PTDATATYPES");
-    fieldToColumnNames.put("priorityCode", "ALARMPRI");
-    fieldToColumnNames.put("deadBandType", "VALDBANDTYPE");
-    fieldToColumnNames.put("publisherName", "DIP_PUBLISHER");
-    fieldToColumnNames.put("lsacType", "SAFELSAC_ADDTYPE");
-    fieldToColumnNames.put("lsacCard", "SAFELSAC_CARDPOS");
-    fieldToColumnNames.put("lsacPort", "SAFELSAC_PORTNO");
-    fieldToColumnNames.put("lsacRack", "SAFELSAC_RACKNO");
-    fieldToColumnNames.put("blockType", "PLC_BLOCKTYPE");
-    fieldToColumnNames.put("bitId", "PLC_BITID");
-    fieldToColumnNames.put("nativePrefix", "PLC_APIMMD_PREFIX");
-    fieldToColumnNames.put("opcdefStatus", "SAFEDEF_STATUS");
-    fieldToColumnNames.put("securifireStatus", "SAFESFIRE_SECSTATUS");
-    fieldToColumnNames.put("securifireType", "SAFESFIRE_SECTYPE");
-    fieldToColumnNames.put("securitonStatus", "SAFESPRO_SECSTATUS");
-    fieldToColumnNames.put("securitonMcu", "SAFESPRO_MCU");
-    fieldToColumnNames.put("winterChannel", "SAFEWNTR_CHANNEL");
-    fieldToColumnNames.put("winterBit", "SAFEWNTR_BITALARM");
-    // ??? what is this one
-    fieldToColumnNames.put("???", "SAFEPLC_BITID");
-  }
 
   @PersistenceContext
   private EntityManager entityManager;
@@ -69,13 +41,13 @@ public class OptionService {
   }
 
   /**
-   * @param fieldId
+   * @param property
    *
    * @return
    */
-  private List<String> getOptions(String fieldId) {
+  private List<String> getOptions(String property) {
     // Translate the field id to its corresponding column name
-    String columnName = translateFieldToColumnName(fieldId);
+    String columnName = propertyToColumnName(property);
 
     // Execute the query to get the options
     String optionString = (String) entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODE_VALUES('%s') %s FROM DUAL", columnName,
@@ -112,7 +84,7 @@ public class OptionService {
    *
    * @return
    */
-  private String translateFieldToColumnName(String fieldId) {
-    return fieldToColumnNames.get(fieldId);
+  private String propertyToColumnName(String fieldId) {
+    return CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, fieldId);
   }
 }

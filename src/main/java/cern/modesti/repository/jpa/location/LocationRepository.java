@@ -69,4 +69,8 @@ public interface LocationRepository extends ReadOnlyRepository<Location, String>
 
   @Cacheable("locations")
   List<Location> find(@Param("query") String query);
+
+//  @Query(value = "" +
+//      "SELECT ", nativeQuery = true)
+//  Location find(@Param("buildingNumber") String buildingNumber, @Param("buildingFloor") String buildingFloor, @Param("buildingRoom") String buildingRoom);
 }
