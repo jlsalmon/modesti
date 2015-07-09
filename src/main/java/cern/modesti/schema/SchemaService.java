@@ -126,6 +126,11 @@ public class SchemaService {
           category.setEditableStates(newCategory.getEditableStates());
         }
 
+        // Copy the constraint list
+        if (newCategory.getConstraints() != null && category.getConstraints() == null) {
+          category.setConstraints(newCategory.getConstraints());
+        }
+
         category.getFields().addAll(newFields);
       }
     }
