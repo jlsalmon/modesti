@@ -208,46 +208,7 @@ function ColumnService($http, $translate) {
       var instance = this.instance;
       var row = this.row;
 
-      instance.addHook('beforeChange', function(change, source) {
-        console.log('beforeChange()');
-      });
-
-      instance.addHook('afterChange', function(change, source) {
-        if (source == 'loadData') {
-          return;
-        }
-
-        // hacky hacky hack hack
-        console.log('afterChange()');
-
-        var row = change[0][0], prop = change[0][1], oldVal = change[0][2], newVal = change[0][3];
-
-        var point = instance.getSourceDataAtRow(row);
-        // get the outer object i.e. properties.location.value -> location
-        prop = prop.split('.')[1];
-
-        if (prop == 'location') {
-          var parts = newVal.split('/');
-          var buildingNumber  = parts[0];
-          if (parts.length > 1) {
-            parts = parts[1].split('-');
-            var floor = parts[0];
-            if (parts.length > 1) {
-              var room = parts[1];
-            }
-          }
-
-          var location = {
-            buildingNumber: buildingNumber,
-            floor: floor,
-            room: room,
-            value: newVal
-          };
-
-          point.properties.location = location;
-        }
-      });
-
+      // Don't make a call if the query is less than the minimum length
       if (field.minLength && query.length < field.minLength) {
         return;
       }
@@ -311,8 +272,6 @@ function ColumnService($http, $translate) {
 
     return column;
   }
-
-
 
   return service;
 }

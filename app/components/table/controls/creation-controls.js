@@ -248,10 +248,10 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       return;
     }
 
-    if (source == 'paste') {
-      console.log('paste');
-      return;
-    }
+    //if (source == 'paste') {
+    //  console.log('paste');
+    //  return;
+    //}
 
     // Make sure the point IDs are consecutive
     for (var i = 0, len = self.rows.length; i < len; i++) {
@@ -273,6 +273,9 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         dirty = true;
         self.rows[index].dirty = true;
       }
+
+      // This is a workaround. See function documentation for info.
+      saveNewValue(index, property, newValue);
     }
 
     // If nothing changed, there's nothing to do! Otherwise, save the request.
@@ -284,6 +287,91 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
           sendModificationSignal();
         }
       });
+    }
+  }
+
+  /**
+   * It would be really great to get rid of this code, but currently Handsontable does not support columns backed
+   * by complex objects, so it's necessary until then. See https://github.com/handsontable/handsontable/issues/2578.
+   *
+   * TODO: consolidate common functionality with column.source() function in ColumnService
+   *
+   * @param row
+   * @param property
+   * @param newValue
+   */
+  function saveNewValue(row, property, newValue) {
+    if (property.indexOf('.') == -1) {
+      return;
+    }
+
+    var point = self.hot.getSourceDataAtRow(row);
+    // get the outer object i.e. properties.location.value -> location
+    var prop = property.split('.')[1];
+    var field = getField(prop);
+
+
+    var params = {};
+    if (field.params == undefined) {
+      // By default, searches are done via parameter called 'query'
+      params.query = newValue;
+    } else {
+      for (var i in field.params) {
+        var param = field.params[i];
+
+        // The parameter might be a sub-property of another property (i.e. contains a dot). In
+        // that case, find the property of the point and add it as a search parameter. This
+        // acts like a filter for a search, based on another property.
+        // TODO: add "filter" parameter to schema instead of this?
+        if (param.indexOf('.') > -1) {
+          var props = param.split('.');
+          params[props[1]] = point.properties[props[0]][props[1]];
+        }
+        else {
+          params[param] = query;
+        }
+      }
+    }
+
+    if (prop == field.id && field.type == 'autocomplete') {
+      $http.get(BACKEND_BASE_URL + '/' + field.url, {
+        params : params,
+        cache: true
+      }).then(function(response) {
+        if (!response.data.hasOwnProperty('_embedded')) {
+          return [];
+        }
+
+        var returnPropertyName = field.url.split('/')[0];
+        response.data._embedded[returnPropertyName].map(function(item) {
+          var value = (field.model == undefined && typeof item == 'object') ? item.value : item[field.model];
+
+          if (value == newValue) {
+            console.log('saving new value');
+            delete item._links;
+            point.properties[prop] = item;
+          }
+        });
+      });
+    }
+  }
+
+  /**
+   *
+   * @param property
+   * @returns {*}
+   */
+  function getField(property) {
+    for (var i in self.parent.schema.categories) {
+      var category = self.parent.schema.categories[i];
+
+      for (var j in category.fields) {
+        var field = category.fields[j];
+
+        if (field.id == property) {
+          return field;
+        }
+      }
     }
   }
 

@@ -18,13 +18,24 @@ function SchemaService($q, $http) {
   /**
    *
    * @param request
+   * @param extraCategory
    * @returns {*}
    */
-  function getSchema(request) {
+  function getSchema(request, extraCategory) {
     console.log('fetching schema');
     var q = $q.defer();
 
-    $http.get(request._links.schema.href).then(function (response) {
+    var url = request._links.schema.href;
+
+    if (extraCategory) {
+      if (url.indexOf('?categories') > -1) {
+        url += ',' + extraCategory;
+      } else {
+        url += '?categories=' + extraCategory;
+      }
+    }
+
+    $http.get(url).then(function (response) {
       var schema = response.data;
       console.log('fetched schema: ' + schema.name);
 

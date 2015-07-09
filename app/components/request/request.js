@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $http, $timeout, $modal, request, children, schema, tasks, RequestService, ColumnService, AlertService, HistoryService) {
+function RequestController($scope, $http, $timeout, $modal, request, children, schema, tasks, RequestService, ColumnService, SchemaService, AlertService, HistoryService) {
   var self = this;
 
   self.request = request;
@@ -255,7 +255,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
             subsystemCode = '?';
           }
 
-          var site = (point.properties.site && point.properties.site.value ? point.properties.site.value : '?');
+          var site = (point.properties.functionality && point.properties.functionality.value ? point.properties.functionality.value : '?');
           var equipmentIdentifier = getEquipmentIdentifier(point);
           var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
 
@@ -302,9 +302,9 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
             subsystemName = subsystem.subsystem;
           }
 
-          if (point.properties.site.value) {
-            $http.get(BACKEND_BASE_URL + '/sites/search/find', {
-              params: {query: point.properties.site.value},
+          if (point.properties.functionality.value) {
+            $http.get(BACKEND_BASE_URL + '/functionalities/search/find', {
+              params: {query: point.properties.functionality.value},
               cache: true
             }).then(function (response) {
               if (!response.data.hasOwnProperty('_embedded')) {
@@ -312,9 +312,9 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
               }
 
               var func = '?';
-              if (response.data._embedded.sites.length == 1) {
-                var site = response.data._embedded.sites[0];
-                func = site.generalFunctionality;
+              if (response.data._embedded.functionalities.length == 1) {
+                var functionality = response.data._embedded.functionalities[0];
+                func = functionality.generalFunctionality;
               }
 
               var equipmentIdentifier = getEquipmentIdentifier(point);
@@ -394,20 +394,9 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   function addExtraCategory(categoryName) {
     console.log("adding category " + categoryName);
 
-    var schemaLink = self.request._links.schema.href;
-
-    if (schemaLink.indexOf('?categories') > -1) {
-      schemaLink += ',' + categoryName;
-    } else {
-      schemaLink += '?categories=' + categoryName;
-    }
-
-    // TODO refactor this into a service
-    $http.get(schemaLink).then(function (response) {
-      console.log('fetched new schema: ' + response.data.name);
-      self.schema = response.data;
-      self.request._links.schema.href = schemaLink;
-
+    SchemaService.getSchema(request, categoryName).then(function(schema) {
+      console.log('fetched new schema: ' + schema.name);
+      self.schema = schema;
       getAvailableExtraCategories();
 
       // Find the new category and activate it
@@ -417,10 +406,6 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
           activateCategory(category);
         }
       }
-    },
-
-    function (error) {
-      console.log('error fetching schema: ' + error);
     });
   }
 
