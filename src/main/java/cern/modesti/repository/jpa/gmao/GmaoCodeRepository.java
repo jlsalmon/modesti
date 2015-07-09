@@ -15,7 +15,6 @@ import java.util.List;
  */
 public interface GmaoCodeRepository extends ReadOnlyRepository<GmaoCode, Long> {
 
-  //@Query(value = "SELECT obj_code AS value FROM mtf_objects WHERE obj_code LIKE UPPER(:query || '%')", nativeQuery = true)
   @RestResource(rel = "find", path = "find")
   @Cacheable("gmaoCodes")
   List<GmaoCode> findByValueStartsWithIgnoreCase(@Param("query") String query);

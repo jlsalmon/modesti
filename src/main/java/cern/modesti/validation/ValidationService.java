@@ -1,10 +1,8 @@
 package cern.modesti.validation;
 
-import cern.modesti.repository.jpa.validation.DraftPoint;
-import cern.modesti.repository.jpa.validation.ValidationRepository;
 import cern.modesti.request.Request;
-import cern.modesti.request.point.Point;
 import cern.modesti.request.point.Error;
+import cern.modesti.request.point.Point;
 import com.google.common.base.CaseFormat;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
+import javax.persistence.PersistenceContext;
+import javax.persistence.StoredProcedureQuery;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,10 +28,10 @@ import java.util.stream.Collectors;
 public class ValidationService {
 
   @Autowired
-  ValidationRepository repository;
+  private JdbcTemplate jdbcTemplate;
 
-  @Autowired
-  JdbcTemplate jdbcTemplate;
+  @PersistenceContext
+  private EntityManager entityManager;
 
   /**
    * @param request
@@ -39,11 +41,9 @@ public class ValidationService {
    */
   @Transactional
   public boolean validateRequest(Request request) {
-
     // Delete all points with this request id
     String query = "DELETE FROM DRAFT_POINTS_NEW WHERE drp_request_id = ?";
     jdbcTemplate.update(query, request.getRequestId());
-
 
     for (Point point : request.getPoints()) {
       List<Object[]> data = new ArrayList<>();
@@ -98,7 +98,7 @@ public class ValidationService {
     }
 
     // Call the stored procedure
-    boolean valid = repository.validate(request);
+    boolean valid = validate(request);
 
     if (!valid) {
       // Read the points back to get the exit codes and error messages
@@ -109,6 +109,37 @@ public class ValidationService {
     }
 
     return valid;
+  }
+
+  /**
+   *
+   * @param request
+   * @return
+   */
+  public boolean validate(Request request) {
+    log.debug("validating via stored procedure");
+
+    // Make sure that the draft points have been properly flushed to the database
+    entityManager.flush();
+
+    // Create and call the stored procedure
+    StoredProcedureQuery storedProcedure = entityManager.createStoredProcedureQuery("TIMPKREQCHECK.STP_CHECK_REQUEST");
+    storedProcedure.registerStoredProcedureParameter(0, Integer.class, ParameterMode.IN);
+    storedProcedure.registerStoredProcedureParameter(1, Integer.class, ParameterMode.OUT);
+    storedProcedure.registerStoredProcedureParameter(2, String.class, ParameterMode.OUT);
+    storedProcedure.setParameter(0, Integer.valueOf(request.getRequestId()));
+    storedProcedure.execute();
+
+    // Get the output parameters
+    Integer exitcode = (Integer) storedProcedure.getOutputParameterValue(1);
+    String exittext = (String) storedProcedure.getOutputParameterValue(2);
+
+    // Clear the persistence context so that we get the exit codes and messages when
+    // we read back the processed draft points
+    entityManager.clear();
+
+    log.debug(String.format("validation result: (%d) %s", exitcode, exittext));
+    return exitcode == 0;
   }
 
   /**
