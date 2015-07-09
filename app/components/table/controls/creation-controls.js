@@ -328,22 +328,22 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
           params[props[1]] = point.properties[props[0]][props[1]];
         }
         else {
-          params[param] = query;
+          params[param] = newValue;
         }
       }
     }
 
     if (prop == field.id && field.type == 'autocomplete') {
       $http.get(BACKEND_BASE_URL + '/' + field.url, {
-        params : params,
+        params: params,
         cache: true
-      }).then(function(response) {
+      }).then(function (response) {
         if (!response.data.hasOwnProperty('_embedded')) {
           return [];
         }
 
         var returnPropertyName = field.url.split('/')[0];
-        response.data._embedded[returnPropertyName].map(function(item) {
+        response.data._embedded[returnPropertyName].map(function (item) {
           var value = (field.model == undefined && typeof item == 'object') ? item.value : item[field.model];
 
           if (value == newValue) {

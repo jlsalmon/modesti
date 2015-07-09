@@ -338,18 +338,20 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    * @returns {*}
    */
   function getEquipmentIdentifier(point) {
-    var equipmentIdentifier, gmaoCode = point.properties.gmaoCode.value, otherCode = point.properties.otherCode;
+    var equipmentIdentifier;
+    var gmaoCode = point.properties.gmaoCode ? point.properties.gmaoCode.value : '';
+    var otherEquipCode = point.properties.otherEquipCode;
 
-    if (gmaoCode && otherCode) {
-      if (gmaoCode === otherCode) {
+    if (gmaoCode && otherEquipCode) {
+      if (gmaoCode === otherEquipCode) {
         equipmentIdentifier = gmaoCode;
       } else {
-        equipmentIdentifier = gmaoCode + '_' + otherCode;
+        equipmentIdentifier = gmaoCode + '_' + otherEquipCode;
       }
-    } else if (gmaoCode && !otherCode) {
+    } else if (gmaoCode && !otherEquipCode) {
       equipmentIdentifier = gmaoCode;
-    } else if (!gmaoCode && otherCode) {
-      equipmentIdentifier = otherCode;
+    } else if (!gmaoCode && otherEquipCode) {
+      equipmentIdentifier = otherEquipCode;
     } else {
       equipmentIdentifier = '?'
     }
