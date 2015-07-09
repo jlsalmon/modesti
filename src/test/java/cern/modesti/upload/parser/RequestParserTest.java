@@ -227,7 +227,6 @@ public class RequestParserTest {
     // General
     assertTrue(properties.get("pointDescription") != null);
     assertTrue(properties.get("pointDatatype") != null);
-    assertTrue(properties.get("gmaoCode") != null);
     assertTrue(properties.get("subsystem") != null);
     assertTrue(properties.get("responsiblePerson") != null);
     assertTrue(properties.get("pointAttribute") != null);
@@ -250,7 +249,8 @@ public class RequestParserTest {
 
   private void assertTimFieldsExist(Map<String, Object> properties) {
     // General
-    assertTrue(properties.get("otherCode") != null); // TIM and PVSS requests have "Other Code", CSAM does not
+    assertTrue(properties.get("gmaoCode") != null);
+    assertTrue(properties.get("otherEquipCode") != null);
     assertTrue(properties.get("timeDeadband") != null);
     assertTrue(properties.get("pointCompInfo") != null);
     assertTrue(properties.get("userApplicationData") != null);
@@ -363,6 +363,8 @@ public class RequestParserTest {
 
   private void assertPvssFieldsExist(Map<String, Object> properties) {
     // General
+    assertTrue(properties.get("gmaoCode") != null);
+    assertTrue(properties.get("otherEquipCode") != null);
     assertTrue(properties.get("pvssReferenceId") != null);
     assertTrue(properties.get("laserSource") != null);
     assertTrue(properties.get("autocallNumber") != null);
