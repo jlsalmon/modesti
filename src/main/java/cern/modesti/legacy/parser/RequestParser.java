@@ -181,13 +181,15 @@ public abstract class RequestParser {
     properties.put("location", parseLocation(properties));
     properties.put("buildingName", new BuildingName((String) properties.get("buildingName")));
     properties.put("gmaoCode", new GmaoCode((String) properties.get("gmaoCode")));
+    properties.put("csamDetector", new GmaoCode((String) properties.get("csamDetector")));
+    properties.put("csamPlcname", parseMonitoringEquipment(properties, "csamPlcname"));
     properties.put("functionality", parseFunctionality(properties));
     properties.put("alarmCategory", new AlarmCategory((String) properties.get("alarmCategory")));
     if (properties.get("safetyZone") != null) {
       properties.put("safetyZone", new Zone(String.valueOf(((Double) properties.get("safetyZone")).intValue())));
     }
     if (properties.get("monitoringEquipmentName") != null) {
-      properties.put("monitoringEquipment", parseMonitoringEquipment(properties));
+      properties.put("monitoringEquipment", parseMonitoringEquipment(properties, "monitoringEquipment"));
     }
 
 
@@ -325,8 +327,8 @@ public abstract class RequestParser {
    * @param properties
    * @return
    */
-  private MonitoringEquipment parseMonitoringEquipment(Map<String, Object> properties) {
-    String monitoringEquipmentName = (String) properties.get("monitoringEquipmentName");
+  private MonitoringEquipment parseMonitoringEquipment(Map<String, Object> properties, String property) {
+    String monitoringEquipmentName = (String) properties.get(property);
     MonitoringEquipment monitoringEquipment = monitoringEquipmentRepository.findOneByValue(monitoringEquipmentName);
 
     if (monitoringEquipment == null) {

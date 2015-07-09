@@ -37,6 +37,7 @@ public class TIMRequestParser extends RequestParser {
 
     // General mappings
     columnTitleMappings.put("pointDataType", "pointDatatype");
+    columnTitleMappings.put("otherCode", "otherEquipCode");
     columnTitleMappings.put("id", "responsiblePersonId");
     columnTitleMappings.put("pointComplementaryInfo", "pointCompInfo");
 
