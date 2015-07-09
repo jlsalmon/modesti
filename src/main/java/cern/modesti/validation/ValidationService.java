@@ -45,7 +45,7 @@ public class ValidationService {
       }
 
       // Create a DraftPoint object. Pull out all the objects into their scalar values ready for validation. Unfortunately the JSON object doesn't give us
-      // the Site, Location, Subsystem etc. objects back, but Maps instead. So we have to cast. Not sure of the best way to solve that problem.
+      // the Functionality, Location, Subsystem etc. objects back, but Maps instead. So we have to cast. Not sure of the best way to solve that problem.
       DraftPoint draftPoint = new DraftPoint(Long.valueOf(request.getRequestId()), point.getId(),
 
           // General
@@ -64,7 +64,7 @@ public class ValidationService {
           getObjectProperty(properties, "location", "buildingNumber", String.class),
           getObjectProperty(properties, "location", "floor", String.class),
           getObjectProperty(properties, "location", "room", String.class),
-          getObjectProperty(properties, "site", "value", String.class),
+          getObjectProperty(properties, "functionality", "value", String.class),
           getObjectProperty(properties, "zone", "value", String.class),
 
           // Alarms

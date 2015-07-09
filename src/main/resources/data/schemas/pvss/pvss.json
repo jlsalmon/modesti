@@ -9,6 +9,24 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
+          "id": "gmaoCode",
+          "type": "autocomplete",
+          "minLength": 4,
+          "url": "gmaoCodes/search/find",
+          "name_en": "GMAO Code",
+          "name_fr": "Code GMAO",
+          "help_en": "The equipment code known by the GMAO system",
+          "help_fr": "Le code de l'equipement connu par le système GMAO"
+        },
+        {
+          "id": "otherCode",
+          "type": "text",
+          "name_en": "Other Code",
+          "name_fr": "Autre Code",
+          "help_en": "A code identifying the equipment concerned if no GMAO code exists, or sub-equipment code that complements the GMAO code",
+          "help_fr": "Un code identifiant l'equipement concerne si aucun code GMAO existe, ou le code du sous-équipement qui complète le code GMAO"
+        },
+        {
           "id": "pvssReferenceId",
           "type": "text",
           "name_en": "PVSS Reference ID",

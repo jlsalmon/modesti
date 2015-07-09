@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -38,7 +39,7 @@ public class OptionServiceTest {
 
   @Test
   public void optionListIsInjectedCorrectly() {
-    when(entityManager.createNativeQuery(anyString(), Matchers.<Class>any())).thenReturn(query);
+    when(entityManager.createNativeQuery(anyString())).thenReturn(query);
     when(query.getSingleResult()).thenReturn("a,b,c");
 
     Schema schema = getTestSchema();
@@ -54,7 +55,7 @@ public class OptionServiceTest {
 
   @Test
   public void optionRangeIsInjectedCorrectly() {
-    when(entityManager.createNativeQuery(anyString(), Matchers.<Class>any())).thenReturn(query);
+    when(entityManager.createNativeQuery(anyString())).thenReturn(query);
     when(query.getSingleResult()).thenReturn("-2:2");
 
     Schema schema = getTestSchema();

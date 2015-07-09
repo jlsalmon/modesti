@@ -56,11 +56,11 @@
           "help_fr": ""
         },
         {
-          "id": "conversionFactor",
-          "type": "text",
+          "id": "plcAdConversion",
+          "type": "options",
           "name_en": "Conversion Factor",
           "name_fr": "Conversion Factor",
-          "help_en": "",
+          "help_en": "Analogue/Digital conversion factor",
           "help_fr": ""
         }
       ]

@@ -4,7 +4,9 @@
 package cern.modesti.legacy.parser;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -12,7 +14,6 @@ import cern.modesti.request.point.Point;
 
 /**
  * @author Justin Lewis Salmon
- *
  */
 public class PVSSRequestParser extends RequestParser {
 
@@ -22,34 +23,52 @@ public class PVSSRequestParser extends RequestParser {
   private static final Double MINIMUM_SUPPORTED_VERSION = 1.1;
 
   public static final int FIRST_DATA_COLUMN = 2;
-  public static final int LAST_DATA_COLUMN = 35;
+  public static final int LAST_DATA_COLUMN = 36;
   public static final int POINT_ID_COLUMN = 1;
+
+  private Map<String, String> columnTitleMappings = new HashMap<>();
 
   /**
    * @param sheet
    */
   public PVSSRequestParser(Sheet sheet) {
     super(sheet);
+
+    // General mappings
+    columnTitleMappings.put("pointDataType", "pointDatatype");
+    columnTitleMappings.put("id", "responsiblePersonId");
+    columnTitleMappings.put("pointComplementaryInfo", "pointCompInfo");
+
+    // Alarm mappings
+    columnTitleMappings.put("pvssAlarmSource", "laserSource");
+    columnTitleMappings.put("value", "alarmValue");
+    columnTitleMappings.put("category", "alarmCategory");
+    columnTitleMappings.put("autoCallNumber", "autocallNumber");
+
+    // Alarm Help mappings
+    columnTitleMappings.put("alarmConsequences", "alarmConseq");
+    columnTitleMappings.put("taskDuringWorkingHoursActionHo", "workHoursTask");
+    columnTitleMappings.put("taskOutsideWorkingHoursActionHho", "outsideHoursTask");
+
+    // Location mappings
+    columnTitleMappings.put("site", "functionalityCode");
+    columnTitleMappings.put("number", "buildingNumber");
+    columnTitleMappings.put("floor", "buildingFloor");
+    columnTitleMappings.put("room", "buildingRoom");
+
+    // Analogue mappings
+    columnTitleMappings.put("valueDeadBand", "valueDeadband");
+    columnTitleMappings.put("deadBandType", "deadbandType");
   }
 
   @Override
   protected String parseColumnTitle(String title, int column) {
-    if (title.equals("id") && column == 8) {
-      title = "responsiblePersonId";
-    }
-    else if (title.equals("name") && column == 9) {
+    String mapping = columnTitleMappings.get(title);
+    if (mapping != null) {
+      title = mapping;
+    } else if (title.equals("name") && column == 9) {
       title = "responsiblePersonName";
-    }
-    else if (title.equals("value")) {
-      title = "alarmValue";
-    }
-    else if (title.equals("category")) {
-      title = "alarmCategory";
-    }
-    else if (title.equals("number")) {
-      title = "buildingNumber";
-    }
-    else if (title.equals("name")) {
+    } else if (title.equals("name") && column == 15) {
       title = "buildingName";
     }
 
@@ -73,7 +92,7 @@ public class PVSSRequestParser extends RequestParser {
   }
 
   @Override
-  protected int getLastDataColumn() {
+  protected int getLastDataColumn(Double version) {
     return LAST_DATA_COLUMN;
   }
 

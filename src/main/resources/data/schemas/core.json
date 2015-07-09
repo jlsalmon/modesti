@@ -35,24 +35,6 @@
           "help_fr": "Entrez la type du point suggère dans la liste"
         },
         {
-          "id": "gmaoCode",
-          "type": "autocomplete",
-          "minLength": 4,
-          "url": "gmaoCodes/search/find",
-          "name_en": "GMAO Code",
-          "name_fr": "Code GMAO",
-          "help_en": "The equipment code known by the GMAO system",
-          "help_fr": "Le code de l'equipement connu par le système GMAO"
-        },
-        {
-          "id": "otherCode",
-          "type": "text",
-          "name_en": "Other Code",
-          "name_fr": "Autre Code",
-          "help_en": "A code identifying the equipment concerned if no GMAO code exists, or sub-equipment code that complements the GMAO code",
-          "help_fr": "Un code identifiant l'equipement concerne si aucun code GMAO existe, ou le code du sous-équipement qui complète le code GMAO"
-        },
-        {
           "id": "subsystem",
           "type": "autocomplete",
           "url": "subsystems/search/find",
@@ -97,10 +79,10 @@
       ],
       "fields": [
         {
-          "id": "functionalityCode",
+          "id": "functionality",
           "type": "autocomplete",
           "required": true,
-          "url": "sites/search/find",
+          "url": "functionalities/search/find",
           "name_en": "Site",
           "name_fr": "Site",
           "help_en": "Enter the functionality or the site where the point is found",

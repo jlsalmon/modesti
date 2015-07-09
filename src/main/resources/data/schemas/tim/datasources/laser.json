@@ -11,7 +11,7 @@
       "disabledStates": ["FOR_APPROVAL"],
       "fields": [
         {
-          "id": "category",
+          "id": "laserCategory",
           "type": "text",
           "name_en": "Category",
           "name_fr": "Category",
@@ -19,7 +19,7 @@
           "help_fr": ""
         },
         {
-          "id": "family",
+          "id": "laserFaultFamily",
           "type": "text",
           "name_en": "Family",
           "name_fr": "Family",
@@ -27,7 +27,7 @@
           "help_fr": ""
         },
         {
-          "id": "member",
+          "id": "laserFaultMember",
           "type": "text",
           "name_en": "Member",
           "name_fr": "Member",
@@ -35,7 +35,7 @@
           "help_fr": ""
         },
         {
-          "id": "code",
+          "id": "laserFaultCode",
           "type": "text",
           "name_en": "Code",
           "name_fr": "Code",

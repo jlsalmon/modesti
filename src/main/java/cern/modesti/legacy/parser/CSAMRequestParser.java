@@ -25,7 +25,6 @@ public class CSAMRequestParser extends RequestParser {
   private static final Double MINIMUM_SUPPORTED_VERSION = 5.2;
 
   public static final int FIRST_DATA_COLUMN = 3;
-  public static final int LAST_DATA_COLUMN = 56;
   public static final int POINT_ID_COLUMN = 2;
 
   private Map<String, String> columnTitleMappings = new HashMap<>();
@@ -39,8 +38,8 @@ public class CSAMRequestParser extends RequestParser {
     // General mappings
     columnTitleMappings.put("description", "pointDescription");
     columnTitleMappings.put("dataType", "pointDatatype");
-    columnTitleMappings.put("equipementCse", "gmaoCode"); // TODO this is wrong
-    columnTitleMappings.put("equipementCapteur", "otherCode"); // TODO this is wrong
+    columnTitleMappings.put("equipementCse", "csamCsename");
+    columnTitleMappings.put("equipementCapteur", "csamDetector");
     columnTitleMappings.put("typeDetectionSubSystem", "subSystemName");
     columnTitleMappings.put("identifiant", "responsiblePersonId");
     columnTitleMappings.put("nom", "responsiblePersonName");
@@ -51,27 +50,30 @@ public class CSAMRequestParser extends RequestParser {
     columnTitleMappings.put("niveauAlarme", "priorityCode");
 
     // Location mappings
+    columnTitleMappings.put("site", "functionalityCode");
+    columnTitleMappings.put("zone", "safetyZone");
     columnTitleMappings.put("numero", "buildingNumber");
     columnTitleMappings.put("sigle", "buildingName");
-    columnTitleMappings.put("etage", "floor");
-    columnTitleMappings.put("piece", "room");
+    columnTitleMappings.put("etage", "buildingFloor");
+    columnTitleMappings.put("piece", "buildingRoom");
 
     // Monitoring mappings
-    columnTitleMappings.put("equipementSurveillance", "monitoringEquipmentName");
+    columnTitleMappings.put("equipementSurveillance", "csamPlcname");
+    columnTitleMappings.put("cablage", "cabling");
 
     // Analogue mappings
     columnTitleMappings.put("min", "lowLimit");
     columnTitleMappings.put("max", "highLimit");
-    columnTitleMappings.put("zoneMorte", "valueDeadBand");
+    columnTitleMappings.put("zoneMorte", "valueDeadband");
     columnTitleMappings.put("unite", "units");
 
     // Logging mappings
-    columnTitleMappings.put("valeurZoneMorte", "valueDeadBand");
-    columnTitleMappings.put("zoneMorteTemps", "timeDeadBand");
+    columnTitleMappings.put("valeurZoneMorte", "logValueDeadband");
+    columnTitleMappings.put("zoneMorteTemps", "logTimeDeadband");
 
     // Alarm Help mappings
-    columnTitleMappings.put("actionHeuresOuvrables", "taskDuringWorkingHoursActionHo");
-    columnTitleMappings.put("actionHorsHeuresOuvrables", "taskDuringWorkingHoursActionHho");
+    columnTitleMappings.put("actionHeuresOuvrables", "workHoursTask");
+    columnTitleMappings.put("actionHorsHeuresOuvrables", "outsideHoursTask");
   }
 
   @Override
@@ -95,25 +97,30 @@ public class CSAMRequestParser extends RequestParser {
 
     // PLC - APIMMD special cases
     if (title.equals("block") && column == 26) {
-      title = "blockType";
+      title = "plcBlockType";
     } else if (title.equals("word") && column == 27) {
-      title = "wordId";
+      title = "plcWordId";
     } else if (title.equals("bit") && column == 28) {
-      title = "bitId";
+      title = "plcBitId";
+    } else if (title.equals("nativePrefix")) {
+      title = "plcNativePrefix";
+    } else if (title.equals("slaveAddress")) {
+      title = "plcSlaveAddress";
+    } else if (title.equals("connectId")) {
+      title = "plcConnectId";
     }
 
     // PLC - OPC special cases
     if (title.equals("byte") && column == 32) {
-      title = "opcByte";
+      title = "safeplcByteId";
     } else if (title.equals("bit") && column == 33) {
-      title = "opcBit";
+      title = "safeplcBitId";
     }
 
     // WINTER special cases
     if (title.equals("voie")) {
       title = "winterChannel";
-    } else
-    if (title.equals("bit") && column == 35) {
+    } else if (title.equals("bit") && column == 35) {
       title = "winterBit";
     }
 
@@ -142,8 +149,14 @@ public class CSAMRequestParser extends RequestParser {
     }
 
     // OPCDEF special cases
-    if (title.equals("status") && column == 48) {
-      title = "opcdefStatus";
+    if (title.equals("module")) {
+      title = "safedefModule";
+    } else if (title.equals("line")) {
+      title = "safedefLine";
+    } else if (title.equals("address")) {
+      title = "safedefAddress";
+    } else if (title.equals("status") && (column == 47 || column == 48)) {
+      title = "safedefStatus";
     }
 
     return title;
@@ -156,17 +169,17 @@ public class CSAMRequestParser extends RequestParser {
     for (Point point : points) {
       if (point.getProperties().containsKey("lsacRack")) {
         if (!categories.contains("LSAC")) categories.add("LSAC");
-      } else if (point.getProperties().containsKey("blockType")) {
+      } else if (point.getProperties().containsKey("plcBlockType")) {
         if (!categories.contains("APIMMD")) categories.add("APIMMD");
-      } else if (point.getProperties().containsKey("opcByte")) {
-        if (!categories.contains("OPC")) categories.add("OPC");
+      } else if (point.getProperties().containsKey("safeplcByteId")) {
+        if (!categories.contains("PLC - OPC")) categories.add("PLC - OPC");
       } else if (point.getProperties().containsKey("winterStatus")) {
         if (!categories.contains("WINTER")) categories.add("WINTER");
       } else if (point.getProperties().containsKey("securitonGroup")) {
         if (!categories.contains("SECIRITON")) categories.add("SECIRITON");
       } else if (point.getProperties().containsKey("securifireGroup")) {
         if (!categories.contains("SECURIFIRE")) categories.add("SECURIFIRE");
-      } else if (point.getProperties().containsKey("module")) {
+      } else if (point.getProperties().containsKey("safedefModule")) {
         if (!categories.contains("OPCDEF")) categories.add("OPCDEF");
       }
     }
@@ -189,8 +202,12 @@ public class CSAMRequestParser extends RequestParser {
   }
 
   @Override
-  protected int getLastDataColumn() {
-    return LAST_DATA_COLUMN;
+  protected int getLastDataColumn(Double version) {
+    if (version == 5.2) {
+      return 56;
+    } else {
+      return 57;
+    }
   }
 
   @Override

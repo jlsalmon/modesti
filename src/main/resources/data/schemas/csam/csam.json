@@ -6,12 +6,31 @@
       "name": "General",
       "fields": [
         {
-          "id": "monitoringEquipment",
+          "id": "csamCsename",
+          "type": "text",
+          "required": true,
+          "name_en": "CSE",
+          "name_fr": "CSE",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "csamDetector",
+          "type": "autocomplete",
+          "minLength": 4,
+          "url": "gmaoCodes/search/find",
+          "name_en": "Detector",
+          "name_fr": "Capteur",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "csamPlcname",
           "type": "autocomplete",
           "url": "monitoringEquipments/search/find",
           "required": true,
-          "name_en": "Equipment Name",
-          "name_fr": "Equipment Name",
+          "name_en": "Monitoring Equipment",
+          "name_fr": "Monitoring Equipment",
           "help_en": "",
           "help_fr": ""
         },

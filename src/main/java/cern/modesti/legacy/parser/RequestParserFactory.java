@@ -6,6 +6,7 @@ package cern.modesti.legacy.parser;
 import java.io.InputStream;
 
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
+import cern.modesti.repository.jpa.location.functionality.FunctionalityRepository;
 import cern.modesti.repository.jpa.person.PersonRepository;
 import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import cern.modesti.request.RequestType;
@@ -35,6 +36,9 @@ public class RequestParserFactory {
 
   @Autowired
   private SubSystemRepository subSystemRepository;
+
+  @Autowired
+  FunctionalityRepository functionalityRepository;
 
   @Autowired
   private MonitoringEquipmentRepository monitoringEquipmentRepository;
@@ -71,6 +75,7 @@ public class RequestParserFactory {
     requestParser.setPersonRepository(personRepository);
     requestParser.setSubSystemRepository(subSystemRepository);
     requestParser.setMonitoringEquipmentRepository(monitoringEquipmentRepository);
+    requestParser.setFunctionalityRepository(functionalityRepository);
     return requestParser;
   }
 }

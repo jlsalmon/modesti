@@ -24,7 +24,7 @@
     "datasources": [
       "LSAC",
       "APIMMD",
-      "OPC",
+      "PLC - OPC",
       "WINTER",
       "SECURITON",
       "SECURIFIRE",

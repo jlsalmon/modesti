@@ -5,14 +5,14 @@ package cern.modesti.legacy.parser;
 
 import java.util.*;
 
-import cern.modesti.config.MongoConfig;
 import cern.modesti.repository.jpa.alarm.AlarmCategory;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipment;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
 import cern.modesti.repository.jpa.gmao.GmaoCode;
 import cern.modesti.repository.jpa.location.BuildingName;
 import cern.modesti.repository.jpa.location.Location;
-import cern.modesti.repository.jpa.location.site.Site;
+import cern.modesti.repository.jpa.location.functionality.Functionality;
+import cern.modesti.repository.jpa.location.functionality.FunctionalityRepository;
 import cern.modesti.repository.jpa.location.zone.Zone;
 import cern.modesti.repository.jpa.person.Person;
 import cern.modesti.repository.jpa.person.PersonRepository;
@@ -42,9 +42,11 @@ public abstract class RequestParser {
   protected static final int FIRST_DATA_ROW = 7;
 
   protected Sheet sheet;
+  private Double version;
 
   private SubSystemRepository subSystemRepository;
   private PersonRepository personRepository;
+  private FunctionalityRepository functionalityRepository;
   private MonitoringEquipmentRepository monitoringEquipmentRepository;
 
   /**
@@ -64,7 +66,7 @@ public abstract class RequestParser {
     request.setDomain(parseDomain());
     request.setType(parseRequestType());
 
-    Double version = parseVersion();
+    version = parseVersion();
 
     // Parse all the points from the request
     List<Point> points = parseDataPoints();
@@ -154,7 +156,7 @@ public abstract class RequestParser {
     }
 
     // Loop over all filled cells and add it as a property to the point.
-    for (int column = getFirstDataColumn(); column < getLastDataColumn(); column++) {
+    for (int column = getFirstDataColumn(); column < getLastDataColumn(version); column++) {
       Cell cell = row.getCell(column);
       Object value = getCellValue(cell);
 
@@ -179,10 +181,10 @@ public abstract class RequestParser {
     properties.put("location", parseLocation(properties));
     properties.put("buildingName", new BuildingName((String) properties.get("buildingName")));
     properties.put("gmaoCode", new GmaoCode((String) properties.get("gmaoCode")));
-    properties.put("site", new Site((String) properties.get("site")));
+    properties.put("functionality", parseFunctionality(properties));
     properties.put("alarmCategory", new AlarmCategory((String) properties.get("alarmCategory")));
-    if (properties.get("zone") != null) {
-      properties.put("zone", new Zone(String.valueOf(((Double) properties.get("zone")).intValue())));
+    if (properties.get("safetyZone") != null) {
+      properties.put("safetyZone", new Zone(String.valueOf(((Double) properties.get("safetyZone")).intValue())));
     }
     if (properties.get("monitoringEquipmentName") != null) {
       properties.put("monitoringEquipment", parseMonitoringEquipment(properties));
@@ -305,6 +307,24 @@ public abstract class RequestParser {
    * @param properties
    * @return
    */
+  private Functionality parseFunctionality(Map<String, Object> properties) {
+    String functionalityCode = (String) properties.get("functionalityCode");
+    Functionality functionality = functionalityRepository.findOne(functionalityCode);
+
+    if (functionality == null) {
+      LOG.warn("Could not determine functionality for point");
+      functionality = new Functionality();
+    }
+
+    properties.remove("functionalityCode");
+    return functionality;
+  }
+
+  /**
+   *
+   * @param properties
+   * @return
+   */
   private MonitoringEquipment parseMonitoringEquipment(Map<String, Object> properties) {
     String monitoringEquipmentName = (String) properties.get("monitoringEquipmentName");
     MonitoringEquipment monitoringEquipment = monitoringEquipmentRepository.findOneByValue(monitoringEquipmentName);
@@ -411,9 +431,10 @@ public abstract class RequestParser {
 
   /**
    *
+   * @param version
    * @return
    */
-  protected abstract int getLastDataColumn();
+  protected abstract int getLastDataColumn(Double version);
 
   /**
    *
@@ -435,6 +456,10 @@ public abstract class RequestParser {
    */
   public void setSubSystemRepository(SubSystemRepository subSystemRepository) {
     this.subSystemRepository = subSystemRepository;
+  }
+
+  public void setFunctionalityRepository(FunctionalityRepository functionalityRepository) {
+    this.functionalityRepository = functionalityRepository;
   }
 
   public void setMonitoringEquipmentRepository(MonitoringEquipmentRepository monitoringEquipmentRepository) {

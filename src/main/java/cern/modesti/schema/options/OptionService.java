@@ -7,6 +7,7 @@ import java.util.stream.IntStream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Service;
 
@@ -55,8 +56,8 @@ public class OptionService {
     String columnName = propertyToColumnName(property);
 
     // Execute the query to get the options
-    String optionString = (String) entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODE_VALUES('%s') %s FROM DUAL", columnName,
-        columnName)).getSingleResult();
+    Query query = entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODE_VALUES('%s') %s FROM DUAL", columnName, columnName));
+    String optionString = (String) query.getSingleResult();
 
     return parseOptionString(optionString);
   }
