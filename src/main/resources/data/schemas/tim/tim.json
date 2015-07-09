@@ -4,6 +4,12 @@
   "categories": [
     {
       "name": "General",
+      "constraints": [
+        {
+          "type": "or",
+          "members": ["gmaoCode", "otherEquipCode"]
+        }
+      ],
       "fields": [
         {
           "id": "gmaoCode",
@@ -16,7 +22,7 @@
           "help_fr": "Le code de l'equipement connu par le système GMAO"
         },
         {
-          "id": "otherCode",
+          "id": "otherEquipCode",
           "type": "text",
           "name_en": "Other Code",
           "name_fr": "Autre Code",

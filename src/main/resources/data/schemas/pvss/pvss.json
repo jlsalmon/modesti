@@ -7,6 +7,12 @@
       "name": "General",
       "editableStates": ["IN_PROGRESS", "FOR_CORRECTION"],
       "disabledStates": ["FOR_APPROVAL"],
+      "constraints": [
+        {
+          "type": "or",
+          "members": ["gmaoCode", "otherCode"]
+        }
+      ],
       "fields": [
         {
           "id": "gmaoCode",
@@ -19,7 +25,7 @@
           "help_fr": "Le code de l'equipement connu par le système GMAO"
         },
         {
-          "id": "otherCode",
+          "id": "otherEquipCode",
           "type": "text",
           "name_en": "Other Code",
           "name_fr": "Autre Code",
