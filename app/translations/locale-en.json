@@ -86,6 +86,7 @@
   "NO_MATCHING_RESULTS": "No results found matching",
 
   "SPLIT_SELECTED": "Split selected rows",
+  "SPLIT_SELECTED_HELP": "You are about to split <b>{{n}}</b> points from your request. These points will be moved into a separate request. <br /><br /> <b>Are you sure you want to do this?</b>",
   "VALIDATE_REQUEST": "Validate request",
   "VALIDATE": "Validate",
   "SUBMIT_REQUEST": "Submit request",
