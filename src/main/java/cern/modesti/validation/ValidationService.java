@@ -3,17 +3,18 @@ package cern.modesti.validation;
 import cern.modesti.repository.jpa.validation.DraftPoint;
 import cern.modesti.repository.jpa.validation.ValidationRepository;
 import cern.modesti.request.Request;
-import cern.modesti.request.point.Error;
 import cern.modesti.request.point.Point;
+import cern.modesti.request.point.Error;
 import com.google.common.base.CaseFormat;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import javax.transaction.Transactional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * TODO
@@ -27,101 +28,84 @@ public class ValidationService {
   @Autowired
   ValidationRepository repository;
 
+  @Autowired
+  JdbcTemplate jdbcTemplate;
+
   /**
    * @param request
    *
    * @return true if the request is valid, false otherwise. When false, error messages will be attached to each individual point and be retrievable via
    * {@link Point#getErrors()}.
    */
+  @Transactional
   public boolean validateRequest(Request request) {
-    List<DraftPoint> draftPoints = new ArrayList<>();
+
+    // Delete all points with this request id
+    String query = "DELETE FROM DRAFT_POINTS_NEW WHERE drp_request_id = ?";
+    jdbcTemplate.update(query, request.getRequestId());
+
 
     for (Point point : request.getPoints()) {
-      Map<String, Object> properties = point.getProperties();
+      List<Object[]> data = new ArrayList<>();
+
+      // Make a copy
+      Map<String, Object> properties = new HashMap<>(point.getProperties());
 
       // Don't include empty points
       if (isEmptyPoint(point)) {
         continue;
       }
 
-      // Create a DraftPoint object. Pull out all the objects into their scalar values ready for validation. Unfortunately the JSON object doesn't give us
+      // These are always required
+      properties.put("requestId", request.getRequestId());
+      properties.put("lineno", point.getId());
+
+      // Need to hack out the object properties into their scalar values ready for validation. Unfortunately the JSON object doesn't give us
       // the Functionality, Location, Subsystem etc. objects back, but Maps instead. So we have to cast. Not sure of the best way to solve that problem.
-      DraftPoint draftPoint = new DraftPoint(Long.valueOf(request.getRequestId()), point.getId(),
+      // If the object properties were flattened on the client side, this wouldn't be necessary.
+      properties.put("gmaoCode", getObjectProperty(properties, "gmaoCode", "value", String.class));
+      properties.put("respId", getObjectProperty(properties, "responsiblePerson", "id", Integer.class));
+      properties.remove("responsiblePerson");
+      properties.put("subsystemId", getObjectProperty(properties, "subsystem", "id", Integer.class));
+      properties.remove("subsystem");
+      properties.put("moneqId", getObjectProperty(properties, "monitoringEquipment", "id", Integer.class));
+      properties.remove("monitoringEquipment");
+      properties.put("buildingName", getObjectProperty(properties, "buildingName", "value", String.class));
+      properties.put("buildingNumber", getObjectProperty(properties, "location", "buildingNumber", String.class));
+      properties.put("buildingFloor", getObjectProperty(properties, "location", "floor", String.class));
+      properties.put("buildingRoom", getObjectProperty(properties, "location", "room", String.class));
+      properties.remove("location");
+      properties.put("funcCode", getObjectProperty(properties, "functionality", "value", String.class));
+      properties.remove("functionality");
+      properties.put("safetyZone", getObjectProperty(properties, "safetyZone", "value", String.class));
+      properties.put("alarmCategory", getObjectProperty(properties, "alarmCategory", "value", String.class));
 
-          // General
-          getProperty(properties, "pointDatatype", String.class),
-          getProperty(properties, "pointDescription", String.class),
-          getObjectProperty(properties, "gmaoCode", "value", String.class),
-          getProperty(properties, "otherCode", String.class),
-          getProperty(properties, "pointAttribute", String.class),
-          getObjectProperty(properties, "responsiblePerson", "id", Integer.class),
-          getObjectProperty(properties, "subsystem", "id", Integer.class),
-          getObjectProperty(properties, "monitoringEquipment", "id", Integer.class),
-          getProperty(properties, "pointComplementaryInfo", String.class),
+      // Tagname does not go into the table
+      properties.remove("tagname");
 
-          // Location
-          getObjectProperty(properties, "buildingName", "value", String.class),
-          getObjectProperty(properties, "location", "buildingNumber", String.class),
-          getObjectProperty(properties, "location", "floor", String.class),
-          getObjectProperty(properties, "location", "room", String.class),
-          getObjectProperty(properties, "functionality", "value", String.class),
-          getObjectProperty(properties, "zone", "value", String.class),
+      data.add(properties.values().toArray());
 
-          // Alarms
-          getProperty(properties, "alarmValue", Integer.class),
-          getProperty(properties, "priorityCode", Integer.class),
-          getObjectProperty(properties, "alarmCategory", "value", String.class),
+      // Create an insert statement based on the properties we have in this point. This is possible due to the standardisation of column names in the
+      // DRAFT_POINTS table (See https://edms.cern.ch/document/1506060/1)
+      query = "INSERT INTO DRAFT_POINTS_NEW (";
+      query += properties.keySet().stream().map(s -> s = propertyToColumnName(s)).collect(Collectors.joining(", "));
+      query += ") VALUES (";
+      query += properties.values().stream().map(s -> "?").collect(Collectors.joining(", "));
+      query += ")";
 
-          // Alarm Help
-          getProperty(properties, "alarmCauses", String.class),
-          getProperty(properties, "alarmConsequences", String.class),
-          getProperty(properties, "workHoursTask", String.class),
-          getProperty(properties, "outsideHoursTask", String.class),
-
-          // PLC (APIMMD)
-          getProperty(properties, "blockType", Integer.class),
-          getProperty(properties, "wordId", Integer.class),
-          getProperty(properties, "bitId", Integer.class),
-          getProperty(properties, "nativePrefix", String.class),
-          getProperty(properties, "slaveAddress", Integer.class),
-          getProperty(properties, "connectId", String.class),
-
-          // Exit parameters
-          null, null
-      );
-
-      draftPoints.add(draftPoint);
+      // Uses JdbcTemplate's batchUpdate operation to bulk load data
+      jdbcTemplate.batchUpdate(query, data);
     }
 
-    // Delete all points with this request id.
-    List<DraftPoint> oldPoints = repository.findByRequestId(Long.valueOf(request.getRequestId()));
-    repository.delete(oldPoints);
-
-    // Write the points
-    repository.save(draftPoints);
     // Call the stored procedure
     boolean valid = repository.validate(request);
 
     if (!valid) {
       // Read the points back to get the exit codes and error messages
-      draftPoints = repository.findByRequestId(Long.valueOf(request.getRequestId()));
-      List<Point> points = request.getPoints();
+      query = "SELECT drp_request_id, drp_lineno, drp_exitcode, drp_exittext FROM DRAFT_POINTS_NEW WHERE drp_request_id = ?";
 
-      for (DraftPoint draftPoint : draftPoints) {
-        log.debug("draft point exit: " + draftPoint);
-
-        // Set the error messages on the points
-        for (Point point : points) {
-          if (point.getId().equals(draftPoint.getLineNumber())) {
-            Long exitCode = draftPoint.getExitCode();
-            String exitText = draftPoint.getExitText();
-
-            if (exitCode != null && exitCode > 0) {
-              point.setErrors(Collections.singletonList(new Error("", Collections.singletonList(exitText != null ? exitText : "unknown error"))));
-            }
-          }
-        }
-      }
+      jdbcTemplate.query(query, new Object[]{request.getRequestId()}, (rs, rowNum) -> new Result(rs.getInt("drp_request_id"), rs.getInt("drp_lineno"), rs
+          .getInt("drp_exitcode"), rs.getString("drp_exittext"))).forEach(result -> setErrorMessage(request, result));
     }
 
     return valid;
@@ -129,23 +113,40 @@ public class ValidationService {
 
   /**
    *
-   * @param properties
-   * @param property
-   * @param klass
-   * @param <T>
-   * @return
+   * @param request
+   * @param result
    */
-  private <T> T getProperty(Map<String, Object> properties, String property, Class<T> klass) {
-    return klass.cast(properties.get(property));
+  private void setErrorMessage(Request request, Result result) {
+    log.debug("draft point exit: " + result.toString());
+
+    // Set the error messages on the points
+    for (Point point : request.getPoints()) {
+      if (point.getId().equals(new Long(result.getLineno()))) {
+        Integer exitCode = result.getExitCode();
+        String exitText = result.getExitText();
+
+        if (exitCode != null && exitCode > 0) {
+          point.setErrors(Collections.singletonList(new Error("", Collections.singletonList(exitText != null ? exitText : "unknown error"))));
+        }
+      }
+    }
+  }
+
+  @Data
+  class Result {
+    final Integer requestId;
+    final Integer lineno;
+    final Integer exitCode;
+    final String exitText;
   }
 
   /**
-   *
    * @param properties
    * @param objectName
    * @param property
    * @param klass
    * @param <T>
+   *
    * @return
    */
   private <T> T getObjectProperty(Map<String, Object> properties, String objectName, String property, Class<T> klass) {
@@ -165,8 +166,8 @@ public class ValidationService {
   }
 
   /**
-   *
    * @param property
+   *
    * @return
    */
   private String propertyToColumnName(String property) {
@@ -176,8 +177,8 @@ public class ValidationService {
   }
 
   /**
-   *
    * @param point
+   *
    * @return
    */
   private boolean isEmptyPoint(Point point) {
