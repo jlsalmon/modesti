@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.jpa.location.site;
+package cern.modesti.repository.jpa.location.functionality;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +27,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "functionalities")
-public class Site {
+public class Functionality{
 
   @Id
   @Column(name = "func_code")
@@ -36,10 +36,10 @@ public class Site {
   @Column(name = "func_gen")
   private String generalFunctionality;
 
-  public Site() {
+  public Functionality() {
   }
 
-  public Site(final String value) {
+  public Functionality(final String value) {
     this.value = value;
   }
 

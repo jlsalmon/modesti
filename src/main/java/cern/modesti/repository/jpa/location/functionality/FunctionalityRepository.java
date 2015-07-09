@@ -15,7 +15,7 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.repository.jpa.location.site;
+package cern.modesti.repository.jpa.location.functionality;
 
 import java.util.List;
 
@@ -28,13 +28,13 @@ import cern.modesti.repository.base.ReadOnlyRepository;
 /**
  * @author Justin Lewis Salmon
  */
-public interface SiteRepository extends ReadOnlyRepository<Site, String> {
+public interface FunctionalityRepository extends ReadOnlyRepository<Functionality, String> {
 
   /**
    * TODO
    *
    * We don't need a manual query here, as the functionalities table is very
-   * simple. So we annotate the {@link Site} class with the necessary table and
+   * simple. So we annotate the {@link Functionality} class with the necessary table and
    * column names and let Spring create a query automatically based on the
    * method name.
    *
@@ -45,6 +45,6 @@ public interface SiteRepository extends ReadOnlyRepository<Site, String> {
    * @return
    */
   @RestResource(rel = "find", path = "find")
-  @Cacheable("sites")
-  List<Site> findByValueStartsWithIgnoreCase(@Param("query") String query);
+  @Cacheable("functionalities")
+  List<Functionality> findByValueStartsWithIgnoreCase(@Param("query") String query);
 }

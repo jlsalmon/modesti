@@ -1,9 +1,9 @@
 {
-  "name": "safeplc",
+  "name": "PLC - OPC",
   "domain": "csam",
   "categories": [
     {
-      "name": "OPC",
+      "name": "PLC - OPC",
       "editableStates": [
         "IN_PROGRESS",
         "FOR_CORRECTION"
