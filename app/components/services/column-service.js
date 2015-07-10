@@ -59,6 +59,7 @@ function ColumnService($http, $translate) {
     var html = '<span class="help-text" data-container="body" data-toggle="popover" data-placement="bottom" ';
     html += 'data-content="' + ($translate.use() == 'en' ? field.help_en : field.help_fr) + '">';
     html += $translate.use() == 'en' ? field.name_en : field.name_fr;
+    html += field.required ? '*' : '';
     html += '</span>';
     return html;
   }
@@ -170,6 +171,7 @@ function ColumnService($http, $translate) {
 
 
     column.type = 'autocomplete';
+    //column.trimDropdown = false;
     //column.strict = true;
     //column.allowInvalid = true;
 

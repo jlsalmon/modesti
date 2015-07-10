@@ -1,152 +1,164 @@
-
 <!-- Content Header (Page header) -->
 <!--<section class="content-header">-->
-  <!--<h1>Upload request</h1>-->
-  <!--<ol class="breadcrumb">-->
-    <!--<li><a href="#/"> <i class="fa fa-home"></i> Home-->
-    <!--</a></li>-->
-    <!--<li class="active">Upload request</li>-->
-  <!--</ol>-->
+<!--<h1>Upload request</h1>-->
+<!--<ol class="breadcrumb">-->
+<!--<li><a href="#/"> <i class="fa fa-home"></i> Home-->
+<!--</a></li>-->
+<!--<li class="active">Upload request</li>-->
+<!--</ol>-->
 <!--</section>-->
 
 <style>
-.drop-zone {
-  border: 2px dashed #ccc;
-  margin-top: 55px;
-  height: 250px;
-  display: table;
-  width: 100%;
-  text-align: center;
-  background-color: #fff;
-  box-shadow: none;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  border-radius: 8px;
-}
+  .drop-zone {
+    border: 2px dashed #ccc;
+    margin-top: 55px;
+    height: 250px;
+    display: table;
+    width: 100%;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    border-radius: 8px;
+  }
 
-.drop-zone span {
-  display: table-cell;
-  vertical-align: middle;
-}
+  .nv-file-over {
+    border: dashed 2px #777;
+  }
 
-.btn-file {
-  position: relative;
-  overflow: hidden;
-}
+  .control-label {
+    text-align: left !important;
+  }
 
-.btn-file input[type=file] {
-  position: absolute;
-  top: 0;
-  right: 0;
-  min-width: 100%;
-  min-height: 100%;
-  font-size: 100px;
-  text-align: right;
-  filter: alpha(opacity = 0);
-  opacity: 0;
-  outline: none;
-  background: white;
-  cursor: inherit;
-  display: block;
-}
+  .drop-zone span {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .btn-file {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+  }
 </style>
 
 <!-- Main content -->
-<section class="content">
+<section class="content" nv-file-drop uploader="ctrl.uploader">
 
-  <div class="row">
-    <div class="col-md-10 col-md-offset-1">
+  <div class="container">
+    <div class="row">
 
-      <div class="row">
-        <div class="col-md-12">
-          <h3 translate>UPLOAD_REQUEST</h3>
+      <div class="col-md-12">
+        <h3 translate>UPLOAD_REQUEST</h3>
 
-          <div class="input-group">
-            <span class="input-group-btn">
-              <span class="btn btn-primary btn-file">
-                <i class="fa fa-folder-open"></i> {{'SELECT_FILE'|translate}}&hellip; <input type="file" nv-file-select="" uploader="ctrl.uploader" />
-              </span>
-            </span>
-            <input type="text" class="form-control" readonly>
+        <span class="help-block" translate>SELECT_FILE_HELP</span>
+
+        <div ng-show="ctrl.uploader.isHTML5 && ctrl.uploader.queue.length == 0">
+          <div class="well drop-zone" nv-file-over uploader="ctrl.uploader">
+
+            <div style="display: table-cell; vertical-align: middle;">
+                <span class="btn btn-primary btn-file" style="display: inline-block;">
+                  <i class="fa fa-folder-open"></i> {{'SELECT_FILE'|translate}}&hellip;
+                  <input type="file" nv-file-select uploader="ctrl.uploader"/>
+                </span>
+
+              <div class="text-muted" translate>OR</div>
+              <div class="text-muted" translate>DROP_FILE</div>
+            </div>
           </div>
-          <span class="help-block" translate>SELECT_FILE_HELP</span>
+        </div>
 
-          <!-- Multiple <input type="file" nv-file-select="" uploader="ctrl.uploader" multiple /><br /> -->
-          </div>
-      </div>
+        <div class="row">
+          <div class="col-md-12" style="margin-bottom: 40px">
 
-      <div class="row" ng-if="ctrl.uploader.queue.length > 0">
-        <div class="col-md-12" style="margin-bottom: 40px">
+            <form name="form" class="form-horizontal" ng-repeat="item in ctrl.uploader.queue" novalidate>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" translate>FILENAME</label>
 
-          <table class="table">
-            <thead>
-              <tr>
-                <th width="50%" translate>NAME</th>
-                <th ng-show="ctrl.uploader.isHTML5" translate>SIZE</th>
-                <th ng-show="ctrl.uploader.isHTML5" translate>PROGRESS</th>
-                <th translate>STATUS</th>
-                <th translate>ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="item in ctrl.uploader.queue">
-                <td><strong>{{ item.file.name }}</strong></td>
-                <td ng-show="ctrl.uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
-                <td ng-show="ctrl.uploader.isHTML5">
-                  <div class="progress" style="margin-bottom: 0;">
-                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                <div class="col-sm-10">
+                  <p class="form-control-static"><strong>{{ item.file.name }}</strong>
+                    ({{item.file.size/1024/1024|number:2 }} MB)</p>
+                </div>
+              </div>
+              <div class="form-group has-feedback"
+                   ng-show="ctrl.uploader.isHTML5"
+                   ng-class="{ 'has-error': (form.$invalid && form.$dirty)
+                                    || (form.$submitted && form.$invalid) }">
+                <label for="description" class="col-sm-2 control-label" translate>DESCRIPTION</label>
+
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" ng-model="item.description" id="description"
+                         placeholder="Description" required>
+                  <span class="help-block" translate>ENTER_DESCRIPTION</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2">
+                <span class="pull-right" style="display: block; margin-right: -20px;">
+                    <i class="fa fa-check" ng-show="item.isSuccess"></i>
+                    <i class="fa fa-ban" ng-show="item.isCancel"></i>
+                    <i class="fa fa-cog fa-spin" ng-show="item.isUploading"></i>
+                    <i class="fa fa-exclamation-triangle" ng-show="item.isError"></i>
+                  </span>
+                </label>
+
+                <div class="col-sm-10">
+                  <div class="progress" ng-if="!item.errorMessage" style="margin-bottom: 0;">
+                    <div ng-show="ctrl.uploader.isHTML5" class="progress-bar" role="progressbar"
+                         ng-style="{ 'width': item.progress + '%' }"></div>
                   </div>
-                </td>
-                <td class="text-center"><span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span> <span ng-show="item.isCancel"><i
-                    class="glyphicon glyphicon-ban-circle"></i></span> <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span></td>
-                <td nowrap>
-                  <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                    <span class="glyphicon glyphicon-upload"></span> {{'UPLOAD'|translate}}
-                  </button>
-                  <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                    <span class="glyphicon glyphicon-ban-circle"></span> {{'CANCEL'|translate}}
-                  </button>
-                  <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                    <span class="glyphicon glyphicon-trash"></span> {{'REMOVE'|translate}}
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
 
-    <!--       <div>
-        <div>
-          Queue progress:
-          <div class="progress" style="">
-            <div class="progress-bar" role="progressbar" ng-style="{ 'width': ctrl.uploader.progress + '%' }"></div>
+                  <code style="display: block; border-radius: 0;" ng-if="item.errorMessage">
+                    {{'ERROR'|translate}}: {{item.errorMessage}}
+                  </code>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10" ng-if="!item.location">
+                  <button type="submit" class="btn btn-success btn-sm" ng-click="ctrl.upload(item)"
+                          ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                    <i class="fa fa-fw fa-upload"></i> {{'UPLOAD'|translate}}
+                  </button>
+                  <button type="button" class="btn btn-warning btn-sm" ng-click="item.cancel()"
+                          ng-disabled="!item.isUploading">
+                    <i class="fa fa-fw fa-ban"></i> {{'CANCEL'|translate}}
+                  </button>
+                  <button type="button" class="btn btn-danger btn-sm" ng-click="item.remove()">
+                    <i class="fa fa-fw fa-trash"></i> {{'REMOVE'|translate}}
+                  </button>
+                </div>
+                <div class="col-sm-offset-2 col-sm-10" ng-if="item.location">
+                  <button type="button" class="btn btn-success btn-sm"
+                          ng-click="ctrl.edit(item); ctrl.loading = true;">
+                    <i class="fa fa-fw fa-hand-o-right" ng-if="ctrl.loading == undefined"></i>
+                    <i class="fa fa-fw fa-hand-o-right" ng-if="ctrl.loading == true"></i>
+                    {{'EDIT'|translate}}
+                  </button>
+                </div>
+              </div>
+            </form>
+
           </div>
         </div>
-        <button type="button" class="btn btn-success btn-s" ng-click="ctrl.uploader.uploadAll()" ng-disabled="!ctrl.uploader.getNotUploadedItems().length">
-          <span class="glyphicon glyphicon-upload"></span> Upload all
-        </button>
-        <button type="button" class="btn btn-warning btn-s" ng-click="ctrl.uploader.cancelAll()" ng-disabled="!ctrl.uploader.isUploading">
-          <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
-        </button>
-        <button type="button" class="btn btn-danger btn-s" ng-click="ctrl.uploader.clearQueue()" ng-disabled="!ctrl.uploader.queue.length">
-          <span class="glyphicon glyphicon-trash"></span> Remove all
-        </button>
-      </div> -->
 
-        </div>
       </div>
-
     </div>
-    <!--<div class="col-md-4">-->
-          <!--<div ng-show="ctrl.uploader.isHTML5">-->
-            <!--<div class="well drop-zone" nv-file-over="" uploader="ctrl.uploader">-->
-              <!--<span class="text-muted">Drop file here</span>-->
-            <!--</div>-->
-          <!--</div>-->
-    <!--</div>-->
-
-
-    <div id="example" class="handsontable"></div>
-
 
   </div>
 </section>

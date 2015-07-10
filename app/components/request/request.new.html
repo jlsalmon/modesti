@@ -1,109 +1,90 @@
-
-<!-- Content Header (Page header) -->
-<section class="content-header">
-  <h1 translate>NEW_REQUEST</h1>
-  <ol class="breadcrumb">
-    <li>
-      <a href="#/">
-        <i class="fa fa-home"></i>
-        {{'HOME'|translate}}
-      </a>
-    </li>
-    <li class="active" translate>NEW_REQUEST</li>
-  </ol>
-</section>
+<style>
+  .control-label {
+    text-align: left !important;
+  }
+</style>
 
 <!-- Main content -->
 <section class="content">
 
-  <div class="row">
-    <div class="col-lg-12">
-<!--       <div class="box box-primary"> -->
-        <div class="box-header">
-          <h3 class="box-title" translate>CREATE_NEW_REQUEST</h3>
-        </div>
-        <!-- /.box-header -->
+  <div class="container">
+    <div class="row">
 
-        <div class="box-body">
+      <div class="col-md-12">
+        <h3 translate>NEW_REQUEST</h3>
 
-          <form name="form" class="form-horizontal" novalidate>
-            <div class="form-group">
-              <label for="requestType" class="col-sm-3 control-label" translate>REQUEST_TYPE</label>
-              <div class="col-sm-9">
-                <label class="radio-inline">
-                  <input type="radio" name="requestType" value="CREATE" ng-model="ctrl.request.type" checked>
-                  {{'CREATE'|translate}}
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="requestType" value="UPDATE" ng-model="ctrl.request.type" disabled>
-                  {{'UPDATE'|translate}}
-                </label>
-                <label class="radio-inline">
-                  <input type="radio" name="requestType" value="DELETE" ng-model="ctrl.request.type" disabled>
-                  {{'DELETE'|translate}}
-                </label>
-                <span class="help-block" translate>SELECT_REQUEST_TYPE</span>
-              </div>
+        <span class="help-block">Create a new MODESTI request from scratch, or <a href="" ui-sref="upload">upload an existing request</a>.</span>
+
+        <form name="form" class="form-horizontal" novalidate>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" translate>REQUEST_TYPE</label>
+
+            <div class="col-sm-9">
+              <label class="radio-inline">
+                <input type="radio" name="requestType" value="CREATE" ng-model="ctrl.request.type" checked>
+                {{'CREATE'|translate}}
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="requestType" value="UPDATE" ng-model="ctrl.request.type" disabled>
+                {{'UPDATE'|translate}}
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="requestType" value="DELETE" ng-model="ctrl.request.type" disabled>
+                {{'DELETE'|translate}}
+              </label>
+              <span class="help-block" translate>SELECT_REQUEST_TYPE</span>
             </div>
+          </div>
 
-            <div class="form-group has-feedback"
-              ng-class="{ 'has-error': (form.description.$invalid && form.description.$dirty)
+          <div class="form-group has-feedback"
+               ng-class="{ 'has-error': (form.description.$invalid && form.description.$dirty)
                                     || (form.$submitted && form.description.$invalid) }">
-              <label for="description" class="col-sm-3 control-label" translate>DESCRIPTION</label>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" ng-model="ctrl.request.description" name="description" placeholder="Description" required>
-                <span class="help-block" translate>ENTER_DESCRIPTION</span>
-              </div>
+            <label for="description" class="col-sm-3 control-label" translate>DESCRIPTION</label>
+
+            <div class="col-sm-9">
+              <input type="text" class="form-control" ng-model="ctrl.request.description" id="description"
+                     placeholder="Description" required>
+              <span class="help-block" translate>ENTER_DESCRIPTION</span>
             </div>
+          </div>
 
-            <!-- Include the separate parts of the form -->
-            <div ng-if="ctrl.request.type == 'CREATE'">
-              <div ng-include src="'components/request/request.new.create.html'"></div>
+          <!-- Include the separate parts of the form -->
+          <div ng-if="ctrl.request.type == 'CREATE'">
+            <div ng-include src="'components/request/request.new.create.html'"></div>
+          </div>
+
+          <div ng-if="ctrl.request.type == 'UPDATE'">
+            <div ng-include src="'components/request/request.new.update.html'"></div>
+          </div>
+
+          <div ng-if="ctrl.request.type == 'DELETE'">
+            <div ng-include src="'components/request/request.new.delete.html'"></div>
+          </div>
+
+
+          <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+              <button type="submit" class="btn btn-default" ng-click="ctrl.submit(form, request)" translate>NEXT
+              </button>
             </div>
+          </div>
+        </form>
 
-            <div ng-if="ctrl.request.type == 'UPDATE'">
-              <div ng-include src="'components/request/request.new.update.html'"></div>
-            </div>
-
-            <div ng-if="ctrl.request.type == 'DELETE'">
-              <div ng-include src="'components/request/request.new.delete.html'"></div>
-            </div>
-
-
-            <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-9">
-                <button type="submit" class="btn btn-default" ng-click="ctrl.submit(form, request)" translate>NEXT</button>
-              </div>
-            </div>
-          </form>
-
-        </div>
-        <!-- /.box-body -->
-
-        <div class="box-footer">
-          <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
-          <!--<tt>form.$valid = {{form.$valid}}</tt>-->
-        </div>
-
-<!--       </div> -->
+      </div>
 
 
       <!--<form>-->
-        <!--<h3>Warning! Here be dragons!</h3>-->
-        <!--<div class="form-group">-->
-          <!--<label for="">Edit schema:</label>-->
-          <!--<pre>-->
-          <!--<textarea class="form-control" rows="30" ng-model="ctrl.schemaString">-->
-            <!--{{ctrl.schemaString || json}}-->
-          <!--</textarea>-->
-          <!--</pre>-->
-        <!--</div>-->
-        <!--<button type="submit" class="btn btn-default" ng-click="ctrl.saveSchema()">Save</button>-->
+      <!--<h3>Warning! Here be dragons!</h3>-->
+      <!--<div class="form-group">-->
+      <!--<label for="">Edit schema:</label>-->
+      <!--<pre>-->
+      <!--<textarea class="form-control" rows="30" ng-model="ctrl.schemaString">-->
+      <!--{{ctrl.schemaString || json}}-->
+      <!--</textarea>-->
+      <!--</pre>-->
+      <!--</div>-->
+      <!--<button type="submit" class="btn btn-default" ng-click="ctrl.saveSchema()">Save</button>-->
       <!--</form>-->
-
-
-
-
 
     </div>
   </div>
