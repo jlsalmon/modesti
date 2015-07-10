@@ -42,7 +42,7 @@ public class ValidationService {
   @Transactional
   public boolean validateRequest(Request request) {
     // Delete all points with this request id
-    String query = "DELETE FROM DRAFT_POINTS_NEW WHERE drp_request_id = ?";
+    String query = "DELETE FROM DRAFT_POINTS WHERE drp_request_id = ?";
     jdbcTemplate.update(query, request.getRequestId());
 
     for (Point point : request.getPoints()) {
@@ -69,6 +69,7 @@ public class ValidationService {
       properties.put("subsystemId", getObjectProperty(properties, "subsystem", "id", Integer.class));
       properties.remove("subsystem");
       properties.put("moneqId", getObjectProperty(properties, "monitoringEquipment", "id", Integer.class));
+      properties.put("csamPlcname", getObjectProperty(properties, "csamPlcname", "value", String.class));
       properties.remove("monitoringEquipment");
       properties.put("buildingName", getObjectProperty(properties, "buildingName", "value", String.class));
       properties.put("buildingNumber", getObjectProperty(properties, "location", "buildingNumber", String.class));
@@ -80,18 +81,22 @@ public class ValidationService {
       properties.put("safetyZone", getObjectProperty(properties, "safetyZone", "value", String.class));
       properties.put("alarmCategory", getObjectProperty(properties, "alarmCategory", "value", String.class));
 
-      // Tagname does not go into the table
+      // These properties do not go into the table
       properties.remove("tagname");
+      properties.remove("faultState");
+      properties.remove("cabling");
+      properties.remove("csamDetector");
 
       data.add(properties.values().toArray());
 
       // Create an insert statement based on the properties we have in this point. This is possible due to the standardisation of column names in the
       // DRAFT_POINTS table (See https://edms.cern.ch/document/1506060/1)
-      query = "INSERT INTO DRAFT_POINTS_NEW (";
+      query = "INSERT INTO DRAFT_POINTS (";
       query += properties.keySet().stream().map(s -> s = propertyToColumnName(s)).collect(Collectors.joining(", "));
       query += ") VALUES (";
       query += properties.values().stream().map(s -> "?").collect(Collectors.joining(", "));
       query += ")";
+      log.debug(query);
 
       // Uses JdbcTemplate's batchUpdate operation to bulk load data
       jdbcTemplate.batchUpdate(query, data);
@@ -102,7 +107,7 @@ public class ValidationService {
 
     if (!valid) {
       // Read the points back to get the exit codes and error messages
-      query = "SELECT drp_request_id, drp_lineno, drp_exitcode, drp_exittext FROM DRAFT_POINTS_NEW WHERE drp_request_id = ?";
+      query = "SELECT drp_request_id, drp_lineno, drp_exitcode, drp_exittext FROM DRAFT_POINTS WHERE drp_request_id = ?";
 
       jdbcTemplate.query(query, new Object[]{request.getRequestId()}, (rs, rowNum) -> new Result(rs.getInt("drp_request_id"), rs.getInt("drp_lineno"), rs
           .getInt("drp_exitcode"), rs.getString("drp_exittext"))).forEach(result -> setErrorMessage(request, result));

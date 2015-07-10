@@ -48,6 +48,7 @@ public class CSAMRequestParser extends RequestParser {
     // Alarm mappings
     columnTitleMappings.put("etatActif", "alarmValue");
     columnTitleMappings.put("niveauAlarme", "priorityCode");
+    columnTitleMappings.put("aideAlarmeNomDeFichierOuTexte", "aideAlarme");
 
     // Location mappings
     columnTitleMappings.put("site", "functionalityCode");

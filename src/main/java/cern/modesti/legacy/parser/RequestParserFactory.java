@@ -3,8 +3,7 @@
  */
 package cern.modesti.legacy.parser;
 
-import java.io.InputStream;
-
+import cern.modesti.legacy.exception.RequestParseException;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
 import cern.modesti.repository.jpa.location.functionality.FunctionalityRepository;
 import cern.modesti.repository.jpa.person.PersonRepository;
@@ -16,11 +15,10 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import cern.modesti.legacy.exception.RequestParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.io.InputStream;
 
 /**
  * @author Justin Lewis Salmon
@@ -38,7 +36,7 @@ public class RequestParserFactory {
   private SubSystemRepository subSystemRepository;
 
   @Autowired
-  FunctionalityRepository functionalityRepository;
+  private FunctionalityRepository functionalityRepository;
 
   @Autowired
   private MonitoringEquipmentRepository monitoringEquipmentRepository;

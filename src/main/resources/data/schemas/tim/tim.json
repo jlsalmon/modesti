@@ -49,6 +49,7 @@
           "id": "monitoringEquipment",
           "type": "autocomplete",
           "url": "monitoringEquipments/search/find",
+          "required": true,
           "name_en": "Equipment Name",
           "name_fr": "Equipment Name",
           "help_en": "",
