@@ -3,8 +3,8 @@
  */
 package cern.modesti.legacy.parser;
 
-import java.util.*;
-
+import cern.modesti.legacy.exception.RequestParseException;
+import cern.modesti.legacy.exception.VersionNotSupportedException;
 import cern.modesti.repository.jpa.alarm.AlarmCategory;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipment;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
@@ -18,26 +18,23 @@ import cern.modesti.repository.jpa.person.Person;
 import cern.modesti.repository.jpa.person.PersonRepository;
 import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
+import cern.modesti.request.Request;
+import cern.modesti.request.RequestType;
+import cern.modesti.request.point.Point;
 import com.google.common.base.CaseFormat;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import cern.modesti.legacy.exception.RequestParseException;
-import cern.modesti.legacy.exception.VersionNotSupportedException;
-import cern.modesti.request.Request;
-import cern.modesti.request.RequestType;
-import cern.modesti.request.point.Point;
+import java.util.*;
 
 /**
  * @author Justin Lewis Salmon
  */
+@Slf4j
 public abstract class RequestParser {
-
-  private static final Logger LOG = LoggerFactory.getLogger(RequestParser.class);
 
   protected static final int FIRST_DATA_ROW = 7;
 
@@ -45,9 +42,13 @@ public abstract class RequestParser {
   private Double version;
 
   private SubSystemRepository subSystemRepository;
+  private Map<String, SubSystem> subSystemCache = new HashMap<>();
   private PersonRepository personRepository;
+  private Map<String, Person> personCache = new HashMap<>();
   private FunctionalityRepository functionalityRepository;
+  private Map<String, Functionality> functionalityCache = new HashMap<>();
   private MonitoringEquipmentRepository monitoringEquipmentRepository;
+  private Map<String, MonitoringEquipment> monitoringEquipmentCache = new HashMap<>();
 
   /**
    * @param sheet
@@ -84,6 +85,10 @@ public abstract class RequestParser {
     return request;
   }
 
+  /**
+   *
+   * @return
+   */
   private String parseDomain() {
     return sheet.getRow(0).getCell(0).getStringCellValue().trim();
   }
@@ -182,15 +187,18 @@ public abstract class RequestParser {
     properties.put("buildingName", new BuildingName((String) properties.get("buildingName")));
     properties.put("gmaoCode", new GmaoCode((String) properties.get("gmaoCode")));
     properties.put("csamDetector", new GmaoCode((String) properties.get("csamDetector")));
-    properties.put("csamPlcname", parseMonitoringEquipment(properties, "csamPlcname"));
     properties.put("functionality", parseFunctionality(properties));
     properties.put("alarmCategory", new AlarmCategory((String) properties.get("alarmCategory")));
     if (properties.get("safetyZone") != null) {
       properties.put("safetyZone", new Zone(String.valueOf(((Double) properties.get("safetyZone")).intValue())));
     }
     if (properties.get("monitoringEquipmentName") != null) {
-      properties.put("monitoringEquipment", parseMonitoringEquipment(properties, "monitoringEquipment"));
+      properties.put("monitoringEquipment", parseMonitoringEquipment(properties, "monitoringEquipmentName"));
     }
+    if (properties.get("csamPlcname") != null) {
+      properties.put("csamPlcname", parseMonitoringEquipment(properties, "csamPlcname"));
+    }
+    properties.remove("aideAlarme");
 
 
     point.setProperties(properties);
@@ -218,26 +226,30 @@ public abstract class RequestParser {
    * @return
    */
   protected Person parseResponsiblePerson(Map<String, Object> properties) {
-    Person person = null;
     Long responsiblePersonId = ((Double) properties.get("responsiblePersonId")).longValue();
     String responsiblePersonName = (String) properties.get("responsiblePersonName");
 
-    // Look for the responsible by ID
-    List<Person> people = personRepository.findByIdOrName(String.valueOf(responsiblePersonId), String.valueOf(responsiblePersonId));
+    Person person = personCache.get(String.valueOf(responsiblePersonId));
 
-    // If there are zero or more than 1 person, try to find by name
-    if (people.size() == 0 || people.size() > 1) {
-      people = personRepository.findByIdOrName(responsiblePersonName, responsiblePersonName);
+    if (person == null) {
+      // Look for the responsible by ID
+      List<Person> people = personRepository.findByIdOrName(String.valueOf(responsiblePersonId), String.valueOf(responsiblePersonId));
+
+      // If there are zero or more than 1 person, try to find by name
+      if (people.size() == 0 || people.size() > 1) {
+        people = personRepository.findByIdOrName(responsiblePersonName, responsiblePersonName);
+      }
+
+      if (people.size() == 0 || people.size() > 1) {
+        log.warn("Could not determine responsible person for point");
+        person = new Person();
+      } else {
+        person = people.get(0);
+        properties.put("responsiblePerson", person);
+      }
     }
 
-    if (people.size() == 0 || people.size() > 1) {
-      LOG.warn("Could not determine responsible person for point");
-      person = new Person();
-    } else {
-      person = people.get(0);
-      properties.put("responsiblePerson", person);
-    }
-
+    personCache.put(String.valueOf(responsiblePersonId), person);
     properties.remove("responsiblePersonId");
     properties.remove("responsiblePersonName");
     return person;
@@ -249,27 +261,24 @@ public abstract class RequestParser {
    * @return
    */
   protected SubSystem parseSubsystem(Map<String, Object> properties) {
-    SubSystem subsystem = null;
     String systemName = (String) properties.get("systemName");
     String subSystemName = (String) properties.get("subSystemName");
 
-    // CSAM requests specify only the subsystem
     if (systemName == null) {
-      // Find the subsystem by name (avoiding the "null" string literal)
-      List<SubSystem> subsystems = subSystemRepository.find(subSystemName);
-      if (subsystems.size() == 0 || subsystems.size() > 1) {
-        LOG.warn("Could not determine subsystem for point");
-        subsystem = new SubSystem();
-      } else {
-        subsystem = subsystems.get(0);
-      }
-    } else {
+      // CSAM requests specify only the subsystem because they are all SECU systems
+      systemName = "SECU";
+    }
+
+    SubSystem subsystem = subSystemCache.get(systemName + " " + subSystemName);
+
+    if (subsystem == null) {
       subsystem = new SubSystem();
       subsystem.setSystem(systemName);
       subsystem.setSubsystem(subSystemName);
       subsystem.setValue(systemName + " " + subSystemName);
     }
 
+    subSystemCache.put(subsystem.getValue(), subsystem);
     properties.remove("systemName");
     properties.remove("subSystemName");
     return subsystem;
@@ -311,13 +320,18 @@ public abstract class RequestParser {
    */
   private Functionality parseFunctionality(Map<String, Object> properties) {
     String functionalityCode = (String) properties.get("functionalityCode");
-    Functionality functionality = functionalityRepository.findOne(functionalityCode);
+    Functionality functionality = functionalityCache.get(functionalityCode);
 
     if (functionality == null) {
-      LOG.warn("Could not determine functionality for point");
+      functionality = functionalityRepository.findOne(functionalityCode);
+    }
+
+    if (functionality == null) {
+      log.warn("Could not determine functionality for point");
       functionality = new Functionality();
     }
 
+    functionalityCache.put(functionalityCode, functionality);
     properties.remove("functionalityCode");
     return functionality;
   }
@@ -329,18 +343,23 @@ public abstract class RequestParser {
    */
   private MonitoringEquipment parseMonitoringEquipment(Map<String, Object> properties, String property) {
     String monitoringEquipmentName = (String) properties.get(property);
-    MonitoringEquipment monitoringEquipment = monitoringEquipmentRepository.findOneByValue(monitoringEquipmentName);
+    MonitoringEquipment monitoringEquipment = monitoringEquipmentCache.get(monitoringEquipmentName);
 
     if (monitoringEquipment == null) {
-      // Try to find by the "impname" property
-      monitoringEquipment = monitoringEquipmentRepository.findOneByName(monitoringEquipmentName);
+      monitoringEquipment = monitoringEquipmentRepository.findOneByValue(monitoringEquipmentName);
 
       if (monitoringEquipment == null) {
-        LOG.warn("Could not determine monitoring equipment for point");
-        monitoringEquipment = new MonitoringEquipment();
+        // Try to find by the "impname" property
+        monitoringEquipment = monitoringEquipmentRepository.findOneByName(monitoringEquipmentName);
+
+        if (monitoringEquipment == null) {
+          log.warn("Could not determine monitoring equipment for point");
+          monitoringEquipment = new MonitoringEquipment();
+        }
       }
     }
 
+    monitoringEquipmentCache.put(monitoringEquipmentName, monitoringEquipment);
     properties.remove("monitoringEquipmentName");
     return monitoringEquipment;
   }
@@ -460,10 +479,18 @@ public abstract class RequestParser {
     this.subSystemRepository = subSystemRepository;
   }
 
+  /**
+   *
+   * @param functionalityRepository
+   */
   public void setFunctionalityRepository(FunctionalityRepository functionalityRepository) {
     this.functionalityRepository = functionalityRepository;
   }
 
+  /**
+   *
+   * @param monitoringEquipmentRepository
+   */
   public void setMonitoringEquipmentRepository(MonitoringEquipmentRepository monitoringEquipmentRepository) {
     this.monitoringEquipmentRepository = monitoringEquipmentRepository;
   }
