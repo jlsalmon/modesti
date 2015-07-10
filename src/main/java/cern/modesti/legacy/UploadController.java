@@ -7,6 +7,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.security.Principal;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,28 +29,27 @@ import cern.modesti.request.Request;
  *
  */
 @Controller
+@Slf4j
 public class UploadController {
-
-  private static final Logger LOG = LoggerFactory.getLogger(UploadController.class);
 
   @Autowired
   private UploadService service;
 
   @RequestMapping(value = "/requests/upload", method = POST)
-  public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, UriComponentsBuilder b, Principal user) {
+  public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("description") String description, UriComponentsBuilder b, Principal user) {
     Request request = null;
 
     if (!file.isEmpty()) {
       try {
-        request = service.parseRequestFromExcelSheet(file.getOriginalFilename(), file.getInputStream(), user);
+        request = service.parseRequestFromExcelSheet(description, file.getInputStream(), user);
 
-        LOG.info("successfully uploaded " + file.getOriginalFilename());
+        log.info("successfully uploaded " + file.getOriginalFilename());
       } catch (Exception e) {
-        LOG.info("failed to upload " + file.getOriginalFilename(), e);
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        log.info("failed to upload " + file.getOriginalFilename(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
       }
     } else {
-      LOG.info("failed to upload " + file.getOriginalFilename() + " because the file was empty.");
+      log.info("failed to upload " + file.getOriginalFilename() + " because the file was empty.");
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
