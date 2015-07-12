@@ -1,5 +1,15 @@
-.main-header .logo {
+.skin-blue-light .main-header .logo {
   font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+  background-color: #205081;
+  font-weight: 400;
+}
+
+.skin-blue-light .main-header .logo:hover {
+  background-color: #205081;
+}
+
+.skin-blue-light .main-header .navbar {
+  background-color: #205081;
 }
 
 /* skin */
@@ -457,27 +467,28 @@ ul.category-headings {
   */
 
 .label.request-status.IN_PROGRESS {
-  background-color: #3c8dbc;
+  background-color: #4A6785;
 }
 
 .label.request-status.FOR_CORRECTION {
-  background-color: #f56954;
+  background-color: #D04437;
 }
 
 .label.request-status.FOR_APPROVAL {
-  background-color: #f39c12;
+  background-color: #F6C342;
+  color: #594300;
 }
 
 .label.request-status.FOR_ADDRESSING {
-  background-color: #8E24AA;
+  background-color: #815B3A;
 }
 
 .label.request-status.FOR_CABLING {
-  background-color: #D81B60;
+  background-color: #654982;
 }
 
 .label.request-status.FOR_TESTING {
-  background-color: #00a65a;
+  background-color: #14892C;
 }
 
 .label.request-status.CLOSED {

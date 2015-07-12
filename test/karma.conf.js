@@ -46,6 +46,8 @@ module.exports = function(config) {
       'app/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
       'app/bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
       'app/bower_components/angular-translate-storage-local/angular-translate-storage-local.js',
+      'app/bower_components/spin.js/spin.js',
+      'app/bower_components/angular-spinner/angular-spinner.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

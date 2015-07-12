@@ -1,7 +1,7 @@
 <style>
   .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
-    background-color: #3C8DBC;
-    /*color: #444;*/
+    background-color: #e6e6e6;
+    color: #444;
   }
 
   .tasklist-controls {
@@ -255,10 +255,18 @@
           <!--</div>-->
         </div>
 
-        <div class="list-group">
+        <div class="loading-container" style="height: 400px; width: 100%" ng-if="ctrl.loading == 'started'">
+          <span us-spinner="{position: 'absolute', zIndex: '200'}"></span>
+        </div>
+        
+        <i class="fa fa-exclamation-triangle" ng-if="ctrl.loading == 'error'"></i>
+        
+        
+        <div class="list-group" ng-if="ctrl.loading == 'success'">
+        
           <a ng-repeat="request in ctrl.requests | filter: ctrl.filter"
-             ng-click="ctrl.editRequest(request)" href=""
-             class="list-group-item">
+             ng-click="ctrl.editRequest(request)" 
+             href="" class="list-group-item">
 
             <i class="fa fa-list-ol fa-fw text-muted"></i>
             <span class="">{{request.description}}</span>

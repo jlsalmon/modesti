@@ -23,6 +23,7 @@ function UserRequestsController($location, $localStorage, Restangular, RequestSe
       },
       type: ''
   };
+  self.loading = undefined;
 
   self.deleteRequest = deleteRequest;
   self.editRequest = editRequest;
@@ -34,12 +35,15 @@ function UserRequestsController($location, $localStorage, Restangular, RequestSe
    *
    */
   function getRequests() {
+    self.loading = 'started';
+    
     RequestService.getRequests().then(function(requests) {
       self.requests = requests;
+      self.loading = 'success';
     },
 
     function(error) {
-      // what to do here?
+      self.loading = 'error';
     });
   }
 
