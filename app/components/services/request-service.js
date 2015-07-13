@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('RequestService', RequestService);
 
-function RequestService($filter, $rootScope, $q, Restangular) {
+function RequestService($http, $filter, $rootScope, $q, Restangular) {
   var self = this;
 
   self.cache = {};
@@ -27,10 +27,13 @@ function RequestService($filter, $rootScope, $q, Restangular) {
    *
    * @returns {*}
    */
-  function getRequests() {
+  function getRequests(page, size, sort) {
     var q = $q.defer();
+    page = page || 0;
+    size = size || 20;
+    sort = sort || 'requestId,desc'
 
-    Restangular.all('requests').getList({'sort': 'requestId,desc'}).then(function (requests) {
+    $http.get(BACKEND_BASE_URL + '/requests', {params: {page: page - 1, size: size, sort: sort}}).then(function (requests) {
         q.resolve(requests.data);
       },
 

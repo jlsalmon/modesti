@@ -43,7 +43,7 @@ function configureRestangular(RestangularProvider) {
 
     if (operation === "getList") {
       if (data.hasOwnProperty('_embedded')) {
-        extractedData = data._embedded.requests;
+        extractedData = data //._embedded.requests;
       } else {
         extractedData = data.data;
       }

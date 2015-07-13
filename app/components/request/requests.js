@@ -27,18 +27,33 @@ function UserRequestsController($location, $localStorage, Restangular, RequestSe
 
   self.deleteRequest = deleteRequest;
   self.editRequest = editRequest;
+  self.onPageChanged = onPageChanged;
   self.claimTask = claimTask;
 
-  getRequests();
+  getRequests(1, 5, "requestId,desc");
 
   /**
    *
    */
-  function getRequests() {
+  function getRequests(page, size, sort) {
     self.loading = 'started';
     
-    RequestService.getRequests().then(function(requests) {
-      self.requests = requests;
+    RequestService.getRequests(page, size, sort).then(function(response) {
+      self.requests = response._embedded.requests;
+      self.page = response.page;
+      // Backend pages 0-based, Bootstrap pagination 1-based
+      self.page.number += 1;
+      
+      angular.forEach(response._links, function(item) {
+        if(item.rel === 'next') {
+          self.page.next = item.href;
+        }
+
+        if(item.rel === 'prev') {
+          self.page.prev = item.href;
+        }
+      });
+      
       self.loading = 'success';
     },
 
@@ -72,6 +87,13 @@ function UserRequestsController($location, $localStorage, Restangular, RequestSe
     var id = href.substring(href.lastIndexOf('/') + 1);
 
     $location.path('/requests/' + id);
+  }
+  
+  /**
+   * 
+   */
+  function onPageChanged() {
+    getRequests(self.page.number, self.page.size, "requestId,desc");
   }
 
   /**
