@@ -23,6 +23,7 @@ import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.result.AddressingResult;
 import cern.modesti.workflow.result.ConfigurationResult;
 import cern.modesti.workflow.result.TestResult;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
@@ -51,6 +52,7 @@ public class Request implements Serializable {
   /**
    * Human-readable id
    */
+  @Indexed
   @TextIndexed(weight = 3)
   private String requestId;
 
@@ -60,29 +62,36 @@ public class Request implements Serializable {
   @TextIndexed
   private List<String> childRequestIds = new ArrayList<>();
 
+  @Indexed
   @TextIndexed
   private RequestStatus status;
 
+  @Indexed
   @TextIndexed
   @NotNull(message = "Request type is compulsory")
   private RequestType type;
 
+  @Indexed
   @TextIndexed
   @NotNull(message = "Request creator is compulsory")
   private User creator;
 
+  @Indexed
   @TextIndexed(weight = 2)
   @NotNull(message = "Description is compulsory")
   private String description;
 
+  @Indexed
   @TextIndexed
   @NotNull(message = "Domain is compulsory")
   private String domain;
 
+  @Indexed
   @TextIndexed
   @NotNull(message = "Subsystem is compulsory")
   private SubSystem subsystem;
 
+  @Indexed
   @TextIndexed
   @NotNull(message = "At least one category is compulsory")
   private List<String> categories = new ArrayList<>();
