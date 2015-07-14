@@ -6,8 +6,12 @@ import cern.modesti.request.point.Point;
 import com.google.common.base.CaseFormat;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import oracle.jdbc.OracleTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -15,6 +19,7 @@ import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
 import javax.persistence.StoredProcedureQuery;
 import javax.transaction.Transactional;
+import java.sql.Types;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -103,52 +108,39 @@ public class ValidationService {
     }
 
     // Call the stored procedure
-    boolean valid = validate(request);
+    validate(request);
 
-    if (!valid) {
-      // Read the points back to get the exit codes and error messages
-      query = "SELECT drp_request_id, drp_lineno, drp_exitcode, drp_exittext FROM DRAFT_POINTS WHERE drp_request_id = ?";
+    // Read the points back to get the exit codes and error messages
+    query = "SELECT drp_request_id, drp_lineno, drp_exitcode, drp_exittext FROM DRAFT_POINTS WHERE drp_request_id = ?";
 
-      jdbcTemplate.query(query, new Object[]{request.getRequestId()}, (rs, rowNum) -> new Result(rs.getInt("drp_request_id"), rs.getInt("drp_lineno"), rs
-          .getInt("drp_exitcode"), rs.getString("drp_exittext"))).forEach(result -> setErrorMessage(request, result));
+    boolean valid = true;
+    List<Result> results = jdbcTemplate.query(query, new Object[]{request.getRequestId()}, (rs, rowNum) -> new Result(rs.getInt("drp_request_id"), rs.getInt("drp_lineno"), rs
+        .getInt("drp_exitcode"), rs.getString("drp_exittext")));
+
+    for (Result result : results) {
+      if (result.getExitCode() != 0) {
+        valid = false;
+        setErrorMessage(request, result);
+      }
     }
 
     return valid;
   }
 
   /**
-   *
    * @param request
-   * @return
    */
-  public boolean validate(Request request) {
+  private void validate(Request request) {
     log.debug("validating via stored procedure");
 
-    // Make sure that the draft points have been properly flushed to the database
-    entityManager.flush();
+    SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withCatalogName("TIMPKREQCHECK").withProcedureName("STP_CHECK_REQUEST").declareParameters(new
+        SqlParameter("p_request_id", OracleTypes.NUMBER), new SqlParameter("p_user_id", OracleTypes.NUMBER), new SqlOutParameter("p_exitcode", OracleTypes
+        .NUMBER), new SqlOutParameter("p_exittext", OracleTypes.VARCHAR));
 
-    // Create and call the stored procedure
-    StoredProcedureQuery storedProcedure = entityManager.createStoredProcedureQuery("TIMPKREQCHECK.STP_CHECK_REQUEST");
-    storedProcedure.registerStoredProcedureParameter(0, Integer.class, ParameterMode.IN);
-    storedProcedure.registerStoredProcedureParameter(1, Integer.class, ParameterMode.OUT);
-    storedProcedure.registerStoredProcedureParameter(2, String.class, ParameterMode.OUT);
-    storedProcedure.setParameter(0, Integer.valueOf(request.getRequestId()));
-    storedProcedure.execute();
-
-    // Get the output parameters
-    Integer exitcode = (Integer) storedProcedure.getOutputParameterValue(1);
-    String exittext = (String) storedProcedure.getOutputParameterValue(2);
-
-    // Clear the persistence context so that we get the exit codes and messages when
-    // we read back the processed draft points
-    entityManager.clear();
-
-    log.debug(String.format("validation result: (%d) %s", exitcode, exittext));
-    return exitcode == 0;
+    call.execute(Integer.valueOf(request.getRequestId()), request.getCreator().getId());
   }
 
   /**
-   *
    * @param request
    * @param result
    */
