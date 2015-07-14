@@ -30,14 +30,6 @@
           "help_fr": "Un code identifiant l'equipement concerne si aucun code GMAO existe, ou le code du sous-équipement qui complète le code GMAO"
         },
         {
-          "id": "timeDeadband",
-          "type": "text",
-          "name_en": "Time Deadband",
-          "name_fr": "Time Deadband",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
           "id": "pointCompInfo",
           "type": "text",
           "name_en": "Complementary Info",
