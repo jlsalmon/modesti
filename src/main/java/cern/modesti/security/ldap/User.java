@@ -12,6 +12,8 @@ import java.util.Collection;
  */
 public class User implements UserDetails {
 
+  private Integer id;
+
   private String username;
 
   private String email;
@@ -23,11 +25,20 @@ public class User implements UserDetails {
   public User() {
   }
 
-  public User(String username, String firstName, String lastName, String email) {
+  public User(Integer id, String username, String firstName, String lastName, String email) {
+    this.id = id;
     this.username = username;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   @Override

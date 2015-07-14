@@ -12,6 +12,7 @@ import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.request.SearchTextConverter;
 import cern.modesti.request.point.Point;
 import cern.modesti.schema.field.*;
+import cern.modesti.security.ldap.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.rest.SpringBootRepositoryRestMvcConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +41,7 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
     config.exposeIdsFor(Point.class, Person.class, Functionality.class, Location.class, Zone.class, SubSystem.class, AlarmCategory.class, Field.class, TextField
         .class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class, BuildingName.class, GmaoCode.class, MonitoringEquipment
-        .class);
+        .class, User.class);
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);

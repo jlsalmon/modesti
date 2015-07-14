@@ -75,6 +75,7 @@ public class LdapSynchroniser {
         if (identityService.createUserQuery().userId(userId).singleResult() == null) {
           LOG.debug("adding new user " + userId);
           User user = identityService.newUser(adapter.getStringAttribute("CN"));
+          user.setId(adapter.getStringAttribute("employeeID"));
           user.setFirstName(adapter.getStringAttribute("givenName"));
           user.setLastName(adapter.getStringAttribute("sn"));
           user.setEmail(adapter.getStringAttribute("mail"));

@@ -19,11 +19,12 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
 
   @Override
   public UserDetails mapUserFromContext(DirContextOperations context, String username, Collection<? extends GrantedAuthority> authorities) {
+    Integer id = Integer.valueOf(context.getStringAttribute("employeeID"));
     String firstName = context.getStringAttribute("givenName");
     String lastName = context.getStringAttribute("sn");
     String email = context.getStringAttribute("mail");
 
-    return new User(username, firstName, lastName, email);
+    return new User(id, username, firstName, lastName, email);
   }
 
   @Override
