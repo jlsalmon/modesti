@@ -20,6 +20,7 @@ function RequestService($http, $filter, $rootScope, $q, Restangular) {
     saveRequest: saveRequest,
     createRequest: createRequest,
     deleteRequest: deleteRequest,
+    getRequestMetrics: getRequestMetrics,
     clearCache: clearCache
   };
 
@@ -27,20 +28,33 @@ function RequestService($http, $filter, $rootScope, $q, Restangular) {
    *
    * @returns {*}
    */
-  function getRequests(page, size, sort) {
+  function getRequests(page, size, sort, filter) {
     var q = $q.defer();
     page = page || 0;
     size = size || 20;
-    sort = sort || 'requestId,desc'
+    sort = sort || 'requestId,desc';
 
-    $http.get(BACKEND_BASE_URL + '/requests', {params: {page: page - 1, size: size, sort: sort}}).then(function (requests) {
-        q.resolve(requests.data);
-      },
+    $http.get(BACKEND_BASE_URL + '/requests/search/find',
+    {
+      params: {
+        status: filter.status,
+        domain: filter.domain,
+        type: filter.type,
+        system: filter.subsystem.system,
+        subsystem: filter.subsystem.subsystem,
+        creator: filter.creator.username,
+        page: page - 1,
+        size: size,
+        sort: sort
+      }
+    }).then(function (requests) {
+      q.resolve(requests.data);
+    },
 
-      function (error) {
-        console.log('error: ' + error.statusText);
-        q.reject(error);
-      });
+    function (error) {
+      console.log('error: ' + error.statusText);
+      q.reject(error);
+    });
 
     return q.promise;
   }
@@ -84,27 +98,27 @@ function RequestService($http, $filter, $rootScope, $q, Restangular) {
       console.log('fetching request ' + id);
 
       Restangular.one('requests', id).get().then(function (response) {
-          var request = response.data;
+        var request = response.data;
 
-          // Cache the request
-          self.cache[request.requestId] = request;
-          console.log('cached request (with ' + request.points.length + ' points)');
+        // Cache the request
+        self.cache[request.requestId] = request;
+        console.log('cached request (with ' + request.points.length + ' points)');
 
-          // Make a copy for sorting/filtering
-          request = Restangular.copy(request);
+        // Make a copy for sorting/filtering
+        request = Restangular.copy(request);
 
-          if (params) {
-            // Perform initial sorting/filtering/slicing
-            request.points = transformData(request.points, params.filter(), params);
-          }
+        if (params) {
+          // Perform initial sorting/filtering/slicing
+          request.points = transformData(request.points, params.filter(), params);
+        }
 
-          q.resolve(request);
-        },
+        q.resolve(request);
+      },
 
-        function (error) {
-          console.log(error.status + ' ' + error.statusText);
-          q.reject(error);
-        });
+      function (error) {
+        console.log(error.status + ' ' + error.statusText);
+        q.reject(error);
+      });
     }
 
     return q.promise;
@@ -119,7 +133,7 @@ function RequestService($http, $filter, $rootScope, $q, Restangular) {
     var childRequestIds = request.childRequestIds;
     var promises = [];
 
-    angular.forEach(childRequestIds, function(childRequestId) {
+    angular.forEach(childRequestIds, function (childRequestId) {
       promises.push(service.getRequest(childRequestId));
     });
 
@@ -190,18 +204,18 @@ function RequestService($http, $filter, $rootScope, $q, Restangular) {
     var requests = Restangular.all('requests');
 
     requests.post(request).then(function (response) {
-        var location = response.headers('Location');
-        console.log('created request: ' + location);
-        q.resolve(location);
-      },
+      var location = response.headers('Location');
+      console.log('created request: ' + location);
+      q.resolve(location);
+    },
 
-      function (error) {
-        console.log(error.data.message);
-        for (var i in error.data.errors) {
-          console.log('error: ' + error.data.errors[i].message);
-        }
-        q.reject(error);
-      });
+    function (error) {
+      console.log(error.data.message);
+      for (var i in error.data.errors) {
+        console.log('error: ' + error.data.errors[i].message);
+      }
+      q.reject(error);
+    });
 
     return q.promise;
   }
@@ -215,14 +229,33 @@ function RequestService($http, $filter, $rootScope, $q, Restangular) {
     var q = $q.defer();
 
     Restangular.one('requests', id).remove().then(function (response) {
-        console.log('deleted request: ' + response);
-        q.resolve(response);
-      },
+      console.log('deleted request: ' + response);
+      q.resolve(response);
+    },
 
-      function (error) {
-        console.log(error.status + ' ' + error.statusText);
-        q.reject(error);
-      });
+    function (error) {
+      console.log(error.status + ' ' + error.statusText);
+      q.reject(error);
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getRequestMetrics() {
+    var q = $q.defer();
+
+    $http.get(BACKEND_BASE_URL + '/metrics').then(function (response) {
+      q.resolve(response.data);
+    },
+
+    function (error) {
+      console.log(error.status + ' ' + error.statusText);
+      q.reject(error);
+    });
 
     return q.promise;
   }

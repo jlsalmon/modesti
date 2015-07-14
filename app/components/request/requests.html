@@ -45,34 +45,34 @@
   .todo-list .request-title .label {
     margin-left: 2px !important;
   }
-  
+
   .pagination {
     margin: 0
   }
+
+  .list-group-item {
+    cursor: pointer;
+  }
+
+  .list-group-item:first-child {
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+  }
+
+  .list-group-item:last-child {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+
+  .sidebar-menu {;
+  }
+
 </style>
 
 
 <!-- Main content -->
 <section class="content">
   <div class="row">
-
-
-
-    <style>
-      .list-group-item:first-child {
-        border-top-right-radius: 0px;
-        border-top-left-radius: 0px;
-      }
-
-      .list-group-item:last-child {
-        border-bottom-right-radius: 0px;
-        border-bottom-left-radius: 0px;
-      }
-
-      .sidebar-menu {;
-      }
-    </style>
-
 
     <div class="container">
 
@@ -86,43 +86,44 @@
             <li ng-class="{active: ctrl.filter.status == 'IN_PROGRESS'}">
               <a href="" ng-click="ctrl.filter.status = 'IN_PROGRESS'">
                 <i class="fa fa-fw fa-inbox"></i> In Progress
-                <span class="label request-status pull-right" ng-class="'IN_PROGRESS'">{{(ctrl.requests | filter:{status: 'IN_PROGRESS'}).length}}</span>
+                <span class="label request-status pull-right" ng-class="'IN_PROGRESS'">{{ctrl.getRequestCount('IN_PROGRESS')}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_CORRECTION'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_CORRECTION'">
                 <i class="fa fa-fw fa-exclamation-circle"></i> For Correction
-                <span class="label request-status pull-right" ng-class="'FOR_CORRECTION'">{{(ctrl.requests | filter:{status: 'FOR_CORRECTION'}).length}}</span>
+                <span class="label request-status pull-right" ng-class="'FOR_CORRECTION'">{{ctrl.getRequestCount('FOR_CORRECTION')}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_APPROVAL'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_APPROVAL'">
                 <i class="fa fa-fw fa-bell-o"></i> For Approval
-                <span class="label request-status pull-right" ng-class="'FOR_APPROVAL'">{{(ctrl.requests | filter:{status: 'FOR_APPROVAL'}).length}}</span>
+                <span class="label request-status pull-right" ng-class="'FOR_APPROVAL'">{{ctrl.getRequestCount('FOR_APPROVAL')}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_ADDRESSING'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_ADDRESSING'">
                 <i class="fa fa-fw fa-tasks"></i> For Addressing
-                <span class="label request-status pull-right" ng-class="'FOR_ADDRESSING'">{{(ctrl.requests | filter:{status: 'FOR_ADDRESSING'}).length}}</span>
+                <span class="label request-status pull-right" ng-class="'FOR_ADDRESSING'">{{ctrl.getRequestCount('FOR_ADDRESSING')}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_CABLING'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_CABLING'">
                 <i class="fa fa-fw fa-plug"></i> For Cabling
-                <span class="label request-status pull-right" ng-class="'FOR_CABLING'">{{(ctrl.requests | filter:{status: 'FOR_CABLING'}).length}}</span>
+                <span class="label request-status pull-right" ng-class="'FOR_CABLING'">{{ctrl.getRequestCount('FOR_CABLING')}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_TESTING'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_TESTING'">
                 <i class="fa fa-fw fa-check-square-o"></i> For Testing
-                <span class="label request-status pull-right" ng-class="'FOR_TESTING'">{{(ctrl.requests | filter:{status: 'FOR_TESTING'}).length}}</span>
+                <span class="label request-status pull-right" ng-class="'FOR_TESTING'">{{ctrl.getRequestCount('FOR_TESTING')}}</span>
               </a>
             </li>
             <li ng-class="{active: ctrl.filter.status == 'CLOSED'}">
               <a href="" ng-click="ctrl.filter.status = 'CLOSED'">
                 <i class="fa fa-fw fa-lock"></i> Closed
-                <span class="label request-status pull-right" ng-class="'CLOSED'">{{(ctrl.requests | filter:{status: 'CLOSED'}).length}}</span>
+                <span class="label request-status pull-right"
+                      ng-class="'CLOSED'">{{ctrl.getRequestCount('CLOSED')}}</span>
               </a>
             </li>
           </ul>
@@ -146,8 +147,8 @@
                   <a href="" ng-click="ctrl.filter.subsystem.system = ''; ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
                 </li>
                 <li class="divider"></li>
-                <li ng-repeat="request in ctrl.requests | unique:'subsystem.system'">
-                  <a href="" ng-click="ctrl.filter.subsystem.system = request.subsystem.system">{{request.subsystem.system}}</a>
+                <li ng-repeat="subsystem in ctrl.subsystems | unique:'system'">
+                  <a href="" ng-click="ctrl.filter.subsystem.system = subsystem.system; ctrl.filter.subsystem.subsystem = ''">{{subsystem.system}}</a>
                 </li>
               </ul>
             </div>
@@ -164,9 +165,10 @@
                   <a href="" ng-click="ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
                 </li>
                 <li class="divider"></li>
-                <li ng-repeat="request in ctrl.requests | filter:ctrl.filter.subsystem.system | unique:'subsystem.subsystem'">
-                  <a href="" ng-click="ctrl.filter.subsystem.subsystem = request.subsystem.subsystem">{{request.subsystem.subsystem}}</a>
+                <li ng-repeat="subsystem in ctrl.subsystems | filter:ctrl.filter.subsystem.system | unique:'subsystem'">
+                  <a href="" ng-click="ctrl.filter.subsystem.subsystem = subsystem.subsystem">{{subsystem.subsystem}}</a>
                 </li>
+                | filter: ctrl.filter
               </ul>
             </div>
           </div>
@@ -182,25 +184,11 @@
                 <a href="" ng-click="ctrl.filter.domain = ''">{{'ANY'|translate}}</a>
               </li>
               <li class="divider"></li>
-              <li ng-repeat="request in ctrl.requests | unique:'domain'"><a href=""
-                                                                            ng-click="ctrl.filter.domain = request.domain">{{request.domain}}</a>
+              <li ng-repeat="domain in ctrl.domains">
+                <a href="" ng-click="ctrl.filter.domain = domain">{{domain}}</a>
               </li>
             </ul>
           </div>
-
-          <!--             <div class="btn-group" dropdown>
-                        <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                          <i class="fa fa-fw fa-sitemap"></i>
-                          <span class="text-muted">categories: </span>{{ctrl.filter.categories != '' ? ctrl.filter.categories : 'Any'}} <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                          <li>
-                            <a href="" ng-click="ctrl.filter.categories = ''">Any</a>
-                          </li>
-                          <li class="divider"></li>
-                          <li ng-repeat="request in ctrl.requests | unique:'categories'"><a href="" ng-click="ctrl.filter.categories = request.categories">{{request.categories}}</a></li>
-                        </ul>
-                      </div> -->
 
           <div class="btn-group" dropdown>
             <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
@@ -230,85 +218,75 @@
                 <a href="" ng-click="ctrl.filter.type = ''">{{'ANY'|translate}}</a>
               </li>
               <li class="divider"></li>
-              <li ng-repeat="request in ctrl.requests | unique:'type'">
-                <a href="" ng-click="ctrl.filter.type = request.type">{{request.type}}</a>
+              <li ng-repeat="type in ctrl.types">
+                <a href="" ng-click="ctrl.filter.type = type">{{type}}</a>
               </li>
             </ul>
           </div>
         </div>
-        
-        <div class="tasklist-controls">
-            <form class="form-inline search-form">
-              <div class="form-group input-group">
-                <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search requests..."> <span class="input-group-btn">
+
+        <div class="tasklist-controls" style="position: relative;">
+          <form class="form-inline search-form">
+            <div class="form-group input-group">
+              <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search requests..."> <span
+                class="input-group-btn">
                   <button type="submit" name="search" id="search-btn" class="btn btn-flat">
                     <i class="fa fa-search"></i>
                   </button>
                 </span>
-              </div>
-            </form>
-        </div>
-
-        <div class="loading-container" style="height: 400px; width: 100%" ng-if="ctrl.loading == 'started' || ctrl.loading == 'error'">
-          <span us-spinner="{position: 'absolute', zIndex: '200'}" ng-if="ctrl.loading == 'started'"></span>
-          <i class="fa fa-2x fa-exclamation-triangle" ng-if="ctrl.loading == 'error'" style="position: absolute; top: 50%; left: 50%;"></i>
-        </div>
-        
-        <div class="list-group" ng-if="ctrl.loading == 'success'">
-          <a ng-repeat="request in ctrl.requests | filter: ctrl.filter"
-             ng-click="ctrl.editRequest(request)" 
-              class="list-group-item">
-
-
-<!--             <div class="request-icon">
-              <i class="fa fa-list-ol fa-fw text-muted vcenter"></i>
             </div>
-            <div class="request-title">
-              <span class="text">{{request.description}}</span> 
-              <span class="label request-status pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_',  ' ')}}</span> 
-              
-              <span class="text-muted" style="margin-left: 5px;"> #{{request.requestId}} {{'BY'|translate}} <i class="fa fa-fw fa-user"></i>
-                {{request.creator.username}}
-              </span> <span class="text-muted"> <i class="fa fa-fw fa-user"></i> {{request.type}}
-              </span> <span class="text-muted" style="margin-left: 5px;"> <i class="fa fa-fw fa-crosshairs"></i> {{request.domain}} &middot;
-              </span> <span class="text-muted"> <i class="fa fa-fw fa-sitemap"></i> {{request.subsystem.value}} &middot;
-              </span> <span class="text-muted"> <i class="fa fa-fw fa-cogs"></i> {{request.categories.join(', ')}}
-              </span>
-            </div> -->
+          </form>
+
+          <span style="position: absolute; top: 50%; right: 0;" ng-cloak>{{ctrl.page.totalElements}} requests for this filter</span>
+        </div>
+
+        <div class="loading-container" style="height: 400px; width: 100%"
+             ng-if="ctrl.loading == 'started' || ctrl.loading == 'error'">
+          <span us-spinner="{position: 'absolute', zIndex: '200'}" ng-if="ctrl.loading == 'started'"></span>
+          <i class="fa fa-2x fa-exclamation-triangle" ng-if="ctrl.loading == 'error'"
+             style="position: absolute; top: 50%; left: 50%;"></i>
+        </div>
+
+        <div class="list-group" ng-if="ctrl.loading == 'success'">
+          <a ng-repeat="request in ctrl.requests"
+             ng-if="ctrl.requests.length > 0"
+             ng-click="ctrl.editRequest(request)"
+             class="list-group-item">
 
             <i class="fa fa-list-ol fa-fw text-muted"></i>
             <span class=""><strong>{{request.description}}</strong></span>
             <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
-            <br />
+            <br/>
             <span class="" style="font-size: 11px;">
-              <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} &middot;</span>
+              <span
+                  class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} &middot;</span>
               <span class="text-muted"> <i class="fa fa-fw fa-crosshairs"></i> {{request.domain}} &middot; </span>
-              <span class="text-muted"> <i class="fa fa-fw fa-sitemap"></i>    {{request.subsystem.value}} &middot; </span>
+              <span class="text-muted"> <i
+                  class="fa fa-fw fa-sitemap"></i>    {{request.subsystem.value}} &middot; </span>
               <span class="text-muted"> <i class="fa fa-fw fa-cogs"></i>       {{request.categories.join(', ')}}</span>
             </span>
-            </a>
+          </a>
+          <div class="list-group-item" ng-if="ctrl.requests.length == 0">
+            No requests to show
           </div>
-        
-          
-            <div class="text-center">
-            <pagination boundary-links="true" 
-                        total-items="ctrl.page.totalElements"
-                        items-per-page="ctrl.page.size"
-                        ng-model="ctrl.page.number"
-                        ng-change="ctrl.onPageChanged()"
-                        class="pagination-sm" 
-                        previous-text="&lsaquo;" 
-                        next-text="&rsaquo;" 
-                        first-text="&laquo;" 
-                        last-text="&raquo;"></pagination>
-            
-            </div>
-                        
-            <!-- <span class="pull-right" ng-cloak>{{ctrl.page.totalElements}} requests in total</span> -->
+        </div>
+
+
+        <div class="text-center" ng-if="ctrl.loading == 'success' && ctrl.requests.length > 0">
+          <pagination boundary-links="true"
+                      max-size="5"
+                      total-items="ctrl.page.totalElements"
+                      items-per-page="ctrl.page.size"
+                      rotate="false"
+                      ng-model="ctrl.page.number"
+                      ng-change="ctrl.onPageChanged()"
+                      class="pagination-sm"
+                      previous-text="&lsaquo;"
+                      next-text="&rsaquo;"
+                      first-text="&laquo;"
+                      last-text="&raquo;"></pagination>
+        </div>
       </div>
     </div>
-
-
   </div>
-  <!-- /.row -->
-</section><!-- /.content -->
+</section>
