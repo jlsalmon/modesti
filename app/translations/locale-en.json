@@ -70,6 +70,7 @@
   "NEXT": "Next",
 
   "UPLOAD_REQUEST": "Upload request",
+  "UPLOAD_EXISTING": "upload an existing request",
   "SELECT_FILE": "Select file",
   "SELECT_FILE_HELP": "Select the legacy MODESTI Excel file you wish to upload. Both .xls and .xlsx formats are supported. Max file size 10MB.",
   "DROP_FILE": "Drop file here",
