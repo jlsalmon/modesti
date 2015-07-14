@@ -17,16 +17,21 @@
  ******************************************************************************/
 package cern.modesti.request;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.WorkflowService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Component;
 
 import cern.modesti.repository.mongo.request.counter.CounterService;
@@ -45,10 +50,9 @@ import cern.modesti.request.point.Point;
  * @author Justin Lewis Salmon
  */
 @Component
+@Slf4j
 @RepositoryEventHandler(Request.class)
 public class RequestEventHandler {
-
-  private static final Logger LOG = LoggerFactory.getLogger(RequestEventHandler.class);
 
   @Autowired
   private CounterService counterService;
@@ -64,7 +68,7 @@ public class RequestEventHandler {
   @HandleBeforeCreate
   public void handleRequestCreate(Request request) {
     request.setRequestId(counterService.getNextSequence(CounterService.REQUEST_ID_SEQUENCE).toString());
-    LOG.trace("beforeCreate() generated request id: " + request.getRequestId());
+    log.trace("beforeCreate() generated request id: " + request.getRequestId());
 
     // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
@@ -79,7 +83,7 @@ public class RequestEventHandler {
       if (point.getId() == null) {
         // Point IDs are 1-based
         point.setId((long) (request.getPoints().indexOf(point) + 1));
-        LOG.debug("beforeCreate() generated point id: " + point.getId());
+        log.debug("beforeCreate() generated point id: " + point.getId());
       }
     }
 
@@ -98,7 +102,7 @@ public class RequestEventHandler {
       if (point.getId() == null) {
         // Point IDs are 1-based
         point.setId((long) (request.getPoints().indexOf(point) + 1));
-        LOG.debug("beforeSave() generated point id: " + point.getId());
+        log.debug("beforeSave() generated point id: " + point.getId());
       }
     }
   }

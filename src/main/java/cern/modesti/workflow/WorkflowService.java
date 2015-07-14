@@ -15,6 +15,7 @@ import cern.modesti.workflow.result.ConfigurationResult;
 import cern.modesti.workflow.result.TestResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -32,9 +33,9 @@ import java.util.*;
  *
  */
 @Service
+@Slf4j
 @Transactional
 public class WorkflowService {
-  private static final Logger LOG = LoggerFactory.getLogger(WorkflowService.class);
 
   @Autowired
   private RequestRepository requestRepository;
@@ -46,17 +47,17 @@ public class WorkflowService {
   private RuntimeService runtimeService;
 
   @Autowired
-  NotificationService notificationService;
+  private NotificationService notificationService;
 
   @Autowired
-  ValidationService validationService;
+  private ValidationService validationService;
 
   /**
    *
    * @param request
    */
   public void startProcessInstance(final Request request) {
-    LOG.info("starting process for request " + request.getRequestId());
+    log.info("starting process for request " + request.getRequestId());
     request.setStatus(Request.RequestStatus.IN_PROGRESS);
 
     Map<String, Object> variables = new HashMap<>();
@@ -70,7 +71,7 @@ public class WorkflowService {
    * @param status
    */
   public void setRequestStatus(String requestId, String status) {
-    LOG.info("setting status " + status + " on request id " + requestId);
+    log.info("setting status " + status + " on request id " + requestId);
 
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
@@ -87,7 +88,7 @@ public class WorkflowService {
    * @return
    */
   public boolean requiresApproval(String requestId) {
-    LOG.info("determining approval requirement for request " + requestId);
+    log.info("determining approval requirement for request " + requestId);
 
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
@@ -126,7 +127,7 @@ public class WorkflowService {
    * @return
    */
   public boolean requiresCabling(String requestId) {
-    LOG.info("determining cabling requirement for request " + requestId);
+    log.info("determining cabling requirement for request " + requestId);
 
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
@@ -161,7 +162,7 @@ public class WorkflowService {
    * @param execution
    */
   public void validateRequest(String requestId, DelegateExecution execution) {
-    LOG.info("validating request " + requestId);
+    log.info("validating request " + requestId);
 
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
@@ -199,7 +200,7 @@ public class WorkflowService {
    * @param execution
    */
   public void onApprovalCompleted(String requestId, DelegateExecution execution) throws IOException {
-    LOG.info("processing approval result for request id " + requestId + "...");
+    log.info("processing approval result for request id " + requestId + "...");
 
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
@@ -249,7 +250,7 @@ public class WorkflowService {
    * @param execution
    */
   public void onAddressingCompleted(String requestId, DelegateExecution execution) {
-    LOG.info("processing addressing result for request id " + requestId + "...");
+    log.info("processing addressing result for request id " + requestId + "...");
 
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
@@ -275,7 +276,7 @@ public class WorkflowService {
    * @param execution
    */
   public void onCablingCompleted(String requestId, DelegateExecution execution) {
-    LOG.info("processing cabling result for request id " + requestId + "...");
+    log.info("processing cabling result for request id " + requestId + "...");
 
     // Nothing to do here yet
   }
@@ -286,7 +287,7 @@ public class WorkflowService {
    * @param execution
    */
   public void onTestingCompleted(String requestId, DelegateExecution execution) {
-    LOG.info("processing testing result for request id " + requestId + "...");
+    log.info("processing testing result for request id " + requestId + "...");
 
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
@@ -312,7 +313,7 @@ public class WorkflowService {
    * @param execution
    */
   public void configureRequest(String requestId, DelegateExecution execution) {
-    LOG.info("configuring points for request id " + requestId + "...");
+    log.info("configuring points for request id " + requestId + "...");
 
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
@@ -346,10 +347,10 @@ public class WorkflowService {
    * @param execution
    */
   public void splitRequest(String requestId, DelegateExecution execution) {
-    LOG.info("splitting request id " + requestId + "...");
+    log.info("splitting request id " + requestId + "...");
 
     String pointsToSplit = execution.getVariable("points", String.class);
-    LOG.info("splitting points " + pointsToSplit);
+    log.info("splitting points " + pointsToSplit);
 
     Request parent = requestRepository.findOneByRequestId(requestId);
     if (parent == null) {
