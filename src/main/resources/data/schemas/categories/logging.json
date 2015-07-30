@@ -17,7 +17,7 @@
       "fields": [
         {
           "id": "logValueDeadband",
-          "type": "text",
+          "type": "numeric",
           "name_en": "Value Deadband",
           "name_fr": "Value Deadband",
           "help_en": "",
@@ -33,7 +33,7 @@
         },
         {
           "id": "logTimeDeadband",
-          "type": "text",
+          "type": "numeric",
           "name_en": "Time Deadband",
           "name_fr": "Time Deadband",
           "help_en": "",
