@@ -23,6 +23,8 @@ import java.sql.Types;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cern.modesti.util.Util.isEmptyPoint;
+
 /**
  * TODO
  *
@@ -90,6 +92,10 @@ public class ValidationService {
       properties.remove("tagname");
       properties.remove("faultState");
       properties.remove("cabling");
+      properties.remove("trueMeaning");
+      properties.remove("falseMeaning");
+      properties.remove("type");
+
       properties.remove("csamDetector");
 
       data.add(properties.values().toArray());
@@ -114,8 +120,8 @@ public class ValidationService {
     query = "SELECT drp_request_id, drp_lineno, drp_exitcode, drp_exittext FROM DRAFT_POINTS WHERE drp_request_id = ?";
 
     boolean valid = true;
-    List<Result> results = jdbcTemplate.query(query, new Object[]{request.getRequestId()}, (rs, rowNum) -> new Result(rs.getInt("drp_request_id"), rs.getInt("drp_lineno"), rs
-        .getInt("drp_exitcode"), rs.getString("drp_exittext")));
+    List<Result> results = jdbcTemplate.query(query, new Object[]{request.getRequestId()}, (rs, rowNum) -> new Result(rs.getInt("drp_request_id"), rs.getInt
+        ("drp_lineno"), rs.getInt("drp_exitcode"), rs.getString("drp_exittext")));
 
     for (Result result : results) {
       if (result.getExitCode() != 0) {
@@ -133,9 +139,11 @@ public class ValidationService {
   private void validate(Request request) {
     log.debug("validating via stored procedure");
 
-    SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withCatalogName("TIMPKREQCHECK").withProcedureName("STP_CHECK_REQUEST").declareParameters(new
-        SqlParameter("p_request_id", OracleTypes.NUMBER), new SqlParameter("p_user_id", OracleTypes.NUMBER), new SqlOutParameter("p_exitcode", OracleTypes
-        .NUMBER), new SqlOutParameter("p_exittext", OracleTypes.VARCHAR));
+    SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withCatalogName("TIMPKREQCHECK").withProcedureName("STP_CHECK_REQUEST");
+    call.addDeclaredParameter(new SqlParameter("p_request_id", OracleTypes.NUMBER));
+    call.addDeclaredParameter(new SqlParameter("p_user_id", OracleTypes.NUMBER));
+    call.addDeclaredParameter(new SqlOutParameter("p_exitcode", OracleTypes.NUMBER));
+    call.addDeclaredParameter(new SqlOutParameter("p_exittext", OracleTypes.VARCHAR));
 
     call.execute(Integer.valueOf(request.getRequestId()), request.getCreator().getId());
   }
@@ -202,30 +210,5 @@ public class ValidationService {
     String columnName = "drp_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, property);
     log.debug(String.format("converted property name %s to column name %s", property, columnName));
     return columnName;
-  }
-
-  /**
-   * @param point
-   *
-   * @return
-   */
-  private boolean isEmptyPoint(Point point) {
-    if (point.getProperties().size() == 0) {
-      return true;
-    }
-
-    for (Object subProperty : point.getProperties().values()) {
-      if (subProperty instanceof Map) {
-        for (Object subSubProperty : ((Map) subProperty).values()) {
-          if (subSubProperty != null && !subSubProperty.equals("")) {
-            return false;
-          }
-        }
-      } else if (subProperty != null && !subProperty.equals("")) {
-        return false;
-      }
-    }
-
-    return true;
   }
 }
