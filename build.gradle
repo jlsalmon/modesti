@@ -28,6 +28,7 @@ repositories {
     maven { url "https://repo.spring.io/libs-release" }
     maven { url "https://repo.spring.io/snapshot" }
     maven { url "http://artifactory/release" }
+    maven { url "http://artifactory/development" }
 }
 
 dependencies {
@@ -47,7 +48,20 @@ dependencies {
     compile('org.activiti:spring-boot-starter-rest-api:5.17.0')
     compile('org.activiti:activiti-ldap:5.17.0')
 
-    compile('cern.c2mon.c2mon-client:c2mon-client-all')
+    // Exclude activemq-all and include necessary dependencies directly.
+    // This is to avoid clashes with slf4j in the activemq-all jar
+    compile('cern.c2mon.c2mon-client:c2mon-client-all:1.5.10-SNAPSHOT') {
+        exclude module: 'activemq-all'
+    }
+    compile('org.apache.activemq:activemq-core:5.5.1-fuse-02-05')
+    compile('org.apache.activemq:activemq-camel:5.5.1-fuse-02-05')
+    compile('org.apache.activemq:activemq-jaas:5.5.1-fuse-02-05')
+    compile('org.apache.activemq:activemq-spring:5.5.1-fuse-02-05')
+    compile('org.apache.activemq:kahadb:5.5.1-fuse-02-05')
+    compile('org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1')
+    compile('org.apache.geronimo.specs:geronimo-jta_1.0.1B_spec:1.1.1')
+    compile('org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1')
+    compile('org.apache.geronimo.specs:geronimo-annotation_1.0_spec:1.1.1')
 
     compile("org.hsqldb:hsqldb")
     compile("com.h2database:h2")
