@@ -3,6 +3,7 @@ package cern.modesti;
 import cern.modesti.config.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.config.EnableEntityLinks;
 
@@ -16,7 +17,8 @@ import org.springframework.hateoas.config.EnableEntityLinks;
  */
 @SpringBootApplication
 @EnableEntityLinks
-@Import({DataSourceConfig.class, JpaConfig.class, MongoConfig.class, RestConfig.class, WorkflowConfig.class, WebSecurityConfig.class})
+@EnableCaching
+@Import({DataSourceConfig.class, JpaConfig.class, MongoConfig.class, RestConfig.class, CacheConfig.class, WorkflowConfig.class, WebSecurityConfig.class})
 public class Application {
 
   public static void main(String[] args) {
