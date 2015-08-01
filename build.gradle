@@ -41,12 +41,13 @@ dependencies {
 
     compile("org.springframework.security:spring-security-ldap")
     compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
-    compile('org.springframework.security.extensions:spring-security-saml2-core:1.0.0.RELEASE')
 
     compile('org.activiti:spring-boot-starter-basic:5.17.0')
     compile('org.activiti:spring-boot-starter-jpa:5.17.0')
     compile('org.activiti:spring-boot-starter-rest-api:5.17.0')
     compile('org.activiti:activiti-ldap:5.17.0')
+
+    compile('cern.c2mon.c2mon-client:c2mon-client-all')
 
     compile("org.hsqldb:hsqldb")
     compile("com.h2database:h2")
