@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('AlertService', AlertService);
 
-function AlertService($rootScope) {
+function AlertService($rootScope, $timeout) {
   var self = this;
 
   // Create an array of globally available alerts
@@ -26,15 +26,24 @@ function AlertService($rootScope) {
    *
    * @param type
    * @param message
+   * @param timeout
    */
-  function add(type, message) {
-    $rootScope.alerts.push({
+  function add(type, message, timeout) {
+    timeout = typeof timeout !== 'undefined' ? a : 5000;
+    
+    var alert = {
       'type': type,
       'message': message,
       close: function () {
         return service.close(this);
       }
-    })
+    }
+    
+    $rootScope.alerts.push(alert);
+    
+    $timeout(function() {
+      alert.close();
+    }, timeout);
   }
 
   /**
