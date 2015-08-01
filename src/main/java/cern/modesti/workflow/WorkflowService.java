@@ -3,6 +3,13 @@
  */
 package cern.modesti.workflow;
 
+import cern.c2mon.client.common.listener.ClientRequestReportListener;
+import cern.c2mon.shared.client.configuration.ConfigConstants;
+import cern.c2mon.shared.client.configuration.ConfigurationReport;
+import cern.c2mon.shared.client.request.ClientRequestErrorReport;
+import cern.c2mon.shared.client.request.ClientRequestProgressReport;
+import cern.modesti.configuration.ConfigurationService;
+import cern.modesti.configuration.ProgressUpdateListener;
 import cern.modesti.notification.NotificationService;
 import cern.modesti.notification.NotificationType;
 import cern.modesti.repository.mongo.request.RequestRepository;
@@ -19,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.runtime.Execution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +59,9 @@ public class WorkflowService {
 
   @Autowired
   private ValidationService validationService;
+
+  @Autowired
+  private ConfigurationService configurationService;
 
   /**
    *
@@ -171,6 +182,7 @@ public class WorkflowService {
 
 
     // TODO: add dirty check: don't need to validate if all the points have already been validated
+    //boolean valid = validationService.validateRequest(request);
     boolean valid = validationService.validateRequest(request);
 
     if (valid) {
@@ -325,17 +337,18 @@ public class WorkflowService {
      * TODO: implement actual point configuration here
      */
 
+    ConfigurationReport report = configurationService.configureRequest(request, new ProgressUpdateListener());
 
-    // Randomly fail the configuration
-    boolean failed = new Random(System.currentTimeMillis()).nextBoolean();
+    // OK, WARNING and RESTART are all considered successful
+    boolean failure = report.getStatus() == ConfigConstants.Status.FAILURE;
 
-    if (failed) {
-      request.setConfigurationResult(new ConfigurationResult(true));
-    } else {
+    if (failure) {
       request.setConfigurationResult(new ConfigurationResult(false));
+    } else {
+      request.setConfigurationResult(new ConfigurationResult(true));
     }
 
-    execution.setVariable("configurationFailure", failed);
+    execution.setVariable("configurationFailure", failure);
 
     // Store the request
     requestRepository.save(request);
