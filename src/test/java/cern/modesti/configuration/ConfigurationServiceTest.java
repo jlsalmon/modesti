@@ -1,18 +1,17 @@
 package cern.modesti.configuration;
 
-import cern.c2mon.client.ext.config.ConfigManager;
+import java.util.Collections;
+import java.util.HashMap;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
+
 import cern.c2mon.shared.client.configuration.ConfigurationReport;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Point;
 import cern.modesti.security.ldap.User;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Collections;
-import java.util.HashMap;
 
 /**
  * TODO
@@ -21,9 +20,6 @@ import java.util.HashMap;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ConfigurationServiceTest {
-
-  @Mock
-  ConfigManager configManager;
 
   @InjectMocks
   ConfigurationService configurationService;
