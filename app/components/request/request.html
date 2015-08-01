@@ -394,6 +394,7 @@
 <style>
   .log {
     height: 38px;
+    background-color: #F5F5F5;
   }
 
   .log .accordion  {
@@ -461,47 +462,55 @@
 <footer class="footer">
   <div class="container-fluid">
 
-    <div class="request-description pull-left">
-      <span>{{ctrl.request.points.length}} {{ctrl.request.points.length == 1 ? 'point' : 'points'}} &middot;</span>
-      <!--<span>{{ctrl.getSelectedPointIds().length}} {{ctrl.getSelectedPointIds().length  == 1 ? 'point' : 'points'}} {{'SELECTED'|translate}}</span>-->
+    <div class="row">
+      <div class="col-md-3">
+        <div class="request-description pull-left">
+          <span>{{ctrl.request.points.length}} {{ctrl.request.points.length == 1 ? 'point' : 'points'}} &middot;</span>
+          <!--<span>{{ctrl.getSelectedPointIds().length}} {{ctrl.getSelectedPointIds().length  == 1 ? 'point' : 'points'}} {{'SELECTED'|translate}}</span>-->
 
-      <!-- If this is a child request, reference its parent -->
-      <span class="details" ng-if="ctrl.request.parentRequestId">
-        {{'PARENT'|translate}}: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a> &middot;
-      </span>
+          <!-- If this is a child request, reference its parent -->
+          <span class="details" ng-if="ctrl.request.parentRequestId">
+            {{'PARENT'|translate}}: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a> &middot;
+          </span>
 
-      <!-- If this is a parent request, list its children -->
-      <span class="details" ng-if="ctrl.children.length > 0">
-        {{'CHILDREN'|translate}}:
-        <span ng-repeat="child in ctrl.children">
-          <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
-        </span>
-      </span>
-    </div>
+          <!-- If this is a parent request, list its children -->
+          <span class="details" ng-if="ctrl.children.length > 0">
+            {{'CHILDREN'|translate}}:
+            <span ng-repeat="child in ctrl.children">
+              <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
+            </span>
+          </span>
+        </div>
+      </div>
 
-
-    <!-- Show appropriate extra controls based on the request status -->
-    <div class="pull-right">
-      <span ng-switch="ctrl.request.status">
-        <span ng-switch-when="IN_PROGRESS">
-          <creation-controls></creation-controls>
-        </span>
-        <span ng-switch-when="FOR_CORRECTION">
-          <creation-controls></creation-controls>
-        </span>
-        <span ng-switch-when="FOR_APPROVAL">
-          <approval-controls></approval-controls>
-        </span>
-        <span ng-switch-when="FOR_ADDRESSING">
-          <addressing-controls></addressing-controls>
-        </span>
-        <span ng-switch-when="FOR_CABLING">
-          <cabling-controls></cabling-controls>
-        </span>
-        <span ng-switch-when="FOR_TESTING">
-          <testing-controls></testing-controls>
-        </span>
-      </span>
+      <div class="col-md-9">
+        <!-- Show appropriate extra controls based on the request status -->
+        <div>
+          <span ng-switch="ctrl.request.status">
+            <span ng-switch-when="IN_PROGRESS">
+              <creation-controls></creation-controls>
+            </span>
+            <span ng-switch-when="FOR_CORRECTION">
+              <creation-controls></creation-controls>
+            </span>
+            <span ng-switch-when="FOR_APPROVAL">
+              <approval-controls></approval-controls>
+            </span>
+            <span ng-switch-when="FOR_ADDRESSING">
+              <addressing-controls></addressing-controls>
+            </span>
+            <span ng-switch-when="FOR_CABLING">
+              <cabling-controls></cabling-controls>
+            </span>
+            <span ng-switch-when="FOR_CONFIGURATION">
+              <config-controls></config-controls>
+            </span>
+            <span ng-switch-when="FOR_TESTING">
+              <testing-controls></testing-controls>
+            </span>
+          </span>
+        </div>
+      </div>
     </div>
 
   </div>

@@ -113,6 +113,12 @@
                 <span class="label request-status pull-right" ng-class="'FOR_CABLING'">{{ctrl.getRequestCount('FOR_CABLING')}}</span>
               </a>
             </li>
+            <li ng-class="{active: ctrl.filter.status == 'FOR_CONFIGURATION'}">
+              <a href="" ng-click="ctrl.filter.status = 'FOR_CONFIGURATION'">
+                <i class="fa fa-fw fa-cog"></i> For Configuration
+                <span class="label request-status pull-right" ng-class="'FOR_CONFIGURATION'">{{ctrl.getRequestCount('FOR_CONFIGURATION')}}</span>
+              </a>
+            </li>
             <li ng-class="{active: ctrl.filter.status == 'FOR_TESTING'}">
               <a href="" ng-click="ctrl.filter.status = 'FOR_TESTING'">
                 <i class="fa fa-fw fa-check-square-o"></i> For Testing

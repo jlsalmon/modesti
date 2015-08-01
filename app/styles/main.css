@@ -487,6 +487,10 @@ ul.category-headings {
   background-color: #654982;
 }
 
+.label.request-status.FOR_CONFIGURATION {
+  background-color: #ac707a;
+}
+
 .label.request-status.FOR_TESTING {
   background-color: #14892C;
 }
