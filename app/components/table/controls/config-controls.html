@@ -1,34 +1,50 @@
-<!--<div>-->
-<!--{{ctrl.progress.progress}} {{ctrl.progress.action}}-->
-<!--</div>-->
-
 <style>
-  div.progress {
+  div.progressbar {
+    display: inline-block;
     position: absolute;
-    background-color: #ccc;
-    width: 600px;
-    top: 15px;
-    margin-bottom: 0;
     right: 150px;
+    top: 15px;
+  }
+  
+  div.progressbar .action {
+    /* position: absolute;
+    display: inline-block; */
+    /* width: 290px; */
+    margin-right: 10px;
+  }
+  
+  div.progressbar .progress {
+    /* position: absolute;
+    display: inline-block; */
+    width: 200px;
+    background-color: #ccc;
   }
 </style>
 
-<div class="btn-group pull-right">
+      
+  <div class="progressbar" ng-if="ctrl.progress">
+    <span class="action pull-left"><i>{{ctrl.progress.action}}</i></span>
+    
+    <progressbar class="progress-striped active" max="100" value="ctrl.progress.progress">
+      <b>{{ctrl.progress.progress}}%</b>
+    </progressbar>
 
-  <button class="btn btn-primary"
-          ng-click="ctrl.configure()"
-          tooltip-append-to-body="true"
-          tooltip="{{'CONFIGURE_REQUEST'|translate}}">
+  </div>
+  
+  <div class="btn-group pull-right">
+  
+    <button class="btn btn-primary"
+            ng-click="ctrl.configure()"
+            tooltip-append-to-body="true"
+            tooltip="{{'CONFIGURE_REQUEST'|translate}}">
+  
+      <!--Show icon based on the loading state-->
+      <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == undefined"></i>
+      <i class="fa fa-fw fa-spin fa-cog" ng-show="ctrl.configuring == 'started'"></i>
+      <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == 'success'"></i>
+      <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.configuring == 'error'"></i>
+      {{'CONFIGURE'|translate}}
+    </button>
+  </div>
 
-    <!--Show icon based on the loading state-->
-    <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == undefined"></i>
-    <i class="fa fa-fw fa-spin fa-cog" ng-show="ctrl.configuring == 'started'"></i>
-    <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == 'success'"></i>
-    <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.configuring == 'error'"></i>
-    {{'CONFIGURE'|translate}}
-  </button>
-</div>
-
-<progressbar ng-if="ctrl.progress" class="progress-striped active" max="100" value="ctrl.progress.progress">
-  <b>{{ctrl.progress.progress}}%</b> <i>{{ctrl.progress.action}}</i>
-</progressbar>
+  

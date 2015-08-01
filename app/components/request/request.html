@@ -465,17 +465,17 @@
     <div class="row">
       <div class="col-md-3">
         <div class="request-description pull-left">
-          <span>{{ctrl.request.points.length}} {{ctrl.request.points.length == 1 ? 'point' : 'points'}} &middot;</span>
+          <span>{{ctrl.request.points.length}} {{ctrl.request.points.length == 1 ? 'point' : 'points'}}</span>
           <!--<span>{{ctrl.getSelectedPointIds().length}} {{ctrl.getSelectedPointIds().length  == 1 ? 'point' : 'points'}} {{'SELECTED'|translate}}</span>-->
 
           <!-- If this is a child request, reference its parent -->
           <span class="details" ng-if="ctrl.request.parentRequestId">
-            {{'PARENT'|translate}}: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a> &middot;
+             &middot; {{'PARENT'|translate}}: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
           </span>
 
           <!-- If this is a parent request, list its children -->
           <span class="details" ng-if="ctrl.children.length > 0">
-            {{'CHILDREN'|translate}}:
+             &middot; {{'CHILDREN'|translate}}:
             <span ng-repeat="child in ctrl.children">
               <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
             </span>
