@@ -54,7 +54,7 @@ public class SchemaService {
    *
    * @return
    */
-  Schema materialiseSchema(Request request, List<String> categories) {
+  public Schema materialiseSchema(Request request, List<String> categories) {
     Schema schema = new Schema(request.getRequestId(), request.getDescription(), request.getDomain());
 
     Schema domainSchema = schemaRepository.findOneByNameIgnoreCase(request.getDomain());
@@ -98,7 +98,7 @@ public class SchemaService {
    *
    * @return
    */
-  Schema mergeSchema(Schema a, Schema b) {
+  private Schema mergeSchema(Schema a, Schema b) {
     List<Category> categories = a.getCategories();
     List<Category> newCategories = new ArrayList<>();
 
