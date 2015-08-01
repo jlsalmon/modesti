@@ -264,11 +264,9 @@
             <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
             <br/>
             <span class="" style="font-size: 11px;">
-              <span
-                  class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} &middot;</span>
+              <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} &middot;</span>
               <span class="text-muted"> <i class="fa fa-fw fa-crosshairs"></i> {{request.domain}} &middot; </span>
-              <span class="text-muted"> <i
-                  class="fa fa-fw fa-sitemap"></i>    {{request.subsystem.value}} &middot; </span>
+              <span class="text-muted"> <i class="fa fa-fw fa-sitemap"></i>    {{request.subsystem.value}} &middot; </span>
               <span class="text-muted"> <i class="fa fa-fw fa-cogs"></i>       {{request.categories.join(', ')}}</span>
             </span>
           </a>
