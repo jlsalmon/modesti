@@ -1,28 +1,24 @@
 package cern.modesti.configuration;
 
-import cern.c2mon.client.common.listener.ClientRequestReportListener;
-import cern.c2mon.client.core.C2monServiceGateway;
-import cern.c2mon.shared.client.configuration.ConfigurationReport;
-import cern.c2mon.shared.client.request.ClientRequestErrorReport;
-import cern.c2mon.shared.client.request.ClientRequestProgressReport;
-import cern.modesti.request.Request;
+import static java.lang.String.format;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import oracle.jdbc.OracleTypes;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.lang.String.format;
+import cern.c2mon.client.core.C2monServiceGateway;
+import cern.c2mon.shared.client.configuration.ConfigurationReport;
+import cern.modesti.request.Request;
 
 /**
  * TODO
@@ -82,7 +78,7 @@ public class ConfigurationService {
     ConfigurationReport report = C2monServiceGateway.getTagManager().applyConfiguration(configId, listener);
 
     try {
-      Thread.sleep(10000);
+      Thread.sleep(1000);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
