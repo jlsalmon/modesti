@@ -78,7 +78,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     // with a text field for each selected point.
     var modalInstance = $modal.open({
       animation: false,
-      templateUrl: 'components/table/controls/modals/rejection-modal.html',
+      templateUrl: 'components/request/controls/modals/rejection-modal.html',
       controller: 'RejectionModalController as ctrl',
       resolve: {
         selectedPointIds: function() {

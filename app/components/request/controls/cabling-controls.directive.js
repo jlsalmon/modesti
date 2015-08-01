@@ -9,7 +9,7 @@ angular.module('modesti').directive('cablingControls', cablingControls);
 
 function cablingControls() {
   var directive = {
-    templateUrl : 'components/table/controls/cabling-controls.html',
+    templateUrl : 'components/request/controls/cabling-controls.html',
     restrict : 'AE',
     controller : 'CablingControlsController as ctrl',
 

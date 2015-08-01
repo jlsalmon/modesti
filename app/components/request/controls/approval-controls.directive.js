@@ -9,7 +9,7 @@ angular.module('modesti').directive('approvalControls', approvalControls);
 
 function approvalControls() {
   var directive = {
-    templateUrl : 'components/table/controls/approval-controls.html',
+    templateUrl : 'components/request/controls/approval-controls.html',
     restrict : 'AE',
     controller : 'ApprovalControlsController as ctrl',
 

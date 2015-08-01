@@ -9,7 +9,7 @@ angular.module('modesti').directive('addressingControls', addressingControls);
 
 function addressingControls() {
   var directive = {
-    templateUrl : 'components/table/controls/addressing-controls.html',
+    templateUrl : 'components/request/controls/addressing-controls.html',
     restrict : 'AE',
     controller : 'AddressingControlsController as ctrl',
 

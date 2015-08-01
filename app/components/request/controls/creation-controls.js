@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService) {
+function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService) {
   var self = this;
 
   self.parent = {};
@@ -156,6 +156,8 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
 
       $state.reload().then(function () {
         self.submitting = 'success';
+        
+        AlertService.add('info', 'Your request has been submitted successfully.');
       });
     },
 
@@ -185,7 +187,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
 
     var modalInstance = $modal.open({
       animation: false,
-      templateUrl: 'components/table/controls/modals/splitting-modal.html',
+      templateUrl: 'components/request/controls/modals/splitting-modal.html',
       controller: 'SplittingModalController as ctrl',
       resolve: {
         selectedPointIds: function () {

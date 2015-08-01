@@ -9,7 +9,7 @@ angular.module('modesti').directive('configControls', configControls);
 
 function configControls() {
   var directive = {
-    templateUrl : 'components/table/controls/config-controls.html',
+    templateUrl : 'components/request/controls/config-controls.html',
     restrict : 'AE',
     controller : 'ConfigControlsController as ctrl',
 

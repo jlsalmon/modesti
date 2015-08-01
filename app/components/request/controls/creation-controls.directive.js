@@ -9,7 +9,7 @@ angular.module('modesti').directive('creationControls', creationControls);
 
 function creationControls() {
   var directive = {
-    templateUrl : 'components/table/controls/creation-controls.html',
+    templateUrl : 'components/request/controls/creation-controls.html',
     restrict : 'AE',
     controller : 'CreationControlsController as ctrl',
 
