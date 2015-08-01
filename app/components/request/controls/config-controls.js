@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('ConfigControlsController', ConfigControlsController);
 
-function ConfigControlsController($state, $http, $timeout, RequestService, TaskService) {
+function ConfigControlsController($state, $http, $timeout, RequestService, TaskService, AlertService) {
   var self = this;
 
   self.request = {};
@@ -38,17 +38,8 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
 
     self.configuring = 'started';
 
-    (function getProgress() {
-      console.log('checking progress');
-
-      $http.get(BACKEND_BASE_URL + '/requests/' + self.request.requestId + '/progress').then(function (response) {
-        self.progress = response.data;
-
-        if (self.configuring != 'success' && self.configuring != 'error') {
-          $timeout(getProgress, 100);
-        }
-      });
-    })();
+    // Start a timer loop to periodically poll for progress updates
+    getProgress();
 
     // Complete the task
     TaskService.completeTask(task.id, []).then(function (task) {
@@ -59,12 +50,30 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
 
       $state.reload().then(function() {
         self.configuring = 'success';
+        
+        AlertService.add('info', 'Your request has been configured successfully.')
       });
     },
 
     function (error) {
       console.log('error completing task ' + task.id);
       self.configuring = 'error';
+    });
+  }
+  
+  /**
+   * 
+   * @returns
+   */
+  function getProgress() {
+    console.log('checking progress');
+
+    $http.get(BACKEND_BASE_URL + '/requests/' + self.request.requestId + '/progress').then(function (response) {
+      self.progress = response.data;
+
+      if (self.configuring != 'success' && self.configuring != 'error') {
+        $timeout(getProgress, 100);
+      }
     });
   }
 }
