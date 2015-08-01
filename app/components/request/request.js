@@ -86,6 +86,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   self.copy = copy;
   self.paste = paste;
   self.search = search;
+  self.showHelp = showHelp;
   self.showComments = showComments;
   self.showHistory = showHistory;
 
@@ -572,6 +573,17 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     self.hot.updateSettings({columnSorting: true});
   }
 
+  /**
+   *
+   */
+  function showHelp() {
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/request/modals/help-modal.html',
+      controller: 'HelpModalController as ctrl'
+    });
+  }
+  
   /**
    *
    */
