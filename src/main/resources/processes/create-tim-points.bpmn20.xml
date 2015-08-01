@@ -127,7 +127,7 @@
     </sequenceFlow>
     <sequenceFlow id="sid-8F658E30-780A-4716-B4B5-1BF9F8020A8F" sourceRef="sid-B54BBF84-4A14-4124-93D2-0577784EB6AB" targetRef="sid-F54BBF84-4A14-4124-93D2-058C884EB6AB"></sequenceFlow>
     <sequenceFlow id="sid-39B11229-9E49-4183-AA9C-63A5DEE2646D" sourceRef="sid-A54BBF84-4A14-4124-93D2-0577784EB6AB" targetRef="sid-AB947816-3916-4FB7-832D-AA862A780624"></sequenceFlow>
-    <boundaryEvent id="sid-B54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-42FD37C6-426A-4BE5-9D2A-550E89965F41" cancelActivity="false">
+    <boundaryEvent id="sid-B54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-42FD37C6-426A-4BE5-9D2A-550E89965F41" cancelActivity="true">
       <signalEventDefinition signalRef="requestModified"></signalEventDefinition>
     </boundaryEvent>
     <sequenceFlow id="sid-3067B825-F7C0-49CC-9765-59EBB9D62EEB" sourceRef="sid-20E5164E-63AD-495D-88D4-53A628D70587" targetRef="sid-EA92A7EB-9AC8-40CA-868E-CB46B68BD55B"></sequenceFlow>
