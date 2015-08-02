@@ -3,11 +3,26 @@
  */
 package cern.modesti.workflow;
 
-import cern.c2mon.client.common.listener.ClientRequestReportListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.activiti.engine.ActivitiException;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.delegate.DelegateExecution;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import cern.c2mon.shared.client.configuration.ConfigConstants;
 import cern.c2mon.shared.client.configuration.ConfigurationReport;
-import cern.c2mon.shared.client.request.ClientRequestErrorReport;
-import cern.c2mon.shared.client.request.ClientRequestProgressReport;
 import cern.modesti.configuration.ConfigurationService;
 import cern.modesti.configuration.ProgressUpdateListener;
 import cern.modesti.notification.NotificationService;
@@ -20,21 +35,9 @@ import cern.modesti.validation.ValidationService;
 import cern.modesti.workflow.result.AddressingResult;
 import cern.modesti.workflow.result.ConfigurationResult;
 import cern.modesti.workflow.result.TestResult;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.ActivitiException;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.delegate.DelegateExecution;
-import org.activiti.engine.runtime.Execution;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * @author Justin Lewis Salmon
@@ -341,13 +344,16 @@ public class WorkflowService {
 
     // OK, WARNING and RESTART are all considered successful
     boolean failure = report.getStatus() == ConfigConstants.Status.FAILURE;
+    ConfigurationResult result;
 
     if (failure) {
-      request.setConfigurationResult(new ConfigurationResult(false));
+      result = new ConfigurationResult(false);
+      result.setErrors(Collections.singletonList(report.getStatusDescription()));
     } else {
-      request.setConfigurationResult(new ConfigurationResult(true));
+      result = new ConfigurationResult(true);
     }
 
+    request.setConfigurationResult(result);
     execution.setVariable("configurationFailure", failure);
 
     // Store the request
