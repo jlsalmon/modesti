@@ -19,7 +19,8 @@ function AlertService($rootScope, $timeout) {
   var service = {
     add: add,
     close: close,
-    closeAlertByIndex: closeAlertByIndex
+    closeAlertByIndex: closeAlertByIndex,
+    clear: clear
   };
 
   /**
@@ -29,7 +30,7 @@ function AlertService($rootScope, $timeout) {
    * @param timeout
    */
   function add(type, message, timeout) {
-    timeout = typeof timeout !== 'undefined' ? a : 5000;
+    timeout = typeof timeout !== 'undefined' ? timeout : 10000;
     
     var alert = {
       'type': type,
@@ -62,6 +63,15 @@ function AlertService($rootScope, $timeout) {
    */
   function closeAlertByIndex(index) {
     return $rootScope.alerts.splice(index, 1);
+  }
+  
+  /**
+   * 
+   */
+  function clear() {
+    angular.forEach($rootScope.alerts, function(alert) {
+      alert.close();
+    })
   }
 
   return service;

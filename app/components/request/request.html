@@ -176,7 +176,7 @@
     bottom: 0;
     width: 100%;
     /* Set the fixed height of the footer here */
-    /*height: 50px;*/
+    height: 50px;
     background-color: #f5f5f5;
     border-top: 1px solid #CCC;
   }
@@ -242,7 +242,7 @@
         <!-- <span class="text-muted">
         {{ctrl.request.type | uppercase}}
         </span> -->
-        <span class="request-detail-item text-muted" tooltip="{{'SYSTEM_SUBSYSTEM'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
+        <!-- <span class="request-detail-item text-muted" tooltip="{{'SYSTEM_SUBSYSTEM'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-sitemap"></i>
           {{::ctrl.request.subsystem.value}}
         </span>
@@ -257,7 +257,27 @@
         <span class="request-detail-item text-muted" tooltip="{{'CREATOR'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-user"></i>
           {{::ctrl.request.creator.username}}
+        </span> -->
+        
+            
+        <!-- <span class="request-detail-item">
+          {{ctrl.request.points.length}} {{ctrl.request.points.length == 1 ? 'point' : 'points'}}
         </span>
+        <span>{{ctrl.getSelectedPointIds().length}} {{ctrl.getSelectedPointIds().length  == 1 ? 'point' : 'points'}} {{'SELECTED'|translate}}</span>
+
+        If this is a child request, reference its parent
+        <span class="request-detail-item" ng-if="ctrl.request.parentRequestId">
+           {{'PARENT'|translate}}: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
+        </span>
+
+        If this is a parent request, list its children
+        <span class="request-detail-item" ng-if="ctrl.children.length > 0">
+           {{'CHILDREN'|translate}}:
+          <span ng-repeat="child in ctrl.children">
+            <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
+          </span>
+        </span> -->
+        
         <span class="request-detail-item"  tooltip="{{'STATUS'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <span class="label request-status" ng-class="'{{::ctrl.request.status}}'">
             {{::ctrl.request.status.replace('_', ' ')}}
@@ -275,7 +295,7 @@
   <alert ng-repeat="alert in alerts"
          type="{{alert.type}}"
          close="alert.close()">
-    {{alert.message}}
+    <span ng-bind-html="alert.message"></span>
   </alert>
 </div>
 
@@ -338,10 +358,10 @@
       </button>
 
       <!-- Button to reset column sorting -->
-      <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.resetSorting()" tooltip-append-to-body="true"
+      <!-- <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.resetSorting()" tooltip-append-to-body="true"
               tooltip="{{'RESET_SORTING'|translate}}">
         <span class="glyphicon glyphicon-erase"></span>
-      </button>
+      </button> -->
 
       <!-- Undo/redo buttons -->
       <div class="btn-group">
@@ -411,126 +431,129 @@
 </section>
 
 <style>
-  .log {
-    height: 38px;
-    background-color: #F5F5F5;
-  }
 
-  .log .accordion  {
+  .footer .accordion  {
     position: absolute;
     width: 100%;
-    bottom: 50px;
+    bottom: 0;
     z-index: 999;
     left: 0;
     right: 0;
   }
 
-  .log .panel-group {
+  .footer .panel-group {
     margin-bottom: 0;
   }
 
-  .log .panel-heading, .log .panel-group .panel, .log .panel {
+  .footer .panel-heading, .footer .panel-group .panel, .footer .panel {
     border-radius: 0;
     box-shadow: none;
     border-left: none;
     border-right: none;
+    padding: 0;
+  }
+  
+  .footer .panel-heading a:hover, .footer .panel-heading a:focus {
+    color: inherit;
+  }
+  
+  .footer .panel-title {
+    font-size: 14px;
+    line-height: inherit;
   }
 
-  .log .panel-body {
+  .panel-body {
     max-height: 300px;
     overflow-y: auto;
   }
+  
+  .footer .label {
+    margin: 15px;
+    font-size: 14px;
+  }
+  
+  .footer {
+    font-size: 12px;
+  }
 </style>
 
-<section class="log">
+<footer class="footer">
   <div class="container-fluid">
-    <accordion class="accordion">
-      <accordion-group is-open="ctrl.errorLogOpen">
+  
+  <accordion class="accordion">
+    <accordion-group is-open="ctrl.errorLogOpen">
 
-        <accordion-heading>
-          <div>
-            <span class="label"
+      <accordion-heading>
+        
+        
+        <div class="row">
+          <div class="col-md-3">
+                
+            <span class="label pull-left"
                   ng-class="ctrl.getNumValidationErrors() > 0 ? 'bg-red' : 'bg-gray'"
                   tooltip="{{ctrl.getNumValidationErrors()}} error(s) found. Click to view details."
                   tooltip-placement="right">
               <i class="fa fa-fw fa-exclamation-triangle"></i> {{ctrl.getNumValidationErrors()}}
             </span>
-            <i class="pull-right fa" ng-class="{'fa-chevron-down': ctrl.errorLogOpen, 'fa-chevron-up': !ctrl.errorLogOpen}"></i>
-          </div>
-        </accordion-heading>
 
-        <div ng-if="ctrl.getNumValidationErrors() > 0">
-          <div ng-repeat="point in ctrl.rows track by point.id">
-            <div ng-repeat="error in point.errors track by $index">
-              <div ng-repeat="error in error.errors">
-                <i class="fa fa-fw fa-exclamation-triangle text-danger"></i> Line {{point.id}}: {{error}}
-              </div>
+          </div>
+    
+          <div class="col-md-9">
+            <!-- Show appropriate extra controls based on the request status -->
+            <div style="margin-right: 15px;">
+              <span ng-switch="ctrl.request.status">
+                <span ng-switch-when="IN_PROGRESS">
+                  <creation-controls></creation-controls>
+                </span>
+                <span ng-switch-when="FOR_CORRECTION">
+                  <creation-controls></creation-controls>
+                </span>
+                <span ng-switch-when="FOR_APPROVAL">
+                  <approval-controls></approval-controls>
+                </span>
+                <span ng-switch-when="FOR_ADDRESSING">
+                  <addressing-controls></addressing-controls>
+                </span>
+                <span ng-switch-when="FOR_CABLING">
+                  <cabling-controls></cabling-controls>
+                </span>
+                <span ng-switch-when="FOR_CONFIGURATION">
+                  <config-controls></config-controls>
+                </span>
+                <span ng-switch-when="FOR_TESTING">
+                  <testing-controls></testing-controls>
+                </span>
+              </span>
             </div>
           </div>
         </div>
 
-        <div ng-if="ctrl.getNumValidationErrors() == 0">
-          No errors found
+      </accordion-heading>
+
+      <div ng-if="ctrl.getNumValidationErrors() > 0">
+        <div ng-repeat="point in ctrl.rows track by point.id">
+          <div ng-repeat="error in point.errors track by $index">
+            <div ng-repeat="error in error.errors">
+              <i class="fa fa-fw fa-exclamation-triangle text-danger"></i> Line {{point.id}}: {{error}}
+            </div>
+          </div>
         </div>
-
-      </accordion-group>
-    </accordion>
-  </div>
-</section>
-
-<footer class="footer">
-  <div class="container-fluid">
-
-    <div class="row">
-      <div class="col-md-3">
-        <div class="request-description pull-left">
-          <span>{{ctrl.request.points.length}} {{ctrl.request.points.length == 1 ? 'point' : 'points'}}</span>
-          <!--<span>{{ctrl.getSelectedPointIds().length}} {{ctrl.getSelectedPointIds().length  == 1 ? 'point' : 'points'}} {{'SELECTED'|translate}}</span>-->
-
-          <!-- If this is a child request, reference its parent -->
-          <span class="details" ng-if="ctrl.request.parentRequestId">
-             &middot; {{'PARENT'|translate}}: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
-          </span>
-
-          <!-- If this is a parent request, list its children -->
-          <span class="details" ng-if="ctrl.children.length > 0">
-             &middot; {{'CHILDREN'|translate}}:
-            <span ng-repeat="child in ctrl.children">
-              <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
-            </span>
-          </span>
+      </div>
+      
+      <div ng-if="ctrl.getNumValidationErrors() == 0">
+        No validation errors found
+      </div>
+      
+      <div ng-if="ctrl.request.configurationResult">
+        <div ng-repeat="error in ctrl.request.configurationResult.errors track by $index">
+          <i class="fa fa-fw fa-exclamation-triangle text-danger"></i> {{error}}
         </div>
       </div>
 
-      <div class="col-md-9">
-        <!-- Show appropriate extra controls based on the request status -->
-        <div>
-          <span ng-switch="ctrl.request.status">
-            <span ng-switch-when="IN_PROGRESS">
-              <creation-controls></creation-controls>
-            </span>
-            <span ng-switch-when="FOR_CORRECTION">
-              <creation-controls></creation-controls>
-            </span>
-            <span ng-switch-when="FOR_APPROVAL">
-              <approval-controls></approval-controls>
-            </span>
-            <span ng-switch-when="FOR_ADDRESSING">
-              <addressing-controls></addressing-controls>
-            </span>
-            <span ng-switch-when="FOR_CABLING">
-              <cabling-controls></cabling-controls>
-            </span>
-            <span ng-switch-when="FOR_CONFIGURATION">
-              <config-controls></config-controls>
-            </span>
-            <span ng-switch-when="FOR_TESTING">
-              <testing-controls></testing-controls>
-            </span>
-          </span>
-        </div>
-      </div>
-    </div>
+    </accordion-group>
+  </accordion>
+
+    
 
   </div>
 </footer>

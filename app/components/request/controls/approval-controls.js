@@ -60,7 +60,12 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   /**
    * Mark the currently selected points as rejected.
    */
-  function rejectSelectedPoints() {
+  function rejectSelectedPoints(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     var selectedPointIds = self.parent.getSelectedPointIds();
 
     var point;
@@ -115,7 +120,12 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   /**
    * Mark the currently selected points as rejected.
    */
-  function approveSelectedPoints() {
+  function approveSelectedPoints(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     var selectedPointIds = self.parent.getSelectedPointIds();
 
     var point;
@@ -149,7 +159,12 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   /**
    *
    */
-  function submit() {
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     var task = self.tasks['approve'];
     if (!task) {
       console.log('error approving request: no task');

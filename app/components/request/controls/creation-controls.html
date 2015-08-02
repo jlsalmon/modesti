@@ -2,7 +2,7 @@
 
   <!-- Button to split the request -->
   <button class="btn btn-danger"
-          ng-click="ctrl.split()"
+          ng-click="ctrl.split($event)"
           ng-disabled="!ctrl.canSplit()"
           tooltip-append-to-body="true"
           tooltip="{{'SPLIT_SELECTED'|translate}}">
@@ -17,7 +17,7 @@
   <div class="btn-group">
     <!--Button to validate the request-->
     <button class="btn btn-success"
-            ng-click="ctrl.validate()"
+            ng-click="ctrl.validate($event)"
             ng-disabled="!ctrl.canValidate()"
             tooltip-append-to-body="true"
             tooltip="{{'VALIDATE_REQUEST'|translate}}">
@@ -34,7 +34,7 @@
   <div class="btn-group">
     <!-- Button to submit the request -->
     <button class="btn btn-primary"
-            ng-click="ctrl.submit()"
+            ng-click="ctrl.submit($event)"
             ng-disabled="!ctrl.canSubmit()"
             tooltip-append-to-body="true"
             tooltip="{{'SUBMIT_REQUEST'|translate}}">

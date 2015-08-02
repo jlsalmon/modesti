@@ -628,11 +628,17 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     var requestHeader = $('.request-header');
     var toolbar = $('.toolbar');
     var table = $('.table');
-    var log = $('.log');
+    //var log = $('.log');
     var footer = $('.footer');
 
     var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight()
-    - log.outerHeight() - footer.outerHeight();
+    - /* log.outerHeight() - */ footer.outerHeight();
+    
+    console.log($(window).height());
+    console.log(mainHeader.height());
+    console.log(requestHeader.height());
+    console.log(toolbar.height());
+    console.log(footer.height());
 
     table.height(height + 'px');
   }

@@ -54,6 +54,15 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         }
       });
     }
+    
+    // Possibly show an alert, depending on how we got here
+    if (self.request.status === 'FOR_CORRECTION') {
+      AlertService.add('danger', 'Request <b>' + self.request.requestId 
+          + '</b> requires correction. Please see the request log for details.');
+    } else if (self.request.valid === true) {
+      AlertService.add('success', 'Request <b>' + self.request.requestId 
+          + '</b> was validated successfully.');
+    }
   }
 
   /**
@@ -82,8 +91,14 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   /**
    *
    */
-  function validate() {
+  function validate(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     self.validating = 'started';
+    AlertService.clear();
 
     $timeout(function () {
       ValidationService.validateRequest(self.rows, self.parent.schema).then(function (valid) {
@@ -137,7 +152,12 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   /**
    *
    */
-  function submit() {
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     var task = self.tasks['submit'];
 
     if (!task) {
@@ -145,6 +165,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       return;
     }
 
+    AlertService.clear();
     self.submitting = 'started';
 
     // Complete the task associated with the request
@@ -170,7 +191,12 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   /**
    *
    */
-  function split() {
+  function split(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     var task = self.tasks['validate'];
     if (!task) {
       console.log('error splitting request: no task');
@@ -202,6 +228,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     // Callback fired when the user clicks 'ok'. Not fired if 'cancel' clicked.
     modalInstance.result.then(function () {
       self.splitting = 'started';
+      AlertService.clear();
 
       var url = task.executionUrl;
       var variables = [{
@@ -225,6 +252,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
 
         $state.reload().then(function () {
           self.splitting = 'success';
+          AlertService.add('info', 'Request <b>' + self.request.requestId + '</b> was successfully split.')
         });
       },
 

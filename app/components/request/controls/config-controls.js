@@ -29,7 +29,12 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
   /**
    *
    */
-  function configure() {
+  function configure(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     var task = self.tasks['configure'];
     if (!task) {
       console.log('error configuring request: no task');
@@ -69,7 +74,9 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
     console.log('checking progress');
 
     $http.get(BACKEND_BASE_URL + '/requests/' + self.request.requestId + '/progress').then(function (response) {
-      self.progress = response.data;
+      if (response.data) {
+        self.progress = response.data;
+      }
 
       if (self.configuring != 'success' && self.configuring != 'error') {
         $timeout(getProgress, 100);

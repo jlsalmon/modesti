@@ -2,7 +2,7 @@
 
   <div class="btn-group">
     <button class="btn btn-success"
-            ng-click="ctrl.approveSelectedPoints()"
+            ng-click="ctrl.approveSelectedPoints($event)"
             ng-disabled="!ctrl.parent.getSelectedPointIds().length">
       <i class="fa fa-fw fa-thumbs-o-up"></i>
       {{'APPROVE_SELECTED'|translate}}
@@ -11,7 +11,7 @@
 
   <div class="btn-group">
     <button class="btn btn-danger"
-            ng-click="ctrl.rejectSelectedPoints()"
+            ng-click="ctrl.rejectSelectedPoints($event)"
             ng-disabled="!ctrl.parent.getSelectedPointIds().length">
       <i class="fa fa-fw fa-thumbs-o-down"></i>
       {{'REJECT_SELECTED'|translate}}
@@ -21,7 +21,7 @@
   <div class="btn-group">
   
     <button class="btn btn-primary"
-            ng-click="ctrl.submit()"
+            ng-click="ctrl.submit($event)"
             ng-disabled="!ctrl.canSubmit()"
             tooltip-append-to-body="true"
             tooltip="{{'SUBMIT_APPROVAL'|translate}}">

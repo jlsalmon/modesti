@@ -23,18 +23,18 @@
 
       
   <div class="progressbar" ng-if="ctrl.progress">
-    <span class="action pull-left"><i>{{ctrl.progress.action}}</i></span>
+    <span class="action pull-left">
+      <i ng-if="ctrl.progress.action">{{ctrl.progress.action}}</i> 
+      <i ng-if="ctrl.progress.progress">({{ctrl.progress.progress}}%)</i>
+    </span>
     
-    <progressbar class="progress-striped active" max="100" value="ctrl.progress.progress">
-      <b>{{ctrl.progress.progress}}%</b>
-    </progressbar>
-
+    <progressbar class="progress-striped active" max="100" value="ctrl.progress.progress"></progressbar>
   </div>
   
   <div class="btn-group pull-right">
   
     <button class="btn btn-primary"
-            ng-click="ctrl.configure()"
+            ng-click="ctrl.configure($event)"
             tooltip-append-to-body="true"
             tooltip="{{'CONFIGURE_REQUEST'|translate}}">
   

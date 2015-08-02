@@ -17,6 +17,8 @@ function AddressingControlsController($state, RequestService, TaskService) {
   self.addressed = true;
 
   self.init = init;
+  self.addressSelectedPoints = addressSelectedPoints;
+  self.rejectSelectedPoints = rejectSelectedPoints;
   self.submit = submit;
 
   /**
@@ -28,9 +30,38 @@ function AddressingControlsController($state, RequestService, TaskService) {
   }
 
   /**
+   * 
+   */
+  function addressSelectedPoints(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    self.addressed = true;
+  }
+  
+  /**
+   * Mark the currently selected points as rejected.
+   */
+  function rejectSelectedPoints(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    self.addressed = false;
+  }
+  
+  /**
    *
    */
-  function submit() {
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     var task = self.tasks['address'];
     if (!task) {
       console.log('error addressing request: no task');

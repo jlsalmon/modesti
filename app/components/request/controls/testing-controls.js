@@ -30,7 +30,12 @@ function TestingControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function submit() {
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     var task = self.tasks['test'];
     if (!task) {
       console.log('error testibg request: no task');

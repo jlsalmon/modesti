@@ -1,13 +1,13 @@
 <div class="pull-right">
 
   <div class="btn-group">
-    <button class="btn btn-success" translate>CABLE_SELECTED</button>
+    <button class="btn btn-success" ng-click="ctrl.cableSelectedPoints($event)" translate>CABLE_SELECTED</button>
   </div>
   
   <div class="btn-group">
   
     <button class="btn btn-primary"
-            ng-click="ctrl.submit()"
+            ng-click="ctrl.submit($event)"
             tooltip-append-to-body="true"
             tooltip="{{ 'SUBMIT_CABLING' | translate}}">
   

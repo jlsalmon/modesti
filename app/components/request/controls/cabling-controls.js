@@ -16,6 +16,7 @@ function CablingControlsController($state, RequestService, TaskService) {
   self.submitting = undefined;
 
   self.init = init;
+  self.cableSelectedPoints = cableSelectedPoints;
   self.submit = submit;
 
   /**
@@ -25,11 +26,26 @@ function CablingControlsController($state, RequestService, TaskService) {
     self.request = request;
     self.tasks = tasks;
   }
+  
+  /**
+   * 
+   */
+  function cableSelectedPoints(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
 
   /**
    *
    */
-  function submit() {
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
     var task = self.tasks['cable'];
     if (!task) {
       console.log('error cabling request: no task');
