@@ -26,9 +26,9 @@ function CablingControlsController($state, RequestService, TaskService) {
     self.request = request;
     self.tasks = tasks;
   }
-  
+
   /**
-   * 
+   *
    */
   function cableSelectedPoints(event) {
     if (event) {
@@ -45,7 +45,7 @@ function CablingControlsController($state, RequestService, TaskService) {
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     var task = self.tasks['cable'];
     if (!task) {
       console.log('error cabling request: no task');
@@ -54,8 +54,8 @@ function CablingControlsController($state, RequestService, TaskService) {
 
     self.submitting = 'started';
 
-    TaskService.completeTask(task.id, []).then(function (task) {
-        console.log('completed task ' + task.id);
+    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+        console.log('completed task ' + task.name);
 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
@@ -66,7 +66,7 @@ function CablingControlsController($state, RequestService, TaskService) {
       },
 
       function (error) {
-        console.log('error completing task ' + task.id);
+        console.log('error completing task ' + task.name);
         self.submitting = 'error';
       });
   }

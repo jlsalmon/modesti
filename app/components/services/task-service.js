@@ -16,6 +16,7 @@ function TaskService($q, $http, $localStorage, Restangular) {
   var service = {
     getTasksForRequest: getTasksForRequest,
     queryTasksForRequest: queryTasksForRequest,
+    getSignalsForRequest: getSignalsForRequest,
     claimTask: claimTask,
     completeTask: completeTask
   };
@@ -29,29 +30,46 @@ function TaskService($q, $http, $localStorage, Restangular) {
     console.log('fetching tasks for request ' + request.requestId);
 
     var q = $q.defer();
-    var promises = [];
 
-    angular.forEach(request._links.tasks, function (link) {
-      var href = link.href ? link.href : link;
-      var promise = $http.get(href);
-      promises.push(promise);
+    $http.get(BACKEND_BASE_URL + '/requests/' + request.requestId + '/tasks').then(function(response) {
+      var tasks = {};
+
+      angular.forEach(response.data._embedded.tasks, function (task) {
+        tasks[task.name] = task;
+      });
+
+      console.log('fetched ' + tasks.length + ' task(s)');
+      q.resolve(tasks);
+    },
+
+    function(error) {
+      console.log('error fetching tasks: ' + error);
+      q.reject(error);
     });
 
-    $q.all(promises).then(function (responses) {
-        console.log('fetched ' + responses.length + ' task(s)');
-        var tasks = {};
-
-        angular.forEach(responses, function (response) {
-          tasks[response.data.name] = response.data;
-        });
-
-        q.resolve(tasks);
-      },
-
-      function (error) {
-        console.log('error fetching tasks: ' + error);
-        q.reject(error);
-      });
+    //var promises = [];
+    //
+    //angular.forEach(request._links.tasks, function (link) {
+    //  var href = link.href ? link.href : link;
+    //  var promise = $http.get(href);
+    //  promises.push(promise);
+    //});
+    //
+    //$q.all(promises).then(function (responses) {
+    //    console.log('fetched ' + responses.length + ' task(s)');
+    //    var tasks = {};
+    //
+    //    angular.forEach(responses, function (response) {
+    //      tasks[response.data.name] = response.data;
+    //    });
+    //
+    //    q.resolve(tasks);
+    //  },
+    //
+    //  function (error) {
+    //    console.log('error fetching tasks: ' + error);
+    //    q.reject(error);
+    //  });
 
     return q.promise;
   }
@@ -96,6 +114,42 @@ function TaskService($q, $http, $localStorage, Restangular) {
 
   /**
    *
+   * @param request
+   * @returns {*}
+   */
+  function getSignalsForRequest(request) {
+    console.log('fetching signals for request ' + request.requestId);
+
+    var q = $q.defer();
+    var promises = [];
+
+    angular.forEach(request._links.signals, function (link) {
+      var href = link.href ? link.href : link;
+      var promise = $http.get(href);
+      promises.push(promise);
+    });
+
+    $q.all(promises).then(function (responses) {
+      console.log('fetched ' + responses.length + ' signal(s)');
+      var signals = {};
+
+      angular.forEach(responses, function (response) {
+        signals[response.data.name] = response.data;
+      });
+
+      q.resolve(signals);
+    },
+
+    function (error) {
+      console.log('error fetching signals: ' + error);
+      q.reject(error);
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
    * @param taskId
    * @returns {*}
    */
@@ -122,25 +176,21 @@ function TaskService($q, $http, $localStorage, Restangular) {
 
   /**
    *
-   * @param taskId
-   * @param variables
+   * @param taskName
+   * @param requestId
    * @returns {*}
    */
-  function completeTask(taskId, variables) {
+  function completeTask(taskName, requestId) {
     var q = $q.defer();
+    var params = {action: 'COMPLETE'};
 
-    var params = {
-      'action': 'complete',
-      'variables': variables
-    };
-
-    Restangular.one('runtime/tasks', taskId).post('', params).then(function (result) {
-        console.log('completed task ' + taskId);
-        q.resolve(result);
+    $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function () {
+        console.log('completed task ' + taskName);
+        q.resolve();
       },
 
       function (error) {
-        console.log('error completing task ' + taskId);
+        console.log('error completing task ' + taskName);
         q.reject(error);
       });
 

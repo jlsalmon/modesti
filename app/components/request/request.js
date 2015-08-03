@@ -7,13 +7,14 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $http, $timeout, $modal, request, children, schema, tasks, RequestService, ColumnService, SchemaService, AlertService, HistoryService) {
+function RequestController($scope, $http, $timeout, $modal, request, children, schema, tasks, signals, RequestService, ColumnService, SchemaService, AlertService, HistoryService) {
   var self = this;
 
   self.request = request;
   self.children = children;
   self.schema = schema;
   self.tasks = tasks;
+  self.signals = signals;
 
   /**
    * The handsontable instance
@@ -583,7 +584,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       controller: 'HelpModalController as ctrl'
     });
   }
-  
+
   /**
    *
    */
@@ -633,7 +634,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
     var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight()
     - /* log.outerHeight() - */ footer.outerHeight();
-    
+
     console.log($(window).height());
     console.log(mainHeader.height());
     console.log(requestHeader.height());

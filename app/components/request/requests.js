@@ -159,24 +159,4 @@ function UserRequestsController($http, $location, $scope, RequestService, TaskSe
 
     getRequests(0, self.page.size, "requestId,desc", self.filter);
   }, true);
-
-  /**
-   *
-   */
-  function claimTask(request) {
-
-    TaskService.getTaskForRequest(request.requestId).then(function (task) {
-      TaskService.claimTask(task.id).then(function (task) {
-        $location.path('/requests/' + request.requestId);
-      },
-
-      function (error) {
-        console.log('error claiming task ' + id);
-      });
-    },
-
-    function (error) {
-      console.log('error querying tasks');
-    });
-  }
-};
+}

@@ -34,7 +34,7 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     var task = self.tasks['configure'];
     if (!task) {
       console.log('error configuring request: no task');
@@ -47,27 +47,27 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
     getProgress();
 
     // Complete the task
-    TaskService.completeTask(task.id, []).then(function (task) {
-      console.log('completed task ' + task.id);
+    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+      console.log('completed task ' + task.name);
 
       // Clear the cache so that the state reload also pulls a fresh request
       RequestService.clearCache();
 
       $state.reload().then(function() {
         self.configuring = 'success';
-        
+
         AlertService.add('info', 'Your request has been configured successfully.')
       });
     },
 
     function (error) {
-      console.log('error completing task ' + task.id);
+      console.log('error completing task ' + task.name);
       self.configuring = 'error';
     });
   }
-  
+
   /**
-   * 
+   *
    * @returns
    */
   function getProgress() {

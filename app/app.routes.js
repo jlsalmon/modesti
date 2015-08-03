@@ -46,6 +46,10 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
 
       tasks : function getTasks(request, TaskService) {
         return TaskService.getTasksForRequest(request);
+      },
+
+      signals : function getSignals(request, TaskService) {
+        return TaskService.getSignalsForRequest(request);
       }
     }
 

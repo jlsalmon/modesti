@@ -30,17 +30,17 @@ function AddressingControlsController($state, RequestService, TaskService) {
   }
 
   /**
-   * 
+   *
    */
   function addressSelectedPoints(event) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     self.addressed = true;
   }
-  
+
   /**
    * Mark the currently selected points as rejected.
    */
@@ -49,10 +49,10 @@ function AddressingControlsController($state, RequestService, TaskService) {
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     self.addressed = false;
   }
-  
+
   /**
    *
    */
@@ -61,7 +61,7 @@ function AddressingControlsController($state, RequestService, TaskService) {
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     var task = self.tasks['address'];
     if (!task) {
       console.log('error addressing request: no task');
@@ -87,15 +87,15 @@ function AddressingControlsController($state, RequestService, TaskService) {
       };
     }
 
-    // Send the approval result as a JSON string
-    var variables = [{
-      "name": "addressingResult",
-      "value": JSON.stringify(addressingResult),
-      "type": "string"
-    }];
+    //// Send the approval result as a JSON string
+    //var variables = [{
+    //  "name": "addressingResult",
+    //  "value": JSON.stringify(addressingResult),
+    //  "type": "string"
+    //}];
 
-    TaskService.completeTask(task.id, variables).then(function (task) {
-        console.log('completed task ' + task.id);
+    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+        console.log('completed task ' + task.name);
 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
@@ -106,7 +106,7 @@ function AddressingControlsController($state, RequestService, TaskService) {
       },
 
       function (error) {
-        console.log('error completing task ' + task.id);
+        console.log('error completing task ' + task.name);
         self.submitting = 'error';
       });
   }

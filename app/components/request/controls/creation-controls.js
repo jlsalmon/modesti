@@ -14,6 +14,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   self.request = {};
   self.rows = {};
   self.tasks = {};
+  self.signals = {};
   self.hot = {};
 
   self.validating = undefined;
@@ -36,6 +37,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     self.request = parent.request;
     self.rows = parent.rows;
     self.tasks = parent.tasks;
+    self.signals = parent.signals;
     self.hot = parent.hot;
 
 
@@ -54,13 +56,13 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         }
       });
     }
-    
+
     // Possibly show an alert, depending on how we got here
     if (self.request.status === 'FOR_CORRECTION') {
-      AlertService.add('danger', 'Request <b>' + self.request.requestId 
+      AlertService.add('danger', 'Request <b>' + self.request.requestId
           + '</b> requires correction. Please see the request log for details.');
     } else if (self.request.valid === true) {
-      AlertService.add('success', 'Request <b>' + self.request.requestId 
+      AlertService.add('success', 'Request <b>' + self.request.requestId
           + '</b> was validated successfully.');
     }
   }
@@ -96,7 +98,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     self.validating = 'started';
     AlertService.clear();
 
@@ -123,8 +125,8 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
           console.log('saved request before validation');
 
           // Complete the task associated with the request
-          TaskService.completeTask(task.id).then(function (task) {
-            console.log('completed task ' + task.id);
+          TaskService.completeTask(task.name, self.request.requestId).then(function () {
+            console.log('completed task ' + task.name);
 
             // Clear the cache so that the state reload also pulls a fresh request
             RequestService.clearCache();
@@ -157,7 +159,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     var task = self.tasks['submit'];
 
     if (!task) {
@@ -169,15 +171,15 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     self.submitting = 'started';
 
     // Complete the task associated with the request
-    TaskService.completeTask(task.id).then(function (task) {
-      console.log('completed task ' + task.id);
+    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+      console.log('completed task ' + task.name);
 
       // Clear the cache so that the state reload also pulls a fresh request
       RequestService.clearCache();
 
       $state.reload().then(function () {
         self.submitting = 'success';
-        
+
         AlertService.add('info', 'Your request has been submitted successfully.');
       });
     },
@@ -196,7 +198,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     var task = self.tasks['validate'];
     if (!task) {
       console.log('error splitting request: no task');
@@ -411,22 +413,22 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
    */
   function sendModificationSignal() {
     var task = self.tasks['submit'];
-    if (task) {
+    if (!task) {
+      console.log('error sending modification signal: no task');
+      return;
+    }
+
+    var signal = self.signals['requestModified'];
+
+    if (signal) {
       console.log('form modified whilst in submit state: sending signal');
 
-      var url = task.executionUrl;
-      var params = {
-        "action": "signalEventReceived",
-        "signalName": "requestModified",
-        "variables": []
-      };
-
       // TODO refactor this into a service
-      $http.put(url, params).then(function () {
+      $http.post(signal._links.self.href, {}).then(function () {
         console.log('sent modification signal');
 
         // The "submit" task will have changed to "validate".
-        TaskService.queryTasksForRequest(self.request).then(function (tasks) {
+        TaskService.getTasksForRequest(self.request).then(function (tasks) {
           self.tasks = tasks;
         });
       },

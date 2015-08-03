@@ -35,41 +35,41 @@ function TestingControlsController($state, RequestService, TaskService) {
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     var task = self.tasks['test'];
     if (!task) {
-      console.log('error testibg request: no task');
+      console.log('error testing request: no task');
       return;
     }
 
     self.submitting = 'started';
 
-    var testResult;
+    //var testResult;
+    //
+    //if (self.tested) {
+    //  testResult = {
+    //    passed: true,
+    //    errors: []
+    //  };
+    //} else {
+    //  testResult = {
+    //    passed: false,
+    //    errors: [
+    //      'Point 1 failed test because reasons',
+    //      'Point 2 failed test because reasons'
+    //    ]
+    //  };
+    //}
+    //
+    //// Send the test result as a JSON string
+    //var variables = [{
+    //  "name": "testResult",
+    //  "value": JSON.stringify(testResult),
+    //  "type": "string"
+    //}];
 
-    if (self.tested) {
-      testResult = {
-        passed: true,
-        errors: []
-      };
-    } else {
-      testResult = {
-        passed: false,
-        errors: [
-          'Point 1 failed test because reasons',
-          'Point 2 failed test because reasons'
-        ]
-      };
-    }
-
-    // Send the test result as a JSON string
-    var variables = [{
-      "name": "testResult",
-      "value": JSON.stringify(testResult),
-      "type": "string"
-    }];
-
-    TaskService.completeTask(task.id, variables).then(function (task) {
-        console.log('completed task ' + task.id);
+    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+        console.log('completed task ' + task.name);
 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
@@ -80,7 +80,7 @@ function TestingControlsController($state, RequestService, TaskService) {
       },
 
       function (error) {
-        console.log('error completing task ' + task.id);
+        console.log('error completing task ' + task.name);
         self.submitting = 'error';
       });
   }

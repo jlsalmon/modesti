@@ -65,7 +65,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     var selectedPointIds = self.parent.getSelectedPointIds();
 
     var point;
@@ -125,7 +125,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     var selectedPointIds = self.parent.getSelectedPointIds();
 
     var point;
@@ -164,7 +164,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
       event.preventDefault();
       event.stopPropagation();
     }
-    
+
     var task = self.tasks['approve'];
     if (!task) {
       console.log('error approving request: no task');
@@ -189,8 +189,8 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     RequestService.saveRequest(self.request).then(function () {
 
       // Complete the task
-      TaskService.completeTask(task.id, []).then(function (task) {
-          console.log('completed task ' + task.id);
+      TaskService.completeTask(task.name, self.request.requestId).then(function () {
+          console.log('completed task ' + task.name);
 
           // Clear the cache so that the state reload also pulls a fresh request
           RequestService.clearCache();
@@ -201,7 +201,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
         },
 
         function (error) {
-          console.log('error completing task ' + task.id);
+          console.log('error completing task ' + task.name);
           self.submitting = 'error';
         });
     });
