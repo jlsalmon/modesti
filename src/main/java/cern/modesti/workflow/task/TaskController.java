@@ -1,43 +1,39 @@
 package cern.modesti.workflow.task;
 
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.request.Request;
-import cern.modesti.workflow.history.HistoricEvent;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.ActivitiException;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.query.Query;
-import org.activiti.engine.runtime.Execution;
-import org.activiti.engine.task.Task;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static java.lang.String.format;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
+
+import lombok.extern.slf4j.Slf4j;
+
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
+import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.request.Request;
+import cern.modesti.security.ldap.User;
 
 /**
  * TODO
@@ -58,8 +54,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * /request/123/tasks/configure     POST                      {action: 'complete|delegate'}
  * /request/123/tasks/test          POST                      {action: 'claim|complete|delegate'}
  *
- * /request/123/signals/split         POST
- * /request/123/signals/modify        POST
+ * /request/123/signals/split       POST
+ * /request/123/signals/modify      POST
  *
  *
  * /request/123/history             GET
@@ -76,6 +72,9 @@ public class TaskController {
 
   @Autowired
   private TaskService taskService;
+
+  @Autowired
+  private IdentityService identityService;
 
   @Autowired
   private RequestRepository requestRepository;
@@ -134,11 +133,13 @@ public class TaskController {
    * @return
    */
   @RequestMapping(value = "/{name}", method = POST)
-  public ResponseEntity action(@PathVariable("id") String id, @PathVariable("name") String name, @NotNull @RequestBody TaskAction action) {
+  public ResponseEntity action(@PathVariable("id") String id, @PathVariable("name") String name, @NotNull @RequestBody TaskAction action, Principal principal) {
     Request request = getRequest(id);
     if (request == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+
 
     if (action.getAction().equals(TaskAction.Action.DELEGATE)) {
       throw new UnsupportedOperationException("Not yet implemented");
@@ -149,6 +150,23 @@ public class TaskController {
     }
 
     // Must be "complete" action
+    Task currentTask = taskService.createTaskQuery().processInstanceBusinessKey(id).singleResult();
+
+    User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+    List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(id)
+        .taskCandidateGroupIn(user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())).list();
+
+    boolean authorised = false;
+    for (Task task : tasks) {
+      if (task.getId().equals(currentTask.getId())) {
+        authorised = true;
+      }
+    }
+
+    if (!authorised) {
+      return new ResponseEntity(HttpStatus.FORBIDDEN);
+    }
+
     completeTask(id, name);
     return new ResponseEntity(HttpStatus.OK);
 

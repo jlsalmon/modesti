@@ -9,7 +9,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.stereotype.Component;
@@ -50,16 +49,16 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
     for (Object group : context.getObjectAttributes("memberOf")) {
 
       if (group.toString().toLowerCase().contains(creators.toLowerCase())) {
-        authorities.add(new Role("ROLE_CREATOR"));
+        authorities.add(new Role(creators));
       }
       if (group.toString().toLowerCase().contains(approvers.toLowerCase())) {
-        authorities.add(new Role("ROLE_APPROVER"));
+        authorities.add(new Role(approvers));
       }
       if (group.toString().toLowerCase().contains(cablers.toLowerCase())) {
-        authorities.add(new Role("ROLE_CABLER"));
+        authorities.add(new Role(cablers));
       }
       if (group.toString().toLowerCase().contains(administrators.toLowerCase())) {
-        authorities.add(new Role("ROLE_ADMIN"));
+        authorities.add(new Role(administrators));
       }
     }
 

@@ -69,19 +69,19 @@ public interface RequestRepository extends MongoRepository<Request, String> {
    *
    * @return
    */
-  @PreAuthorize("hasRole('ROLE_CREATOR')")
+  @PreAuthorize("hasRole('modesti-creators')")
   @Override
   Request save(Request request);
 
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PreAuthorize("hasRole('modesti-administrators')")
   @Override
   void delete(String id);
 
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PreAuthorize("hasRole('modesti-administrators')")
   @Override
   void delete(Request request);
 
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PreAuthorize("hasRole('modesti-administrators')")
   @Override
   void deleteAll();
 }
