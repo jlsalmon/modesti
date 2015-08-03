@@ -39,6 +39,11 @@ public class RequestResourceProcessor implements ResourceProcessor<Resource<Requ
       resource.add(taskLinks);
     }
 
+    List<Link> signalLinks = requestLinks.getSignalLinks(request);
+    if (!signalLinks.isEmpty()) {
+      resource.add(signalLinks);
+    }
+
     return resource;
   }
 

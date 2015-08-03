@@ -3,17 +3,16 @@
  */
 package cern.modesti.request;
 
-import java.io.Serializable;
-
 import cern.modesti.repository.mongo.domain.Domain;
 import cern.modesti.repository.mongo.domain.DomainRepository;
+import cern.modesti.repository.mongo.request.RequestRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.spi.BackendIdConverter;
 import org.springframework.stereotype.Component;
 
-import cern.modesti.repository.mongo.request.RequestRepository;
+import java.io.Serializable;
 
 /**
  * @author Justin Lewis Salmon
