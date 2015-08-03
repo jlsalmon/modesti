@@ -20,9 +20,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.validation.Validator;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
+@EnableEntityLinks
 public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
 
   @Autowired

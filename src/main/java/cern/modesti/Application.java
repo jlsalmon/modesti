@@ -6,6 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.config.EnableEntityLinks;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 /**
  * TODO
@@ -16,9 +17,6 @@ import org.springframework.hateoas.config.EnableEntityLinks;
  * @author Justin Lewis Salmon
  */
 @SpringBootApplication
-@EnableEntityLinks
-@EnableCaching
-@Import({DataSourceConfig.class, JpaConfig.class, MongoConfig.class, RestConfig.class, CacheConfig.class, WorkflowConfig.class, WebSecurityConfig.class})
 public class Application {
 
   public static void main(String[] args) {
