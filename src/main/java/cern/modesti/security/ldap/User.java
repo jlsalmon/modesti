@@ -1,13 +1,14 @@
 package cern.modesti.security.ldap;
 
-import java.util.Collection;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Set;
 
 /**
  * TODO
@@ -29,7 +30,8 @@ public class User implements UserDetails {
 
   private String email;
 
-  private Collection<? extends GrantedAuthority> authorities;
+  @JsonDeserialize(contentAs = Role.class)
+  private Set<? extends GrantedAuthority> authorities;
 
   @Override
   public String getPassword() {

@@ -49,17 +49,17 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
 
     for (Object group : context.getObjectAttributes("memberOf")) {
 
-      if (group.toString().toLowerCase().contains(creators.toLowerCase()) == true) {
-        authorities.add(new SimpleGrantedAuthority("ROLE_CREATOR"));
+      if (group.toString().toLowerCase().contains(creators.toLowerCase())) {
+        authorities.add(new Role("ROLE_CREATOR"));
       }
-      if (group.toString().toLowerCase().contains(approvers.toLowerCase()) == true) {
-        authorities.add(new SimpleGrantedAuthority("ROLE_APPROVER"));
+      if (group.toString().toLowerCase().contains(approvers.toLowerCase())) {
+        authorities.add(new Role("ROLE_APPROVER"));
       }
-      if (group.toString().toLowerCase().contains(cablers.toLowerCase()) == true) {
-        authorities.add(new SimpleGrantedAuthority("ROLE_CABLER"));
+      if (group.toString().toLowerCase().contains(cablers.toLowerCase())) {
+        authorities.add(new Role("ROLE_CABLER"));
       }
-      if (group.toString().toLowerCase().contains(administrators.toLowerCase()) == true) {
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+      if (group.toString().toLowerCase().contains(administrators.toLowerCase())) {
+        authorities.add(new Role("ROLE_ADMIN"));
       }
     }
 
