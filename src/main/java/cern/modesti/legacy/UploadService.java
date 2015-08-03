@@ -63,7 +63,7 @@ public class UploadService {
     workflowService.startProcessInstance(request);
 
     // Store the request in the database
-    requestRepository.insert(request);
+    requestRepository.save(request);
     return request;
   }
 }
