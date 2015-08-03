@@ -34,7 +34,7 @@ public class ConfigurationServiceTest {
     Request request = new Request();
     request.setRequestId("1234");
     request.setDescription("test request");
-    request.setCreator(new User(1234, "nobody", "No", "Body", "nobody@cern.ch"));
+    request.setCreator(new User(1234, "nobody", "No", "Body", "nobody@cern.ch", Collections.emptySet()));
 
     Point p1 = new Point();
     p1.setId(1L);

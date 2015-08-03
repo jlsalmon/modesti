@@ -3,7 +3,6 @@
  */
 package cern.modesti.config;
 
-import cern.modesti.security.ldap.LdapUserDetailsMapper;
 import org.apache.catalina.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
@@ -27,11 +26,24 @@ import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 
+import cern.modesti.security.ldap.LdapUserDetailsMapper;
 
 /**
  * TODO
  *
- * Web security and LDAP configuration beans
+ * Web security and LDAP configuration beans.
+ *
+ * The authentication/authorisation mechanism uses two different LDAP servers:
+ * cerndc.cern.ch and xldap.cern.ch. The former is available in authenticated
+ * mode only, from inside CERN only, and is used to authenticate a user. The
+ * latter is available anonymously, from inside CERN only, and is used to
+ * perform anonymous lookups on the LDAP server in order to do things like
+ * lookup all the e-groups a particular user is a member of, or to check if a
+ * user is a member of a particular e-group.
+ *
+ * See <a href=
+ * "https://espace.cern.ch/identitymanagement/Wiki%20Pages/Active%20Directory%20Publication.aspx"
+ * >this page</a> for documentation about the CERN LDAP structure.
  *
  * @author Justin Lewis Salmon
  */
@@ -59,14 +71,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapAuthenticationProvider ldapAuthenticationProvider() {
     LdapAuthenticationProvider provider = new LdapAuthenticationProvider(ldapAuthenticator());
-    provider.setUserDetailsContextMapper(new LdapUserDetailsMapper());
+    provider.setUserDetailsContextMapper(ldapUserDetailsMapper());
     return provider;
+  }
+
+  @Bean
+  public LdapUserDetailsMapper ldapUserDetailsMapper() {
+    return new LdapUserDetailsMapper();
   }
 
   @Bean
   public LdapAuthenticator ldapAuthenticator() {
     BindAuthenticator authenticator = new BindAuthenticator(contextSource());
-    String[] userDnPatterns = new String[]{env.getRequiredProperty("ldap.user.filter")};
+    String[] userDnPatterns = new String[] { env.getRequiredProperty("ldap.user.filter") };
     authenticator.setUserDnPatterns(userDnPatterns);
     return authenticator;
   }
