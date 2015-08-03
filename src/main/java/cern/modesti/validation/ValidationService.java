@@ -89,13 +89,24 @@ public class ValidationService {
       properties.put("alarmCategory", getObjectProperty(properties, "alarmCategory", "value", String.class));
 
       // These properties do not go into the table
+      // TODO: review these
       properties.remove("tagname");
       properties.remove("faultState");
       properties.remove("cabling");
       properties.remove("trueMeaning");
       properties.remove("falseMeaning");
       properties.remove("type");
-
+      properties.remove("timeDeadband");
+      properties.remove("userApplicationData");
+      properties.remove("laserCategory");
+      properties.remove("laserFaultFamily");
+      properties.remove("laserFaultMember");
+      properties.remove("laserFaultCode");
+      properties.remove("parentAlarm");
+      properties.remove("hostName");
+      properties.remove("electricityFaultFamily");
+      properties.remove("detail");
+      properties.remove("multiplicityValue");
       properties.remove("csamDetector");
 
       data.add(properties.values().toArray());
