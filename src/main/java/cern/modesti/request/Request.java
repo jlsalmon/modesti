@@ -20,9 +20,9 @@ package cern.modesti.request;
 import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.request.point.Point;
 import cern.modesti.security.ldap.User;
-import cern.modesti.workflow.result.AddressingResult;
 import cern.modesti.workflow.result.ConfigurationResult;
-import cern.modesti.workflow.result.TestResult;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -39,6 +39,8 @@ import java.util.List;
  * @author Justin Lewis Salmon
  */
 @Document
+@Data
+@NoArgsConstructor
 public class Request implements Serializable {
 
   private static final long serialVersionUID = -7075036449830835583L;
@@ -116,17 +118,22 @@ public class Request implements Serializable {
   /**
    *
    */
-  private AddressingResult addressingResult;
+  private Boolean addressed;
+
+  /**
+   *
+   */
+  private Boolean cabled;
+
+  /**
+   *
+   */
+  private Boolean tested;
 
   /**
    *
    */
   private ConfigurationResult configurationResult;
-
-  /**
-   *
-   */
-  private TestResult testResult;
 
   /**
    *
@@ -151,12 +158,6 @@ public class Request implements Serializable {
   }
 
   /**
-   * Default constructor
-   */
-  public Request() {
-  }
-
-  /**
    * Copy constructor
    *
    * @param request
@@ -173,259 +174,6 @@ public class Request implements Serializable {
     this.subsystem = request.subsystem;
     this.categories = request.categories;
     this.points = request.points;
-  }
-
-  /**
-   *
-   */
-  public String getId() {
-    return this.id;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getRequestId() {
-    return requestId;
-  }
-
-  /**
-   *
-   * @param id
-   */
-  public void setRequestId(String id) {
-    this.requestId = id;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getParentRequestId() {
-    return parentRequestId;
-  }
-
-  /**
-   *
-   * @param parentRequestId
-   */
-  public void setParentRequestId(String parentRequestId) {
-    this.parentRequestId = parentRequestId;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public List<String> getChildRequestIds() {
-    return childRequestIds;
-  }
-
-  /**
-   *
-   * @param childRequestIds
-   */
-  public void setChildRequestIds(List<String> childRequestIds) {
-    this.childRequestIds = childRequestIds;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public RequestStatus getStatus() {
-    return status;
-  }
-
-  /**
-   *
-   * @param status
-   */
-  public void setStatus(RequestStatus status) {
-    this.status = status;
-  }
-
-  /**
-   * @return the type
-   */
-  public RequestType getType() {
-    return type;
-  }
-
-  /**
-   * @param type the type to set
-   */
-  public void setType(RequestType type) {
-    this.type = type;
-  }
-
-  /**
-   * @return the creator
-   */
-  public User getCreator() {
-    return creator;
-  }
-
-  /**
-   * @param creator the creator to set
-   */
-  public void setCreator(User creator) {
-    this.creator = creator;
-  }
-
-  /**
-   * @return the description
-   */
-  public String getDescription() {
-    return description;
-  }
-
-  /**
-   * @param description the description to set
-   */
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  /**
-   * @return the domain
-   */
-  public String getDomain() {
-    return domain;
-  }
-
-  /**
-   * @param domain the domain to set
-   */
-  public void setDomain(String domain) {
-    this.domain = domain;
-  }
-
-  /**
-   * @return the subsystem
-   */
-  public SubSystem getSubsystem() {
-    return subsystem;
-  }
-
-  /**
-   * @param subsystem the subsystem to set
-   */
-  public void setSubsystem(SubSystem subsystem) {
-    this.subsystem = subsystem;
-  }
-
-  /**
-   * @return the categories
-   */
-  public List<String> getCategories() {
-    return categories;
-  }
-
-  /**
-   * @param categories the categories to set
-   */
-  public void setCategories(List<String> categories) {
-    this.categories = categories;
-  }
-
-  /**
-   * @return the points
-   */
-  public List<Point> getPoints() {
-    return points;
-  }
-
-  /**
-   * @param points the points to set
-   */
-  public void setPoints(List<Point> points) {
-    this.points = points;
-  }
-
-  /**
-   * @return the comments
-   */
-  public List<Comment> getComments() {
-    return comments;
-  }
-
-  /**
-   * @param comments the comments to set
-   */
-  public void setComments(List<Comment> comments) {
-    this.comments = comments;
-  }
-
-  /**
-   * @return the validationResult
-   */
-  public Boolean isValid() {
-    return valid;
-  }
-
-  /**
-   * @param valid the valid to set
-   */
-  public void setValid(Boolean valid) {
-    this.valid = valid;
-  }
-
-  /**
-   * @return the approved
-   */
-  public Boolean isApproved() {
-    return approved;
-  }
-
-  /**
-   * @param approved the approved to set
-   */
-  public void setApproved(Boolean approved) {
-    this.approved = approved;
-  }
-
-  /**
-   * @return the addressingResult
-   */
-  public AddressingResult getAddressingResult() {
-    return addressingResult;
-  }
-
-  /**
-   * @param addressingResult the addressingResult to set
-   */
-  public void setAddressingResult(AddressingResult addressingResult) {
-    this.addressingResult = addressingResult;
-  }
-
-  /**
-   * @return the configurationResult
-   */
-  public ConfigurationResult getConfigurationResult() {
-    return configurationResult;
-  }
-
-  /**
-   * @param configurationResult the configurationResult to set
-   */
-  public void setConfigurationResult(ConfigurationResult configurationResult) {
-    this.configurationResult = configurationResult;
-  }
-
-  /**
-   * @return the testResult
-   */
-  public TestResult getTestResult() {
-    return testResult;
-  }
-
-  /**
-   * @param testResult the testResult to set
-   */
-  public void setTestResult(TestResult testResult) {
-    this.testResult = testResult;
   }
 
   /**

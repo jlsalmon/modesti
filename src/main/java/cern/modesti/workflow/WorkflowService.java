@@ -253,7 +253,7 @@ public class WorkflowService {
     notificationService.sendNotification(request, NotificationType.APPROVAL_COMPLETED);
 
     // Set the variable for the next stage to evaluate
-    execution.setVariable("approved", request.isApproved());
+    execution.setVariable("approved", request.getApproved());
 
     // Store the request
     requestRepository.save(request);
@@ -272,14 +272,16 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-    // We will have gotten a JSON serialised representation of an AddressingResult from the user task.
-    String addressingResultString = execution.getVariable("addressingResult", String.class);
+//    // We will have gotten a JSON serialised representation of an AddressingResult from the user task.
+//    String addressingResultString = execution.getVariable("addressingResult", String.class);
+//
+//    AddressingResult addressingResult = new Gson().fromJson(addressingResultString, AddressingResult.class);
+//    request.setAddressingResult(addressingResult);
 
-    AddressingResult addressingResult = new Gson().fromJson(addressingResultString, AddressingResult.class);
-    request.setAddressingResult(addressingResult);
 
     // Set the variable for the next stage to evaluate
-    execution.setVariable("addressed", addressingResult.isAddressed());
+    // TODO: do this properly
+    execution.setVariable("addressed", true); //equest.getAddressed());
 
     // Store the request
     requestRepository.save(request);
@@ -309,14 +311,15 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-    // We will have gotten a JSON serialised representation of a TestResult from the user task.
-    String testResultString = execution.getVariable("testResult", String.class);
-
-    TestResult testResult = new Gson().fromJson(testResultString, TestResult.class);
-    request.setTestResult(testResult);
+//    // We will have gotten a JSON serialised representation of a TestResult from the user task.
+//    String testResultString = execution.getVariable("testResult", String.class);
+//
+//    TestResult testResult = new Gson().fromJson(testResultString, TestResult.class);
+//    request.setTestResult(testResult);
 
     // Set the variable for the next stage to evaluate
-    execution.setVariable("passed", testResult.getPassed());
+    // TODO: do this properly
+    execution.setVariable("passed", true); // request.getTested());
 
     // Store the request
     requestRepository.save(request);
@@ -417,7 +420,7 @@ public class WorkflowService {
 
     // Store the requests
     requestRepository.save(parent);
-    requestRepository.insert(child);
+    requestRepository.save(child);
 
     // Add variables to the execution so that they are available to the
     // recursive process invocation
