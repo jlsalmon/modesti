@@ -45,7 +45,7 @@ dependencies {
 
     compile('org.activiti:spring-boot-starter-basic:5.17.0')
     compile('org.activiti:spring-boot-starter-jpa:5.17.0')
-    compile('org.activiti:spring-boot-starter-rest-api:5.17.0')
+    //compile('org.activiti:spring-boot-starter-rest-api:5.17.0')
     compile('org.activiti:activiti-ldap:5.17.0')
 
     // Exclude activemq-all and include necessary dependencies directly.
