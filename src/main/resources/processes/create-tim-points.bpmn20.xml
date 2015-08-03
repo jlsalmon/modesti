@@ -36,12 +36,12 @@
         <activiti:in source="childRequiresCabling" target="requiresCabling"></activiti:in>
       </extensionElements>
     </callActivity>
-    <userTask id="sid-98765471-E687-4A88-A193-3B974901E636" name="address" activiti:candidateGroups="modesti-creators,modesti-administrators">
+    <userTask id="sid-98765471-E687-4A88-A193-3B974901E636" name="address" activiti:candidateGroups="modesti-cablers,modesti-administrators">
       <extensionElements>
         <activiti:taskListener event="complete" expression="${workflowService.onAddressingCompleted(requestId, execution)}"></activiti:taskListener>
       </extensionElements>
     </userTask>
-    <userTask id="sid-2BE485D4-5AE3-43F4-87A9-4B1B25E341A1" name="cable" activiti:candidateGroups="modesti-creators,modesti-administrators">
+    <userTask id="sid-2BE485D4-5AE3-43F4-87A9-4B1B25E341A1" name="cable" activiti:candidateGroups="modesti-cablers,modesti-administrators">
       <extensionElements>
         <activiti:taskListener event="complete" expression="${workflowService.onCablingCompleted(requestId, execution)}"></activiti:taskListener>
       </extensionElements>
