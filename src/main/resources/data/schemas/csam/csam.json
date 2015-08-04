@@ -27,6 +27,7 @@
         {
           "id": "csamPlcname",
           "type": "autocomplete",
+          "maxLength": 15,
           "url": "monitoringEquipments/search/find",
           "required": true,
           "name_en": "Monitoring Equipment",
