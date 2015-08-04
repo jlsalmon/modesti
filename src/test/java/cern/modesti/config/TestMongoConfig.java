@@ -10,12 +10,12 @@ import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventL
 import org.springframework.data.mongodb.repository.support.MongoRepositoryFactory;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import com.github.fakemongo.Fongo;
 import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
 
 @Configuration
-@Profile({"dev", "prod"})
-public class MongoConfig extends AbstractMongoConfiguration {
+@Profile("test")
+public class TestMongoConfig extends AbstractMongoConfiguration {
 
   @Autowired
   private Environment env;
@@ -27,7 +27,8 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
   @Override
   public Mongo mongo() throws Exception {
-    return new MongoClient(env.getProperty("mongodb.host"));
+    // Fake in-memory mongo
+    return new Fongo(getDatabaseName()).getMongo();
   }
 
   @Bean

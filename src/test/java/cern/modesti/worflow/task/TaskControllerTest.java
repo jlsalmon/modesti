@@ -1,13 +1,22 @@
 package cern.modesti.worflow.task;
 
-import cern.modesti.Application;
-import cern.modesti.repository.jpa.subsystem.SubSystem;
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.request.Request;
-import cern.modesti.request.RequestType;
-import cern.modesti.security.ldap.Role;
-import cern.modesti.security.ldap.User;
-import cern.modesti.workflow.task.TaskInfo;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.core.Is.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
 import org.activiti.engine.RuntimeService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,14 +35,14 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.IOException;
-import java.util.*;
-
-import static org.hamcrest.core.Is.is;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import cern.modesti.Application;
+import cern.modesti.repository.jpa.subsystem.SubSystem;
+import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.request.Request;
+import cern.modesti.request.RequestType;
+import cern.modesti.security.ldap.Role;
+import cern.modesti.security.ldap.User;
+import cern.modesti.workflow.task.TaskInfo;
 
 
 /**
@@ -85,8 +94,8 @@ public class TaskControllerTest {
         .andExpect(content().contentType(contentType))
         .andExpect(jsonPath("$.name", is(this.taskList.get(0).getName())))
         .andExpect(jsonPath("$.description", is(this.taskList.get(0).getDescription())))
-        .andExpect(jsonPath("$.assignee", is(this.taskList.get(0).getAssignee())));
-        //.andExpect(jsonPath("$.candidateGroups", contains(this.taskList.get(0).getCandidateGroups())));
+        .andExpect(jsonPath("$.assignee", is(this.taskList.get(0).getAssignee())))
+        .andExpect(jsonPath("$.candidateGroups", contains(this.taskList.get(0).getCandidateGroups().toArray())));
   }
 
   private Request getTestRequest() {

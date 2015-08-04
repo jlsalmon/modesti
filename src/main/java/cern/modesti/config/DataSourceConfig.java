@@ -6,12 +6,15 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 
 @Configuration
+@Profile({"test", "dev", "prod"})
 public class DataSourceConfig {
 
-    @Autowired private Environment env;
+    @Autowired
+    private Environment env;
 
     @Bean(destroyMethod="close")
     public DataSource dataSource() {

@@ -1,15 +1,17 @@
 package cern.modesti;
 
-import cern.modesti.config.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Import;
-import org.springframework.hateoas.config.EnableEntityLinks;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 /**
  * TODO
+ *
+ * "test" profile should use:
+ *  - In-memory JDBC datasource (h2)        - check
+ *  - In-memory MongoDB datasource (fongo)
+ *  - In-memory LDAP authentication
+ *
+ * "dev" and "prod" should use real stuff.
  *
  * To activate a profile, pass -Dspring.profiles.active=[test|dev|prod]
  *

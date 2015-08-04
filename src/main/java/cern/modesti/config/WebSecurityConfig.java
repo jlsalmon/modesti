@@ -3,8 +3,8 @@
  */
 package cern.modesti.config;
 
-import cern.modesti.security.ldap.LdapUserDetailsMapper;
 import org.apache.catalina.Context;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
@@ -27,6 +27,9 @@ import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
+
+import cern.modesti.security.ldap.LdapSynchroniser;
+import cern.modesti.security.ldap.LdapUserDetailsMapper;
 
 /**
  * TODO
@@ -68,6 +71,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and().authorizeRequests().anyRequest().authenticated()
         // TODO: implement CSRF protection. Here we just turn it off.
         .and().csrf().disable();
+  }
+
+  /**
+   * Synchronise LDAP users and groups at startup via an InitializingBean.
+   *
+   * @param ldapSynchroniser the newly created LdapSynchroniser instance
+   * @return the initialising bean
+   */
+  @Bean
+  InitializingBean usersAndGroupsInitializer(final LdapSynchroniser ldapSynchroniser) {
+    return ldapSynchroniser::synchroniseUsersAndGroups;
   }
 
   @Bean
