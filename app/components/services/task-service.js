@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('TaskService', TaskService);
 
-function TaskService($q, $http, $localStorage, Restangular) {
+function TaskService($q, $http, $localStorage) {
   var self = this;
 
   /**
@@ -30,7 +30,7 @@ function TaskService($q, $http, $localStorage, Restangular) {
 
     var q = $q.defer();
 
-    $http.get(BACKEND_BASE_URL + '/requests/' + request.requestId + '/tasks').then(function(response) {
+    $http.get(BACKEND_BASE_URL + '/requests/' + request.requestId + '/tasks').then(function (response) {
       var tasks = {};
 
       if (response.data.hasOwnProperty('_embedded')) {
@@ -43,7 +43,7 @@ function TaskService($q, $http, $localStorage, Restangular) {
       q.resolve(tasks);
     },
 
-    function(error) {
+    function (error) {
       console.log('error fetching tasks: ' + error);
       q.reject(error);
     });
@@ -61,7 +61,7 @@ function TaskService($q, $http, $localStorage, Restangular) {
 
     var q = $q.defer();
 
-    $http.get(BACKEND_BASE_URL + '/requests/' + request.requestId + '/signals').then(function(response) {
+    $http.get(BACKEND_BASE_URL + '/requests/' + request.requestId + '/signals').then(function (response) {
       var signals = {};
 
       if (response.data.hasOwnProperty('_embedded')) {
@@ -74,7 +74,7 @@ function TaskService($q, $http, $localStorage, Restangular) {
       q.resolve(signals);
     },
 
-    function(error) {
+    function (error) {
       console.log('error fetching signals: ' + error);
       q.reject(error);
     });
@@ -84,26 +84,27 @@ function TaskService($q, $http, $localStorage, Restangular) {
 
   /**
    *
-   * @param taskId
+   * @param taskName
+   * @param requestId
    * @returns {*}
    */
-  function claimTask(taskId) {
+  function claimTask(taskName, requestId) {
     var q = $q.defer();
 
     var params = {
-      action: 'claim',
-      assignee: $localStorage.user.name
+      action: 'CLAIM',
+      assignee: $localStorage.user.username
     };
 
-    Restangular.one('runtime/tasks', taskId).post('', params).then(function (result) {
-        console.log('claimed task ' + taskId + ' as user ' + params.assignee);
-        q.resolve(result);
-      },
+    $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function (response) {
+      console.log('claimed task ' + taskName + ' as user ' + params.assignee);
+      q.resolve(response.data);
+    },
 
-      function (error) {
-        console.log('error claiming task ' + taskId);
-        q.reject(error);
-      });
+    function (error) {
+      console.log('error claiming task ' + taskName + ': ' + error.data.message);
+      q.reject(error);
+    });
 
     return q.promise;
   }
@@ -119,14 +120,14 @@ function TaskService($q, $http, $localStorage, Restangular) {
     var params = {action: 'COMPLETE'};
 
     $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function () {
-        console.log('completed task ' + taskName);
-        q.resolve();
-      },
+      console.log('completed task ' + taskName);
+      q.resolve();
+    },
 
-      function (error) {
-        console.log('error completing task ' + taskName);
-        q.reject(error);
-      });
+    function (error) {
+      console.log('error completing task ' + taskName);
+      q.reject(error);
+    });
 
     return q.promise;
   }
