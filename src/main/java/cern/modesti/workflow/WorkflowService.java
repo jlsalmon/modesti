@@ -3,24 +3,6 @@
  */
 package cern.modesti.workflow;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.transaction.Transactional;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.activiti.engine.ActivitiException;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.delegate.DelegateExecution;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import cern.c2mon.shared.client.configuration.ConfigConstants;
 import cern.c2mon.shared.client.configuration.ConfigurationReport;
 import cern.modesti.configuration.ConfigurationService;
@@ -32,16 +14,23 @@ import cern.modesti.repository.mongo.request.counter.CounterService;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Point;
 import cern.modesti.validation.ValidationService;
-import cern.modesti.workflow.result.AddressingResult;
 import cern.modesti.workflow.result.ConfigurationResult;
-import cern.modesti.workflow.result.TestResult;
+import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.ActivitiException;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.delegate.DelegateExecution;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.*;
+
+import static java.lang.String.format;
 
 /**
  * @author Justin Lewis Salmon
- *
  */
 @Service
 @Slf4j
@@ -67,7 +56,6 @@ public class WorkflowService {
   private ConfigurationService configurationService;
 
   /**
-   *
    * @param request
    */
   public void startProcessInstance(final Request request) {
@@ -78,6 +66,21 @@ public class WorkflowService {
     variables.put("requestId", request.getRequestId());
 
     runtimeService.startProcessInstanceByKey("create-tim-points", request.getRequestId(), variables);
+  }
+
+  /**
+   * Set the business key for a process instance.
+   *
+   * This method is invoked by an execution listener when the process starts in order to set the business key (request id) that will be used throughout the
+   * rest of the workflow. Although we can set the business key via {@link RuntimeService#startProcessInstanceById(String, String)} when starting a new
+   * parent process, we are not responsible for starting process instances of subprocess call activities, and Activiti currently does not support passing a
+   * business key directly to a call activity. So we use this method to ensure that child activities have their business keys set correctly.
+   *
+   * @param requestId
+   * @param execution
+   */
+  public void setBusinessKey(String requestId, DelegateExecution execution) {
+    runtimeService.updateBusinessKey(execution.getProcessInstanceId(), requestId);
   }
 
   /**
@@ -97,8 +100,8 @@ public class WorkflowService {
   }
 
   /**
-   *
    * @param requestId
+   *
    * @return
    */
   public boolean requiresApproval(String requestId) {
@@ -136,8 +139,8 @@ public class WorkflowService {
   }
 
   /**
-   *
    * @param requestId
+   *
    * @return
    */
   public boolean requiresCabling(String requestId) {
@@ -159,9 +162,7 @@ public class WorkflowService {
       if (request.getStatus().equals(Request.RequestStatus.FOR_ADDRESSING)) {
         notificationService.sendNotification(request, NotificationType.ADDRESSING_STARTED);
         notificationService.sendNotification(request, NotificationType.NEW_REQUEST_FOR_ADDRESSING);
-      }
-
-      else if (request.getStatus().equals(Request.RequestStatus.FOR_CABLING)) {
+      } else if (request.getStatus().equals(Request.RequestStatus.FOR_CABLING)) {
         notificationService.sendNotification(request, NotificationType.CABLING_STARTED);
         notificationService.sendNotification(request, NotificationType.NEW_REQUEST_FOR_CABLING);
       }
@@ -171,7 +172,6 @@ public class WorkflowService {
   }
 
   /**
-   *
    * @param requestId
    * @param execution
    */
@@ -210,7 +210,6 @@ public class WorkflowService {
   }
 
   /**
-   *
    * @param requestId
    * @param execution
    */
@@ -222,32 +221,32 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-//    // We will have gotten a JSON serialised representation of an ApprovalResult from the user task.
-//    String approvalResultString = execution.getVariable("approvalResult", String.class);
-//
-//    ApprovalResult approvalResult = new ObjectMapper().readValue(approvalResultString, ApprovalResult.class);
-//    List<Point> points = request.getPoints();
+    //    // We will have gotten a JSON serialised representation of an ApprovalResult from the user task.
+    //    String approvalResultString = execution.getVariable("approvalResult", String.class);
+    //
+    //    ApprovalResult approvalResult = new ObjectMapper().readValue(approvalResultString, ApprovalResult.class);
+    //    List<Point> points = request.getPoints();
 
 
-//    // If any of the points are rejected, the whole request is rejected
-//    boolean approved = true;
-//    for (Point point : request.getPoints()) {
-//      if (!point.getApproval().isApproved()) {
-//        approved = false;
-//      }
-//    }
-//
-//    request.setApproved(approved);
+    //    // If any of the points are rejected, the whole request is rejected
+    //    boolean approved = true;
+    //    for (Point point : request.getPoints()) {
+    //      if (!point.getApproval().isApproved()) {
+    //        approved = false;
+    //      }
+    //    }
+    //
+    //    request.setApproved(approved);
 
-//    // Mark all the points as approved or not
-//    for (Point point : request.getPoints()) {
-//
-//      for (ApprovalResult.ApprovalResultItem item : approvalResult.getItems()) {
-//        if (Objects.equals(item.getPointId(), point.getId())) {
-//          point.setApproved(item.isApproved());
-//        }
-//      }
-//    }
+    //    // Mark all the points as approved or not
+    //    for (Point point : request.getPoints()) {
+    //
+    //      for (ApprovalResult.ApprovalResultItem item : approvalResult.getItems()) {
+    //        if (Objects.equals(item.getPointId(), point.getId())) {
+    //          point.setApproved(item.isApproved());
+    //        }
+    //      }
+    //    }
 
     // Send an email to the original requestor
     notificationService.sendNotification(request, NotificationType.APPROVAL_COMPLETED);
@@ -260,7 +259,6 @@ public class WorkflowService {
   }
 
   /**
-   *
    * @param requestId
    * @param execution
    */
@@ -272,11 +270,11 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-//    // We will have gotten a JSON serialised representation of an AddressingResult from the user task.
-//    String addressingResultString = execution.getVariable("addressingResult", String.class);
-//
-//    AddressingResult addressingResult = new Gson().fromJson(addressingResultString, AddressingResult.class);
-//    request.setAddressingResult(addressingResult);
+    //    // We will have gotten a JSON serialised representation of an AddressingResult from the user task.
+    //    String addressingResultString = execution.getVariable("addressingResult", String.class);
+    //
+    //    AddressingResult addressingResult = new Gson().fromJson(addressingResultString, AddressingResult.class);
+    //    request.setAddressingResult(addressingResult);
 
 
     // Set the variable for the next stage to evaluate
@@ -288,7 +286,6 @@ public class WorkflowService {
   }
 
   /**
-   *
    * @param requestId
    * @param execution
    */
@@ -299,7 +296,6 @@ public class WorkflowService {
   }
 
   /**
-   *
    * @param requestId
    * @param execution
    */
@@ -311,11 +307,11 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-//    // We will have gotten a JSON serialised representation of a TestResult from the user task.
-//    String testResultString = execution.getVariable("testResult", String.class);
-//
-//    TestResult testResult = new Gson().fromJson(testResultString, TestResult.class);
-//    request.setTestResult(testResult);
+    //    // We will have gotten a JSON serialised representation of a TestResult from the user task.
+    //    String testResultString = execution.getVariable("testResult", String.class);
+    //
+    //    TestResult testResult = new Gson().fromJson(testResultString, TestResult.class);
+    //    request.setTestResult(testResult);
 
     // Set the variable for the next stage to evaluate
     // TODO: do this properly
@@ -326,7 +322,6 @@ public class WorkflowService {
   }
 
   /**
-   *
    * @param requestId
    * @param execution
    */
@@ -364,28 +359,25 @@ public class WorkflowService {
   }
 
   /**
-   *
    * @param requestId
    * @param execution
    */
   public void splitRequest(String requestId, DelegateExecution execution) {
-    log.info("splitting request id " + requestId + "...");
+    log.info(format("splitting request id %s...", requestId));
 
-    String pointsToSplit = execution.getVariable("points", String.class);
-    log.info("splitting points " + pointsToSplit);
+    List<Long> pointsToSplit = execution.getVariable("points", List.class);
+    log.info(format("splitting points [%s]", StringUtils.join(pointsToSplit, ", ")));
 
     Request parent = requestRepository.findOneByRequestId(requestId);
     if (parent == null) {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-    // Parse the JSON list to a Java object
-    Set<Long> pointIdsToSplit = new Gson().fromJson(pointsToSplit, new TypeToken<Set<Long>>() {}.getType());
 
     List<Point> childPoints = new ArrayList<>();
 
     // Give the split points to the child.
-    for (Long pointId : pointIdsToSplit) {
+    for (Long pointId : pointsToSplit) {
       Point pointToSplit = null;
 
       for (Point point : parent.getPoints()) {
@@ -405,7 +397,7 @@ public class WorkflowService {
     // Rebase the point IDs back to starting from 1.
     for (Point point : parent.getPoints()) {
       //if (pointIdsToSplit.contains(point.getId())) {
-        point.setId((long) (parent.getPoints().indexOf(point) + 1));
+      point.setId((long) (parent.getPoints().indexOf(point) + 1));
       //}
     }
 
@@ -425,15 +417,15 @@ public class WorkflowService {
     // Add variables to the execution so that they are available to the
     // recursive process invocation
     execution.setVariable("childRequestId", child.getRequestId());
-//    execution.setVariable("childRequiresApproval", child.requiresApproval());
-//    execution.setVariable("childRequiresCabling", child.requiresCabling());
+    //    execution.setVariable("childRequiresApproval", child.requiresApproval());
+    //    execution.setVariable("childRequiresCabling", child.requiresCabling());
   }
 
   /**
-   *
    * @param requestId
    * @param parent
    * @param points
+   *
    * @return
    */
   private Request createChildRequest(String requestId, Request parent, List<Point> points) {
