@@ -253,11 +253,11 @@
         <span class="request-detail-item text-muted" tooltip="{{'CATEGORIES'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-cogs"></i>
           {{ctrl.request.categories.join(', ')}}
-        </span>
+        </span> -->
         <span class="request-detail-item text-muted" tooltip="{{'CREATOR'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-user"></i>
           {{::ctrl.request.creator.username}}
-        </span> -->
+        </span>
 
 
         <!-- <span class="request-detail-item">
@@ -432,6 +432,10 @@
 
 <style>
 
+  .footer {
+    font-size: 14px;
+  }
+
   .footer .accordion  {
     position: absolute;
     width: 100%;
@@ -445,15 +449,19 @@
     margin-bottom: 0;
   }
 
+  .footer .panel-heading {
+    height:50px;
+    padding: 15px 15px;
+  }
+
   .footer .panel-heading, .footer .panel-group .panel, .footer .panel {
     border-radius: 0;
     box-shadow: none;
     border-left: none;
     border-right: none;
-    padding: 0;
   }
 
-  .footer .panel-heading a:hover, .footer .panel-heading a:focus {
+  .footer .panel-heading a.accordion-toggle:hover, .footer .panel-heading a.accordion-toggle:focus {
     color: inherit;
   }
 
@@ -462,26 +470,27 @@
     line-height: inherit;
   }
 
-  .panel-body {
+  .footer .panel-title .btn-group {
+    margin-top: -15px;
+  }
+
+  .footer .panel-body {
     max-height: 300px;
     overflow-y: auto;
   }
 
   .footer .label {
-    margin: 15px;
+    /*margin: 15px;*/
     font-size: 14px;
   }
 
-  .footer {
-    font-size: 12px;
-  }
 </style>
 
 <footer class="footer">
   <div class="container-fluid">
 
   <accordion class="accordion">
-    <accordion-group is-open="ctrl.errorLogOpen">
+    <accordion-group is-open="ctrl.errorLogOpen" is-disabled="ctrl.getNumValidationErrors() == 0">
 
       <accordion-heading>
 
@@ -500,31 +509,29 @@
 
           <div class="col-md-9">
             <!-- Show appropriate extra controls based on the request status -->
-            <div style="margin-right: 15px;">
-              <span ng-switch="ctrl.request.status">
-                <span ng-switch-when="IN_PROGRESS">
-                  <creation-controls></creation-controls>
-                </span>
-                <span ng-switch-when="FOR_CORRECTION">
-                  <creation-controls></creation-controls>
-                </span>
-                <span ng-switch-when="FOR_APPROVAL">
-                  <approval-controls></approval-controls>
-                </span>
-                <span ng-switch-when="FOR_ADDRESSING">
-                  <addressing-controls></addressing-controls>
-                </span>
-                <span ng-switch-when="FOR_CABLING">
-                  <cabling-controls></cabling-controls>
-                </span>
-                <span ng-switch-when="FOR_CONFIGURATION">
-                  <config-controls></config-controls>
-                </span>
-                <span ng-switch-when="FOR_TESTING">
-                  <testing-controls></testing-controls>
-                </span>
+            <span ng-switch="ctrl.request.status">
+              <span ng-switch-when="IN_PROGRESS">
+                <creation-controls></creation-controls>
               </span>
-            </div>
+              <span ng-switch-when="FOR_CORRECTION">
+                <creation-controls></creation-controls>
+              </span>
+              <span ng-switch-when="FOR_APPROVAL">
+                <approval-controls></approval-controls>
+              </span>
+              <span ng-switch-when="FOR_ADDRESSING">
+                <addressing-controls></addressing-controls>
+              </span>
+              <span ng-switch-when="FOR_CABLING">
+                <cabling-controls></cabling-controls>
+              </span>
+              <span ng-switch-when="FOR_CONFIGURATION">
+                <config-controls></config-controls>
+              </span>
+              <span ng-switch-when="FOR_TESTING">
+                <testing-controls></testing-controls>
+              </span>
+            </span>
           </div>
         </div>
 

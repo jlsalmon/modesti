@@ -36,7 +36,6 @@ function UserRequestsController($http, $location, $scope, RequestService, TaskSe
   self.editRequest = editRequest;
   self.onPageChanged = onPageChanged;
   self.getRequestCount = getRequestCount;
-  self.claimTask = claimTask;
 
   getRequests(1, 10, "requestId,desc", self.filter);
   getRequestMetrics();

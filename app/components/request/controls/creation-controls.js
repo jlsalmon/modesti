@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService) {
+function CreationControlsController($http, $state, $timeout, $modal, $localStorage, RequestService, TaskService, ValidationService, AlertService) {
   var self = this;
 
   self.parent = {};
@@ -16,12 +16,14 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   self.tasks = {};
   self.signals = {};
   self.hot = {};
+  self.user = $localStorage.user;
 
   self.validating = undefined;
   self.submitting = undefined;
   self.splitting = undefined;
 
   self.init = init;
+  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
   self.validate = validate;
   self.submit = submit;
   self.split = split;
@@ -58,13 +60,22 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     }
 
     // Possibly show an alert, depending on how we got here
-    if (self.request.status === 'FOR_CORRECTION') {
-      AlertService.add('danger', 'Request <b>' + self.request.requestId
-          + '</b> requires correction. Please see the request log for details.');
-    } else if (self.request.valid === true) {
-      AlertService.add('success', 'Request <b>' + self.request.requestId
-          + '</b> was validated successfully.');
-    }
+    //if (self.request.status === 'FOR_CORRECTION') {
+    //  AlertService.add('danger', 'Request <b>' + self.request.requestId
+    //      + '</b> requires correction. Please see the request log for details.');
+    //} else if (self.request.valid === true) {
+    //  AlertService.add('success', 'Request <b>' + self.request.requestId
+    //      + '</b> was validated successfully.');
+    //}
+  }
+
+  /**
+   * TODO refactor this common behaviour into a service
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAuthorised() {
+    return self.user.username === self.request.creator.username;
   }
 
   /**

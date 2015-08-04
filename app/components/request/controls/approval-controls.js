@@ -7,17 +7,22 @@
  */
 angular.module('modesti').controller('ApprovalControlsController', ApprovalControlsController);
 
-function ApprovalControlsController($state, $modal, RequestService, TaskService) {
+function ApprovalControlsController($state, $modal, $localStorage, RequestService, TaskService) {
   var self = this;
 
   self.request = {};
   self.rows = {};
   self.tasks = {};
   self.parent = {};
+  self.user = $localStorage.user;
 
   self.submitting = undefined;
 
   self.init = init;
+  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
+  self.isCurrentTaskClaimed = isCurrentTaskClaimed;
+  self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.claim = claim;
   self.approveSelectedPoints = approveSelectedPoints;
   self.rejectSelectedPoints = rejectSelectedPoints;
   self.canSubmit = canSubmit;
@@ -38,6 +43,51 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     // Update the table settings to paint the row backgrounds depending on
     // if they have already been approved or rejected
     self.parent.renderRowBackgrounds();
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAuthorised() {
+    var role;
+    for (var i = 0, len = self.user.authorities.length; i < len; i++) {
+      role = self.user.authorities[i].authority;
+
+      if (self.tasks['approve'].candidateGroups.indexOf(role) > -1) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentTaskClaimed() {
+    var assignee =  self.tasks['approve'].assignee;
+    return assignee !== undefined && assignee !== null;
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAssigned() {
+    var assignee =  self.tasks['approve'].assignee;
+    return assignee === self.user.username;
+  }
+
+  /**
+   *
+   */
+  function claim() {
+    TaskService.claimTask(self.tasks['approve'].name, self.request.requestId).then(function(task) {
+      console.log('claimed task successfully');
+      self.tasks['approve'] = task;
+    });
   }
 
   /**

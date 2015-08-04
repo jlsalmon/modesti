@@ -1,51 +1,55 @@
 <div class="pull-right">
 
-  <!-- Button to split the request -->
-  <button class="btn btn-danger"
-          ng-click="ctrl.split($event)"
-          ng-disabled="!ctrl.canSplit()"
-          tooltip-append-to-body="true"
-          tooltip="{{'SPLIT_SELECTED'|translate}}">
-  
-    <!--Show icon based on the loading state-->
-    <i class="fa fa-fw fa-code-fork"            ng-show="ctrl.splitting == undefined"></i>
-    <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.splitting == 'started'"></i>
-    <i class="fa fa-fw fa-code-fork"            ng-show="ctrl.splitting == 'success'"></i>
-    <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.splitting == 'error'"></i>
-  </button>
+  <div ng-if="ctrl.isCurrentUserAuthorised()">
+    <div class="btn-group">
+      <!-- Button to split the request -->
+      <button class="btn btn-danger"
+              ng-click="ctrl.split($event)"
+              ng-disabled="!ctrl.canSplit()"
+              tooltip-append-to-body="true"
+              tooltip="{{'SPLIT_SELECTED'|translate}}">
 
-  <div class="btn-group">
-    <!--Button to validate the request-->
-    <button class="btn btn-success"
-            ng-click="ctrl.validate($event)"
-            ng-disabled="!ctrl.canValidate()"
-            tooltip-append-to-body="true"
-            tooltip="{{'VALIDATE_REQUEST'|translate}}">
-  
-      <!--Show icon based on the loading state-->
-      <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
-      <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
-      <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
-      <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
-      {{'VALIDATE'|translate}}
-    </button>
+        <!--Show icon based on the loading state-->
+        <i class="fa fa-fw fa-code-fork"            ng-show="ctrl.splitting == undefined"></i>
+        <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.splitting == 'started'"></i>
+        <i class="fa fa-fw fa-code-fork"            ng-show="ctrl.splitting == 'success'"></i>
+        <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.splitting == 'error'"></i>
+      </button>
+    </div>
+
+    <div class="btn-group">
+      <!--Button to validate the request-->
+      <button class="btn btn-success"
+              ng-click="ctrl.validate($event)"
+              ng-disabled="!ctrl.canValidate()"
+              tooltip-append-to-body="true"
+              tooltip="{{'VALIDATE_REQUEST'|translate}}">
+
+        <!--Show icon based on the loading state-->
+        <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
+        <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
+        <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
+        <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
+        {{'VALIDATE'|translate}}
+      </button>
+    </div>
+
+    <div class="btn-group">
+      <!-- Button to submit the request -->
+      <button class="btn btn-primary"
+              ng-click="ctrl.submit($event)"
+              ng-disabled="!ctrl.canSubmit()"
+              tooltip-append-to-body="true"
+              tooltip="{{'SUBMIT_REQUEST'|translate}}">
+
+        <!--Show icon based on the loading state-->
+        <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
+        <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
+        <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
+        <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
+        {{'SUBMIT'|translate}}
+      </button>
+    </div>
   </div>
-  
-  <div class="btn-group">
-    <!-- Button to submit the request -->
-    <button class="btn btn-primary"
-            ng-click="ctrl.submit($event)"
-            ng-disabled="!ctrl.canSubmit()"
-            tooltip-append-to-body="true"
-            tooltip="{{'SUBMIT_REQUEST'|translate}}">
-  
-      <!--Show icon based on the loading state-->
-      <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
-      <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
-      <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
-      <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
-      {{'SUBMIT'|translate}}
-    </button>
-  </div>
-  
+
 </div>
