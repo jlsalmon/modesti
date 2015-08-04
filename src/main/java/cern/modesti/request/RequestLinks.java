@@ -83,7 +83,7 @@ public class RequestLinks {
     for (Task task : tasks) {
 
       // TODO: remove these hardcoded task names and instead query via the {@link org.activiti.engine.RuntimeService}
-      if (task.getName().equals("validate") && request.getStatus().equals(Request.RequestStatus.FOR_CORRECTION)) {
+      if (task.getName().equals("validate")) {
         links.add(linkTo(SignalController.class, request.getRequestId()).slash("splitRequest").withRel("tasks"));
       }
 

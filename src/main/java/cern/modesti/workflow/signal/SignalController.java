@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +60,20 @@ public class SignalController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    List<SignalInfo> signals = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).orderByTaskCreateTime().desc().list().stream
-        ().map(t -> new SignalInfo(t.getName())).collect(Collectors.toList());
+    List<SignalInfo> signals = new ArrayList<>();
+    List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).list();
+
+    for (Task task : tasks) {
+
+      // TODO: remove these hardcoded task names and instead query via the {@link org.activiti.engine.RuntimeService}
+      if (task.getName().equals("validate")) {
+        signals.add(new SignalInfo("splitRequest"));
+      }
+
+      if (task.getName().equals("submit")) {
+        signals.add(new SignalInfo("requestModified"));
+      }
+    }
 
     Resources<Resource<SignalInfo>> resources = Resources.wrap(signals);
     for (Resource<SignalInfo> resource : resources) {
