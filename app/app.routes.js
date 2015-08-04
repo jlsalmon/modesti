@@ -58,6 +58,11 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     templateUrl : 'components/search/search.html',
     controller : 'SearchController as ctrl'
 
+  }).state('users', {
+    url : '/users/:id',
+    templateUrl : 'components/users/user.html',
+    controller : 'UserController as ctrl'
+
   }).state('404', {
     url : '/404',
     templateUrl : 'components/errors/404.html'
