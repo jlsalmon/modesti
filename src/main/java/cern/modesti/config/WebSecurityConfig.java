@@ -12,6 +12,7 @@ import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
@@ -50,6 +51,7 @@ import org.springframework.security.ldap.authentication.LdapAuthenticator;
 @EnableWebMvcSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(1)
+@Profile({"dev", "prod"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired

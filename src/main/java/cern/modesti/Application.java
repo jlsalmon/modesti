@@ -11,8 +11,36 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 /**
  * TODO
  *
- * To run with test profile, pass -Dspring.profiles.active=test
- * To run with prod profile, pass -Dspring.profiles.active=prod
+ * To activate a profile, pass -Dspring.profiles.active=[test|dev|prod]
+ *
+ * Service                      Profiles
+ * --------------------------------------------------------------------
+ * CounterInitialiser           test
+ * DomainInitialiser            test
+ * SchemaInitialiser            test
+ * ConfigurationService
+ * UploadService
+ * NotificationService
+ * CounterService
+ * SchemaService
+ * OptionService
+ * LdapSynchroniser             dev, prod
+ * ValidationService
+ * WorkflowService
+ * HistoryService
+ *
+ *
+ * Configuration                Profiles
+ * --------------------------------------------------------------------
+ * CacheConfig
+ * DataSourceConfig
+ * JpaConfig
+ * Mongoconfig
+ * RestConfig
+ * WebSecurityconfig            dev, prod
+ * WorkflowConfig               dev, prod (usersAndGroupsInitializer)
+ *
+ *
  *
  * @author Justin Lewis Salmon
  */

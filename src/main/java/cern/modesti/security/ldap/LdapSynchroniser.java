@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
@@ -26,6 +27,7 @@ import java.util.*;
  */
 @Service
 @EnableScheduling
+@Profile({"dev", "prod"})
 public class LdapSynchroniser {
   private static final Logger LOG = LoggerFactory.getLogger(LdapSynchroniser.class);
 
