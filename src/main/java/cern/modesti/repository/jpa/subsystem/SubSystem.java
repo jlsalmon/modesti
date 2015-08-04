@@ -17,6 +17,10 @@
  ******************************************************************************/
 package cern.modesti.repository.jpa.subsystem;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -25,84 +29,15 @@ import javax.persistence.Id;
  * @author Justin Lewis Salmon
  */
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class SubSystem {
-
   @Id
   private Long id;
-
   private String value;
-
   private String system;
-
   private String systemCode;
-
   private String subsystem;
-
   private String subsystemCode;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the value
-   */
-  public String getValue() {
-    return value;
-  }
-
-  /**
-   * @param value the value to set
-   */
-  public void setValue(String value) {
-    this.value = value;
-  }
-
-  /**
-   * @return the system
-   */
-  public String getSystem() {
-    return system;
-  }
-
-  /**
-   * @param system the system to set
-   */
-  public void setSystem(String system) {
-    this.system = system;
-  }
-
-  public String getSystemCode() {
-    return systemCode;
-  }
-
-  public void setSystemCode(String systemCode) {
-    this.systemCode = systemCode;
-  }
-
-  /**
-   * @return the subsystem
-   */
-  public String getSubsystem() {
-    return subsystem;
-  }
-
-  /**
-   * @param subsystem the subsystem to set
-   */
-  public void setSubsystem(String subsystem) {
-    this.subsystem = subsystem;
-  }
-
-  public String getSubsystemCode() {
-    return subsystemCode;
-  }
-
-  public void setSubsystemCode(String subsystemCode) {
-    this.subsystemCode = subsystemCode;
-  }
 }
