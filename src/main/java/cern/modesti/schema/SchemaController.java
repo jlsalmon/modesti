@@ -77,8 +77,9 @@ public class SchemaController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    request.setCategories(categoryList);
-    requestRepository.save(request);
+    // TODO since only modesti-creators can save requests, this indirect way of adding new categories should be re-thought.
+//    request.setCategories(categoryList);
+//    requestRepository.save(request);
 
     Resource<Schema> resource = new Resource<>(schema);
     resource.add(linkTo(methodOn(SchemaController.class).getSchema(id, categories)).withSelfRel());
