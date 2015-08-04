@@ -200,7 +200,7 @@
     z-index: 1000;
     width: 350px;
   }
-  
+
   .alert-messages .alert {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -211,7 +211,7 @@
     background-color: #DFF0D8 !important;
     border-color: #D6E9C6 !important;
   }
-  
+
   .alert-info {
     color: #31708F !important;
     background-color: #D9EDF7 !important;
@@ -258,26 +258,26 @@
           <i class="fa fa-fw fa-user"></i>
           {{::ctrl.request.creator.username}}
         </span> -->
-        
-            
+
+
         <!-- <span class="request-detail-item">
           {{ctrl.request.points.length}} {{ctrl.request.points.length == 1 ? 'point' : 'points'}}
         </span>
-        <span>{{ctrl.getSelectedPointIds().length}} {{ctrl.getSelectedPointIds().length  == 1 ? 'point' : 'points'}} {{'SELECTED'|translate}}</span>
+        <span>{{ctrl.getSelectedPointIds().length}} {{ctrl.getSelectedPointIds().length  == 1 ? 'point' : 'points'}} {{'SELECTED'|translate}}</span>  -->
 
-        If this is a child request, reference its parent
+        <!--If this is a child request, reference its parent-->
         <span class="request-detail-item" ng-if="ctrl.request.parentRequestId">
            {{'PARENT'|translate}}: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
         </span>
 
-        If this is a parent request, list its children
+        <!--If this is a parent request, list its children-->
         <span class="request-detail-item" ng-if="ctrl.children.length > 0">
            {{'CHILDREN'|translate}}:
           <span ng-repeat="child in ctrl.children">
             <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
           </span>
-        </span> -->
-        
+        </span>
+
         <span class="request-detail-item"  tooltip="{{'STATUS'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <span class="label request-status" ng-class="'{{::ctrl.request.status}}'">
             {{::ctrl.request.status.replace('_', ' ')}}
@@ -387,7 +387,7 @@
       </div>
 
       <div class="pull-right">
-      
+
         <!-- Help button -->
         <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHelp()" tooltip-append-to-body="true" tooltip="{{'HELP'|translate}}">
           <i class="fa fa-fw fa-question-circle"></i> Help
@@ -452,11 +452,11 @@
     border-right: none;
     padding: 0;
   }
-  
+
   .footer .panel-heading a:hover, .footer .panel-heading a:focus {
     color: inherit;
   }
-  
+
   .footer .panel-title {
     font-size: 14px;
     line-height: inherit;
@@ -466,12 +466,12 @@
     max-height: 300px;
     overflow-y: auto;
   }
-  
+
   .footer .label {
     margin: 15px;
     font-size: 14px;
   }
-  
+
   .footer {
     font-size: 12px;
   }
@@ -479,16 +479,16 @@
 
 <footer class="footer">
   <div class="container-fluid">
-  
+
   <accordion class="accordion">
     <accordion-group is-open="ctrl.errorLogOpen">
 
       <accordion-heading>
-        
-        
+
+
         <div class="row">
           <div class="col-md-3">
-                
+
             <span class="label pull-left"
                   ng-class="ctrl.getNumValidationErrors() > 0 ? 'bg-red' : 'bg-gray'"
                   tooltip="{{ctrl.getNumValidationErrors()}} error(s) found. Click to view details."
@@ -497,7 +497,7 @@
             </span>
 
           </div>
-    
+
           <div class="col-md-9">
             <!-- Show appropriate extra controls based on the request status -->
             <div style="margin-right: 15px;">
@@ -539,11 +539,11 @@
           </div>
         </div>
       </div>
-      
+
       <div ng-if="ctrl.getNumValidationErrors() == 0">
         No validation errors found
       </div>
-      
+
       <div ng-if="ctrl.request.configurationResult">
         <div ng-repeat="error in ctrl.request.configurationResult.errors track by $index">
           <i class="fa fa-fw fa-exclamation-triangle text-danger"></i> {{error}}
@@ -553,7 +553,7 @@
     </accordion-group>
   </accordion>
 
-    
+
 
   </div>
 </footer>

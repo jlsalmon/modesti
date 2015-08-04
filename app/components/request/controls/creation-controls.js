@@ -205,8 +205,13 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       return;
     }
 
-    var selectedPointIds = self.parent.getSelectedPointIds();
+    var signal = self.signals['splitRequest'];
+    if (!signal) {
+      console.log('error splitting request: no signal');
+      return;
+    }
 
+    var selectedPointIds = self.parent.getSelectedPointIds();
     if (!selectedPointIds.length) {
       return;
     }
@@ -232,21 +237,8 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       self.splitting = 'started';
       AlertService.clear();
 
-      var url = task.executionUrl;
-      var variables = [{
-        "name": "points",
-        "value": JSON.stringify(selectedPointIds),
-        "type": "string"
-      }];
-
-      var params = {
-        "action": "signalEventReceived",
-        "signalName": "splitRequest",
-        "variables": variables
-      };
-
       // TODO refactor this into a service
-      $http.put(url, params).then(function () {
+      $http.post(signal._links.self.href, JSON.stringify(selectedPointIds)).then(function () {
         console.log('sent split signal');
 
         // Clear the cache so that the state reload also pulls a fresh request
@@ -259,7 +251,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       },
 
       function (error) {
-        console.log('error sending signal: ' + error);
+        console.log('error sending signal: ' + error.data.message);
         self.splitting = 'error';
       });
     });

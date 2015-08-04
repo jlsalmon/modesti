@@ -15,7 +15,6 @@ function TaskService($q, $http, $localStorage, Restangular) {
    */
   var service = {
     getTasksForRequest: getTasksForRequest,
-    queryTasksForRequest: queryTasksForRequest,
     getSignalsForRequest: getSignalsForRequest,
     claimTask: claimTask,
     completeTask: completeTask
@@ -34,9 +33,11 @@ function TaskService($q, $http, $localStorage, Restangular) {
     $http.get(BACKEND_BASE_URL + '/requests/' + request.requestId + '/tasks').then(function(response) {
       var tasks = {};
 
-      angular.forEach(response.data._embedded.tasks, function (task) {
-        tasks[task.name] = task;
-      });
+      if (response.data.hasOwnProperty('_embedded')) {
+        angular.forEach(response.data._embedded.tasks, function (task) {
+          tasks[task.name] = task;
+        });
+      }
 
       console.log('fetched ' + tasks.length + ' task(s)');
       q.resolve(tasks);
@@ -46,68 +47,6 @@ function TaskService($q, $http, $localStorage, Restangular) {
       console.log('error fetching tasks: ' + error);
       q.reject(error);
     });
-
-    //var promises = [];
-    //
-    //angular.forEach(request._links.tasks, function (link) {
-    //  var href = link.href ? link.href : link;
-    //  var promise = $http.get(href);
-    //  promises.push(promise);
-    //});
-    //
-    //$q.all(promises).then(function (responses) {
-    //    console.log('fetched ' + responses.length + ' task(s)');
-    //    var tasks = {};
-    //
-    //    angular.forEach(responses, function (response) {
-    //      tasks[response.data.name] = response.data;
-    //    });
-    //
-    //    q.resolve(tasks);
-    //  },
-    //
-    //  function (error) {
-    //    console.log('error fetching tasks: ' + error);
-    //    q.reject(error);
-    //  });
-
-    return q.promise;
-  }
-
-  /**
-   *
-   * @param request
-   * @returns {*}
-   */
-  function queryTasksForRequest(request) {
-    console.log('querying tasks for request ' + request.requestId);
-    var q = $q.defer();
-
-    var query = {
-      processInstanceVariables: [{
-        name: "requestId",
-        value: request.requestId,
-        operation: "equals",
-        type: "string"
-      }]
-    };
-
-    Restangular.one('query/tasks').post('', query).then(function (result) {
-        var taskList = result.data.data;
-        console.log('found ' + taskList.length + ' task(s)');
-        var tasks = {};
-
-        angular.forEach(result.data.data, function (task) {
-          tasks[task.name] = task;
-        });
-
-        q.resolve(tasks);
-      },
-
-      function (error) {
-        console.log('error querying tasks: ' + error);
-        q.reject(error);
-      });
 
     return q.promise;
   }
@@ -121,26 +60,21 @@ function TaskService($q, $http, $localStorage, Restangular) {
     console.log('fetching signals for request ' + request.requestId);
 
     var q = $q.defer();
-    var promises = [];
 
-    angular.forEach(request._links.signals, function (link) {
-      var href = link.href ? link.href : link;
-      var promise = $http.get(href);
-      promises.push(promise);
-    });
-
-    $q.all(promises).then(function (responses) {
-      console.log('fetched ' + responses.length + ' signal(s)');
+    $http.get(BACKEND_BASE_URL + '/requests/' + request.requestId + '/signals').then(function(response) {
       var signals = {};
 
-      angular.forEach(responses, function (response) {
-        signals[response.data.name] = response.data;
-      });
+      if (response.data.hasOwnProperty('_embedded')) {
+        angular.forEach(response.data._embedded.signals, function (signal) {
+          signals[signal.name] = signal;
+        });
+      }
 
+      console.log('fetched ' + signals.length + ' signal(s)');
       q.resolve(signals);
     },
 
-    function (error) {
+    function(error) {
       console.log('error fetching signals: ' + error);
       q.reject(error);
     });
