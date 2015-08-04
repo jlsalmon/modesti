@@ -8,19 +8,24 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import cern.modesti.workflow.task.TaskAction.Action;
 import lombok.extern.slf4j.Slf4j;
 
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.query.Query;
+import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -91,8 +96,8 @@ public class TaskController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    List<TaskInfo> tasks = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).orderByTaskCreateTime().desc().list().stream()
-        .map(t -> new TaskInfo(t.getName(), t.getDescription())).collect(Collectors.toList());
+    List<TaskInfo> tasks = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).list().stream().map(task -> new TaskInfo(task
+        .getName(), task.getDescription(), task.getAssignee(), getCandidateGroups(task))).collect(Collectors.toList());
 
     Resources<Resource<TaskInfo>> resources = Resources.wrap(tasks);
     for (Resource<TaskInfo> resource : resources) {
@@ -120,56 +125,56 @@ public class TaskController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    Resource<TaskInfo> resource = new Resource<>(new TaskInfo(task.getName(), task.getDescription()));
+    Resource<TaskInfo> resource = new Resource<>(new TaskInfo(task.getName(), task.getDescription(), task.getAssignee(), getCandidateGroups(task)));
     resource.add(linkTo(methodOn(TaskController.class).getTask(id, resource.getContent().getName())).withSelfRel());
 
     return new ResponseEntity<>(resource, HttpStatus.OK);
   }
 
   /**
-   * @param id
-   * @param name
+   * @param requestId
+   * @param taskName
    *
    * @return
    */
   @RequestMapping(value = "/{name}", method = POST)
-  public ResponseEntity action(@PathVariable("id") String id, @PathVariable("name") String name, @NotNull @RequestBody TaskAction action, Principal principal) {
-    Request request = getRequest(id);
+  public HttpEntity<Resource<TaskInfo>> action(@PathVariable("id") String requestId, @PathVariable("name") String taskName, @RequestBody TaskAction action, Principal
+      principal) {
+    Request request = getRequest(requestId);
     if (request == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    Task currentTask = getTaskForRequest(requestId, taskName);
 
-
-    if (action.getAction().equals(TaskAction.Action.DELEGATE)) {
-      throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    if (action.getAction().equals(TaskAction.Action.CLAIM)) {
-      throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    // Must be "complete" action
-    Task currentTask = taskService.createTaskQuery().processInstanceBusinessKey(id).singleResult();
-
-    User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-    List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(id)
-        .taskCandidateGroupIn(user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())).list();
-
-    boolean authorised = false;
-    for (Task task : tasks) {
-      if (task.getId().equals(currentTask.getId())) {
-        authorised = true;
-      }
-    }
-
-    if (!authorised) {
+    // Authorise the user to act upon this task
+    if (!isUserAuthorisedFor(currentTask, principal)) {
       return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
-    completeTask(id, name);
-    return new ResponseEntity(HttpStatus.OK);
+    if (action.getAction().equals(Action.CLAIM)) {
+      TaskInfo task = claimTask(requestId, taskName, action.getAssignee());
+      return new ResponseEntity<>(new Resource<>(task), HttpStatus.OK);
+    } else if (action.getAction().equals(Action.COMPLETE)) {
+      completeTask(requestId, taskName);
+      return new ResponseEntity(HttpStatus.OK);
+    } else if (action.getAction().equals(Action.DELEGATE)) {
+      throw new UnsupportedOperationException("Not yet implemented");
+    } else {
+      return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+  }
 
+  /**
+   * @param requestId
+   * @param taskName
+   * @param assignee
+   */
+  private TaskInfo claimTask(String requestId, String taskName, String assignee) {
+    Task task = getTaskForRequest(requestId, taskName);
+    taskService.claim(task.getId(), assignee);
+    task.setAssignee(assignee);
+    return new TaskInfo(task.getName(), task.getDescription(), task.getAssignee(), getCandidateGroups(task));
   }
 
   /**
@@ -177,6 +182,26 @@ public class TaskController {
    * @param taskName
    */
   private void completeTask(String requestId, String taskName) {
+    Task task = getTaskForRequest(requestId, taskName);
+    taskService.complete(task.getId());
+  }
+
+  /**
+   * @param requestId
+   *
+   * @return
+   */
+  private Request getRequest(String requestId) {
+    return requestRepository.findOneByRequestId(requestId);
+  }
+
+  /**
+   * @param requestId
+   * @param taskName
+   *
+   * @return
+   */
+  private Task getTaskForRequest(String requestId, String taskName) {
     Task task = taskService.createTaskQuery().processInstanceBusinessKey(requestId).taskName(taskName).singleResult();
 
     if (task == null) {
@@ -186,15 +211,46 @@ public class TaskController {
           "[%s]", taskName, requestId, tasks.stream().map(Task::getName).collect(Collectors.joining(", "))));
     }
 
-    taskService.complete(task.getId());
+    return task;
   }
 
   /**
-   * @param id
+   * @param task
+   * @param principal
    *
    * @return
    */
-  private Request getRequest(String id) {
-    return requestRepository.findOneByRequestId(id);
+  private boolean isUserAuthorisedFor(Task task, Principal principal) {
+    User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+
+    Set<String> roles = getRoles(user);
+    Set<String> candidateGroups = getCandidateGroups(task);
+
+    for (String candidateGroup : candidateGroups) {
+      if (roles.contains(candidateGroup)) {
+        log.debug(format("user %s authorised for task %s", user, task));
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * @param task
+   *
+   * @return
+   */
+  private Set<String> getCandidateGroups(Task task) {
+    return taskService.getIdentityLinksForTask(task.getId()).stream().map(IdentityLink::getGroupId).collect(Collectors.toSet());
+  }
+
+  /**
+   * @param user
+   *
+   * @return
+   */
+  private Set<String> getRoles(User user) {
+    return user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
   }
 }

@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TaskAction {
   private Action action;
-  private String claimer;
-  private String delegate;
+  private String assignee;
 
   public enum Action {
     CLAIM, COMPLETE, DELEGATE
