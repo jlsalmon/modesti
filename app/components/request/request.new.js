@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('NewRequestController', NewRequestController);
 
-function NewRequestController($http, $location, $localStorage, RequestService, Restangular) {
+function NewRequestController($http, $location, RequestService, AuthService) {
   var self = this;
 
   self.domains = [];
@@ -22,7 +22,7 @@ function NewRequestController($http, $location, $localStorage, RequestService, R
   self.request = {
     type : 'CREATE',
     description : '',
-    creator : $localStorage.user,
+    creator : AuthService.getCurrentUser(),
     categories: []
   };
 
@@ -120,33 +120,33 @@ function NewRequestController($http, $location, $localStorage, RequestService, R
 
   // TODO: move everything below here to another page ------------------------------------------------------------------------
 
-  self.schema = {};
-  self.schemaString = '';
-  self.saveSchema = saveSchema;
+  //self.schema = {};
+  //self.schemaString = '';
+  //self.saveSchema = saveSchema;
+  //
+  //var id = 'tim';
+  //
+  //Restangular.one('schemas', id).get().then(function(schema) {
+  //  console.log('fetched schema');
+  //  self.schema = schema.data;
+  //  self.schemaString = JSON.stringify(schema.data, null, "    ");
+  //},
+  //
+  //function(error) {
+  //  console.log('error fetching schema');
+  //});
+  //
+  //
+  //function saveSchema() {
+  //  self.schema.categories = JSON.parse(self.schemaString).categories;
+  //
+  //  self.schema.save().then(function(response) {
+  //    console.log('saved schema');
+  //    self.categories = response.data;
+  //  }, function(error) {
+  //    console.log('error saving schema: ' + error.data.message);
+  //  });
+  //};
 
-  var id = 'tim';
 
-  Restangular.one('schemas', id).get().then(function(schema) {
-    console.log('fetched schema');
-    self.schema = schema.data;
-    self.schemaString = JSON.stringify(schema.data, null, "    ");
-  },
-
-  function(error) {
-    console.log('error fetching schema');
-  });
-
-
-  function saveSchema() {
-    self.schema.categories = JSON.parse(self.schemaString).categories;
-
-    self.schema.save().then(function(response) {
-      console.log('saved schema');
-      self.categories = response.data;
-    }, function(error) {
-      console.log('error saving schema: ' + error.data.message);
-    });
-  };
-
-
-};
+}

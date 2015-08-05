@@ -7,9 +7,8 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $http, $timeout, $modal, $localStorage,
-                           request, children, schema, tasks, signals,
-                           RequestService, ColumnService, SchemaService, AlertService, HistoryService, AuthService) {
+function RequestController($scope, $http, $timeout, $modal, request, children, schema, tasks, signals,
+                           RequestService, ColumnService, SchemaService, AlertService, HistoryService, TaskService) {
   var self = this;
 
   self.request = request;
@@ -236,7 +235,11 @@ function RequestController($scope, $http, $timeout, $modal, $localStorage,
    * @returns {boolean}
    */
   function isCurrentUserAuthorised() {
-    // TODO
+    for (var key in self.tasks) {
+      if (TaskService.isCurrentUserAuthorised(self.tasks[key])) {
+        return true;
+      }
+    }
     return false;
   }
 

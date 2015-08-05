@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($http, $state, $timeout, $modal, $localStorage, RequestService, TaskService, ValidationService, AlertService) {
+function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService) {
   var self = this;
 
   self.parent = {};
@@ -16,14 +16,13 @@ function CreationControlsController($http, $state, $timeout, $modal, $localStora
   self.tasks = {};
   self.signals = {};
   self.hot = {};
-  self.user = $localStorage.user;
 
   self.validating = undefined;
   self.submitting = undefined;
   self.splitting = undefined;
 
   self.init = init;
-  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
+  self.isCurrentUserOwner = isCurrentUserOwner;
   self.validate = validate;
   self.submit = submit;
   self.split = split;
@@ -74,8 +73,8 @@ function CreationControlsController($http, $state, $timeout, $modal, $localStora
    *
    * @returns {boolean}
    */
-  function isCurrentUserAuthorised() {
-    return self.user.username === self.request.creator.username;
+  function isCurrentUserOwner() {
+    return RequestService.isCurrentUserOwner(self.request);
   }
 
   /**

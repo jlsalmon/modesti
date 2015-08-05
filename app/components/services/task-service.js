@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('TaskService', TaskService);
 
-function TaskService($q, $http, $localStorage) {
+function TaskService($q, $http, AuthService) {
   var self = this;
 
   /**
@@ -17,7 +17,10 @@ function TaskService($q, $http, $localStorage) {
     getTasksForRequest: getTasksForRequest,
     getSignalsForRequest: getSignalsForRequest,
     claimTask: claimTask,
-    completeTask: completeTask
+    completeTask: completeTask,
+    isTaskClaimed: isTaskClaimed,
+    isCurrentUserAssigned: isCurrentUserAssigned,
+    isCurrentUserAuthorised: isCurrentUserAuthorised
   };
 
   /**
@@ -93,7 +96,7 @@ function TaskService($q, $http, $localStorage) {
 
     var params = {
       action: 'CLAIM',
-      assignee: $localStorage.user.username
+      assignee: AuthService.getCurrentUser()
     };
 
     $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function (response) {
@@ -132,6 +135,45 @@ function TaskService($q, $http, $localStorage) {
     return q.promise;
   }
 
+  /**
+   *
+   * @param task
+   * @returns {boolean}
+   */
+  function isTaskClaimed(task) {
+    return task.assignee !== undefined && task.assignee !== null;
+  }
+
+  /**
+   *
+   * @param task
+   * @returns {boolean}
+   */
+  function isCurrentUserAssigned(task) {
+    return task.assignee === AuthService.getCurrentUser().username;
+  }
+
+  /**
+   * Check if the current user is authorised to act upon the given task.
+   *
+   * @param task
+   * @returns {boolean} true if the current user is authorised to act the given task
+   */
+  function isCurrentUserAuthorised(task) {
+    var user = AuthService.getCurrentUser();
+
+    var role;
+    for (var i = 0, len = user.authorities.length; i < len; i++) {
+      role = user.authorities[i].authority;
+
+      if (task.candidateGroups.indexOf(role) > -1) {
+        return true;
+      }
+    }
+
+
+    return false;
+  }
 
   return service;
 }

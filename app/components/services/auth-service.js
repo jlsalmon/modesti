@@ -115,25 +115,5 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
     return $localStorage.user !== undefined;
   }
 
-
-  function isCurrentUserAuthorised(task) {
-    var user = $localStorage.user;
-
-    for (var key in self.tasks) {
-      task = self.tasks[key];
-
-      var role;
-      for (var i = 0, len = user.authorities.length; i < len; i++) {
-        role = user.authorities[i].authority;
-
-        if (task.candidateGroups.indexOf(role) > -1) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
   return service;
 }

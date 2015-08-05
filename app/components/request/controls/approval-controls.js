@@ -7,14 +7,13 @@
  */
 angular.module('modesti').controller('ApprovalControlsController', ApprovalControlsController);
 
-function ApprovalControlsController($state, $modal, $localStorage, RequestService, TaskService) {
+function ApprovalControlsController($state, $modal, RequestService, TaskService) {
   var self = this;
 
   self.request = {};
   self.rows = {};
   self.tasks = {};
   self.parent = {};
-  self.user = $localStorage.user;
 
   self.submitting = undefined;
 
@@ -50,16 +49,7 @@ function ApprovalControlsController($state, $modal, $localStorage, RequestServic
    * @returns {boolean}
    */
   function isCurrentUserAuthorised() {
-    var role;
-    for (var i = 0, len = self.user.authorities.length; i < len; i++) {
-      role = self.user.authorities[i].authority;
-
-      if (self.tasks['approve'].candidateGroups.indexOf(role) > -1) {
-        return true;
-      }
-    }
-
-    return false;
+    return TaskService.isCurrentUserAuthorised(self.tasks['approve']);
   }
 
   /**
@@ -67,8 +57,7 @@ function ApprovalControlsController($state, $modal, $localStorage, RequestServic
    * @returns {boolean}
    */
   function isCurrentTaskClaimed() {
-    var assignee =  self.tasks['approve'].assignee;
-    return assignee !== undefined && assignee !== null;
+    return TaskService.isTaskClaimed(self.tasks['approve']);
   }
 
   /**
@@ -76,8 +65,7 @@ function ApprovalControlsController($state, $modal, $localStorage, RequestServic
    * @returns {boolean}
    */
   function isCurrentUserAssigned() {
-    var assignee =  self.tasks['approve'].assignee;
-    return assignee === self.user.username;
+    return TaskService.isCurrentUserAssigned(self.tasks['approve']);
   }
 
   /**

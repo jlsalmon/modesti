@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CommentsModalController', CommentsModalController);
 
-function CommentsModalController($modalInstance, $localStorage, request, RequestService) {
+function CommentsModalController($modalInstance, request, RequestService, AuthService) {
   var self = this;
 
   self.request = request;
@@ -23,7 +23,7 @@ function CommentsModalController($modalInstance, $localStorage, request, Request
     if (self.text.length) {
       var comment = {
         text: self.text,
-        user: $localStorage.user,
+        user: AuthService.getCurrentUser(),
         timestamp: Date.now()
       };
 

@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('UserRequestsController', UserRequestsController);
 
-function UserRequestsController($http, $location, $scope, $localStorage, RequestService, TaskService) {
+function UserRequestsController($http, $location, $scope, RequestService, AuthService) {
   var self = this;
 
   self.statuses = [];
@@ -47,7 +47,7 @@ function UserRequestsController($http, $location, $scope, $localStorage, Request
    * @returns {boolean}
    */
   function isUserAuthenticated() {
-    return $localStorage.user;
+    return AuthService.isCurrentUserAuthenticated();
   }
 
   /**

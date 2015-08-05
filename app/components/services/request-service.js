@@ -20,6 +20,7 @@ function RequestService($http, $filter, $rootScope, $q, Restangular) {
     saveRequest: saveRequest,
     createRequest: createRequest,
     deleteRequest: deleteRequest,
+    isCurrentUserOwner : isCurrentUserOwner,
     getRequestMetrics: getRequestMetrics,
     clearCache: clearCache
   };
@@ -239,6 +240,16 @@ function RequestService($http, $filter, $rootScope, $q, Restangular) {
     });
 
     return q.promise;
+  }
+
+  /**
+   *
+   * @param request
+   * @returns {boolean}
+   */
+  function isCurrentUserOwner(request) {
+    var user = AuthService.getCurrentUser();
+    return user && user.username === request.creator.username;
   }
 
   /**
