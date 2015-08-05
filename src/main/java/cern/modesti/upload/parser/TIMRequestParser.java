@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.legacy.parser;
+package cern.modesti.upload.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Sheet;
 
-import cern.modesti.legacy.exception.RequestParseException;
+import cern.modesti.upload.exception.RequestParseException;
 import cern.modesti.request.point.Point;
 
 /**

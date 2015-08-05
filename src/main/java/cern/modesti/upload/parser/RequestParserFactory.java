@@ -1,9 +1,9 @@
 /**
  *
  */
-package cern.modesti.legacy.parser;
+package cern.modesti.upload.parser;
 
-import cern.modesti.legacy.exception.RequestParseException;
+import cern.modesti.upload.exception.RequestParseException;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
 import cern.modesti.repository.jpa.location.functionality.FunctionalityRepository;
 import cern.modesti.repository.jpa.person.PersonRepository;

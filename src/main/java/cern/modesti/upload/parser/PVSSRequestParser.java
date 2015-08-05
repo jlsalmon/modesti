@@ -1,7 +1,7 @@
 /**
  *
  */
-package cern.modesti.legacy.parser;
+package cern.modesti.upload.parser;
 
 import java.util.Collections;
 import java.util.HashMap;

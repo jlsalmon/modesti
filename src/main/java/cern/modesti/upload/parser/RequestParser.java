@@ -1,10 +1,10 @@
 /**
  *
  */
-package cern.modesti.legacy.parser;
+package cern.modesti.upload.parser;
 
-import cern.modesti.legacy.exception.RequestParseException;
-import cern.modesti.legacy.exception.VersionNotSupportedException;
+import cern.modesti.upload.exception.RequestParseException;
+import cern.modesti.upload.exception.VersionNotSupportedException;
 import cern.modesti.repository.jpa.alarm.AlarmCategory;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipment;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;

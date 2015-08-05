@@ -30,9 +30,8 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import cern.modesti.request.point.Point;
 import cern.modesti.request.Request;
-import cern.modesti.legacy.exception.RequestParseException;
-import cern.modesti.legacy.exception.VersionNotSupportedException;
-import cern.modesti.legacy.parser.RequestParserFactory;
+import cern.modesti.upload.exception.RequestParseException;
+import cern.modesti.upload.exception.VersionNotSupportedException;
 
 /**
  * @author Justin Lewis Salmon

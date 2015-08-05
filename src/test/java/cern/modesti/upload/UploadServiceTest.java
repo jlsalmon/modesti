@@ -3,8 +3,7 @@
  */
 package cern.modesti.upload;
 
-import cern.modesti.legacy.UploadService;
-import cern.modesti.legacy.parser.RequestParser;
+import cern.modesti.upload.parser.RequestParser;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
 import cern.modesti.repository.mongo.schema.SchemaRepository;

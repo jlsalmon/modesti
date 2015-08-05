@@ -1,10 +1,10 @@
 /**
  *
  */
-package cern.modesti.legacy;
+package cern.modesti.upload;
 
-import cern.modesti.legacy.parser.RequestParser;
-import cern.modesti.legacy.parser.RequestParserFactory;
+import cern.modesti.upload.parser.RequestParser;
+import cern.modesti.upload.parser.RequestParserFactory;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterService;
 import cern.modesti.request.Request;
