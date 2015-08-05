@@ -14,7 +14,7 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
   $stateProvider.state('requests', {
     url : '/requests',
     templateUrl : 'components/request/requests.html',
-    controller : 'UserRequestsController as ctrl'
+    controller : 'RequestsController as ctrl'
 
   }).state('new', {
     url : '/requests/new',

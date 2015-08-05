@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:UserRequestsController
- * @description # UserRequestsController Controller of the modesti
+ * @name modesti.controller:RequestsController
+ * @description # RequestsController Controller of the modesti
  */
-angular.module('modesti').controller('UserRequestsController', UserRequestsController);
+angular.module('modesti').controller('RequestsController', RequestsController);
 
-function UserRequestsController($http, $location, $scope, RequestService, AuthService) {
+function RequestsController($http, $location, $scope, RequestService, AuthService) {
   var self = this;
 
   self.statuses = [];
