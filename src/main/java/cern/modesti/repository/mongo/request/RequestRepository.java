@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import cern.modesti.request.Request;
@@ -65,13 +66,21 @@ public interface RequestRepository extends MongoRepository<Request, String> {
   /**
    * TODO
    *
+   * A user may save a request if:
+   *
+   * - They are the original creator
+   * - They are an approver or cabler and are assigned to the approval/addressing/cabling task
+   * - They are an administrator
+   *
+   * TODO cover this with test cases
+   *
    * @param request
    *
    * @return
    */
-  @PreAuthorize("hasRole('modesti-creators')")
+  @PostAuthorize("@authService.isCreator(#request, principal) or @authService.isAssigned(#request, principal) or hasRole('modesti-administrators')")
   @Override
-  Request save(Request request);
+  Request save(@Param("request") Request request);
 
   @PreAuthorize("hasRole('modesti-administrators')")
   @Override
