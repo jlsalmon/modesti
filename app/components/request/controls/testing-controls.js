@@ -17,6 +17,12 @@ function TestingControlsController($state, RequestService, TaskService) {
   self.tested = true;
 
   self.init = init;
+  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
+  self.isCurrentTaskClaimed = isCurrentTaskClaimed;
+  self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.claim = claim;
+  self.testSelectedPoints = testSelectedPoints;
+  self.rejectSelectedPoints = rejectSelectedPoints;
   self.submit = submit;
 
   /**
@@ -25,6 +31,60 @@ function TestingControlsController($state, RequestService, TaskService) {
   function init(request, tasks) {
     self.request = request;
     self.tasks = tasks;
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAuthorised() {
+    return TaskService.isCurrentUserAuthorised(self.tasks['test']);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentTaskClaimed() {
+    return TaskService.isTaskClaimed(self.tasks['test']);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAssigned() {
+    return TaskService.isCurrentUserAssigned(self.tasks['test']);
+  }
+
+  /**
+   *
+   */
+  function claim() {
+    TaskService.claimTask(self.tasks['test'].name, self.request.requestId).then(function (task) {
+      console.log('claimed task successfully');
+      self.tasks['test'] = task;
+    });
+  }
+
+  /**
+   *
+   */
+  function testSelectedPoints(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  /**
+   *
+   */
+  function rejectSelectedPoints(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
   }
 
   /**

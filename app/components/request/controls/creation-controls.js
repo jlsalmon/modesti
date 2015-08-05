@@ -69,7 +69,6 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   }
 
   /**
-   * TODO refactor this common behaviour into a service
    *
    * @returns {boolean}
    */

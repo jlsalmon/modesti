@@ -17,6 +17,10 @@ function AddressingControlsController($state, RequestService, TaskService) {
   self.addressed = true;
 
   self.init = init;
+  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
+  self.isCurrentTaskClaimed = isCurrentTaskClaimed;
+  self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.claim = claim;
   self.addressSelectedPoints = addressSelectedPoints;
   self.rejectSelectedPoints = rejectSelectedPoints;
   self.submit = submit;
@@ -27,6 +31,40 @@ function AddressingControlsController($state, RequestService, TaskService) {
   function init(request, tasks) {
     self.request = request;
     self.tasks = tasks;
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAuthorised() {
+    return TaskService.isCurrentUserAuthorised(self.tasks['address']);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentTaskClaimed() {
+    return TaskService.isTaskClaimed(self.tasks['address']);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAssigned() {
+    return TaskService.isCurrentUserAssigned(self.tasks['address']);
+  }
+
+  /**
+   *
+   */
+  function claim() {
+    TaskService.claimTask(self.tasks['address'].name, self.request.requestId).then(function (task) {
+      console.log('claimed task successfully');
+      self.tasks['address'] = task;
+    });
   }
 
   /**

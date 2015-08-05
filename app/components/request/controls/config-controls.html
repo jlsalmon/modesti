@@ -5,14 +5,14 @@
     right: 150px;
     top: 15px;
   }
-  
+
   div.progressbar .action {
     /* position: absolute;
     display: inline-block; */
     /* width: 290px; */
     margin-right: 10px;
   }
-  
+
   div.progressbar .progress {
     /* position: absolute;
     display: inline-block; */
@@ -21,30 +21,31 @@
   }
 </style>
 
-      
+<div ng-if="ctrl.isCurrentUserOwner()">
+
   <div class="progressbar" ng-if="ctrl.progress">
     <span class="action pull-left">
-      <i ng-if="ctrl.progress.action">{{ctrl.progress.action}}</i> 
+      <i ng-if="ctrl.progress.action">{{ctrl.progress.action}}</i>
       <i ng-if="ctrl.progress.progress">({{ctrl.progress.progress}}%)</i>
     </span>
-    
+
     <progressbar class="progress-striped active" max="100" value="ctrl.progress.progress"></progressbar>
   </div>
-  
+
   <div class="btn-group pull-right">
-  
+
     <button class="btn btn-primary"
             ng-click="ctrl.configure($event)"
             tooltip-append-to-body="true"
-            tooltip="{{'CONFIGURE_REQUEST'|translate}}">
-  
+            tooltip="Configure request"> <!--tooltip="{{'CONFIGURE_REQUEST'|translate}}">-->
+
       <!--Show icon based on the loading state-->
       <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == undefined"></i>
       <i class="fa fa-fw fa-spin fa-cog" ng-show="ctrl.configuring == 'started'"></i>
       <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == 'success'"></i>
       <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.configuring == 'error'"></i>
-      {{'CONFIGURE'|translate}}
+      Configure <!--{{'CONFIGURE'|translate}}-->
     </button>
   </div>
 
-  
+</div>

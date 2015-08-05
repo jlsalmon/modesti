@@ -72,7 +72,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
    *
    */
   function claim() {
-    TaskService.claimTask(self.tasks['approve'].name, self.request.requestId).then(function(task) {
+    TaskService.claimTask(self.tasks['approve'].name, self.request.requestId).then(function (task) {
       console.log('claimed task successfully');
       self.tasks['approve'] = task;
     });
@@ -124,17 +124,17 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
       templateUrl: 'components/request/controls/modals/rejection-modal.html',
       controller: 'RejectionModalController as ctrl',
       resolve: {
-        selectedPointIds: function() {
+        selectedPointIds: function () {
           return selectedPointIds;
         },
-        rows: function() {
+        rows: function () {
           return self.rows;
         }
       }
     });
 
     // Callback fired when the user clicks 'ok'. Not fired if 'cancel' clicked.
-    modalInstance.result.then(function() {
+    modalInstance.result.then(function () {
       self.request.approved = false;
 
       var point;
@@ -228,20 +228,25 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
 
       // Complete the task
       TaskService.completeTask(task.name, self.request.requestId).then(function () {
-          console.log('completed task ' + task.name);
+        console.log('completed task ' + task.name);
 
-          // Clear the cache so that the state reload also pulls a fresh request
-          RequestService.clearCache();
+        // Clear the cache so that the state reload also pulls a fresh request
+        RequestService.clearCache();
 
-          $state.reload().then(function () {
-            self.submitting = 'success';
-          });
-        },
-
-        function (error) {
-          console.log('error completing task ' + task.name);
-          self.submitting = 'error';
+        $state.reload().then(function () {
+          self.submitting = 'success';
         });
+      },
+
+      function (error) {
+        console.log('error completing task ' + task.name);
+        self.submitting = 'error';
+      });
+    },
+
+    function (error) {
+      console.log('error completing task ' + task.name + ': ' + error.data.message);
+      self.submitting = 'error';
     });
   }
 }

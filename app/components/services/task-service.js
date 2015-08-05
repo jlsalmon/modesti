@@ -96,7 +96,7 @@ function TaskService($q, $http, AuthService) {
 
     var params = {
       action: 'CLAIM',
-      assignee: AuthService.getCurrentUser()
+      assignee: AuthService.getCurrentUser().username
     };
 
     $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function (response) {
@@ -150,7 +150,12 @@ function TaskService($q, $http, AuthService) {
    * @returns {boolean}
    */
   function isCurrentUserAssigned(task) {
-    return task.assignee === AuthService.getCurrentUser().username;
+    var user = AuthService.getCurrentUser();
+    if (!user) {
+      return false;
+    }
+
+    return task.assignee === user.username;
   }
 
   /**
@@ -161,6 +166,9 @@ function TaskService($q, $http, AuthService) {
    */
   function isCurrentUserAuthorised(task) {
     var user = AuthService.getCurrentUser();
+    if (!user) {
+      return false;
+    }
 
     var role;
     for (var i = 0, len = user.authorities.length; i < len; i++) {

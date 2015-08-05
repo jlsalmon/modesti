@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('RequestService', RequestService);
 
-function RequestService($http, $filter, $rootScope, $q, Restangular) {
+function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService) {
   var self = this;
 
   self.cache = {};
@@ -249,6 +249,10 @@ function RequestService($http, $filter, $rootScope, $q, Restangular) {
    */
   function isCurrentUserOwner(request) {
     var user = AuthService.getCurrentUser();
+    if (!user) {
+      return false;
+    }
+
     return user && user.username === request.creator.username;
   }
 

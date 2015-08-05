@@ -16,7 +16,12 @@ function CablingControlsController($state, RequestService, TaskService) {
   self.submitting = undefined;
 
   self.init = init;
+  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
+  self.isCurrentTaskClaimed = isCurrentTaskClaimed;
+  self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.claim = claim;
   self.cableSelectedPoints = cableSelectedPoints;
+  self.rejectSelectedPoints = rejectSelectedPoints;
   self.submit = submit;
 
   /**
@@ -29,8 +34,52 @@ function CablingControlsController($state, RequestService, TaskService) {
 
   /**
    *
+   * @returns {boolean}
+   */
+  function isCurrentUserAuthorised() {
+    return TaskService.isCurrentUserAuthorised(self.tasks['cable']);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentTaskClaimed() {
+    return TaskService.isTaskClaimed(self.tasks['cable']);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAssigned() {
+    return TaskService.isCurrentUserAssigned(self.tasks['cable']);
+  }
+
+  /**
+   *
+   */
+  function claim() {
+    TaskService.claimTask(self.tasks['cable'].name, self.request.requestId).then(function (task) {
+      console.log('claimed task successfully');
+      self.tasks['cable'] = task;
+    });
+  }
+
+  /**
+   *
    */
   function cableSelectedPoints(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  /**
+   *
+   */
+  function rejectSelectedPoints(event) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();

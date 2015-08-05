@@ -16,6 +16,7 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
   self.configuring = undefined;
 
   self.init = init;
+  self.isCurrentUserOwner = isCurrentUserOwner;
   self.configure = configure;
 
   /**
@@ -24,6 +25,14 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
   function init(parent) {
     self.request = parent.request;
     self.tasks = parent.tasks;
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserOwner() {
+    return RequestService.isCurrentUserOwner(self.request);
   }
 
   /**

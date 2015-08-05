@@ -1,24 +1,67 @@
+<!--
+  If we are allowed to cable:
+    - if the task is not claimed, show a claim button
+    - if we have claimed the task, show the cabling controls (also show delegation controls)
+    - if the task is claimed by someone else, show the assignee username
+
+  If we are not allowed to cable:
+    - show no controls
+-->
+
 <div class="pull-right">
 
-  <div class="btn-group">
-    <button class="btn btn-success" ng-click="ctrl.cableSelectedPoints($event)" translate>CABLE_SELECTED</button>
-  </div>
-  
-  <div class="btn-group">
-  
-    <button class="btn btn-primary"
-            ng-click="ctrl.submit($event)"
-            tooltip-append-to-body="true"
-            tooltip="{{ 'SUBMIT_CABLING' | translate}}">
-  
-      <!--Show icon based on the loading state-->
-      <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
-      <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
-      <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
-      <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
-      {{ 'SUBMIT' | translate}}
-    </button>
-  
+  <!-- Only show controls when we have permission to cable -->
+  <div ng-if="ctrl.isCurrentUserAuthorised()">
+
+    <!-- Request has been claimed -->
+    <div ng-if="ctrl.isCurrentTaskClaimed()">
+
+      <!-- Request has been claimed by us -->
+      <div ng-if="ctrl.isCurrentUserAssigned()">
+
+        <div class="btn-group">
+          <button class="btn btn-success" ng-click="ctrl.cableSelectedPoints($event)" translate>CABLE_SELECTED</button>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn-danger"  ng-click="ctrl.rejectSelectedPoints($event)" translate>REJECT_SELECTED</button>
+        </div>
+
+        <div class="btn-group">
+
+          <button class="btn btn-primary"
+                  ng-click="ctrl.submit($event)"
+                  tooltip-append-to-body="true"
+                  tooltip="{{ 'SUBMIT_CABLING' | translate}}">
+
+            <!--Show icon based on the loading state-->
+            <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
+            <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
+            <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
+            <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
+            {{ 'SUBMIT' | translate}}
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Request is assigned to someone else -->
+      <div ng-if="!ctrl.isCurrentUserAssigned()">
+        <div>Request assigned to: <a href="#/users/{{ctrl.tasks['cable'].assignee}}" ng-click="$event.stopPropagation();">{{ctrl.tasks['cable'].assignee}}</a></div>
+      </div>
+
+    </div>
+
+    <!-- Request is unclaimed -->
+    <div ng-if="!ctrl.isCurrentTaskClaimed()">
+      <div class="btn-group">
+        <button class="btn btn-primary"
+                ng-click="ctrl.claim($event)">
+          Begin cabling
+        </button>
+      </div>
+    </div>
+
   </div>
 
 </div>
