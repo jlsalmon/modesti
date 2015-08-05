@@ -2,7 +2,7 @@
 buildscript {
     repositories {
         maven { url "https://repo.spring.io/libs-release" }
-        maven { url "http://localhost:11112/release" }
+        maven { url "http://artifactory/release" }
         mavenLocal()
         mavenCentral()
     }
@@ -27,8 +27,8 @@ repositories {
     mavenCentral()
     maven { url "https://repo.spring.io/libs-release" }
     maven { url "https://repo.spring.io/snapshot" }
-    maven { url "http://localhost:11112/release" }
-    maven { url "http://localhost:11112/development" }
+    maven { url "http://artifactory/release" }
+    maven { url "http://artifactory/development" }
 }
 
 dependencies {
