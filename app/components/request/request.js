@@ -173,6 +173,8 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   }
 
   /**
+   * Row headers can optionally contain a success/failure icon and a popover message shown when the user hovers over
+   * the icon.
    *
    * @param row
    * @returns {*}
@@ -180,15 +182,19 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   function getRowHeaders(row) {
     var point = self.rows[row];
 
-    if (point.approval && point.approval.approved == false) {
-      var html =
-      '<i class="fa fa-exclamation-circle text-danger error-indicator"\
-          data-container="body" \
-          data-toggle="popover" \
-          data-placement="right" \
-          data-content="' + 'Operator comment: ' + point.approval.message + '"> \
-         </i>';
+    if (self.request.status === 'FOR_APPROVAL' && point.approval) {
+      var cssClass, popoverMessage;
 
+      if (point.approval.approved === false) {
+        cssClass = 'fa fa-exclamation-circle text-danger error-indicator';
+        popoverMessage = 'Operator comment: ' + point.approval.message;
+      } else {
+        cssClass = 'fa fa-check-circle text-success error-indicator';
+        popoverMessage = 'Point approved';
+      }
+
+      var html = '<i class="' + cssClass + ' data-container="body" data-toggle="popover" data-placement="right" '
+                 + 'data-content="' + popoverMessage + '"></i>';
       return point.id + ' ' + html;
     }
 

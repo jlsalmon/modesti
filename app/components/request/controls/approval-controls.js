@@ -23,7 +23,9 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   self.isCurrentUserAssigned = isCurrentUserAssigned;
   self.claim = claim;
   self.approveSelectedPoints = approveSelectedPoints;
+  self.approveAll = approveAll;
   self.rejectSelectedPoints = rejectSelectedPoints;
+  self.rejectAll = rejectAll;
   self.canSubmit = canSubmit;
   self.submit = submit;
 
@@ -37,7 +39,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     self.parent = parent;
 
     // By default, all points are approved.
-    initialiseApprovalState();
+    // initialiseApprovalState();
 
     // Update the table settings to paint the row backgrounds depending on
     // if they have already been approved or rejected
@@ -81,19 +83,19 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   /**
    *
    */
-  function initialiseApprovalState() {
-    var point;
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      point = self.rows[i];
-
-      if (!point.approval) {
-        point.approval = {
-          approved: true,
-          message: ''
-        };
-      }
-    }
-  }
+  //function initialiseApprovalState() {
+  //  var point;
+  //  for (var i = 0, len = self.rows.length; i < len; i++) {
+  //    point = self.rows[i];
+  //
+  //    if (!point.approval) {
+  //      point.approval = {
+  //        approved: true,
+  //        message: ''
+  //      };
+  //    }
+  //  }
+  //}
 
   /**
    * Mark the currently selected points as rejected.
@@ -105,12 +107,33 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     }
 
     var selectedPointIds = self.parent.getSelectedPointIds();
+    rejectPoints(selectedPointIds);
+  }
 
+  /**
+   *
+   * @param event
+   */
+  function rejectAll(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    var pointIds = self.rows.map(function(row) { return row.id });
+    rejectPoints(pointIds);
+  }
+
+  /**
+   *
+   * @param pointIds
+   */
+  function rejectPoints(pointIds) {
     var point;
     for (var i = 0, len = self.rows.length; i < len; i++) {
       point = self.rows[i];
 
-      if (selectedPointIds.indexOf(point.id) > -1) {
+      if (pointIds.indexOf(point.id) > -1) {
         if (!point.approval) {
           point.approval = {};
         }
@@ -125,7 +148,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
       controller: 'RejectionModalController as ctrl',
       resolve: {
         selectedPointIds: function () {
-          return selectedPointIds;
+          return pointIds;
         },
         rows: function () {
           return self.rows;
@@ -141,7 +164,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
       for (var i = 0, len = self.rows.length; i < len; i++) {
         point = self.rows[i];
 
-        if (selectedPointIds.indexOf(point.id) > -1) {
+        if (pointIds.indexOf(point.id) > -1) {
           point.approval.approved = false;
         }
       }
@@ -165,12 +188,33 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     }
 
     var selectedPointIds = self.parent.getSelectedPointIds();
+    approvePoints(selectedPointIds);
+  }
 
+  /**
+   *
+   * @param event
+   */
+  function approveAll(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    var pointIds = self.rows.map(function(row) { return row.id });
+    approvePoints(pointIds);
+  }
+
+  /**
+   *
+   * @param pointIds
+   */
+  function approvePoints(pointIds) {
     var point;
     for (var i = 0, len = self.rows.length; i < len; i++) {
       point = self.rows[i];
 
-      if (selectedPointIds.indexOf(point.id) > -1) {
+      if (pointIds.indexOf(point.id) > -1) {
         point.approval = {
           approved: true,
           message: ''
@@ -187,15 +231,26 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
   }
 
   /**
+   * The approval may only be submitted if all points in the request have been either approved or rejected.
    *
    * @returns {boolean}
    */
   function canSubmit() {
-    return self.parent.getSelectedPointIds().length > 0;
+    var point;
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      point = self.rows[i];
+
+      if (!point.approval) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**
    *
+   * @param event {Object}
    */
   function submit(event) {
     if (event) {

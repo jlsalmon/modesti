@@ -22,8 +22,12 @@
           <button class="btn btn-success"
                   ng-click="ctrl.approveSelectedPoints($event)"
                   ng-disabled="!ctrl.parent.getSelectedPointIds().length">
-            <i class="fa fa-fw fa-thumbs-o-up"></i>
             {{'APPROVE_SELECTED'|translate}}
+          </button>
+
+          <button class="btn btn-success"
+                  ng-click="ctrl.approveAll($event)">
+            Approve all <!--{{'REJECT_ALL'|translate}}-->
           </button>
         </div>
 
@@ -31,8 +35,12 @@
           <button class="btn btn-danger"
                   ng-click="ctrl.rejectSelectedPoints($event)"
                   ng-disabled="!ctrl.parent.getSelectedPointIds().length">
-            <i class="fa fa-fw fa-thumbs-o-down"></i>
             {{'REJECT_SELECTED'|translate}}
+          </button>
+
+          <button class="btn btn-danger"
+                  ng-click="ctrl.rejectAll($event)">
+            Reject all <!--{{'REJECT_ALL'|translate}}-->
           </button>
         </div>
 
