@@ -226,7 +226,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
     //if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
     //  // Checkbox column not shown when preparing
-      self.columns.push({data: 'selected', type: 'checkbox'});
+      self.columns.push({data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />'});
     //}
   }
 
@@ -490,6 +490,10 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    *
    */
   function getSelectedPointIds() {
+    if ($.isEmptyObject(self.hot)) {
+      return [];
+    }
+
     var checkboxes = self.hot.getDataAtCol(self.columns.length - 1);
     var pointIds = [];
 
@@ -815,11 +819,11 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       var firstColumnHeader = $('.htCore colgroup col.rowHeader');
       var secondColumnHeader = $('.htCore colgroup col:nth-child(2)');
       var secondColumnHeaderWidth = secondColumnHeader.width();
-      var checkboxHeader = $('.htCore colgroup col:last-child');
-      var checkboxHeaderWidth = checkboxHeader.width();
+      var checkboxColumn = $('.htCore colgroup col:last-child');
+      var checkboxHeaderWidth = checkboxColumn.width();
       secondColumnHeaderWidth = secondColumnHeaderWidth + (checkboxHeaderWidth - 30);
       secondColumnHeader.width(secondColumnHeaderWidth);
-      checkboxHeader.width('30px');
+      checkboxColumn.width('30px');
       firstColumnHeader.width('45px');
 
       //checkboxTd.css('width', '20px');
@@ -828,6 +832,40 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     // Centre checkbox columns
     var checkboxCell = $('.htCore input.htCheckboxRendererInput').parent();
     checkboxCell.css('text-align', 'center');
+
+    // Initialise checkbox header state
+    var checkboxHeader = $('.select-all:checkbox');
+    checkboxHeader.prop(getCheckboxHeaderState(), true);
+
+    // Listen for the change event on the "select-all" checkbox and act accordingly
+    checkboxHeader.change(function () {
+      for (var i = 0, len = self.rows.length; i < len; i++) {
+        self.rows[i].selected = this.checked;
+      }
+
+      // Need to explicitly trigger a digest loop here because we are out of the angularjs world and in the happy land
+      // of jquery hacking
+      $scope.$apply();
+    });
+
+    // Listen for change events on all checkboxes
+    $('.htCheckboxRendererInput:checkbox').change(function () {
+      $('.select-all:checkbox').prop(getCheckboxHeaderState(), true);
+    });
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getCheckboxHeaderState() {
+    if (self.getSelectedPointIds().length === self.rows.length) {
+      return 'checked';
+    } else if (self.getSelectedPointIds().length > 0) {
+      return 'indeterminate'
+    } else {
+      return 'unchecked';
+    }
   }
 
   /**
