@@ -200,26 +200,26 @@
             </li> -->
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
-              <a href="" ng-click="ctrl.login()" ng-if="!ctrl.storage.user" ng-cloak>
+              <a href="" ng-click="ctrl.login()" ng-if="!ctrl.isAuthenticated()" ng-cloak>
                 <span class="hidden-xs" >
                   <i class="fa fa-fw fa-sign-in"></i>
                     {{'SIGN_IN'|translate}}
                 </span>
               </a>
 
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-if="ctrl.storage.user && ctrl.storage.user.username" ng-cloak>
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-if="ctrl.isAuthenticated()" ng-cloak>
                 <!--<img src="images/no-avatar.png" class="user-image" alt="User Image" />-->
                 <span class="hidden-xs">
 
-                    {{ctrl.storage.user.firstName}} {{ctrl.storage.user.lastName}}
+                    {{ctrl.user.firstName}} {{ctrl.user.lastName}}
                   <span class="caret"></span>
                 </span>
               </a>
-              <ul class="dropdown-menu" ng-show="ctrl.storage.user && ctrl.storage.user.username" ng-cloak>
+              <ul class="dropdown-menu" ng-show="ctrl.isAuthenticated()" ng-cloak>
                 <li>
-                  <a href="#/users/{{ctrl.storage.user.username}}" class="header">
+                  <a href="#/users/{{ctrl.user.username}}" class="header">
                     <i class="fa fa-fw fa-user"></i>
-                    Profile ({{ctrl.storage.user.username}})
+                    Profile ({{ctrl.user.username}})
                   </a>
                 </li>
                 <li class="divider"></li>
@@ -348,7 +348,7 @@
   <script src="app.routes.js"></script>
   <!--<script src="components/layout/AdminLTE.js"></script>-->
   <script src="components/layout/layout.js"></script>
-  <script src="components/login/login.js"></script>
+  <script src="components/login/login-modal.js"></script>
   <script src="components/errors/interceptor.js"></script>
   <script src="components/request/request.new.js"></script>
   <script src="components/request/request.upload.js"></script>
@@ -375,6 +375,7 @@
   <script src="components/about/about.js"></script>
   <script src="components/users/user.js"></script>
   <script src="components/search/search.js"></script>
+  <script src="components/services/auth-service.js"></script>
   <script src="components/services/request-service.js"></script>
   <script src="components/services/schema-service.js"></script>
   <script src="components/services/task-service.js"></script>

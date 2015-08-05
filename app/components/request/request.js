@@ -7,7 +7,9 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $http, $timeout, $modal, request, children, schema, tasks, signals, RequestService, ColumnService, SchemaService, AlertService, HistoryService) {
+function RequestController($scope, $http, $timeout, $modal, $localStorage,
+                           request, children, schema, tasks, signals,
+                           RequestService, ColumnService, SchemaService, AlertService, HistoryService, AuthService) {
   var self = this;
 
   self.request = request;
@@ -202,7 +204,6 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    * See https://github.com/handsontable/handsontable/issues/590. Hopefully this will be fixed in a later release.
    */
   function getColumns() {
-    // Get the columns
     self.columns.length = 0;
 
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
@@ -210,7 +211,13 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     var field, editable;
     for (var i = 0; i < self.activeCategory.fields.length; i++) {
       field = self.activeCategory.fields[i];
-      editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
+
+      if (isCurrentUserAuthorised()) {
+        editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
+      } else {
+        editable = false;
+      }
+
 
       // Build the right type of column based on the schema
       var column = ColumnService.getColumn(field, editable);
@@ -222,6 +229,15 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     //  // Checkbox column not shown when preparing
       self.columns.push({data: 'selected', type: 'checkbox'});
     //}
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAuthorised() {
+    // TODO
+    return false;
   }
 
   /**

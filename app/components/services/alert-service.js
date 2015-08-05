@@ -31,17 +31,17 @@ function AlertService($rootScope, $timeout) {
    */
   function add(type, message, timeout) {
     timeout = typeof timeout !== 'undefined' ? timeout : 10000;
-    
+
     var alert = {
       'type': type,
       'message': message,
       close: function () {
         return service.close(this);
       }
-    }
-    
+    };
+
     $rootScope.alerts.push(alert);
-    
+
     $timeout(function() {
       alert.close();
     }, timeout);
@@ -64,9 +64,9 @@ function AlertService($rootScope, $timeout) {
   function closeAlertByIndex(index) {
     return $rootScope.alerts.splice(index, 1);
   }
-  
+
   /**
-   * 
+   *
    */
   function clear() {
     angular.forEach($rootScope.alerts, function(alert) {

@@ -7,20 +7,16 @@
  */
 angular.module('modesti').controller('LayoutController', LayoutController);
 
-function LayoutController($scope, $rootScope, $location, $translate, $localStorage, $cookies, $modal) {
+function LayoutController($scope, $rootScope, $location, $translate, AuthService) {
   var self = this;
 
-  var user = $localStorage.user;
-
-  self.storage = $localStorage.$default({
-    user: user
-  });
-  self.loginModalOpened = false;
+  self.user = AuthService.getCurrentUser();
 
   self.isActivePage = isActivePage;
   self.getCurrentLanguage = getCurrentLanguage;
   self.changeLanguage = changeLanguage;
   self.search = search;
+  self.isAuthenticated = isAuthenticated;
   self.login = login;
   self.logout = logout;
 
@@ -60,45 +56,33 @@ function LayoutController($scope, $rootScope, $location, $translate, $localStora
 
   /**
    *
+   * @returns {boolean}
+   */
+  function isAuthenticated() {
+    return AuthService.isCurrentUserAuthenticated();
+  }
+
+  /**
+   *
    */
   function login() {
-    showLoginModal();
+    AuthService.login().then(function (user) {
+      self.user = user;
+    });
   }
 
   /**
    *
    */
   function logout() {
-    $localStorage.user = undefined;
-    delete $cookies["JSESSIONID"];
-    $location.path("/");
-  }
-
-  /**
-   *
-   */
-  function showLoginModal() {
-    self.loginModalOpened = true;
-
-    var modalInstance = $modal.open({
-      animation: false,
-      keyboard: false,
-      backdrop: 'static',
-      templateUrl: 'components/login/login-modal.html',
-      controller: 'LoginController as ctrl'
-    });
-
-    modalInstance.result.then(function () {
-      self.loginModalOpened = false;
+    AuthService.logout().then(function () {
+      $location.path("/");
     });
   }
-
 
   // When an API request returns 401 Unauthorized, angular-http-auth broadcasts
   // this event. We simply catch it and show the login modal.
   $scope.$on('event:auth-loginRequired', function () {
-    if (!self.loginModalOpened) {
-      showLoginModal();
-    }
+    login();
   });
 }
