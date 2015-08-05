@@ -13,7 +13,7 @@ function LayoutController($scope, $rootScope, $location, $translate, $localStora
   var user = $localStorage.user;
 
   self.storage = $localStorage.$default({
-    user : user
+    user: user
   });
   self.loginModalOpened = false;
 
@@ -79,19 +79,24 @@ function LayoutController($scope, $rootScope, $location, $translate, $localStora
    */
   function showLoginModal() {
     self.loginModalOpened = true;
-    $modal.open({
+
+    var modalInstance = $modal.open({
       animation: false,
       keyboard: false,
       backdrop: 'static',
       templateUrl: 'components/login/login-modal.html',
       controller: 'LoginController as ctrl'
     });
+
+    modalInstance.result.then(function () {
+      self.loginModalOpened = false;
+    });
   }
 
 
   // When an API request returns 401 Unauthorized, angular-http-auth broadcasts
   // this event. We simply catch it and show the login modal.
-  $scope.$on('event:auth-loginRequired', function() {
+  $scope.$on('event:auth-loginRequired', function () {
     if (!self.loginModalOpened) {
       showLoginModal();
     }
