@@ -10,6 +10,7 @@ angular.module('modesti').controller('CablingControlsController', CablingControl
 function CablingControlsController($state, RequestService, TaskService) {
   var self = this;
 
+  self.parent = {};
   self.request = {};
   self.tasks = {};
 
@@ -27,9 +28,10 @@ function CablingControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function init(request, tasks) {
-    self.request = request;
-    self.tasks = tasks;
+  function init(parent) {
+    self.parent = parent;
+    self.request = parent.request;
+    self.tasks = parent.tasks;
   }
 
   /**
@@ -63,6 +65,7 @@ function CablingControlsController($state, RequestService, TaskService) {
     TaskService.claimTask(self.tasks['cable'].name, self.request.requestId).then(function (task) {
       console.log('claimed task successfully');
       self.tasks['cable'] = task;
+      self.parent.activateDefaultCategory();
     });
   }
 

@@ -142,6 +142,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
 
             $state.reload().then(function () {
               self.validating = 'success';
+              AlertService.add('success', 'Request has been validated successfully');
             });
           },
 

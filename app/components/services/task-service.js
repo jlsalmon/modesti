@@ -19,6 +19,7 @@ function TaskService($q, $http, AuthService) {
     claimTask: claimTask,
     completeTask: completeTask,
     isTaskClaimed: isTaskClaimed,
+    isAnyTaskClaimed: isAnyTaskClaimed,
     isCurrentUserAssigned: isCurrentUserAssigned,
     isCurrentUserAuthorised: isCurrentUserAuthorised
   };
@@ -142,6 +143,20 @@ function TaskService($q, $http, AuthService) {
    */
   function isTaskClaimed(task) {
     return task.assignee !== undefined && task.assignee !== null;
+  }
+
+  /**
+   *
+   * @param tasks
+   * @returns {boolean}
+   */
+  function isAnyTaskClaimed(tasks) {
+    for (var key in tasks) {
+      if (isTaskClaimed(tasks[key])) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

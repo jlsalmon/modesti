@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('ApprovalControlsController', ApprovalControlsController);
 
-function ApprovalControlsController($state, $modal, RequestService, TaskService) {
+function ApprovalControlsController($state, $modal, RequestService, TaskService, ValidationService) {
   var self = this;
 
   self.request = {};
@@ -38,8 +38,18 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     self.tasks = parent.tasks;
     self.parent = parent;
 
-    // By default, all points are approved.
-    // initialiseApprovalState();
+    // Initialise the approval state of each point
+    var point;
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      point = self.rows[i];
+
+      if (!point.approval) {
+        point.approval = {
+          approved: undefined,
+          message: ''
+        };
+      }
+    }
 
     // Update the table settings to paint the row backgrounds depending on
     // if they have already been approved or rejected
@@ -77,25 +87,9 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     TaskService.claimTask(self.tasks['approve'].name, self.request.requestId).then(function (task) {
       console.log('claimed task successfully');
       self.tasks['approve'] = task;
+      self.parent.activateDefaultCategory();
     });
   }
-
-  /**
-   *
-   */
-  //function initialiseApprovalState() {
-  //  var point;
-  //  for (var i = 0, len = self.rows.length; i < len; i++) {
-  //    point = self.rows[i];
-  //
-  //    if (!point.approval) {
-  //      point.approval = {
-  //        approved: true,
-  //        message: ''
-  //      };
-  //    }
-  //  }
-  //}
 
   /**
    * Mark the currently selected points as rejected.
@@ -133,49 +127,24 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
     for (var i = 0, len = self.rows.length; i < len; i++) {
       point = self.rows[i];
 
+      if (!point.approval) {
+        point.approval = {};
+      }
+
       if (pointIds.indexOf(point.id) > -1) {
-        if (!point.approval) {
-          point.approval = {};
+        point.approval.approved = false;
+
+        if (!point.approval.message) {
+          point.errors = [];
+          ValidationService.setErrorMessage(point, 'approval.message', 'sadgsadgsd');
         }
       }
     }
 
-    // The user must supply a comment for each rejected point. Display a modal
-    // with a text field for each selected point.
-    var modalInstance = $modal.open({
-      animation: false,
-      templateUrl: 'components/request/controls/modals/rejection-modal.html',
-      controller: 'RejectionModalController as ctrl',
-      resolve: {
-        selectedPointIds: function () {
-          return pointIds;
-        },
-        rows: function () {
-          return self.rows;
-        }
-      }
-    });
-
-    // Callback fired when the user clicks 'ok'. Not fired if 'cancel' clicked.
-    modalInstance.result.then(function () {
-      self.request.approved = false;
-
-      var point;
-      for (var i = 0, len = self.rows.length; i < len; i++) {
-        point = self.rows[i];
-
-        if (pointIds.indexOf(point.id) > -1) {
-          point.approval.approved = false;
-        }
-      }
-
-      // Save the request
-      RequestService.saveRequest(self.request).then(function () {
-
-        // Update the table settings to paint the approved rows with a red background
-        self.parent.renderRowBackgrounds();
-      });
-    });
+    // Save the request
+    RequestService.saveRequest(self.request).then(function () {
+      self.parent.hot.render();
+    })
   }
 
   /**
@@ -215,23 +184,21 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
       point = self.rows[i];
 
       if (pointIds.indexOf(point.id) > -1) {
+        point.errors = [];
         point.approval = {
           approved: true,
-          message: ''
+          message: null
         };
       }
     }
 
     // Save the request
-    RequestService.saveRequest(self.request).then(function () {
-
-      // Update the table settings to paint the approved rows with a red background
-      self.parent.renderRowBackgrounds();
-    });
+    RequestService.saveRequest(self.request);
   }
 
   /**
-   * The approval may only be submitted if all points in the request have been either approved or rejected.
+   * The approval may only be submitted if all points in the request have been either approved or rejected. If they have
+   * been rejected, there must be an accompanying comment.
    *
    * @returns {boolean}
    */
@@ -241,6 +208,10 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService)
       point = self.rows[i];
 
       if (!point.approval) {
+        return false;
+      }
+
+      if (point.approval.approved === false && !point.approval.message) {
         return false;
       }
     }

@@ -10,6 +10,7 @@ angular.module('modesti').controller('TestingControlsController', TestingControl
 function TestingControlsController($state, RequestService, TaskService) {
   var self = this;
 
+  self.parent = {}
   self.request = {};
   self.tasks = {};
 
@@ -28,9 +29,10 @@ function TestingControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function init(request, tasks) {
-    self.request = request;
-    self.tasks = tasks;
+  function init(parent) {
+    self.parent = parent;
+    self.request = parent.request;
+    self.tasks = parent.tasks;
   }
 
   /**
@@ -64,6 +66,7 @@ function TestingControlsController($state, RequestService, TaskService) {
     TaskService.claimTask(self.tasks['test'].name, self.request.requestId).then(function (task) {
       console.log('claimed task successfully');
       self.tasks['test'] = task;
+      self.parent.activateDefaultCategory();
     });
   }
 

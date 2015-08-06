@@ -78,6 +78,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   self.getColumns = getColumns;
 
   self.activateCategory = activateCategory;
+  self.activateDefaultCategory = activateDefaultCategory;
   self.addExtraCategory = addExtraCategory;
   self.getAvailableExtraCategories = getAvailableExtraCategories;
   self.resetSorting = resetSorting;
@@ -114,6 +115,14 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
       renderRowBackgrounds();
     });
+  }
+
+  /**
+   *
+   */
+  function activateDefaultCategory() {
+    console.log('activating default category');
+    activateCategory(self.schema.categories[0]);
   }
 
   /**
@@ -186,16 +195,17 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       var cssClass, popoverMessage;
 
       if (point.approval.approved === false) {
-        cssClass = 'fa fa-exclamation-circle text-danger error-indicator';
+        cssClass = 'fa fa-exclamation-circle text-danger';
         popoverMessage = 'Operator comment: ' + point.approval.message;
-      } else {
-        cssClass = 'fa fa-check-circle text-success error-indicator';
+      } else if (point.approval.approved === true) {
+        cssClass = 'fa fa-check-circle text-success';
         popoverMessage = 'Point approved';
       }
 
-      var html = '<i class="' + cssClass + ' data-container="body" data-toggle="popover" data-placement="right" '
-                 + 'data-content="' + popoverMessage + '"></i>';
-      return point.id + ' ' + html;
+      var html = '<div class="row-header" data-toggle="popover" data-container="body" data-placement="right" ';
+      html += 'data-content="' + popoverMessage + '">';
+      html += point.id + ' <i class="' + cssClass + '"></i></div>';
+      return html;
     }
 
     else {
@@ -213,6 +223,15 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
+    // Append "select-all" checkbox field.
+    if (hasCheckboxColumn()) {
+      self.columns.push(getCheckboxColumn());
+    }
+
+    if (hasCommentColumn()) {
+      self.columns.push(getCommentColumn());
+    }
+
     var field, editable;
     for (var i = 0; i < self.activeCategory.fields.length; i++) {
       field = self.activeCategory.fields[i];
@@ -223,17 +242,65 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
         editable = false;
       }
 
-
       // Build the right type of column based on the schema
       var column = ColumnService.getColumn(field, editable);
       column.renderer = customRenderer;
       self.columns.push(column);
     }
 
-    //if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
-    //  // Checkbox column not shown when preparing
-      self.columns.push({data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />'});
-    //}
+
+  }
+
+  /**
+   * The "select-all" checkbox column is shown when the request is in either state FOR_APPROVAL, FOR_ADDRESSING,
+   * FOR_CABLING or FOR_TESTING, except when the task is not yet claimed or the user is not authorised.
+   *
+   * @returns {boolean}
+   */
+  function hasCheckboxColumn() {
+    var checkboxStates = ['FOR_APPROVAL', 'FOR_ADDRESSING', 'FOR_CABLING', 'FOR_TESTING'];
+
+    var assigned = false;
+    for (var key in self.tasks) {
+      var task = self.tasks[key];
+      if (TaskService.isCurrentUserAssigned(task)) {
+        assigned = true;
+      }
+    }
+
+    return checkboxStates.indexOf(self.request.status) > -1 && assigned;
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function hasCommentColumn() {
+    var commentStates =  ['FOR_APPROVAL', 'FOR_TESTING'];
+    return commentStates.indexOf(self.request.status) > -1 && TaskService.isAnyTaskClaimed(self.tasks);
+  }
+
+  /**
+   *
+   * @returns {{data: string, type: string, title: string}}
+   */
+  function getCheckboxColumn() {
+    return {data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />', renderer: customRenderer}
+  }
+
+  /**
+   *
+   * @returns {{data: *, type: string, title: string}}
+   */
+  function getCommentColumn() {
+    var property;
+    if (self.request.status == 'FOR_APPROVAL') {
+      property = 'approval.message';
+    } else if (self.request.status == 'FOR_TESTING') {
+      property = 'testing.message';
+    }
+
+    return {data: property, type: 'text', title: 'Comment', renderer: customRenderer}
   }
 
   /**
@@ -365,8 +432,14 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    * @returns {*}
    */
   function getEquipmentIdentifier(point) {
-    var equipmentIdentifier;
-    var gmaoCode = point.properties.gmaoCode ? point.properties.gmaoCode.value : '';
+    var equipmentIdentifier, gmaoCode;
+
+    if (point.properties.gmaoCode && point.properties.gmaoCode.value) {
+      gmaoCode = point.properties.gmaoCode.value
+    } else if (point.properties.csamCsename) {
+      gmaoCode = point.properties.csamCsename;
+    }
+
     var otherEquipCode = point.properties.otherEquipCode;
 
     if (gmaoCode && otherEquipCode) {
@@ -500,7 +573,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       return [];
     }
 
-    var checkboxes = self.hot.getDataAtCol(self.columns.length - 1);
+    var checkboxes = self.hot.getDataAtProp('selected');
     var pointIds = [];
 
     for (var i = 0, len = checkboxes.length; i < len; i++) {
@@ -717,7 +790,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     }
 
     // Make the background red
-    td.style.background = '#F2DEDE';
+    //td.style.background = '#F2DEDE';
   }
 
   /**
@@ -800,64 +873,62 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   function afterRender() {
 
     // Initialise the popovers in the row headers
-    $('.error-indicator').popover({trigger: "manual", html: true, animation: false})
-    .on("mouseenter", function () {
-      var _this = this;
-      $(this).popover("show");
-      $(".popover").on("mouseleave", function () {
-        $(_this).popover('hide');
-      });
-    })
-    .on("mouseleave", function () {
-      var _this = this;
-      setTimeout(function () {
-        if (!$(".popover:hover").length) {
-          $(_this).popover("hide");
-        }
-      }, 300);
-    });
+    $('.row-header').popover({trigger: 'hover', delay: {"show": 100, "hide": 100}});
 
     // Initialise the help text popovers on the column headers
     $('.help-text').popover({trigger: 'hover', delay: {"show": 500, "hide": 100}});
 
-    //if (self.request.status != 'IN_PROGRESS' && self.request.status != 'FOR_CORRECTION') {
-      // Fix the width of the last column and add the surplus to the first column
+    if (hasCheckboxColumn()) {
+
       var firstColumnHeader = $('.htCore colgroup col.rowHeader');
-      var secondColumnHeader = $('.htCore colgroup col:nth-child(2)');
-      var secondColumnHeaderWidth = secondColumnHeader.width();
-      var checkboxColumn = $('.htCore colgroup col:last-child');
-      var checkboxHeaderWidth = checkboxColumn.width();
-      secondColumnHeaderWidth = secondColumnHeaderWidth + (checkboxHeaderWidth - 30);
-      secondColumnHeader.width(secondColumnHeaderWidth);
+      var lastColumnHeader = $('.htCore colgroup col:last-child');
+      var checkboxColumn = $('.htCore colgroup col:nth-child(2)');
+
+      // Fix the width of the "select-all" checkbox column (second column) and add the surplus to the last column
+      var lastColumnHeaderWidth = lastColumnHeader.width() + (checkboxColumn.width() - 30);
+      lastColumnHeader.width(lastColumnHeaderWidth);
       checkboxColumn.width('30px');
+
+      // Fix the width of the first column (point id column)
       firstColumnHeader.width('45px');
 
-      //checkboxTd.css('width', '20px');
-    //}
+      // Centre checkbox columns
+      var checkboxCell = $('.htCore input.htCheckboxRendererInput').parent();
+      checkboxCell.css('text-align', 'center');
 
-    // Centre checkbox columns
-    var checkboxCell = $('.htCore input.htCheckboxRendererInput').parent();
-    checkboxCell.css('text-align', 'center');
+      // Initialise checkbox header state
+      var checkboxHeader = $('.select-all:checkbox');
+      checkboxHeader.prop(getCheckboxHeaderState(), true);
 
-    // Initialise checkbox header state
-    var checkboxHeader = $('.select-all:checkbox');
-    checkboxHeader.prop(getCheckboxHeaderState(), true);
-
-    // Listen for the change event on the "select-all" checkbox and act accordingly
-    checkboxHeader.change(function () {
-      for (var i = 0, len = self.rows.length; i < len; i++) {
-        self.rows[i].selected = this.checked;
+      var column, cell;
+      if (hasCommentColumn()) {
+        column = $('.htCore thead th:nth-child(3)');
+        cell = $('.htCore tbody td:nth-child(3)');
+      } else {
+        column = checkboxColumn;
+        cell = checkboxCell;
       }
 
-      // Need to explicitly trigger a digest loop here because we are out of the angularjs world and in the happy land
-      // of jquery hacking
-      $scope.$apply();
-    });
+      // Add a thicker border between the control column(s) and the first data column
+      cell.css('border-right', '3px solid #ccc');
+      column.css('border-right', '3px solid #ccc');
 
-    // Listen for change events on all checkboxes
-    $('.htCheckboxRendererInput:checkbox').change(function () {
-      $('.select-all:checkbox').prop(getCheckboxHeaderState(), true);
-    });
+      // Listen for the change event on the "select-all" checkbox and act accordingly
+      checkboxHeader.change(function () {
+        for (var i = 0, len = self.rows.length; i < len; i++) {
+          self.rows[i].selected = this.checked;
+        }
+
+        // Need to explicitly trigger a digest loop here because we are out of the angularjs world and in the happy land
+        // of jquery hacking
+        $scope.$apply();
+      });
+
+      // Listen for change events on all checkboxes
+      $('.htCheckboxRendererInput:checkbox').change(function () {
+        $('.select-all:checkbox').prop(getCheckboxHeaderState(), true);
+      });
+    }
   }
 
   /**

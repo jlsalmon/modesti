@@ -39,7 +39,7 @@ function SchemaService($q, $http) {
       var schema = response.data;
       console.log('fetched schema: ' + schema.name);
 
-      // Append tagname and fault state fields
+      // Prepend tagname and fault state fields
       for (var i = 0, len = schema.categories.length; i < len; i++) {
         var category = schema.categories[i];
 

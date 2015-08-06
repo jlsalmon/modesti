@@ -12,7 +12,8 @@ function ValidationService($q) {
 
   // Public API
   var service = {
-    validateRequest: validateRequest
+    validateRequest: validateRequest,
+    setErrorMessage: setErrorMessage
   };
 
   /**
@@ -231,7 +232,7 @@ function ValidationService($q) {
     var error;
 
     for (var i in point.errors) {
-      if (point.errors[i].property === 'propertyName') {
+      if (point.errors[i].property === propertyName) {
         error = point.errors[i];
       }
     }
