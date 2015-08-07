@@ -22,7 +22,7 @@ import cern.modesti.repository.mongo.request.counter.Counter;
  *
  */
 @Service
-@Profile("test")
+@Profile({"test", "dev"})
 public class CounterInitialiser {
 
   private static final Logger LOG = LoggerFactory.getLogger(CounterInitialiser.class);

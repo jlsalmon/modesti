@@ -28,7 +28,7 @@ import com.google.common.io.ByteStreams;
  *
  */
 @Service
-@Profile("test")
+@Profile({"test", "dev"})
 public class DomainInitialiser {
   private static final Logger LOG = LoggerFactory.getLogger(DomainInitialiser.class);
 

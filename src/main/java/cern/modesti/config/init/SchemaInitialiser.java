@@ -23,10 +23,9 @@ import com.google.common.io.ByteStreams;
  * them from the data/schemas classpath directory.
  *
  * @author Justin Lewis Salmon
- *
  */
 @Service
-@Profile("test")
+@Profile({"test", "dev"})
 public class SchemaInitialiser {
   private static final Logger LOG = LoggerFactory.getLogger(SchemaInitialiser.class);
 
@@ -50,9 +49,10 @@ public class SchemaInitialiser {
   }
 
   /**
-   *
    * @param resource
+   *
    * @return
+   *
    * @throws IOException
    */
   public Schema loadSchemaFromResource(Resource resource) throws IOException {
