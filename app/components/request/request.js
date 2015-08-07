@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $http, $timeout, $modal, request, children, schema, tasks, signals,
+function RequestController($scope, $http, $timeout, $modal, $filter, request, children, schema, tasks, signals,
                            RequestService, ColumnService, SchemaService, AlertService, HistoryService, TaskService) {
   var self = this;
 
@@ -41,6 +41,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     //manualRowMove: true,
     afterInit: afterInit,
     afterRender: afterRender,
+    beforeChange: beforeChange,
     afterChange: afterChange,
     afterValidate: afterValidate,
     afterCreateRow: afterCreateRow,
@@ -95,7 +96,6 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
 
   self.getSelectedPointIds = getSelectedPointIds;
   self.getNumValidationErrors = getNumValidationErrors;
-  self.renderRowBackgrounds = renderRowBackgrounds;
 
   /**
    * Called when the handsontable table has finished initialising.
@@ -113,7 +113,7 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
       // Activate the first category
       activateCategory(self.schema.categories[0]);
 
-      renderRowBackgrounds();
+      //renderRowBackgrounds();
     });
   }
 
@@ -277,7 +277,16 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    */
   function hasCommentColumn() {
     var commentStates =  ['FOR_APPROVAL', 'FOR_TESTING'];
-    return commentStates.indexOf(self.request.status) > -1 && TaskService.isAnyTaskClaimed(self.tasks);
+
+    var assigned = false;
+    for (var key in self.tasks) {
+      var task = self.tasks[key];
+      if (TaskService.isCurrentUserAssigned(task)) {
+        assigned = true;
+      }
+    }
+
+    return commentStates.indexOf(self.request.status) > -1 && assigned;
   }
 
   /**
@@ -512,12 +521,58 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
   }
 
   /**
+   * Called before a change is made to the table.
    *
-   * @param changes
-   * @param source
+   * @param changes a 2D array containing information about each of the edited cells [ [row, prop, oldVal, newVal], ... ]
+   * @param source one of the strings: "alter", "empty", "edit", "populateFromArray", "loadData", "autofill", "paste"
+   */
+  function beforeChange(changes, source) {
+    if (source == 'loadData') {
+      return;
+    }
+
+    var change, row, property, oldValue, newValue;
+    for (var i = 0, ilen = changes.length; i < ilen; i++) {
+      change = changes[i];
+      row = change[0];
+      property = change[1];
+      oldValue = change[2];
+      newValue = change[3];
+
+      // get the outer object i.e. properties.location.value -> location
+      var prop = property.split('.')[1];
+
+      for (var j = 0, jlen = self.activeCategory.fields.length; j < jlen; j++) {
+        var field = self.activeCategory.fields[j];
+
+        if (field.id === prop) {
+
+          // Remove accented characters
+          newValue = $filter('latinize')(newValue);
+
+          // Force uppercase if necessary
+          if (field.uppercase === true) {
+            newValue = $filter('uppercase')(newValue);
+          }
+
+          changes[i][3] = newValue;
+          break;
+        }
+      }
+    }
+  }
+
+  /**
+   * Called after a change is made to the table (edit, paste, etc.)
+   *
+   * @param changes a 2D array containing information about each of the edited cells [ [row, prop, oldVal, newVal], ... ]
+   * @param source one of the strings: "alter", "empty", "edit", "populateFromArray", "loadData", "autofill", "paste"
    */
   function afterChange(changes, source) {
     console.log('afterChange()');
+
+    // Normalise point ids.
+    // TODO is this necessary anymore?
     for (var i = 0, len = self.rows.length; i < len; i++) {
       self.rows[i].id = i + 1;
     }
@@ -746,77 +801,77 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
     table.height(height + 'px');
   }
 
-  /**
-   *
-   */
-  function renderRowBackgrounds() {
-    var point;
-
-    self.hot.updateSettings({
-      cells: function (row, col, prop) {
-        point = self.rows[row];
-
-        if (self.request.status == 'FOR_APPROVAL') {
-          if (point.approval && point.approval.approved == false) {
-            return {renderer: dangerCellRenderer};
-          }
-//          else if (point.approval && point.approval.approved == true) {
-//            return {renderer: successCellRenderer};
+//  /**
+//   *
+//   */
+//  function renderRowBackgrounds() {
+//    var point;
+//
+//    self.hot.updateSettings({
+//      cells: function (row, col, prop) {
+//        point = self.rows[row];
+//
+//        if (self.request.status == 'FOR_APPROVAL') {
+//          if (point.approval && point.approval.approved == false) {
+//            return {renderer: dangerCellRenderer};
 //          }
-        }
-      }
-    });
-  }
+////          else if (point.approval && point.approval.approved == true) {
+////            return {renderer: successCellRenderer};
+////          }
+//        }
+//      }
+//    });
+//  }
 
-  /**
-   *
-   * @param instance
-   * @param td
-   * @param row
-   * @param col
-   * @param prop
-   * @param value
-   * @param cellProperties
-   */
-  function dangerCellRenderer(instance, td, row, col, prop, value, cellProperties) {
-    // Make sure to render the last column as a checkbox
-    if (prop == 'selected') {
-      Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
-    }
+  ///**
+  // *
+  // * @param instance
+  // * @param td
+  // * @param row
+  // * @param col
+  // * @param prop
+  // * @param value
+  // * @param cellProperties
+  // */
+  //function dangerCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+  //  // Make sure to render the last column as a checkbox
+  //  if (prop == 'selected') {
+  //    Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
+  //  }
+  //
+  //  // All the other columns can be rendered as text boxes at this point
+  //  else {
+  //    Handsontable.renderers.TextRenderer.apply(this, arguments);
+  //  }
+  //
+  //  // Make the background red
+  //  //td.style.background = '#F2DEDE';
+  //}
 
-    // All the other columns can be rendered as text boxes at this point
-    else {
-      Handsontable.renderers.TextRenderer.apply(this, arguments);
-    }
-
-    // Make the background red
-    //td.style.background = '#F2DEDE';
-  }
-
-  /**
-   *
-   * @param instance
-   * @param td
-   * @param row
-   * @param col
-   * @param prop
-   * @param value
-   * @param cellProperties
-   */
-  function successCellRenderer(instance, td, row, col, prop, value, cellProperties) {
-    // Make sure to render the last column as a checkbox
-    if (prop == 'selected') {
-      Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
-    }
-
-    // All the other columns can be rendered as text boxes at this point
-    else {
-      Handsontable.renderers.TextRenderer.apply(this, arguments);
-    }
-
-    // Make the background red
-    td.style.background = '#DFF0D8';
-  }
+  ///**
+  // *
+  // * @param instance
+  // * @param td
+  // * @param row
+  // * @param col
+  // * @param prop
+  // * @param value
+  // * @param cellProperties
+  // */
+  //function successCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+  //  // Make sure to render the last column as a checkbox
+  //  if (prop == 'selected') {
+  //    Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
+  //  }
+  //
+  //  // All the other columns can be rendered as text boxes at this point
+  //  else {
+  //    Handsontable.renderers.TextRenderer.apply(this, arguments);
+  //  }
+  //
+  //  // Make the background red
+  //  td.style.background = '#DFF0D8';
+  //}
 
 
   /**
@@ -871,7 +926,6 @@ function RequestController($scope, $http, $timeout, $modal, request, children, s
    * initialised.
    */
   function afterRender() {
-
     // Initialise the popovers in the row headers
     $('.row-header').popover({trigger: 'hover', delay: {"show": 100, "hide": 100}});
 
