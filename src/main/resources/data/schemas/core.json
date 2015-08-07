@@ -117,14 +117,6 @@
           "name_fr": "Zone",
           "help_en": "Enter the safety zone related to the point",
           "help_fr": "Entrez le zone secu concerne par le point"
-        },
-        {
-          "id": "detail",
-          "type": "text",
-          "name_en": "Detail",
-          "name_fr": "Detail",
-          "help_en": "Supplementary details of the localisation (e.g. Racks)",
-          "help_fr": "Details supplementaire de la localisation (e.g. Racks)"
         }
       ]
     },

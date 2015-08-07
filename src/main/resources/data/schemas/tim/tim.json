@@ -54,6 +54,14 @@
           "name_fr": "Cablage",
           "help_en": "",
           "help_fr": ""
+        },
+        {
+          "id": "detail",
+          "type": "text",
+          "name_en": "Detail",
+          "name_fr": "Detail",
+          "help_en": "Supplementary details of the localisation (e.g. Racks)",
+          "help_fr": "Details supplementaire de la localisation (e.g. Racks)"
         }
       ]
     },
