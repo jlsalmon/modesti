@@ -1,41 +1,27 @@
-<style>
-  .no-bottom-margin {
-    margin-bottom: 0;
-  }
-</style>
-
 <div class="modal-header">
-  <h3 class="modal-title" translate>REJECT_POINTS</h3>
+  <h3 class="modal-title">
+    <i class="fa fa-fw fa-exclamation-circle"></i>
+    Reject request
+  </h3>
 </div>
 
 <div class="modal-body">
-  <p translate translate-values='{ n: ctrl.selectedPointIds.length}'>REJECT_POINTS_HELP</p>
+  <p>
+    You are about to reject request <b>{{ctrl.request.requestId}}</b>. Please supply a comment to the original creator
+    specifying the reason for the rejection.
+  </p>
 
-  <form class="form-horizontal" name="rejectionReasonsForm">
-    <div ng-repeat="point in ctrl.rows track by point.id">
+  <form class="form-horizontal" name="rejectionReasonForm">
+    <div class="form-group">
+      <label for="rejectionReason" class="col-sm-2 control-label" translate>REASON</label>
 
-      <div ng-if="ctrl.selectedPointIds.indexOf(point.id) > -1">
-
-        <div class="form-group no-bottom-margin">
-          <label class="col-sm-2 control-label">Point</label>
-          <div class="col-sm-10">
-            <p class="form-control-static">
-              #{{::point.id}}: {{::point.properties.pointDescription}}
-            </p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="rejectionReason" class="col-sm-2 control-label" translate>REASON</label>
-          <div class="col-sm-10">
-            <input type="text"
-                   class="form-control"
-                   id="rejectionReason"
-                   ng-model="point.approval.message"
-                   ng-model-options="{ updateOn: 'default blur', debounce: {'default': 500, 'blur': 0} }"
-                   placeholder="{{'REJECTION_REASON'|translate}}"
-                   required>
-          </div>
-        </div>
+      <div class="col-sm-10">
+        <input type="text"
+               class="form-control"
+               id="rejectionReason"
+               ng-model="request.approval.message"
+               placeholder="{{'REJECTION_REASON'|translate}}"
+               required>
       </div>
     </div>
   </form>
@@ -44,5 +30,5 @@
 
 <div class="modal-footer">
   <button class="btn btn-default" ng-click="ctrl.cancel()" translate>CANCEL</button>
-  <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="rejectionReasonsForm.$invalid">OK</button>
+  <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="rejectionReasonForm.$invalid">OK</button>
 </div>

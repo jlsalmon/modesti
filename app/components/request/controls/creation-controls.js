@@ -46,17 +46,17 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     // state and the user makes a modification
     self.hot.addHook('afterChange', afterChange);
 
-    // Update the table settings to paint the row backgrounds depending on if they have already been approved
-    // or rejected
-    if (self.request.approvalResult) {
-      self.hot.updateSettings({
-        cells: function (row, col, prop) {
-          if (self.request.approvalResult.items[row].approved == false) {
-            return {renderer: self.parent.dangerCellRenderer};
-          }
-        }
-      });
-    }
+    //// Update the table settings to paint the row backgrounds depending on if they have already been approved
+    //// or rejected
+    //if (self.request.approvalResult) {
+    //  self.hot.updateSettings({
+    //    cells: function (row, col, prop) {
+    //      if (self.request.approvalResult.items[row].approved == false) {
+    //        return {renderer: self.parent.dangerCellRenderer};
+    //      }
+    //    }
+    //  });
+    //}
 
     // Possibly show an alert, depending on how we got here
     //if (self.request.status === 'FOR_CORRECTION') {

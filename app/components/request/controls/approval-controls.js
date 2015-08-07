@@ -38,22 +38,23 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
     self.tasks = parent.tasks;
     self.parent = parent;
 
+    // Initialise the approval state of the request itself
+    if (!self.request.approval) {
+      self.request.approval = {approved: undefined, message: ''};;
+    }
+
     // Initialise the approval state of each point
     var point;
     for (var i = 0, len = self.rows.length; i < len; i++) {
       point = self.rows[i];
 
       if (!point.approval) {
-        point.approval = {
-          approved: undefined,
-          message: ''
-        };
+        point.approval = {approved: undefined, message: ''};
       }
     }
 
-    // Update the table settings to paint the row backgrounds depending on
-    // if they have already been approved or rejected
-    self.parent.renderRowBackgrounds();
+    // Register hooks
+    self.parent.hot.addHook('afterChange', afterChange);
   }
 
   /**
@@ -114,8 +115,33 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
       event.stopPropagation();
     }
 
-    var pointIds = self.rows.map(function(row) { return row.id });
-    rejectPoints(pointIds);
+    // If the entire request is rejected, the user must supply a global comment describing the reason
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/request/controls/modals/rejection-modal.html',
+      controller: 'RejectionModalController as ctrl',
+      resolve: {
+        request: function () {
+          return self.request;
+        }
+      }
+    });
+
+    // Callback fired when the user clicks 'ok'. Not fired if 'cancel' clicked.
+    modalInstance.result.then(function () {
+      self.request.approval.approved = false;
+
+      var point;
+      for (var i = 0, len = self.rows.length; i < len; i++) {
+        point = self.rows[i];
+        point.approval.approved = false;
+        point.approval.message = self.request.approval.message;
+      }
+
+      // Save the request
+      RequestService.saveRequest(self.request);
+    });
+
   }
 
   /**
@@ -135,8 +161,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
         point.approval.approved = false;
 
         if (!point.approval.message) {
-          point.errors = [];
-          ValidationService.setErrorMessage(point, 'approval.message', 'sadgsadgsd');
+          ValidationService.setErrorMessage(point, 'approval.message', 'Reason for rejection must be given in the comment field');
         }
       }
     }
@@ -170,7 +195,9 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
       event.stopPropagation();
     }
 
-    var pointIds = self.rows.map(function(row) { return row.id });
+    var pointIds = self.rows.map(function (row) {
+      return row.id
+    });
     approvePoints(pointIds);
   }
 
@@ -184,7 +211,10 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
       point = self.rows[i];
 
       if (pointIds.indexOf(point.id) > -1) {
+
+        // TODO: there may be other errors not related to approval that we don't want to nuke
         point.errors = [];
+
         point.approval = {
           approved: true,
           message: null
@@ -211,7 +241,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
         return false;
       }
 
-      if (point.approval.approved === false && !point.approval.message) {
+      if ((point.approval.approved === false && !point.approval.message) || point.approval.approved !== true) {
         return false;
       }
     }
@@ -274,5 +304,47 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
       console.log('error completing task ' + task.name + ': ' + error.data.message);
       self.submitting = 'error';
     });
+  }
+
+  /**
+   * Called after a change is made to the table (edit, paste, etc.)
+   *
+   * @param changes a 2D array containing information about each of the edited cells [ [row, prop, oldVal, newVal], ... ]
+   * @param source one of the strings: "alter", "empty", "edit", "populateFromArray", "loadData", "autofill", "paste"
+   */
+  function afterChange(changes, source) {
+    console.log('afterChange()');
+
+    // When the table is initially loaded, this callback is invoked with source == 'loadData'. In that case, we don't
+    // want to save the request or send the modification signal.
+    if (source == 'loadData') {
+      return;
+    }
+
+    var change, row, property, oldValue, newValue;
+    for (var i = 0, len = changes.length; i < len; i++) {
+      change = changes[i];
+      row = change[0];
+      property = change[1];
+      oldValue = change[2];
+      newValue = change[3];
+
+      var point = self.rows[row];
+
+      if (property === 'approval.message' && point.approval && point.approval.approved === false) {
+
+        // If a point is rejected and a comment has just been deleted, then add an error
+        if (newValue === undefined || newValue === null || newValue === '') {
+          ValidationService.setErrorMessage(point, 'approval.message', 'Reason for rejection must be given in the comment field');
+        }
+
+        // If a point is rejected and a comment has just been added, then remove the error
+        else {
+          point.errors = [];
+        }
+
+        self.parent.hot.render();
+      }
+    }
   }
 }

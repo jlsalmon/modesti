@@ -7,11 +7,10 @@
  */
 angular.module('modesti').controller('RejectionModalController', RejectionModalController);
 
-function RejectionModalController($modalInstance, selectedPointIds, rows) {
+function RejectionModalController($modalInstance, request) {
   var self = this;
 
-  self.selectedPointIds = selectedPointIds;
-  self.rows = rows;
+  self.request = request;
 
   self.ok = ok;
   self.cancel = cancel;
