@@ -18,6 +18,7 @@
 package cern.modesti.request;
 
 import cern.modesti.repository.jpa.subsystem.SubSystem;
+import cern.modesti.request.point.Approval;
 import cern.modesti.request.point.Point;
 import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.result.ConfigurationResult;
@@ -113,7 +114,7 @@ public class Request implements Serializable {
   /**
    *
    */
-  private Boolean approved;
+  private Approval approval;
 
   /**
    *

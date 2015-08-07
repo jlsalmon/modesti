@@ -121,7 +121,7 @@ public class WorkflowService {
 
         if (point.isAlarm()) {
           // If there is a single dirty or unapproved point, approval is required
-          if (point.isDirty() || point.getApproval() == null || !point.getApproval().isApproved()) {
+          if (point.isDirty() || point.getApproval() == null || !point.getApproval().getApproved()) {
             approvalRequired = true;
             break;
           }
@@ -191,7 +191,7 @@ public class WorkflowService {
     if (valid) {
       for (Point point : request.getPoints()) {
 
-        if (point.getApproval() != null && point.getApproval().isApproved() && point.isDirty()) {
+        if (point.getApproval() != null && point.getApproval().getApproved() && point.isDirty()) {
           // If a point is dirty and has already been approved, it will need re-approval
           point.setApproval(null);
 
@@ -252,7 +252,7 @@ public class WorkflowService {
     notificationService.sendNotification(request, NotificationType.APPROVAL_COMPLETED);
 
     // Set the variable for the next stage to evaluate
-    execution.setVariable("approved", request.getApproved());
+    execution.setVariable("approved", request.getApproval().getApproved());
 
     // Store the request
     requestRepository.save(request);
