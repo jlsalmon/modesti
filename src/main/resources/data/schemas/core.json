@@ -12,7 +12,8 @@
           "id": "pointDescription",
           "type": "text",
           "minLength": 5,
-          "maxLength": 50,
+          "maxLength": 80,
+          "uppercase": true,
           "required": true,
           "name_en": "Description",
           "name_fr": "Description",
@@ -57,6 +58,7 @@
         {
           "id": "pointAttribute",
           "type": "text",
+          "uppercase": true,
           "required": true,
           "name_en": "Point Attribute",
           "name_fr": "Attribut",
