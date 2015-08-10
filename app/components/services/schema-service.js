@@ -35,6 +35,8 @@ function SchemaService($q, $http) {
       }
     }
 
+    request._links.schema.href = url;
+
     $http.get(url).then(function (response) {
       var schema = response.data;
       console.log('fetched schema: ' + schema.name);
