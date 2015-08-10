@@ -35,14 +35,6 @@
           "name_fr": "PLC Name",
           "help_en": "",
           "help_fr": ""
-        },
-        {
-          "id": "cabling",
-          "type": "checkbox",
-          "name_en": "Cabling",
-          "name_fr": "Cablage",
-          "help_en": "",
-          "help_fr": ""
         }
       ]
     }
