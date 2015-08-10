@@ -11,7 +11,7 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["lowLimit", "highLimit", "valueDeadBand", "deadBandType", "units"]
+          "members": ["lowLimit", "highLimit", "valueDeadband", "deadbandType", "units"]
         }
       ],
       "fields": [
