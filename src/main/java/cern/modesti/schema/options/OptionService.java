@@ -56,10 +56,15 @@ public class OptionService {
     String columnName = propertyToColumnName(property);
 
     // Execute the query to get the options
-    Query query = entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODE_VALUES('%s') %s FROM DUAL", columnName, columnName));
+    Query query = entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODE_VALUES('%s') FROM DUAL", columnName));
     String optionString = (String) query.getSingleResult();
 
-    return parseOptionString(optionString);
+    List<String> options = parseOptionString(optionString);
+    if (options != null) {
+      options = getOptionMeanings(options, columnName);
+    }
+
+    return options;
   }
 
   /**
@@ -86,10 +91,36 @@ public class OptionService {
   }
 
   /**
-   * @param fieldId
    *
+   * @param options
+   * @param columnName
    * @return
    */
+  private List<String> getOptionMeanings(List<String> options, String columnName) {
+    List<String> optionsWithMeaning = new ArrayList<>();
+
+    for (String option : options) {
+      Query query = entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODES_MEANING('%s', '%s') FROM DUAL", columnName, option));
+      String meaning = (String) query.getSingleResult();
+
+      if (option.equals(meaning) || meaning == null || meaning.equals("allowed numeric range") || meaning.equals("allowed range")) {
+        optionsWithMeaning.add(option);
+      } else {
+        optionsWithMeaning.add(option + ": " + meaning);
+      }
+
+    }
+
+    return optionsWithMeaning;
+  }
+
+
+
+    /**
+     * @param fieldId
+     *
+     * @return
+     */
   private String propertyToColumnName(String fieldId) {
     return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, fieldId);
   }
