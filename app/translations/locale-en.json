@@ -9,7 +9,7 @@
   "USERNAME": "Username",
   "PASSWORD": "Password",
 
-  "CATEGORY": "category",
+  "CATEGORY": "group",
   "SYSTEM": "System",
   "SUBSYSTEM": "Subsystem",
   "SYSTEM_SUBSYSTEM": "System/Subsystem",
