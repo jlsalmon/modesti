@@ -187,6 +187,7 @@ public abstract class RequestParser {
     properties.put("buildingName", new BuildingName((String) properties.get("buildingName")));
     properties.put("gmaoCode", new GmaoCode((String) properties.get("gmaoCode")));
     properties.put("csamDetector", new GmaoCode((String) properties.get("csamDetector")));
+    properties.put("csamCsename", new GmaoCode((String) properties.get("csamCsename")));
     properties.put("functionality", parseFunctionality(properties));
     properties.put("alarmCategory", new AlarmCategory((String) properties.get("alarmCategory")));
     if (properties.get("safetyZone") != null) {
@@ -195,9 +196,9 @@ public abstract class RequestParser {
     if (properties.get("monitoringEquipmentName") != null) {
       properties.put("monitoringEquipment", parseMonitoringEquipment(properties, "monitoringEquipmentName"));
     }
-    if (properties.get("csamPlcname") != null) {
-      properties.put("csamPlcname", parseMonitoringEquipment(properties, "csamPlcname"));
-    }
+//    if (properties.get("csamPlcname") != null) {
+//      properties.put("csamPlcname", parseMonitoringEquipment(properties, "csamPlcname"));
+//    }
     properties.remove("aideAlarme");
 
 

@@ -53,7 +53,6 @@ public class ValidationService {
     jdbcTemplate.update(query, request.getRequestId());
 
     for (Point point : request.getPoints()) {
-      List<Object[]> data = new ArrayList<>();
 
       // Make a copy
       Map<String, Object> properties = new HashMap<>(point.getProperties());
@@ -70,14 +69,17 @@ public class ValidationService {
       // Need to hack out the object properties into their scalar values ready for validation. Unfortunately the JSON object doesn't give us
       // the Functionality, Location, Subsystem etc. objects back, but Maps instead. So we have to cast. Not sure of the best way to solve that problem.
       // If the object properties were flattened on the client side, this wouldn't be necessary.
+
       properties.put("gmaoCode", getObjectProperty(properties, "gmaoCode", "value", String.class));
       properties.put("respId", getObjectProperty(properties, "responsiblePerson", "id", Integer.class));
       properties.remove("responsiblePerson");
       properties.put("subsystemId", getObjectProperty(properties, "subsystem", "id", Integer.class));
       properties.remove("subsystem");
       properties.put("moneqId", getObjectProperty(properties, "monitoringEquipment", "id", Integer.class));
-      properties.put("csamPlcname", getObjectProperty(properties, "csamPlcname", "value", String.class));
+      //properties.put("csamPlcname", getObjectProperty(properties, "csamPlcname", "value", String.class));
       properties.remove("monitoringEquipment");
+      properties.put("csamCsename", getObjectProperty(properties, "csamCsename", "value", String.class));
+
       properties.put("buildingName", getObjectProperty(properties, "buildingName", "value", String.class));
       properties.put("buildingNumber", getObjectProperty(properties, "location", "buildingNumber", String.class));
       properties.put("buildingFloor", getObjectProperty(properties, "location", "floor", String.class));
@@ -86,7 +88,9 @@ public class ValidationService {
       properties.put("funcCode", getObjectProperty(properties, "functionality", "value", String.class));
       properties.remove("functionality");
       properties.put("safetyZone", getObjectProperty(properties, "safetyZone", "value", String.class));
+
       properties.put("alarmCategory", getObjectProperty(properties, "alarmCategory", "value", String.class));
+      //properties.put("priorityCode", Integer.valueOf(((String) properties.get("priorityCode")).split(":")[0]));
 
       // These properties do not go into the table
       // TODO: review these
@@ -109,6 +113,17 @@ public class ValidationService {
       properties.remove("multiplicityValue");
       properties.remove("csamDetector");
 
+      // HACK ALERT: Loop over all property values and remove their descriptions (i.e. "4: Defaut centrale" -> "4")
+      for (Map.Entry<String, Object> entry : properties.entrySet()) {
+        Object value = entry.getValue();
+        if (value != null && String.class.isAssignableFrom(value.getClass())) {
+          if (((String) entry.getValue()).contains(":")) {
+            properties.put(entry.getKey(), ((String) entry.getValue()).split(":")[0]);
+          }
+        }
+      }
+
+      List<Object[]> data = new ArrayList<>();
       data.add(properties.values().toArray());
 
       // Create an insert statement based on the properties we have in this point. This is possible due to the standardisation of column names in the

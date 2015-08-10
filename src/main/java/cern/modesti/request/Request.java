@@ -193,6 +193,16 @@ public class Request implements Serializable {
   /**
    * TODO: implement this properly
    *
+   * For TIM requests, a point requires cabling if:
+   *  - it is an APIMMD point or;
+   *  - ???
+   *
+   * For CSAM requests, a point requires cabling if:
+   *  - it is an APIMMD point or;
+   *  - it is an LSAC point
+   *
+   * TODO make this class abstract and have TimRequest, CsamRequest and PvssRequest?
+   *
    * @return true if this request requires cabling, false otherwise
    */
   public boolean requiresCabling() {

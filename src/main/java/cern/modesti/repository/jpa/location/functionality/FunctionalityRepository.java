@@ -19,6 +19,7 @@ package cern.modesti.repository.jpa.location.functionality;
 
 import java.util.List;
 
+import cern.modesti.repository.jpa.location.BuildingName;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
