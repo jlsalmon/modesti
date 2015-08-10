@@ -1,5 +1,6 @@
-package cern.modesti.request;
+package cern.modesti.request.metrics;
 
+import cern.modesti.request.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
