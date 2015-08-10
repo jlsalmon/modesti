@@ -75,16 +75,6 @@
       ],
       "fields": [
         {
-          "id": "functionality",
-          "type": "autocomplete",
-          "required": true,
-          "url": "functionalities/search/find",
-          "name_en": "Site",
-          "name_fr": "Site",
-          "help_en": "Enter the functionality or the site where the point is found",
-          "help_fr": "Entrez la fonctionnalité ou le site ou se trouve le point"
-        },
-        {
           "id": "location",
           "type": "autocomplete",
           "required": true,
@@ -109,9 +99,23 @@
           "help_fr": ""
         },
         {
+          "id": "functionality",
+          "type": "autocomplete",
+          "required": true,
+          "url": "functionalities/search/find",
+          "name_en": "Site",
+          "name_fr": "Site",
+          "help_en": "Enter the functionality or the site where the point is found",
+          "help_fr": "Entrez la fonctionnalité ou le site ou se trouve le point"
+        },
+        {
           "id": "safetyZone",
           "type": "autocomplete",
-          "url": "zones/search/find",
+          "url": "zones/search/findByBuildingNumber",
+          "params": [
+            "query",
+            "location.buildingNumber"
+          ],
           "required": true,
           "name_en": "Zone",
           "name_fr": "Zone",
