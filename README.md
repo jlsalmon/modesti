@@ -1,10 +1,8 @@
-modesti-api
-===========
+# modesti-api
 
 Monitoring Data Entry System for Technical Infrastructure (backend API)
 
-Development
------------
+## Development
 
 Requirements for running backend:
 * MongoDB 2.6.10+ running
@@ -15,8 +13,10 @@ Instructions:
 * Open the project in IDEA/Eclipse (or emacs or whatever)
 * Compile and run: `java cern.modesti.Application -Dspring.profiles.active=(test|dev|prod) -Dc2mon.client.cont.url=http://whatever`
 
+## Testing
 
-Deployment
-----------
+`TODO`
+
+## Build and deployment
 
 `TODO`
