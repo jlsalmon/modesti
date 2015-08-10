@@ -344,6 +344,10 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     var prop = property.split('.')[1];
     var field = getField(prop);
 
+    // Don't make a call if the query is less than the minimum length
+    if (field.minLength && newValue < field.minLength) {
+      return;
+    }
 
     var params = {};
     if (field.params == undefined) {
@@ -368,6 +372,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     }
 
     if (prop == field.id && field.type == 'autocomplete') {
+
       $http.get(BACKEND_BASE_URL + '/' + field.url, {
         params: params,
         cache: true
