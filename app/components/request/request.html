@@ -358,6 +358,18 @@
         </span>
       </button>
 
+      <style>
+        .divider-vertical {
+          display: inline-block;
+          height: 26px;
+          margin: 0 4px 0 5px;
+          border-right: 1px solid #ccc;
+          vertical-align: middle;
+        }
+      </style>
+
+      <span class="divider-vertical"></span>
+
       <!-- Button to reset column sorting -->
       <!-- <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.resetSorting()" tooltip-append-to-body="true"
               tooltip="{{'RESET_SORTING'|translate}}">
@@ -374,6 +386,8 @@
         </a>
       </div>
 
+      <span class="divider-vertical"></span>
+
       <!-- Cut/copy/paste buttons -->
       <div class="btn-group toolbar-item">
         <button class="btn btn-sm btn-default" ng-click="ctrl.cut()" tooltip-append-to-body="true" tooltip="{{'CUT'|translate}}">
@@ -386,6 +400,16 @@
           <i class="fa fa-fw fa-paste"></i>
         </button>
       </div>
+
+      <span class="divider-vertical"></span>
+
+      <!-- Expand/contract table buttons -->
+      <!--<button class="btn btn-sm btn-default toolbar-item" data-toggle="button">-->
+        <!--<i class="fa fa-fw fa-expand" ng-if="ctrl.tableExpanded === true" ng-click="ctrl.toggleTableStretch()"></i>-->
+        <!--<i class="fa fa-fw fa-compress" ng-if="ctrl.tableExpanded === false" ng-click="ctrl.toggleTableStretch()"></i>-->
+      <!--</button>-->
+
+
 
       <div class="pull-right">
 

@@ -48,6 +48,19 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     afterRemoveRow: afterRemoveRow
   };
 
+  //self.tableExpanded = true;
+  //self.toggleTableStretch = function() {
+  //  if (self.tableExpanded === true) {
+  //    self.hot.updateSettings({stretchH: 'none'});
+  //    self.tableExpanded = false;
+  //    self.hot.render();
+  //  } else {
+  //    self.hot.updateSettings({stretchH: 'all'});
+  //    self.tableExpanded = true;
+  //    self.hot.render();
+  //  }
+  //};
+
   /**
    * The data rows that will be given to the table
    *
@@ -191,7 +204,16 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
   function getRowHeaders(row) {
     var point = self.rows[row];
 
-    if (self.request.status === 'FOR_APPROVAL' && point.approval) {
+    if (self.request.status === 'IN_PROGRESS' || self.request.status === 'FOR_CORRECTION') {
+      if (point.valid === false) {
+        return '<div class="row-header">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
+      }
+      //else if (point.valid === true) {
+      //  return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
+      //}
+    }
+
+    else if (self.request.status === 'FOR_APPROVAL' && point.approval) {
       var cssClass, popoverMessage;
 
       if (point.approval.approved === false) {
@@ -208,9 +230,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       return html;
     }
 
-    else {
-      return point.id;
-    }
+    return point.id;
   }
 
   /**

@@ -52,7 +52,7 @@ function ValidationService($q) {
 
     for (var i in points) {
       point = points[i];
-      point.valid = true;
+      point.valid = undefined;
       point.errors = [];
 
       // Ignore empty points
