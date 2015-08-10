@@ -445,8 +445,8 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
 
     if (point.properties.gmaoCode && point.properties.gmaoCode.value) {
       gmaoCode = point.properties.gmaoCode.value
-    } else if (point.properties.csamCsename) {
-      gmaoCode = point.properties.csamCsename;
+    } else if (point.properties.csamCsename && point.properties.csamCsename.value) {
+      gmaoCode = point.properties.csamCsename.value;
     }
 
     var otherEquipCode = point.properties.otherEquipCode;
