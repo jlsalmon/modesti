@@ -130,7 +130,7 @@ function ValidationService($q) {
                 point.valid = category.valid = valid = false;
                 for (var o in emptyFields) {
                   var field = emptyFields[o];
-                  setErrorMessage(point, field.id, 'At least one of "' + columnNames.join(', ') + '" is required for category "' + category.name + '"');
+                  setErrorMessage(point, getPropertyName(field), 'At least one of "' + columnNames.join(', ') + '" is required for category "' + category.name + '"');
                 }
 
               }
@@ -143,7 +143,7 @@ function ValidationService($q) {
 
                 for (var o in emptyFields) {
                   var field = emptyFields[o];
-                  setErrorMessage(point, field.id, 'Field "' + field.name_en + '" is required for points of category "' + category.name
+                  setErrorMessage(point, getPropertyName(field), 'Field "' + field.name_en + '" is required for points of category "' + category.name
                   + '" if other fields of that category have been specified');
                 }
               }

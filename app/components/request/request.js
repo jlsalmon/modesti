@@ -916,6 +916,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       // If the property name isn't specified, then the error applies to the whole point.
       if (error.property === prop || error.property === '') {
         td.style.background = '#F2DEDE';
+        break;
       }
     }
   }
