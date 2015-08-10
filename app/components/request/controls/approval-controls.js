@@ -40,7 +40,8 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
 
     // Initialise the approval state of the request itself
     if (!self.request.approval) {
-      self.request.approval = {approved: undefined, message: ''};;
+      self.request.approval = {approved: undefined, message: ''};
+      ;
     }
 
     // Initialise the approval state of each point
@@ -199,6 +200,8 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
       return row.id
     });
     approvePoints(pointIds);
+
+    self.request.approval = {approved: true, message: ''};
   }
 
   /**
@@ -241,7 +244,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
         return false;
       }
 
-      if ((point.approval.approved === false && !point.approval.message) || point.approval.approved !== true) {
+      else if (point.approval.approved === false && !point.approval.message) {
         return false;
       }
     }
