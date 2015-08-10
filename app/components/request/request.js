@@ -218,16 +218,11 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
 
       if (point.approval.approved === false) {
         cssClass = 'fa fa-exclamation-circle text-danger';
-        popoverMessage = 'Operator comment: ' + point.approval.message;
       } else if (point.approval.approved === true) {
         cssClass = 'fa fa-check-circle text-success';
-        popoverMessage = 'Point approved';
       }
 
-      var html = '<div class="row-header" data-toggle="popover" data-container="body" data-placement="right" ';
-      html += 'data-content="' + popoverMessage + '">';
-      html += point.id + ' <i class="' + cssClass + '"></i></div>';
-      return html;
+      return '<div class="row-header">' + point.id + ' <i class="' + cssClass + '"></i></div>';
     }
 
     return point.id;

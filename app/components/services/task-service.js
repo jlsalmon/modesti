@@ -43,7 +43,7 @@ function TaskService($q, $http, AuthService) {
         });
       }
 
-      console.log('fetched ' + tasks.length + ' task(s)');
+      console.log('fetched ' + Object.keys(tasks).length + ' task(s)');
       q.resolve(tasks);
     },
 
@@ -74,7 +74,7 @@ function TaskService($q, $http, AuthService) {
         });
       }
 
-      console.log('fetched ' + signals.length + ' signal(s)');
+      console.log('fetched ' + Object.keys(signals).length + ' signal(s)');
       q.resolve(signals);
     },
 
