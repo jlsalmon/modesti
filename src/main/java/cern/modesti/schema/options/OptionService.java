@@ -3,6 +3,8 @@ package cern.modesti.schema.options;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
 import javax.persistence.EntityManager;
@@ -28,6 +30,8 @@ public class OptionService {
 
   @PersistenceContext
   private EntityManager entityManager;
+
+  private Map<String, List<String>> cache = new ConcurrentHashMap<>();
 
   /**
    * Look at all the "options" fields of the schema that do not explicitly specify a list of options and pre-inject their options from the database. This is
@@ -55,6 +59,10 @@ public class OptionService {
     // Translate the field id to its corresponding column name
     String columnName = propertyToColumnName(property);
 
+    if (cache.containsKey(columnName)) {
+      return cache.get(columnName);
+    }
+
     // Execute the query to get the options
     Query query = entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODE_VALUES('%s') FROM DUAL", columnName));
     String optionString = (String) query.getSingleResult();
@@ -64,6 +72,7 @@ public class OptionService {
       options = getOptionMeanings(options, columnName);
     }
 
+    cache.put(columnName, options);
     return options;
   }
 
