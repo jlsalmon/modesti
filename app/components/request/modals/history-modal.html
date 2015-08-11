@@ -16,6 +16,7 @@
         <th>{{'DESCRIPTION'|translate}}</th>
         <th>{{'START_TIME'|translate}}</th>
         <th>{{'END_TIME'|translate}}</th>
+        <th>User</th>
       </tr>
     </thead>
     <tbody>
@@ -25,6 +26,7 @@
         <td>{{::item.description}}</td>
         <td>{{::item.startTime | date:'medium'}}</td>
         <td>{{::item.endTime | date:'medium'}}</td>
+        <td>{{::item.assignee}}</td>
       </tr>
     </tbody>
   </table>
