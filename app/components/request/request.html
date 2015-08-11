@@ -417,13 +417,9 @@
 
       <div class="pull-right">
 
-        <!-- Help button -->
-        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHelp()" tooltip-append-to-body="true" tooltip="{{'HELP'|translate}}">
-          <i class="fa fa-fw fa-question-circle"></i> Help
-        </button>
-
         <!-- Comments button -->
-        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showComments()" tooltip-append-to-body="true" tooltip="{{'COMMENTS'|translate}}">
+        <button class="btn btn-sm toolbar-item" ng-click="ctrl.showComments()" tooltip-append-to-body="true" tooltip="{{'COMMENTS'|translate}}"
+                ng-class="ctrl.request.comments.length > 0 ? 'btn-danger' : 'btn-default'">
           <i class="fa fa-fw fa-comments"></i>
           {{ctrl.request.comments.length}}
         </button>
@@ -431,6 +427,11 @@
         <!-- History button -->
         <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHistory()" tooltip-append-to-body="true" tooltip="{{'HISTORY'|translate}}">
           <i class="fa fa-fw fa-history"></i>
+        </button>
+
+        <!-- Help button -->
+        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHelp()" tooltip-append-to-body="true" tooltip="{{'HELP'|translate}}">
+          <i class="fa fa-fw fa-question-circle"></i> Help
         </button>
 
         <!-- Search form -->
