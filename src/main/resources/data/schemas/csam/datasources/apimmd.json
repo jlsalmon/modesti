@@ -5,8 +5,7 @@
     {
       "name": "APIMMD",
       "editableStates": [
-        "IN_PROGRESS",
-        "FOR_CORRECTION"
+        "FOR_ADDRESSING"
       ],
       "disabledStates": ["FOR_APPROVAL"],
       "constraints": [
