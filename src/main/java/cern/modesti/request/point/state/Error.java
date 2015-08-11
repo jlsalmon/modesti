@@ -1,4 +1,4 @@
-package cern.modesti.request.point;
+package cern.modesti.request.point.state;
 
 import java.util.List;
 

@@ -18,8 +18,11 @@
 package cern.modesti.request;
 
 import cern.modesti.repository.jpa.subsystem.SubSystem;
-import cern.modesti.request.point.Approval;
+import cern.modesti.request.point.state.Addressing;
+import cern.modesti.request.point.state.Approval;
 import cern.modesti.request.point.Point;
+import cern.modesti.request.point.state.Cabling;
+import cern.modesti.request.point.state.Testing;
 import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.result.ConfigurationResult;
 import lombok.Data;
@@ -119,17 +122,17 @@ public class Request implements Serializable {
   /**
    *
    */
-  private Boolean addressed;
+  private Addressing addressing;
 
   /**
    *
    */
-  private Boolean cabled;
+  private Cabling cabling;
 
   /**
    *
    */
-  private Boolean tested;
+  private Testing testing;
 
   /**
    *

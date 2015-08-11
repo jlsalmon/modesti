@@ -1,4 +1,4 @@
-package cern.modesti.request.point;
+package cern.modesti.request.point.state;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  * @author Justin Lewis Salmon
  */
 @Data
-public class Approval {
-  private Boolean approved;
+public class Addressing {
+  private Boolean addressed;
   private String message;
 }

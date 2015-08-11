@@ -1,7 +1,7 @@
 package cern.modesti.validation;
 
 import cern.modesti.request.Request;
-import cern.modesti.request.point.Error;
+import cern.modesti.request.point.state.Error;
 import cern.modesti.request.point.Point;
 import com.google.common.base.CaseFormat;
 import lombok.Data;
@@ -15,11 +15,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
-import javax.persistence.StoredProcedureQuery;
 import javax.transaction.Transactional;
-import java.sql.Types;
 import java.util.*;
 import java.util.stream.Collectors;
 

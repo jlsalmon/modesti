@@ -12,6 +12,7 @@ import cern.modesti.notification.NotificationType;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterService;
 import cern.modesti.request.Request;
+import cern.modesti.request.point.state.Approval;
 import cern.modesti.request.point.Point;
 import cern.modesti.validation.ValidationService;
 import cern.modesti.workflow.result.ConfigurationResult;
@@ -121,7 +122,7 @@ public class WorkflowService {
 
         if (point.isAlarm()) {
           // If there is a single dirty or unapproved point, approval is required
-          if (point.isDirty() || point.getApproval() == null || !point.getApproval().getApproved()) {
+          if (point.getDirty() || point.getApproval() == null || point.getApproval().getApproved() == null || !point.getApproval().getApproved()) {
             approvalRequired = true;
             break;
           }
@@ -191,9 +192,9 @@ public class WorkflowService {
     if (valid) {
       for (Point point : request.getPoints()) {
 
-        if (point.getApproval() != null && point.getApproval().getApproved() && point.isDirty()) {
+        if (point.getApproval() != null && point.getApproval().getApproved() != null && point.getDirty()) {
           // If a point is dirty and has already been approved, it will need re-approval
-          point.setApproval(null);
+          point.setApproval(new Approval());
 
         } else {
           // Mark point as clean
@@ -221,33 +222,6 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-    //    // We will have gotten a JSON serialised representation of an ApprovalResult from the user task.
-    //    String approvalResultString = execution.getVariable("approvalResult", String.class);
-    //
-    //    ApprovalResult approvalResult = new ObjectMapper().readValue(approvalResultString, ApprovalResult.class);
-    //    List<Point> points = request.getPoints();
-
-
-    //    // If any of the points are rejected, the whole request is rejected
-    //    boolean approved = true;
-    //    for (Point point : request.getPoints()) {
-    //      if (!point.getApproval().isApproved()) {
-    //        approved = false;
-    //      }
-    //    }
-    //
-    //    request.setApproved(approved);
-
-    //    // Mark all the points as approved or not
-    //    for (Point point : request.getPoints()) {
-    //
-    //      for (ApprovalResult.ApprovalResultItem item : approvalResult.getItems()) {
-    //        if (Objects.equals(item.getPointId(), point.getId())) {
-    //          point.setApproved(item.isApproved());
-    //        }
-    //      }
-    //    }
-
     // Send an email to the original requestor
     notificationService.sendNotification(request, NotificationType.APPROVAL_COMPLETED);
 
@@ -270,16 +244,8 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-    //    // We will have gotten a JSON serialised representation of an AddressingResult from the user task.
-    //    String addressingResultString = execution.getVariable("addressingResult", String.class);
-    //
-    //    AddressingResult addressingResult = new Gson().fromJson(addressingResultString, AddressingResult.class);
-    //    request.setAddressingResult(addressingResult);
-
-
     // Set the variable for the next stage to evaluate
-    // TODO: do this properly
-    execution.setVariable("addressed", true); //equest.getAddressed());
+    execution.setVariable("addressed", request.getAddressing().getAddressed());
 
     // Store the request
     requestRepository.save(request);
@@ -307,15 +273,8 @@ public class WorkflowService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-    //    // We will have gotten a JSON serialised representation of a TestResult from the user task.
-    //    String testResultString = execution.getVariable("testResult", String.class);
-    //
-    //    TestResult testResult = new Gson().fromJson(testResultString, TestResult.class);
-    //    request.setTestResult(testResult);
-
     // Set the variable for the next stage to evaluate
-    // TODO: do this properly
-    execution.setVariable("passed", true); // request.getTested());
+    execution.setVariable("passed", request.getTesting().getTested());
 
     // Store the request
     requestRepository.save(request);

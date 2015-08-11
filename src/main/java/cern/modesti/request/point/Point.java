@@ -17,6 +17,9 @@
  ******************************************************************************/
 package cern.modesti.request.point;
 
+import cern.modesti.request.point.state.*;
+import cern.modesti.request.point.state.Error;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -28,6 +31,7 @@ import java.util.Map;
 /**
  * @author Justin Lewis Salmon
  */
+@Data
 public class Point implements Serializable {
 
   private static final long serialVersionUID = -6275036449999835583L;
@@ -52,15 +56,15 @@ public class Point implements Serializable {
    */
   private List<Error> errors = new ArrayList<>();
 
-  private Approval approval;
+  private Approval approval = new Approval();
 
-  private Boolean addressed;
+  private Addressing addressing = new Addressing();
 
-  private Boolean cabled;
+  private Cabling cabling = new Cabling();
 
   private Boolean configured;
 
-  private Boolean tested;
+  private Testing testing = new Testing();
 
   /**
    *
@@ -72,118 +76,14 @@ public class Point implements Serializable {
 
   public Point(Long id) {
     this.id = id;
-    //this.properties.put("pointDescription", "");
   }
 
   /**
-   * @return the id
+   *
+   * @return
    */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the dirty state
-   */
-  public Boolean isDirty() {
-    return dirty;
-  }
-
-  /**
-   * @param dirty the dirty state to set
-   */
-  public void setDirty(Boolean dirty) {
-    this.dirty = dirty;
-  }
-
-  public Boolean isSelected() {
-    return selected;
-  }
-
-  public void setSelected(Boolean selected) {
-    this.selected = selected;
-  }
-
-  public Boolean isValid() {
-    return valid;
-  }
-
-  public void setValid(Boolean valid) {
-    this.valid = valid;
-  }
-
-  public List<Error> getErrors() {
-    return errors;
-  }
-
-  public void setErrors(List<Error> errors) {
-    this.errors = errors;
-  }
-
-  public Approval getApproval() {
-    return this.approval;
-  }
-
-  public void setApproval(Approval approval) {
-    this.approval = approval;
-  }
-
-  public Boolean isAddressed() {
-    return addressed;
-  }
-
-  public void setAddressed(Boolean addressed) {
-    this.addressed = addressed;
-  }
-
-  public Boolean isCabled() {
-    return cabled;
-  }
-
-  public void setCabled(Boolean cabled) {
-    this.cabled = cabled;
-  }
-
-  public Boolean isConfigured() {
-    return configured;
-  }
-
-  public void setConfigured(Boolean configured) {
-    this.configured = configured;
-  }
-
-  public Boolean isTested() {
-    return tested;
-  }
-
-  public void setTested(Boolean tested) {
-    this.tested = tested;
-  }
-
   public Boolean isAlarm() {
     // An alarm must have a priority code, therefore if it has a priority code it is an alarm.
     return properties.get("priorityCode") != null;
-
-  }
-
-  /**
-   * @return the properties
-   */
-  public Map<String, Object> getProperties() {
-    return properties;
-  }
-
-  /**
-   * @param properties the properties to set
-   */
-  public void setProperties(Map<String, Object> properties) {
-    this.properties = properties;
   }
 }
