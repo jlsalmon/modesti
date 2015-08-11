@@ -12,59 +12,71 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/requests');
 
   $stateProvider.state('requests', {
-    url : '/requests',
-    templateUrl : 'components/request/requests.html',
-    controller : 'RequestsController as ctrl'
+    url: '/requests',
+    templateUrl: 'components/request/requests.html',
+    controller: 'RequestsController as ctrl'
 
   }).state('new', {
-    url : '/requests/new',
-    templateUrl : 'components/request/request.new.html',
-    controller : 'NewRequestController as ctrl'
+    url: '/requests/new',
+    templateUrl: 'components/request/request.new.html',
+    controller: 'NewRequestController as ctrl'
 
   }).state('upload', {
-    url : '/requests/upload',
-    templateUrl : 'components/request/request.upload.html',
-    controller : 'UploadController as ctrl'
+    url: '/requests/upload',
+    templateUrl: 'components/request/request.upload.html',
+    controller: 'UploadController as ctrl'
 
   }).state('request', {
-    url : '/requests/:id',
-    templateUrl : 'components/request/request.html',
-    controller : 'RequestController as ctrl',
-    resolve : {
+    url: '/requests/:id',
+    templateUrl: 'components/request/request.html',
+    controller: 'RequestController as ctrl',
+    resolve: {
 
-      request : function getRequest($stateParams, RequestService) {
+      request: function getRequest($stateParams, RequestService) {
         return RequestService.getRequest($stateParams.id);
       },
 
-      children : function getChildren(request, RequestService) {
+      children: function getChildren(request, RequestService) {
         return RequestService.getChildRequests(request);
       },
 
-      schema : function getSchema(request, SchemaService) {
+      schema: function getSchema(request, SchemaService) {
         return SchemaService.getSchema(request);
       },
 
-      tasks : function getTasks(request, TaskService) {
+      tasks: function getTasks(request, TaskService) {
         return TaskService.getTasksForRequest(request);
       },
 
-      signals : function getSignals(request, TaskService) {
+      signals: function getSignals(request, TaskService) {
         return TaskService.getSignalsForRequest(request);
       }
-    }
 
+    }
+  }).state('submitted', {
+    url: '/requests/:id/submitted',
+    templateUrl: 'components/request/request.submitted.html',
+    controller: 'RequestSubmittedController as ctrl',
+    params: {previousStatus: null},
+    resolve: {
+
+      request: function getRequest($stateParams, RequestService) {
+        return RequestService.getRequest($stateParams.id);
+      }
+
+    }
   }).state('search', {
-    url : '/search/:q',
-    templateUrl : 'components/search/search.html',
-    controller : 'SearchController as ctrl'
+    url: '/search/:q',
+    templateUrl: 'components/search/search.html',
+    controller: 'SearchController as ctrl'
 
   }).state('users', {
-    url : '/users/:id',
-    templateUrl : 'components/users/user.html',
-    controller : 'UserController as ctrl'
+    url: '/users/:id',
+    templateUrl: 'components/users/user.html',
+    controller: 'UserController as ctrl'
 
   }).state('404', {
-    url : '/404',
-    templateUrl : 'components/errors/404.html'
+    url: '/404',
+    templateUrl: 'components/errors/404.html'
   });
 }
