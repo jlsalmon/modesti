@@ -149,6 +149,10 @@
     vertical-align: middle;
   }
 
+  .table input.select-all {
+    margin: 0;
+  }
+
   /** Centre the last row (checkboxes */
   .table td:last-child {
     /*text-align: center;*/
@@ -430,16 +434,16 @@
         </button>
 
         <!-- Search form -->
-        <form class="search-form toolbar-item form-inline pull-right">
-          <div class="form-group input-group">
-            <input type="text" name="query" ng-model="query" class="form-control input-sm" placeholder="{{'THIS_REQUEST'|translate}}">
-            <span class="input-group-btn">
-              <button type="submit" name="search" id="search-btn" class="btn btn-sm btn-flat" ng-click="ctrl.search(query)">
-                <i class="fa fa-search"></i>
-              </button>
-            </span>
-          </div>
-        </form>
+        <!--<form class="search-form toolbar-item form-inline pull-right">-->
+          <!--<div class="form-group input-group">-->
+            <!--<input type="text" name="query" ng-model="query" class="form-control input-sm" placeholder="{{'THIS_REQUEST'|translate}}">-->
+            <!--<span class="input-group-btn">-->
+              <!--<button type="submit" name="search" id="search-btn" class="btn btn-sm btn-flat" ng-click="ctrl.search(query)">-->
+                <!--<i class="fa fa-search"></i>-->
+              <!--</button>-->
+            <!--</span>-->
+          <!--</div>-->
+        <!--</form>-->
       </div>
 
     </div>

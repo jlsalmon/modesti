@@ -219,6 +219,8 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 
+
+
     return point.id;
   }
 
@@ -938,26 +940,26 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       // Fix the width of the first column (point id column)
       firstColumnHeader.width('45px');
 
-      // Centre checkbox columns
-      var checkboxCell = $('.htCore input.htCheckboxRendererInput').parent();
-      checkboxCell.css('text-align', 'center');
+      // Centre checkboxes
+      var checkboxCells = $('.htCore input.htCheckboxRendererInput').parent();
+      checkboxCells.css('text-align', 'center');
 
       // Initialise checkbox header state
       var checkboxHeader = $('.select-all:checkbox');
       checkboxHeader.prop(getCheckboxHeaderState(), true);
 
-      var column, cell;
+      var header, cells;
       if (hasCommentColumn()) {
-        column = $('.htCore thead th:nth-child(3)');
-        cell = $('.htCore tbody td:nth-child(3)');
+        header = $('.htCore thead th:nth-child(3)');
+        cells = $('.htCore tbody td:nth-child(3)');
       } else {
-        column = checkboxColumn;
-        cell = checkboxCell;
+        header = $('.htCore thead th:nth-child(2)');
+        cells = $('.htCore tbody td:nth-child(2)');
       }
 
       // Add a thicker border between the control column(s) and the first data column
-      cell.css('border-right', '3px solid #ccc');
-      column.css('border-right', '3px solid #ccc');
+      header.css('border-right', '5px double #ccc');
+      cells.css('border-right', '5px double #ccc');
 
       // Listen for the change event on the "select-all" checkbox and act accordingly
       checkboxHeader.change(function () {

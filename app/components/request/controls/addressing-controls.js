@@ -22,8 +22,8 @@ function AddressingControlsController($state, RequestService, TaskService) {
   self.isCurrentTaskClaimed = isCurrentTaskClaimed;
   self.isCurrentUserAssigned = isCurrentUserAssigned;
   self.claim = claim;
-  self.addressSelectedPoints = addressSelectedPoints;
-  self.rejectSelectedPoints = rejectSelectedPoints;
+  self.rejectRequest = rejectRequest;
+  self.canSubmit = canSubmit;
   self.submit = submit;
 
   /**
@@ -73,25 +73,30 @@ function AddressingControlsController($state, RequestService, TaskService) {
   /**
    *
    */
-  function addressSelectedPoints(event) {
+  function rejectRequest(event) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
 
-    self.addressed = true;
+    // TODO: show comment modal with text box for rejection reason
+
+    self.addressed = false;
   }
 
   /**
-   * Mark the currently selected points as rejected.
+   * The addressing can be submitted if all points that require addresses have them.
+   **
+   * TODO: only show those points which require addresses to the addresser
+   *
+   * TODO: how to deduce if a point requires an address? What if a request has a mixture of datasources, some which
+   * TODO: require an address and some which don't? Can it be derived somehow from the moneq or the plc name? Also,
+   * TODO: what if someone adds a datasource but doesn't actually have any points of that type?
+   *
+   * @returns {boolean}
    */
-  function rejectSelectedPoints(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    self.addressed = false;
+  function canSubmit() {
+    return false;
   }
 
   /**
