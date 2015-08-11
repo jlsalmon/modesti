@@ -204,6 +204,10 @@ public class Request implements Serializable {
    *  - it is an APIMMD point or;
    *  - it is an LSAC point
    *
+   * TODO: how to deduce if a point requires an address? What if a request has a mixture of datasources, some which
+   * TODO: require an address and some which don't? Can it be derived somehow from the moneq or the plc name? Also,
+   * TODO: what if someone adds a datasource but doesn't actually have any points of that type?
+   *
    * TODO make this class abstract and have TimRequest, CsamRequest and PvssRequest?
    *
    * @return true if this request requires cabling, false otherwise
