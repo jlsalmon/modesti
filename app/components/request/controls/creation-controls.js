@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService) {
+function CreationControlsController($http, $state, $location, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService) {
   var self = this;
 
   self.parent = {};
@@ -29,6 +29,9 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   self.canValidate = canValidate;
   self.canSubmit = canSubmit;
   self.canSplit = canSplit;
+  self.hasErrors = hasErrors;
+  self.getTotalErrors = getTotalErrors;
+  self.getNumValidationErrors = getNumValidationErrors;
 
   /**
    *
@@ -95,8 +98,52 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
    *
    */
   function canSplit() {
-    return self.parent.getNumValidationErrors() > 0;
+    return self.getNumValidationErrors() > 0;
     //return self.parent.getSelectedPointIds().length > 0;
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function hasErrors() {
+    return getNumValidationErrors() > 0 || getNumApprovalRejections() > 0
+  }
+
+  function getTotalErrors() {
+    return getNumValidationErrors() + getNumApprovalRejections();
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  function getNumValidationErrors() {
+    var n = 0;
+
+    for (var i in self.rows) {
+      var point = self.rows[i];
+
+      for (var j in point.errors) {
+        n += point.errors[j].errors.length;
+      }
+    }
+
+    return n;
+  }
+
+  function getNumApprovalRejections() {
+    var n = 0;
+
+    for (var i in self.rows) {
+      var point = self.rows[i];
+
+      if (point.approval.approved === false) {
+        n++;
+      }
+    }
+
+    return n;
   }
 
   /**
@@ -184,13 +231,23 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     TaskService.completeTask(task.name, self.request.requestId).then(function () {
       console.log('completed task ' + task.name);
 
+      var previousStatus = self.request.status;
+
       // Clear the cache so that the state reload also pulls a fresh request
       RequestService.clearCache();
 
       $state.reload().then(function () {
         self.submitting = 'success';
 
-        AlertService.add('info', 'Your request has been submitted successfully.');
+        // If the request is now FOR_CONFIGURATION, no need to go away from the request page
+        if (self.request.status === 'FOR_CONFIGURATION') {
+          AlertService.add('info', 'Your request has been submitted successfully and is ready to be configured.');
+        }
+
+        // If the request is in any other state, show a page with information about what happens next
+        else {
+          $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
+        }
       });
     },
 

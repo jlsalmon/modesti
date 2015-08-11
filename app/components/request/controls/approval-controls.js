@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('ApprovalControlsController', ApprovalControlsController);
 
-function ApprovalControlsController($state, $modal, RequestService, TaskService, ValidationService) {
+function ApprovalControlsController($state, $modal, $location, RequestService, TaskService, ValidationService) {
   var self = this;
 
   self.request = {};
@@ -240,7 +240,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
     for (var i = 0, len = self.rows.length; i < len; i++) {
       point = self.rows[i];
 
-      if (!point.approval) {
+      if (!point.approval || point.approval.approved === null) {
         return false;
       }
 
@@ -280,7 +280,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
       }
     }
 
-    self.request.approved = entireRequestApproved;
+    self.request.approval.approved = entireRequestApproved;
 
     // Save the request
     RequestService.saveRequest(self.request).then(function () {
@@ -289,11 +289,17 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
       TaskService.completeTask(task.name, self.request.requestId).then(function () {
         console.log('completed task ' + task.name);
 
+        var previousStatus = self.request.status;
+
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
 
         $state.reload().then(function () {
           self.submitting = 'success';
+
+          // Show a page with information about what happens next
+          $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
+
         });
       },
 
@@ -304,7 +310,7 @@ function ApprovalControlsController($state, $modal, RequestService, TaskService,
     },
 
     function (error) {
-      console.log('error completing task ' + task.name + ': ' + error.data.message);
+      console.log('error saving request ' + task.name + ': ' + error.data.message);
       self.submitting = 'error';
     });
   }

@@ -20,7 +20,8 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
     doLogin: doLogin,
     logout: logout,
     getCurrentUser: getCurrentUser,
-    isCurrentUserAuthenticated: isCurrentUserAuthenticated
+    isCurrentUserAuthenticated: isCurrentUserAuthenticated,
+    isCurrentUserAdministrator: isCurrentUserAdministrator
   };
 
   /**
@@ -113,6 +114,26 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
    */
   function isCurrentUserAuthenticated() {
     return $localStorage.user !== undefined;
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAdministrator() {
+    if (!isCurrentUserAuthenticated()) {
+      return false;
+    }
+
+    for (var i = 0, len = $localStorage.user.authorities.length; i < len; i++) {
+      var authority = $localStorage.user.authorities[i];
+
+      if (authority.authority === 'modesti-administrators') {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   return service;

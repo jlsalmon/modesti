@@ -10,7 +10,7 @@ angular.module('modesti').controller('TestingControlsController', TestingControl
 function TestingControlsController($state, RequestService, TaskService) {
   var self = this;
 
-  self.parent = {}
+  self.parent = {};
   self.request = {};
   self.tasks = {};
 
@@ -78,6 +78,8 @@ function TestingControlsController($state, RequestService, TaskService) {
       event.preventDefault();
       event.stopPropagation();
     }
+
+    self.tested = true;
   }
 
   /**
@@ -88,6 +90,8 @@ function TestingControlsController($state, RequestService, TaskService) {
       event.preventDefault();
       event.stopPropagation();
     }
+
+    self.tested = false;
   }
 
   /**
@@ -107,37 +111,18 @@ function TestingControlsController($state, RequestService, TaskService) {
 
     self.submitting = 'started';
 
-    //var testResult;
-    //
-    //if (self.tested) {
-    //  testResult = {
-    //    passed: true,
-    //    errors: []
-    //  };
-    //} else {
-    //  testResult = {
-    //    passed: false,
-    //    errors: [
-    //      'Point 1 failed test because reasons',
-    //      'Point 2 failed test because reasons'
-    //    ]
-    //  };
-    //}
-    //
-    //// Send the test result as a JSON string
-    //var variables = [{
-    //  "name": "testResult",
-    //  "value": JSON.stringify(testResult),
-    //  "type": "string"
-    //}];
+    self.request.testing = {tested: self.tested, message: ''};
 
-    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+    // Save the request
+    RequestService.saveRequest(self.request).then(function () {
+
+      TaskService.completeTask(task.name, self.request.requestId).then(function () {
         console.log('completed task ' + task.name);
 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
 
-        $state.reload().then(function() {
+        $state.reload().then(function () {
           self.submitting = 'success';
         });
       },
@@ -146,5 +131,11 @@ function TestingControlsController($state, RequestService, TaskService) {
         console.log('error completing task ' + task.name);
         self.submitting = 'error';
       });
+    },
+
+    function (error) {
+      console.log('error saving request ' + task.name + ': ' + error.data.message);
+      self.submitting = 'error';
+    });
   }
 }

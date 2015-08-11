@@ -108,7 +108,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
   self.showHistory = showHistory;
 
   self.getSelectedPointIds = getSelectedPointIds;
-  self.getNumValidationErrors = getNumValidationErrors;
+
 
   /**
    * Called when the handsontable table has finished initialising.
@@ -204,25 +204,19 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
   function getRowHeaders(row) {
     var point = self.rows[row];
 
-    if (self.request.status === 'IN_PROGRESS' || self.request.status === 'FOR_CORRECTION') {
-      if (point.valid === false) {
-        return '<div class="row-header">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
-      }
-      //else if (point.valid === true) {
-      //  return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
-      //}
+    if (point.valid === false) {
+      return '<div class="row-header">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
+    }
+    //else if (point.valid === true) {
+    //  return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
+    //}
+
+    else if (point.approval.approved === false) {
+      return '<div class="row-header">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
 
-    else if (self.request.status === 'FOR_APPROVAL' && point.approval) {
-      var cssClass, popoverMessage;
-
-      if (point.approval.approved === false) {
-        cssClass = 'fa fa-exclamation-circle text-danger';
-      } else if (point.approval.approved === true) {
-        cssClass = 'fa fa-check-circle text-success';
-      }
-
-      return '<div class="row-header">' + point.id + ' <i class="' + cssClass + '"></i></div>';
+    else if (point.approval.approved === true && self.request.status === 'FOR_APPROVAL') {
+      return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 
     return point.id;
@@ -654,24 +648,6 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     }
 
     return pointIds;
-  }
-
-  /**
-   *
-   * @returns {number}
-   */
-  function getNumValidationErrors() {
-    var n = 0;
-
-    for (var i in self.rows) {
-      var point = self.rows[i];
-
-      for (var j in point.errors) {
-        n += point.errors[j].errors.length;
-      }
-    }
-
-    return n;
   }
 
   /**

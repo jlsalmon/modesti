@@ -514,78 +514,30 @@
 <footer class="footer">
   <div class="container-fluid">
 
-  <accordion class="accordion">
-    <accordion-group is-open="ctrl.errorLogOpen" is-disabled="ctrl.getNumValidationErrors() == 0">
-
-      <accordion-heading>
-
-
-        <div class="row">
-          <div class="col-md-3">
-
-            <span class="label pull-left"
-                  ng-class="ctrl.getNumValidationErrors() > 0 ? 'bg-red' : 'bg-gray'"
-                  tooltip="{{ctrl.getNumValidationErrors()}} error(s) found. Click to view details."
-                  tooltip-placement="right">
-              <i class="fa fa-fw fa-exclamation-triangle"></i> {{ctrl.getNumValidationErrors()}}
-            </span>
-
-          </div>
-
-          <div class="col-md-9">
-            <!-- Show appropriate extra controls based on the request status -->
-            <span ng-switch="ctrl.request.status">
-              <span ng-switch-when="IN_PROGRESS">
-                <creation-controls></creation-controls>
-              </span>
-              <span ng-switch-when="FOR_CORRECTION">
-                <creation-controls></creation-controls>
-              </span>
-              <span ng-switch-when="FOR_APPROVAL">
-                <approval-controls></approval-controls>
-              </span>
-              <span ng-switch-when="FOR_ADDRESSING">
-                <addressing-controls></addressing-controls>
-              </span>
-              <span ng-switch-when="FOR_CABLING">
-                <cabling-controls></cabling-controls>
-              </span>
-              <span ng-switch-when="FOR_CONFIGURATION">
-                <config-controls></config-controls>
-              </span>
-              <span ng-switch-when="FOR_TESTING">
-                <testing-controls></testing-controls>
-              </span>
-            </span>
-          </div>
-        </div>
-
-      </accordion-heading>
-
-      <div ng-if="ctrl.getNumValidationErrors() > 0">
-        <div ng-repeat="point in ctrl.rows track by point.id">
-          <div ng-repeat="error in point.errors track by $index">
-            <div ng-repeat="error in error.errors">
-              <i class="fa fa-fw fa-exclamation-triangle text-danger"></i> Line {{point.id}}: {{error}}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div ng-if="ctrl.getNumValidationErrors() == 0">
-        No validation errors found
-      </div>
-
-      <div ng-if="ctrl.request.configurationResult">
-        <div ng-repeat="error in ctrl.request.configurationResult.errors track by $index">
-          <i class="fa fa-fw fa-exclamation-triangle text-danger"></i> {{error}}
-        </div>
-      </div>
-
-    </accordion-group>
-  </accordion>
-
-
+    <!-- Show appropriate extra controls based on the request status -->
+    <span ng-switch="ctrl.request.status">
+      <span ng-switch-when="IN_PROGRESS">
+        <creation-controls></creation-controls>
+      </span>
+      <span ng-switch-when="FOR_CORRECTION">
+        <creation-controls></creation-controls>
+      </span>
+      <span ng-switch-when="FOR_APPROVAL">
+        <approval-controls></approval-controls>
+      </span>
+      <span ng-switch-when="FOR_ADDRESSING">
+        <addressing-controls></addressing-controls>
+      </span>
+      <span ng-switch-when="FOR_CABLING">
+        <cabling-controls></cabling-controls>
+      </span>
+      <span ng-switch-when="FOR_CONFIGURATION">
+        <config-controls></config-controls>
+      </span>
+      <span ng-switch-when="FOR_TESTING">
+        <testing-controls></testing-controls>
+      </span>
+    </span>
 
   </div>
 </footer>

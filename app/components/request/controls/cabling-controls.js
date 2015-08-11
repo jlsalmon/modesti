@@ -15,6 +15,7 @@ function CablingControlsController($state, RequestService, TaskService) {
   self.tasks = {};
 
   self.submitting = undefined;
+  self.cabled = true;
 
   self.init = init;
   self.isCurrentUserAuthorised = isCurrentUserAuthorised;
@@ -77,6 +78,8 @@ function CablingControlsController($state, RequestService, TaskService) {
       event.preventDefault();
       event.stopPropagation();
     }
+
+    self.cabled = true;
   }
 
   /**
@@ -87,6 +90,8 @@ function CablingControlsController($state, RequestService, TaskService) {
       event.preventDefault();
       event.stopPropagation();
     }
+
+    self.cabled = false;
   }
 
   /**
@@ -106,14 +111,24 @@ function CablingControlsController($state, RequestService, TaskService) {
 
     self.submitting = 'started';
 
-    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+    self.request.cabling = {cabled: self.cabled, message: ''};
+
+    // Save the request
+    RequestService.saveRequest(self.request).then(function () {
+
+      TaskService.completeTask(task.name, self.request.requestId).then(function () {
         console.log('completed task ' + task.name);
+
+        var previousStatus = self.request.status;
 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
 
-        $state.reload().then(function() {
+        $state.reload().then(function () {
           self.submitting = 'success';
+
+          // Show a page with information about what happens next
+          $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
         });
       },
 
@@ -121,5 +136,11 @@ function CablingControlsController($state, RequestService, TaskService) {
         console.log('error completing task ' + task.name);
         self.submitting = 'error';
       });
+    },
+
+    function (error) {
+      console.log('error saving request ' + task.name + ': ' + error.data.message);
+      self.submitting = 'error';
+    });
   }
 }

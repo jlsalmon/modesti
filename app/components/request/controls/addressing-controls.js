@@ -111,38 +111,24 @@ function AddressingControlsController($state, RequestService, TaskService) {
 
     self.submitting = 'started';
 
-    var addressingResult;
+    self.request.addressing = {addressed: self.addressed, message: ''};
 
-    if (self.addressed) {
-      addressingResult = {
-        addressed: true,
-        errors: []
-      };
-    } else {
-      addressingResult = {
-        addressed: false,
-        errors: [
-          'Point 1 is not addressed because reasons',
-          'Point 2 is not addressed because reasons'
-        ]
-      };
-    }
+    // Save the request
+    RequestService.saveRequest(self.request).then(function () {
 
-    //// Send the approval result as a JSON string
-    //var variables = [{
-    //  "name": "addressingResult",
-    //  "value": JSON.stringify(addressingResult),
-    //  "type": "string"
-    //}];
-
-    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+      TaskService.completeTask(task.name, self.request.requestId).then(function () {
         console.log('completed task ' + task.name);
+
+        var previousStatus = self.request.status;
 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
 
-        $state.reload().then(function() {
+        $state.reload().then(function () {
           self.submitting = 'success';
+
+          // Show a page with information about what happens next
+          $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
         });
       },
 
@@ -150,5 +136,12 @@ function AddressingControlsController($state, RequestService, TaskService) {
         console.log('error completing task ' + task.name);
         self.submitting = 'error';
       });
+    },
+
+    function (error) {
+      console.log('error saving request ' + task.name + ': ' + error.data.message);
+      self.submitting = 'error';
+    });
+
   }
 }
