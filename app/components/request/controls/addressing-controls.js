@@ -33,6 +33,27 @@ function AddressingControlsController($state, RequestService, TaskService) {
     self.parent = parent;
     self.request = parent.request;
     self.tasks = parent.tasks;
+
+    // Make sure that only those column groups which match the point type are editable.
+    self.parent.hot.updateSettings( {
+      cells: function (row, col, prop) {
+        var cellProperties = {};
+        var pointType = self.parent.hot.getDataAtRowProp(row, 'properties.pointType');
+
+        if (pointType !== self.parent.activeCategory.name) {
+          cellProperties.readOnly = true;
+        }
+
+        // We want the "pointType" field to be more distinct when it matches the active category, so we set it to
+        // non-editable rather than read-only (see http://docs.handsontable.com/0.16.1/demo-disable-cell-editing.html)
+        // for the difference)
+        if (pointType === self.parent.activeCategory.name && prop === 'properties.pointType') {
+          cellProperties.editor = false;
+        }
+
+        return cellProperties;
+      }
+    })
   }
 
   /**

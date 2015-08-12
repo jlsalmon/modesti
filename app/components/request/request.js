@@ -178,17 +178,26 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       for (var i = 0, len = self.request.points.length; i < len; i++) {
         point = self.request.points[i];
 
+        // Display only alarms
         if (point.properties['priorityCode']) {
           rows.push(point);
         }
       }
+    }
 
-      // Also set maxRows to prevent new rows being added
-      self.settings.maxRows = rows.length;
+    else if (self.request.status == 'FOR_ADDRESSING' || self.request.status == 'FOR_CABLING') {
+
+      // TODO display only points which require cabling
+      rows = self.request.points;
     }
 
     else {
       rows = self.request.points;
+    }
+
+    if (self.request.status !== 'IN_PROGRESS' && self.request.status !== 'FOR_CORRECTION') {
+      // If the request is not in preparation, set maxRows to prevent new rows being added
+      self.settings.maxRows = rows.length;
     }
 
     return rows;
@@ -247,6 +256,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     for (var i = 0; i < self.activeCategory.fields.length; i++) {
       field = self.activeCategory.fields[i];
 
+      // A column is editable only if the category is marked as an editable state for the current request status.
       if (isCurrentUserAuthorised()) {
         editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
       } else {
@@ -258,8 +268,6 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       column.renderer = customRenderer;
       self.columns.push(column);
     }
-
-
   }
 
   /**
