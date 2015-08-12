@@ -83,7 +83,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
    *
    */
   function canValidate() {
-    var task = self.tasks['validate'];
+    var task = self.tasks['edit'];
     return task;
   }
 
@@ -169,7 +169,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
         }
 
         // Validate server-side
-        var task = self.tasks['validate'];
+        var task = self.tasks['edit'];
 
         if (!task) {
           console.log('warning: no validate task found');
@@ -266,7 +266,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
       event.stopPropagation();
     }
 
-    var task = self.tasks['validate'];
+    var task = self.tasks['edit'];
     if (!task) {
       console.log('error splitting request: no task');
       return;
