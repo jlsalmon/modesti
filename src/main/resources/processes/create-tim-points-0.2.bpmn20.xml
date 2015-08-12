@@ -32,7 +32,7 @@
       <exclusiveGateway id="sid-F5C7C86D-365F-4463-AB7D-5A8F9F4FE473" name="valid?"></exclusiveGateway>
       <startEvent id="sid-EEE85D06-A9DF-44E6-B610-B4FC05C30509"></startEvent>
       <endEvent id="sid-D82F4247-F777-4BD7-AC4E-C7E806E01467"></endEvent>
-      <boundaryEvent id="sid-B54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-7ECE2459-8221-4319-839E-C43F3F862966" cancelActivity="false">
+      <boundaryEvent id="sid-B54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-7ECE2459-8221-4319-839E-C43F3F862966" cancelActivity="true">
         <signalEventDefinition signalRef="requestModified"></signalEventDefinition>
       </boundaryEvent>
       <sequenceFlow id="sid-BD650895-7B01-4D54-BD1D-0C25A33226F4" sourceRef="sid-1E10AD68-54A5-4A05-8007-B8E4EDD3077E" targetRef="sid-3A2991EF-1666-4809-9379-B51AEDE0C673"></sequenceFlow>
@@ -66,7 +66,7 @@
         <documentation>Request created</documentation>
       </startEvent>
       <endEvent id="sid-0F6D105C-79EA-48CE-9CAE-3FE1AA202189"></endEvent>
-      <boundaryEvent id="sid-C54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-DE7CD5B1-7DFE-4D9F-BB1C-7DCCAD01F862" cancelActivity="false">
+      <boundaryEvent id="sid-C54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-DE7CD5B1-7DFE-4D9F-BB1C-7DCCAD01F862" cancelActivity="true">
         <signalEventDefinition signalRef="requestModified"></signalEventDefinition>
       </boundaryEvent>
       <sequenceFlow id="sid-12B4B46C-ED3E-4A2F-A5D6-86839EDD18B6" sourceRef="sid-B6571CE9-02A8-4B26-8996-BEBFE66DA437" targetRef="sid-4A2991EF-1666-4809-9379-B51AEDE0C673"></sequenceFlow>
@@ -100,7 +100,7 @@
         <documentation>Request created</documentation>
       </startEvent>
       <endEvent id="sid-1D16F747-9D06-4434-B36A-BF0CC2E2AE0D"></endEvent>
-      <boundaryEvent id="sid-D54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-23AB92E2-7E03-4E13-B9DB-9DA602661BE8" cancelActivity="false">
+      <boundaryEvent id="sid-D54BBF84-4A14-4124-93D2-0577784EB6AB" name="modified" attachedToRef="sid-23AB92E2-7E03-4E13-B9DB-9DA602661BE8" cancelActivity="true">
         <signalEventDefinition signalRef="requestModified"></signalEventDefinition>
       </boundaryEvent>
       <sequenceFlow id="sid-3D5A852C-2F9D-420A-A253-FD9D451EE490" sourceRef="sid-1910B5B3-53E1-4A09-A2B9-A230CE70B1C8" targetRef="sid-5A2991EF-1666-4809-9379-B51AEDE0C673"></sequenceFlow>
