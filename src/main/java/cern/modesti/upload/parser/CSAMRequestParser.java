@@ -173,7 +173,7 @@ public class CSAMRequestParser extends RequestParser {
       } else if (point.getProperties().containsKey("plcBlockType")) {
         if (!categories.contains("APIMMD")) categories.add("APIMMD");
       } else if (point.getProperties().containsKey("safeplcByteId")) {
-        if (!categories.contains("PLC - OPC")) categories.add("PLC - OPC");
+        if (!categories.contains("SFPLC")) categories.add("SFPLC");
       } else if (point.getProperties().containsKey("winterStatus")) {
         if (!categories.contains("WINTER")) categories.add("WINTER");
       } else if (point.getProperties().containsKey("securitonGroup")) {
@@ -181,12 +181,8 @@ public class CSAMRequestParser extends RequestParser {
       } else if (point.getProperties().containsKey("securifireGroup")) {
         if (!categories.contains("SECURIFIRE")) categories.add("SECURIFIRE");
       } else if (point.getProperties().containsKey("safedefModule")) {
-        if (!categories.contains("OPCDEF")) categories.add("OPCDEF");
+        if (!categories.contains("DEF")) categories.add("DEF");
       }
-    }
-
-    if (categories.isEmpty()) {
-      throw new RequestParseException("Could not determine request categories");
     }
 
     return categories;

@@ -227,7 +227,7 @@ public abstract class RequestParser {
    * @return
    */
   protected Person parseResponsiblePerson(Map<String, Object> properties) {
-    Long responsiblePersonId = ((Double) properties.get("responsiblePersonId")).longValue();
+    Long responsiblePersonId = properties.get("responsiblePersonId") != null ? ((Double) properties.get("responsiblePersonId")).longValue() : null;
     String responsiblePersonName = (String) properties.get("responsiblePersonName");
 
     Person person = personCache.get(String.valueOf(responsiblePersonId));

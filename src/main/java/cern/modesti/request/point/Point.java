@@ -20,6 +20,7 @@ package cern.modesti.request.point;
 import cern.modesti.request.point.state.*;
 import cern.modesti.request.point.state.Error;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -32,6 +33,7 @@ import java.util.Map;
  * @author Justin Lewis Salmon
  */
 @Data
+@NoArgsConstructor
 public class Point implements Serializable {
 
   private static final long serialVersionUID = -6275036449999835583L;
@@ -70,9 +72,6 @@ public class Point implements Serializable {
    *
    */
   private Map<String, Object> properties = new HashMap<>();
-
-  public Point() {
-  }
 
   public Point(Long id) {
     this.id = id;

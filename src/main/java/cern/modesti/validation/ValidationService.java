@@ -91,6 +91,7 @@ public class ValidationService {
 
       // These properties do not go into the table
       // TODO: review these
+      properties.remove("pointType");
       properties.remove("tagname");
       properties.remove("faultState");
       properties.remove("cabling");

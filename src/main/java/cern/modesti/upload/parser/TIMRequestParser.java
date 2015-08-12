@@ -176,10 +176,6 @@ public class TIMRequestParser extends RequestParser {
       categories.add("DB");
     }
 
-    if (categories.isEmpty()) {
-      throw new RequestParseException("Could not determine request categories");
-    }
-
     return categories;
   }
 
