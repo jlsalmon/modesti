@@ -66,7 +66,7 @@ public class WorkflowService {
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
 
-    runtimeService.startProcessInstanceByKey("create-tim-points", request.getRequestId(), variables);
+    runtimeService.startProcessInstanceByKey("create-tim-points-0.2", request.getRequestId(), variables);
   }
 
   /**
@@ -204,7 +204,7 @@ public class WorkflowService {
     }
 
     // Set the variable for the next stage to evaluate
-    execution.setVariable("containsErrors", !valid);
+    execution.setVariable("valid", valid);
 
     // Store the request
     requestRepository.save(request);
@@ -274,7 +274,7 @@ public class WorkflowService {
     }
 
     // Set the variable for the next stage to evaluate
-    execution.setVariable("passed", request.getTesting().getTested());
+    execution.setVariable("accepted", request.getTesting().getTested());
 
     // Store the request
     requestRepository.save(request);
@@ -311,7 +311,7 @@ public class WorkflowService {
     }
 
     request.setConfigurationResult(result);
-    execution.setVariable("configurationFailure", failure);
+    execution.setVariable("configured", !failure);
 
     // Store the request
     requestRepository.save(request);

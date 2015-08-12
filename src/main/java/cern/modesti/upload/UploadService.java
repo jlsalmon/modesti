@@ -59,11 +59,12 @@ public class UploadService {
     request.setRequestId(counterService.getNextSequence("requests").toString());
     log.debug("generated request id: " + request.getRequestId());
 
-    // Kick off the workflow process
-    workflowService.startProcessInstance(request);
-
     // Store the request in the database
     requestRepository.save(request);
+
+    // Kick off the workflow process
+    workflowService.startProcessInstance(request);
+    
     return request;
   }
 }

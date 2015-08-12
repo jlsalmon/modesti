@@ -202,7 +202,7 @@ public class TaskController {
    * @return
    */
   private Task getTaskForRequest(String requestId, String taskName) {
-    Task task = taskService.createTaskQuery().processInstanceBusinessKey(requestId).taskName(taskName).singleResult();
+    Task task = taskService.createTaskQuery().processInstanceBusinessKey(requestId).taskName(taskName).active().singleResult();
 
     if (task == null) {
       List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(requestId).orderByTaskCreateTime().desc().list();
