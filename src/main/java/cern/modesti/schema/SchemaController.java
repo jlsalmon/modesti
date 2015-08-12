@@ -55,16 +55,22 @@ public class SchemaController {
   }
 
   /**
-   * GET /requests/{id}/schema?datasources=lsac,apimmd&categories=logging
+   * GET /requests/{id}/schema?categories=logging
    *
+   * @param id
    * @param categories
    * @return
    */
   @RequestMapping(value = "/requests/{id}/schema", method = GET)
-  public HttpEntity<Resource<Schema>> getSchema(@PathVariable("id") String id, @RequestParam("categories") String categories) {
-    List<String> categoryList = new ArrayList<>(Arrays.asList(categories.split(",")));
-    if (categoryList.isEmpty()) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+  public HttpEntity<Resource<Schema>> getSchema(@PathVariable("id") String id, @RequestParam(value = "categories", required = false) String categories) {
+
+    // Parse the categories into a list
+    List<String> categoryList;
+
+    if (categories == null || categories.isEmpty()) {
+      categoryList = new ArrayList<>();
+    } else {
+      categoryList = new ArrayList<>(Arrays.asList(categories.split(",")));
     }
 
     Request request = requestRepository.findOneByRequestId(id);

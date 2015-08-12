@@ -28,8 +28,6 @@ public class SchemaService {
   /**
    * TODO rewrite this and explain it better
    *
-   * TODO the three merge methods can be combined into one
-   *
    * The schema hierarchy looks like the following:
    *
    *

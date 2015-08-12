@@ -46,9 +46,11 @@ public class RequestLinks {
 
       if (categories.length() > 0) {
         categories.deleteCharAt(categories.length() - 1);
+        return linkTo(methodOn(SchemaController.class).getSchema(request.getRequestId(), categories.toString())).withRel("schema");
       }
 
-      return linkTo(methodOn(SchemaController.class).getSchema(request.getRequestId(), categories.toString())).withRel("schema");
+      return linkTo(methodOn(SchemaController.class).getSchema(request.getRequestId(), null)).withRel("schema");
+
     } else {
       LOG.warn("Request " + request.getRequestId() + " has no schema link!");
       return null;
