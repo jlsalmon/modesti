@@ -1,9 +1,9 @@
 {
-  "name": "opcdef",
+  "name": "SFPLC",
   "domain": "csam",
   "categories": [
     {
-      "name": "OPCDEF",
+      "name": "SFPLC",
       "editableStates": [
         "IN_PROGRESS",
         "FOR_CORRECTION"
@@ -12,39 +12,40 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["safedefModule", "safedefLine", "safedefAddress", "safedefStatus"]
+          "members": ["csamPlcname", "safeplcByteId", "safeplcBitId"]
         }
       ],
       "fields": [
         {
-          "id": "safedefModule",
+          "id": "pointType",
           "type": "text",
-          "name_en": "Module",
-          "name_fr": "Module",
+          "name_en": "Point Type",
+          "name_fr": "Point Type",
           "help_en": "",
           "help_fr": ""
         },
         {
-          "id": "safedefLine",
+          "id": "csamPlcname",
           "type": "text",
-          "name_en": "Line",
-          "name_fr": "Line",
+          "maxLength": 15,
+          "name_en": "PLC Name",
+          "name_fr": "PLC Name",
           "help_en": "",
           "help_fr": ""
         },
         {
-          "id": "safedefAddress",
-          "type": "text",
-          "name_en": "Address",
-          "name_fr": "Address",
+          "id": "safeplcByteId",
+          "type": "numeric",
+          "name_en": "Byte",
+          "name_fr": "Byte",
           "help_en": "",
           "help_fr": ""
         },
         {
-          "id": "safedefStatus",
+          "id": "safeplcBitId",
           "type": "options",
-          "name_en": "Status",
-          "name_fr": "Status",
+          "name_en": "Bit",
+          "name_fr": "Bit",
           "help_en": "",
           "help_fr": ""
         }

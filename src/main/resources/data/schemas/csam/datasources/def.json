@@ -1,9 +1,9 @@
 {
-  "name": "securiton",
+  "name": "def",
   "domain": "csam",
   "categories": [
     {
-      "name": "SECURITON",
+      "name": "DEF",
       "editableStates": [
         "IN_PROGRESS",
         "FOR_CORRECTION"
@@ -12,7 +12,7 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["securitonArea", "securitonGroup", "securitonDetecteur", "securitonStatus"]
+          "members": ["safedefModule", "safedefLine", "safedefAddress", "safedefStatus"]
         }
       ],
       "fields": [
@@ -25,42 +25,34 @@
           "help_fr": ""
         },
         {
-          "id": "securitonArea",
+          "id": "safedefModule",
           "type": "text",
-          "name_en": "Area",
-          "name_fr": "Area",
+          "name_en": "Module",
+          "name_fr": "Module",
           "help_en": "",
           "help_fr": ""
         },
         {
-          "id": "securitonGroup",
+          "id": "safedefLine",
           "type": "text",
-          "name_en": "Group",
-          "name_fr": "Group",
+          "name_en": "Line",
+          "name_fr": "Line",
           "help_en": "",
           "help_fr": ""
         },
         {
-          "id": "securitonDetecteur",
+          "id": "safedefAddress",
           "type": "text",
-          "name_en": "Detecteur",
-          "name_fr": "Detecteur",
+          "name_en": "Address",
+          "name_fr": "Address",
           "help_en": "",
           "help_fr": ""
         },
         {
-          "id": "securitonStatus",
+          "id": "safedefStatus",
           "type": "options",
           "name_en": "Status",
           "name_fr": "Status",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "securitonMcu",
-          "type": "options",
-          "name_en": "MCU",
-          "name_fr": "MCU",
           "help_en": "",
           "help_fr": ""
         }

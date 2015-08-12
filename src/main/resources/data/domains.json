@@ -24,11 +24,11 @@
     "datasources": [
       "LSAC",
       "APIMMD",
-      "PLC - OPC",
+      "SFPLC",
       "WINTER",
       "SECURITON",
       "SECURIFIRE",
-      "OPCDEF"
+      "DEF"
     ],
     "categories": [
       "Analogue Points",

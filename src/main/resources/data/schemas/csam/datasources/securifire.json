@@ -17,6 +17,14 @@
       ],
       "fields": [
         {
+          "id": "pointType",
+          "type": "text",
+          "name_en": "Point Type",
+          "name_fr": "Point Type",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
           "id": "securifireGroup",
           "type": "text",
           "name_en": "Group",

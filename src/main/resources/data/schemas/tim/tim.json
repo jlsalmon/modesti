@@ -48,12 +48,22 @@
           "help_fr": ""
         },
         {
-          "id": "detail",
-          "type": "text",
-          "name_en": "Detail",
-          "name_fr": "Detail",
-          "help_en": "Supplementary details of the localisation (e.g. Racks)",
-          "help_fr": "Details supplementaire de la localisation (e.g. Racks)"
+          "id": "pointType",
+          "type": "options",
+          "options": [
+            "OPC",
+            "DIP",
+            "PLC",
+            "LASER",
+            "JAPC",
+            "DIAMON",
+            "DATABASE"
+          ],
+          "required": true,
+          "name_en": "Point Type",
+          "name_fr": "Point Type",
+          "help_en": "",
+          "help_fr": ""
         }
       ]
     },

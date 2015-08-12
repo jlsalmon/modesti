@@ -11,10 +11,27 @@
       "constraints": [
         {
           "type": "xnor",
-          "members": ["plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix", "plcSlaveAddress", "plcConnectId"]
+          "members": ["csamPlcname", "plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix", "plcSlaveAddress", "plcConnectId"]
         }
       ],
       "fields": [
+        {
+          "id": "pointType",
+          "type": "text",
+          "name_en": "Point Type",
+          "name_fr": "Point Type",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "csamPlcname",
+          "type": "text",
+          "maxLength": 15,
+          "name_en": "PLC Name",
+          "name_fr": "PLC Name",
+          "help_en": "",
+          "help_fr": ""
+        },
         {
           "id": "plcBlockType",
           "type": "options",

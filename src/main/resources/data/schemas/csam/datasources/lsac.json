@@ -5,8 +5,7 @@
     {
       "name": "LSAC",
       "editableStates": [
-        "IN_PROGRESS",
-        "FOR_CORRECTION"
+        "FOR_ADDRESSING"
       ],
       "disabledStates": ["FOR_APPROVAL"],
       "constraints": [
@@ -16,6 +15,14 @@
         }
       ],
       "fields": [
+        {
+          "id": "pointType",
+          "type": "text",
+          "name_en": "Point Type",
+          "name_fr": "Point Type",
+          "help_en": "",
+          "help_fr": ""
+        },
         {
           "id": "lsacType",
           "type": "options",
