@@ -63,7 +63,7 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
    * @returns {boolean}
    */
   function isCurrentUserAuthorised() {
-    return TaskService.isCurrentUserAuthorised(self.tasks['approve']);
+    return TaskService.isCurrentUserAuthorised(self.tasks['edit']);
   }
 
   /**
@@ -71,7 +71,7 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
    * @returns {boolean}
    */
   function isCurrentTaskClaimed() {
-    return TaskService.isTaskClaimed(self.tasks['approve']);
+    return TaskService.isTaskClaimed(self.tasks['edit']);
   }
 
   /**
@@ -79,16 +79,16 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
    * @returns {boolean}
    */
   function isCurrentUserAssigned() {
-    return TaskService.isCurrentUserAssigned(self.tasks['approve']);
+    return TaskService.isCurrentUserAssigned(self.tasks['edit']);
   }
 
   /**
    *
    */
   function claim() {
-    TaskService.claimTask(self.tasks['approve'].name, self.request.requestId).then(function (task) {
+    TaskService.claimTask(self.tasks['edit'].name, self.request.requestId).then(function (task) {
       console.log('claimed task successfully');
-      self.tasks['approve'] = task;
+      self.tasks['edit'] = task;
       self.parent.activateDefaultCategory();
     });
   }
@@ -262,7 +262,7 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
       event.stopPropagation();
     }
 
-    var task = self.tasks['approve'];
+    var task = self.tasks['edit'];
     if (!task) {
       console.log('error approving request: no task');
       return;
