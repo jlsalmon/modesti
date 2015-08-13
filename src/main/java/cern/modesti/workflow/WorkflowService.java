@@ -189,19 +189,19 @@ public class WorkflowService {
     //boolean valid = validationService.validateRequest(request);
     boolean valid = validationService.validateRequest(request);
 
-    if (valid) {
-      for (Point point : request.getPoints()) {
-
-        if (point.getApproval() != null && point.getApproval().getApproved() != null && point.getDirty()) {
-          // If a point is dirty and has already been approved, it will need re-approval
-          point.setApproval(new Approval());
-
-        } else {
-          // Mark point as clean
-          point.setDirty(false);
-        }
-      }
-    }
+//    if (valid) {
+//      for (Point point : request.getPoints()) {
+//
+//        if (point.getApproval().getApproved() != null  && point.getApproval().getApproved() == true && point.getDirty()) {
+//          // If a point is dirty and has already been approved, it will need re-approval
+//          point.setApproval(new Approval());
+//
+//        } else {
+//          // Mark point as clean
+//          point.setDirty(false);
+//        }
+//      }
+//    }
 
     // Set the variable for the next stage to evaluate
     execution.setVariable("valid", valid);
