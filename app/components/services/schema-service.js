@@ -46,12 +46,12 @@ function SchemaService($q, $http) {
         var category = schema.categories[i];
 
         // Tagname is shown on each category except General and Alarms
-        if (category.name != 'General' && category.name != 'Alarms') {
+        if (category.name != 'General' && category.name != 'Alarms' && category.name != 'Alarm Help') {
           category.fields.unshift(getTagnameField());
         }
 
         // Fault state is shown only on the Alarms category.
-        if (category.name == 'Alarms') {
+        if (category.name == 'Alarms' || category.name == 'Alarm Help') {
           category.fields.unshift(getFaultStateField());
         }
       }
