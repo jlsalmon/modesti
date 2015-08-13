@@ -161,7 +161,8 @@
       "disabledStates": [],
       "editableStates": [
         "IN_PROGRESS",
-        "FOR_CORRECTION"
+        "FOR_CORRECTION",
+        "FOR_APPROVAL"
       ],
       "fields": [
         {
