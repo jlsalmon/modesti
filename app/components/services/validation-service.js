@@ -18,12 +18,13 @@ function ValidationService($q) {
 
   /**
    *
-   * @param points
+   * @param request
    * @param schema
    * @returns {*}
    */
-  function validateRequest(points, schema) {
+  function validateRequest(request, schema) {
     var q = $q.defer();
+    var points = request.points;
 
     // Reset all categories to valid
     for (var i in schema.categories) {
@@ -32,10 +33,20 @@ function ValidationService($q) {
 
     var valid = true;
 
-    // Validate row by row
-    if (!validateRows(points, schema)) valid = false;
-    // Validate column by column
-    if (!validateColumns(points, schema)) valid = false;
+    if (request.status === 'IN_PROGRESS' || request.status === 'FOR_CORRECTION') {
+      // Validate row by row
+      if (!validateRows(points, schema)) valid = false;
+      // Validate column by column
+      if (!validateColumns(points, schema)) valid = false;
+    }
+
+    else if (request.status === 'FOR_APPROVAL') {
+      // TODO move approval validation here
+    }
+
+    else if (request.status === 'FOR_ADDRESSING') {
+      if (!validateAddresses(points, schema)) valid = false;
+    }
 
     q.resolve(valid);
     return q.promise;
@@ -100,57 +111,7 @@ function ValidationService($q) {
         }
 
         // Validate additional constraints
-        for (var l in category.constraints) {
-          var constraint = category.constraints[l];
-
-          // Get all the fields specified as members of the constraint
-          var fields = [];
-          for (var n in category.fields) {
-            var field = category.fields[n];
-            if (constraint.members.indexOf(field.id) > -1) {
-              fields.push(field);
-            }
-          }
-
-          // Check the values of all fields for this point
-          var emptyFields = [], columnNames = [];
-          for (var m in fields) {
-            var field = fields[m];
-            columnNames.push(field.name_en);
-            var value = getValueByPropertyName(point, getPropertyName(field));
-            if (value === undefined || value === '' || value === null) {
-              emptyFields.push(field);
-            }
-          }
-
-          switch (constraint.type) {
-            case 'or':
-            {
-              if (emptyFields.length == constraint.members.length) {
-                point.valid = category.valid = valid = false;
-                for (var o in emptyFields) {
-                  var field = emptyFields[o];
-                  setErrorMessage(point, getPropertyName(field), 'At least one of "' + columnNames.join(', ') + '" is required for category "' + category.name + '"');
-                }
-
-              }
-              break;
-            }
-            case 'xnor':
-            {
-              if (emptyFields.length != 0 && emptyFields.length != constraint.members.length) {
-                point.valid = category.valid = valid = false;
-
-                for (var o in emptyFields) {
-                  var field = emptyFields[o];
-                  setErrorMessage(point, getPropertyName(field), 'Field "' + field.name_en + '" is required for points of category "' + category.name
-                  + '" if other fields of that category have been specified');
-                }
-              }
-              break;
-            }
-          }
-        }
+        valid = checkConstraints(point, category);
       }
     }
 
@@ -216,6 +177,142 @@ function ValidationService($q) {
         }
 
         checkedColumns.push(columnName);
+      }
+    }
+
+    return valid;
+  }
+
+  /**
+   * Checks that all points have a correct address based on their point type.
+   *
+   * @param points
+   * @param schema
+   */
+  function validateAddresses(points, schema) {
+    var point, valid = true;
+
+    for (var i = 0, len = points.length; i < len; i++) {
+      point = points[i];
+      point.errors = [];
+
+      var pointType = point.properties.pointType;
+
+      // Find the category that matches the point type
+      var category;
+      for (var key in schema.categories) {
+        category = schema.categories[key];
+
+        if (category.name === pointType) {
+          // TODO: do this properly. This is hacked by making any "xnor" constraints become "and" constraints
+          for (var l in category.constraints) {
+            var constraint = category.constraints[l];
+
+            if (constraint.type === 'xnor') {
+              constraint.type = 'and';
+            }
+          }
+
+          valid = checkConstraints(point, category);
+        }
+      }
+
+
+
+
+
+      //
+      //if (pointType === 'APIMMD' && !point.properties.plcBlockType) {
+      //  ValidationService.setErrorMessage(point, 'plcBlockType', 'A complete APIMMD address is required for this point');
+      //  ValidationService.setErrorMessage(point, 'plcWordId', 'A complete APIMMD address is required for this point');
+      //  ValidationService.setErrorMessage(point, 'plcBitId', 'A complete APIMMD address is required for this point');
+      //  valid = false;
+      //}
+      //
+      //else if (pointType === 'LSAC' && !point.properties.lsacType) {
+      //  ValidationService.setErrorMessage(point, 'lsacType', 'A complete LSAC address is required for this point');
+      //  ValidationService.setErrorMessage(point, 'lsacCard', 'A complete LSAC address is required for this point');
+      //  ValidationService.setErrorMessage(point, 'lsacRack', 'A complete LSAC address is required for this point');
+      //  ValidationService.setErrorMessage(point, 'lsacPort', 'A complete LSAC address is required for this point');
+      //  valid = false;
+      //}
+
+    }
+  }
+
+  function checkConstraints(point, category) {
+    var valid;
+
+    for (var l in category.constraints) {
+      var constraint = category.constraints[l];
+
+      // Get all the fields specified as members of the constraint
+      var fields = [];
+      for (var n in category.fields) {
+        var field = category.fields[n];
+        if (constraint.members.indexOf(field.id) > -1) {
+          fields.push(field);
+        }
+      }
+
+      // Check the values of all fields for this point
+      var emptyFields = [], columnNames = [];
+      for (var m in fields) {
+        var field = fields[m];
+        columnNames.push(field.name_en);
+        var value = getValueByPropertyName(point, getPropertyName(field));
+        if (value === undefined || value === '' || value === null) {
+          emptyFields.push(field);
+        }
+      }
+
+      switch (constraint.type) {
+        case 'or':
+        {
+          if (emptyFields.length == constraint.members.length) {
+            point.valid = category.valid = valid = false;
+            for (var o in emptyFields) {
+              var field = emptyFields[o];
+              setErrorMessage(point, getPropertyName(field), 'At least one of "' + columnNames.join(', ') + '" is required for group "' + category.name + '"');
+            }
+
+          }
+          break;
+        }
+        case 'xnor':
+        {
+          if (emptyFields.length != 0 && emptyFields.length != constraint.members.length) {
+            point.valid = category.valid = valid = false;
+
+            for (var o in emptyFields) {
+              var field = emptyFields[o];
+              setErrorMessage(point, getPropertyName(field), 'Field "' + field.name_en + '" is required for points of type "' + category.name + '"');
+            }
+          }
+          break;
+        }
+        case 'and':
+        {
+          if (emptyFields.length === constraint.members.length) {
+            // If all fields are empty, say "Address of type X is required"
+            point.valid = category.valid = valid = false;
+
+            for (var o in emptyFields) {
+              var field = emptyFields[o];
+              setErrorMessage(point, getPropertyName(field), 'All fields in group "' + category.name + '" are required for this point');
+            }
+          }
+          if (emptyFields.length > 0) {
+            // If some are filled, say "Field X is required"
+            point.valid = category.valid = valid = false;
+
+            for (var o in emptyFields) {
+              var field = emptyFields[o];
+              setErrorMessage(point, getPropertyName(field), 'Field "' + field.name_en + '" is required for points of type "' + category.name + '"');
+            }
+          }
+          break;
+        }
       }
     }
 
