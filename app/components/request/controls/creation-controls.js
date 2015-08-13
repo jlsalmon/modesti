@@ -83,8 +83,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
    *
    */
   function canValidate() {
-    var task = self.tasks['edit'];
-    return task;
+    return self.tasks['edit'];
   }
 
   /**
@@ -110,6 +109,10 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
     return getNumValidationErrors() > 0 || getNumApprovalRejections() > 0
   }
 
+  /**
+   *
+   * @returns {number}
+   */
   function getTotalErrors() {
     return getNumValidationErrors() + getNumApprovalRejections();
   }
@@ -339,34 +342,29 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
       return;
     }
 
-    //if (source == 'paste') {
-    //  console.log('paste');
-    //  return;
-    //}
-
     // Make sure the point IDs are consecutive
     for (var i = 0, len = self.rows.length; i < len; i++) {
       self.rows[i].id = i + 1;
     }
 
     // Loop over the changes and check if anything actually changed. Mark any changed points as dirty.
-    var change, index, property, oldValue, newValue, dirty = false;
+    var change, row, property, oldValue, newValue, dirty = false;
     for (var i = 0, len = changes.length; i < len; i++) {
       change = changes[i];
-      index = change[0];
+      row = change[0];
       property = change[1];
       oldValue = change[2];
       newValue = change[3];
 
       // Mark the point as dirty.
       if (newValue != oldValue) {
-        console.log('dirty point: ' + self.rows[index].id);
+        console.log('dirty point: ' + self.rows[row].id);
         dirty = true;
-        self.rows[index].dirty = true;
+        self.rows[row].dirty = true;
       }
 
       // This is a workaround. See function documentation for info.
-      saveNewValue(index, property, newValue);
+      saveNewValue(row, property, newValue);
     }
 
     // If nothing changed, there's nothing to do! Otherwise, save the request.
@@ -476,29 +474,16 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
    * back to the "validate" stage.
    */
   function sendModificationSignal() {
-    var task = self.tasks['submit'];
-    if (!task) {
-      console.log('error sending modification signal: no task');
-      return;
-    }
-
     var signal = self.signals['requestModified'];
 
     if (signal) {
       console.log('form modified whilst in submit state: sending signal');
 
-      // TODO refactor this into a service
-      $http.post(signal._links.self.href, {}).then(function () {
-        console.log('sent modification signal');
-
-        // The "submit" task will have changed to "validate".
+      TaskService.sendSignal(signal).then(function () {
+        // The "submit" task will have changed back to "edit".
         TaskService.getTasksForRequest(self.request).then(function (tasks) {
           self.tasks = tasks;
         });
-      },
-
-      function (error) {
-        console.log('error sending signal: ' + error);
       });
     }
   }

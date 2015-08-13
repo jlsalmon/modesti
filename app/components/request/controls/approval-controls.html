@@ -58,7 +58,24 @@
                 </div>
 
                 <div class="btn-group">
+                  <!--Button to validate the request-->
+                  <button class="btn btn-success"
+                          ng-click="ctrl.validate($event)"
+                          ng-disabled="!ctrl.canValidate()"
+                          tooltip-append-to-body="true"
+                          tooltip="{{'VALIDATE_REQUEST'|translate}}">
 
+                    <!--Show icon based on the loading state-->
+                    <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
+                    <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
+                    <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
+                    <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
+                    {{'VALIDATE'|translate}}
+                  </button>
+                </div>
+
+                <div class="btn-group">
+                  <!-- Button to submit the request -->
                   <button class="btn btn-primary"
                           ng-click="ctrl.submit($event)"
                           ng-disabled="!ctrl.canSubmit()"

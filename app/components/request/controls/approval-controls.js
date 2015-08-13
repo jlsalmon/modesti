@@ -7,13 +7,15 @@
  */
 angular.module('modesti').controller('ApprovalControlsController', ApprovalControlsController);
 
-function ApprovalControlsController($state, $modal, $location, RequestService, TaskService, ValidationService) {
+function ApprovalControlsController($state, $modal, $timeout, RequestService, TaskService, ValidationService, AlertService) {
   var self = this;
 
+  self.parent = {};
   self.request = {};
   self.rows = {};
   self.tasks = {};
-  self.parent = {};
+  self.signals = {};
+  self.hot = {};
 
   self.submitting = undefined;
 
@@ -26,22 +28,25 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
   self.approveAll = approveAll;
   self.rejectSelectedPoints = rejectSelectedPoints;
   self.rejectAll = rejectAll;
+  self.canValidate = canValidate;
   self.canSubmit = canSubmit;
+  self.validate = validate;
   self.submit = submit;
 
   /**
    *
    */
   function init(parent) {
+    self.parent = parent;
     self.request = parent.request;
     self.rows = parent.rows;
     self.tasks = parent.tasks;
-    self.parent = parent;
+    self.signals = parent.signals;
+    self.hot = parent.hot;
 
     // Initialise the approval state of the request itself
     if (!self.request.approval) {
       self.request.approval = {approved: undefined, message: ''};
-      ;
     }
 
     // Initialise the approval state of each point
@@ -63,7 +68,8 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
    * @returns {boolean}
    */
   function isCurrentUserAuthorised() {
-    return TaskService.isCurrentUserAuthorised(self.tasks['edit']);
+    var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
+    return TaskService.isCurrentUserAuthorised(task);
   }
 
   /**
@@ -71,7 +77,8 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
    * @returns {boolean}
    */
   function isCurrentTaskClaimed() {
-    return TaskService.isTaskClaimed(self.tasks['edit']);
+    var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
+    return TaskService.isTaskClaimed(task);
   }
 
   /**
@@ -79,16 +86,24 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
    * @returns {boolean}
    */
   function isCurrentUserAssigned() {
-    return TaskService.isCurrentUserAssigned(self.tasks['edit']);
+    var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
+    return TaskService.isCurrentUserAssigned(task);
   }
 
   /**
    *
    */
-  function claim() {
-    TaskService.claimTask(self.tasks['edit'].name, self.request.requestId).then(function (task) {
+  function claim(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    var taskName = self.tasks['edit'] ? self.tasks['edit'].name : self.tasks['submit'].name;
+
+    TaskService.claimTask(taskName, self.request.requestId).then(function (task) {
       console.log('claimed task successfully');
-      self.tasks['edit'] = task;
+      self.tasks[taskName] = task;
       self.parent.activateDefaultCategory();
     });
   }
@@ -230,26 +245,104 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
   }
 
   /**
+   *
+   */
+  function canValidate() {
+    return self.tasks['edit'];
+  }
+
+  /**
    * The approval may only be submitted if all points in the request have been either approved or rejected. If they have
    * been rejected, there must be an accompanying comment.
    *
    * @returns {boolean}
    */
   function canSubmit() {
-    var point;
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      point = self.rows[i];
+    //var point;
+    //for (var i = 0, len = self.rows.length; i < len; i++) {
+    //  point = self.rows[i];
+    //
+    //  if (!point.approval || point.approval.approved === null) {
+    //    return false;
+    //  }
+    //
+    //  else if (point.approval.approved === false && !point.approval.message) {
+    //    return false;
+    //  }
+    //}
+    //
+    //return true;
 
-      if (!point.approval || point.approval.approved === null) {
-        return false;
-      }
+    return self.tasks['submit'];
+  }
 
-      else if (point.approval.approved === false && !point.approval.message) {
-        return false;
-      }
+  /**
+   *
+   */
+  function validate(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
     }
 
-    return true;
+    self.validating = 'started';
+    AlertService.clear();
+
+    $timeout(function () {
+      ValidationService.validateRequest(self.rows, self.parent.schema).then(function (valid) {
+        // Render the table to show the error highlights
+        self.hot.render();
+
+        if (!valid) {
+          self.validating = 'error';
+          return;
+        }
+
+        // Validate server-side
+        var task = self.tasks['edit'];
+
+        if (!task) {
+          console.log('warning: no validate task found');
+          return;
+        }
+
+        // First save the request
+        RequestService.saveRequest(self.request).then(function () {
+          console.log('saved request before validation');
+
+          // Complete the task associated with the request
+          TaskService.completeTask(task.name, self.request.requestId).then(function () {
+            console.log('completed task ' + task.name);
+
+            // Clear the cache so that the state reload also pulls a fresh request
+            RequestService.clearCache();
+
+            $state.reload().then(function () {
+              self.validating = 'success';
+              AlertService.add('success', 'Request has been validated successfully');
+
+              // The "edit" task will have changed to "submit"
+              TaskService.getTasksForRequest(self.request).then(function (tasks) {
+                self.tasks = tasks;
+                // Claim the submit task
+                // claim();
+              });
+            });
+          },
+
+          function (error) {
+            console.log('error completing task: ' + error.statusText);
+            self.validating = 'error';
+          });
+        },
+
+        function (error) {
+          console.log('error saving before validation: ' + error.statusText);
+          self.validating = 'error';
+        });
+      });
+
+    })
   }
 
   /**
@@ -262,7 +355,7 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
       event.stopPropagation();
     }
 
-    var task = self.tasks['edit'];
+    var task = self.tasks['submit'];
     if (!task) {
       console.log('error approving request: no task');
       return;
@@ -330,7 +423,7 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
       return;
     }
 
-    var change, row, property, oldValue, newValue;
+    var change, row, property, oldValue, newValue, dirty = false;
     for (var i = 0, len = changes.length; i < len; i++) {
       change = changes[i];
       row = change[0];
@@ -338,8 +431,14 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
       oldValue = change[2];
       newValue = change[3];
 
-      var point = self.rows[row];
+      // Mark the point as dirty.
+      if (newValue != oldValue) {
+        console.log('dirty point: ' + self.rows[row].id);
+        dirty = true;
+        self.rows[row].dirty = true;
+      }
 
+      var point = self.rows[row];
       if (property === 'approval.message' && point.approval && point.approval.approved === false) {
 
         // If a point is rejected and a comment has just been deleted, then add an error
@@ -354,6 +453,36 @@ function ApprovalControlsController($state, $modal, $location, RequestService, T
 
         self.parent.hot.render();
       }
+    }
+
+    // If nothing changed, there's nothing to do! Otherwise, save the request.
+    if (dirty) {
+      RequestService.saveRequest(self.request).then(function () {
+        // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
+        // revalidated. This is done by sending the "requestModified" signal.
+        if (self.tasks['submit']) {
+          sendModificationSignal();
+        }
+      });
+    }
+  }
+
+  /**
+   * Sends the "requestModified" signal when in the "submit" stage of the workflow in order to force the request
+   * back to the "validate" stage.
+   */
+  function sendModificationSignal() {
+    var signal = self.signals['requestModified'];
+
+    if (signal) {
+      console.log('form modified whilst in submit state: sending signal');
+
+      TaskService.sendSignal(signal).then(function () {
+        // The "submit" task will have changed back to "edit".
+        TaskService.getTasksForRequest(self.request).then(function (tasks) {
+          self.tasks = tasks;
+        });
+      });
     }
   }
 }

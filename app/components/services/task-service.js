@@ -21,8 +21,9 @@ function TaskService($q, $http, AuthService) {
     isTaskClaimed: isTaskClaimed,
     isAnyTaskClaimed: isAnyTaskClaimed,
     isCurrentUserAssigned: isCurrentUserAssigned,
-    isCurrentUserAuthorised: isCurrentUserAuthorised
-  };
+    isCurrentUserAuthorised: isCurrentUserAuthorised,
+    sendSignal: sendSignal
+};
 
   /**
    *
@@ -194,8 +195,26 @@ function TaskService($q, $http, AuthService) {
       }
     }
 
-
     return false;
+  }
+
+  /**
+   *
+   */
+  function sendSignal(signal) {
+    var q = $q.defer();
+
+    $http.post(signal._links.self.href, {}).then(function () {
+      console.log('sent signal ' + signal.name);
+      q.resolve();
+    },
+
+    function (error) {
+      console.log('error sending signal ' + signal.name + ': ' + error);
+      q.reject(error);
+    });
+
+    return q.promise;
   }
 
   return service;
