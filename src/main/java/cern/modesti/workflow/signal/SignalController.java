@@ -2,6 +2,7 @@ package cern.modesti.workflow.signal;
 
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
+import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.task.TaskInfo;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -13,11 +14,13 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -118,7 +121,7 @@ public class SignalController {
    * @return
    */
   @RequestMapping(value = "/requestModified", method = POST)
-  public ResponseEntity requestModified(@PathVariable("id") String id) {
+  public ResponseEntity requestModified(@PathVariable("id") String id, Principal principal) {
     Request request = getRequest(id);
     if (request == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -129,7 +132,15 @@ public class SignalController {
       throw new InvalidOperationException(format("Signal 'requestModified' is not valid for request %s at this stage in the workflow.", id));
     }
 
+    // Send the signal to the workflow engine, which will sent the request back to the "edit" task
     runtimeService.signalEventReceived("requestModified", task.getExecutionId());
+
+    // Claim the "edit" task as the user who just modified the request.
+    task = taskService.createTaskQuery().processInstanceBusinessKey(id).taskName("edit").singleResult();
+    User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+    taskService.claim(task.getId(), user.getUsername());
+    task.setAssignee(user.getUsername());
+
     return new ResponseEntity(HttpStatus.OK);
   }
 

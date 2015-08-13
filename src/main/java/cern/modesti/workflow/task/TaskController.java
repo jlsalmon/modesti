@@ -17,11 +17,12 @@ import cern.modesti.workflow.task.TaskAction.Action;
 import lombok.extern.slf4j.Slf4j;
 
 import org.activiti.engine.IdentityService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.query.Query;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
-import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -79,7 +80,7 @@ public class TaskController {
   private TaskService taskService;
 
   @Autowired
-  private IdentityService identityService;
+  private RuntimeService runtimeService;
 
   @Autowired
   private RequestRepository requestRepository;
@@ -138,8 +139,8 @@ public class TaskController {
    * @return
    */
   @RequestMapping(value = "/{name}", method = POST)
-  public HttpEntity<Resource<TaskInfo>> action(@PathVariable("id") String requestId, @PathVariable("name") String taskName, @RequestBody TaskAction action, Principal
-      principal) {
+  public HttpEntity<Resource<TaskInfo>> action(@PathVariable("id") String requestId, @PathVariable("name") String taskName, @RequestBody TaskAction action,
+                                               Principal principal) {
     Request request = getRequest(requestId);
     if (request == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -174,6 +175,14 @@ public class TaskController {
     Task task = getTaskForRequest(requestId, taskName);
     taskService.claim(task.getId(), assignee);
     task.setAssignee(assignee);
+
+    // If this task is an "edit" task, then place the assignee name as a variable "editor" in the execution. This is so that we can automatically assign the
+    // "submit" task which inevitably follows. The sequence is always "edit" -> "validate" -> "submit".
+    if (taskName.equals("edit")) {
+      Execution execution = runtimeService.createExecutionQuery().processInstanceBusinessKey(requestId).singleResult();
+      runtimeService.setVariable(execution.getId(), "editor", assignee);
+    }
+
     return new TaskInfo(task.getName(), task.getDescription(), task.getAssignee(), getCandidateGroups(task));
   }
 
@@ -207,7 +216,7 @@ public class TaskController {
     if (task == null) {
       List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(requestId).orderByTaskCreateTime().desc().list();
 
-      throw new InvalidOperationException(format("Task '%s' does not exist or is not valid for request %s at this stage in the workflow. Available tasks: " +
+      throw new IllegalArgumentException(format("Task '%s' does not exist or is not valid for request %s at this stage in the workflow. Available tasks: " +
           "[%s]", taskName, requestId, tasks.stream().map(Task::getName).collect(Collectors.joining(", "))));
     }
 
