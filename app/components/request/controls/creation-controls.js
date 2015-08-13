@@ -150,7 +150,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
   }
 
   /**
-   *
+   * TODO: figure out a nice way of refactoring this out (possibly into a service, possibly into a base controller of some kind)
    */
   function validate(event) {
     if (event) {
@@ -162,7 +162,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
     AlertService.clear();
 
     $timeout(function () {
-      ValidationService.validateRequest(self.rows, self.parent.schema).then(function (valid) {
+      ValidationService.validateRequest(self.request, self.parent.schema).then(function (valid) {
         // Render the table to show the error highlights
         self.hot.render();
 

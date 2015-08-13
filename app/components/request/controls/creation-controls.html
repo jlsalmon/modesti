@@ -134,8 +134,8 @@
 
     <div ng-if="ctrl.getNumValidationErrors() > 0">
       <p>
-        Your request has failed validation. Please review the following lines which explain the validation failures. You should modify your
-        request before re-validating it.
+        The request has failed validation. Please review the following lines which explain the validation failures. The
+        request should be modified before revalidation.
       </p>
 
       <div ng-repeat="point in ctrl.rows track by point.id">
@@ -149,8 +149,8 @@
 
     <div ng-if="ctrl.request.approval.approved === false">
       <p>
-        Your request has been rejected by an operator. Please review the following lines which show the reason for the rejection. You should
-        modify your request according to the operator comments before re-submitting it.
+        The request has been rejected by an operator. Please review the following lines which show the reason for the
+        rejection. The request should be modified according to the operator comments before resubmission.
       </p>
 
       <div ng-repeat="point in ctrl.rows track by point.id">

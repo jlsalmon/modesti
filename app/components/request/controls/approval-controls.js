@@ -32,6 +32,7 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
   self.canSubmit = canSubmit;
   self.validate = validate;
   self.submit = submit;
+  self.getNumValidationErrors = getNumValidationErrors;
 
   /**
    *
@@ -88,6 +89,24 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
   function isCurrentUserAssigned() {
     var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
     return TaskService.isCurrentUserAssigned(task);
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  function getNumValidationErrors() {
+    var n = 0;
+
+    for (var i in self.rows) {
+      var point = self.rows[i];
+
+      for (var j in point.errors) {
+        n += point.errors[j].errors.length;
+      }
+    }
+
+    return n;
   }
 
   /**
@@ -252,27 +271,10 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
   }
 
   /**
-   * The approval may only be submitted if all points in the request have been either approved or rejected. If they have
-   * been rejected, there must be an accompanying comment.
    *
    * @returns {boolean}
    */
   function canSubmit() {
-    //var point;
-    //for (var i = 0, len = self.rows.length; i < len; i++) {
-    //  point = self.rows[i];
-    //
-    //  if (!point.approval || point.approval.approved === null) {
-    //    return false;
-    //  }
-    //
-    //  else if (point.approval.approved === false && !point.approval.message) {
-    //    return false;
-    //  }
-    //}
-    //
-    //return true;
-
     return self.tasks['submit'];
   }
 
@@ -288,8 +290,36 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
     self.validating = 'started';
     AlertService.clear();
 
+
+    // The request is only valid if all points in the request have been either approved or rejected. If they have
+    // been rejected, there must be an accompanying comment.
+
+    var point, valid = true;
+    for (var i = 0, len = self.rows.length; i < len; i++) {
+      point = self.rows[i];
+      point.errors = [];
+
+      if (!point.approval || point.approval.approved === null) {
+        ValidationService.setErrorMessage(point, 'approval.message', 'Each point in the request must be either approved or rejected');
+        valid = false;
+      }
+
+      else if (point.approval.approved === false &&
+      (point.approval.message === undefined || point.approval.message === null || point.approval.message === '')) {
+        ValidationService.setErrorMessage(point, 'approval.message', 'Reason for rejection must be given in the comment field');
+        valid = false;
+      }
+    }
+
+    if (!valid) {
+      self.validating = 'error';
+      self.hot.render();
+      return;
+    }
+
+    // Run the generic validations
     $timeout(function () {
-      ValidationService.validateRequest(self.rows, self.parent.schema).then(function (valid) {
+      ValidationService.validateRequest(self.request, self.parent.schema).then(function (valid) {
         // Render the table to show the error highlights
         self.hot.render();
 
@@ -324,8 +354,6 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
               // The "edit" task will have changed to "submit"
               TaskService.getTasksForRequest(self.request).then(function (tasks) {
                 self.tasks = tasks;
-                // Claim the submit task
-                // claim();
               });
             });
           },
@@ -436,22 +464,6 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
         console.log('dirty point: ' + self.rows[row].id);
         dirty = true;
         self.rows[row].dirty = true;
-      }
-
-      var point = self.rows[row];
-      if (property === 'approval.message' && point.approval && point.approval.approved === false) {
-
-        // If a point is rejected and a comment has just been deleted, then add an error
-        if (newValue === undefined || newValue === null || newValue === '') {
-          ValidationService.setErrorMessage(point, 'approval.message', 'Reason for rejection must be given in the comment field');
-        }
-
-        // If a point is rejected and a comment has just been added, then remove the error
-        else {
-          point.errors = [];
-        }
-
-        self.parent.hot.render();
       }
     }
 

@@ -117,5 +117,20 @@
       </div>
     </accordion-heading>
 
+    <div ng-if="ctrl.getNumValidationErrors() > 0">
+      <p>
+        The request has failed validation. Please review the following lines which explain the validation failures. The
+        request should be modified before revalidation.
+      </p>
+
+      <div ng-repeat="point in ctrl.rows track by point.id">
+        <div ng-repeat="error in point.errors track by $index">
+          <div ng-repeat="error in error.errors">
+            <i class="fa fa-fw fa-exclamation-circle text-danger"></i> Line {{point.id}}: {{error}}
+          </div>
+        </div>
+      </div>
+    </div>
+
   </accordion-group>
 </accordion>
