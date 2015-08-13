@@ -35,11 +35,12 @@ function SchemaService($q, $http) {
       }
     }
 
-    request._links.schema.href = url;
-
     $http.get(url).then(function (response) {
       var schema = response.data;
       console.log('fetched schema: ' + schema.name);
+
+      // Save the URL
+      request._links.schema.href = url;
 
       // Prepend tagname and fault state fields
       for (var i = 0, len = schema.categories.length; i < len; i++) {

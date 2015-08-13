@@ -363,6 +363,23 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
         self.rows[row].dirty = true;
       }
 
+      // If the change was to the "pointType" field, make sure that the corresponding category is added (but not
+      // activated) unless we already have it.
+      if (property === 'properties.pointType') {
+        var found = false;
+        for (var key in self.parent.schema.categories) {
+          if (self.parent.schema.categories[key].name === newValue) {
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          console.log('adding extra category for point type ' + newValue);
+          self.parent.addExtraCategory(newValue, false);
+        }
+      }
+
       // This is a workaround. See function documentation for info.
       saveNewValue(row, property, newValue);
     }

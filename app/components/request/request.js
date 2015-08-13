@@ -520,8 +520,10 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
   /**
    *
    * @param categoryName
+   * @param activate {boolean} whether to activate the newly added category
    */
-  function addExtraCategory(categoryName) {
+  function addExtraCategory(categoryName, activate) {
+    if (typeof(activate) === 'undefined') activate = true;
     console.log("adding category " + categoryName);
 
     SchemaService.getSchema(request, categoryName).then(function(schema) {
@@ -529,11 +531,13 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       self.schema = schema;
       getAvailableExtraCategories();
 
-      // Find the new category and activate it
-      for (var i in self.schema.categories) {
-        var category = self.schema.categories[i];
-        if (category.name == categoryName) {
-          activateCategory(category);
+      if (activate) {
+        // Find the new category and activate it
+        for (var i in self.schema.categories) {
+          var category = self.schema.categories[i];
+          if (category.name == categoryName) {
+            activateCategory(category);
+          }
         }
       }
     });

@@ -241,7 +241,7 @@ function ValidationService($q) {
   }
 
   function checkConstraints(point, category) {
-    var valid;
+    var valid = true;
 
     for (var l in category.constraints) {
       var constraint = category.constraints[l];
