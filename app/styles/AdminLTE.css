@@ -3989,7 +3989,7 @@ fieldset[disabled] .btn-vk.active {
 .alert-error,
 .label-danger,
 .modal-danger .modal-body {
-  /*background-color: #dd4b39 !important;*/
+  background-color: #dd4b39 !important;
 }
 .bg-yellow,
 .callout.callout-warning,
