@@ -1,5 +1,6 @@
 package cern.modesti.worflow.task;
 
+import static cern.modesti.util.TestUtil.getTestRequest;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -52,7 +53,7 @@ import cern.modesti.workflow.task.TaskInfo;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@TestPropertySource("classpath:modesti-test.properties")
+@TestPropertySource("classpath:**/modesti-test.properties")
 @WebAppConfiguration
 public class TaskControllerTest {
 
@@ -98,17 +99,7 @@ public class TaskControllerTest {
         .andExpect(jsonPath("$.candidateGroups", contains(this.taskList.get(0).getCandidateGroups().toArray())));
   }
 
-  private Request getTestRequest() {
-    Request request = new Request();
-    request.setRequestId("1");
-    request.setType(RequestType.CREATE);
-    request.setCreator(new User(1, "bert", "Bert", "Is Evil", "bert@modesti.ch", new HashSet<>(Collections.singleton(new Role("modesti-administrators")))));
-    request.setDescription("description");
-    request.setDomain("TIM");
-    request.setSubsystem(new SubSystem(1L, "EAU DEMI", "EAU", "A", "DEMI", "B"));
-    request.setCategories(new ArrayList<>(Arrays.asList("PLC")));
-    return request;
-  }
+
 
   @Autowired
   void setConverters(HttpMessageConverter<?>[] converters) {
