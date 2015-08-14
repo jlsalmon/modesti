@@ -59,8 +59,8 @@ public class HistoryService {
         .orderByHistoricActivityInstanceStartTime().asc().list();
 
     for (HistoricActivityInstance activity : activities) {
-      // Not interested in gateway activities
-      if (!activity.getActivityType().equals("exclusiveGateway") && !activity.getActivityType().equals("parallelGateway")) {
+      // Only interested in user tasks
+      if (activity.getActivityType().equals("userTask")) {
 
         String description = "";
         for (HistoricTaskInstance task : tasks) {
