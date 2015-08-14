@@ -34,7 +34,7 @@ import cern.modesti.request.Request;
  */
 @Service
 @Slf4j
-public class ConfigurationService implements JavaDelegate {
+public class ConfigurationService {
 
   @Autowired
   RequestRepository requestRepository;
@@ -54,10 +54,7 @@ public class ConfigurationService implements JavaDelegate {
    * @param execution
    * @throws Exception
    */
-  @Override
-  public void execute(DelegateExecution execution) throws Exception {
-    String requestId = execution.getProcessBusinessKey();
-
+  public void configureRequest(String requestId, DelegateExecution execution) throws Exception {
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
       throw new ActivitiException("No request with id " + requestId + " was found");

@@ -16,7 +16,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  */
 @RestController
 @Slf4j
-@Profile({"dev", "prod"})
 public class ProgressUpdateController {
 
   @Autowired

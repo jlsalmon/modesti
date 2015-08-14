@@ -42,6 +42,7 @@ import static cern.modesti.util.TestUtil.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -115,10 +116,10 @@ public class WorkflowServiceTest {
 
     // Stub the 'configure' service task, making sure the 'configured' execution variable is set.
     doAnswer(invocation -> {
-      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[0];
+      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[1];
       execution.setVariable("configured", true);
       return null;
-    }).when(configurationService).execute(anyObject());
+    }).when(configurationService).configureRequest(anyString(), anyObject());
 
     // Completing the 'configure' task should activate the 'test' task. The request status should be 'FOR_TESTING'.
     completeCurrentTask(request.getRequestId());
@@ -167,10 +168,10 @@ public class WorkflowServiceTest {
     assertTaskNameAndRequestStatus(request.getRequestId(), "configure", Request.RequestStatus.FOR_CONFIGURATION);
 
     doAnswer(invocation -> {
-      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[0];
+      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[1];
       execution.setVariable("configured", true);
       return null;
-    }).when(configurationService).execute(anyObject());
+    }).when(configurationService).configureRequest(anyString(), anyObject());
 
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), "test", Request.RequestStatus.FOR_TESTING);
@@ -226,10 +227,10 @@ public class WorkflowServiceTest {
     assertEquals(4, wiser.getMessages().size());
 
     doAnswer(invocation -> {
-      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[0];
+      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[1];
       execution.setVariable("configured", true);
       return null;
-    }).when(configurationService).execute(anyObject());
+    }).when(configurationService).configureRequest(anyString(), anyObject());
 
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), "test", Request.RequestStatus.FOR_TESTING);
@@ -299,10 +300,10 @@ public class WorkflowServiceTest {
     assertTaskNameAndRequestStatus(request.getRequestId(), "configure", Request.RequestStatus.FOR_CONFIGURATION);
 
     doAnswer(invocation -> {
-      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[0];
+      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[1];
       execution.setVariable("configured", true);
       return null;
-    }).when(configurationService).execute(anyObject());
+    }).when(configurationService).configureRequest(anyString(), anyObject());
 
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), "test", Request.RequestStatus.FOR_TESTING);

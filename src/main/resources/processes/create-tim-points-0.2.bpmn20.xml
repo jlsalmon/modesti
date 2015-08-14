@@ -142,7 +142,7 @@ required?"></exclusiveGateway>
       <userTask id="sid-415AAE54-E92E-4944-8B77-47597470979A" name="configure" activiti:candidateGroups="modesti-creators,modesti-administrators">
         <documentation>Points ready for configuration</documentation>
       </userTask>
-      <serviceTask id="sid-2A2991EF-1666-4809-9379-B51AEDE0C673" name="configure" activiti:delegateExpression="${configurationService}">
+      <serviceTask id="sid-2A2991EF-1666-4809-9379-B51AEDE0C673" name="configure" activiti:expression="${configurationService.configureRequest(requestId, execution)}">
         <documentation>Points configured</documentation>
       </serviceTask>
       <exclusiveGateway id="sid-27D6ABA9-798D-4103-A6DD-22B14F709007" name="configured?"></exclusiveGateway>
