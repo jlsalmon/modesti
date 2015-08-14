@@ -2,12 +2,19 @@ package cern.modesti.configuration;
 
 import static java.lang.String.format;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import cern.c2mon.shared.client.configuration.ConfigConstants;
+import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.workflow.result.ConfigurationResult;
 import lombok.extern.slf4j.Slf4j;
 import oracle.jdbc.OracleTypes;
 
+import org.activiti.engine.ActivitiException;
+import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SqlOutParameter;
@@ -27,7 +34,10 @@ import cern.modesti.request.Request;
  */
 @Service
 @Slf4j
-public class ConfigurationService {
+public class ConfigurationService implements JavaDelegate {
+
+  @Autowired
+  RequestRepository requestRepository;
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
@@ -38,12 +48,49 @@ public class ConfigurationService {
   private Map<String, ProgressUpdateListener> listeners = new HashMap<>();
 
   /**
+   * Entry point to the configuration from the workflow engine. The 'configure' service task in the workflow refers to this class from a 'delegate expression',
+   * which means that this method will be invoked as the service task.
+   *
+   * @param execution
+   * @throws Exception
+   */
+  @Override
+  public void execute(DelegateExecution execution) throws Exception {
+    String requestId = execution.getProcessBusinessKey();
+
+    Request request = requestRepository.findOneByRequestId(requestId);
+    if (request == null) {
+      throw new ActivitiException("No request with id " + requestId + " was found");
+    }
+
+    ConfigurationReport report = configureRequest(request, new ProgressUpdateListener());
+
+    // OK, WARNING and RESTART are all considered successful
+    boolean failure = report.getStatus() == ConfigConstants.Status.FAILURE;
+    ConfigurationResult result;
+
+    if (failure) {
+      result = new ConfigurationResult(false);
+      result.setErrors(Collections.singletonList(report.getStatusDescription()));
+    } else {
+      result = new ConfigurationResult(true);
+    }
+
+    request.setConfigurationResult(result);
+    execution.setVariable("configured", !failure);
+
+    // Store the request
+    requestRepository.save(request);
+  }
+
+  /**
    * @param request
    *
    * @return true if the configuration was applied successfully, false otherwise
    */
   @Transactional
   public ConfigurationReport configureRequest(Request request, ProgressUpdateListener listener) {
+    log.info(format("configuring points for request id %s...", request.getRequestId()));
 
     // Generate the configuration
     SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withCatalogName("CONFIG_GENERATOR").withProcedureName("STP_LOAD_POINT_LIST_WRAP");

@@ -53,8 +53,8 @@ public class WorkflowService {
   @Autowired
   private ValidationService validationService;
 
-  @Autowired
-  private ConfigurationService configurationService;
+//  @Autowired
+//  private ConfigurationService configurationService;
 
   /**
    * @param request
@@ -207,6 +207,7 @@ public class WorkflowService {
     execution.setVariable("valid", valid);
 
     // Store the request
+    request.setValid(valid);
     requestRepository.save(request);
   }
 
@@ -280,42 +281,42 @@ public class WorkflowService {
     requestRepository.save(request);
   }
 
-  /**
-   * @param requestId
-   * @param execution
-   */
-  public void configureRequest(String requestId, DelegateExecution execution) {
-    log.info("configuring points for request id " + requestId + "...");
-
-    Request request = requestRepository.findOneByRequestId(requestId);
-    if (request == null) {
-      throw new ActivitiException("No request with id " + requestId + " was found");
-    }
-
-
-    /**
-     * TODO: implement actual point configuration here
-     */
-
-    ConfigurationReport report = configurationService.configureRequest(request, new ProgressUpdateListener());
-
-    // OK, WARNING and RESTART are all considered successful
-    boolean failure = report.getStatus() == ConfigConstants.Status.FAILURE;
-    ConfigurationResult result;
-
-    if (failure) {
-      result = new ConfigurationResult(false);
-      result.setErrors(Collections.singletonList(report.getStatusDescription()));
-    } else {
-      result = new ConfigurationResult(true);
-    }
-
-    request.setConfigurationResult(result);
-    execution.setVariable("configured", !failure);
-
-    // Store the request
-    requestRepository.save(request);
-  }
+//  /**
+//   * @param requestId
+//   * @param execution
+//   */
+//  public void configureRequest(String requestId, DelegateExecution execution) {
+//    log.info("configuring points for request id " + requestId + "...");
+//
+//    Request request = requestRepository.findOneByRequestId(requestId);
+//    if (request == null) {
+//      throw new ActivitiException("No request with id " + requestId + " was found");
+//    }
+//
+//
+//    /**
+//     * TODO: implement actual point configuration here
+//     */
+//
+//    ConfigurationReport report = configurationService.configureRequest(request, new ProgressUpdateListener());
+//
+//    // OK, WARNING and RESTART are all considered successful
+//    boolean failure = report.getStatus() == ConfigConstants.Status.FAILURE;
+//    ConfigurationResult result;
+//
+//    if (failure) {
+//      result = new ConfigurationResult(false);
+//      result.setErrors(Collections.singletonList(report.getStatusDescription()));
+//    } else {
+//      result = new ConfigurationResult(true);
+//    }
+//
+//    request.setConfigurationResult(result);
+//    execution.setVariable("configured", !failure);
+//
+//    // Store the request
+//    requestRepository.save(request);
+//  }
 
   /**
    * @param requestId

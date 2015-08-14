@@ -38,6 +38,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Justin Lewis Salmon
@@ -117,22 +118,22 @@ public class Request implements Serializable {
   /**
    *
    */
-  private Approval approval;
+  private Approval approval = new Approval();
 
   /**
    *
    */
-  private Addressing addressing;
+  private Addressing addressing = new Addressing();
 
   /**
    *
    */
-  private Cabling cabling;
+  private Cabling cabling = new Cabling();
 
   /**
    *
    */
-  private Testing testing;
+  private Testing testing = new Testing();
 
   /**
    *
@@ -156,7 +157,6 @@ public class Request implements Serializable {
     FOR_ADDRESSING,
     FOR_CABLING,
     FOR_CONFIGURATION,
-    CONFIGURED,
     FOR_TESTING,
     CLOSED
   }
@@ -194,26 +194,26 @@ public class Request implements Serializable {
   }
 
   /**
-   * TODO: implement this properly
-   *
    * For TIM requests, a point requires cabling if:
-   *  - it is an APIMMD point or;
-   *  - ???
+   *  - it is an APIMMD point
    *
    * For CSAM requests, a point requires cabling if:
    *  - it is an APIMMD point or;
    *  - it is an LSAC point
    *
-   * TODO: how to deduce if a point requires an address? What if a request has a mixture of datasources, some which
-   * TODO: require an address and some which don't? Can it be derived somehow from the moneq or the plc name? Also,
-   * TODO: what if someone adds a datasource but doesn't actually have any points of that type?
-   *
-   * TODO make this class abstract and have TimRequest, CsamRequest and PvssRequest?
-   *
    * @return true if this request requires cabling, false otherwise
    */
   public boolean requiresCabling() {
-    // Return a random result for now
-    return true; // new Random(System.currentTimeMillis()).nextBoolean();
+    for (Point point : points) {
+      String pointType = (String) point.getProperties().get("pointType");
+
+      if (pointType != null) {
+        if (pointType.equals("APIMMD") || pointType.equals("LSAC")) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }
