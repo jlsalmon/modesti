@@ -3,20 +3,22 @@ package cern.modesti.util;
 import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
+import cern.modesti.request.point.Point;
 import cern.modesti.security.ldap.Role;
 import cern.modesti.security.ldap.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 /**
- * Created by jsalmon on 13/08/15.
+ *
  */
 public class TestUtil {
 
-  public static Request getTestRequest() {
+  /**
+   *
+   * @return
+   */
+  public static Request getTimRequest() {
     Request request = new Request();
     request.setRequestId("1");
     request.setType(RequestType.CREATE);
@@ -24,7 +26,56 @@ public class TestUtil {
     request.setDescription("description");
     request.setDomain("TIM");
     request.setSubsystem(new SubSystem(1L, "EAU DEMI", "EAU", "A", "DEMI", "B"));
-    request.setCategories(new ArrayList<>(Arrays.asList("PLC")));
+    request.setCategories(new ArrayList<>(Collections.singletonList("PLC")));
+
+    request.setPoints(getTimPoints());
     return request;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public static Request getTimRequestWithAlarms() {
+    Request request = getTimRequest();
+    request.setRequestId("2");
+    request.setPoints(getTimAlarms());
+    return request;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public static List<Point> getTimPoints() {
+    List<Point> points = new ArrayList<>();
+
+    Point point1 = new Point(1L);
+    point1.setProperties(new HashMap<String, Object>() {{
+      put("pointDescription", "TEST POINT 1");
+      put("pointDataType", "Boolean");
+    }});
+
+    points.add(point1);
+    return points;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public static List<Point> getTimAlarms() {
+    List<Point> points = new ArrayList<>();
+
+    Point point1 = new Point(1L);
+    point1.setProperties(new HashMap<String, Object>() {{
+      put("pointDescription", "TEST ALARM 1");
+      put("pointDataType", "Boolean");
+      put("priorityCode", 1);
+      put("alarmValue", 0);
+    }});
+
+    points.add(point1);
+    return points;
   }
 }

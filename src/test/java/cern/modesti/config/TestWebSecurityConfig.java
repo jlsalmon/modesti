@@ -25,11 +25,11 @@ public class TestWebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-      .authorizeRequests()
-        .antMatchers("/css/**").permitAll()
-        .anyRequest().fullyAuthenticated()
-        .and()
-      .formLogin();
+        // Enable basic HTTP authentication
+        .httpBasic()
+          // Authentication is required for all URLs
+          .and().authorizeRequests().anyRequest().authenticated()
+          .and().csrf().disable();
   }
 
   @Configuration

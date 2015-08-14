@@ -1,8 +1,5 @@
 package cern.modesti.configuration;
 
-import java.util.Collections;
-import java.util.HashMap;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -10,10 +7,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import cern.c2mon.shared.client.configuration.ConfigurationReport;
 import cern.modesti.request.Request;
-import cern.modesti.request.point.Point;
-import cern.modesti.security.ldap.User;
 
-import static cern.modesti.util.TestUtil.getTestRequest;
+import static cern.modesti.util.TestUtil.getTimRequest;
 
 /**
  * TODO
@@ -28,7 +23,7 @@ public class ConfigurationServiceTest {
 
   @Test
   public void test() {
-    Request request = getTestRequest();
+    Request request = getTimRequest();
     ConfigurationReport report = configurationService.configureRequest(request, null);
   }
 }

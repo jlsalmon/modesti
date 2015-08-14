@@ -1,6 +1,6 @@
 package cern.modesti.worflow.task;
 
-import static cern.modesti.util.TestUtil.getTestRequest;
+import static cern.modesti.util.TestUtil.getTimRequest;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,12 +36,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import cern.modesti.Application;
-import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
-import cern.modesti.request.RequestType;
-import cern.modesti.security.ldap.Role;
-import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.task.TaskInfo;
 
 
@@ -53,7 +48,7 @@ import cern.modesti.workflow.task.TaskInfo;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@TestPropertySource("classpath:**/modesti-test.properties")
+@TestPropertySource("classpath:modesti-test.properties")
 @WebAppConfiguration
 public class TaskControllerTest {
 
@@ -79,7 +74,7 @@ public class TaskControllerTest {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
     // How to add tasks to a request? Need to start the process.
-    this.request = requestRepository.save(getTestRequest());
+    this.request = requestRepository.save(getTimRequest());
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
