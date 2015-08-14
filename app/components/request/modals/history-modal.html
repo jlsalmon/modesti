@@ -11,18 +11,14 @@
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th>Type</th>
-        <th>{{'NAME'|translate}}</th>
         <th>{{'DESCRIPTION'|translate}}</th>
         <th>{{'START_TIME'|translate}}</th>
         <th>{{'END_TIME'|translate}}</th>
-        <th>User</th>
+        <th>Assignee</th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="item in ctrl.history">
-        <td>{{::item.type}}</td>
-        <td>{{::item.name}}</td>
         <td>{{::item.description}}</td>
         <td>{{::item.startTime | date:'medium'}}</td>
         <td>{{::item.endTime | date:'medium'}}</td>
