@@ -47,6 +47,28 @@ public class TestUtil {
    *
    * @return
    */
+  public static Request getTimRequestWithCabledPoints() {
+    Request request = getTimRequest();
+    request.setRequestId("3");
+    request.setPoints(getTimCabledPoints());
+    return request;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public static Request getTimRequestWithCabledAlarms() {
+    Request request = getTimRequest();
+    request.setRequestId("4");
+    request.setPoints(getTimCabledAlarms());
+    return request;
+  }
+
+  /**
+   *
+   * @return
+   */
   public static List<Point> getTimPoints() {
     List<Point> points = new ArrayList<>();
 
@@ -71,6 +93,44 @@ public class TestUtil {
     point1.setProperties(new HashMap<String, Object>() {{
       put("pointDescription", "TEST ALARM 1");
       put("pointDataType", "Boolean");
+      put("priorityCode", 1);
+      put("alarmValue", 0);
+    }});
+
+    points.add(point1);
+    return points;
+  }
+
+  /**
+   *
+   * @return
+   */
+  private static List<Point> getTimCabledPoints() {
+    List<Point> points = new ArrayList<>();
+
+    Point point1 = new Point(1L);
+    point1.setProperties(new HashMap<String, Object>() {{
+      put("pointDescription", "TEST CABLED POINT 1");
+      put("pointDataType", "Boolean");
+      put("pointType", "APIMMD");
+    }});
+
+    points.add(point1);
+    return points;
+  }
+
+  /**
+   *
+   * @return
+   */
+  private static List<Point> getTimCabledAlarms() {
+    List<Point> points = new ArrayList<>();
+
+    Point point1 = new Point(1L);
+    point1.setProperties(new HashMap<String, Object>() {{
+      put("pointDescription", "TEST CABLED ALARM 1");
+      put("pointDataType", "Boolean");
+      put("pointType", "APIMMD");
       put("priorityCode", 1);
       put("alarmValue", 0);
     }});

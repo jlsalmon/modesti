@@ -1,6 +1,8 @@
 package cern.modesti.request.point.state;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * TODO
@@ -8,6 +10,8 @@ import lombok.Data;
  * @author Justin Lewis Salmon
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cabling {
   private Boolean cabled;
   private String message;

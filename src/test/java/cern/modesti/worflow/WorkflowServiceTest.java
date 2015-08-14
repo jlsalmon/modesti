@@ -5,7 +5,9 @@ import cern.modesti.configuration.ConfigurationService;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Point;
+import cern.modesti.request.point.state.Addressing;
 import cern.modesti.request.point.state.Approval;
+import cern.modesti.request.point.state.Cabling;
 import cern.modesti.request.point.state.Testing;
 import cern.modesti.workflow.WorkflowService;
 import org.activiti.engine.HistoryService;
@@ -36,9 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static cern.modesti.util.TestUtil.getTimPoints;
-import static cern.modesti.util.TestUtil.getTimRequest;
-import static cern.modesti.util.TestUtil.getTimRequestWithAlarms;
+import static cern.modesti.util.TestUtil.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyObject;
@@ -186,9 +186,137 @@ public class WorkflowServiceTest {
     historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
   }
 
+  @Test
+  public void timCabledPoints() throws Exception {
+    Request request = getTimRequestWithCabledPoints();
+    requestRepository.save(request);
 
+    ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.IN_PROGRESS);
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.IN_PROGRESS);
+    // Completing the 'submit' task should activate the 'edit' task in the 'addressing' subprocess, since we have cabled points.
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.FOR_ADDRESSING);
 
+    // Verify emails were sent
+    assertEquals(2, wiser.getMessages().size());
 
+    // Set the addressing result object
+    request = requestRepository.findOneByRequestId(request.getRequestId());
+    request.setAddressing(new Addressing(true, ""));
+    requestRepository.save(request);
+
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.FOR_ADDRESSING);
+
+    // Completing the 'submit' task should lead to the 'cable' task
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "cable", Request.RequestStatus.FOR_CABLING);
+
+    // Set the cabling result object
+    request = requestRepository.findOneByRequestId(request.getRequestId());
+    request.setCabling(new Cabling(true, ""));
+    requestRepository.save(request);
+
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", Request.RequestStatus.FOR_CONFIGURATION);
+
+    // Verify emails were sent
+    assertEquals(4, wiser.getMessages().size());
+
+    doAnswer(invocation -> {
+      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[0];
+      execution.setVariable("configured", true);
+      return null;
+    }).when(configurationService).execute(anyObject());
+
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "test", Request.RequestStatus.FOR_TESTING);
+
+    // Set the testing result object
+    request = requestRepository.findOneByRequestId(request.getRequestId());
+    request.setTesting(new Testing(true, ""));
+    requestRepository.save(request);
+
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), null, Request.RequestStatus.CLOSED);
+    assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
+    historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
+  }
+
+  @Test
+  public void timCabledAlarms() throws Exception {
+    Request request = getTimRequestWithCabledAlarms();
+    requestRepository.save(request);
+
+    ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.IN_PROGRESS);
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.IN_PROGRESS);
+    // Completing the 'submit' task should activate the 'edit' task in the 'addressing' subprocess, since we have cabled alarms.
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.FOR_APPROVAL);
+
+    // Verify emails were sent
+    assertEquals(2, wiser.getMessages().size());
+
+    // Set the approval result object
+    request = requestRepository.findOneByRequestId(request.getRequestId());
+    request.setApproval(new Approval(true, ""));
+    requestRepository.save(request);
+
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.FOR_APPROVAL);
+    // Completing the 'submit' task should activate the 'edit' task in the 'addressing' subprocess, since we have cabled points.
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.FOR_ADDRESSING);
+
+    // Verify emails were sent
+    assertEquals(5, wiser.getMessages().size());
+
+    // Set the addressing result object
+    request = requestRepository.findOneByRequestId(request.getRequestId());
+    request.setAddressing(new Addressing(true, ""));
+    requestRepository.save(request);
+
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.FOR_ADDRESSING);
+
+    // Completing the 'submit' task should lead to the 'cable' task
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "cable", Request.RequestStatus.FOR_CABLING);
+
+    // Set the cabling result object
+    request = requestRepository.findOneByRequestId(request.getRequestId());
+    request.setCabling(new Cabling(true, ""));
+    requestRepository.save(request);
+
+    // Verify emails were sent
+    assertEquals(7, wiser.getMessages().size());
+
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", Request.RequestStatus.FOR_CONFIGURATION);
+
+    doAnswer(invocation -> {
+      DelegateExecution execution = (DelegateExecution) invocation.getArguments()[0];
+      execution.setVariable("configured", true);
+      return null;
+    }).when(configurationService).execute(anyObject());
+
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), "test", Request.RequestStatus.FOR_TESTING);
+
+    // Set the testing result object
+    request = requestRepository.findOneByRequestId(request.getRequestId());
+    request.setTesting(new Testing(true, ""));
+    requestRepository.save(request);
+
+    completeCurrentTask(request.getRequestId());
+    assertTaskNameAndRequestStatus(request.getRequestId(), null, Request.RequestStatus.CLOSED);
+    assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
+    historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
+  }
 
 
 
