@@ -98,8 +98,7 @@ public class WorkflowServiceTest {
   public void timPoints() throws Exception {
     Request request = getTimRequest();
     requestRepository.save(request);
-
-    startProcessInstance("create-tim-points-0.2", request);
+    ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
 
     // First, the 'edit' task should be active and the request should be 'IN_PROGRESS'.
     assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.IN_PROGRESS);
@@ -136,9 +135,7 @@ public class WorkflowServiceTest {
 
     // Verify process completed
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
-
-    //    // Verify email
-    //    Assert.assertEquals(1, wiser.getMessages().size());
+    historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
   }
 
   @Test
@@ -146,13 +143,15 @@ public class WorkflowServiceTest {
     Request request = getTimRequestWithAlarms();
     requestRepository.save(request);
 
-    startProcessInstance("create-tim-points-0.2", request);
+    ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
     assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.IN_PROGRESS);
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.IN_PROGRESS);
     // Completing the 'submit' task should activate the 'edit' task in the 'approval' subprocess, since we have alarms.
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.FOR_APPROVAL);
+
+    // TODO maybe test task claiming here? The test will work without, as we don't do any authorisation in this test atm.
 
     // Verify emails were sent
     assertEquals(2, wiser.getMessages().size());
@@ -184,6 +183,7 @@ public class WorkflowServiceTest {
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), null, Request.RequestStatus.CLOSED);
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
+    historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
   }
 
 
@@ -197,12 +197,13 @@ public class WorkflowServiceTest {
    * @param processName
    * @param request
    */
-  private void startProcessInstance(String processName, Request request) {
+  private ProcessInstance startProcessInstance(String processName, Request request) {
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
     ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processName, variables);
     // The business key should have been set to the request id.
     assertEquals(request.getRequestId(), processInstance.getBusinessKey());
+    return processInstance;
   }
 
   /**

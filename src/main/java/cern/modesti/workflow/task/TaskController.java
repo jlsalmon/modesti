@@ -176,12 +176,12 @@ public class TaskController {
     taskService.claim(task.getId(), assignee);
     task.setAssignee(assignee);
 
-    // If this task is an "edit" task, then place the assignee name as a variable "editor" in the execution. This is so that we can automatically assign the
-    // "submit" task which inevitably follows. The sequence is always "edit" -> "validate" -> "submit".
-    if (taskName.equals("edit")) {
-      Execution execution = runtimeService.createExecutionQuery().processInstanceBusinessKey(requestId).singleResult();
-      runtimeService.setVariable(execution.getId(), "editor", assignee);
-    }
+//    // If this task is an "edit" task, then place the assignee name as a variable "editor" in the execution. This is so that we can automatically assign the
+//    // "submit" task which inevitably follows. The sequence is always "edit" -> "validate" -> "submit".
+//    if (taskName.equals("edit")) {
+//      Execution execution = runtimeService.createExecutionQuery().processInstanceBusinessKey(requestId).singleResult();
+//      runtimeService.setVariable(execution.getId(), "editor", assignee);
+//    }
 
     return new TaskInfo(task.getName(), task.getDescription(), task.getAssignee(), getCandidateGroups(task));
   }
