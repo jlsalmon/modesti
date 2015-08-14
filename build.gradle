@@ -43,10 +43,10 @@ dependencies {
     compile("org.springframework.security:spring-security-ldap")
     compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
 
-    compile('org.activiti:spring-boot-starter-basic:5.17.0')
-    compile('org.activiti:spring-boot-starter-jpa:5.17.0')
+    compile('org.activiti:spring-boot-starter-basic:5.18.0')
+    compile('org.activiti:spring-boot-starter-jpa:5.18.0')
     //compile('org.activiti:spring-boot-starter-rest-api:5.17.0')
-    compile('org.activiti:activiti-ldap:5.17.0')
+    compile('org.activiti:activiti-ldap:5.18.0')
 
     // Exclude activemq-all and include necessary dependencies directly.
     // This is to avoid clashes with slf4j in the activemq-all jar
@@ -86,6 +86,7 @@ dependencies {
     testCompile("org.mockito:mockito-core")
     testCompile("com.jayway.jsonpath:json-path")
     testCompile("com.github.fakemongo:fongo:1.6.3")
+    testCompile("org.subethamail:subethasmtp:3.1.7")
 }
 
 task wrapper(type: Wrapper) {
