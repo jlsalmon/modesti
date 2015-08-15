@@ -111,7 +111,8 @@ function ValidationService($q) {
         }
 
         // Validate additional constraints
-        valid = checkConstraints(point, category);
+        var constraintsValid = checkConstraints(point, category);
+        if (constraintsValid === false) valid = false;
       }
     }
 

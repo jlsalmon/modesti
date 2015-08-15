@@ -168,6 +168,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
 
         if (!valid) {
           self.validating = 'error';
+          AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
           return;
         }
 
