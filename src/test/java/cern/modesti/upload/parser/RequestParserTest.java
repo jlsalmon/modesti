@@ -15,6 +15,7 @@ import java.util.Map;
 
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
 import cern.modesti.repository.jpa.location.functionality.FunctionalityRepository;
+import cern.modesti.repository.jpa.location.zone.SafetyZoneRepository;
 import cern.modesti.repository.jpa.person.PersonRepository;
 import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
 import cern.modesti.request.RequestType;
@@ -55,6 +56,9 @@ public class RequestParserTest {
 
   @Mock
   private FunctionalityRepository functionalityRepository;
+
+  @Mock
+  private SafetyZoneRepository safetyZoneRepository;
 
   @Mock
   private MonitoringEquipmentRepository monitoringEquipmentRepository;
@@ -410,6 +414,22 @@ public class RequestParserTest {
 
     assertTrue(request.getDomain().equals("CSAM"));
     assertTrue(request.getType().equals(RequestType.CREATE));
+    List<Point> points = request.getPoints();
+    assertTrue(points.size() == 14);
+
+    for (Point point : points) {
+      assertTrue(point.getId() != null);
+      assertFalse(point.getProperties().isEmpty());
+    }
+  }
+
+  @Test
+  public void csamPlcLsacRequestWithAddressedAlarmsIsAccepted() throws IOException {
+    Resource sheet = sheets.get("csam-plc-lsac-alarms-addressed.xlsx");
+    Request request = requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
+
+    assertTrue(request.getDomain().equals("CSAM"));
+    assertTrue(request.getType().equals(RequestType.CREATE));
     assertTrue(request.getCategories().size() == 2); // has PLC and LSAC points
     assertTrue(request.getCategories().contains("LSAC"));
     assertTrue(request.getCategories().contains("APIMMD"));
@@ -430,8 +450,6 @@ public class RequestParserTest {
 
     assertTrue(request.getDomain().equals("PVSS"));
     assertTrue(request.getType().equals(RequestType.CREATE));
-    assertTrue(request.getCategories().size() == 1);
-    assertTrue(request.getCategories().contains("PVSS"));
 
     List<Point> points = request.getPoints();
     assertTrue(points.size() == 43);
