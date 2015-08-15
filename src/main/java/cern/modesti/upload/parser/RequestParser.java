@@ -371,18 +371,15 @@ public abstract class RequestParser {
       return safetyZone;
     }
 
-    if (zone == null) {
-      // Try to derive the safety zone from the building number
-      Location location = (Location) properties.get("location");
-      if (location != null) {
-        List<SafetyZone> zones = safetyZoneRepository.findByBuildingNumber("", location.getBuildingNumber());
-        if (zones.size() == 1) {
-          log.debug("derived safety zone from building number");
-          safetyZone = zones.get(0);
-        }
+
+    // Try to derive the safety zone from the building number
+    Location location = (Location) properties.get("location");
+    if (location != null) {
+      List<SafetyZone> zones = safetyZoneRepository.findByBuildingNumber("", location.getBuildingNumber());
+      if (zones.size() == 1) {
+        log.debug("derived safety zone from building number");
+        safetyZone = zones.get(0);
       }
-    } else {
-      safetyZone = safetyZoneRepository.findOne(zone);
     }
 
     if (safetyZone == null) {

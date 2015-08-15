@@ -64,7 +64,9 @@ public class WorkflowService {
    */
   public void startProcessInstance(final Request request) {
     log.info("starting process for request " + request.getRequestId());
+
     request.setStatus(Request.RequestStatus.IN_PROGRESS);
+    requestRepository.save(request);
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
@@ -93,11 +95,7 @@ public class WorkflowService {
    */
   public void setRequestStatus(String requestId, String status) {
     log.info("setting status " + status + " on request id " + requestId);
-
-    Request request = requestRepository.findOneByRequestId(requestId);
-    if (request == null) {
-      throw new ActivitiException("No request with id " + requestId + " was found");
-    }
+    Request request = getRequest(requestId);
 
     request.setStatus(Request.RequestStatus.valueOf(status));
     requestRepository.save(request);

@@ -111,7 +111,7 @@
         {
           "id": "safetyZone",
           "type": "autocomplete",
-          "url": "zones/search/findByBuildingNumber",
+          "url": "safetyZones/search/findByBuildingNumber",
           "params": [
             "query",
             "location.buildingNumber"
