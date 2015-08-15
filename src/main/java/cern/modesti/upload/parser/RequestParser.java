@@ -3,6 +3,7 @@
  */
 package cern.modesti.upload.parser;
 
+import cern.modesti.repository.jpa.location.zone.SafetyZoneRepository;
 import cern.modesti.upload.exception.RequestParseException;
 import cern.modesti.upload.exception.VersionNotSupportedException;
 import cern.modesti.repository.jpa.alarm.AlarmCategory;
@@ -13,7 +14,7 @@ import cern.modesti.repository.jpa.location.BuildingName;
 import cern.modesti.repository.jpa.location.Location;
 import cern.modesti.repository.jpa.location.functionality.Functionality;
 import cern.modesti.repository.jpa.location.functionality.FunctionalityRepository;
-import cern.modesti.repository.jpa.location.zone.Zone;
+import cern.modesti.repository.jpa.location.zone.SafetyZone;
 import cern.modesti.repository.jpa.person.Person;
 import cern.modesti.repository.jpa.person.PersonRepository;
 import cern.modesti.repository.jpa.subsystem.SubSystem;
@@ -43,10 +44,16 @@ public abstract class RequestParser {
 
   private SubSystemRepository subSystemRepository;
   private Map<String, SubSystem> subSystemCache = new HashMap<>();
+
   private PersonRepository personRepository;
   private Map<String, Person> personCache = new HashMap<>();
+
   private FunctionalityRepository functionalityRepository;
   private Map<String, Functionality> functionalityCache = new HashMap<>();
+
+  private SafetyZoneRepository safetyZoneRepository;
+  private Map<String, SafetyZone> safetyZoneCache = new HashMap<>();
+
   private MonitoringEquipmentRepository monitoringEquipmentRepository;
   private Map<String, MonitoringEquipment> monitoringEquipmentCache = new HashMap<>();
 
@@ -139,6 +146,9 @@ public abstract class RequestParser {
         break;
       }
 
+      // Figure out the point type
+      point.getProperties().put("pointType", parsePointType(point.getProperties()));
+
       points.add(point);
     }
 
@@ -168,10 +178,8 @@ public abstract class RequestParser {
       if (value != null) {
         String title = getColumnTitle(column);
 
-        // Handle domain-specific special cases
-        title = parseColumnTitle(title, column);
-
-        properties.put(title, value);
+        // Get the proper, standardised column name
+        properties.put(parseColumnTitle(title, column), value);
       }
     }
 
@@ -181,6 +189,7 @@ public abstract class RequestParser {
     }
 
 
+    // Parse object properties from the simple strings we get from the excel sheet
     properties.put("responsiblePerson", parseResponsiblePerson(properties));
     properties.put("subsystem", parseSubsystem(properties));
     properties.put("location", parseLocation(properties));
@@ -189,18 +198,12 @@ public abstract class RequestParser {
     properties.put("csamDetector", new GmaoCode((String) properties.get("csamDetector")));
     properties.put("csamCsename", new GmaoCode((String) properties.get("csamCsename")));
     properties.put("functionality", parseFunctionality(properties));
+    properties.put("safetyZone", parseSafetyZone(properties));
     properties.put("alarmCategory", new AlarmCategory((String) properties.get("alarmCategory")));
-    if (properties.get("safetyZone") != null) {
-      properties.put("safetyZone", new Zone(String.valueOf(((Double) properties.get("safetyZone")).intValue())));
-    }
     if (properties.get("monitoringEquipmentName") != null) {
       properties.put("monitoringEquipment", parseMonitoringEquipment(properties, "monitoringEquipmentName"));
     }
-//    if (properties.get("csamPlcname") != null) {
-//      properties.put("csamPlcname", parseMonitoringEquipment(properties, "csamPlcname"));
-//    }
     properties.remove("aideAlarme");
-
 
     point.setProperties(properties);
     return point;
@@ -215,11 +218,29 @@ public abstract class RequestParser {
   protected abstract String parseColumnTitle(String title, int column);
 
   /**
-   * @param points
    *
+   * @param properties
    * @return
    */
-  protected abstract List<String> parseCategories(List<Point> points);
+  protected abstract String parsePointType(Map<String, Object> properties);
+
+  /**
+   *
+   * @param points
+   * @return
+   */
+  protected List<String> parseCategories(List<Point> points) {
+    List<String> categories = new ArrayList<>();
+
+    for (Point point : points) {
+      String pointType = (String) point.getProperties().get("pointType");
+      if (pointType != null && !pointType.isEmpty() && !categories.contains(pointType)) {
+        categories.add((String) point.getProperties().get("pointType"));
+      }
+    }
+
+    return categories;
+  }
 
   /**
    *
@@ -335,6 +356,42 @@ public abstract class RequestParser {
     functionalityCache.put(functionalityCode, functionality);
     properties.remove("functionalityCode");
     return functionality;
+  }
+
+  /**
+   *
+   * @param properties
+   * @return
+   */
+  private SafetyZone parseSafetyZone(Map<String, Object> properties) {
+    String zone = String.valueOf(properties.get("safetyZone"));
+
+    SafetyZone safetyZone = safetyZoneCache.get(zone);
+    if (safetyZone != null) {
+      return safetyZone;
+    }
+
+    if (zone == null) {
+      // Try to derive the safety zone from the building number
+      Location location = (Location) properties.get("location");
+      if (location != null) {
+        List<SafetyZone> zones = safetyZoneRepository.findByBuildingNumber("", location.getBuildingNumber());
+        if (zones.size() == 1) {
+          log.debug("derived safety zone from building number");
+          safetyZone = zones.get(0);
+        }
+      }
+    } else {
+      safetyZone = safetyZoneRepository.findOne(zone);
+    }
+
+    if (safetyZone == null) {
+      log.warn("Could not determine safety zone for point");
+      safetyZone = new SafetyZone();
+    }
+
+    safetyZoneCache.put(zone, safetyZone);
+    return safetyZone;
   }
 
   /**
@@ -486,6 +543,14 @@ public abstract class RequestParser {
    */
   public void setFunctionalityRepository(FunctionalityRepository functionalityRepository) {
     this.functionalityRepository = functionalityRepository;
+  }
+
+  /**
+   *
+   * @param safetyZoneRepository
+   */
+  public void setSafetyZoneRepository(SafetyZoneRepository safetyZoneRepository) {
+    this.safetyZoneRepository = safetyZoneRepository;
   }
 
   /**

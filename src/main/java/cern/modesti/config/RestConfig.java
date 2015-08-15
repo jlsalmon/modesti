@@ -17,7 +17,7 @@ import cern.modesti.repository.jpa.gmao.GmaoCode;
 import cern.modesti.repository.jpa.location.BuildingName;
 import cern.modesti.repository.jpa.location.Location;
 import cern.modesti.repository.jpa.location.functionality.Functionality;
-import cern.modesti.repository.jpa.location.zone.Zone;
+import cern.modesti.repository.jpa.location.zone.SafetyZone;
 import cern.modesti.repository.jpa.person.Person;
 import cern.modesti.repository.jpa.subsystem.SubSystem;
 import cern.modesti.request.SearchTextConverter;
@@ -49,7 +49,7 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
     super.configureRepositoryRestConfiguration(config);
 
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
-    config.exposeIdsFor(Point.class, Person.class, Functionality.class, Location.class, Zone.class, SubSystem.class, AlarmCategory.class, Field.class, TextField
+    config.exposeIdsFor(Point.class, Person.class, Functionality.class, Location.class, SafetyZone.class, SubSystem.class, AlarmCategory.class, Field.class, TextField
         .class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class, BuildingName.class, GmaoCode.class, MonitoringEquipment
         .class, User.class);
 

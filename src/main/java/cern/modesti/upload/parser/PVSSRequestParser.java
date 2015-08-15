@@ -77,9 +77,9 @@ public class PVSSRequestParser extends RequestParser {
   }
 
   @Override
-  protected List<String> parseCategories(List<Point> points) {
-    // PVSS requests don't really have categories
-    return Collections.singletonList("PVSS");
+  protected String parsePointType(Map<String, Object> properties) {
+    // PVSS points don't really have different types
+    return null;
   }
 
   @Override

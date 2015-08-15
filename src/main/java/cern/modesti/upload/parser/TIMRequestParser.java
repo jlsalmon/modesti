@@ -156,27 +156,22 @@ public class TIMRequestParser extends RequestParser {
   }
 
   @Override
-  protected List<String> parseCategories(List<Point> points) {
-    List<String> categories = new ArrayList<>();
-
-    // Naive implementation: look at the first point and assume the rest are the same.
-    Point point = points.get(0);
-
-    if (point.getProperties().containsKey("opcTagname")) {
-      categories.add("OPC");
-    } else if (point.getProperties().containsKey("dipItem")) {
-      categories.add("DIP");
-    } else if (point.getProperties().containsKey("plcBlockType")) {
-      categories.add("PLC");
-    } else if (point.getProperties().containsKey("japcProtocol")) {
-      categories.add("JAPC");
-    } else if (point.getProperties().containsKey("hostName")) {
-      categories.add("DIAMON");
-    } else if (point.getProperties().containsKey("dbTagname")) {
-      categories.add("DB");
+  protected String parsePointType(Map<String, Object> properties) {
+    if (properties.containsKey("opcTagname")) {
+      return "OPC";
+    } else if (properties.containsKey("dipItem")) {
+      return "DIP";
+    } else if (properties.containsKey("plcBlockType")) {
+      return "PLC";
+    } else if (properties.containsKey("japcProtocol")) {
+      return "JAPC";
+    } else if (properties.containsKey("hostName")) {
+      return "DIAMON";
+    } else if (properties.containsKey("dbTagname")) {
+      return "DB";
     }
 
-    return categories;
+    return null;
   }
 
   @Override

@@ -164,28 +164,24 @@ public class CSAMRequestParser extends RequestParser {
   }
 
   @Override
-  protected List<String> parseCategories(List<Point> points) {
-    List<String> categories = new ArrayList<>();
-
-    for (Point point : points) {
-      if (point.getProperties().containsKey("lsacRack")) {
-        if (!categories.contains("LSAC")) categories.add("LSAC");
-      } else if (point.getProperties().containsKey("plcBlockType")) {
-        if (!categories.contains("APIMMD")) categories.add("APIMMD");
-      } else if (point.getProperties().containsKey("safeplcByteId")) {
-        if (!categories.contains("SFPLC")) categories.add("SFPLC");
-      } else if (point.getProperties().containsKey("winterStatus")) {
-        if (!categories.contains("WINTER")) categories.add("WINTER");
-      } else if (point.getProperties().containsKey("securitonGroup")) {
-        if (!categories.contains("SECIRITON")) categories.add("SECIRITON");
-      } else if (point.getProperties().containsKey("securifireGroup")) {
-        if (!categories.contains("SECURIFIRE")) categories.add("SECURIFIRE");
-      } else if (point.getProperties().containsKey("safedefModule")) {
-        if (!categories.contains("DEF")) categories.add("DEF");
-      }
+  protected String parsePointType(Map<String, Object> properties) {
+    if (properties.containsKey("lsacRack")) {
+      return "LSAC";
+    } else if (properties.containsKey("plcBlockType")) {
+      return "APIMMD";
+    } else if (properties.containsKey("safeplcByteId")) {
+      return "SFPLC";
+    } else if (properties.containsKey("winterStatus")) {
+      return "WINTER";
+    } else if (properties.containsKey("securitonGroup")) {
+      return "SECIRITON";
+    } else if (properties.containsKey("securifireGroup")) {
+      return "SECURIFIRE";
+    } else if (properties.containsKey("safedefModule")) {
+      return "DEF";
     }
 
-    return categories;
+    return null;
   }
 
   @Override

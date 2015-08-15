@@ -86,7 +86,7 @@ public class ConfigurationService {
    * @return true if the configuration was applied successfully, false otherwise
    */
   @Transactional
-  public ConfigurationReport configureRequest(Request request, ProgressUpdateListener listener) {
+  protected ConfigurationReport configureRequest(Request request, ProgressUpdateListener listener) {
     log.info(format("configuring points for request id %s...", request.getRequestId()));
 
     // Generate the configuration

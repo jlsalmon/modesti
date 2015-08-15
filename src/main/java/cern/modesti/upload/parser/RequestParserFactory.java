@@ -3,6 +3,7 @@
  */
 package cern.modesti.upload.parser;
 
+import cern.modesti.repository.jpa.location.zone.SafetyZoneRepository;
 import cern.modesti.upload.exception.RequestParseException;
 import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
 import cern.modesti.repository.jpa.location.functionality.FunctionalityRepository;
@@ -37,6 +38,9 @@ public class RequestParserFactory {
 
   @Autowired
   private FunctionalityRepository functionalityRepository;
+
+  @Autowired
+  private SafetyZoneRepository safetyZoneRepository;
 
   @Autowired
   private MonitoringEquipmentRepository monitoringEquipmentRepository;
@@ -74,6 +78,7 @@ public class RequestParserFactory {
     requestParser.setSubSystemRepository(subSystemRepository);
     requestParser.setMonitoringEquipmentRepository(monitoringEquipmentRepository);
     requestParser.setFunctionalityRepository(functionalityRepository);
+    requestParser.setSafetyZoneRepository(safetyZoneRepository);
     return requestParser;
   }
 }

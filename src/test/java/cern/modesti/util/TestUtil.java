@@ -112,7 +112,7 @@ public class TestUtil {
     point1.setProperties(new HashMap<String, Object>() {{
       put("pointDescription", "TEST CABLED POINT 1");
       put("pointDataType", "Boolean");
-      put("pointType", "APIMMD");
+      put("pointType", "PLC");
     }});
 
     points.add(point1);
@@ -130,7 +130,7 @@ public class TestUtil {
     point1.setProperties(new HashMap<String, Object>() {{
       put("pointDescription", "TEST CABLED ALARM 1");
       put("pointDataType", "Boolean");
-      put("pointType", "APIMMD");
+      put("pointType", "PLC");
       put("priorityCode", 1);
       put("alarmValue", 0);
     }});
