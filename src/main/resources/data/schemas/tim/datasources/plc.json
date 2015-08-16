@@ -5,10 +5,17 @@
     {
       "name": "PLC",
       "editableStates": [
-        "IN_PROGRESS",
-        "FOR_CORRECTION"
+        "FOR_ADDRESSING"
       ],
       "fields": [
+        {
+        "id": "pointType",
+        "type": "text",
+        "name_en": "Point Type",
+        "name_fr": "Point Type",
+        "help_en": "",
+        "help_fr": ""
+        },
         {
           "id": "plcBlockType",
           "type": "options",
