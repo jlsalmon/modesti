@@ -195,6 +195,7 @@ function ValidationService($q) {
 
     for (var i = 0, len = points.length; i < len; i++) {
       point = points[i];
+      point.valid = undefined;
       point.errors = [];
 
       var pointType = point.properties.pointType;
@@ -217,30 +218,17 @@ function ValidationService($q) {
           valid = checkConstraints(point, category);
         }
       }
-
-
-
-
-
-      //
-      //if (pointType === 'APIMMD' && !point.properties.plcBlockType) {
-      //  ValidationService.setErrorMessage(point, 'plcBlockType', 'A complete APIMMD address is required for this point');
-      //  ValidationService.setErrorMessage(point, 'plcWordId', 'A complete APIMMD address is required for this point');
-      //  ValidationService.setErrorMessage(point, 'plcBitId', 'A complete APIMMD address is required for this point');
-      //  valid = false;
-      //}
-      //
-      //else if (pointType === 'LSAC' && !point.properties.lsacType) {
-      //  ValidationService.setErrorMessage(point, 'lsacType', 'A complete LSAC address is required for this point');
-      //  ValidationService.setErrorMessage(point, 'lsacCard', 'A complete LSAC address is required for this point');
-      //  ValidationService.setErrorMessage(point, 'lsacRack', 'A complete LSAC address is required for this point');
-      //  ValidationService.setErrorMessage(point, 'lsacPort', 'A complete LSAC address is required for this point');
-      //  valid = false;
-      //}
-
     }
+
+    return valid;
   }
 
+  /**
+   *
+   * @param point
+   * @param category
+   * @returns {boolean}
+   */
   function checkConstraints(point, category) {
     var valid = true;
 
