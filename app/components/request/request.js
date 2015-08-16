@@ -277,7 +277,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
    * @returns {boolean}
    */
   function hasCheckboxColumn() {
-    var checkboxStates = ['FOR_APPROVAL', 'FOR_ADDRESSING', 'FOR_CABLING', 'FOR_TESTING'];
+    var checkboxStates = ['FOR_CORRECTION', 'FOR_APPROVAL', 'FOR_ADDRESSING', 'FOR_CABLING', 'FOR_TESTING'];
 
     var assigned = false;
     for (var key in self.tasks) {
@@ -287,7 +287,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       }
     }
 
-    return checkboxStates.indexOf(self.request.status) > -1 && assigned;
+    return checkboxStates.indexOf(self.request.status) > -1 && (self.request.status === 'FOR_CORRECTION' || assigned);
   }
 
   /**
