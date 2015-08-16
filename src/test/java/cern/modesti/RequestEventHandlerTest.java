@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import cern.modesti.request.RequestType;
@@ -94,7 +95,7 @@ public class RequestEventHandlerTest {
     request.setType(RequestType.CREATE);
     request.setDescription("description");
     request.setDomain("TIM");
-    request.setCategories(new ArrayList<>(Arrays.asList("PLC")));
+    request.setCategories(new HashSet<>(Arrays.asList("PLC")));
     request.setPoints(getTestPoints());
     return request;
   }

@@ -26,7 +26,7 @@ public class TestUtil {
     request.setDescription("description");
     request.setDomain("TIM");
     request.setSubsystem(new SubSystem(1L, "EAU DEMI", "EAU", "A", "DEMI", "B"));
-    request.setCategories(new ArrayList<>(Collections.singletonList("PLC")));
+    request.setCategories(new HashSet<>(Collections.singletonList("PLC")));
 
     request.setPoints(getTimPoints());
     return request;

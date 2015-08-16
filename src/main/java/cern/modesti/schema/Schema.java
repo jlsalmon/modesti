@@ -23,6 +23,8 @@ import java.util.List;
 import javax.persistence.Id;
 
 import cern.modesti.schema.category.Category;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,6 +33,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Justin Lewis Salmon
  */
 @Document
+@Data
+@NoArgsConstructor
 public class Schema {
 
   @Id
@@ -38,15 +42,13 @@ public class Schema {
 
   private String name;
 
+  private String domain;
+
   @JsonProperty("extends")
   private String parent;
 
-  private String domain;
-
   private List<Category> categories = new ArrayList<>();
 
-  public Schema() {
-  }
 
   /**
    *
@@ -58,79 +60,5 @@ public class Schema {
     this.id = id;
     this.name = name;
     this.domain = domain;
-  }
-
-  /**
-   * @return the id
-   */
-  public String getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @return the parent
-   */
-  public String getParent() {
-    return parent;
-  }
-
-  /**
-   * @param parent the parent to set
-   */
-  public void setParent(String parent) {
-    this.parent = parent;
-  }
-
-  /**
-   * @return the domain
-   */
-  public String getDomain() {
-    return domain;
-  }
-
-  /**
-   * @param domain the domain to set
-   */
-  public void setDomain(String domain) {
-    this.domain = domain;
-  }
-
-  /**
-   * @return the categories
-   */
-  public List<Category> getCategories() {
-    return categories;
-  }
-
-  /**
-   * @param categories the categories to set
-   */
-  public void setCategories(List<Category> categories) {
-    this.categories = categories;
-  }
-
-  public void addCategory(Category category) {
-    categories.add(category);
   }
 }

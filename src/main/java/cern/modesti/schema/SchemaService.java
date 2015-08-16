@@ -2,6 +2,7 @@ package cern.modesti.schema;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import cern.modesti.schema.options.OptionService;
 import cern.modesti.schema.category.Category;
@@ -52,7 +53,7 @@ public class SchemaService {
    *
    * @return
    */
-  public Schema materialiseSchema(Request request, List<String> categories) {
+  public Schema materialiseSchema(Request request, Set<String> categories) {
     Schema schema = new Schema(request.getRequestId(), request.getDescription(), request.getDomain());
 
     Schema domainSchema = schemaRepository.findOneByNameIgnoreCase(request.getDomain());

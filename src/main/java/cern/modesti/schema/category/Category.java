@@ -22,10 +22,12 @@ import java.util.List;
 import javax.persistence.Id;
 
 import cern.modesti.schema.field.Field;
+import lombok.Data;
 
 /**
  * @author Justin Lewis Salmon
  */
+@Data
 public class Category {
 
   /**
@@ -53,77 +55,6 @@ public class Category {
    *
    */
   private List<Field> fields;
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @return the disabledStates
-   */
-  public List<String> getDisabledStates() {
-    return disabledStates;
-  }
-
-  /**
-   * @param disabledStates the disabled to set
-   */
-  public void setDisabledStates(List<String> disabledStates) {
-    this.disabledStates = disabledStates;
-  }
-
-  /**
-   * @return the editableStates
-   */
-  public List<String> getEditableStates() {
-    return editableStates;
-  }
-
-  /**
-   * @param editableStates the editableStates to set
-   */
-  public void setEditableStates(List<String> editableStates) {
-    this.editableStates = editableStates;
-  }
-
-  public List<Constraint> getConstraints() {
-    return constraints;
-  }
-
-  public void setConstraints(List<Constraint> constraints) {
-    this.constraints = constraints;
-  }
-
-  /**
-   * @return the fields
-   */
-  public List<Field> getFields() {
-    return fields;
-  }
-
-  /**
-   * @param fields the fields to set
-   */
-  public void setFields(List<Field> fields) {
-    this.fields = fields;
-  }
-
-  /**
-   * @param field the field to add
-   */
-  public void addField(Field field) {
-    fields.add(field);
-  }
 
   @Override
   public int hashCode() {

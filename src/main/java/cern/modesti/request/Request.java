@@ -36,9 +36,7 @@ import javax.persistence.Id;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Justin Lewis Salmon
@@ -101,7 +99,7 @@ public class Request implements Serializable {
   @Indexed
   @TextIndexed
   @NotNull(message = "At least one category is compulsory")
-  private List<String> categories = new ArrayList<>();
+  private Set<String> categories = new HashSet<>();
 
   @TextIndexed
   @Valid

@@ -1,5 +1,6 @@
 package cern.modesti.schema;
 
+import static java.lang.String.format;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -7,6 +8,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.schema.SchemaRepository;
 import cern.modesti.request.Request;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +22,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author Justin Lewis Salmon
  */
 @Controller
+@Slf4j
 @ExposesResourceFor(Schema.class)
 public class SchemaController {
 
@@ -55,6 +57,8 @@ public class SchemaController {
   }
 
   /**
+   * TODO fix the semantics of this method. Does passing "categories" set the list, or add them to the existing categories?
+   *
    * GET /requests/{id}/schema?categories=logging
    *
    * @param id
@@ -64,20 +68,22 @@ public class SchemaController {
   @RequestMapping(value = "/requests/{id}/schema", method = GET)
   public HttpEntity<Resource<Schema>> getSchema(@PathVariable("id") String id, @RequestParam(value = "categories", required = false) String categories) {
 
-    // Parse the categories into a list
-    List<String> categoryList;
-
-    if (categories == null || categories.isEmpty()) {
-      categoryList = new ArrayList<>();
-    } else {
-      categoryList = new ArrayList<>(Arrays.asList(categories.split(",")));
-    }
-
     Request request = requestRepository.findOneByRequestId(id);
     if (request == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    // Parse the categories into a list
+    Set<String> categoryList = new HashSet<>();
+    // Add the existing categories
+    categoryList.addAll(request.getCategories());
+
+    if (categories != null && !categories.isEmpty()) {
+      List<String> c = Arrays.asList(categories.split(","));
+      categoryList.addAll(c);
+    }
+
+    // Generate a schema for the request, adding the newly given categories
     Schema schema = schemaService.materialiseSchema(request, categoryList);
     if (schema == null) {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -86,6 +92,7 @@ public class SchemaController {
     request.setCategories(categoryList);
     requestRepository.save(request);
 
+    // Add the self link
     Resource<Schema> resource = new Resource<>(schema);
     resource.add(linkTo(methodOn(SchemaController.class).getSchema(id, categories)).withSelfRel());
 
@@ -96,6 +103,5 @@ public class SchemaController {
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   void handleException(IllegalStateException e) {
     LOG.error("Caught exception: ", e);
-
   }
 }

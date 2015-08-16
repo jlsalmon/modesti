@@ -229,8 +229,8 @@ public abstract class RequestParser {
    * @param points
    * @return
    */
-  protected List<String> parseCategories(List<Point> points) {
-    List<String> categories = new ArrayList<>();
+  protected Set<String> parseCategories(List<Point> points) {
+    Set<String> categories = new HashSet<>();
 
     for (Point point : points) {
       String pointType = (String) point.getProperties().get("pointType");
