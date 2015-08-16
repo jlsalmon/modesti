@@ -89,8 +89,8 @@ public class SchemaController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    request.setCategories(categoryList);
-    requestRepository.save(request);
+    //request.setCategories(categoryList);
+    //requestRepository.save(request);
 
     // Add the self link
     Resource<Schema> resource = new Resource<>(schema);
