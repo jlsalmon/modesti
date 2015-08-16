@@ -47,7 +47,7 @@
 
       <!-- Request is assigned to someone else -->
       <div ng-if="!ctrl.isCurrentUserAssigned()">
-        <div>Request assigned to: <a href="#/users/{{ctrl.tasks['cable'].assignee}}" ng-click="$event.stopPropagation();">{{ctrl.tasks['cable'].assignee}}</a></div>
+        <div>Request assigned to: <a href="#/users/{{ctrl.getCurrentAssignee()}}" ng-click="$event.stopPropagation();">{{ctrl.getCurrentAssignee()}}</a></div>
       </div>
 
     </div>

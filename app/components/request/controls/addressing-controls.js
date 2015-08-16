@@ -24,6 +24,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
   self.isCurrentUserAuthorised = isCurrentUserAuthorised;
   self.isCurrentTaskClaimed = isCurrentTaskClaimed;
   self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.getCurrentAssignee = getCurrentAssignee;
   self.claim = claim;
   self.rejectRequest = rejectRequest;
   self.canValidate = canValidate;
@@ -93,6 +94,15 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
   function isCurrentUserAssigned() {
     var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
     return TaskService.isCurrentUserAssigned(task);
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getCurrentAssignee() {
+    var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
+    return task.assignee;
   }
 
   /**

@@ -21,6 +21,7 @@ function TestingControlsController($state, RequestService, TaskService) {
   self.isCurrentUserAuthorised = isCurrentUserAuthorised;
   self.isCurrentTaskClaimed = isCurrentTaskClaimed;
   self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.getCurrentAssignee = getCurrentAssignee;
   self.claim = claim;
   self.testSelectedPoints = testSelectedPoints;
   self.rejectSelectedPoints = rejectSelectedPoints;
@@ -57,6 +58,14 @@ function TestingControlsController($state, RequestService, TaskService) {
    */
   function isCurrentUserAssigned() {
     return TaskService.isCurrentUserAssigned(self.tasks['test']);
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getCurrentAssignee() {
+    return self.tasks['test'].assignee;
   }
 
   /**

@@ -21,6 +21,7 @@ function CablingControlsController($state, RequestService, TaskService) {
   self.isCurrentUserAuthorised = isCurrentUserAuthorised;
   self.isCurrentTaskClaimed = isCurrentTaskClaimed;
   self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.getCurrentAssignee = getCurrentAssignee;
   self.claim = claim;
   self.cableSelectedPoints = cableSelectedPoints;
   self.rejectSelectedPoints = rejectSelectedPoints;
@@ -57,6 +58,14 @@ function CablingControlsController($state, RequestService, TaskService) {
    */
   function isCurrentUserAssigned() {
     return TaskService.isCurrentUserAssigned(self.tasks['cable']);
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getCurrentAssignee() {
+    return self.tasks['cable'].assignee;
   }
 
   /**

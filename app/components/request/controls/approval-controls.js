@@ -23,6 +23,7 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
   self.isCurrentUserAuthorised = isCurrentUserAuthorised;
   self.isCurrentTaskClaimed = isCurrentTaskClaimed;
   self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.getCurrentAssignee = getCurrentAssignee;
   self.claim = claim;
   self.approveSelectedPoints = approveSelectedPoints;
   self.approveAll = approveAll;
@@ -89,6 +90,15 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
   function isCurrentUserAssigned() {
     var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
     return TaskService.isCurrentUserAssigned(task);
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getCurrentAssignee() {
+    var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
+    return task.assignee;
   }
 
   /**

@@ -97,7 +97,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
    *
    */
   function canSplit() {
-    return self.getNumValidationErrors() > 0;
+    return self.hasErrors();
     //return self.parent.getSelectedPointIds().length > 0;
   }
 
@@ -106,7 +106,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
    * @returns {boolean}
    */
   function hasErrors() {
-    return getNumValidationErrors() > 0 || getNumApprovalRejections() > 0
+    return getNumValidationErrors() > 0 || getNumApprovalRejections() > 0;
   }
 
   /**
@@ -268,12 +268,6 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
     if (event) {
       event.preventDefault();
       event.stopPropagation();
-    }
-
-    var task = self.tasks['edit'];
-    if (!task) {
-      console.log('error splitting request: no task');
-      return;
     }
 
     var signal = self.signals['splitRequest'];
