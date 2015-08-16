@@ -529,6 +529,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     SchemaService.getSchema(request, categoryName).then(function(schema) {
       console.log('fetched new schema: ' + schema.name);
       self.schema = schema;
+
       getAvailableExtraCategories();
 
       if (activate) {

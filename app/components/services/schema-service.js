@@ -42,6 +42,11 @@ function SchemaService($q, $http) {
       // Save the URL
       request._links.schema.href = url;
 
+      // Save the new category
+      if (extraCategory && request.categories.indexOf(extraCategory) == -1) {
+        request.categories.push(extraCategory);
+      }
+
       // Prepend tagname and fault state fields
       for (var i = 0, len = schema.categories.length; i < len; i++) {
         var category = schema.categories[i];
