@@ -7,7 +7,6 @@
       "editableStates": [
         "FOR_ADDRESSING"
       ],
-      "disabledStates": ["FOR_APPROVAL"],
       "constraints": [
         {
           "type": "xnor",
