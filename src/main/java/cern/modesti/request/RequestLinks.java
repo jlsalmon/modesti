@@ -3,9 +3,16 @@ package cern.modesti.request;
 import cern.modesti.schema.SchemaController;
 import cern.modesti.workflow.signal.SignalController;
 import cern.modesti.workflow.task.TaskController;
+import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.EventSubscriptionQueryImpl;
+import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.activiti.engine.impl.interceptor.CommandExecutor;
+import org.activiti.engine.impl.persistence.entity.EventSubscriptionEntity;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.runtime.Execution;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,9 +87,20 @@ public class RequestLinks {
    */
   List<Link> getSignalLinks(Request request) {
     List<Link> links = new ArrayList<>();
-    List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).orderByTaskCreateTime().desc().list();
+    Task task = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).active().singleResult();
 
-    for (Task task : tasks) {
+    List<Execution> executions = runtimeService.createExecutionQuery().processInstanceBusinessKey(request.getRequestId(), true).su.list();
+    ExecutionEntity entity = (ExecutionEntity) executions.get(0);
+
+    CommandExecutor executor = ((ProcessEngineConfigurationImpl) ProcessEngines.getDefaultProcessEngine().getProcessEngineConfiguration()).getCommandExecutor();
+    EventSubscriptionQueryImpl query = new EventSubscriptionQueryImpl(executor);
+
+    List<EventSubscriptionEntity> events = query.executionId(task.getExecutionId()).list();
+
+
+    //List<EventSubscriptionEntity> subs = entity.getEventSubscriptions();
+
+    //for (Task task : tasks) {
 
       // TODO: remove these hardcoded task names and instead query via the {@link org.activiti.engine.RuntimeService}
       if (task.getName().equals("validate")) {
@@ -92,7 +110,7 @@ public class RequestLinks {
       if (task.getName().equals("submit")) {
         links.add(linkTo(SignalController.class, request.getRequestId()).slash("requestModified").withRel("signals"));
       }
-    }
+    //}
 
     return links;
   }

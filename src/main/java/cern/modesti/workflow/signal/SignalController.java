@@ -156,7 +156,10 @@ public class SignalController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    Execution execution = runtimeService.createExecutionQuery().signalEventSubscriptionName("splitRequest").singleResult();
     Task task = taskService.createTaskQuery().processInstanceBusinessKey(id).taskName("validate").singleResult();
+
+
     if (task == null) {
       throw new InvalidOperationException(format("Signal 'splitRequest' is not valid for request %s at this stage in the workflow.", id));
     }
