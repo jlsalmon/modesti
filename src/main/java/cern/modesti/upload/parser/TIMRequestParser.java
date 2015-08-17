@@ -168,7 +168,7 @@ public class TIMRequestParser extends RequestParser {
     } else if (properties.containsKey("hostName")) {
       return "DIAMON";
     } else if (properties.containsKey("dbTagname")) {
-      return "DB";
+      return "DATABASE";
     }
 
     return null;
