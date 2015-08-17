@@ -43,9 +43,8 @@ dependencies {
     compile("org.springframework.security:spring-security-ldap")
     compile("org.apache.directory.server:apacheds-server-jndi:1.5.5")
 
-    compile('org.activiti:spring-boot-starter-basic:5.18.0')
-    compile('org.activiti:spring-boot-starter-jpa:5.18.0')
-    //compile('org.activiti:spring-boot-starter-rest-api:5.17.0')
+    compile('org.activiti:activiti-spring-boot-starter-basic:5.18.0')
+    compile('org.activiti:activiti-spring-boot-starter-jpa:5.18.0')
     compile('org.activiti:activiti-ldap:5.18.0')
 
     // Exclude activemq-all and include necessary dependencies directly.
