@@ -71,8 +71,8 @@ function ColumnService($http, $translate) {
    * @returns {*}
    */
   function getDropdownColumn(column, field) {
-    column.type = 'dropdown';
-    column.strict = false;
+    column.type = 'autocomplete';
+    column.strict = true;
     column.allowInvalid = true;
 
     // Dropdown options given as list
@@ -172,8 +172,29 @@ function ColumnService($http, $translate) {
 
     column.type = 'autocomplete';
     //column.trimDropdown = false;
-    //column.strict = true;
-    //column.allowInvalid = true;
+    column.strict = true;
+    column.allowInvalid = true;
+    column.filter = false;
+
+    // Add a custom validator to set the validation state to false if the value is not one of the options in the list.
+    column.validator = function (value, callback) {
+      var params = {};
+      params.query = value;
+
+      // Don't make a call if the query is less than the minimum length
+      if (field.minLength && query.length < field.minLength) {
+        callback(false);
+      }
+
+      $http.get(BACKEND_BASE_URL + '/' + field.url, { params : params, cache: true }).then(function(response) {
+        if (!response.data.hasOwnProperty('_embedded')) {
+          callback(false);
+        } else {
+          callback(true);
+        }
+      });
+    };
+
 
     //column.renderer = function autocompleteCellRenderer(instance, td, row, col, prop, value, cellProperties) {
     //  Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
