@@ -468,7 +468,13 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       gmaoCode = point.properties.csamCsename.value;
     }
 
-    var otherEquipCode = point.properties.otherEquipCode;
+    var otherEquipCode;
+
+    if (point.properties.otherEquipCode) {
+      otherEquipCode = point.properties.otherEquipCode;
+    } else if(point.properties.csamDetector && point.properties.csamDetector.value) {
+      otherEquipCode = point.properties.csamDetector.value;
+    }
 
     if (gmaoCode && otherEquipCode) {
       if (gmaoCode === otherEquipCode) {
