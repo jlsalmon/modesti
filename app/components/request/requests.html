@@ -229,21 +229,25 @@
               </li>
             </ul>
           </div>
+
+          <div class="pull-right" style="margin-top: 12px;" ng-if="ctrl.page.totalElements">
+            {{ctrl.page.totalElements}} requests for this filter
+          </div>
         </div>
 
         <div class="tasklist-controls" style="position: relative;">
-          <form class="form-inline search-form">
-            <div class="form-group input-group">
-              <input type="text" name="q" ng-model="q" class="form-control" placeholder="Search requests..."> <span
-                class="input-group-btn">
-                  <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-                    <i class="fa fa-search"></i>
-                  </button>
-                </span>
-            </div>
-          </form>
+          <!--<form class="form-inline search-form">-->
+            <!--<div class="form-group input-group">-->
+              <!--<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search requests..."> <span-->
+                <!--class="input-group-btn">-->
+                  <!--<button type="submit" name="search" id="search-btn" class="btn btn-flat">-->
+                    <!--<i class="fa fa-search"></i>-->
+                  <!--</button>-->
+                <!--</span>-->
+            <!--</div>-->
+          <!--</form>-->
 
-          <span style="position: absolute; top: 50%; right: 0;" ng-cloak>{{ctrl.page.totalElements}} requests for this filter</span>
+
         </div>
 
         <div class="loading-container" style="height: 400px; width: 100%"
