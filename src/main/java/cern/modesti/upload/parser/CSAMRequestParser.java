@@ -174,7 +174,7 @@ public class CSAMRequestParser extends RequestParser {
     } else if (properties.containsKey("winterStatus")) {
       return "WINTER";
     } else if (properties.containsKey("securitonGroup")) {
-      return "SECIRITON";
+      return "SECURITON";
     } else if (properties.containsKey("securifireGroup")) {
       return "SECURIFIRE";
     } else if (properties.containsKey("safedefModule")) {
