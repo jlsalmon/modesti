@@ -4,8 +4,13 @@ import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
 import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.task.TaskInfo;
+import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.EventSubscriptionQueryImpl;
+import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
+import org.activiti.engine.impl.interceptor.CommandExecutor;
+import org.activiti.engine.impl.persistence.entity.EventSubscriptionEntity;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.task.Task;
 import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
@@ -64,18 +69,15 @@ public class SignalController {
     }
 
     List<SignalInfo> signals = new ArrayList<>();
-    List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).list();
+    Task task = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).active().singleResult();
 
-    for (Task task : tasks) {
+    // Query the signals that are subscribed to by the current process instance.
+    // TODO this is a non-public API, is there a supported way of doing this?
+    CommandExecutor executor = ((ProcessEngineConfigurationImpl) ProcessEngines.getDefaultProcessEngine().getProcessEngineConfiguration()).getCommandExecutor();
+    EventSubscriptionQueryImpl query = new EventSubscriptionQueryImpl(executor);
 
-      // TODO: remove these hardcoded task names and instead query via the {@link org.activiti.engine.RuntimeService}
-      if (task.getName().equals("validate")) {
-        signals.add(new SignalInfo("splitRequest"));
-      }
-
-      if (task.getName().equals("submit")) {
-        signals.add(new SignalInfo("requestModified"));
-      }
+    for (EventSubscriptionEntity signal : query.processInstanceId(task.getProcessInstanceId()).list()) {
+      signals.add(new SignalInfo(signal.getEventName()));
     }
 
     Resources<Resource<SignalInfo>> resources = Resources.wrap(signals);
@@ -156,10 +158,7 @@ public class SignalController {
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    Execution execution = runtimeService.createExecutionQuery().signalEventSubscriptionName("splitRequest").singleResult();
-    Task task = taskService.createTaskQuery().processInstanceBusinessKey(id).taskName("validate").singleResult();
-
-
+    Task task = taskService.createTaskQuery().processInstanceBusinessKey(id).active().singleResult();
     if (task == null) {
       throw new InvalidOperationException(format("Signal 'splitRequest' is not valid for request %s at this stage in the workflow.", id));
     }

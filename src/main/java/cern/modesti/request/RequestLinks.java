@@ -89,28 +89,15 @@ public class RequestLinks {
     List<Link> links = new ArrayList<>();
     Task task = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).active().singleResult();
 
-    List<Execution> executions = runtimeService.createExecutionQuery().processInstanceBusinessKey(request.getRequestId(), true).su.list();
-    ExecutionEntity entity = (ExecutionEntity) executions.get(0);
-
+    // Query the signals that are subscribed to by the current process instance.
+    // TODO this is a non-public API, is there a supported way of doing this?
     CommandExecutor executor = ((ProcessEngineConfigurationImpl) ProcessEngines.getDefaultProcessEngine().getProcessEngineConfiguration()).getCommandExecutor();
     EventSubscriptionQueryImpl query = new EventSubscriptionQueryImpl(executor);
+    List<EventSubscriptionEntity> signals = query.processInstanceId(task.getProcessInstanceId()).list();
 
-    List<EventSubscriptionEntity> events = query.executionId(task.getExecutionId()).list();
-
-
-    //List<EventSubscriptionEntity> subs = entity.getEventSubscriptions();
-
-    //for (Task task : tasks) {
-
-      // TODO: remove these hardcoded task names and instead query via the {@link org.activiti.engine.RuntimeService}
-      if (task.getName().equals("validate")) {
-        links.add(linkTo(SignalController.class, request.getRequestId()).slash("splitRequest").withRel("tasks"));
-      }
-
-      if (task.getName().equals("submit")) {
-        links.add(linkTo(SignalController.class, request.getRequestId()).slash("requestModified").withRel("signals"));
-      }
-    //}
+    for (EventSubscriptionEntity signal : signals) {
+      links.add(linkTo(SignalController.class, request.getRequestId()).slash(signal.getEventName()).withRel("signals"));
+    }
 
     return links;
   }
