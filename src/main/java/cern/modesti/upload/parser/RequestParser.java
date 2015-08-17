@@ -317,12 +317,12 @@ public abstract class RequestParser {
     String buildingNumber = String.valueOf(((Double) properties.get("buildingNumber")).intValue());
     location.setBuildingNumber(buildingNumber);
 
-    if (properties.get("floor") != null) {
-      location.setFloor(String.valueOf(properties.get("floor")));
+    if (properties.get("buildingFloor") != null) {
+      location.setFloor(String.valueOf(properties.get("buildingFloor")));
     }
 
-    if (properties.get("room") != null) {
-      String room = String.format("%03d", ((Double) properties.get("room")).intValue());
+    if (properties.get("buildingRoom") != null) {
+      location.setRoom(String.format("%03d", ((Double) properties.get("buildingRoom")).intValue()));
     }
 
     String value = buildingNumber + (location.getFloor() == null ? "" : "/" + location.getFloor());
@@ -330,8 +330,8 @@ public abstract class RequestParser {
     location.setValue(value);
 
     properties.remove("buildingNumber");
-    properties.remove("floor");
-    properties.remove("room");
+    properties.remove("buildingFloor");
+    properties.remove("buildingRoom");
     return location;
   }
 
