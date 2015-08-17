@@ -45,6 +45,14 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 
+/**
+ * TODO:
+ *
+ *  - Test request modification signal
+ *  - Test split signal
+ *  - Test CSAM workflow
+ *  - Test PVSS workflow
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @TestPropertySource("classpath:modesti-test.properties")

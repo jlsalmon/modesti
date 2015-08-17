@@ -17,7 +17,7 @@
           "help_fr": ""
         },
         {
-          "id": "gmaoCode",
+          "id": "csamDetector",
           "type": "autocomplete",
           "minLength": 4,
           "url": "gmaoCodes/search/find",
