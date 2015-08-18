@@ -156,7 +156,11 @@ function ColumnService($http, $translate) {
           // TODO: add "filter" parameter to schema instead of this?
           if (param.indexOf('.') > -1) {
             var props = param.split('.');
-            params[props[1]] = point.properties[props[0]][props[1]];
+            if (point.properties[props[0]] && point.properties[props[0]].hasOwnProperty(props[1])) {
+              params[props[1]] = point.properties[props[0]][props[1]];
+            } else {
+              params[props[1]] = '';
+            }
           }
           else {
             params[param] = query;

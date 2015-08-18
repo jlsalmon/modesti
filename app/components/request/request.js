@@ -424,7 +424,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
             subsystemName = subsystem.subsystem;
           }
 
-          if (point.properties.functionality.value) {
+          if (point.properties.functionality && point.properties.functionality.value) {
             $http.get(BACKEND_BASE_URL + '/functionalities/search/find', {
               params: {query: point.properties.functionality.value},
               cache: true
