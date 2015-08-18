@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('ValidationService', ValidationService);
 
-function ValidationService($q) {
+function ValidationService($q, $http) {
   var self = this;
 
   // Public API
@@ -83,6 +83,12 @@ function ValidationService($q) {
           //point.errors[propertyName] = [];
 
           var value = getValueByPropertyName(point, propertyName);
+
+          // Check for invalid fields
+          if (!isValidValue(value, point, field)) {
+            point.valid = category.valid = valid = false;
+            setErrorMessage(point, propertyName, 'Value "' + value + '" is not a legal option for field "' + field.name_en + '". Please select a value from the list.');
+          }
 
           // Required fields
           if (field.required === true) {
@@ -182,6 +188,45 @@ function ValidationService($q) {
     }
 
     return valid;
+  }
+
+  /**
+   *
+   * @param value
+   * @param point
+   * @param field
+   * @returns {boolean} true if the value is valid, false otherwise
+   */
+  function isValidValue(value, point, field) {
+    // If the value is empty, it's technically not invalid.
+    if (value === undefined || value === null || value === '') {
+      return true;
+    }
+
+    // If we have an options field, check that the value is in the static list of options
+    if (field.type === 'options' && field.options && field.options instanceof Array) {
+      for (var key in field.options) {
+        var option = field.options[key];
+
+        if (value === option) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Otherwise, if we have an autocomplete field, make a call to the backend to see if this value returns any results
+    else if (field.type === 'autocomplete') {
+
+      // If no results are found in the source function, then this field will have been marked as invalid.
+      return !(point.invalidFields && point.invalidFields.indexOf(field.id) > -1);
+
+    }
+
+    else {
+      return true;
+    }
   }
 
   /**
@@ -312,7 +357,7 @@ function ValidationService($q) {
    *
    * @param point
    * @param propertyName
-   * @param error
+   * @param message
    */
   function setErrorMessage(point, propertyName, message) {
     var error;
