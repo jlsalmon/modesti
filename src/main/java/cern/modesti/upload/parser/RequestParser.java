@@ -79,7 +79,7 @@ public abstract class RequestParser {
     // Parse all the points from the request
     List<Point> points = parseDataPoints();
     if (points.isEmpty()) {
-      throw new RequestParseException("Request contained no data points");
+      throw new RequestParseException("Sheet contains no data points");
     }
     request.setPoints(points);
 
@@ -138,8 +138,6 @@ public abstract class RequestParser {
   private List<Point> parseDataPoints() {
     List<Point> points = new ArrayList<>();
 
-
-
     for (int i = FIRST_DATA_ROW; i < sheet.getLastRowNum(); i++) {
       Point point = parseDataPoint(sheet.getRow(i));
 
@@ -150,9 +148,6 @@ public abstract class RequestParser {
 
       // Figure out the point type
       point.getProperties().put("pointType", parsePointType(point.getProperties()));
-
-      // Run the point through the option service to interpret any potential values that need converting
-
 
       points.add(point);
     }
@@ -260,13 +255,10 @@ public abstract class RequestParser {
         category = "Logging";
       }
 
-
       if (category != null && !categories.contains(category)) {
         categories.add(category);
       }
     }
-
-
 
     return categories;
   }
