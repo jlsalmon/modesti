@@ -10,7 +10,7 @@
       ],
       "fields": [
         {
-          "id": "type",
+          "id": "commandType",
           "type": "options",
           "options": [
             "bi-stable",
@@ -22,7 +22,7 @@
           "help_fr": ""
         },
         {
-          "id": "pulseLength",
+          "id": "commandPulseLength",
           "type": "numeric",
           "name_en": "Pulse Length",
           "name_fr": "Pulse Length",

@@ -136,7 +136,9 @@ public abstract class RequestParser {
    * @return
    */
   private List<Point> parseDataPoints() {
-    List<Point> points = new ArrayList<Point>();
+    List<Point> points = new ArrayList<>();
+
+
 
     for (int i = FIRST_DATA_ROW; i < sheet.getLastRowNum(); i++) {
       Point point = parseDataPoint(sheet.getRow(i));
@@ -148,6 +150,9 @@ public abstract class RequestParser {
 
       // Figure out the point type
       point.getProperties().put("pointType", parsePointType(point.getProperties()));
+
+      // Run the point through the option service to interpret any potential values that need converting
+
 
       points.add(point);
     }
@@ -233,11 +238,35 @@ public abstract class RequestParser {
     Set<String> categories = new HashSet<>();
 
     for (Point point : points) {
-      String pointType = (String) point.getProperties().get("pointType");
+      Map<String, Object> properties = point.getProperties();
+
+      String pointType = (String) properties.get("pointType");
       if (pointType != null && !pointType.isEmpty() && !categories.contains(pointType)) {
-        categories.add((String) point.getProperties().get("pointType"));
+        categories.add((String) properties.get("pointType"));
+      }
+
+      String category = null;
+      if (properties.containsKey("trueMeaning")) {
+        category = "Binary Points";
+      } else if (properties.containsKey("commandType")) {
+        category = "Commands";
+      } else if (properties.containsKey("lowLimit")) {
+        category = "Analogue Points";
+      } else if (properties.containsKey("dipClientApp")) {
+        category = "DIP Client";
+      } else if (properties.containsKey("japcClientApp")) {
+        category = "JAPC Client";
+      } else if (properties.containsKey("logValueDeadband")) {
+        category = "Logging";
+      }
+
+
+      if (category != null && !categories.contains(category)) {
+        categories.add(category);
       }
     }
+
+
 
     return categories;
   }

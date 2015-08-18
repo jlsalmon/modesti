@@ -95,6 +95,10 @@ public class TIMRequestParser extends RequestParser {
     columnTitleMappings.put("columnIndex", "japcColumnIndex");
     columnTitleMappings.put("rowIndex", "japcRowIndex");
 
+    // Command mappings
+    columnTitleMappings.put("type", "commandType");
+    columnTitleMappings.put("pulseLength", "commandPulseLength");
+
     // Analogue mappings
     columnTitleMappings.put("conversionFactor", "plcAdConversion");
   }
@@ -165,6 +169,8 @@ public class TIMRequestParser extends RequestParser {
       return "PLC";
     } else if (properties.containsKey("japcProtocol")) {
       return "JAPC";
+    } else if (properties.containsKey("laserCategory")) {
+      return "LASER";
     } else if (properties.containsKey("hostName")) {
       return "DIAMON";
     } else if (properties.containsKey("dbTagname")) {
