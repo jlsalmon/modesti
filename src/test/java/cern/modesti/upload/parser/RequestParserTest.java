@@ -277,8 +277,8 @@ public class RequestParserTest {
     assertTrue(properties.get("trueMeaning") != null);
     assertTrue(properties.get("falseMeaning") != null);
     // Commands
-    assertTrue(properties.get("type") != null);
-    assertTrue(properties.get("pulseLength") != null);
+    assertTrue(properties.get("commandType") != null);
+    assertTrue(properties.get("commandPulseLength") != null);
     // Monitoring
     assertTrue(properties.get("monitoringEquipment") != null);
     assertTrue(properties.get("cabling") != null);
@@ -395,8 +395,10 @@ public class RequestParserTest {
 
     assertTrue(request.getDomain().equals("TIM"));
     assertTrue(request.getType().equals(RequestType.CREATE));
-    assertTrue(request.getCategories().size() == 1);
+    assertTrue(request.getCategories().size() == 3);
     assertTrue(request.getCategories().contains("PLC"));
+    assertTrue(request.getCategories().contains("Commands"));
+    assertTrue(request.getCategories().contains("Binary Points"));
 
     List<Point> points = request.getPoints();
     assertTrue(points.size() == 279);
