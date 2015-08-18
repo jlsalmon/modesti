@@ -208,7 +208,12 @@ function ValidationService($q, $http) {
       for (var key in field.options) {
         var option = field.options[key];
 
-        if (value === option) {
+        if (value !== undefined && value !== null && value !== '' && value == option) {
+          return true;
+        }
+
+        // Fiddle with the meaning and check again
+        if (value !== undefined && value !== null && value !== ''  && (value == option.split(':')[0] || value == option.replace(':', ''))) {
           return true;
         }
       }
