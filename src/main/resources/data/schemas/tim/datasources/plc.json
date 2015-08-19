@@ -7,6 +7,12 @@
       "editableStates": [
         "FOR_ADDRESSING"
       ],
+      "constraints": [
+        {
+          "type": "xnor",
+          "members": ["plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix"]
+        }
+      ],
       "fields": [
         {
         "id": "pointType",
@@ -42,7 +48,7 @@
         },
         {
           "id": "plcNativePrefix",
-          "type": "text",
+          "type": "options",
           "name_en": "Native Prefix",
           "name_fr": "Native Prefix",
           "help_en": "",
