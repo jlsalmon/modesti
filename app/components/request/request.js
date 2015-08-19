@@ -407,8 +407,6 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
         });
       })(point);
     }
-
-    generateFaultStates();
   }
 
   /**
@@ -630,6 +628,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     }
 
     generateTagnames();
+    generateFaultStates();
   }
 
   /**

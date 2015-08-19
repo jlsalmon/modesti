@@ -177,6 +177,11 @@ function ValidationService($q) {
     var valid = true;
 
     points.forEach(function (point) {
+      // Ignore empty points
+      if (isEmptyPoint(point)) {
+        return true;
+      }
+
       // Get all the fields specified as members of the constraint
       var fields = getFields(category, constraint.members);
 
@@ -207,6 +212,10 @@ function ValidationService($q) {
     var valid = true;
 
     points.forEach(function (point) {
+      // Ignore empty points
+      if (isEmptyPoint(point)) {
+        return true;
+      }
 
       // Some constraints are only evaluated when their condition is true
       if (constraint.condition) {
@@ -241,8 +250,6 @@ function ValidationService($q) {
     });
 
     return valid;
-
-
   }
 
   /**
@@ -256,6 +263,11 @@ function ValidationService($q) {
     var valid = true;
 
     points.forEach(function (point) {
+      // Ignore empty points
+      if (isEmptyPoint(point)) {
+        return true;
+      }
+
       // Get all the fields specified as members of the constraint
       var fields = getFields(category, constraint.members);
 
@@ -295,13 +307,21 @@ function ValidationService($q) {
       var concatenatedValue = '';
 
       constraint.members.forEach(function (member) {
-        concatenatedValue += getValueByPropertyName(point, member);
+        var value = getValueByPropertyName(point, member);
+        if (value !== undefined && value !== null && value !== '') {
+          concatenatedValue += value;
+        }
       });
 
       concatenatedValues.push(concatenatedValue);
     });
 
     points.forEach(function (point, i) {
+      // Ignore empty points
+      if (isEmptyPoint(point)) {
+        return true;
+      }
+
       var value = concatenatedValues[i];
 
       var data = $.extend([], concatenatedValues);

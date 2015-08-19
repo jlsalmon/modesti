@@ -69,9 +69,9 @@ function NewRequestController($http, $location, RequestService, AuthService) {
           self.categories.push(item);
         });
 
-        self.domains[i].categories.map(function(item) {
-          self.categories.push(item);
-        });
+        //self.domains[i].categories.map(function(item) {
+        //  self.categories.push(item);
+        //});
       }
     }
   }
