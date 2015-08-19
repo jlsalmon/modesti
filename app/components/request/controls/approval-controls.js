@@ -323,6 +323,7 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
 
     if (!valid) {
       self.validating = 'error';
+      AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
       self.hot.render();
       return;
     }

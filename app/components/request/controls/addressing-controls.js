@@ -193,6 +193,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
 
         if (!valid) {
           self.validating = 'error';
+          AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
           return;
         }
 

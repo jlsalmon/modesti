@@ -243,6 +243,9 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
 
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
+    // Add a column for displaying icons
+   // self.columns.push({readOnly: true, renderer: iconRenderer});
+
     // Append "select-all" checkbox field.
     if (hasCheckboxColumn()) {
       self.columns.push(getCheckboxColumn());
@@ -257,6 +260,9 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       field = self.activeCategory.fields[i];
 
       // A column is editable only if the category is marked as an editable state for the current request status.
+
+      // TODO: don't allow editing until the task is claimed (if it is a claimable task)
+
       if (isCurrentUserAuthorised()) {
         editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
       } else {
@@ -268,6 +274,18 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       column.renderer = customRenderer;
       self.columns.push(column);
     }
+  }
+
+  function iconRenderer(instance, td, row, col, prop, value, cellProperties) {
+    var point = self.rows[row];
+    td.innerHTML = '';
+
+    if (point.properties.priorityCode) {
+      td.innerHTML += '<i class="fa fa-fw fa-bell"></i>';
+    }
+
+
+    //td.innerHTML = '<i class="fa fa-fw fa-bell"></i><i class="fa fa-fw fa-plug"></i><i class="fa fa-fw fa-terminal"></i>';
   }
 
   /**
@@ -444,8 +462,12 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
 
               if (systemName == '?' && subsystemName == '?' && func == '?' && equipmentIdentifier == '?' && description == '?') {
                 point.properties.faultState = '';
+                point.properties.faultFamily = '';
+                point.properties.faultMember = '';
               } else {
                 point.properties.faultState = systemName + '_' + subsystemName + '_' + func + ':' + equipmentIdentifier + ':' + description;
+                point.properties.faultFamily = systemName + '_' + subsystemName + '_' + func;
+                point.properties.faultMember = equipmentIdentifier;
               }
             });
           }

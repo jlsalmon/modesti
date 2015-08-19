@@ -55,11 +55,6 @@ function SchemaService($q, $http) {
         if (category.name != 'General' && category.name != 'Alarms' && category.name != 'Alarm Help') {
           category.fields.unshift(getTagnameField());
         }
-
-        // Fault state is shown only on the Alarms category.
-        if (category.name == 'Alarms' || category.name == 'Alarm Help') {
-          category.fields.unshift(getFaultStateField());
-        }
       }
 
       q.resolve(schema);
@@ -85,23 +80,6 @@ function SchemaService($q, $http) {
       unique: true,
       name_en: "Tagname",
       name_fr: "Tagname",
-      help_en: "",
-      help_fr: ""
-    }
-  }
-
-  /**
-   *
-   * @returns {*}
-   */
-  function getFaultStateField() {
-    return {
-      id: 'faultState',
-      type: 'text',
-      editable: false,
-      unique: true,
-      name_en: "Fault State",
-      name_fr: "Fault State",
       help_en: "",
       help_fr: ""
     }
