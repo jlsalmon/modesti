@@ -71,43 +71,43 @@ function ColumnService($http, $translate) {
    * @returns {*}
    */
   function getDropdownColumn(column, field) {
-    column.type = 'autocomplete';
-    column.strict = false;
-    column.allowInvalid = true;
+    column.editor = 'select';
+    //column.strict = false;
+    //column.allowInvalid = true;
 
     // Dropdown options given as list
     if (field.options instanceof Array) {
-      column.source = field.options;
+      column.selectOptions = field.options;
     }
 
     // Dropdown options given as URL
-    else if (typeof field.options === 'string') {
-      column.source = function (query, process) {
-
-        // TODO refactor this into a service
-        $http.get(BACKEND_BASE_URL + '/' + field.options, {cache: true}).then(function (response) {
-          if (!response.data.hasOwnProperty('_embedded')) {
-            return [];
-          }
-
-          // Relies on the fact that the property name inside the JSON response is the same
-          // as the first part of the URL, before the first forward slash
-          var returnPropertyName = field.options.split('/')[0];
-          var items = response.data._embedded[returnPropertyName].map(function (item) {
-
-            // For fields that are objects but have no 'model' attribute defined, assume that
-            // the object has only a single property called 'value'.
-            if (field.model == undefined && typeof item == 'object') {
-              return item.value;
-            } else {
-              return item[field.model];
-            }
-          });
-
-          process(items);
-        });
-      };
-    }
+    //else if (typeof field.options === 'string') {
+    //  column.source = function (query, process) {
+    //
+    //    // TODO refactor this into a service
+    //    $http.get(BACKEND_BASE_URL + '/' + field.options, {cache: true}).then(function (response) {
+    //      if (!response.data.hasOwnProperty('_embedded')) {
+    //        return [];
+    //      }
+    //
+    //      // Relies on the fact that the property name inside the JSON response is the same
+    //      // as the first part of the URL, before the first forward slash
+    //      var returnPropertyName = field.options.split('/')[0];
+    //      var items = response.data._embedded[returnPropertyName].map(function (item) {
+    //
+    //        // For fields that are objects but have no 'model' attribute defined, assume that
+    //        // the object has only a single property called 'value'.
+    //        if (field.model == undefined && typeof item == 'object') {
+    //          return item.value;
+    //        } else {
+    //          return item[field.model];
+    //        }
+    //      });
+    //
+    //      process(items);
+    //    });
+    //  };
+    //}
 
     return column;
   }
