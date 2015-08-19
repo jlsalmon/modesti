@@ -1,5 +1,8 @@
 package cern.modesti.schema.category;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 /**
@@ -7,23 +10,11 @@ import java.util.List;
  *
  * @author Justin Lewis Salmon
  */
+@Data
+@NoArgsConstructor
 public class Constraint {
-  String type;
-  List<String> members;
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public List<String> getMembers() {
-    return members;
-  }
-
-  public void setMembers(List<String> members) {
-    this.members = members;
-  }
+  private String type;
+  private List<String> members;
+  private List<String> activeStates;
+  private Condition condition;
 }

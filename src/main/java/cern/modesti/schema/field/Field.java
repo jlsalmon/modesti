@@ -65,6 +65,8 @@ public class Field {
 
   private Boolean required;
 
+  private Boolean editable;
+
   private String help_en = "";
 
   private String help_fr = "";
