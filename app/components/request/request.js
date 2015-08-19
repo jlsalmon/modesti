@@ -244,7 +244,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
 
     // Add a column for displaying icons
-   // self.columns.push({readOnly: true, renderer: iconRenderer});
+    //self.columns.push({readOnly: true, renderer: iconRenderer});
 
     // Append "select-all" checkbox field.
     if (hasCheckboxColumn()) {
@@ -282,10 +282,9 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
 
     if (point.properties.priorityCode) {
       td.innerHTML += '<i class="fa fa-fw fa-bell"></i>';
+    } else {
+      td.innerHTML += '<i class="fa fa-fw fa-bell-o text-muted"></i>';
     }
-
-
-    //td.innerHTML = '<i class="fa fa-fw fa-bell"></i><i class="fa fa-fw fa-plug"></i><i class="fa fa-fw fa-terminal"></i>';
   }
 
   /**
