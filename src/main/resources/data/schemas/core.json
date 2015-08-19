@@ -126,7 +126,6 @@
     },
     {
       "name": "Alarms",
-      "disabledStates": [],
       "editableStates": [
         "IN_PROGRESS",
         "FOR_CORRECTION"
@@ -135,9 +134,40 @@
         {
           "type": "xnor",
           "members": ["priorityCode", "alarmValue"]
+        },
+        {
+          "type": "unique",
+          "members": ["faultFamily", "faultMember", "pointDescription"]
         }
       ],
       "fields": [
+        {
+          "id": "faultFamily",
+          "type": "text",
+          "editable": false,
+          "name_en": "Fault Family",
+          "name_fr": "Fault Family",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "faultMember",
+          "type": "text",
+          "editable": false,
+          "name_en": "Fault Member",
+          "name_fr": "Fault Member",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "pointDescription",
+          "type": "text",
+          "editable": false,
+          "name_en": "Problem Description",
+          "name_fr": "Problem Description",
+          "help_en": "",
+          "help_fr": ""
+        },
         {
           "id": "priorityCode",
           "type": "options",
@@ -158,7 +188,6 @@
     },
     {
       "name": "Alarm Help",
-      "disabledStates": [],
       "editableStates": [
         "IN_PROGRESS",
         "FOR_CORRECTION",
