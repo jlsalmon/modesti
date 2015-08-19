@@ -14,7 +14,7 @@
   "SUBSYSTEM": "Subsystem",
   "SYSTEM_SUBSYSTEM": "System/Subsystem",
   "DOMAIN": "Target Domain",
-  "CATEGORIES": "Categories",
+  "CATEGORIES": "Groups",
   "CREATOR": "Creator",
   "STATUS": "Status",
   "ANY": "Any",
@@ -27,8 +27,8 @@
   "TEST": "Test",
   "VIEW": "View",
 
-  "ADD_CATEGORY": "Add category",
-  "NO_CATEGORIES_AVAILABLE": "No extra categories available",
+  "ADD_CATEGORY": "Add group",
+  "NO_CATEGORIES_AVAILABLE": "No extra groups available",
 
   "SAVE": "Save request",
   "RESET_SORTING": "Reset sorting",
@@ -65,7 +65,7 @@
   "SELECT_REQUEST_TYPE": "Select the type of request you wish (create, update or delete points).",
   "ENTER_DESCRIPTION": "Enter a general description of your request.",
   "SELECT_DOMAIN": "Select the target domain of the request.",
-  "SELECT_CATEGORIES": "Select the categories (one or more) of which the points in your request will be. <br/>Note: you can always add new categories later.",
+  "SELECT_CATEGORIES": "Select the groups (one or more) of which the points in your request will be. <br/>Note: you can always add new groups later.",
   "SELECT_SUBSYSTEM": "Type the system/subsystem to which this request relates.",
   "NEXT": "Next",
 
