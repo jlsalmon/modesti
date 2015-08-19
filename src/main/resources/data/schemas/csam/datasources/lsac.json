@@ -9,8 +9,14 @@
       ],
       "constraints": [
         {
-          "type": "xnor",
-          "members": ["lsacType", "lsacRack", "lsacCard", "lsacPort"]
+          "type": "and",
+          "members": ["lsacType", "lsacRack", "lsacCard", "lsacPort"],
+          "activeStates": ["FOR_ADDRESSING"],
+          "condition": {
+            "operation": "equals",
+            "field": "pointType",
+            "value": "LSAC"
+          }
         }
       ],
       "fields": [

@@ -9,8 +9,14 @@
       ],
       "constraints": [
         {
-          "type": "xnor",
-          "members": ["plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix"]
+          "type": "and",
+          "members": ["plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix"],
+          "activeStates": ["FOR_ADDRESSING"],
+          "condition": {
+            "operation": "equals",
+            "field": "pointType",
+            "value": "PLC"
+          }
         }
       ],
       "fields": [

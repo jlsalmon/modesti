@@ -9,8 +9,14 @@
       ],
       "constraints": [
         {
-          "type": "xnor",
-          "members": ["csamPlcname", "plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix", "plcSlaveAddress", "plcConnectId"]
+          "type": "and",
+          "members": ["csamPlcname", "plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix"],
+          "activeStates": ["FOR_ADDRESSING"],
+          "condition": {
+            "operation": "equals",
+            "field": "pointType",
+            "value": "APIMMD"
+          }
         }
       ],
       "fields": [
