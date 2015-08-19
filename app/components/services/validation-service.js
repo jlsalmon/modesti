@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('ValidationService', ValidationService);
 
-function ValidationService($q, $http) {
+function ValidationService($q) {
   var self = this;
 
   // Public API
@@ -27,25 +27,22 @@ function ValidationService($q, $http) {
     var points = request.points;
 
     // Reset all categories to valid
-    for (var i in schema.categories) {
-      schema.categories[i].valid = true;
-    }
+    schema.categories.forEach(function (category) {
+      category.valid = true;
+    });
 
     var valid = true;
 
-    if (request.status === 'IN_PROGRESS' || request.status === 'FOR_CORRECTION') {
-      // Validate row by row
-      if (!validateRows(points, schema)) valid = false;
-      // Validate column by column
-      if (!validateColumns(points, schema)) valid = false;
-    }
+    // Validate each point separately. This checks things like required values, min/max length, valid values etc.
+    points.forEach(function (point) {
+      if (!validatePoint(point, schema)) {
+        valid = false;
+      }
+    });
 
-    else if (request.status === 'FOR_APPROVAL') {
-      // TODO move approval validation here
-    }
-
-    else if (request.status === 'FOR_ADDRESSING') {
-      if (!validateAddresses(points, schema)) valid = false;
+    // Validate the request as a whole. This checks things like unique column groups, mutually exclusive columns, etc.
+    if (!validateConstraints(request, schema)) {
+      valid = false;
     }
 
     q.resolve(valid);
@@ -54,308 +51,323 @@ function ValidationService($q, $http) {
 
   /**
    *
-   * @param points
+   * @param point
    * @param schema
    * @returns {boolean}
    */
-  function validateRows(points, schema) {
-    var point, valid = true;
+  function validatePoint(point, schema) {
+    var valid = true;
+    point.valid = undefined;
+    point.errors = [];
 
-    for (var i in points) {
-      point = points[i];
-      point.valid = undefined;
-      point.errors = [];
+    // Ignore empty points
+    if (isEmptyPoint(point)) {
+      return true;
+    }
 
-      // Ignore empty points
-      if (isEmptyPoint(point)) {
-        continue;
-      }
+    schema.categories.forEach(function (category) {
+      category.fields.forEach(function (field) {
 
-      var category;
-      for (var j in schema.categories) {
-        category = schema.categories[j];
+        var propertyName = getPropertyName(field);
+        var value = getValueByPropertyName(point, propertyName);
 
-        var field;
-        for (var k in category.fields) {
-          field = category.fields[k];
+        // Check for invalid fields
+        if (!isValidValue(value, point, field)) {
+          point.valid = category.valid = valid = false;
+          setErrorMessage(point, propertyName, 'Value "' + value + '" is not a legal option for field "' + field.name_en + '". Please select a value from the list.');
+        }
 
-          var propertyName = getPropertyName(field);
-          //point.errors[propertyName] = [];
-
-          var value = getValueByPropertyName(point, propertyName);
-
-          // Check for invalid fields
-          if (!isValidValue(value, point, field)) {
+        // Required fields
+        if (field.required === true) {
+          if (value === '' || value === undefined || value === null) {
             point.valid = category.valid = valid = false;
-            setErrorMessage(point, propertyName, 'Value "' + value + '" is not a legal option for field "' + field.name_en + '". Please select a value from the list.');
-          }
-
-          // Required fields
-          if (field.required === true) {
-            if (value === '' || value === undefined || value === null) {
-              point.valid = category.valid = valid = false;
-              setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" is mandatory');
-            }
-          }
-
-          // Min length
-          if (field.minLength) {
-            if (value && value.length < field.minLength) {
-              point.valid = category.valid = valid = false;
-              setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
-            }
-          }
-
-          // Max length
-          if (field.maxLength) {
-            if (value && value.length > field.maxLength) {
-              //cell.valid = false;
-              point.valid = category.valid = valid = false;
-              setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
-            }
+            setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" is mandatory');
           }
         }
 
-        // Validate additional constraints
-        var constraintsValid = checkConstraints(point, category);
-        if (constraintsValid === false) valid = false;
-      }
-    }
+        // Min length
+        if (field.minLength) {
+          if (value && value.length < field.minLength) {
+            point.valid = category.valid = valid = false;
+            setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
+          }
+        }
+
+        // Max length
+        if (field.maxLength) {
+          if (value && value.length > field.maxLength) {
+            //cell.valid = false;
+            point.valid = category.valid = valid = false;
+            setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
+          }
+        }
+      });
+    });
 
     return valid;
   }
 
-
   /**
+   * TODO: Mutually exclusive groups validation
    *
-   * @param points
+   * @param request
    * @param schema
    * @returns {boolean}
    */
-  function validateColumns(points, schema) {
-    var valid = true, checkedColumns = [];
+  function validateConstraints(request, schema) {
+    var valid = true;
+    var points = request.points;
 
-    var category;
-    for (var i in schema.categories) {
-      category = schema.categories[i];
-
-      var field;
-      for (var j in category.fields) {
-        field = category.fields[j];
-
-        var columnName = getPropertyName(field);
-        if (checkedColumns.indexOf(columnName) > -1) {
-          continue;
-        }
-
-        var column = getColumnByProperty(points, columnName);
-
-        var value, point;
-        for (var row in column) {
-          value = column[row];
-          point = points[row];
-
-          // Ignore empty points
-          if (isEmptyPoint(point)) {
-            continue;
-          }
-
-          // Unique columns
-          if (field.unique) {
-            var data = $.extend([], column);
-            var index = data.indexOf(value);
-            data.splice(index, 1);
-            var second_index = data.indexOf(value);
-
-            if (value && index > -1 && second_index > -1) {
-              point.valid = category.valid = valid = false;
-              setErrorMessage(point, columnName, 'Column "' + field.name_en + '" must be unique. Check for duplicate descriptions and attributes.');
-            }
-          }
-
-
-          // TODO: Unique columns validation
-
-          // TODO: Unique tagnames, fault states, address parameter validations
-
-          // TODO: column groups validation
-
-          // TODO: Mutually exclusive groups validation
-        }
-
-        checkedColumns.push(columnName);
+    schema.categories.forEach(function (category) {
+      if (!category.constraints) {
+        return;
       }
-    }
+
+      category.constraints.forEach(function (constraint) {
+
+        // Some constraints are only active during certain request statuses
+        if (constraint.activeStates && constraint.activeStates.indexOf(request.status) == -1) {
+          return;
+        }
+
+        switch (constraint.type) {
+          case 'or':
+          {
+            if (!validateOrConstraint(points, category, constraint)) {
+              valid = false;
+            }
+            break;
+          }
+          case 'and':
+          {
+            if (!validateAndConstraint(points, category, constraint)) {
+              valid = false;
+            }
+            break;
+          }
+          case 'xnor':
+          {
+            if (!validateXnorConstraint(points, category, constraint)) {
+              valid = false;
+            }
+            break;
+          }
+          case 'unique':
+          {
+            if (!validateUniqueConstraint(points, category, constraint)) {
+              valid = false;
+            }
+            break;
+          }
+        }
+      });
+    });
 
     return valid;
   }
 
   /**
-   *
-   * @param value
-   * @param point
-   * @param field
-   * @returns {boolean} true if the value is valid, false otherwise
-   */
-  function isValidValue(value, point, field) {
-    // If the value is empty, it's technically not invalid.
-    if (value === undefined || value === null || value === '') {
-      return true;
-    }
-
-    // If we have an options field, check that the value is in the static list of options
-    if (field.type === 'options' && field.options && field.options instanceof Array) {
-      for (var key in field.options) {
-        var option = field.options[key];
-
-        if (value !== undefined && value !== null && value !== '' && value == option) {
-          return true;
-        }
-
-        // Fiddle with the meaning and check again
-        if (value !== undefined && value !== null && value !== ''  && (value == option.split(':')[0] || value == option.replace(':', ''))) {
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    // Otherwise, if we have an autocomplete field, make a call to the backend to see if this value returns any results
-    else if (field.type === 'autocomplete') {
-
-      // If no results are found in the source function, then this field will have been marked as invalid.
-      return !(point.invalidFields && point.invalidFields.indexOf(field.id) > -1);
-
-    }
-
-    else {
-      return true;
-    }
-  }
-
-  /**
-   * Checks that all points have a correct address based on their point type.
    *
    * @param points
-   * @param schema
-   */
-  function validateAddresses(points, schema) {
-    var point, valid = true;
-
-    for (var i = 0, len = points.length; i < len; i++) {
-      point = points[i];
-      point.valid = undefined;
-      point.errors = [];
-
-      var pointType = point.properties.pointType;
-
-      // Find the category that matches the point type
-      var category;
-      for (var key in schema.categories) {
-        category = schema.categories[key];
-
-        if (category.name === pointType) {
-          // TODO: do this properly. This is hacked by making any "xnor" constraints become "and" constraints
-          for (var l in category.constraints) {
-            var constraint = category.constraints[l];
-
-            if (constraint.type === 'xnor') {
-              constraint.type = 'and';
-            }
-          }
-
-          valid = checkConstraints(point, category);
-        }
-      }
-    }
-
-    return valid;
-  }
-
-  /**
-   *
-   * @param point
    * @param category
+   * @param constraint
    * @returns {boolean}
    */
-  function checkConstraints(point, category) {
+  function validateOrConstraint(points, category, constraint) {
     var valid = true;
 
-    for (var l in category.constraints) {
-      var constraint = category.constraints[l];
-
+    points.forEach(function (point) {
       // Get all the fields specified as members of the constraint
-      var fields = [];
-      for (var n in category.fields) {
-        var field = category.fields[n];
-        if (constraint.members.indexOf(field.id) > -1) {
-          fields.push(field);
-        }
+      var fields = getFields(category, constraint.members);
+
+      // Get a list of fields for the constraint that are empty
+      var emptyFields = getEmptyFields(point, fields);
+
+      if (emptyFields.length == constraint.members.length) {
+        point.valid = category.valid = valid = false;
+        var fieldNames = getFieldNames(category, constraint.members);
+
+        emptyFields.forEach(function (emptyField) {
+          setErrorMessage(point, getPropertyName(emptyField), 'At least one of "' + fieldNames.join(', ') + '" is required for group "' + category.name + '"');
+        });
       }
-
-      // Check the values of all fields for this point
-      var emptyFields = [], columnNames = [];
-      for (var m in fields) {
-        var field = fields[m];
-        columnNames.push(field.name_en);
-        var value = getValueByPropertyName(point, getPropertyName(field));
-        if (value === undefined || value === '' || value === null) {
-          emptyFields.push(field);
-        }
-      }
-
-      switch (constraint.type) {
-        case 'or':
-        {
-          if (emptyFields.length == constraint.members.length) {
-            point.valid = category.valid = valid = false;
-            for (var o in emptyFields) {
-              var field = emptyFields[o];
-              setErrorMessage(point, getPropertyName(field), 'At least one of "' + columnNames.join(', ') + '" is required for group "' + category.name + '"');
-            }
-
-          }
-          break;
-        }
-        case 'xnor':
-        {
-          if (emptyFields.length != 0 && emptyFields.length != constraint.members.length) {
-            point.valid = category.valid = valid = false;
-
-            for (var o in emptyFields) {
-              var field = emptyFields[o];
-              setErrorMessage(point, getPropertyName(field), 'Field "' + field.name_en + '" is required for points of type "' + category.name + '"');
-            }
-          }
-          break;
-        }
-        case 'and':
-        {
-          if (emptyFields.length === constraint.members.length) {
-            // If all fields are empty, say "Address of type X is required"
-            point.valid = category.valid = valid = false;
-
-            for (var o in emptyFields) {
-              var field = emptyFields[o];
-              setErrorMessage(point, getPropertyName(field), 'All fields in group "' + category.name + '" are required for this point');
-            }
-          }
-          if (emptyFields.length > 0) {
-            // If some are filled, say "Field X is required"
-            point.valid = category.valid = valid = false;
-
-            for (var o in emptyFields) {
-              var field = emptyFields[o];
-              setErrorMessage(point, getPropertyName(field), 'Field "' + field.name_en + '" is required for points of type "' + category.name + '"');
-            }
-          }
-          break;
-        }
-      }
-    }
+    });
 
     return valid;
+  }
+
+  /**
+   *
+   * @param points
+   * @param category
+   * @param constraint
+   * @returns {boolean}
+   */
+  function validateAndConstraint(points, category, constraint) {
+    var valid = true;
+
+    points.forEach(function (point) {
+
+      // Some constraints are only evaluated when their condition is true
+      if (constraint.condition) {
+        var value = point.properties[constraint.condition.field];
+        if (value !== constraint.condition.value) {
+          return;
+        }
+      }
+
+      // Get all the fields specified as members of the constraint
+      var fields = getFields(category, constraint.members);
+
+      // Get a list of fields for the constraint that are empty
+      var emptyFields = getEmptyFields(point, fields);
+
+      if (emptyFields.length === constraint.members.length) {
+        // If all fields are empty, say "Address of type X is required"
+        point.valid = category.valid = valid = false;
+
+        emptyFields.forEach(function (emptyField) {
+          setErrorMessage(point, getPropertyName(emptyField), 'All fields in group "' + category.name + '" are required for this point');
+        });
+      }
+      if (emptyFields.length > 0) {
+        // If some are filled, say "Field X is required"
+        point.valid = category.valid = valid = false;
+
+        emptyFields.forEach(function (emptyField) {
+          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name + '"');
+        });
+      }
+    });
+
+    return valid;
+
+
+  }
+
+  /**
+   *
+   * @param points
+   * @param category
+   * @param constraint
+   * @returns {boolean}
+   */
+  function validateXnorConstraint(points, category, constraint) {
+    var valid = true;
+
+    points.forEach(function (point) {
+      // Get all the fields specified as members of the constraint
+      var fields = getFields(category, constraint.members);
+
+      // Get a list of fields for the constraint that are empty
+      var emptyFields = getEmptyFields(point, fields);
+
+      if (emptyFields.length != 0 && emptyFields.length != constraint.members.length) {
+        point.valid = category.valid = valid = false;
+
+        emptyFields.forEach(function (emptyField) {
+          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name + '"');
+        });
+      }
+    });
+
+    return valid;
+
+
+  }
+
+  /**
+   * Unique constraints apply to the entire request. For example, a constraint with two members means that the result of
+   * the concatenation of the values of those members must be unique for all points.
+   *
+   *
+   * @param points
+   * @param category
+   * @param constraint
+   * @returns {boolean}
+   */
+  function validateUniqueConstraint(points, category, constraint) {
+    var valid = true;
+    var concatenatedValues = [];
+
+    // Build a new array containing the concatenation of the values of all constraint members
+    points.forEach(function (point) {
+      var concatenatedValue = '';
+
+      constraint.members.forEach(function (member) {
+        concatenatedValue += getValueByPropertyName(point, member);
+      });
+
+      concatenatedValues.push(concatenatedValue);
+    });
+
+    points.forEach(function (point, i) {
+      var value = concatenatedValues[i];
+
+      var data = $.extend([], concatenatedValues);
+      var index = data.indexOf(value);
+      data.splice(index, 1);
+      var second_index = data.indexOf(value);
+
+      if (value && index > -1 && second_index > -1) {
+        point.valid = category.valid = valid = false;
+        setErrorMessage(point, '', 'Columns "' + getFieldNames(category, constraint.members).join(', ') + '" must be unique for all points. Check for duplications.');
+      }
+    });
+
+    return valid;
+  }
+
+  /**
+   *
+   * @param category
+   * @param fieldIds
+   */
+  function getFields(category, fieldIds) {
+    var fields = [];
+
+    category.fields.forEach(function (field) {
+      if (fieldIds.indexOf(field.id) > -1) {
+        fields.push(field);
+      }
+    });
+
+    return fields;
+  }
+
+  /**
+   *
+   * @param point
+   * @param fields
+   * @returns {Array}
+   */
+  function getEmptyFields(point, fields) {
+    var emptyFields = [];
+
+    fields.forEach(function (field) {
+      var value = getValueByPropertyName(point, getPropertyName(field));
+      if (value === undefined || value === '' || value === null) {
+        emptyFields.push(field);
+      }
+    });
+
+    return emptyFields;
+  }
+
+  /**
+   *
+   * @param category
+   * @param fieldIds
+   * @returns {Array}
+   */
+  function getFieldNames(category, fieldIds) {
+    var fieldNames = [];
+
+    getFields(category, fieldIds).forEach(function (field) {
+      fieldNames.push(field.name_en);
+    });
+
+    return fieldNames;
   }
 
   /**
@@ -376,24 +388,6 @@ function ValidationService($q, $http) {
     if (!error) {
       point.errors.push({property: propertyName, errors: [message]});
     }
-  }
-
-  /**
-   * Get an entire column by its property name
-   * @param rows
-   * @param property
-   * @returns {Array}
-   */
-  function getColumnByProperty(rows, property) {
-    var column = [];
-
-    var point;
-    for (var i = 0, len = rows.length; i < len; i++) {
-      point = rows[i];
-      column.push(getValueByPropertyName(point, property));
-    }
-
-    return column;
   }
 
   /**
@@ -464,6 +458,50 @@ function ValidationService($q, $http) {
     }
 
     return true;
+  }
+
+  /**
+   *
+   * @param value
+   * @param point
+   * @param field
+   * @returns {boolean} true if the value is valid, false otherwise
+   */
+  function isValidValue(value, point, field) {
+    // If the value is empty, it's technically not invalid.
+    if (value === undefined || value === null || value === '') {
+      return true;
+    }
+
+    // If we have an options field, check that the value is in the static list of options
+    if (field.type === 'options' && field.options && field.options instanceof Array) {
+      for (var key in field.options) {
+        var option = field.options[key];
+
+        if (value !== undefined && value !== null && value !== '' && value == option) {
+          return true;
+        }
+
+        // Fiddle with the meaning and check again
+        if (value !== undefined && value !== null && value !== ''  && (value == option.split(':')[0] || value == option.replace(':', ''))) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Otherwise, if we have an autocomplete field, make a call to the backend to see if this value returns any results
+    else if (field.type === 'autocomplete') {
+
+      // If no results are found in the source function, then this field will have been marked as invalid.
+      return !(point.invalidFields && point.invalidFields.indexOf(field.id) > -1);
+
+    }
+
+    else {
+      return true;
+    }
   }
 
   return service;
