@@ -52,7 +52,7 @@ import static org.mockito.Mockito.doAnswer;
  *  - Test request modification signal
  *  - Test split signal
  *  - Test CSAM workflow
- *  - Test PVSS workflow
+ *  - Test WINCC workflow
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)

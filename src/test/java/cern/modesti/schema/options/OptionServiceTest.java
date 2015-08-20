@@ -40,7 +40,7 @@ public class OptionServiceTest {
   @Test
   public void optionListIsInjectedCorrectly() {
     when(entityManager.createNativeQuery(anyString())).thenReturn(query);
-    when(query.getSingleResult()).thenReturn("a,b,c", null);
+    when(query.getSingleResult()).thenReturn("a,b,c", (Object) null);
 
     Schema schema = getTestSchema();
     optionService.injectOptions(schema);
@@ -56,7 +56,7 @@ public class OptionServiceTest {
   @Test
   public void optionRangeIsInjectedCorrectly() {
     when(entityManager.createNativeQuery(anyString())).thenReturn(query);
-    when(query.getSingleResult()).thenReturn("-2:2", null);
+    when(query.getSingleResult()).thenReturn("-2:2", (Object) null);
 
     Schema schema = getTestSchema();
     optionService.injectOptions(schema);

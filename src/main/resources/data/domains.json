@@ -34,7 +34,7 @@
     ]
   },
   {
-    "name": "PVSS",
+    "name": "WINCC",
     "datasources": [
       "JAPC"
     ],

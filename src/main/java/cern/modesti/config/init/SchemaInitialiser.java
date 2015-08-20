@@ -20,16 +20,16 @@ import com.google.common.io.ByteStreams;
 
 /**
  * This class will delete all schemas stored in the schema repository and re-add
- * them from the data/schemas classpath directory.
+ * them from the schemas classpath directory.
  *
  * @author Justin Lewis Salmon
  */
 @Service
-@Profile({"test", "dev"})
+@Profile({"test", "dev", "prod"})
 public class SchemaInitialiser {
   private static final Logger LOG = LoggerFactory.getLogger(SchemaInitialiser.class);
 
-  private static final String SCHEMA_RESOURCE_PATTERN = "classpath:/data/schemas/**/*.json";
+  private static final String SCHEMA_RESOURCE_PATTERN = "classpath*:/schemas/**/*.json";
 
   private ObjectMapper mapper;
 
