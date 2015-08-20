@@ -160,7 +160,8 @@ public class WorkflowServiceTest {
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.FOR_APPROVAL);
 
-    // TODO maybe test task claiming here? The test will work without, as we don't do any authorisation in this test atm.
+    // Claim the "edit" task
+    claimCurrentTask(request.getRequestId());
 
     // Verify emails were sent
     assertEquals(2, wiser.getMessages().size());
@@ -270,6 +271,9 @@ public class WorkflowServiceTest {
     // Verify emails were sent
     assertEquals(2, wiser.getMessages().size());
 
+    // Claim the "edit" task
+    claimCurrentTask(request.getRequestId());
+
     // Set the approval result object
     request = requestRepository.findOneByRequestId(request.getRequestId());
     request.setApproval(new Approval(true, ""));
@@ -355,6 +359,16 @@ public class WorkflowServiceTest {
 
     if (taskName == null) assertNull(task); else assertEquals(taskName, task.getName());
     assertEquals(status, request.getStatus());
+  }
+
+  /**
+   *
+   * @param requestId
+   */
+  private void claimCurrentTask(String requestId) {
+    Task task = taskService.createTaskQuery().processInstanceBusinessKey(requestId).active().singleResult();
+    taskService.claim(task.getId(), "bert");
+    task.setAssignee("bert");
   }
 
   /**

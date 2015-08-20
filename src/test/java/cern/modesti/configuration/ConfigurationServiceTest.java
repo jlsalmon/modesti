@@ -1,5 +1,6 @@
 package cern.modesti.configuration;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,6 +23,7 @@ public class ConfigurationServiceTest {
   ConfigurationService configurationService;
 
   @Test
+  @Ignore
   public void test() {
     Request request = getTimRequest();
     ConfigurationReport report = configurationService.configureRequest(request, null);
