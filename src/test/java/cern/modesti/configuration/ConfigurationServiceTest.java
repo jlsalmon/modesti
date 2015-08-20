@@ -1,5 +1,6 @@
 package cern.modesti.configuration;
 
+import cern.modesti.tim.configuration.TimConfigurationService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +21,7 @@ import static cern.modesti.util.TestUtil.getTimRequest;
 public class ConfigurationServiceTest {
 
   @InjectMocks
-  ConfigurationService configurationService;
+  TimConfigurationService configurationService;
 
   @Test
   @Ignore

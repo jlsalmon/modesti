@@ -23,7 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import cern.modesti.request.point.Point;
 import cern.modesti.request.Request;
-import cern.modesti.request.Request.RequestStatus;
+import cern.modesti.request.RequestStatus;
 import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
 import cern.modesti.schema.Schema;
 import cern.modesti.repository.mongo.schema.SchemaRepository;

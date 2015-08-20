@@ -17,26 +17,15 @@
  ******************************************************************************/
 package cern.modesti.request;
 
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
-
-import cern.modesti.security.ldap.User;
+import cern.modesti.repository.mongo.request.counter.CounterService;
+import cern.modesti.request.point.Point;
 import cern.modesti.workflow.WorkflowService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Component;
-
-import cern.modesti.repository.mongo.request.counter.CounterService;
-import cern.modesti.request.Request.RequestStatus;
-import cern.modesti.request.point.Point;
 
 /**
  * TODO

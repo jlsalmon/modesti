@@ -1,19 +1,20 @@
 package cern.modesti;
 
+import cern.modesti.plugin.RequestProvider;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.plugin.core.config.EnablePluginRegistries;
 
 /**
- * TODO
+ * To activate a profile, pass -Dspring.profiles.active=[test|dev|prod]
  *
- * "test" profile should use:
- *  - In-memory JDBC datasource (h2)        - check
+ * The "test" profile uses:
+ *  - In-memory JDBC datasource (h2)
  *  - In-memory MongoDB datasource (fongo)
  *  - In-memory LDAP authentication
  *
- * "dev" and "prod" should use real stuff.
+ * The "dev" profile uses timdb-test, and the "prod" profile uses timdb-pro.
  *
- * To activate a profile, pass -Dspring.profiles.active=[test|dev|prod]
  *
  * Service                      Profiles
  * --------------------------------------------------------------------
@@ -47,6 +48,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
  * @author Justin Lewis Salmon
  */
 @SpringBootApplication
+@EnablePluginRegistries(RequestProvider.class)
 public class Application {
 
   public static void main(String[] args) {

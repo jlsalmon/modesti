@@ -18,9 +18,9 @@ public interface SkinnyRequest {
 
   String getRequestId();
 
-  Request.RequestStatus getStatus();
+  RequestStatus getStatus();
 
-  void setStatus(Request.RequestStatus status);
+  void setStatus(RequestStatus status);
 
   RequestType getType();
 

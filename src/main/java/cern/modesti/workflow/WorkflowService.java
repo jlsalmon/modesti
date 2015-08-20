@@ -3,28 +3,24 @@
  */
 package cern.modesti.workflow;
 
-import cern.c2mon.shared.client.configuration.ConfigConstants;
-import cern.c2mon.shared.client.configuration.ConfigurationReport;
-import cern.modesti.configuration.ConfigurationService;
-import cern.modesti.configuration.ProgressUpdateListener;
 import cern.modesti.notification.NotificationService;
 import cern.modesti.notification.NotificationType;
+import cern.modesti.plugin.RequestProvider;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterService;
 import cern.modesti.request.Request;
-import cern.modesti.request.point.state.Approval;
+import cern.modesti.request.RequestStatus;
 import cern.modesti.request.point.Point;
 import cern.modesti.validation.ValidationService;
-import cern.modesti.workflow.result.ConfigurationResult;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
-import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -40,6 +36,9 @@ import static java.lang.String.format;
 @Slf4j
 @Transactional
 public class WorkflowService {
+
+  @Autowired
+  private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
   @Autowired
   private RequestRepository requestRepository;
@@ -63,15 +62,19 @@ public class WorkflowService {
    * @param request
    */
   public void startProcessInstance(final Request request) {
-    log.info("starting process for request " + request.getRequestId());
+    log.info(format("starting process for %s request %s", request.getDomain(), request.getRequestId()));
 
-    request.setStatus(Request.RequestStatus.IN_PROGRESS);
+    request.setStatus(RequestStatus.IN_PROGRESS);
     requestRepository.save(request);
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
 
-    runtimeService.startProcessInstanceByKey("create-tim-points-0.2", request.getRequestId(), variables);
+    // Figure out which process to start, based on the domain and type
+    RequestProvider provider = requestProviderRegistry.getPluginFor(request);
+    String processKey = provider.getProcessKey(request.getType());
+
+    runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
   }
 
   /**
@@ -94,10 +97,10 @@ public class WorkflowService {
    * @param status
    */
   public void setRequestStatus(String requestId, String status) {
-    log.info("setting status " + status + " on request id " + requestId);
+    log.info(format("setting status %s on request id %s", status, requestId));
     Request request = getRequest(requestId);
 
-    request.setStatus(Request.RequestStatus.valueOf(status));
+    request.setStatus(RequestStatus.valueOf(status));
     requestRepository.save(request);
   }
 
@@ -107,30 +110,15 @@ public class WorkflowService {
    */
   public void validateRequest(String requestId, DelegateExecution execution) {
     log.info("validating request " + requestId);
+    Request request = getRequest(requestId);
 
-    Request request = requestRepository.findOneByRequestId(requestId);
-    if (request == null) {
-      throw new ActivitiException("No request with id " + requestId + " was found");
-    }
+    RequestProvider provider = requestProviderRegistry.getPluginFor(request);
+
+    boolean valid = provider.validate(request);
 
 
     // TODO: add dirty check: don't need to validate if all the points have already been validated
-    //boolean valid = validationService.validateRequest(request);
-    boolean valid = validationService.validateRequest(request);
 
-//    if (valid) {
-//      for (Point point : request.getPoints()) {
-//
-//        if (point.getApproval().getApproved() != null  && point.getApproval().getApproved() == true && point.getDirty()) {
-//          // If a point is dirty and has already been approved, it will need re-approval
-//          point.setApproval(new Approval());
-//
-//        } else {
-//          // Mark point as clean
-//          point.setDirty(false);
-//        }
-//      }
-//    }
 
     // Set the variable for the next stage to evaluate
     execution.setVariable("valid", valid);

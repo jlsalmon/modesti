@@ -145,21 +145,6 @@ public class Request implements Serializable {
   private Float score;
 
   /**
-   *
-   * @author Justin Lewis Salmon
-   */
-  public enum RequestStatus {
-    IN_PROGRESS,
-    FOR_CORRECTION,
-    FOR_APPROVAL,
-    FOR_ADDRESSING,
-    FOR_CABLING,
-    FOR_CONFIGURATION,
-    FOR_TESTING,
-    CLOSED
-  }
-
-  /**
    * Copy constructor
    *
    * @param request

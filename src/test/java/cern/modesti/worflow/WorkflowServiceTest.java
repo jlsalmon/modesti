@@ -4,6 +4,7 @@ import cern.modesti.Application;
 import cern.modesti.configuration.ConfigurationService;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
+import cern.modesti.request.RequestStatus;
 import cern.modesti.request.point.Point;
 import cern.modesti.request.point.state.Addressing;
 import cern.modesti.request.point.state.Approval;
@@ -110,17 +111,17 @@ public class WorkflowServiceTest {
     ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
 
     // First, the 'edit' task should be active and the request should be 'IN_PROGRESS'.
-    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.IN_PROGRESS);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.IN_PROGRESS);
 
     // Completing the 'edit' task should validate the request and activate the 'submit' task
     // TODO need to mock out the validate task
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.IN_PROGRESS);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.IN_PROGRESS);
 
     // Completing the 'submit' task should activate the 'configure' task, since the basic test points are not alarms nor cabled points. The request status
     // should be 'FOR_CONFIGURATION'
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", Request.RequestStatus.FOR_CONFIGURATION);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", RequestStatus.FOR_CONFIGURATION);
 
     // Stub the 'configure' service task, making sure the 'configured' execution variable is set.
     doAnswer(invocation -> {
@@ -131,7 +132,7 @@ public class WorkflowServiceTest {
 
     // Completing the 'configure' task should activate the 'test' task. The request status should be 'FOR_TESTING'.
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "test", Request.RequestStatus.FOR_TESTING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "test", RequestStatus.FOR_TESTING);
 
     // Set the testing result object
     request = requestRepository.findOneByRequestId(request.getRequestId());
@@ -140,7 +141,7 @@ public class WorkflowServiceTest {
 
     // Completing the 'test' task should close the request.
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), null, Request.RequestStatus.CLOSED);
+    assertTaskNameAndRequestStatus(request.getRequestId(), null, RequestStatus.CLOSED);
 
     // Verify process completed
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
@@ -153,12 +154,12 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
-    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.IN_PROGRESS);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.IN_PROGRESS);
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.IN_PROGRESS);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.IN_PROGRESS);
     // Completing the 'submit' task should activate the 'edit' task in the 'approval' subprocess, since we have alarms.
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.FOR_APPROVAL);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.FOR_APPROVAL);
 
     // Claim the "edit" task
     claimCurrentTask(request.getRequestId());
@@ -172,9 +173,9 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.FOR_APPROVAL);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.FOR_APPROVAL);
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", Request.RequestStatus.FOR_CONFIGURATION);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", RequestStatus.FOR_CONFIGURATION);
 
     doAnswer(invocation -> {
       DelegateExecution execution = (DelegateExecution) invocation.getArguments()[1];
@@ -183,7 +184,7 @@ public class WorkflowServiceTest {
     }).when(configurationService).configureRequest(anyString(), anyObject());
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "test", Request.RequestStatus.FOR_TESTING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "test", RequestStatus.FOR_TESTING);
 
     // Set the testing result object
     request = requestRepository.findOneByRequestId(request.getRequestId());
@@ -191,7 +192,7 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), null, Request.RequestStatus.CLOSED);
+    assertTaskNameAndRequestStatus(request.getRequestId(), null, RequestStatus.CLOSED);
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
     historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
   }
@@ -202,12 +203,12 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
-    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.IN_PROGRESS);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.IN_PROGRESS);
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.IN_PROGRESS);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.IN_PROGRESS);
     // Completing the 'submit' task should activate the 'edit' task in the 'addressing' subprocess, since we have cabled points.
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.FOR_ADDRESSING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.FOR_ADDRESSING);
 
     // Verify emails were sent
     assertEquals(2, wiser.getMessages().size());
@@ -218,11 +219,11 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.FOR_ADDRESSING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.FOR_ADDRESSING);
 
     // Completing the 'submit' task should lead to the 'cable' task
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "cable", Request.RequestStatus.FOR_CABLING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "cable", RequestStatus.FOR_CABLING);
 
     // Set the cabling result object
     request = requestRepository.findOneByRequestId(request.getRequestId());
@@ -230,7 +231,7 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", Request.RequestStatus.FOR_CONFIGURATION);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", RequestStatus.FOR_CONFIGURATION);
 
     // Verify emails were sent
     assertEquals(4, wiser.getMessages().size());
@@ -242,7 +243,7 @@ public class WorkflowServiceTest {
     }).when(configurationService).configureRequest(anyString(), anyObject());
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "test", Request.RequestStatus.FOR_TESTING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "test", RequestStatus.FOR_TESTING);
 
     // Set the testing result object
     request = requestRepository.findOneByRequestId(request.getRequestId());
@@ -250,7 +251,7 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), null, Request.RequestStatus.CLOSED);
+    assertTaskNameAndRequestStatus(request.getRequestId(), null, RequestStatus.CLOSED);
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
     historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
   }
@@ -261,12 +262,12 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
-    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.IN_PROGRESS);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.IN_PROGRESS);
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.IN_PROGRESS);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.IN_PROGRESS);
     // Completing the 'submit' task should activate the 'edit' task in the 'addressing' subprocess, since we have cabled alarms.
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.FOR_APPROVAL);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.FOR_APPROVAL);
 
     // Verify emails were sent
     assertEquals(2, wiser.getMessages().size());
@@ -280,10 +281,10 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.FOR_APPROVAL);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.FOR_APPROVAL);
     // Completing the 'submit' task should activate the 'edit' task in the 'addressing' subprocess, since we have cabled points.
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", Request.RequestStatus.FOR_ADDRESSING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.FOR_ADDRESSING);
 
     // Verify emails were sent
     assertEquals(5, wiser.getMessages().size());
@@ -294,11 +295,11 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", Request.RequestStatus.FOR_ADDRESSING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.FOR_ADDRESSING);
 
     // Completing the 'submit' task should lead to the 'cable' task
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "cable", Request.RequestStatus.FOR_CABLING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "cable", RequestStatus.FOR_CABLING);
 
     // Set the cabling result object
     request = requestRepository.findOneByRequestId(request.getRequestId());
@@ -309,7 +310,7 @@ public class WorkflowServiceTest {
     assertEquals(7, wiser.getMessages().size());
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", Request.RequestStatus.FOR_CONFIGURATION);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "configure", RequestStatus.FOR_CONFIGURATION);
 
     doAnswer(invocation -> {
       DelegateExecution execution = (DelegateExecution) invocation.getArguments()[1];
@@ -318,7 +319,7 @@ public class WorkflowServiceTest {
     }).when(configurationService).configureRequest(anyString(), anyObject());
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), "test", Request.RequestStatus.FOR_TESTING);
+    assertTaskNameAndRequestStatus(request.getRequestId(), "test", RequestStatus.FOR_TESTING);
 
     // Set the testing result object
     request = requestRepository.findOneByRequestId(request.getRequestId());
@@ -326,7 +327,7 @@ public class WorkflowServiceTest {
     requestRepository.save(request);
 
     completeCurrentTask(request.getRequestId());
-    assertTaskNameAndRequestStatus(request.getRequestId(), null, Request.RequestStatus.CLOSED);
+    assertTaskNameAndRequestStatus(request.getRequestId(), null, RequestStatus.CLOSED);
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
     historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
   }
@@ -353,7 +354,7 @@ public class WorkflowServiceTest {
    * @param taskName
    * @param status
    */
-  private void assertTaskNameAndRequestStatus(String requestId, String taskName, Request.RequestStatus status) {
+  private void assertTaskNameAndRequestStatus(String requestId, String taskName, RequestStatus status) {
     Task task = taskService.createTaskQuery().processInstanceBusinessKey(requestId).active().singleResult();
     Request request = requestRepository.findOneByRequestId(requestId);
 
