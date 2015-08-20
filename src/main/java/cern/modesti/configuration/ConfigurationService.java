@@ -1,6 +1,7 @@
 package cern.modesti.configuration;
 
 import cern.modesti.plugin.RequestProvider;
+import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class ConfigurationService {
       throw new ActivitiException("No request with id " + requestId + " was found");
     }
 
-    RequestProvider provider = requestProviderRegistry.getPluginFor(request);
+    RequestProvider provider = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
 
     boolean result = provider.configure(request);
     execution.setVariable("configured", result);

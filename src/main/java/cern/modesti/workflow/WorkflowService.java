@@ -6,6 +6,7 @@ package cern.modesti.workflow;
 import cern.modesti.notification.NotificationService;
 import cern.modesti.notification.NotificationType;
 import cern.modesti.plugin.RequestProvider;
+import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.repository.mongo.request.counter.CounterService;
 import cern.modesti.request.Request;
@@ -71,7 +72,7 @@ public class WorkflowService {
     variables.put("requestId", request.getRequestId());
 
     // Figure out which process to start, based on the domain and type
-    RequestProvider provider = requestProviderRegistry.getPluginFor(request);
+    RequestProvider provider = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
     String processKey = provider.getProcessKey(request.getType());
 
     runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
@@ -112,7 +113,7 @@ public class WorkflowService {
     log.info("validating request " + requestId);
     Request request = getRequest(requestId);
 
-    RequestProvider provider = requestProviderRegistry.getPluginFor(request);
+    RequestProvider provider = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
 
     boolean valid = provider.validate(request);
 
