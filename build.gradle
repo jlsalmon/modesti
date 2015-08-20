@@ -23,6 +23,9 @@ repositories {
 
 dependencies {
 
+    // TODO find a proper way of including plugins dynamically at runtime from the classpath
+    compile "cern.modesti:modesti-tim-plugin:1.0-SNAPSHOT"
+
     compile "org.springframework.boot:spring-boot-starter-data-rest:$bootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-mongodb:$bootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$bootVersion"
@@ -50,7 +53,7 @@ dependencies {
     testCompile "junit:junit:4.11"
     testCompile "org.hamcrest:hamcrest-all:1.3"
     testCompile "org.springframework:spring-test:4.1.6.RELEASE"
-    testCompile "org.mockito:mockito-core"
+    testCompile "org.mockito:mockito-core:1.10.19"
     testCompile "com.jayway.jsonpath:json-path"
     testCompile "com.github.fakemongo:fongo:1.6.3"
     testCompile "org.subethamail:subethasmtp:3.1.7"
