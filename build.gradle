@@ -17,14 +17,14 @@ ext {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://repo.spring.io/libs-release" }
-    maven { url "https://repo.spring.io/snapshot" }
 }
 
 dependencies {
 
     // TODO find a proper way of including plugins dynamically at runtime from the classpath
     compile "cern.modesti:modesti-tim-plugin:1.0-SNAPSHOT"
+    compile "cern.modesti:modesti-csam-plugin:1.0-SNAPSHOT"
+    compile "cern.modesti:modesti-wincc-plugin:1.0-SNAPSHOT"
 
     compile "org.springframework.boot:spring-boot-starter-data-rest:$bootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-mongodb:$bootVersion"
@@ -61,7 +61,6 @@ dependencies {
 
 buildscript {
     repositories {
-        maven { url "https://repo.spring.io/libs-release" }
         mavenLocal()
         mavenCentral()
     }

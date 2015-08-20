@@ -3,6 +3,7 @@ package cern.modesti.config.init;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,9 @@ import com.google.common.io.ByteStreams;
  * @author Justin Lewis Salmon
  */
 @Service
+@Slf4j
 @Profile({"test", "dev", "prod"})
 public class SchemaInitialiser {
-  private static final Logger LOG = LoggerFactory.getLogger(SchemaInitialiser.class);
 
   private static final String SCHEMA_RESOURCE_PATTERN = "classpath*:/schemas/**/*.json";
 
@@ -35,7 +36,7 @@ public class SchemaInitialiser {
 
   @Autowired
   public SchemaInitialiser(SchemaRepository repo) throws IOException {
-    LOG.info("Initialising schemas");
+    log.info("Initialising schemas");
     mapper = new ObjectMapper();
 
     repo.deleteAll();
@@ -56,7 +57,7 @@ public class SchemaInitialiser {
    * @throws IOException
    */
   public Schema loadSchemaFromResource(Resource resource) throws IOException {
-    LOG.info("Loading schema from classpath resource: " + resource);
+    log.info("Loading schema from classpath resource: " + resource);
     byte[] bytes = ByteStreams.toByteArray(resource.getInputStream());
     return mapper.readValue(new String(bytes, StandardCharsets.UTF_8), Schema.class);
   }
