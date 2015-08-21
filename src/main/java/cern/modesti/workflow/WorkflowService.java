@@ -73,7 +73,7 @@ public class WorkflowService {
 
     // Figure out which process to start, based on the domain and type
     RequestProvider provider = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
-    String processKey = provider.getProcessKey(request.getType());
+    String processKey = provider.getMetadata().getProcessKey(request.getType());
 
     runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
   }
