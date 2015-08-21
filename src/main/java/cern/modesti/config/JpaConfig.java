@@ -15,7 +15,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 @Configuration
-@EnableJpaRepositories(basePackages="cern.modesti.repository.jpa")
+@EnableJpaRepositories(basePackages="cern.modesti.repository")
 @Profile({"test", "dev", "prod"})
 public class JpaConfig {
 
