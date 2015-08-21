@@ -2,8 +2,8 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
   <signal id="requestModified" name="requestModified" activiti:scope="global"></signal>
   <signal id="splitRequest" name="splitRequest" activiti:scope="global"></signal>
-  <process id="create-tim-points-0.2" name="Workflow for the creation of points to be monitored in TIM" isExecutable="true">
-    <documentation>Workflow for the creation of points to be monitored in TIM</documentation>
+  <process id="create" name="Default creation process" isExecutable="true">
+    <documentation>Default workflow process for the creation of new monitoring data points</documentation>
     <startEvent id="sid-B1DE1508-E0EF-4111-AAAC-E093EDD9413D">
       <documentation>Request created</documentation>
     </startEvent>
@@ -132,7 +132,7 @@
       </sequenceFlow>
     </subProcess>
     <exclusiveGateway id="sid-C08A1B07-7050-48E6-8696-E29281264F2F" name="approval required?"></exclusiveGateway>
-    <exclusiveGateway id="sid-65317E2D-1E32-4B05-999A-296F89DB2B88" name="addressing 
+    <exclusiveGateway id="sid-65317E2D-1E32-4B05-999A-296F89DB2B88" name="addressing
 required?"></exclusiveGateway>
     <exclusiveGateway id="sid-21E0FA98-CB42-4952-B1CB-51DCDC364C95" name="approved?"></exclusiveGateway>
     <exclusiveGateway id="sid-5D4900A0-1E25-4BC7-8C57-6D8C1B81A502" name="addressed?"></exclusiveGateway>
