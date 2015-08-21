@@ -12,13 +12,16 @@ angular.module('modesti').filter('enabled', enabled);
 function enabled() {
   return function (input, status) {
     var result = [];
-    
+
+    console.log('input:' + input);
+    console.log('status:' + status);
+
     input.map(function(category) {
       if (!category.disabledStates || category.disabledStates.indexOf(status) == -1){
         result.push(category)
       }
     });
-    
+
     return result;
   };
 }

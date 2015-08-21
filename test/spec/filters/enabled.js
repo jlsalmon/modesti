@@ -11,9 +11,10 @@ describe('Filter: enabled', function () {
     enabled = $filter('enabled');
   }));
 
-  it('should return the input prefixed with "enabled filter:"', function () {
-    var text = 'angularjs';
-    expect(enabled(text)).toBe('enabled filter: ' + text);
+  it('should return an empty list', function () {
+    var categories = [];
+    var status = 'IN_PROGRESS';
+    expect(enabled(categories, status)).toEqual(categories);
   });
 
 });
