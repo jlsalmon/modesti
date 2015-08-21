@@ -1,6 +1,6 @@
 package cern.modesti.worflow.task;
 
-import static cern.modesti.util.TestUtil.getTimRequest;
+import static cern.modesti.util.TestUtil.getDefaultRequest;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -74,7 +74,7 @@ public class TaskControllerTest {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
 
     // How to add tasks to a request? Need to start the process.
-    this.request = requestRepository.save(getTimRequest());
+    this.request = requestRepository.save(getDefaultRequest());
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());

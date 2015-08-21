@@ -18,17 +18,17 @@ public class TestUtil {
    *
    * @return
    */
-  public static Request getTimRequest() {
+  public static Request getDefaultRequest() {
     Request request = new Request();
     request.setRequestId("1");
     request.setType(RequestType.CREATE);
     request.setCreator(new User(1, "bert", "Bert", "Is Evil", "bert@modesti.ch", new HashSet<>(Collections.singleton(new Role("modesti-administrators")))));
     request.setDescription("description");
-    request.setDomain("TIM");
+    request.setDomain("DEFAULT");
     request.setSubsystem(new SubSystem(1L, "EAU DEMI", "EAU", "A", "DEMI", "B"));
     request.setCategories(new HashSet<>(Collections.singletonList("PLC")));
 
-    request.setPoints(getTimPoints());
+    request.setPoints(getDefaultPoints());
     return request;
   }
 
@@ -36,10 +36,10 @@ public class TestUtil {
    *
    * @return
    */
-  public static Request getTimRequestWithAlarms() {
-    Request request = getTimRequest();
+  public static Request getDefaultRequestWithAlarms() {
+    Request request = getDefaultRequest();
     request.setRequestId("2");
-    request.setPoints(getTimAlarms());
+    request.setPoints(getDefaultAlarms());
     return request;
   }
 
@@ -47,10 +47,10 @@ public class TestUtil {
    *
    * @return
    */
-  public static Request getTimRequestWithCabledPoints() {
-    Request request = getTimRequest();
+  public static Request getDefaultRequestWithCabledPoints() {
+    Request request = getDefaultRequest();
     request.setRequestId("3");
-    request.setPoints(getTimCabledPoints());
+    request.setPoints(getDefaultCabledPoints());
     return request;
   }
 
@@ -58,10 +58,10 @@ public class TestUtil {
    *
    * @return
    */
-  public static Request getTimRequestWithCabledAlarms() {
-    Request request = getTimRequest();
+  public static Request getDefaultRequestWithCabledAlarms() {
+    Request request = getDefaultRequest();
     request.setRequestId("4");
-    request.setPoints(getTimCabledAlarms());
+    request.setPoints(getDefaultCabledAlarms());
     return request;
   }
 
@@ -69,7 +69,7 @@ public class TestUtil {
    *
    * @return
    */
-  public static List<Point> getTimPoints() {
+  public static List<Point> getDefaultPoints() {
     List<Point> points = new ArrayList<>();
 
     Point point1 = new Point(1L);
@@ -86,7 +86,7 @@ public class TestUtil {
    *
    * @return
    */
-  public static List<Point> getTimAlarms() {
+  public static List<Point> getDefaultAlarms() {
     List<Point> points = new ArrayList<>();
 
     Point point1 = new Point(1L);
@@ -105,7 +105,7 @@ public class TestUtil {
    *
    * @return
    */
-  private static List<Point> getTimCabledPoints() {
+  private static List<Point> getDefaultCabledPoints() {
     List<Point> points = new ArrayList<>();
 
     Point point1 = new Point(1L);
@@ -123,7 +123,7 @@ public class TestUtil {
    *
    * @return
    */
-  private static List<Point> getTimCabledAlarms() {
+  private static List<Point> getDefaultCabledAlarms() {
     List<Point> points = new ArrayList<>();
 
     Point point1 = new Point(1L);

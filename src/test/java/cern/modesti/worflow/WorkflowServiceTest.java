@@ -5,7 +5,6 @@ import cern.modesti.configuration.ConfigurationService;
 import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestStatus;
-import cern.modesti.request.point.Point;
 import cern.modesti.request.point.state.Addressing;
 import cern.modesti.request.point.state.Approval;
 import cern.modesti.request.point.state.Cabling;
@@ -30,13 +29,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.subethamail.wiser.Wiser;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static cern.modesti.util.TestUtil.*;
@@ -106,7 +103,7 @@ public class WorkflowServiceTest {
 
   @Test
   public void timPoints() throws Exception {
-    Request request = getTimRequest();
+    Request request = getDefaultRequest();
     requestRepository.save(request);
     ProcessInstance process = startProcessInstance("create", request);
 
@@ -150,7 +147,7 @@ public class WorkflowServiceTest {
 
   @Test
   public void timAlarms() throws Exception {
-    Request request = getTimRequestWithAlarms();
+    Request request = getDefaultRequestWithAlarms();
     requestRepository.save(request);
 
     ProcessInstance process = startProcessInstance("create", request);
@@ -199,7 +196,7 @@ public class WorkflowServiceTest {
 
   @Test
   public void timCabledPoints() throws Exception {
-    Request request = getTimRequestWithCabledPoints();
+    Request request = getDefaultRequestWithCabledPoints();
     requestRepository.save(request);
 
     ProcessInstance process = startProcessInstance("create", request);
@@ -258,7 +255,7 @@ public class WorkflowServiceTest {
 
   @Test
   public void timCabledAlarms() throws Exception {
-    Request request = getTimRequestWithCabledAlarms();
+    Request request = getDefaultRequestWithCabledAlarms();
     requestRepository.save(request);
 
     ProcessInstance process = startProcessInstance("create", request);
