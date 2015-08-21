@@ -108,7 +108,7 @@ public class WorkflowServiceTest {
   public void timPoints() throws Exception {
     Request request = getTimRequest();
     requestRepository.save(request);
-    ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
+    ProcessInstance process = startProcessInstance("create", request);
 
     // First, the 'edit' task should be active and the request should be 'IN_PROGRESS'.
     assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.IN_PROGRESS);
@@ -153,7 +153,7 @@ public class WorkflowServiceTest {
     Request request = getTimRequestWithAlarms();
     requestRepository.save(request);
 
-    ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
+    ProcessInstance process = startProcessInstance("create", request);
     assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.IN_PROGRESS);
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.IN_PROGRESS);
@@ -202,7 +202,7 @@ public class WorkflowServiceTest {
     Request request = getTimRequestWithCabledPoints();
     requestRepository.save(request);
 
-    ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
+    ProcessInstance process = startProcessInstance("create", request);
     assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.IN_PROGRESS);
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.IN_PROGRESS);
@@ -261,7 +261,7 @@ public class WorkflowServiceTest {
     Request request = getTimRequestWithCabledAlarms();
     requestRepository.save(request);
 
-    ProcessInstance process = startProcessInstance("create-tim-points-0.2", request);
+    ProcessInstance process = startProcessInstance("create", request);
     assertTaskNameAndRequestStatus(request.getRequestId(), "edit", RequestStatus.IN_PROGRESS);
     completeCurrentTask(request.getRequestId());
     assertTaskNameAndRequestStatus(request.getRequestId(), "submit", RequestStatus.IN_PROGRESS);

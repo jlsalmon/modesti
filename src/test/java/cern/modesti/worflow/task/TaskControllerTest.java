@@ -64,7 +64,7 @@ public class TaskControllerTest {
   @Autowired
   private RuntimeService runtimeService;
 
-  private String processDefinitionId = "create-tim-points";
+  private String processDefinitionId = "create";
   private Request request;
   private String requestId = "1";
   private List<TaskInfo> taskList = new ArrayList<>();
@@ -80,7 +80,7 @@ public class TaskControllerTest {
     variables.put("requestId", request.getRequestId());
     runtimeService.startProcessInstanceByKey(processDefinitionId, requestId, variables);
 
-    taskList.add(new TaskInfo("validate", "Validate task", null, new HashSet<>(Arrays.asList("modesti-creators", "modesti-administrators"))));
+    taskList.add(new TaskInfo("edit", "Request in preparation", null, new HashSet<>(Arrays.asList("modesti-creators", "modesti-administrators"))));
   }
 
   @Test
