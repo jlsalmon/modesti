@@ -14,7 +14,7 @@ module.exports = function(config) {
     basePath: '../',
 
     // testing framework to use (jasmine/mocha/qunit/...)
-    frameworks: ['jasmine'],
+    frameworks: ['mocha'],
 
     // list of files / patterns to load in the browser
     files: [
@@ -49,8 +49,13 @@ module.exports = function(config) {
       'app/bower_components/angular-spinner/angular-spinner.js',
       'app/bower_components/angular-filter/dist/angular-filter.min.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
+      'app/bower_components/chai/chai.js',
+      'app/bower_components/mocha/mocha.js',
       // endbower
-      'app/scripts/**/*.js',
+      'app/app.js',
+      'app/app.config.js',
+      'app/app.routes.js',
+      'app/components/**/*.js',
       'test/mock/**/*.js',
       'test/spec/**/*.js'
     ],
@@ -77,8 +82,18 @@ module.exports = function(config) {
     // Which plugins to enable
     plugins: [
       'karma-phantomjs-launcher',
-      'karma-jasmine'
+      'karma-mocha',
+      'karma-mocha-reporter',
+      'karma-junit-reporter'
     ],
+
+    // reporters configuration
+    reporters: ['mocha', 'junit'],
+
+    junitReporter: {
+      outputDir: 'test-results',
+      outputFile: 'test-results.xml'
+    },
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit

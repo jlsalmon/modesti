@@ -1,22 +1,24 @@
 'use strict';
 
-describe('Controller: MainCtrl', function () {
+var expect = chai.expect;
+
+describe('Controller: AboutCtrl', function () {
 
   // load the controller's module
   beforeEach(module('modesti'));
 
-  var MainCtrl,
+  var AboutCtrl,
     scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    MainCtrl = $controller('MainCtrl', {
+    AboutCtrl = $controller('AboutCtrl', {
       $scope: scope
     });
   }));
 
   it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
+    expect(scope.awesomeThings.length).to.be(3);
   });
 });
