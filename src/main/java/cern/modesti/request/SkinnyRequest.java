@@ -1,6 +1,6 @@
 package cern.modesti.request;
 
-import cern.modesti.repository.jpa.subsystem.SubSystem;
+import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.security.ldap.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;

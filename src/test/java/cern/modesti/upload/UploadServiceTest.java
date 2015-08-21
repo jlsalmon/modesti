@@ -3,10 +3,10 @@
  */
 package cern.modesti.upload;
 
+import cern.modesti.request.counter.CounterServiceImpl;
+import cern.modesti.schema.SchemaRepository;
 import cern.modesti.upload.parser.RequestParser;
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
-import cern.modesti.repository.mongo.schema.SchemaRepository;
+import cern.modesti.request.RequestRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

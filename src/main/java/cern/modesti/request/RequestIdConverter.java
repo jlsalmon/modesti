@@ -3,9 +3,9 @@
  */
 package cern.modesti.request;
 
-import cern.modesti.repository.mongo.domain.Domain;
-import cern.modesti.repository.mongo.domain.DomainRepository;
-import cern.modesti.repository.mongo.request.RequestRepository;
+
+import cern.modesti.request.domain.Domain;
+import cern.modesti.request.domain.DomainRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

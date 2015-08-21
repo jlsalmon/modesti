@@ -1,7 +1,7 @@
 package cern.modesti.workflow.signal;
 
-import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
+import cern.modesti.request.RequestRepository;
 import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.task.TaskInfo;
 import org.activiti.engine.ProcessEngines;

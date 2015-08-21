@@ -3,10 +3,10 @@
  */
 package cern.modesti.upload;
 
+import cern.modesti.request.counter.CounterService;
 import cern.modesti.upload.parser.RequestParser;
 import cern.modesti.upload.parser.RequestParserFactory;
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.repository.mongo.request.counter.CounterService;
+import cern.modesti.request.RequestRepository;
 import cern.modesti.request.Request;
 import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.WorkflowService;

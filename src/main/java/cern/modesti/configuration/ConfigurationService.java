@@ -2,8 +2,8 @@ package cern.modesti.configuration;
 
 import cern.modesti.plugin.RequestProvider;
 import cern.modesti.plugin.UnsupportedRequestException;
-import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
+import cern.modesti.request.RequestRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.delegate.DelegateExecution;

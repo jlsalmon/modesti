@@ -11,15 +11,15 @@ import org.springframework.data.rest.core.event.ValidatingRepositoryEventListene
 import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.validation.Validator;
 
-import cern.modesti.repository.jpa.alarm.AlarmCategory;
-import cern.modesti.repository.jpa.equipment.MonitoringEquipment;
-import cern.modesti.repository.jpa.gmao.GmaoCode;
-import cern.modesti.repository.jpa.location.BuildingName;
-import cern.modesti.repository.jpa.location.Location;
-import cern.modesti.repository.jpa.location.functionality.Functionality;
-import cern.modesti.repository.jpa.location.zone.SafetyZone;
-import cern.modesti.repository.jpa.person.Person;
-import cern.modesti.repository.jpa.subsystem.SubSystem;
+import cern.modesti.repository.alarm.AlarmCategory;
+import cern.modesti.repository.equipment.MonitoringEquipment;
+import cern.modesti.repository.gmao.GmaoCode;
+import cern.modesti.repository.location.BuildingName;
+import cern.modesti.repository.location.Location;
+import cern.modesti.repository.location.functionality.Functionality;
+import cern.modesti.repository.location.zone.SafetyZone;
+import cern.modesti.repository.person.Person;
+import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.SearchTextConverter;
 import cern.modesti.request.point.Point;
 import cern.modesti.schema.field.AutocompleteField;

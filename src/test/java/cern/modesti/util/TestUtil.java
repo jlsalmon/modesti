@@ -1,6 +1,6 @@
 package cern.modesti.util;
 
-import cern.modesti.repository.jpa.subsystem.SubSystem;
+import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
 import cern.modesti.request.point.Point;

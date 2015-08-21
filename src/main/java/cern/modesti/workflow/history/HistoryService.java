@@ -1,6 +1,6 @@
 package cern.modesti.workflow.history;
 
-import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.request.RequestRepository;
 import cern.modesti.request.Request;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;

@@ -17,7 +17,7 @@
  ******************************************************************************/
 package cern.modesti.request;
 
-import cern.modesti.repository.mongo.request.counter.CounterService;
+import cern.modesti.request.counter.CounterService;
 import cern.modesti.request.point.Point;
 import cern.modesti.workflow.WorkflowService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 /**
  * TODO
  *
- * The {@link cern.modesti.repository.mongo.request.RequestRepository} is
+ * The {@link cern.modesti.request.RequestRepository} is
  * automatically exposed as a REST resource via Spring Data REST, hence why
  * there is no explicit MVC controller for it. This class simply hooks into the
  * Spring Data REST lifecycle and intercepts request create/save events, and

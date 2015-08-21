@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import cern.modesti.request.RequestRepository;
 import cern.modesti.workflow.task.TaskAction.Action;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +38,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cern.modesti.repository.mongo.request.RequestRepository;
 import cern.modesti.request.Request;
 import cern.modesti.security.ldap.User;
 

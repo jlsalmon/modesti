@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import cern.modesti.request.RequestType;
+import cern.modesti.request.counter.CounterServiceImpl;
+import cern.modesti.schema.SchemaRepository;
 import cern.modesti.workflow.WorkflowService;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,9 +26,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import cern.modesti.request.point.Point;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestStatus;
-import cern.modesti.repository.mongo.request.counter.CounterServiceImpl;
 import cern.modesti.schema.Schema;
-import cern.modesti.repository.mongo.schema.SchemaRepository;
 import cern.modesti.request.RequestEventHandler;
 
 /**

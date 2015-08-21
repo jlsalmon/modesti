@@ -3,6 +3,7 @@ package cern.modesti.config.init;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import cern.modesti.schema.SchemaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 import cern.modesti.schema.Schema;
-import cern.modesti.repository.mongo.schema.SchemaRepository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;

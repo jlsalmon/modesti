@@ -17,7 +17,7 @@
  ******************************************************************************/
 package cern.modesti.request;
 
-import cern.modesti.repository.jpa.subsystem.SubSystem;
+import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.point.state.Addressing;
 import cern.modesti.request.point.state.Approval;
 import cern.modesti.request.point.Point;

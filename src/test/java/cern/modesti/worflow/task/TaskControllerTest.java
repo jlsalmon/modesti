@@ -36,7 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import cern.modesti.Application;
-import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.request.RequestRepository;
 import cern.modesti.request.Request;
 import cern.modesti.workflow.task.TaskInfo;
 

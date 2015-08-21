@@ -3,12 +3,12 @@
  */
 package cern.modesti.upload.parser;
 
-import cern.modesti.repository.jpa.location.zone.SafetyZoneRepository;
+import cern.modesti.repository.location.zone.SafetyZoneRepository;
 import cern.modesti.upload.exception.RequestParseException;
-import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
-import cern.modesti.repository.jpa.location.functionality.FunctionalityRepository;
-import cern.modesti.repository.jpa.person.PersonRepository;
-import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
+import cern.modesti.repository.equipment.MonitoringEquipmentRepository;
+import cern.modesti.repository.location.functionality.FunctionalityRepository;
+import cern.modesti.repository.person.PersonRepository;
+import cern.modesti.repository.subsystem.SubSystemRepository;
 import cern.modesti.request.RequestType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;

@@ -3,22 +3,22 @@
  */
 package cern.modesti.upload.parser;
 
-import cern.modesti.repository.jpa.location.zone.SafetyZoneRepository;
+import cern.modesti.repository.location.zone.SafetyZoneRepository;
 import cern.modesti.upload.exception.RequestParseException;
 import cern.modesti.upload.exception.VersionNotSupportedException;
-import cern.modesti.repository.jpa.alarm.AlarmCategory;
-import cern.modesti.repository.jpa.equipment.MonitoringEquipment;
-import cern.modesti.repository.jpa.equipment.MonitoringEquipmentRepository;
-import cern.modesti.repository.jpa.gmao.GmaoCode;
-import cern.modesti.repository.jpa.location.BuildingName;
-import cern.modesti.repository.jpa.location.Location;
-import cern.modesti.repository.jpa.location.functionality.Functionality;
-import cern.modesti.repository.jpa.location.functionality.FunctionalityRepository;
-import cern.modesti.repository.jpa.location.zone.SafetyZone;
-import cern.modesti.repository.jpa.person.Person;
-import cern.modesti.repository.jpa.person.PersonRepository;
-import cern.modesti.repository.jpa.subsystem.SubSystem;
-import cern.modesti.repository.jpa.subsystem.SubSystemRepository;
+import cern.modesti.repository.alarm.AlarmCategory;
+import cern.modesti.repository.equipment.MonitoringEquipment;
+import cern.modesti.repository.equipment.MonitoringEquipmentRepository;
+import cern.modesti.repository.gmao.GmaoCode;
+import cern.modesti.repository.location.BuildingName;
+import cern.modesti.repository.location.Location;
+import cern.modesti.repository.location.functionality.Functionality;
+import cern.modesti.repository.location.functionality.FunctionalityRepository;
+import cern.modesti.repository.location.zone.SafetyZone;
+import cern.modesti.repository.person.Person;
+import cern.modesti.repository.person.PersonRepository;
+import cern.modesti.repository.subsystem.SubSystem;
+import cern.modesti.repository.subsystem.SubSystemRepository;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
 import cern.modesti.request.point.Point;

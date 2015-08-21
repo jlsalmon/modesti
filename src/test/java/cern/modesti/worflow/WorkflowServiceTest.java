@@ -2,7 +2,7 @@ package cern.modesti.worflow;
 
 import cern.modesti.Application;
 import cern.modesti.configuration.ConfigurationService;
-import cern.modesti.repository.mongo.request.RequestRepository;
+import cern.modesti.request.RequestRepository;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestStatus;
 import cern.modesti.request.point.state.Addressing;

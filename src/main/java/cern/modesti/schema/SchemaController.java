@@ -5,8 +5,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import cern.modesti.repository.mongo.request.RequestRepository;
-import cern.modesti.repository.mongo.schema.SchemaRepository;
+import cern.modesti.request.RequestRepository;
 import cern.modesti.request.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
