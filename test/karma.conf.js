@@ -14,7 +14,7 @@ module.exports = function(config) {
     basePath: '../',
 
     // testing framework to use (jasmine/mocha/qunit/...)
-    frameworks: ['mocha'],
+    frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
     files: [
@@ -82,17 +82,16 @@ module.exports = function(config) {
     // Which plugins to enable
     plugins: [
       'karma-phantomjs-launcher',
-      'karma-mocha',
-      'karma-mocha-reporter',
-      'karma-junit-reporter'
+      'karma-jasmine',
+      'karma-spec-reporter',
+      'karma-atlassian-bamboo-reporter'
     ],
 
     // reporters configuration
-    reporters: ['mocha', 'junit'],
+    reporters: ['progress', 'spec', 'bamboo'],
 
-    junitReporter: {
-      outputDir: 'test-results',
-      outputFile: 'test-results.xml'
+    bambooReporter:{
+      filename: 'mocha.json'
     },
 
     // Continuous Integration mode
