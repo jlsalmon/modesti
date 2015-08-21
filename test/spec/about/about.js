@@ -1,6 +1,6 @@
 'use strict';
 
-var expect = chai.expect;
+//var expect = chai.expect;
 
 describe('Controller: AboutCtrl', function () {
 
