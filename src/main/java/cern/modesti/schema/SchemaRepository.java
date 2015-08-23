@@ -17,10 +17,11 @@
  ******************************************************************************/
 package cern.modesti.schema;
 
-import cern.modesti.schema.Schema;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+import java.util.List;
 
 /**
  * @author Justin Lewis Salmon
@@ -31,4 +32,6 @@ public interface SchemaRepository extends MongoRepository<Schema, String> {
   Schema findOneByNameIgnoreCase(@Param("name") String name);
 
   Schema findOneByNameIgnoreCaseAndDomainIgnoreCase(@Param("name") String name, @Param("domain") String domain);
+
+  List<Schema> findByDomainIgnoreCase(@Param("domain") String domain);
 }

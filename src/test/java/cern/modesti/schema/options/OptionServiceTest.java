@@ -75,7 +75,7 @@ public class OptionServiceTest {
     OptionsField field1 = new OptionsField();
     field1.setId("lsacType");
 
-    Category category = new Category();
+    Category category = new Category("test");
     category.setFields(Collections.singletonList(field1));
 
     Schema schema = new Schema();

@@ -1,0 +1,30 @@
+{
+  "id": "binary",
+  "name_en": "Binary Points",
+  "name_fr": "Points Binaire",
+  "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
+  "constraints": [
+    {
+      "type": "xnor",
+      "members": [ "trueMeaning", "falseMeaning" ]
+    }
+  ],
+  "fields": [
+    {
+      "id": "trueMeaning",
+      "type": "text",
+      "name_en": "True Meaning (1)",
+      "name_fr": "True Meaning (1)",
+      "help_en": "",
+      "help_fr": ""
+    },
+    {
+      "id": "falseMeaning",
+      "type": "text",
+      "name_en": "False Meaning (0)",
+      "name_fr": "False Meaning (0)",
+      "help_en": "",
+      "help_fr": ""
+    }
+  ]
+}

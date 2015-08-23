@@ -35,18 +35,18 @@ public class DomainInitialiser {
 
   @Autowired
   public DomainInitialiser(DomainRepository domainRepository) throws IOException {
-    LOG.info("Initialising domains and datasources");
-    ObjectMapper mapper = new ObjectMapper();
-
-    domainRepository.deleteAll();
-
-    ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
-    Resource schemas = resolver.getResource(DOMAIN_RESOURCE);
-
-    byte[] bytes = ByteStreams.toByteArray(schemas.getInputStream());
-    List<Domain> domains = mapper.readValue(new String(bytes, StandardCharsets.UTF_8), new TypeReference<List<Domain>>() {});
-
-    domainRepository.insert(domains);
+//    LOG.info("Initialising domains and datasources");
+//    ObjectMapper mapper = new ObjectMapper();
+//
+//    domainRepository.deleteAll();
+//
+//    ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
+//    Resource schemas = resolver.getResource(DOMAIN_RESOURCE);
+//
+//    byte[] bytes = ByteStreams.toByteArray(schemas.getInputStream());
+//    List<Domain> domains = mapper.readValue(new String(bytes, StandardCharsets.UTF_8), new TypeReference<List<Domain>>() {});
+//
+//    domainRepository.insert(domains);
   }
 
 }

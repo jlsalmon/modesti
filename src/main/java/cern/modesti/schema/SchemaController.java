@@ -1,15 +1,8 @@
 package cern.modesti.schema;
 
-import static java.lang.String.format;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
-import cern.modesti.request.RequestRepository;
 import cern.modesti.request.Request;
+import cern.modesti.request.RequestRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.ExposesResourceFor;
@@ -21,8 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  *
@@ -32,8 +31,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @ExposesResourceFor(Schema.class)
 public class SchemaController {
-
-  private static final Logger LOG = LoggerFactory.getLogger(SchemaController.class);
 
   @Autowired
   private SchemaRepository schemaRepository;
@@ -101,6 +98,6 @@ public class SchemaController {
   @ExceptionHandler(IllegalStateException.class)
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   void handleException(IllegalStateException e) {
-    LOG.error("Caught exception: ", e);
+    log.error("Caught exception: ", e);
   }
 }

@@ -1,12 +1,11 @@
 {
-  "name": "core",
+  "id": "core",
   "categories": [
     {
-      "name": "General",
-      "editableStates": [
-        "IN_PROGRESS",
-        "FOR_CORRECTION"
-      ],
+      "id": "general",
+      "name_en": "General",
+      "name_fr": "Generale",
+      "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
       "fields": [
         {
           "id": "pointDescription",
@@ -68,11 +67,10 @@
       ]
     },
     {
-      "name": "Location",
-      "editableStates": [
-        "IN_PROGRESS",
-        "FOR_CORRECTION"
-      ],
+      "id": "location",
+      "name_en": "Location",
+      "name_fr": "Location",
+      "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
       "fields": [
         {
           "id": "location",
@@ -125,19 +123,18 @@
       ]
     },
     {
-      "name": "Alarms",
-      "editableStates": [
-        "IN_PROGRESS",
-        "FOR_CORRECTION"
-      ],
+      "id": "alarms",
+      "name_en": "Alarms",
+      "name_fr": "Alarmes",
+      "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
       "constraints": [
         {
           "type": "xnor",
-          "members": ["priorityCode", "alarmValue"]
+          "members": [ "priorityCode", "alarmValue" ]
         },
         {
           "type": "unique",
-          "members": ["faultFamily", "faultMember", "pointDescription"]
+          "members": [ "faultFamily", "faultMember", "pointDescription" ]
         }
       ],
       "fields": [
@@ -187,12 +184,10 @@
       ]
     },
     {
-      "name": "Alarm Help",
-      "editableStates": [
-        "IN_PROGRESS",
-        "FOR_CORRECTION",
-        "FOR_APPROVAL"
-      ],
+      "id": "alarmHelp",
+      "name_en": "Alarm Help",
+      "name_fr": "Aide Alarme",
+      "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
       "fields": [
         {
           "id": "faultFamily",

@@ -1,0 +1,38 @@
+{
+  "id": "logging",
+  "name_en": "Logging",
+  "name_fr": "Logging",
+  "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
+  "constraints": [
+    {
+      "type": "xnor",
+      "members": [ "logValueDeadband", "logDeadbandType" ]
+    }
+  ],
+  "fields": [
+    {
+      "id": "logValueDeadband",
+      "type": "numeric",
+      "name_en": "Value Deadband",
+      "name_fr": "Value Deadband",
+      "help_en": "",
+      "help_fr": ""
+    },
+    {
+      "id": "logDeadbandType",
+      "type": "options",
+      "name_en": "Deadband Type",
+      "name_fr": "Deadband Type",
+      "help_en": "",
+      "help_fr": ""
+    },
+    {
+      "id": "logTimeDeadband",
+      "type": "numeric",
+      "name_en": "Time Deadband",
+      "name_fr": "Time Deadband",
+      "help_en": "",
+      "help_fr": ""
+    }
+  ]
+}

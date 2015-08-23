@@ -53,7 +53,7 @@ public class RequestIdConverter implements BackendIdConverter {
       Domain domain = domainRepository.findOneByNameIgnoreCase(id);
 
       if (domain != null) {
-        return domain.getId();
+        return domain.getName();
       }
     }
 

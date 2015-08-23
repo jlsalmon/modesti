@@ -1,5 +1,8 @@
 package cern.modesti.request.domain;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 import javax.persistence.Id;
@@ -9,10 +12,9 @@ import javax.persistence.Id;
  * @author Justin Lewis Salmon
  *
  */
+@Data
+@NoArgsConstructor
 public class Domain {
-
-  @Id
-  private String id;
 
   private String name;
 
@@ -20,59 +22,7 @@ public class Domain {
 
   private List<String> categories;
 
-  public Domain() {
-  }
-
   public Domain(String name) {
     this.name = name;
-  }
-
-  /**
-   * @return the id
-   */
-  public String getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-  /**
-   * @return the datasources
-   */
-  public List<String> getDatasources() {
-    return datasources;
-  }
-
-  /**
-   * @param datasources the datasources to set
-   */
-  public void setDatasources(List<String> datasources) {
-    this.datasources = datasources;
-  }
-
-  public List<String> getCategories() {
-    return categories;
-  }
-
-  public void setCategories(List<String> categories) {
-    this.categories = categories;
   }
 }
