@@ -324,34 +324,46 @@
         <div class="btn-group toolbar-item" dropdown>
           <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
             <span class="text-muted">{{'CATEGORY'|translate}}:</span>
-            {{ctrl.activeCategory.name}} <span class="caret"></span>
+            {{ctrl.activeCategory.name_en}} <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status track by category.name"
+            <li ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status"
                 ng-click="ctrl.activateCategory(category)">
               <a>
-                <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger"></i>{{::category.name}}
+                <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger"></i>{{::category.name_en}}
+              </a>
+            </li>
+
+            <li class="divider"></li>
+
+            <!-- TODO only show datasource if it has been selected as point type for at least one point -->
+
+            <li ng-repeat="datasource in ctrl.schema.datasources | enabled:ctrl.request.status"
+                ng-click="ctrl.activateCategory(datasource)">
+              <a>
+                <i ng-if="datasource.valid === false" class="fa fa-exclamation-triangle text-danger"></i>{{::datasource.name_en}}
               </a>
             </li>
           </ul>
         </div>
 
-        <!-- Button to dynamically add a new tab category -->
-        <div class="btn-group toolbar-item" dropdown ng-show="::ctrl.request.status == 'IN_PROGRESS'">
-          <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle tooltip="{{'ADD_CATEGORY'|translate}}">
-            <i class="fa fa-plus"></i>
-          </button>
-          <ul class="new-tab-menu dropdown-menu" role="menu">
-            <li ng-repeat="tab in ctrl.availableCategories">
-              <a ng-click="ctrl.addExtraCategory(tab)">
-                {{::tab}}
-              </a>
-            </li>
-            <li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">
-              {{'NO_CATEGORIES_AVAILABLE'|translate}}
-            </li>
-          </ul>
-        </div>
+        <!--&lt;!&ndash; Button to dynamically add a new tab category &ndash;&gt;-->
+        <!--<div class="btn-group toolbar-item" dropdown ng-show="::ctrl.request.status == 'IN_PROGRESS'">-->
+          <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle tooltip="{{'ADD_CATEGORY'|translate}}">-->
+            <!--<i class="fa fa-plus"></i>-->
+          <!--</button>-->
+          <!--<ul class="new-tab-menu dropdown-menu" role="menu">-->
+            <!--<li ng-repeat="tab in ctrl.availableCategories">-->
+              <!--<a ng-click="ctrl.addExtraCategory(tab)">-->
+                <!--{{::tab}}-->
+              <!--</a>-->
+            <!--</li>-->
+            <!--<li ng-show="ctrl.availableCategories.length == 0" class="dropdown-header">-->
+              <!--{{'NO_CATEGORIES_AVAILABLE'|translate}}-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
+
       </div>
 
 

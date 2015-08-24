@@ -370,8 +370,10 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
         }
 
         if (!found) {
-          console.log('adding extra category for point type ' + newValue);
-          self.parent.addExtraCategory(newValue, false);
+          // TODO reimplement this
+
+          //console.log('adding extra category for point type ' + newValue);
+          //self.parent.addExtraCategory(newValue, false);
         }
       }
 

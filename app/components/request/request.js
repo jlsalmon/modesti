@@ -93,8 +93,8 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
 
   self.activateCategory = activateCategory;
   self.activateDefaultCategory = activateDefaultCategory;
-  self.addExtraCategory = addExtraCategory;
-  self.getAvailableExtraCategories = getAvailableExtraCategories;
+  //self.addExtraCategory = addExtraCategory;
+  //self.getAvailableExtraCategories = getAvailableExtraCategories;
   self.resetSorting = resetSorting;
   self.save = save;
   self.undo = undo;
@@ -120,7 +120,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     calculateTableHeight();
 
     // Retrieve the list of available extra categories
-    getAvailableExtraCategories();
+    //getAvailableExtraCategories();
 
     $timeout(function () {
       // Activate the first category
@@ -512,62 +512,62 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     return equipmentIdentifier;
   }
 
-  /**
-   *
-   */
-  function getAvailableExtraCategories() {
-    // TODO refactor this into a service
-    $http.get(BACKEND_BASE_URL + '/domains/' + self.request.domain).then(function (response) {
-      self.availableCategories = [];
-
-      response.data.categories.map(function (category) {
-
-        // Only add the category if we aren't already using it
-        if ($.grep(self.schema.categories, function (item) {
-          return item.name == category;
-        }).length == 0) {
-          self.availableCategories.push(category);
-        }
-      });
-
-      response.data.datasources.map(function (category) {
-
-        // Only add the category if we aren't already using it
-        if ($.grep(self.schema.categories, function (item) {
-          return item.name == category;
-        }).length == 0) {
-          self.availableCategories.push(category);
-        }
-      });
-    });
-  }
-
-  /**
-   *
-   * @param categoryName
-   * @param activate {boolean} whether to activate the newly added category
-   */
-  function addExtraCategory(categoryName, activate) {
-    if (typeof(activate) === 'undefined') activate = true;
-    console.log("adding category " + categoryName);
-
-    SchemaService.getSchema(request, categoryName).then(function(schema) {
-      console.log('fetched new schema: ' + schema.name);
-      self.schema = schema;
-
-      getAvailableExtraCategories();
-
-      if (activate) {
-        // Find the new category and activate it
-        for (var i in self.schema.categories) {
-          var category = self.schema.categories[i];
-          if (category.name == categoryName) {
-            activateCategory(category);
-          }
-        }
-      }
-    });
-  }
+  ///**
+  // *
+  // */
+  //function getAvailableExtraCategories() {
+  //  // TODO refactor this into a service
+  //  $http.get(BACKEND_BASE_URL + '/domains/' + self.request.domain).then(function (response) {
+  //    self.availableCategories = [];
+  //
+  //    response.data.categories.map(function (category) {
+  //
+  //      // Only add the category if we aren't already using it
+  //      if ($.grep(self.schema.categories, function (item) {
+  //        return item.name == category;
+  //      }).length == 0) {
+  //        self.availableCategories.push(category);
+  //      }
+  //    });
+  //
+  //    response.data.datasources.map(function (category) {
+  //
+  //      // Only add the category if we aren't already using it
+  //      if ($.grep(self.schema.categories, function (item) {
+  //        return item.name == category;
+  //      }).length == 0) {
+  //        self.availableCategories.push(category);
+  //      }
+  //    });
+  //  });
+  //}
+  //
+  ///**
+  // *
+  // * @param categoryName
+  // * @param activate {boolean} whether to activate the newly added category
+  // */
+  //function addExtraCategory(categoryName, activate) {
+  //  if (typeof(activate) === 'undefined') activate = true;
+  //  console.log("adding category " + categoryName);
+  //
+  //  SchemaService.getSchema(request, categoryName).then(function(schema) {
+  //    console.log('fetched new schema: ' + schema.name);
+  //    self.schema = schema;
+  //
+  //    getAvailableExtraCategories();
+  //
+  //    if (activate) {
+  //      // Find the new category and activate it
+  //      for (var i in self.schema.categories) {
+  //        var category = self.schema.categories[i];
+  //        if (category.name == categoryName) {
+  //          activateCategory(category);
+  //        }
+  //      }
+  //    }
+  //  });
+  //}
 
   /**
    * Called before a change is made to the table.

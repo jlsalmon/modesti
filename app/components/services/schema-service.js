@@ -12,7 +12,8 @@ function SchemaService($q, $http) {
 
   // Public API
   var service = {
-    getSchema: getSchema
+    getSchema: getSchema,
+    getSchemas: getSchemas
   };
 
   /**
@@ -62,6 +63,34 @@ function SchemaService($q, $http) {
 
     function (error) {
       console.log('error fetching schema: ' + error);
+      q.reject();
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getSchemas() {
+    console.log('fetching schemas');
+    var q = $q.defer();
+
+    $http.get(BACKEND_BASE_URL + '/schemas').then(function (response) {
+      var schemas = response.data._embedded.schemas;
+
+      // Don't include the core schema
+      schemas = schemas.filter(function (schema) {
+        return schema.id !== 'core';
+      });
+
+      console.log('fetched ' + schemas.length + ' schemas');
+      q.resolve(schemas);
+    },
+
+    function (error) {
+      console.log('error fetching schemas: ' + error);
       q.reject();
     });
 

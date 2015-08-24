@@ -11,7 +11,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   var self = this;
 
   self.statuses = [];
-  self.domains = ['TIM', 'CSAM', 'PVSS']; // TODO retrieve this dynamically
+  self.domains = ['TIM', 'CSAM', 'WINCC']; // TODO retrieve this dynamically
   self.subsystems = [];
   self.creators = [];
   self.types = ['CREATE', 'UPDATE', 'DELETE'];

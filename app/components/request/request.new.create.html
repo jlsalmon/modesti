@@ -1,38 +1,38 @@
 
 <div class="form-group" ng-class="{ 'has-error': (form.domain.$invalid && form.domain.$dirty)
                                               || (form.$submitted && form.domain.$invalid) }">
-  <label for="domain" class="col-sm-3 control-label">
+  <label class="col-sm-3 control-label">
     {{'DOMAIN'|translate}}
     <i class="fa fa-fw fa-crosshairs"></i>
   </label>
   <div class="col-sm-9">
     <select class="form-control" ng-model="ctrl.request.domain"
-            ng-options="domain.name as domain.name for domain in ctrl.domains"
+            ng-options="schema.id as schema.id for schema in ctrl.schemas"
             ng-change="ctrl.updateCategories()" name="domain" required ></select>
     <span class="help-block" translate>SELECT_DOMAIN</span>
   </div>
 </div>
 
-<div class="form-group" ng-show="ctrl.request.domain" ng-if="ctrl.categories.length > 0"
-  ng-class="{ 'has-error': (form.$submitted && ctrl.request.categories.length == 0) }">
-  <label for="categories" class="col-sm-3 control-label">
-    {{'CATEGORIES'|translate}}
-    <i class="fa fa-fw fa-gears"></i>
-  </label>
-  <div class="col-sm-9">
+<!--<div class="form-group" ng-show="ctrl.request.domain" ng-if="ctrl.categories.length > 0"-->
+  <!--ng-class="{ 'has-error': (form.$submitted && ctrl.request.categories.length == 0) }">-->
+  <!--<label class="col-sm-3 control-label">-->
+    <!--{{'CATEGORIES'|translate}}-->
+    <!--<i class="fa fa-fw fa-gears"></i>-->
+  <!--</label>-->
+  <!--<div class="col-sm-9">-->
 
-    <label class="checkbox-inline" ng-repeat="category in ctrl.categories">
-      <input type="checkbox" value="{{category}}" ng-checked="ctrl.request.categories.indexOf(category) > -1"
-             ng-click="ctrl.toggleCategory(category)" name="categories"> {{category}}
-    </label>
+    <!--<label class="checkbox-inline" ng-repeat="category in ctrl.categories">-->
+      <!--<input type="checkbox" value="{{category}}" ng-checked="ctrl.request.categories.indexOf(category) > -1"-->
+             <!--ng-click="ctrl.toggleCategory(category)" name="categories"> {{category}}-->
+    <!--</label>-->
 
-    <span class="help-block" translate>SELECT_CATEGORIES</span>
-  </div>
-</div>
+    <!--<span class="help-block" translate>SELECT_CATEGORIES</span>-->
+  <!--</div>-->
+<!--</div>-->
 
 <div class="form-group has-feedback" ng-show="ctrl.request.domain"
   ng-class="{ 'has-error': (form.$submitted && form.system.$invalid) }">
-  <label for="System/Subsystem" class="col-sm-3 control-label">
+  <label class="col-sm-3 control-label">
     {{'SYSTEM_SUBSYSTEM'|translate}}
     <i class="fa fa-fw fa-sitemap"></i>
   </label>

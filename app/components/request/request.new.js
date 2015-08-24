@@ -7,35 +7,30 @@
  */
 angular.module('modesti').controller('NewRequestController', NewRequestController);
 
-function NewRequestController($http, $location, RequestService, AuthService) {
+function NewRequestController($http, $location, RequestService, SchemaService, AuthService) {
   var self = this;
 
-  self.domains = [];
+  self.schemas = [];
   self.categories = [];
 
-  self.getDomains = getDomains;
+  self.getSchemas = getSchemas;
   self.getSubsystems = getSubsystems;
-  self.updateCategories = updateCategories;
-  self.toggleCategory = toggleCategory;
   self.submit = submit;
 
   self.request = {
     type : 'CREATE',
     description : '',
-    creator : AuthService.getCurrentUser(),
-    categories: []
+    creator : AuthService.getCurrentUser()
   };
 
-  getDomains();
+  getSchemas();
 
   /**
    *
    */
-  function getDomains() {
-    $http.get(BACKEND_BASE_URL + '/domains').then(function(response) {
-      response.data._embedded.domains.map(function(item) {
-        self.domains.push(item);
-      });
+  function getSchemas() {
+    SchemaService.getSchemas().then(function (schemas) {
+      self.schemas = schemas;
     });
   }
 
@@ -54,44 +49,6 @@ function NewRequestController($http, $location, RequestService, AuthService) {
 
       return response.data._embedded.subsystems;
     });
-  }
-
-  /**
-   *
-   */
-  function updateCategories() {
-    var domain = self.request.domain;
-    self.categories = [];
-
-    for (var i in self.domains) {
-      if (self.domains[i].name == domain) {
-        self.domains[i].datasources.map(function(item) {
-          self.categories.push(item);
-        });
-
-        //self.domains[i].categories.map(function(item) {
-        //  self.categories.push(item);
-        //});
-      }
-    }
-  }
-
-  /**
-   *
-   * @param category
-   */
-  function toggleCategory(category) {
-    var idx = self.request.categories.indexOf(category);
-
-    // is currently selected
-    if (idx > -1) {
-      self.request.categories.splice(idx, 1);
-    }
-
-    // is newly selected
-    else {
-      self.request.categories.push(category);
-    }
   }
 
   /**
@@ -116,37 +73,4 @@ function NewRequestController($http, $location, RequestService, AuthService) {
       });
     }
   }
-
-
-  // TODO: move everything below here to another page ------------------------------------------------------------------------
-
-  //self.schema = {};
-  //self.schemaString = '';
-  //self.saveSchema = saveSchema;
-  //
-  //var id = 'tim';
-  //
-  //Restangular.one('schemas', id).get().then(function(schema) {
-  //  console.log('fetched schema');
-  //  self.schema = schema.data;
-  //  self.schemaString = JSON.stringify(schema.data, null, "    ");
-  //},
-  //
-  //function(error) {
-  //  console.log('error fetching schema');
-  //});
-  //
-  //
-  //function saveSchema() {
-  //  self.schema.categories = JSON.parse(self.schemaString).categories;
-  //
-  //  self.schema.save().then(function(response) {
-  //    console.log('saved schema');
-  //    self.categories = response.data;
-  //  }, function(error) {
-  //    console.log('error saving schema: ' + error.data.message);
-  //  });
-  //};
-
-
 }
