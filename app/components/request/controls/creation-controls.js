@@ -141,7 +141,7 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
     for (var i in self.rows) {
       var point = self.rows[i];
 
-      if (point.approval.approved === false) {
+      if (point.approved && point.approval.approved === false) {
         n++;
       }
     }

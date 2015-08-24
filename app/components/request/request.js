@@ -220,11 +220,11 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     //  return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
     //}
 
-    else if (point.approval.approved === false) {
+    else if (point.approved && point.approval.approved === false) {
       return '<div class="row-header">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
 
-    else if (point.approval.approved === true && self.request.status === 'FOR_APPROVAL') {
+    else if (point.approved && point.approval.approved === true && self.request.status === 'FOR_APPROVAL') {
       return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 
