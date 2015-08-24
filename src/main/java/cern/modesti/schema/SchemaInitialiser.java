@@ -102,7 +102,7 @@ public class SchemaInitialiser {
 
         // Attach categories (either built-in or from the plugin) that are specified in the schema
         for (Category category : schema.getCategories()) {
-          if (pluginCategories.get(pathToJar).contains(category)) {
+          if (pluginCategories.get(pathToJar) != null && pluginCategories.get(pathToJar).contains(category)) {
             categories.add(pluginCategories.get(pathToJar).get(pluginCategories.get(pathToJar).indexOf(category)));
           } else if (builtinCategories.contains(category)) {
             categories.add(builtinCategories.get(builtinCategories.indexOf(category)));
@@ -115,7 +115,7 @@ public class SchemaInitialiser {
         List<Datasource> datasources = new ArrayList<>();
 
         for (Datasource datasource : schema.getDatasources()) {
-          if (pluginDatasources.get(pathToJar).contains(datasource)) {
+          if (pluginDatasources.get(pathToJar) != null && pluginDatasources.get(pathToJar).contains(datasource)) {
             datasources.add(pluginDatasources.get(pathToJar).get(pluginDatasources.get(pathToJar).indexOf(datasource)));
           } else {
             throw new IllegalArgumentException(format("Datasource %s was not found for schema %s", datasource.getId(), schema.getId()));
