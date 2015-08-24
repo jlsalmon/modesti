@@ -1,20 +1,20 @@
 'use strict';
 
-describe('Filter: enabled', function () {
+describe('Filter: active', function () {
 
   // load the filter's module
   beforeEach(module('modesti'));
 
   // initialize a new instance of the filter before each test
-  var enabled;
+  var active;
   beforeEach(inject(function ($filter) {
-    enabled = $filter('enabled');
+    active = $filter('active');
   }));
 
   it('should return an empty list', function () {
-    var categories = [];
-    var status = 'IN_PROGRESS';
-    expect(enabled(categories, status)).toEqual(categories);
+    var datasources = [];
+    var request = { points: [] };
+    expect(active(datasources, request)).toEqual(datasources);
   });
 
 });

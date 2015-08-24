@@ -327,7 +327,7 @@
             {{ctrl.activeCategory.name_en}} <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
-            <li ng-repeat="category in ctrl.schema.categories | enabled:ctrl.request.status"
+            <li ng-repeat="category in ctrl.schema.categories"
                 ng-click="ctrl.activateCategory(category)">
               <a>
                 <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger"></i>{{::category.name_en}}
@@ -336,9 +336,8 @@
 
             <li class="divider"></li>
 
-            <!-- TODO only show datasource if it has been selected as point type for at least one point -->
-
-            <li ng-repeat="datasource in ctrl.schema.datasources | enabled:ctrl.request.status"
+            <!-- Only show datasource if it has been selected as point type for at least one point -->
+            <li ng-repeat="datasource in ctrl.schema.datasources | active:ctrl.request"
                 ng-click="ctrl.activateCategory(datasource)">
               <a>
                 <i ng-if="datasource.valid === false" class="fa fa-exclamation-triangle text-danger"></i>{{::datasource.name_en}}
