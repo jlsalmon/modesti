@@ -17,8 +17,6 @@ import cern.modesti.schema.field.Field;
 @Service
 public class SchemaService {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SchemaService.class);
-
   @Autowired
   private SchemaRepository schemaRepository;
 
@@ -52,39 +50,9 @@ public class SchemaService {
    *
    * @return
    */
-  public Schema materialiseSchema(Request request, Set<String> categories) {
-    Schema schema = new Schema(request.getRequestId(), request.getDescription(), request.getDomain());
-
-    Schema domainSchema = schemaRepository.findOneByNameIgnoreCase(request.getDomain());
-    Schema parentSchema = schemaRepository.findOneByNameIgnoreCase(domainSchema.getParent());
-
-    // Merge the core schema
-    if (parentSchema == null) {
-      throw new IllegalStateException("Parent schema \"" + domainSchema.getParent() + "\" for domain " + domainSchema.getName() + " was not found");
-    }
-    schema = mergeSchema(schema, parentSchema);
-
-    // Merge the domain schema
-    if (domainSchema == null) {
-      throw new IllegalStateException("Schema for domain \"" + request.getDomain() + "\" was not found");
-    }
-    schema = mergeSchema(schema, domainSchema);
-
-    // Merge all sibling schemas
-    for (String category : categories) {
-      LOG.info("finding and merging schema for category " + category);
-
-      Schema categorySchema = schemaRepository.findOneByNameIgnoreCase(category);
-      if (categorySchema == null) {
-        throw new IllegalStateException("Schema for category \"" + category + "\" was not found");
-      }
-
-      schema = mergeSchema(schema, categorySchema);
-    }
-
-    // Inject options
-    optionService.injectOptions(schema);
-
+  public Schema getSchema(Request request) {
+    Schema schema = schemaRepository.findOne(request.getDomain());
+    schema.setName(request.getDescription());
     return schema;
   }
 
@@ -96,44 +64,44 @@ public class SchemaService {
    *
    * @return
    */
-  private Schema mergeSchema(Schema a, Schema b) {
-    List<Category> categories = a.getCategories();
-    List<Category> newCategories = new ArrayList<>();
-
-    for (Category newCategory : b.getCategories()) {
-      if (!categories.contains(newCategory)) {
-        newCategories.add(newCategory);
-
-      } else {
-        Category category = categories.get(categories.indexOf(newCategory));
-        List<Field> newFields = new ArrayList<>();
-
-        for (Field newField : newCategory.getFields()) {
-          if (!category.getFields().contains(newField)) {
-            newFields.add(newField);
-          }
-        }
-
-        // Copy the disabled state list if the child doesn't specify it.
-        if (newCategory.getDisabledStates() != null && category.getDisabledStates() == null) {
-          category.setDisabledStates(newCategory.getDisabledStates());
-        }
-
-        // Copy the editable state list if the child doesn't specify it.
-        if (newCategory.getEditableStates() != null && category.getEditableStates() == null) {
-          category.setEditableStates(newCategory.getEditableStates());
-        }
-
-        // Copy the constraint list
-        if (newCategory.getConstraints() != null && category.getConstraints() == null) {
-          category.setConstraints(newCategory.getConstraints());
-        }
-
-        category.getFields().addAll(newFields);
-      }
-    }
-
-    a.getCategories().addAll(newCategories);
-    return a;
-  }
+//  private Schema mergeSchema(Schema a, Schema b) {
+//    Set<Category> categories = a.getCategories();
+//    List<Category> newCategories = new ArrayList<>();
+//
+//    for (Category newCategory : b.getCategories()) {
+//      if (!categories.contains(newCategory)) {
+//        newCategories.add(newCategory);
+//
+//      } else {
+//        Category category = categories.get(categories.indexOf(newCategory));
+//        List<Field> newFields = new ArrayList<>();
+//
+//        for (Field newField : newCategory.getFields()) {
+//          if (!category.getFields().contains(newField)) {
+//            newFields.add(newField);
+//          }
+//        }
+//
+//        // Copy the disabled state list if the child doesn't specify it.
+//        if (newCategory.getDisabledStates() != null && category.getDisabledStates() == null) {
+//          category.setDisabledStates(newCategory.getDisabledStates());
+//        }
+//
+//        // Copy the editable state list if the child doesn't specify it.
+//        if (newCategory.getEditableStates() != null && category.getEditableStates() == null) {
+//          category.setEditableStates(newCategory.getEditableStates());
+//        }
+//
+//        // Copy the constraint list
+//        if (newCategory.getConstraints() != null && category.getConstraints() == null) {
+//          category.setConstraints(newCategory.getConstraints());
+//        }
+//
+//        category.getFields().addAll(newFields);
+//      }
+//    }
+//
+//    a.getCategories().addAll(newCategories);
+//    return a;
+//  }
 }

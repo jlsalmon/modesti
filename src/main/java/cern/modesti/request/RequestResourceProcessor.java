@@ -1,5 +1,6 @@
 package cern.modesti.request;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.stereotype.Component;
-
-import cern.modesti.schema.SchemaController;
 
 import java.util.List;
 
@@ -20,9 +19,8 @@ import java.util.List;
  * @author Justin Lewis Salmon
  */
 @Component
+@Slf4j
 public class RequestResourceProcessor implements ResourceProcessor<Resource<Request>> {
-
-  private static final Logger LOG = LoggerFactory.getLogger(SchemaController.class);
 
   @Autowired
   RequestLinks requestLinks;
@@ -30,7 +28,7 @@ public class RequestResourceProcessor implements ResourceProcessor<Resource<Requ
   @Override
   public Resource<Request> process(Resource<Request> resource) {
     Request request = resource.getContent();
-    LOG.debug("adding links to request " + request.getRequestId());
+    log.debug("adding links to request " + request.getRequestId());
 
     resource.add(requestLinks.getSchemaLink(request));
 

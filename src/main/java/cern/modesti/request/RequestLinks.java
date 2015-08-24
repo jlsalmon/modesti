@@ -1,5 +1,6 @@
 package cern.modesti.request;
 
+import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaController;
 import cern.modesti.workflow.signal.SignalController;
 import cern.modesti.workflow.task.TaskController;
@@ -17,6 +18,7 @@ import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
@@ -37,31 +39,16 @@ public class RequestLinks {
   @Autowired
   RuntimeService runtimeService;
 
+  @Autowired
+  EntityLinks entityLinks;
+
   /**
    *
    * @param request
    * @return
    */
   Link getSchemaLink(Request request) {
-    if (request.getCategories() != null) {
-
-      // Need to manually build a comma-separated list of categories
-      StringBuilder categories = new StringBuilder();
-      for (String category : request.getCategories()) {
-        categories.append(category).append(",");
-      }
-
-      if (categories.length() > 0) {
-        categories.deleteCharAt(categories.length() - 1);
-        return linkTo(methodOn(SchemaController.class).getSchema(request.getRequestId(), categories.toString())).withRel("schema");
-      }
-
-      return linkTo(methodOn(SchemaController.class).getSchema(request.getRequestId(), null)).withRel("schema");
-
-    } else {
-      LOG.warn("Request " + request.getRequestId() + " has no schema link!");
-      return null;
-    }
+    return linkTo(methodOn(SchemaController.class).getSchema(request.getRequestId())).withRel("schema");
   }
 
   /**

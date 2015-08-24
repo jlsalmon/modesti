@@ -15,15 +15,20 @@ import cern.modesti.request.point.Point;
 import cern.modesti.validation.ValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
@@ -37,6 +42,8 @@ import static java.lang.String.format;
 @Slf4j
 @Transactional
 public class WorkflowService {
+
+  private static final String PROCESS_RESOURCE_PATTERN = "classpath*:/processes/*.bpmn20.xml";
 
   @Autowired
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
@@ -54,10 +61,29 @@ public class WorkflowService {
   private TaskService taskService;
 
   @Autowired
+  private RepositoryService repositoryService;
+
+  @Autowired
   private NotificationService notificationService;
 
   @Autowired
   private ValidationService validationService;
+
+  /**
+   *
+   * @throws IOException
+   */
+  @PostConstruct
+  public void init() throws IOException {
+    log.info("Initialising workflow processes");
+
+    ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
+    Resource[] processes = resolver.getResources(PROCESS_RESOURCE_PATTERN);
+
+    for (Resource process : processes) {
+      repositoryService.createDeployment().addInputStream(process.getFilename(), process.getInputStream()).deploy();
+    }
+  }
 
   /**
    * @param request

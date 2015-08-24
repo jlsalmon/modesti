@@ -17,6 +17,7 @@
  ******************************************************************************/
 package cern.modesti.schema.category;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Id;
@@ -32,9 +33,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Category {
 
-  /**
-   *
-   */
   @Id
   private String id;
 
@@ -52,18 +50,31 @@ public class Category {
    */
   private List<String> editableStates;
 
-  /**
-   *
-   */
   private List<Constraint> constraints;
 
-  /**
-   *
-   */
   private List<Field> fields;
 
+  /**
+   *
+   * @param id
+   */
   public Category(String id) {
     this.id = id;
+  }
+
+  /**
+   * Copy constructor
+   *
+   * @param category
+   */
+  public Category(Category category) {
+    id = category.id;
+    name_en = category.name_en;
+    name_fr = category.name_fr;
+    disabledStates = category.disabledStates == null ? null : new ArrayList<>(category.disabledStates);
+    editableStates = category.editableStates == null ? null : new ArrayList<>(category.editableStates);
+    constraints = category.constraints == null ? null : new ArrayList<>(category.constraints);
+    fields = category.fields == null ? null : new ArrayList<>(category.fields);
   }
 
   @Override

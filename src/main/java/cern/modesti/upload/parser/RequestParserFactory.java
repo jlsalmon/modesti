@@ -9,7 +9,6 @@ import cern.modesti.repository.equipment.MonitoringEquipmentRepository;
 import cern.modesti.repository.location.functionality.FunctionalityRepository;
 import cern.modesti.repository.person.PersonRepository;
 import cern.modesti.repository.subsystem.SubSystemRepository;
-import cern.modesti.request.RequestType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -64,11 +63,11 @@ public class RequestParserFactory {
     Row header = sheet.getRow(0);
 
     String domain = header.getCell(0).getStringCellValue().trim();
-    if (domain.equals(RequestType.Domain.TIM.toString())) {
+    if (domain.equals(RequestParser.Domain.TIM.toString())) {
       requestParser = new TIMRequestParser(sheet);
-    } else if (domain.equals(RequestType.Domain.CSAM.toString())) {
+    } else if (domain.equals(RequestParser.Domain.CSAM.toString())) {
       requestParser = new CSAMRequestParser(sheet);
-    } else if (domain.equals(RequestType.Domain.PVSS.toString())) {
+    } else if (domain.equals(RequestParser.Domain.PVSS.toString())) {
       requestParser = new PVSSRequestParser(sheet);
     } else {
       throw new RequestParseException("Domain " + domain + " is not valid and/or supported");

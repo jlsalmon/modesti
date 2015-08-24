@@ -31,7 +31,7 @@ public class ValidationService2 {
     log.info(String.format("validating request %s", request.getRequestId()));
 
     // Get the schema
-    Schema schema = schemaService.materialiseSchema(request, request.getCategories());
+    // Schema schema = schemaService.materialiseSchema(request, request.getCategories());
 
 
     return false;

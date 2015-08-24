@@ -45,7 +45,7 @@ public class OptionServiceTest {
     Schema schema = getTestSchema();
     optionService.injectOptions(schema);
 
-    List<String> options = (List<String>) ((OptionsField) schema.getCategories().get(0).getFields().get(0)).getOptions();
+    List<String> options = (List<String>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
 
     assertTrue(options != null);
     assertTrue(options.get(0).equals("a"));
@@ -61,7 +61,7 @@ public class OptionServiceTest {
     Schema schema = getTestSchema();
     optionService.injectOptions(schema);
 
-    List<String> options = (List<String>) ((OptionsField) schema.getCategories().get(0).getFields().get(0)).getOptions();
+    List<String> options = (List<String>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
 
     assertTrue(options != null);
     assertTrue(options.get(0).equals("-2"));

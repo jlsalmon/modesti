@@ -18,9 +18,6 @@ import org.springframework.plugin.core.config.EnablePluginRegistries;
  *
  * Service                      Profiles
  * --------------------------------------------------------------------
- * CounterInitialiser           test
- * DomainInitialiser            test
- * SchemaInitialiser            test
  * ConfigurationService
  * UploadService
  * NotificationService

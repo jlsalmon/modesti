@@ -54,7 +54,7 @@ public class RequestEventHandlerTest {
   @Test
   @Ignore
   public void requestIsCreatedInProgress() throws Exception {
-    when(schemaRepository.findOneByNameIgnoreCase(anyString())).thenReturn(new Schema());
+    when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
 
     Request request = getTestRequest();
     requestEventHandler.handleRequestCreate(request);
@@ -64,7 +64,7 @@ public class RequestEventHandlerTest {
   @Test
   public void requestIdIsGenerated() {
     when(counterService.getNextSequence(anyString())).thenReturn(1L);
-    when(schemaRepository.findOneByNameIgnoreCase(anyString())).thenReturn(new Schema());
+    when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
 
     Request request = getTestRequest();
     requestEventHandler.handleRequestCreate(request);
@@ -83,7 +83,7 @@ public class RequestEventHandlerTest {
 
   @Test
   public void requestSchemaIsLinked() {
-    when(schemaRepository.findOneByNameIgnoreCase(anyString())).thenReturn(new Schema());
+    when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
 
     Request request = getTestRequest();
     requestEventHandler.handleRequestCreate(request);

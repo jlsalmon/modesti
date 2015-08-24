@@ -10,9 +10,4 @@ public enum RequestType {
   MODIFY,
   DELETE;
 
-  public enum Domain {
-    TIM,
-    CSAM,
-    PVSS;
-  }
 }

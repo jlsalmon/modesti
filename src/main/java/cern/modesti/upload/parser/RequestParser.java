@@ -57,6 +57,12 @@ public abstract class RequestParser {
   private MonitoringEquipmentRepository monitoringEquipmentRepository;
   private Map<String, MonitoringEquipment> monitoringEquipmentCache = new HashMap<>();
 
+  public enum Domain {
+    TIM,
+    CSAM,
+    PVSS;
+  }
+
   /**
    * @param sheet
    */

@@ -9,6 +9,7 @@ import cern.modesti.request.point.state.Addressing;
 import cern.modesti.request.point.state.Approval;
 import cern.modesti.request.point.state.Cabling;
 import cern.modesti.request.point.state.Testing;
+import cern.modesti.schema.options.OptionService;
 import cern.modesti.workflow.WorkflowService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngines;
@@ -75,6 +76,9 @@ public class WorkflowServiceTest {
   @Mock
   ConfigurationService configurationService;
 
+  @Mock
+  OptionService optionService;
+
   /**
    * In-memory SMTP server for receiving emails sent during the tests.
    */
@@ -89,6 +93,7 @@ public class WorkflowServiceTest {
 
     Mocks.register("workflowService", workflowService);
     Mocks.register("configurationService", configurationService);
+    Mocks.register("optionService", optionService);
 
     wiser = new Wiser();
     wiser.setPort(25000);
