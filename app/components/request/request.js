@@ -7,8 +7,8 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $http, $timeout, $modal, $filter, request, children, schema, tasks, signals,
-                           RequestService, ColumnService, SchemaService, AlertService, HistoryService, TaskService) {
+function RequestController($scope, $timeout, $modal, $filter, request, children, schema, tasks, signals,
+                           RequestService, ColumnService, SchemaService, HistoryService, TaskService) {
   var self = this;
 
   self.request = request;
@@ -43,7 +43,6 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     afterRender: afterRender,
     beforeChange: beforeChange,
     afterChange: afterChange,
-    afterValidate: afterValidate,
     afterCreateRow: afterCreateRow,
     afterRemoveRow: afterRemoveRow
   };
@@ -93,8 +92,6 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
 
   self.activateCategory = activateCategory;
   self.activateDefaultCategory = activateDefaultCategory;
-  //self.addExtraCategory = addExtraCategory;
-  //self.getAvailableExtraCategories = getAvailableExtraCategories;
   self.resetSorting = resetSorting;
   self.save = save;
   self.undo = undo;
@@ -160,15 +157,12 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
 
     if (self.request.status == 'FOR_APPROVAL') {
 
-      var point;
-      for (var i = 0, len = self.request.points.length; i < len; i++) {
-        point = self.request.points[i];
-
+      self.request.points.forEach(function (point) {
         // Display only alarms
         if (point.properties['priorityCode']) {
           rows.push(point);
         }
-      }
+      });
     }
 
     else if (self.request.status == 'FOR_ADDRESSING' || self.request.status == 'FOR_CABLING') {
@@ -227,8 +221,6 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
   function getColumns() {
     self.columns.length = 0;
 
-    //self.columns.push({data: 'id', title: '#', readOnly: true, width: 30, className: "htCenter"});
-
     // Add a column for displaying icons
     //self.columns.push({readOnly: true, renderer: iconRenderer});
 
@@ -241,14 +233,11 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       self.columns.push(getCommentColumn());
     }
 
-    var field, editable;
-    for (var i = 0; i < self.activeCategory.fields.length; i++) {
-      field = self.activeCategory.fields[i];
+    var editable;
+    self.activeCategory.fields.forEach(function (field) {
 
       // A column is editable only if the category is marked as an editable state for the current request status.
-
       // TODO: don't allow editing until the task is claimed (if it is a claimable task)
-
       if (isCurrentUserAuthorised()) {
         editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
       } else {
@@ -259,7 +248,7 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
       var column = ColumnService.getColumn(field, editable);
       column.renderer = customRenderer;
       self.columns.push(column);
-    }
+    });
   }
 
   function iconRenderer(instance, td, row, col, prop, value, cellProperties) {
@@ -410,25 +399,11 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
 
   /**
    *
-   * @param isValid
-   * @param value
-   * @param row
-   * @param prop
-   * @param source
-   */
-  function afterValidate(isValid, value, row, prop, source) {
-    self.request.valid = isValid;
-  }
-
-  /**
-   *
    * @param index
    * @param amount
    */
   function afterCreateRow(index, amount) {
     // Fix the point IDs
-    //self.rows[index].id = index + 1;
-    //
     for (var i = 0, len = self.rows.length; i < len; i++) {
       self.rows[i].id = i + 1;
     }
@@ -441,8 +416,6 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
    */
   function afterRemoveRow(index, amount) {
     // Fix the point IDs
-    //self.rows[index].id = index + 1;
-    //
     for (var i = 0, len = self.rows.length; i < len; i++) {
       self.rows[i].id = i + 1;
     }
@@ -480,8 +453,6 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
     }, function (error) {
       console.log('error saving request');
     });
-
-    //AlertService.add('danger', 'This is a warning')
   }
 
   /**
