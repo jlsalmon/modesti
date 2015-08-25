@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import cern.modesti.request.point.Point;
+import cern.modesti.schema.category.Datasource;
 import org.springframework.stereotype.Service;
 
 import cern.modesti.schema.Schema;
@@ -42,11 +44,28 @@ public class OptionService {
    */
   public void injectOptions(Schema schema) {
     for (Category category : schema.getCategories()) {
-      for (Field field : category.getFields()) {
+      category.getFields().forEach(field -> injectOptions(schema, field));
+    }
 
-        if (field instanceof OptionsField && ((OptionsField) field).getOptions() == null) {
-          ((OptionsField) field).setOptions(getOptions(field.getId()));
-        }
+    for (Datasource datasource : schema.getDatasources()) {
+      datasource.getFields().forEach(field -> injectOptions(schema, field));
+    }
+  }
+
+  /**
+   *
+   * @param schema
+   * @param field
+   */
+  private void injectOptions(Schema schema, Field field) {
+    if (field instanceof OptionsField && ((OptionsField) field).getOptions() == null) {
+
+      // The "pointType" field is treated specially. Its options are the possible datasources of the schema.
+      if (field.getId().equals("pointType")) {
+        // TODO: don't hardcode the use of "name_en" here...
+        ((OptionsField) field).setOptions(schema.getDatasources().stream().map(Datasource::getName_en).collect(Collectors.toList()));
+      } else {
+        ((OptionsField) field).setOptions(getOptions(field.getId()));
       }
     }
   }
@@ -57,6 +76,7 @@ public class OptionService {
    * @return
    */
   private List<String> getOptions(String property) {
+
     // Translate the field id to its corresponding column name
     String columnName = propertyToColumnName(property);
 

@@ -18,24 +18,20 @@
 package cern.modesti.schema.field;
 
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 /**
  * @author Justin Lewis Salmon
  */
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class OptionsField extends Field {
-
   private Object options;
 
-  /**
-   * @return the options
-   */
-  public Object getOptions() {
-    return options;
-  }
-
-  /**
-   * @param options the options to set
-   */
-  public void setOptions(Object options) {
-    this.options = options;
+  public OptionsField(String id) {
+    super(id);
   }
 }

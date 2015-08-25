@@ -25,11 +25,14 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 /**
  * @author Justin Lewis Salmon
  */
+@Data
+@NoArgsConstructor
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.PROPERTY,
@@ -42,7 +45,6 @@ import lombok.Data;
     @Type(value = OptionsField.class, name = "options"),
     @Type(value = AutocompleteField.class, name = "autocomplete")})
 @JsonInclude(Include.NON_NULL)
-@Data
 public class Field {
 
   @Id
@@ -70,4 +72,8 @@ public class Field {
   private String help_en = "";
 
   private String help_fr = "";
+
+  public Field(String id) {
+    this.id = id;
+  }
 }
