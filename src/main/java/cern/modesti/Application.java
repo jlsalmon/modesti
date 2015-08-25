@@ -22,7 +22,6 @@ import org.springframework.plugin.core.config.EnablePluginRegistries;
  * UploadService
  * NotificationService
  * CounterService
- * SchemaService
  * OptionService
  * LdapSynchroniser             dev, prod
  * ValidationService

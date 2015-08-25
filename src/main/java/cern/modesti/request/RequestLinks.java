@@ -1,7 +1,6 @@
 package cern.modesti.request;
 
 import cern.modesti.schema.Schema;
-import cern.modesti.schema.SchemaController;
 import cern.modesti.workflow.signal.SignalController;
 import cern.modesti.workflow.task.TaskController;
 import org.activiti.engine.ProcessEngines;
@@ -11,12 +10,7 @@ import org.activiti.engine.impl.EventSubscriptionQueryImpl;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.impl.interceptor.CommandExecutor;
 import org.activiti.engine.impl.persistence.entity.EventSubscriptionEntity;
-import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
-import org.activiti.engine.runtime.Execution;
-import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Link;
@@ -26,12 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Component
 public class RequestLinks {
-
-  private static final Logger LOG = LoggerFactory.getLogger(RequestLinks.class);
 
   @Autowired
   TaskService taskService;
@@ -48,7 +39,7 @@ public class RequestLinks {
    * @return
    */
   Link getSchemaLink(Request request) {
-    return linkTo(methodOn(SchemaController.class).getSchema(request.getRequestId())).withRel("schema");
+    return entityLinks.linkToSingleResource(Schema.class, request.getDomain());
   }
 
   /**
