@@ -358,24 +358,22 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
         self.rows[row].dirty = true;
       }
 
-      // If the change was to the "pointType" field, make sure that the corresponding category is added (but not
-      // activated) unless we already have it.
-      if (property === 'properties.pointType') {
-        var found = false;
-        for (var key in self.parent.schema.categories) {
-          if (self.parent.schema.categories[key].name === newValue) {
-            found = true;
-            break;
-          }
-        }
-
-        if (!found) {
-          // TODO reimplement this
-
-          //console.log('adding extra category for point type ' + newValue);
-          //self.parent.addExtraCategory(newValue, false);
-        }
-      }
+      //// If the change was to the "pointType" field, make sure that the corresponding category is added (but not
+      //// activated) unless we already have it.
+      //if (property === 'properties.pointType') {
+      //  var found = false;
+      //  for (var key in self.parent.schema.categories) {
+      //    if (self.parent.schema.categories[key].name === newValue) {
+      //      found = true;
+      //      break;
+      //    }
+      //  }
+      //
+      //  if (!found) {
+      //    //console.log('adding extra category for point type ' + newValue);
+      //    //self.parent.addExtraCategory(newValue, false);
+      //  }
+      //}
 
       // This is a workaround. See function documentation for info.
       saveNewValue(row, property, newValue);
@@ -474,17 +472,25 @@ function CreationControlsController($http, $state, $location, $timeout, $modal, 
    * @returns {*}
    */
   function getField(property) {
-    for (var i in self.parent.schema.categories) {
-      var category = self.parent.schema.categories[i];
+    var result;
 
-      for (var j in category.fields) {
-        var field = category.fields[j];
-
-        if (field.id == property) {
-          return field;
+    self.parent.schema.categories.forEach(function (category) {
+      category.fields.forEach(function (field) {
+        if (field.id === property) {
+          result = field;
         }
-      }
-    }
+      });
+    });
+
+    self.parent.schema.datasources.forEach(function (datasource) {
+      datasource.fields.forEach(function (field) {
+        if (field.id === property) {
+          result = field;
+        }
+      });
+    });
+
+    return result;
   }
 
   /**
