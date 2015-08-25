@@ -42,7 +42,9 @@ public class OptionServiceTest {
   public void optionList() {
     Schema schema = new Schema();
     Category category = new Category("testCategory");
-    category.setFields(Collections.singletonList(new OptionsField("optionList")));
+    Field field = new OptionsField();
+    field.setId("optionList");
+    category.setFields(Collections.singletonList(field));
     schema.setCategories(Collections.singletonList(category));
 
     Query q = mock(Query.class);
@@ -63,7 +65,9 @@ public class OptionServiceTest {
   public void optionsWithMeanings() {
     Schema schema = new Schema();
     Category category = new Category("testCategory");
-    category.setFields(Collections.singletonList(new OptionsField("optionsWithMeanings")));
+    Field field = new OptionsField();
+    field.setId("optionsWithMeanings");
+    category.setFields(Collections.singletonList(field));
     schema.setCategories(Collections.singletonList(category));
 
     Query q = mock(Query.class);
@@ -84,7 +88,9 @@ public class OptionServiceTest {
   public void optionRange() {
     Schema schema = new Schema();
     Category category = new Category("testCategory");
-    category.setFields(Collections.singletonList(new OptionsField("optionRange")));
+    Field field = new OptionsField();
+    field.setId("optionRange");
+    category.setFields(Collections.singletonList(field));
     schema.setCategories(Collections.singletonList(category));
 
     Query q = mock(Query.class);
@@ -108,7 +114,9 @@ public class OptionServiceTest {
     Schema schema = new Schema();
     Datasource datasource = new Datasource("testDatasource");
     datasource.setName_en(datasource.getId());
-    datasource.setFields(Collections.singletonList(new OptionsField("pointType")));
+    Field field = new OptionsField();
+    field.setId("pointType");
+    datasource.setFields(Collections.singletonList(field));
     schema.setDatasources(Collections.singletonList(datasource));
 
     optionService.injectOptions(schema);

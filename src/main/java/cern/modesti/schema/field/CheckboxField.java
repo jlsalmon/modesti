@@ -1,5 +1,8 @@
 package cern.modesti.schema.field;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * TODO
  *
@@ -7,13 +10,7 @@ package cern.modesti.schema.field;
  */
 public class CheckboxField extends Field {
 
+  @Getter
+  @Setter
   private Boolean selected;
-
-  public Boolean getSelected() {
-    return selected;
-  }
-
-  public void setSelected(Boolean selected) {
-    this.selected = selected;
-  }
 }

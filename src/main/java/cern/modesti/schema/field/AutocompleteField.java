@@ -17,6 +17,9 @@
  ******************************************************************************/
 package cern.modesti.schema.field;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,35 +28,11 @@ import java.util.List;
  */
 public class AutocompleteField extends Field {
 
+  @Getter
+  @Setter
   private String url;
 
+  @Getter
+  @Setter
   private List<String> params;
-
-  /**
-   * @return the url
-   */
-  public String getUrl() {
-    return url;
-  }
-
-  /**
-   * @param url the url to set
-   */
-  public void setUrl(String url) {
-    this.url = url;
-  }
-
-  /**
-   * @return the params
-   */
-  public List<String> getParams() {
-    return params;
-  }
-
-  /**
-   * @param params the params to set
-   */
-  public void setParams(List<String> params) {
-    this.params = params;
-  }
 }
