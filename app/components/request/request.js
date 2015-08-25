@@ -143,23 +143,9 @@ function RequestController($scope, $http, $timeout, $modal, $filter, request, ch
    * @param category
    */
   function activateCategory(category) {
-    console.log('activating category');
-    var categories = self.schema.categories;
-
-    for (var key in categories) {
-      if (categories.hasOwnProperty(key)) {
-        categories[key].active = false;
-        console.log('category:' + categories[key]);
-      }
-    }
-
-    category.active = true;
-    console.log(category);
+    console.log('activating category "' + category.id + '"');
     self.activeCategory = category;
-
-
     getColumns();
-    //getColumnHeaders();
   }
 
   /**

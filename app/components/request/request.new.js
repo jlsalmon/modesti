@@ -11,7 +11,6 @@ function NewRequestController($http, $location, RequestService, SchemaService, A
   var self = this;
 
   self.schemas = [];
-  self.categories = [];
 
   self.getSchemas = getSchemas;
   self.getSubsystems = getSubsystems;
@@ -56,9 +55,8 @@ function NewRequestController($http, $location, RequestService, SchemaService, A
    */
   function submit(form) {
     console.log(form);
-    if (form.$invalid || (self.categories.length > 0 && self.request.categories.length == 0)) {
+    if (form.$invalid) {
       console.log('form invalid');
-      return;
     }
 
     else {

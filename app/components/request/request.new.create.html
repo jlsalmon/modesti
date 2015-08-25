@@ -13,23 +13,6 @@
   </div>
 </div>
 
-<!--<div class="form-group" ng-show="ctrl.request.domain" ng-if="ctrl.categories.length > 0"-->
-  <!--ng-class="{ 'has-error': (form.$submitted && ctrl.request.categories.length == 0) }">-->
-  <!--<label class="col-sm-3 control-label">-->
-    <!--{{'CATEGORIES'|translate}}-->
-    <!--<i class="fa fa-fw fa-gears"></i>-->
-  <!--</label>-->
-  <!--<div class="col-sm-9">-->
-
-    <!--<label class="checkbox-inline" ng-repeat="category in ctrl.categories">-->
-      <!--<input type="checkbox" value="{{category}}" ng-checked="ctrl.request.categories.indexOf(category) > -1"-->
-             <!--ng-click="ctrl.toggleCategory(category)" name="categories"> {{category}}-->
-    <!--</label>-->
-
-    <!--<span class="help-block" translate>SELECT_CATEGORIES</span>-->
-  <!--</div>-->
-<!--</div>-->
-
 <div class="form-group has-feedback" ng-show="ctrl.request.domain"
   ng-class="{ 'has-error': (form.$submitted && form.system.$invalid) }">
   <label class="col-sm-3 control-label">

@@ -19,34 +19,33 @@ function SchemaService($q, $http) {
   /**
    *
    * @param request
-   * @param extraCategory
    * @returns {*}
    */
-  function getSchema(request, extraCategory) {
+  function getSchema(request) {
     console.log('fetching schema');
     var q = $q.defer();
 
     var url = request._links.schema.href;
 
-    if (extraCategory) {
-      if (url.indexOf('?categories') > -1) {
-        url += ',' + extraCategory;
-      } else {
-        url += '?categories=' + extraCategory;
-      }
-    }
+    //if (extraCategory) {
+    //  if (url.indexOf('?categories') > -1) {
+    //    url += ',' + extraCategory;
+    //  } else {
+    //    url += '?categories=' + extraCategory;
+    //  }
+    //}
 
     $http.get(url).then(function (response) {
       var schema = response.data;
       console.log('fetched schema: ' + schema.name);
 
       // Save the URL
-      request._links.schema.href = url;
-
-      // Save the new category
-      if (extraCategory && request.categories.indexOf(extraCategory) == -1) {
-        request.categories.push(extraCategory);
-      }
+      //request._links.schema.href = url;
+      //
+      //// Save the new category
+      //if (extraCategory && request.categories.indexOf(extraCategory) == -1) {
+      //  request.categories.push(extraCategory);
+      //}
 
       // Prepend tagname and fault state fields
       schema.categories.forEach(function (category) {
