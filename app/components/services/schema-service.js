@@ -13,7 +13,9 @@ function SchemaService($q, $http) {
   // Public API
   var service = {
     getSchema: getSchema,
-    getSchemas: getSchemas
+    getSchemas: getSchemas,
+    generateTagnames: generateTagnames,
+    generateFaultStates: generateFaultStates
   };
 
   /**
@@ -27,37 +29,17 @@ function SchemaService($q, $http) {
 
     var url = request._links.schema.href;
 
-    //if (extraCategory) {
-    //  if (url.indexOf('?categories') > -1) {
-    //    url += ',' + extraCategory;
-    //  } else {
-    //    url += '?categories=' + extraCategory;
-    //  }
-    //}
-
     $http.get(url).then(function (response) {
       var schema = response.data;
       console.log('fetched schema: ' + schema.name);
 
-      // Save the URL
-      //request._links.schema.href = url;
-      //
-      //// Save the new category
-      //if (extraCategory && request.categories.indexOf(extraCategory) == -1) {
-      //  request.categories.push(extraCategory);
-      //}
-
       // Prepend tagname and fault state fields
-      schema.categories.forEach(function (category) {
+      schema.categories.concat(schema.datasources).forEach(function (category) {
 
         // Tagname is shown on each category except General and Alarms
         if (category.id !== 'general' && category.id !== 'alarms' && category.id !== 'alarmHelp') {
           category.fields.unshift(getTagnameField());
         }
-      });
-
-      schema.datasources.forEach(function (datasource) {
-        datasource.fields.unshift(getTagnameField());
       });
 
       q.resolve(schema);
@@ -114,6 +96,147 @@ function SchemaService($q, $http) {
       help_en: "",
       help_fr: ""
     }
+  }
+
+  /**
+   * Tagname format: system_code|subsystem_code|’.’|functionality_code|’.’|equipment_identifier|’:’|point_attribute
+   */
+  function generateTagnames(request) {
+
+    request.points.forEach(function (point) {
+
+      if (!point.properties.subsystem) {
+        return;
+      }
+
+      (function (point) {
+        $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
+          params: {query: point.properties.subsystem.value},
+          cache: true
+        }).then(function (response) {
+
+          if (!response.data.hasOwnProperty('_embedded')) {
+            return;
+          }
+
+          var subsystemCode;
+
+          if (response.data._embedded.subsystems.length == 1) {
+            var subsystem = response.data._embedded.subsystems[0];
+            subsystemCode = subsystem.systemCode + subsystem.subsystemCode;
+          } else {
+            subsystemCode = '?';
+          }
+
+          var site = (point.properties.functionality && point.properties.functionality.value ? point.properties.functionality.value : '?');
+          var equipmentIdentifier = getEquipmentIdentifier(point);
+          equipmentIdentifier = equipmentIdentifier ? '?' : equipmentIdentifier;
+          var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
+
+          if (subsystemCode == '?' && site == '?' && equipmentIdentifier == '?' && attribute == '?') {
+            point.properties.tagname = '';
+          } else {
+            point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
+          }
+        });
+      })(point);
+    });
+  }
+
+  /**
+   * Fault state format: system_name|’_’|subsystem_name|’_’|general_functionality|’:’|equipment_identifier|’:’|point_description
+   */
+  function generateFaultStates(request) {
+    request.points.forEach(function (point) {
+
+      point.properties.faultMember = getEquipmentIdentifier(point);
+
+      if (!point.properties.subsystem) {
+        return;
+      }
+
+      (function (point) {
+        $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
+          params: {query: point.properties.subsystem.value},
+          cache: true
+        }).then(function (response) {
+
+          if (!response.data.hasOwnProperty('_embedded')) {
+            return;
+          }
+
+          var systemName = '?', subsystemName = '?';
+
+          if (response.data._embedded.subsystems.length == 1) {
+            var subsystem = response.data._embedded.subsystems[0];
+            systemName = subsystem.system;
+            subsystemName = subsystem.subsystem;
+          }
+
+          if (point.properties.functionality && point.properties.functionality.value) {
+            $http.get(BACKEND_BASE_URL + '/functionalities/search/find', {
+              params: {query: point.properties.functionality.value},
+              cache: true
+            }).then(function (response) {
+              if (!response.data.hasOwnProperty('_embedded')) {
+                return;
+              }
+
+              var func = '?';
+              if (response.data._embedded.functionalities.length == 1) {
+                var functionality = response.data._embedded.functionalities[0];
+                func = functionality.generalFunctionality;
+              }
+
+              if (systemName == '?' && subsystemName == '?' && func == '?') {
+                point.properties.faultFamily = '';
+              } else {
+                point.properties.faultFamily = systemName + '_' + subsystemName + '_' + func;
+              }
+            });
+          }
+        });
+      })(point);
+    });
+  }
+
+  /**
+   *
+   * @param point
+   * @returns {*}
+   */
+  function getEquipmentIdentifier(point) {
+    var equipmentIdentifier, gmaoCode;
+
+    if (point.properties.gmaoCode && point.properties.gmaoCode.value) {
+      gmaoCode = point.properties.gmaoCode.value
+    } else if (point.properties.csamCsename && point.properties.csamCsename.value) {
+      gmaoCode = point.properties.csamCsename.value;
+    }
+
+    var otherEquipCode;
+
+    if (point.properties.otherEquipCode) {
+      otherEquipCode = point.properties.otherEquipCode;
+    } else if(point.properties.csamDetector && point.properties.csamDetector.value) {
+      otherEquipCode = point.properties.csamDetector.value;
+    }
+
+    if (gmaoCode && otherEquipCode) {
+      if (gmaoCode === otherEquipCode) {
+        equipmentIdentifier = gmaoCode;
+      } else {
+        equipmentIdentifier = gmaoCode + '_' + otherEquipCode;
+      }
+    } else if (gmaoCode && !otherEquipCode) {
+      equipmentIdentifier = gmaoCode;
+    } else if (!gmaoCode && otherEquipCode) {
+      equipmentIdentifier = otherEquipCode;
+    } else {
+      equipmentIdentifier = '';
+    }
+
+    return equipmentIdentifier;
   }
 
   return service;
