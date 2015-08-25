@@ -177,6 +177,8 @@ public class Request implements Serializable {
   }
 
   /**
+   * TODO remove this TIM/CSAM specific logic from the core
+   *
    * For TIM requests, a point requires cabling if:
    *  - it is an APIMMD point
    *
