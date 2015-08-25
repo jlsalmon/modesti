@@ -49,14 +49,17 @@ function SchemaService($q, $http) {
       }
 
       // Prepend tagname and fault state fields
-      for (var i = 0, len = schema.categories.length; i < len; i++) {
-        var category = schema.categories[i];
+      schema.categories.forEach(function (category) {
 
         // Tagname is shown on each category except General and Alarms
-        if (category.name != 'General' && category.name != 'Alarms' && category.name != 'Alarm Help') {
+        if (category.id !== 'general' && category.id !== 'alarms' && category.id !== 'alarmHelp') {
           category.fields.unshift(getTagnameField());
         }
-      }
+      });
+
+      schema.datasources.forEach(function (datasource) {
+        datasource.fields.unshift(getTagnameField());
+      });
 
       q.resolve(schema);
     },

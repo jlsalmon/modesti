@@ -193,7 +193,7 @@ function ValidationService($q) {
         var fieldNames = getFieldNames(category, constraint.members);
 
         emptyFields.forEach(function (emptyField) {
-          setErrorMessage(point, getPropertyName(emptyField), 'At least one of "' + fieldNames.join(', ') + '" is required for group "' + category.name + '"');
+          setErrorMessage(point, getPropertyName(emptyField), 'At least one of "' + fieldNames.join(', ') + '" is required for group "' + category.name_en + '"');
         });
       }
     });
@@ -236,7 +236,7 @@ function ValidationService($q) {
         point.valid = category.valid = valid = false;
 
         emptyFields.forEach(function (emptyField) {
-          setErrorMessage(point, getPropertyName(emptyField), 'All fields in group "' + category.name + '" are required for this point');
+          setErrorMessage(point, getPropertyName(emptyField), 'All fields in group "' + category.name_en + '" are required for this point');
         });
       }
       if (emptyFields.length > 0) {
@@ -244,7 +244,7 @@ function ValidationService($q) {
         point.valid = category.valid = valid = false;
 
         emptyFields.forEach(function (emptyField) {
-          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name + '"');
+          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name_en + '"');
         });
       }
     });
@@ -278,7 +278,7 @@ function ValidationService($q) {
         point.valid = category.valid = valid = false;
 
         emptyFields.forEach(function (emptyField) {
-          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name + '"');
+          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name_en + '"');
         });
       }
     });
