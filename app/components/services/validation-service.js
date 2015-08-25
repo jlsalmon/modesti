@@ -26,8 +26,8 @@ function ValidationService($q) {
     var q = $q.defer();
     var points = request.points;
 
-    // Reset all categories to valid
-    schema.categories.forEach(function (category) {
+    // Reset all categories and datasources to valid
+    schema.categories.concat(schema.datasources).forEach(function (category) {
       category.valid = true;
     });
 
@@ -65,7 +65,7 @@ function ValidationService($q) {
       return true;
     }
 
-    schema.categories.forEach(function (category) {
+    schema.categories.concat(schema.datasources).forEach(function (category) {
       category.fields.forEach(function (field) {
 
         var propertyName = getPropertyName(field);
@@ -118,7 +118,7 @@ function ValidationService($q) {
     var valid = true;
     var points = request.points;
 
-    schema.categories.forEach(function (category) {
+    schema.categories.concat(schema.datasources).forEach(function (category) {
       if (!category.constraints) {
         return;
       }
