@@ -1,9 +1,6 @@
 package cern.modesti.security.ldap;
 
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.identity.Group;
-import org.activiti.engine.identity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +13,13 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import javax.naming.directory.SearchControls;
 import java.util.*;
+
+import static java.lang.String.format;
 
 /**
  * TODO
@@ -34,9 +34,6 @@ public class LdapSynchroniser {
 
   @Autowired
   Environment env;
-
-  @Autowired
-  IdentityService identityService;
 
   @Autowired
   UserRepository userRepository;
@@ -58,9 +55,7 @@ public class LdapSynchroniser {
     groupIds.addAll(env.getRequiredProperty("modesti.role.cablers", List.class));
     groupIds.addAll(env.getRequiredProperty("modesti.role.administrators", List.class));
 
-
     for (String groupId : groupIds) {
-
       DistinguishedName dn = new DistinguishedName(env.getRequiredProperty("ldap.group.filter"));
       dn.append("cn", groupId);
 
@@ -68,40 +63,31 @@ public class LdapSynchroniser {
       EqualsFilter filter = new EqualsFilter("memberOf", dn.toString());
       List users = ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), SearchControls.SUBTREE_SCOPE, null, (Object ctx) -> ctx);
 
+      for (Object object : users) {
+        DirContextAdapter adapter = (DirContextAdapter) object;
+        String username = adapter.getStringAttribute("CN");
 
-//      if (identityService.createGroupQuery().groupId(groupId).singleResult() == null) {
-//        log.debug("adding new group " + groupId);
-//        Group group = identityService.newGroup(groupId);
-//        group.setName(groupId);
-//        identityService.saveGroup(group);
-//      }
-//
-//      DistinguishedName dn = new DistinguishedName(env.getRequiredProperty("ldap.group.filter"));
-//      dn.append("cn", groupId);
-//
-//      // E.g.: (memberOf=CN=modesti-developers,OU=e-groups,OU=Workgroups,DC=cern,DC=ch)
-//      EqualsFilter filter = new EqualsFilter("memberOf", dn.toString());
-//      List users = ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), SearchControls.SUBTREE_SCOPE, null, (Object ctx) -> ctx);
-//
-//      for (Object object : users) {
-//        DirContextAdapter adapter = (DirContextAdapter) object;
-//        String userId = adapter.getStringAttribute("CN");
-//
-//        if (identityService.createUserQuery().userId(userId).singleResult() == null) {
-//          log.debug("adding new user " + userId);
-//          User user = identityService.newUser(adapter.getStringAttribute("CN"));
-//          user.setFirstName(adapter.getStringAttribute("givenName"));
-//          user.setLastName(adapter.getStringAttribute("sn"));
-//          user.setEmail(adapter.getStringAttribute("mail"));
-//          identityService.saveUser(user);
-//        }
-//
-//        // Add the user to the group (unless he/she is already a member)
-//        if (identityService.createUserQuery().userId(userId).memberOfGroup(groupId).singleResult() == null) {
-//          log.debug("adding user " + userId + " to group " + groupId);
-//          identityService.createMembership(userId, groupId);
-//        }
-//      }
+        User user = userRepository.findOneByUsername(username);
+
+        if (user == null) {
+          user = new User();
+          user.setUsername(username);
+          user.setEmployeeId(Integer.valueOf(adapter.getStringAttribute("employeeID")));
+          user.setFirstName(adapter.getStringAttribute("givenName"));
+          user.setLastName(adapter.getStringAttribute("sn"));
+          user.setEmail(adapter.getStringAttribute("mail"));
+          user.setAuthorities(new HashSet<>(Collections.singleton(new Role(groupId))));
+          log.debug(format("adding new user %s", user));
+
+        } else {
+          Set<Role> authorities = (Set<Role>) user.getAuthorities();
+          authorities.add(new Role(groupId));
+          user.setAuthorities(authorities);
+          log.debug(format("adding user %s to group '%s'", user, groupId));
+        }
+
+        userRepository.save(user);
+      }
     }
   }
 }

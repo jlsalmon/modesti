@@ -175,7 +175,7 @@ public class ValidationService {
     call.addDeclaredParameter(new SqlOutParameter("p_exitcode", OracleTypes.NUMBER));
     call.addDeclaredParameter(new SqlOutParameter("p_exittext", OracleTypes.VARCHAR));
 
-    call.execute(Integer.valueOf(request.getRequestId()), request.getCreator().getId());
+    call.execute(Integer.valueOf(request.getRequestId()), request.getCreator().getEmployeeId());
   }
 
   /**

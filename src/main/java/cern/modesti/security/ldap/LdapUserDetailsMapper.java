@@ -33,10 +33,12 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
 
   @Override
   public UserDetails mapUserFromContext(DirContextOperations context, String username, Collection<? extends GrantedAuthority> grantedAuthorities) {
-    Integer id = Integer.valueOf(context.getStringAttribute("employeeID"));
-    String firstName = context.getStringAttribute("givenName");
-    String lastName = context.getStringAttribute("sn");
-    String email = context.getStringAttribute("mail");
+    User user = new User();
+    user.setUsername(username);
+    user.setEmployeeId(Integer.valueOf(context.getStringAttribute("employeeID")));
+    user.setFirstName(context.getStringAttribute("givenName"));
+    user.setLastName(context.getStringAttribute("sn"));
+    user.setEmail(context.getStringAttribute("mail"));
 
     String creators = env.getRequiredProperty("modesti.role.creators", String.class);
     String approvers = env.getRequiredProperty("modesti.role.approvers", String.class);
@@ -62,7 +64,8 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
       }
     }
 
-    return new User(id, username, firstName, lastName, email, authorities);
+    user.setAuthorities(authorities);
+    return user;
   }
 
   @Override
