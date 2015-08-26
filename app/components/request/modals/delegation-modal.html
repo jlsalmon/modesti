@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Assign to somebody else
+  </h3>
+</div>
+
+<div class="modal-body">
+
+  <form class="form-horizontal" name="form">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">
+        Assignee
+        <i class="fa fa-fw fa-user"></i>
+      </label>
+      <div class="col-sm-9">
+
+        <input type="text" ng-model="ctrl.assignee" placeholder="Type a username or ID..."
+               typeahead="user as user.name for user in ctrl.getUsers($viewValue)"
+               typeahead-loading="loading"
+               typeahead-editable="false" class="form-control" name="assignee" required>
+        <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
+        <span class="help-block" translate>Select the user to whom you wish to assign this request.</span>
+      </div>
+    </div>
+  </form>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="ctrl.cancel()" translate>CANCEL</button>
+  <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="form.$invalid">OK</button>
+</div>

@@ -18,6 +18,9 @@ function TaskService($q, $http, AuthService) {
     getSignalsForRequest: getSignalsForRequest,
     claimTask: claimTask,
     completeTask: completeTask,
+    delegateTask: delegateTask,
+    resolveTask: resolveTask,
+    unclaimTask: unclaimTask,
     isTaskClaimed: isTaskClaimed,
     isAnyTaskClaimed: isAnyTaskClaimed,
     isCurrentUserAssigned: isCurrentUserAssigned,
@@ -131,6 +134,86 @@ function TaskService($q, $http, AuthService) {
 
     function (error) {
       console.log('error completing task ' + taskName);
+      q.reject(error);
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
+   * @param taskName
+   * @param requestId
+   * @param user
+   * @returns {*}
+   */
+  function delegateTask(taskName, requestId, user) {
+    var q = $q.defer();
+
+    var params = {
+      action: 'DELEGATE',
+      assignee: user.username
+    };
+
+    $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function (response) {
+      console.log('delegated task ' + taskName + ' to user ' + params.assignee);
+      q.resolve(response.data);
+    },
+
+    function (error) {
+      console.log('error delegating task ' + taskName + ': ' + error.data.message);
+      q.reject(error);
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
+   * @param taskName
+   * @param requestId
+   * @returns {*}
+   */
+  function resolveTask(taskName, requestId) {
+    var q = $q.defer();
+
+    var params = {
+      action: 'RESOLVE'
+    };
+
+    $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function (response) {
+      console.log('resolved task ' + taskName);
+      q.resolve(response.data);
+    },
+
+    function (error) {
+      console.log('error resolving task ' + taskName + ': ' + error.data.message);
+      q.reject(error);
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
+   * @param taskName
+   * @param requestId
+   * @returns {*}
+   */
+  function unclaimTask(taskName, requestId) {
+    var q = $q.defer();
+
+    var params = {
+      action: 'UNCLAIM',
+    };
+
+    $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function (response) {
+      console.log('unclaimed task ' + taskName + ' to user ' + params.assignee);
+      q.resolve(response.data);
+    },
+
+    function (error) {
+      console.log('error unclaiming task ' + taskName + ': ' + error.data.message);
       q.reject(error);
     });
 

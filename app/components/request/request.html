@@ -455,6 +455,22 @@
           <i class="fa fa-fw fa-question-circle"></i> Help
         </button>
 
+
+        <!-- Actions dropdown -->
+        <div class="btn-group toolbar-item" dropdown dropdown-append-to-body>
+          <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+            <i class="fa fa-fw fa-cog"></i> Actions <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu pull-right">
+            <li>
+              <a ng-click="ctrl.delegateTask()">Assign to somebody...</a>
+            </li>
+            <li>
+              <a>Unclaim</a>
+            </li>
+          </ul>
+        </div>
+
         <!-- Search form -->
         <!--<form class="search-form toolbar-item form-inline pull-right">-->
           <!--<div class="form-group input-group">-->

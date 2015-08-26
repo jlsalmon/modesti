@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($http, $state, $location, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService) {
+function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService) {
   var self = this;
 
   self.parent = {};

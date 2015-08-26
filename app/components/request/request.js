@@ -103,8 +103,9 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
   self.showHelp = showHelp;
   self.showComments = showComments;
   self.showHistory = showHistory;
-
   self.getSelectedPointIds = getSelectedPointIds;
+  self.delegateTask = delegateTask;
+  self.unclaimTask = unclaimTask;
 
 
   /**
@@ -510,6 +511,33 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     // Hack to clear sorting
     self.hot.updateSettings({columnSorting: false});
     self.hot.updateSettings({columnSorting: true});
+  }
+
+  /**
+   *
+   */
+  function delegateTask() {
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/request/modals/delegation-modal.html',
+      controller: 'DelegationModalController as ctrl',
+      resolve: {
+        request: function () {
+          return self.request;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (assignee) {
+      console.log('delegating request to user ' + assignee.name);
+    })
+  }
+
+  /**
+   *
+   */
+  function unclaimTask() {
+
   }
 
   /**
