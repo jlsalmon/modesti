@@ -207,6 +207,10 @@ public class WorkflowService {
     log.info(format("approval completed for request %s", requestId));
     Request request = getRequest(requestId);
 
+    if (request.getApproval() == null || request.getApproval().getApproved() == null) {
+      throw new ActivitiException("Request approval object must not be null!");
+    }
+
     // Send an email to the original requestor
     notificationService.sendNotification(request, NotificationType.APPROVAL_COMPLETED);
 
@@ -250,6 +254,10 @@ public class WorkflowService {
     log.info("processing addressing result for request id " + requestId + "...");
     Request request = getRequest(requestId);
 
+    if (request.getAddressing() == null || request.getAddressing().getAddressed() == null) {
+      throw new ActivitiException("Request addressing object must not be null!");
+    }
+
     // Set the variable for the next stage to evaluate
     execution.setVariable("addressed", request.getAddressing().getAddressed());
 
@@ -287,6 +295,10 @@ public class WorkflowService {
   public void onTestingCompleted(String requestId, DelegateExecution execution) {
     log.info("processing testing result for request id " + requestId + "...");
     Request request = getRequest(requestId);
+
+    if (request.getTesting() == null || request.getTesting().getTested() == null) {
+      throw new ActivitiException("Request testing object must not be null!");
+    }
 
     // Set the variable for the next stage to evaluate
     execution.setVariable("accepted", request.getTesting().getTested());

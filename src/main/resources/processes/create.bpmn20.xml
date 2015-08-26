@@ -30,7 +30,7 @@
       <serviceTask id="sid-3A2991EF-1666-4809-9379-B51AEDE0C673" name="validate" activiti:expression="${workflowService.validateRequest(requestId, execution)}">
         <documentation>Points validated</documentation>
       </serviceTask>
-      <userTask id="sid-7ECE2459-8221-4319-839E-C43F3F862966" name="submit" activiti:candidateGroups="modesti-creators,modesti-administrators">
+      <userTask id="sid-7ECE2459-8221-4319-839E-C43F3F862966" name="submit" activiti:candidateGroups="modesti-creators,modesti-administrators" activiti:owner="${creator}">
         <documentation>Points submitted</documentation>
       </userTask>
       <exclusiveGateway id="sid-F5C7C86D-365F-4463-AB7D-5A8F9F4FE473" name="valid?"></exclusiveGateway>

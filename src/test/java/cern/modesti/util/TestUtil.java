@@ -17,6 +17,8 @@ public class TestUtil {
   public static final User BEN = new User(1, "ben", "Ben", "Alex", "ben@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-creators"))));
   public static final User JOE = new User(2, "joe", "Joe", "Bell", "joe@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-creators"))));
   public static final User DAN = new User(3, "dan", "Dan", "Ford", "dan@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-approvers"))));
+  public static final User SUE = new User(3, "sue", "Sue", "Cook", "sue@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-approvers"))));
+  public static final User AMY = new User(4, "amy", "Amy", "Down", "amy@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-cablers"))));
   public static final User ROB = new User(4, "rob", "Rob", "Ward", "rob@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-cablers"))));
 
   /**

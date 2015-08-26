@@ -1,6 +1,7 @@
 package cern.modesti.worflow.task;
 
 import cern.modesti.request.Request;
+import cern.modesti.request.point.state.Approval;
 import cern.modesti.util.BaseIntegrationTest;
 import cern.modesti.workflow.task.TaskAction;
 import cern.modesti.workflow.task.TaskInfo;
@@ -10,7 +11,6 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.DelegationState;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,14 +33,14 @@ public class TaskServiceTest extends BaseIntegrationTest {
 
   @Before
   public void setUp() {
-    request = getDefaultRequest();
+    request = getDefaultRequestWithAlarms();
     process = workflowService.startProcessInstance(request);
   }
 
   @After
   public void tearDown() {
-    requestRepository.delete(request.getRequestId());
     runtimeService.deleteProcessInstance(process.getProcessInstanceId(), null);
+    requestRepository.delete(request.getRequestId());
   }
 
   @Test
@@ -49,11 +49,10 @@ public class TaskServiceTest extends BaseIntegrationTest {
     assertTrue(task.getOwner().equals(BEN.getUsername()));
     //assertTrue(task.getAssignee().equals(BEN.getUsername()));
 
-    // Delegate the task to Joe
+    // Ben delegates the task to Joe
     task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(DELEGATE, JOE.getUsername()), BEN);
-
-    assertTrue(task.getAssignee().equals(JOE.getUsername()));
     assertTrue(task.getOwner().equals(BEN.getUsername()));
+    assertTrue(task.getAssignee().equals(JOE.getUsername()));
     assertTrue(task.getDelegationState().equals(DelegationState.PENDING));
 
     try {
@@ -63,11 +62,47 @@ public class TaskServiceTest extends BaseIntegrationTest {
     } catch (ActivitiException ignored) {
     }
 
-    // Joe should be able to resolve the task back to Ben
+    // Joe resolves the task back to Ben
     task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(RESOLVE, null), JOE);
     assertTrue(task.getOwner().equals(BEN.getUsername()));
     assertTrue(task.getAssignee().equals(BEN.getUsername()));
     assertTrue(task.getDelegationState().equals(DelegationState.RESOLVED));
+
+    // Ben may now complete the task
+    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), BEN); // activates "submit" task
+    task = taskService.getTask(request.getRequestId(), "submit");
+
+    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), BEN); // activates "edit" task of "approval" subprocess
+    task = taskService.getTask(request.getRequestId(), "edit");
+    assertNull(task.getOwner());
+    assertNull(task.getAssignee());
+
+    // Now Dan comes along and claims the approval task
+    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(CLAIM, DAN.getUsername()), DAN);
+    assertTrue(task.getOwner().equals(DAN.getUsername()));
+    assertTrue(task.getAssignee().equals(DAN.getUsername()));
+
+    // Then Dan decides he wants Sue to check the approval, so he delegates to her
+    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(DELEGATE, SUE.getUsername()), DAN);
+    assertTrue(task.getOwner().equals(DAN.getUsername()));
+    assertTrue(task.getAssignee().equals(SUE.getUsername()));
+    assertTrue(task.getDelegationState().equals(DelegationState.PENDING));
+
+    // Sue sets the approval result object
+    request = requestRepository.findOneByRequestId(request.getRequestId());
+    request.setApproval(new Approval(true, ""));
+    requestRepository.save(request);
+
+    // Sue resolves the task back to Dan
+    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(RESOLVE, null), SUE);
+    assertTrue(task.getOwner().equals(DAN.getUsername()));
+    assertTrue(task.getAssignee().equals(DAN.getUsername()));
+    assertTrue(task.getDelegationState().equals(DelegationState.RESOLVED));
+
+    // Dan completes the task
+    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), DAN);
+    task = taskService.getTask(request.getRequestId(), "submit");
+    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), DAN);
   }
 
   @Test

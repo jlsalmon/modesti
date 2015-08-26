@@ -59,7 +59,7 @@ public abstract class BaseIntegrationTest {
   public Wiser wiser;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUpBase() throws Exception {
     MockitoAnnotations.initMocks(this);
 
     SpringProcessEngineConfiguration configuration = (SpringProcessEngineConfiguration) ProcessEngines.getDefaultProcessEngine().getProcessEngineConfiguration();
@@ -75,7 +75,7 @@ public abstract class BaseIntegrationTest {
   }
 
   @After
-  public void tearDown() throws Exception {
+  public void tearDownBase() throws Exception {
     wiser.stop();
   }
 }

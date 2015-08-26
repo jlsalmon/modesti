@@ -93,15 +93,16 @@ public class TaskService {
   }
 
   /**
-   * Claim a task, i.e. set the given assignee as the owner of the task.
+   * Claim a task, i.e. set the given user as the owner and assignee of the task.
    *
    * @param requestId
    * @param taskName
-   * @param assignee
+   * @param username
    */
-  private TaskInfo claimTask(String requestId, String taskName, String assignee) {
+  private TaskInfo claimTask(String requestId, String taskName, String username) {
     Task task = getTaskForRequest(requestId, taskName);
-    taskService.claim(task.getId(), assignee);
+    taskService.claim(task.getId(), username);
+    taskService.setOwner(task.getId(), username);
     task = getTaskForRequest(requestId, taskName);
     return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(), getCandidateGroups(task));
   }
