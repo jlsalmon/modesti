@@ -102,6 +102,6 @@ public class LdapSynchroniser {
 //          identityService.createMembership(userId, groupId);
 //        }
 //      }
-//    }
+    }
   }
 }
