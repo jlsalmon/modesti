@@ -1,5 +1,6 @@
 package cern.modesti.workflow.task;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,11 +11,12 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class TaskAction {
   private Action action;
   private String assignee;
 
   public enum Action {
-    CLAIM, COMPLETE, DELEGATE
+    CLAIM, COMPLETE, DELEGATE, RESOLVE, UNCLAIM
   }
 }

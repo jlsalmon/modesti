@@ -14,6 +14,11 @@ import java.util.*;
  */
 public class TestUtil {
 
+  public static final User BEN = new User(1, "ben", "Ben", "Alex", "ben@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-creators"))));
+  public static final User JOE = new User(2, "joe", "Joe", "Bell", "joe@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-creators"))));
+  public static final User DAN = new User(3, "dan", "Dan", "Ford", "dan@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-approvers"))));
+  public static final User ROB = new User(4, "rob", "Rob", "Ward", "rob@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-cablers"))));
+
   /**
    *
    * @return
@@ -22,7 +27,7 @@ public class TestUtil {
     Request request = new Request();
     request.setRequestId("1");
     request.setType(RequestType.CREATE);
-    request.setCreator(new User(1, "bert", "Bert", "Is Evil", "bert@modesti.ch", new HashSet<>(Collections.singleton(new Role("modesti-administrators")))));
+    request.setCreator(BEN);
     request.setDescription("description");
     request.setDomain("DEFAULT");
     request.setSubsystem(new SubSystem(1L, "EAU DEMI", "EAU", "A", "DEMI", "B"));

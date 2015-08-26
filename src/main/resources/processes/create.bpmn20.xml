@@ -24,7 +24,7 @@
         <activiti:executionListener event="end" expression="${workflowService.determineApprovalRequirement(requestId, execution)}"></activiti:executionListener>
         <activiti:executionListener event="end" expression="${workflowService.determineCablingRequirement(requestId, execution)}"></activiti:executionListener>
       </extensionElements>
-      <userTask id="sid-1E10AD68-54A5-4A05-8007-B8E4EDD3077E" name="edit" activiti:candidateGroups="modesti-creators,modesti-administrators">
+      <userTask id="sid-1E10AD68-54A5-4A05-8007-B8E4EDD3077E" name="edit" activiti:candidateGroups="modesti-creators,modesti-administrators" activiti:owner="${creator}">
         <documentation>Request in preparation</documentation>
       </userTask>
       <serviceTask id="sid-3A2991EF-1666-4809-9379-B51AEDE0C673" name="validate" activiti:expression="${workflowService.validateRequest(requestId, execution)}">

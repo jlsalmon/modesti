@@ -19,6 +19,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ public class WorkflowService {
   /**
    * @param request
    */
-  public void startProcessInstance(final Request request) {
+  public ProcessInstance startProcessInstance(final Request request) {
     log.info(format("starting process for %s request %s", request.getDomain(), request.getRequestId()));
 
     request.setStatus(RequestStatus.IN_PROGRESS);
@@ -96,12 +97,13 @@ public class WorkflowService {
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
+    variables.put("creator", request.getCreator().getUsername());
 
     // Figure out which process to start, based on the domain and type
     RequestProvider provider = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
     String processKey = provider.getMetadata().getProcessKey(request.getType());
 
-    runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
+    return runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
   }
 
   /**

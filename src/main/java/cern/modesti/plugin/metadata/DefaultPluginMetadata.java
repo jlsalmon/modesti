@@ -16,7 +16,7 @@ public class DefaultPluginMetadata implements PluginMetadata {
 
   public static final String DEFAULT_CREATE_PROCESS = "create";
   public static final String DEFAULT_UPDATE_PROCESS = "update";
-  public static final String DEFAULT_DELETE_PROCESS = "create";
+  public static final String DEFAULT_DELETE_PROCESS = "delete";
 
   private String name;
 
