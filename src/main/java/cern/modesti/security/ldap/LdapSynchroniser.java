@@ -1,5 +1,6 @@
 package cern.modesti.security.ldap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.identity.Group;
 import org.activiti.engine.identity.User;
@@ -27,9 +28,9 @@ import java.util.*;
  */
 @Service
 @EnableScheduling
+@Slf4j
 @Profile({"dev", "prod"})
 public class LdapSynchroniser {
-  private static final Logger LOG = LoggerFactory.getLogger(LdapSynchroniser.class);
 
   @Autowired
   Environment env;
@@ -46,7 +47,7 @@ public class LdapSynchroniser {
    */
   @Scheduled(cron = "0 0 * * * *")
   public void synchroniseUsersAndGroups() {
-    LOG.debug("synchronising users and groups with LDAP server");
+    log.debug("synchronising users and groups with LDAP server");
     Set<String> groupIds = new HashSet<>();
 
     groupIds.addAll(env.getRequiredProperty("modesti.role.creators", List.class));
@@ -57,7 +58,7 @@ public class LdapSynchroniser {
 
     for (String groupId : groupIds) {
       if (identityService.createGroupQuery().groupId(groupId).singleResult() == null) {
-        LOG.debug("adding new group " + groupId);
+        log.debug("adding new group " + groupId);
         Group group = identityService.newGroup(groupId);
         group.setName(groupId);
         identityService.saveGroup(group);
@@ -75,7 +76,7 @@ public class LdapSynchroniser {
         String userId = adapter.getStringAttribute("CN");
 
         if (identityService.createUserQuery().userId(userId).singleResult() == null) {
-          LOG.debug("adding new user " + userId);
+          log.debug("adding new user " + userId);
           User user = identityService.newUser(adapter.getStringAttribute("CN"));
           user.setFirstName(adapter.getStringAttribute("givenName"));
           user.setLastName(adapter.getStringAttribute("sn"));
@@ -85,7 +86,7 @@ public class LdapSynchroniser {
 
         // Add the user to the group (unless he/she is already a member)
         if (identityService.createUserQuery().userId(userId).memberOfGroup(groupId).singleResult() == null) {
-          LOG.debug("adding user " + userId + " to group " + groupId);
+          log.debug("adding user " + userId + " to group " + groupId);
           identityService.createMembership(userId, groupId);
         }
       }

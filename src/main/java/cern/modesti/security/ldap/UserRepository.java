@@ -7,5 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  *
  * @author Justin Lewis Salmon
  */
-public interface UserRepository extends MongoRepository<Integer, User> {
+public interface UserRepository extends MongoRepository<User, Integer> {
 }
