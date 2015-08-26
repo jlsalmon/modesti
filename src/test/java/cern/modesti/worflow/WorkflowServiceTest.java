@@ -81,6 +81,7 @@ public class WorkflowServiceTest extends BaseIntegrationTest {
     // Verify process completed
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
     historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
+    requestRepository.delete(request);
   }
 
   @Test
@@ -130,6 +131,7 @@ public class WorkflowServiceTest extends BaseIntegrationTest {
     assertTaskNameAndRequestStatus(request.getRequestId(), null, RequestStatus.CLOSED);
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
     historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
+    requestRepository.delete(request);
   }
 
   @Test
@@ -195,6 +197,7 @@ public class WorkflowServiceTest extends BaseIntegrationTest {
     assertTaskNameAndRequestStatus(request.getRequestId(), null, RequestStatus.CLOSED);
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
     historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
+    requestRepository.delete(request);
   }
 
   @Test
@@ -278,6 +281,7 @@ public class WorkflowServiceTest extends BaseIntegrationTest {
     assertTaskNameAndRequestStatus(request.getRequestId(), null, RequestStatus.CLOSED);
     assertEquals(1, historyService.createHistoricProcessInstanceQuery().finished().count());
     historyService.deleteHistoricProcessInstance(process.getProcessInstanceId());
+    requestRepository.delete(request);
   }
 
   /**
