@@ -30,7 +30,9 @@ import cern.modesti.repository.base.ReadOnlyRepository;
  */
 public interface PersonRepository extends ReadOnlyRepository<Person, String> {
 
-  @Query(value = "SELECT person_id as id, first_name || ' ' || last_name as name "
+  @Query(value = "SELECT person_id as id, "
+               + "first_name || ' ' || last_name as name, "
+               + "username as username "
                + "FROM   persons_mv "
                + "WHERE  at_cern = 'Y' AND cern_class = 'STAF' "
                + "AND   (person_id  LIKE UPPER(:id || '%') "

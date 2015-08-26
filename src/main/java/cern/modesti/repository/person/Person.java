@@ -17,6 +17,8 @@
  ******************************************************************************/
 package cern.modesti.repository.person;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -27,54 +29,10 @@ import javax.persistence.Id;
  * @author Justin Lewis Salmon
  */
 @Entity
-public class Person implements Serializable {
-
-  private static final long serialVersionUID = 548818728867189335L;
-
+@Data
+public class Person  {
   @Id
   private Long id;
-
   private String name;
-
-  public Person() {
-  }
-
-  /**
-   * Create a new Person instance.
-   *
-   * @param id the id
-   * @param name the name
-   */
-  public Person(Long id, String name) {
-    this.id = id;
-    this.name = name;
-  }
-
-  /**
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
+  private String username;
 }
