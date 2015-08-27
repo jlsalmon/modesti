@@ -4,6 +4,7 @@ import cern.modesti.schema.Schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.Field;
+import cern.modesti.schema.field.Option;
 import cern.modesti.schema.field.OptionsField;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -53,12 +54,15 @@ public class OptionServiceTest {
 
     optionService.injectOptions(schema);
 
-    List<String> options = (List<String>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
+    List<Option> options = (List<Option>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
 
     assertTrue(options != null);
-    assertTrue(options.get(0).equals("a"));
-    assertTrue(options.get(1).equals("b"));
-    assertTrue(options.get(2).equals("c"));
+    assertTrue(options.get(0).getValue().equals("a"));
+    assertTrue(options.get(0).getId() == 0);
+    assertTrue(options.get(1).getValue().equals("b"));
+    assertTrue(options.get(1).getId() == 1);
+    assertTrue(options.get(2).getValue().equals("c"));
+    assertTrue(options.get(2).getId() == 2);
   }
 
   @Test
@@ -76,12 +80,15 @@ public class OptionServiceTest {
 
     optionService.injectOptions(schema);
 
-    List<String> options = (List<String>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
+    List<Option> options = (List<Option>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
 
     assertTrue(options != null);
-    assertTrue(options.get(0).equals("a: a desc"));
-    assertTrue(options.get(1).equals("b: b desc"));
-    assertTrue(options.get(2).equals("c: c desc"));
+    assertTrue(options.get(0).getValue().equals("a: a desc"));
+    assertTrue(options.get(0).getId() == 0);
+    assertTrue(options.get(1).getValue().equals("b: b desc"));
+    assertTrue(options.get(1).getId() == 1);
+    assertTrue(options.get(2).getValue().equals("c: c desc"));
+    assertTrue(options.get(2).getId() == 2);
   }
 
   @Test
@@ -99,14 +106,19 @@ public class OptionServiceTest {
 
     optionService.injectOptions(schema);
 
-    List<String> options = (List<String>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
+    List<Option> options = (List<Option>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
 
     assertTrue(options != null);
-    assertTrue(options.get(0).equals("-2"));
-    assertTrue(options.get(1).equals("-1"));
-    assertTrue(options.get(2).equals("0"));
-    assertTrue(options.get(3).equals("1"));
-    assertTrue(options.get(4).equals("2"));
+    assertTrue(options.get(0).getValue().equals("-2"));
+    assertTrue(options.get(0).getId() == -2);
+    assertTrue(options.get(1).getValue().equals("-1"));
+    assertTrue(options.get(1).getId() == -1);
+    assertTrue(options.get(2).getValue().equals("0"));
+    assertTrue(options.get(2).getId() == 0);
+    assertTrue(options.get(3).getValue().equals("1"));
+    assertTrue(options.get(3).getId() == 1);
+    assertTrue(options.get(4).getValue().equals("2"));
+    assertTrue(options.get(4).getId() == 2);
   }
 
   @Test
@@ -121,9 +133,9 @@ public class OptionServiceTest {
 
     optionService.injectOptions(schema);
 
-    List<String> options = (List<String>) ((OptionsField) schema.getDatasources().iterator().next().getFields().get(0)).getOptions();
+    List<Option> options = (List<Option>) ((OptionsField) schema.getDatasources().iterator().next().getFields().get(0)).getOptions();
 
     assertTrue(options != null);
-    assertTrue(options.get(0).equals("testDatasource"));
+    assertTrue(options.get(0).getValue().equals("testDatasource"));
   }
 }

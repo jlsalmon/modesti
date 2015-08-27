@@ -3,6 +3,7 @@ package cern.modesti.config;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
+import cern.modesti.schema.field.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.rest.SpringBootRepositoryRestMvcConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -25,12 +26,6 @@ import cern.modesti.repository.person.Person;
 import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.SearchTextConverter;
 import cern.modesti.request.point.Point;
-import cern.modesti.schema.field.AutocompleteField;
-import cern.modesti.schema.field.CheckboxField;
-import cern.modesti.schema.field.Field;
-import cern.modesti.schema.field.NumericField;
-import cern.modesti.schema.field.OptionsField;
-import cern.modesti.schema.field.TextField;
 import cern.modesti.security.ldap.User;
 
 @Configuration
@@ -54,7 +49,7 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
     config.exposeIdsFor(Point.class, Person.class, Functionality.class, Location.class, SafetyZone.class, SubSystem.class, AlarmCategory.class, Field.class,
         TextField.class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class, BuildingName.class, GmaoCode.class,
-        MonitoringEquipment.class, User.class, Schema.class, Category.class, Datasource.class);
+        MonitoringEquipment.class, User.class, Schema.class, Category.class, Datasource.class, Option.class);
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);
