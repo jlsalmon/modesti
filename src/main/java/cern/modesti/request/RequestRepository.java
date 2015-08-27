@@ -20,6 +20,7 @@ import cern.modesti.request.SkinnyRequest;
  *
  * @author Justin Lewis Salmon
  */
+
 @RepositoryRestResource(excerptProjection = SkinnyRequest.class)
 public interface RequestRepository extends MongoRepository<Request, String> {
 
@@ -78,7 +79,7 @@ public interface RequestRepository extends MongoRepository<Request, String> {
    *
    * @return
    */
-  @PostAuthorize("@authService.isCreator(#request, principal) or @authService.isAssigned(#request, principal) or hasRole('modesti-administrators')")
+  @PreAuthorize("@authService.isCreator(#request, principal) or @authService.isAssigned(#request, principal) or hasRole('modesti-administrators')")
   @Override
   Request save(@Param("request") Request request);
 

@@ -16,5 +16,4 @@ public class SearchTextConverter implements Converter<String, TextCriteria>{
     logger.info("converting search text");
     return new TextCriteria().matching(q);
   }
-
 }

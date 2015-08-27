@@ -14,12 +14,12 @@ import java.util.*;
  */
 public class TestUtil {
 
-  public static final User BEN = new User("", "ben", 1, "Ben", "Alex", "ben@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-creators"))));
-  public static final User JOE = new User("", "joe", 2, "Joe", "Bell", "joe@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-creators"))));
-  public static final User DAN = new User("", "dan", 3, "Dan", "Ford", "dan@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-approvers"))));
-  public static final User SUE = new User("", "sue", 4, "Sue", "Cook", "sue@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-approvers"))));
-  public static final User AMY = new User("", "amy", 5, "Amy", "Down", "amy@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-cablers"))));
-  public static final User ROB = new User("", "rob", 6, "Rob", "Ward", "rob@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-cablers"))));
+  public static final User BEN = new User("ben", 1, "Ben", "Alex", "ben@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-creators"))));
+  public static final User JOE = new User("joe", 2, "Joe", "Bell", "joe@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-creators"))));
+  public static final User DAN = new User("dan", 3, "Dan", "Ford", "dan@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-approvers"))));
+  public static final User SUE = new User("sue", 4, "Sue", "Cook", "sue@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-approvers"))));
+  public static final User AMY = new User("amy", 5, "Amy", "Down", "amy@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-cablers"))));
+  public static final User ROB = new User("rob", 6, "Rob", "Ward", "rob@modesti.ch", new HashSet<>(Collections.singletonList(new Role("modesti-cablers"))));
 
   /**
    *

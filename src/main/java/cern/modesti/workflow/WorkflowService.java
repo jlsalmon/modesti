@@ -12,7 +12,6 @@ import cern.modesti.request.RequestRepository;
 import cern.modesti.request.RequestStatus;
 import cern.modesti.request.counter.CounterService;
 import cern.modesti.request.point.Point;
-import cern.modesti.validation.ValidationService;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
@@ -32,7 +31,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 
@@ -66,9 +68,6 @@ public class WorkflowService {
 
   @Autowired
   private NotificationService notificationService;
-
-  @Autowired
-  private ValidationService validationService;
 
   /**
    *
