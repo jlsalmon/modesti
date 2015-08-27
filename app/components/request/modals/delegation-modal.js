@@ -7,14 +7,15 @@
  */
 angular.module('modesti').controller('DelegationModalController', DelegationModalController);
 
-function DelegationModalController($modalInstance, $http, request) {
+function DelegationModalController($modalInstance, $http, task) {
   var self = this;
 
-  self.request = request;
+  self.task = task;
+  self.users = [];
 
   self.ok = ok;
   self.cancel = cancel;
-  self.getUsers = getUsers;
+  self.refreshUsers = refreshUsers;
 
   function ok() {
     $modalInstance.close(self.assignee);
@@ -25,20 +26,20 @@ function DelegationModalController($modalInstance, $http, request) {
   }
 
   /**
-   *
+   * TODO: which authority to assign to? I guess all...
    */
-  function getUsers(query) {
-    return $http.get(BACKEND_BASE_URL + '/persons/search/findByIdOrName', {
+  function refreshUsers(query) {
+    return $http.get(BACKEND_BASE_URL + '/users/search/find', {
       params : {
-        id : query,
-        name: query
+        query : query,
+        authority: task.candidateGroups[1]
       }
     }).then(function(response) {
       if (!response.data.hasOwnProperty('_embedded')) {
         return [];
       }
 
-      return response.data._embedded.persons;
+      self.users = response.data._embedded.users;
     });
   }
 }

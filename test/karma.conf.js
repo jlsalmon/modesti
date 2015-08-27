@@ -48,6 +48,8 @@ module.exports = function(config) {
       'app/bower_components/spin.js/spin.js',
       'app/bower_components/angular-spinner/angular-spinner.js',
       'app/bower_components/angular-filter/dist/angular-filter.min.js',
+      'app/bower_components/angular-ui-select/dist/select.js',
+      'app/bower_components/select2/select2.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       'app/bower_components/chai/chai.js',
       'app/bower_components/mocha/mocha.js',

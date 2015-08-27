@@ -247,7 +247,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
 
       // Build the right type of column based on the schema
       var column = ColumnService.getColumn(field, editable);
-      column.renderer = customRenderer;
+      //column.renderer = customRenderer;
       self.columns.push(column);
     });
   }
@@ -517,19 +517,26 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    *
    */
   function delegateTask() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+
     var modalInstance = $modal.open({
       animation: false,
       templateUrl: 'components/request/modals/delegation-modal.html',
       controller: 'DelegationModalController as ctrl',
       resolve: {
-        request: function () {
-          return self.request;
+        task: function () {
+          return task;
         }
       }
     });
 
     modalInstance.result.then(function (assignee) {
-      console.log('delegating request to user ' + assignee.name);
+      console.log('delegating request to user ' + assignee.username);
+
+      TaskService.delegateTask(task.name, self.request.requestId, assignee).then(function (task) {
+        console.log('delegated request');
+        self.tasks[task.name] = task;
+      })
     })
   }
 

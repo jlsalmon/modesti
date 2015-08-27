@@ -12,14 +12,21 @@
         Assignee
         <i class="fa fa-fw fa-user"></i>
       </label>
+
       <div class="col-sm-9">
 
-        <input type="text" ng-model="ctrl.assignee" placeholder="Type a username or ID..."
-               typeahead="user as user.name for user in ctrl.getUsers($viewValue)"
-               typeahead-loading="loading"
-               typeahead-editable="false" class="form-control" name="assignee" required>
-        <i ng-show="loading" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
-        <span class="help-block" translate>Select the user to whom you wish to assign this request.</span>
+        <ui-select ng-model="ctrl.assignee" theme="bootstrap">
+          <ui-select-match placeholder="Select a person in the list or search by name...">{{$select.selected.firstName}} {{$select.selected.lastName}}</ui-select-match>
+          <ui-select-choices repeat="user in ctrl.users track by $index"
+                             refresh="ctrl.refreshUsers($select.search)"
+                             refresh-delay="0">
+            <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
+            <small>
+              <span style="color: #999;" ng-bind-html="''+user.username | highlight: $select.search"></span>
+            </small>
+          </ui-select-choices>
+        </ui-select>
+
       </div>
     </div>
   </form>
