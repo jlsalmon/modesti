@@ -1,5 +1,7 @@
 {
   "REQUESTS": "Requests",
+  "REQUEST": "Request #{{id}}",
+  "REQUEST_SUBMITTED": "Request {{id}} has been submitted",
 
   "NEW_REQUEST": "New request",
   "SIGN_IN": "Sign in",
@@ -8,6 +10,7 @@
   "SIGN_OUT": "Sign out",
   "USERNAME": "Username",
   "PASSWORD": "Password",
+  "USER": "User {{id}}",
 
   "CATEGORY": "group",
   "SYSTEM": "System",
@@ -86,6 +89,7 @@
 
   "SEARCH_REQUESTS": "Search requests...",
   "SEARCH": "Search",
+  "SEARCHING_FOR": "Searching for {{q}}...",
   "RESULTS": "results",
   "NO_RESULTS": "No results",
   "NO_MATCHING_RESULTS": "No results found matching",

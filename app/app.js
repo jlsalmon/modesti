@@ -10,12 +10,14 @@
  */
 var app = angular.module('modesti',
 [
+  'ng',
   'ngCookies',
   'ngSanitize',
   'ngStorage',
   'ngHandsontable',
   'ui.bootstrap',
   'ui.router',
+  'ui.router.title',
   'ui.select',
   'restangular',
   'angularFileUpload',

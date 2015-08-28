@@ -1,5 +1,7 @@
 {
   "REQUESTS": "Demandes",
+  "REQUEST": "Demande #{{id}}",
+  "REQUEST_SUBMITTED": "Request {{id}} a été soumis",
   "NEW_REQUEST": "Nouvelle demande",
   "SIGN_IN": "Se connecter",
   "SIGN_IN_MSG": "Connectez-vous avec vos identifiants NICE",
@@ -7,6 +9,7 @@
   "SIGN_OUT": "Se déconnecter",
   "USERNAME": "Nom d'utilisateur",
   "PASSWORD": "Mot de passe",
+  "USER": "Utilisateur {{id}}",
   "CATEGORY": "groupe",
   "SYSTEM": "Système",
   "SUBSYSTEM": "Sous-système",
@@ -74,6 +77,7 @@
   "REMOVE": "Supprimer",
   "SEARCH_REQUESTS": "Rechercher demandes...",
   "SEARCH": "Recherche",
+  "SEARCHING_FOR": "A la recherche de {{q}}...",
   "RESULTS": "Résultats",
   "NO_RESULTS": "Aucun résultat",
   "NO_MATCHING_RESULTS": "Aucun résultat correspondant",

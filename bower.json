@@ -30,7 +30,8 @@
     "angular-filter": "~0.5.4",
     "angular-ui-select": "~0.12.1",
     "select2": "~3.4.5",
-    "Handsontable-select2-editor": "*"
+    "Handsontable-select2-editor": "*",
+    "angular-ui-router-title": "~0.0.4"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0",

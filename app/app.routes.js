@@ -15,33 +15,36 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     url: '/requests',
     templateUrl: 'components/request/requests.html',
     controller: 'RequestsController as ctrl',
-    data: {
-      pageTitle: 'REQUESTS'
+    resolve: {
+      $title: function ($translate) {
+        return 'REQUESTS';
+      }
     }
 
   }).state('new', {
     url: '/requests/new',
     templateUrl: 'components/request/request.new.html',
     controller: 'NewRequestController as ctrl',
-    data: {
-      pageTitle: 'NEW_REQUEST'
+    resolve: {
+      $title: function ($translate) {
+        return $translate('NEW_REQUEST');
+      }
     }
 
   }).state('upload', {
     url: '/requests/upload',
     templateUrl: 'components/request/request.upload.html',
     controller: 'UploadController as ctrl',
-    data: {
-      pageTitle: 'UPLOAD_REQUEST'
+    resolve: {
+      $title: function ($translate) {
+        return $translate('UPLOAD_REQUEST');
+      }
     }
 
   }).state('request', {
     url: '/requests/:id',
     templateUrl: 'components/request/request.html',
     controller: 'RequestController as ctrl',
-    data: {
-      pageTitle: 'EDIT_REQUEST' // TODO localise this and add request id
-    },
     resolve: {
 
       request: function getRequest($stateParams, RequestService) {
@@ -62,6 +65,10 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
 
       signals: function getSignals(request, TaskService) {
         return TaskService.getSignalsForRequest(request);
+      },
+
+      $title: function (request, $translate) {
+        return $translate('REQUEST', { id: request.requestId });
       }
 
     }
@@ -77,6 +84,10 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
 
       request: function getRequest($stateParams, RequestService) {
         return RequestService.getRequest($stateParams.id);
+      },
+
+      $title: function (request, $translate) {
+        return $translate('REQUEST', { id: request.requestId });
       }
 
     }
@@ -84,23 +95,29 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     url: '/search/:q',
     templateUrl: 'components/search/search.html',
     controller: 'SearchController as ctrl',
-    data: {
-      pageTitle: 'SEARCH' // TODO localise this and add search term
+    resolve: {
+      $title: function ($stateParams, $translate) {
+        return $translate('SEARCHING_FOR', { q: $stateParams.q });
+      }
     }
 
   }).state('users', {
     url: '/users/:id',
     templateUrl: 'components/users/user.html',
     controller: 'UserController as ctrl',
-    data: {
-      pageTitle: 'USERS' // TODO localise this and add user id
+    resolve: {
+      $title: function ($stateParams, $translate) {
+        return $translate('USER', { id: $stateParams.id });
+      }
     }
 
   }).state('404', {
     url: '/404',
     templateUrl: 'components/errors/404.html',
-    data: {
-      pageTitle: 'PAGE_NOT_FOUND' // TODO localise this
+    resolve: {
+      $title: function ($translate) {
+        return $translate('PAGE_NOT_FOUND');
+      }
     }
   });
 }
