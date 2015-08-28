@@ -44,8 +44,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     beforeChange: beforeChange,
     afterChange: afterChange,
     afterCreateRow: afterCreateRow,
-    afterRemoveRow: afterRemoveRow,
-    beforeKeyDown: afterSelection
+    afterRemoveRow: afterRemoveRow
   };
 
   //self.tableExpanded = true;
@@ -118,15 +117,10 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
 
     calculateTableHeight();
 
-    // Retrieve the list of available extra categories
-    //getAvailableExtraCategories();
-
-    $timeout(function () {
+    //$timeout(function () {
       // Activate the first category
       activateCategory(self.schema.categories[0]);
-
-      //renderRowBackgrounds();
-    });
+    //});
   }
 
   /**
@@ -248,7 +242,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
 
       // Build the right type of column based on the schema
       var column = ColumnService.getColumn(field, editable);
-      //column.renderer = customRenderer;
+      column.renderer = customRenderer;
       self.columns.push(column);
     });
   }
@@ -336,16 +330,6 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
       }
     }
     return false;
-  }
-
-
-  function afterSelection(e) {
-    var editor = this.getActiveEditor();
-
-    editor.$textarea.on("select2-selecting", function (e) {
-      alert(e);
-    });
-
   }
 
   /**
@@ -681,6 +665,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    * initialised.
    */
   function afterRender() {
+
     // Initialise the popovers in the row headers
     $('.row-header').popover({trigger: 'hover', delay: {"show": 100, "hide": 100}});
 

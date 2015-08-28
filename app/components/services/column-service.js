@@ -86,30 +86,44 @@ function ColumnService($http, $localStorage, $translate) {
   function getDropdownColumn(column, field) {
     column.editor = 'select2';
 
-    column.renderer = function (instance, td, row, col, prop, value, cellProperties) {
-      if (typeof prop !== 'string' || prop.split('.')[1] !== field.id || !value) {
-        return;
-      }
-
-      value = getValue(value, field.options, getModelAttribute(field));
-      td.innerHTML = value;
-    };
+    //column.renderer = function (instance, td, row, col, prop, value, cellProperties) {
+    //  if (typeof prop !== 'string' || prop.split('.')[1] !== field.id) {
+    //    return;
+    //  }
+    //
+    //  value = getValue(value, field.options, getModelAttribute(field));
+    //
+    //  if (value) {
+    //    td.innerHTML = value;
+    //    arguments[5] = value;
+    //  }
+    //
+    //  Handsontable.TextCell.renderer.apply(this, arguments);
+    //};
 
     column.select2Options = {
-      data: {results: field.options, text: getModelAttribute(field)},
+      data: {results: field.options.map(function (option) { return {id: option, text: option} })},
       dropdownAutoWidth: true,
       width: 'resolve',
-
-      formatResult: function (option) {
-        return option[getModelAttribute(field)];
-      },
-
-      formatSelection: function (option) {
-        return option[getModelAttribute(field)];
-      }
+      //
+      //formatResult: function (option) {
+      //  return option[getModelAttribute(field)];
+      //},
+      //
+      //formatSelection: function (option) {
+      //  return option[getModelAttribute(field)];
+      //}
     };
 
     return column;
+  }
+
+  function getValue(key, options, model) {
+    for (var index = 0; index < options.length; index++) {
+      if (key === options[index].id || parseInt(key) === options[index].id) {
+        return options[index][model];
+      }
+    }
   }
 
   /**
@@ -120,23 +134,51 @@ function ColumnService($http, $localStorage, $translate) {
    */
   function getAutocompleteColumn(column, field) {
     column.editor = 'select2';
-    column.renderer = getRenderer(column, field);
+
+    if (field.model) {
+      column.data = 'properties.' + field.id + '.' + field.model;
+    } else {
+      column.data = 'properties.' + field.id + '.value';
+    }
+
+    //column.renderer = getRenderer(column, field);
+
     column.select2Options = {
       minimumInputLength: field.minLength || 0,
+      maximumInputLength: 200,
 
       query: getQueryFunction(column, field),
 
       // Formats the items shown in the dropdown list
       formatResult: function (option) {
-        return option[getModelAttribute(field)];
+        return option.text;
       },
 
-      formatSelection: function (option) {
-        return option[getModelAttribute(field)];
+      formatSelection: function (option, container) {
+
+        if (self.optionsCache[field.id]) {
+          self.optionsCache[field.id][option.id] = option;
+        } else {
+          self.optionsCache[field.id] = {};
+          self.optionsCache[field.id][option.id] = option;
+        }
+
+        //self.optionsCache[field.id]
+        return option.text;
       },
 
-      //id: getModelAttribute(field),
-      //text: getModelAttribute(field),
+      //id: function (option) {
+      //  return option;
+      //},
+
+      //width: function() {
+      //  //try {
+      //  //  var object = JSON.parse(this.element.value);
+      //  //  var width = [getModelAttribute(field)];
+      //  //} catch (e) {
+      //  //}
+      //  return 0;
+      //},
       dropdownAutoWidth: true,
       width: 'resolve'
     };
@@ -195,51 +237,53 @@ function ColumnService($http, $localStorage, $translate) {
         // Relies on the fact that the property name inside the JSON response is the same
         // as the first part of the URL, before the first forward slash
         var returnPropertyName = field.url.split('/')[0];
-        results = response.data._embedded[returnPropertyName];
+        //results = response.data._embedded[returnPropertyName];
+        results = response.data._embedded[returnPropertyName].map(function (option) {
+          return {id: option[getModelAttribute(field)], text: option[getModelAttribute(field)]};
+        });
       }
 
-      //self.optionsCache[field.id] = results;
+      //if (self.optionsCache[field.id]) {
+       // self.optionsCache[field.id] = _.union(self.optionsCache[field.id], results);
+     // } else {
+        //self.optionsCache[field.id] = results;
+     // }
+
+
       return results;
     });
   }
 
-  function getRenderer(column, field) {
-    return function (instance, td, row, col, prop, value, cellProperties) {
-      if (typeof prop !== 'string' || prop.split('.')[1] !== field.id) {
-        return;
-      }
-
-      console.log('rendering value: ' + value);
-
-      //var cachedValues = self.optionsCache[field.id];
-      //
-      //if (cachedValues) {
-      //  cachedValues.forEach(function (cachedValue) {
-      //    if (cachedValue.id === value || cachedValue.id === parseInt(value)) {
-      //      value = cachedValue;
-      //    }
-      //  });
-      //}
-      //
-      //if (!self.optionsCache[field.id]) {
-      //  self.optionsCache[field.id] = [{id: value, value: value}];
-      //} else {
-      //  self.optionsCache[field.id].push(value);
-      //}
-      //
-      //td.innerHTML = value[getModelAttribute(field)];
-
-      Handsontable.TextCell.renderer.apply(this, arguments);
-    }
-  }
-
-  function getValue(key, options, model) {
-    for (var index = 0; index < options.length; index++) {
-      if (key === options[index].id || parseInt(key) === options[index].id) {
-        return options[index][model];
-      }
-    }
-  }
+  //function getRenderer(column, field) {
+  //  return function (instance, td, row, col, prop, value, cellProperties) {
+  //    if (typeof prop !== 'string') {
+  //      return;
+  //    }
+  //
+  //    var property = prop.split('.')[1];
+  //    if (property !== field.id) {
+  //      return;
+  //    }
+  //
+  //    var options = self.optionsCache[field.id];
+  //
+  //    if (options) {
+  //      var option = options[value];
+  //      if (option) {
+  //        value = option[getModelAttribute(field)];
+  //        arguments[5] = value;
+  //      } else {
+  //        // We don't have that option in the cache! We must make a call to the server and fetch it. Otherwise the ID
+  //        // will be shown instead of the text value.
+  //
+  //        value = undefined;
+  //        arguments[5] = value;
+  //      }
+  //    }
+  //
+  //    Handsontable.TextCell.renderer.apply(this, arguments);
+  //  }
+  //}
 
   function getModelAttribute(field) {
     // For fields that are objects but have no 'model' attribute defined, assume that

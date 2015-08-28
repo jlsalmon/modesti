@@ -19,7 +19,7 @@
     "angular-http-auth": "~1.2.2",
     "angular-ui-utils": "~0.2.3",
     "autofill-event": "~1.0.0",
-    "handsontable": "0.16.1",
+    "handsontable": "0.17.0",
     "ngHandsontable": "0.6.0",
     "angular-translate": "~2.7.2",
     "angular-translate-loader-static-files": "~2.7.2",
@@ -40,6 +40,8 @@
   "appPath": "app",
   "moduleName": "modesti",
   "resolutions": {
-    "angular": "^1.4.0"
+    "angular": "^1.4.0",
+    "handsontable": "0.17.0",
+    "ngHandsontable": "0.6.0"
   }
 }
