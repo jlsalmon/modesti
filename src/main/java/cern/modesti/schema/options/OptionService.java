@@ -14,7 +14,6 @@ import javax.persistence.Query;
 
 import cern.modesti.request.point.Point;
 import cern.modesti.schema.category.Datasource;
-import cern.modesti.schema.field.Option;
 import org.springframework.stereotype.Service;
 
 import cern.modesti.schema.Schema;
@@ -35,7 +34,7 @@ public class OptionService {
   @PersistenceContext
   private EntityManager entityManager;
 
-  private Map<String, List<Option>> cache = new ConcurrentHashMap<>();
+  private Map<String, List<String>> cache = new ConcurrentHashMap<>();
 
   /**
    * Look at all the "options" fields of the schema that do not explicitly specify a list of options and pre-inject their options from the database. This is
@@ -64,12 +63,7 @@ public class OptionService {
       // The "pointType" field is treated specially. Its options are the possible datasources of the schema.
       if (field.getId().equals("pointType")) {
         // TODO: don't hardcode the use of "name_en" here...
-        List<Option> options = new ArrayList<>();
-        for (int i = 0; i < schema.getDatasources().size(); i++) {
-          options.add(new Option(i, schema.getDatasources().get(i).getName_en()));
-        }
-
-        ((OptionsField) field).setOptions(options);
+        ((OptionsField) field).setOptions(schema.getDatasources().stream().map(Datasource::getName_en).collect(Collectors.toList()));
       } else {
         ((OptionsField) field).setOptions(getOptions(field.getId()));
       }
@@ -81,7 +75,7 @@ public class OptionService {
    *
    * @return
    */
-  private List<Option> getOptions(String property) {
+  private List<String> getOptions(String property) {
 
     // Translate the field id to its corresponding column name
     String columnName = propertyToColumnName(property);
@@ -94,7 +88,7 @@ public class OptionService {
     Query query = entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODE_VALUES('%s') FROM DUAL", columnName));
     String optionString = (String) query.getSingleResult();
 
-    List<Option> options = parseOptionString(optionString);
+    List<String> options = parseOptionString(optionString);
     if (options != null) {
       options = getOptionMeanings(options, columnName);
     }
@@ -111,22 +105,15 @@ public class OptionService {
    *
    * @return
    */
-  private List<Option> parseOptionString(String optionString) {
+  private List<String> parseOptionString(String optionString) {
     if (optionString.contains(",")) {
-      List<Option> options = new ArrayList<>();
-      String[] optionValues = optionString.split(",");
-
-      for (int i = 0; i < optionValues.length; i++) {
-        options.add(new Option(i, optionValues[i]));
-      }
-
-      return options;
+      return Arrays.asList(optionString.split(","));
     } else if (optionString.contains(":")) {
       Integer start = Integer.valueOf(optionString.substring(0, optionString.indexOf(":")));
       Integer end = Integer.valueOf(optionString.substring(optionString.indexOf(":") + 1, optionString.length()));
 
-      List<Option> options = new ArrayList<>();
-      IntStream.rangeClosed(start, end).forEach(n -> options.add(new Option(n, String.valueOf(n))));
+      ArrayList<String> options = new ArrayList<>();
+      IntStream.rangeClosed(start, end).forEach(n -> options.add(String.valueOf(n)));
       return options;
     }
 
@@ -139,17 +126,17 @@ public class OptionService {
    * @param columnName
    * @return
    */
-  private List<Option> getOptionMeanings(List<Option> options, String columnName) {
-    List<Option> optionsWithMeaning = new ArrayList<>();
+  private List<String> getOptionMeanings(List<String> options, String columnName) {
+    List<String> optionsWithMeaning = new ArrayList<>();
 
-    for (Option option : options) {
-      Query query = entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODES_MEANING('%s', '%s') FROM DUAL", columnName, option.getValue()));
+    for (String option : options) {
+      Query query = entityManager.createNativeQuery(String.format("SELECT TIMPKUTIL.STF_GET_REFCODES_MEANING('%s', '%s') FROM DUAL", columnName, option));
       String meaning = (String) query.getSingleResult();
 
-      if (option.getValue().equals(meaning) || meaning == null || meaning.equals("allowed numeric range") || meaning.equals("allowed range")) {
+      if (option.equals(meaning) || meaning == null || meaning.equals("allowed numeric range") || meaning.equals("allowed range")) {
         optionsWithMeaning.add(option);
       } else {
-        optionsWithMeaning.add(new Option(option.getId(), option.getValue() + ": " + meaning));
+        optionsWithMeaning.add(option + ": " + meaning);
       }
 
     }
