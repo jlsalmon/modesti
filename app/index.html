@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <!--[if gte IE 10]><!-->
-<html class="no-js" lang="en">
+<html ng-app="modesti" class="no-js" lang="en">
 <!--<![endif]-->
 <head>
 
-<title>modesti</title>
+<title ng-bind="title"></title>
 <base href="/">
 
 <meta charset="utf-8">
@@ -30,21 +30,26 @@
 <!-- endbuild -->
 </head>
 
-<body ng-app="modesti" class="skin-blue-light sidebar-collapse">
+<body class="skin-blue-light sidebar-collapse">
 
-  <!--[if lt IE 10]>
-  <div class="col-lg-12">
-    <div class="alert alert-info" style="margin-top: 20px; z-index: 1000;">
-      <p translate>UNSUPPORTED_BROWSER_WARNING</p>
-    </div>
-    <div class="clearfix"></div>
+<!--[if lt IE 10]>
+<div class="col-lg-12">
+  <div class="alert alert-warning" style="margin-top: 20px; z-index: 1000;">
+    <p translate>UNSUPPORTED_BROWSER_WARNING</p>
   </div>
-  <![endif]-->
+  <div class="clearfix"></div>
+</div>
+<![endif]-->
+
 
     <header class="main-header" ng-controller="LayoutController as ctrl">
+
+      <div class="container-fluid">
+        <div class="row">
       <a ui-sref="requests" class="logo"> modesti <small style="font-size: 50%">v0.1</small></a>
-      <!-- Header Navbar: style can be found in header.less -->
+
       <nav class="navbar navbar-static-top" role="navigation">
+
         <!-- Sidebar toggle button-->
         <!--<a ng-href="#/" class="sidebar-toggle" data-toggle="offcanvas" role="button">-->
           <!--<span class="sr-only">Toggle navigation</span>-->
@@ -237,6 +242,8 @@
           </ul>
         </div>
       </nav>
+        </div>
+      </div>
     </header>
 
     <!-- =============================================== -->
