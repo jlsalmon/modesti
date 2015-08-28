@@ -14,22 +14,34 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
   $stateProvider.state('requests', {
     url: '/requests',
     templateUrl: 'components/request/requests.html',
-    controller: 'RequestsController as ctrl'
+    controller: 'RequestsController as ctrl',
+    data: {
+      pageTitle: 'REQUESTS'
+    }
 
   }).state('new', {
     url: '/requests/new',
     templateUrl: 'components/request/request.new.html',
-    controller: 'NewRequestController as ctrl'
+    controller: 'NewRequestController as ctrl',
+    data: {
+      pageTitle: 'NEW_REQUEST'
+    }
 
   }).state('upload', {
     url: '/requests/upload',
     templateUrl: 'components/request/request.upload.html',
-    controller: 'UploadController as ctrl'
+    controller: 'UploadController as ctrl',
+    data: {
+      pageTitle: 'UPLOAD_REQUEST'
+    }
 
   }).state('request', {
     url: '/requests/:id',
     templateUrl: 'components/request/request.html',
     controller: 'RequestController as ctrl',
+    data: {
+      pageTitle: 'EDIT_REQUEST' // TODO localise this and add request id
+    },
     resolve: {
 
       request: function getRequest($stateParams, RequestService) {
@@ -57,7 +69,10 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     url: '/requests/:id/submitted',
     templateUrl: 'components/request/request.submitted.html',
     controller: 'RequestSubmittedController as ctrl',
-    params: {previousStatus: null},
+    params: { previousStatus: null },
+    data: {
+      pageTitle: 'REQUEST_SUBMITTED' // TODO localise this and add request id
+    },
     resolve: {
 
       request: function getRequest($stateParams, RequestService) {
@@ -68,15 +83,24 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
   }).state('search', {
     url: '/search/:q',
     templateUrl: 'components/search/search.html',
-    controller: 'SearchController as ctrl'
+    controller: 'SearchController as ctrl',
+    data: {
+      pageTitle: 'SEARCH' // TODO localise this and add search term
+    }
 
   }).state('users', {
     url: '/users/:id',
     templateUrl: 'components/users/user.html',
-    controller: 'UserController as ctrl'
+    controller: 'UserController as ctrl',
+    data: {
+      pageTitle: 'USERS' // TODO localise this and add user id
+    }
 
   }).state('404', {
     url: '/404',
-    templateUrl: 'components/errors/404.html'
+    templateUrl: 'components/errors/404.html',
+    data: {
+      pageTitle: 'PAGE_NOT_FOUND' // TODO localise this
+    }
   });
 }

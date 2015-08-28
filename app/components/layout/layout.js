@@ -86,3 +86,51 @@ function LayoutController($scope, $rootScope, $location, $translate, AuthService
     login();
   });
 }
+
+// TODO move this to a separate file
+angular.module('modesti').directive('title', ['$rootScope', '$timeout', '$translate',
+  function ($rootScope, $timeout, $translate) {
+    return {
+      controller: function () {
+        var self = this;
+
+        var listener = function (event, toState) {
+
+          //$timeout(function () {
+          if (toState.data && toState.data.pageTitle) {
+            self.title = toState.data.pageTitle;
+            setTitle(self.title);
+            //$translate(toState.data.pageTitle).then(function(title) {
+            //  $rootScope.title = 'modesti · ' + title;
+            //});
+          }
+          //});
+        };
+
+        $rootScope.$on('$stateChangeSuccess', listener);
+
+        /**
+         * When the global language is changed, this event will be fired. We catch it here and
+         * update the columns to make sure the help text etc. is in the right language.
+         */
+        $rootScope.$on('event:languageChanged', function () {
+          setTitle(self.title);
+        });
+
+        /**
+         *
+         * @param title
+         */
+        function setTitle(title) {
+
+          $translate(title).then(function (translated) {
+            $timeout(function () {
+              $rootScope.title = 'modesti · ' + translated;
+            });
+          });
+
+        }
+      }
+    };
+  }
+]);
