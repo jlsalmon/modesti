@@ -44,7 +44,8 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     beforeChange: beforeChange,
     afterChange: afterChange,
     afterCreateRow: afterCreateRow,
-    afterRemoveRow: afterRemoveRow
+    afterRemoveRow: afterRemoveRow,
+    beforeKeyDown: afterSelection
   };
 
   //self.tableExpanded = true;
@@ -335,6 +336,16 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
       }
     }
     return false;
+  }
+
+
+  function afterSelection(e) {
+    var editor = this.getActiveEditor();
+
+    editor.$textarea.on("select2-selecting", function (e) {
+      alert(e);
+    });
+
   }
 
   /**

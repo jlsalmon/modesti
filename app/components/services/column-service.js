@@ -126,6 +126,7 @@ function ColumnService($http, $localStorage, $translate) {
 
       query: getQueryFunction(column, field),
 
+      // Formats the items shown in the dropdown list
       formatResult: function (option) {
         return option[getModelAttribute(field)];
       },
@@ -135,7 +136,7 @@ function ColumnService($http, $localStorage, $translate) {
       },
 
       //id: getModelAttribute(field),
-      text: getModelAttribute(field),
+      //text: getModelAttribute(field),
       dropdownAutoWidth: true,
       width: 'resolve'
     };
@@ -147,7 +148,7 @@ function ColumnService($http, $localStorage, $translate) {
   function getQueryFunction(column, field) {
     return function (query) {
       getOptions(field, query.term, query.callback).then(function (results) {
-        query.callback({results: results, text: getModelAttribute(field)});
+        query.callback({results: results});
       });
     }
   }
@@ -176,7 +177,7 @@ function ColumnService($http, $localStorage, $translate) {
         //  }
         //}
         //else {
-        //  params[param] = query;
+         params[param] = query;
         //}
 
       });
@@ -204,27 +205,31 @@ function ColumnService($http, $localStorage, $translate) {
 
   function getRenderer(column, field) {
     return function (instance, td, row, col, prop, value, cellProperties) {
-      if (typeof prop !== 'string' || prop.split('.')[1] !== field.id || !value) {
+      if (typeof prop !== 'string' || prop.split('.')[1] !== field.id) {
         return;
       }
 
-      var cachedValues = self.optionsCache[field.id];
+      console.log('rendering value: ' + value);
 
-      if (cachedValues) {
-        cachedValues.forEach(function (cachedValue) {
-          if (cachedValue.id === value || cachedValue.id === parseInt(value)) {
-            value = cachedValue;
-          }
-        });
-      }
+      //var cachedValues = self.optionsCache[field.id];
+      //
+      //if (cachedValues) {
+      //  cachedValues.forEach(function (cachedValue) {
+      //    if (cachedValue.id === value || cachedValue.id === parseInt(value)) {
+      //      value = cachedValue;
+      //    }
+      //  });
+      //}
+      //
+      //if (!self.optionsCache[field.id]) {
+      //  self.optionsCache[field.id] = [{id: value, value: value}];
+      //} else {
+      //  self.optionsCache[field.id].push(value);
+      //}
+      //
+      //td.innerHTML = value[getModelAttribute(field)];
 
-      if (self.optionsCache[field.id]) {
-        self.optionsCache[field.id] = [{id: value, value: value}];
-      } else {
-        self.optionsCache[field.id].push(value);
-      }
-
-      td.innerHTML = value;
+      Handsontable.TextCell.renderer.apply(this, arguments);
     }
   }
 
@@ -241,6 +246,9 @@ function ColumnService($http, $localStorage, $translate) {
     // the object has only a single property called 'value'.
     return field.model ? field.model : 'value';
   }
+
+
+
 
   //column.type = 'autocomplete';
   ////column.trimDropdown = false;
