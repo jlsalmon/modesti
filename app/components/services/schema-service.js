@@ -130,7 +130,7 @@ function SchemaService($q, $http) {
 
           var site = (point.properties.functionality && point.properties.functionality.value ? point.properties.functionality.value : '?');
           var equipmentIdentifier = getEquipmentIdentifier(point);
-          equipmentIdentifier = equipmentIdentifier ? '?' : equipmentIdentifier;
+          equipmentIdentifier = equipmentIdentifier || '?';
           var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
 
           if (subsystemCode == '?' && site == '?' && equipmentIdentifier == '?' && attribute == '?') {
