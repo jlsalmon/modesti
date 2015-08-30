@@ -630,15 +630,13 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
       case 'numeric':
         Handsontable.renderers.NumericRenderer.apply(this, arguments);
         break;
-      case 'autocomplete':
-        Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-        break;
-      case 'dropdown':
-        Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-        break;
       case 'checkbox':
         Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
         break;
+    }
+
+    if (cellProperties.editor === 'select2') {
+      Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
     }
 
     if (typeof prop !== 'string') {
