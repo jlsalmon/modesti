@@ -17,7 +17,9 @@
  ******************************************************************************/
 package cern.modesti.repository.person;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -30,6 +32,8 @@ import javax.persistence.Id;
  */
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Person  {
   @Id
   private Long id;

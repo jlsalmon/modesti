@@ -1,7 +1,9 @@
 package cern.modesti.security.ldap;
 
+import com.mysema.query.types.Predicate;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -27,4 +29,5 @@ public interface UserRepository extends MongoRepository<User, String> {
          "  ]                                                       " +
          "}                                                         ")
   List<User> find(@Param("query") String query, @Param("authority") String authority);
+
 }

@@ -1,5 +1,14 @@
 package cern.modesti.validation;
 
+import cern.modesti.repository.alarm.AlarmCategory;
+import cern.modesti.repository.equipment.MonitoringEquipment;
+import cern.modesti.repository.gmao.GmaoCode;
+import cern.modesti.repository.location.BuildingName;
+import cern.modesti.repository.location.Location;
+import cern.modesti.repository.location.functionality.Functionality;
+import cern.modesti.repository.location.zone.SafetyZone;
+import cern.modesti.repository.person.Person;
+import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.state.Error;
 import cern.modesti.request.point.Point;
@@ -21,6 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static cern.modesti.util.Util.isEmptyPoint;
+import static java.lang.String.format;
 
 /**
  * TODO
@@ -47,9 +57,9 @@ public class ValidationService {
   public boolean validateRequest(Request request) {
 
     // TODO: remove this when the validation procedure is ready
-    if (true) {
-      return true;
-    }
+//    if (true) {
+//      return true;
+//    }
 
     // Delete all points with this request id
     String query = "DELETE FROM DRAFT_POINTS WHERE drp_request_id = ?";
@@ -69,30 +79,29 @@ public class ValidationService {
       properties.put("requestId", request.getRequestId());
       properties.put("lineno", point.getId());
 
-      // Need to hack out the object properties into their scalar values ready for validation. Unfortunately the JSON object doesn't give us
-      // the Functionality, Location, Subsystem etc. objects back, but Maps instead. So we have to cast. Not sure of the best way to solve that problem.
-      // If the object properties were flattened on the client side, this wouldn't be necessary.
+      // Some properties are stored as complex objects, so we need to retrieve the appropriate properties from them, ready for validation.
 
-      properties.put("gmaoCode", getObjectProperty(properties, "gmaoCode", "value", String.class));
-      properties.put("respId", getObjectProperty(properties, "responsiblePerson", "id", Integer.class));
+      properties.put("gmaoCode", properties.get("gmaoCode") != null ? ((GmaoCode) properties.get("gmaoCode")).getValue() : null);
+      properties.put("respId", properties.get("responsiblePerson") != null ? ((Person) properties.get("responsiblePerson")).getId() : null);
       properties.remove("responsiblePerson");
-      properties.put("subsystemId", getObjectProperty(properties, "subsystem", "id", Integer.class));
+      properties.put("subsystemId", properties.get("subsystem") != null ? ((SubSystem) properties.get("subsystem")).getId() : null);
       properties.remove("subsystem");
-      properties.put("moneqId", getObjectProperty(properties, "monitoringEquipment", "id", Integer.class));
+      properties.put("moneqId", properties.get("monitoringEquipment") != null ? ((MonitoringEquipment) properties.get("monitoringEquipment")).getId() : null);
       //properties.put("csamPlcname", getObjectProperty(properties, "csamPlcname", "value", String.class));
       properties.remove("monitoringEquipment");
-      properties.put("csamCsename", getObjectProperty(properties, "csamCsename", "value", String.class));
+      properties.put("csamCsename", properties.get("csamCsename") != null ? ((GmaoCode) properties.get("csamCsename")).getValue() : null);
 
-      properties.put("buildingName", getObjectProperty(properties, "buildingName", "value", String.class));
-      properties.put("buildingNumber", getObjectProperty(properties, "location", "buildingNumber", String.class));
-      properties.put("buildingFloor", getObjectProperty(properties, "location", "floor", String.class));
-      properties.put("buildingRoom", getObjectProperty(properties, "location", "room", String.class));
+      properties.put("buildingNumber", properties.get("location") != null ? ((Location) properties.get("location")).getBuildingNumber() : null);
+      properties.put("buildingFloor", properties.get("location") != null ? ((Location) properties.get("location")).getFloor() : null);
+      properties.put("buildingRoom", properties.get("location") != null ? ((Location) properties.get("location")).getRoom() : null);
       properties.remove("location");
-      properties.put("funcCode", getObjectProperty(properties, "functionality", "value", String.class));
-      properties.remove("functionality");
-      properties.put("safetyZone", getObjectProperty(properties, "safetyZone", "value", String.class));
+      properties.put("buildingName", properties.get("buildingName") != null ? ((BuildingName) properties.get("buildingName")).getValue() : null);
 
-      properties.put("alarmCategory", getObjectProperty(properties, "alarmCategory", "value", String.class));
+      properties.put("funcCode", properties.get("functionality") != null ? ((Functionality) properties.get("functionality")).getValue() : null);
+      properties.remove("functionality");
+      properties.put("safetyZone", properties.get("safetyZone") != null ? ((SafetyZone) properties.get("safetyZone")).getValue() : null);
+
+      properties.put("alarmCategory", properties.get("alarmCategory") != null ? ((AlarmCategory) properties.get("alarmCategory")).getValue() : null);
       //properties.put("priorityCode", Integer.valueOf(((String) properties.get("priorityCode")).split(":")[0]));
 
       // These properties do not go into the table
@@ -172,10 +181,12 @@ public class ValidationService {
     SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withCatalogName("TIMPKREQCHECK").withProcedureName("STP_CHECK_REQUEST");
     call.addDeclaredParameter(new SqlParameter("p_request_id", OracleTypes.NUMBER));
     call.addDeclaredParameter(new SqlParameter("p_user_id", OracleTypes.NUMBER));
+    call.addDeclaredParameter(new SqlParameter("p_request_stage", OracleTypes.VARCHAR));
     call.addDeclaredParameter(new SqlOutParameter("p_exitcode", OracleTypes.NUMBER));
     call.addDeclaredParameter(new SqlOutParameter("p_exittext", OracleTypes.VARCHAR));
 
-    call.execute(Integer.valueOf(request.getRequestId()), request.getCreator().getEmployeeId());
+    Map<String, Object> results = call.execute(Integer.valueOf(request.getRequestId()), request.getCreator().getEmployeeId(), request.getStatus().toString());
+    log.debug(format("exitcode: %s, exittext: %s", results.get("p_exitcode"), results.get("p_exittext")));
   }
 
   /**
@@ -238,7 +249,7 @@ public class ValidationService {
    */
   private String propertyToColumnName(String property) {
     String columnName = "drp_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, property);
-    log.debug(String.format("converted property name %s to column name %s", property, columnName));
+    log.debug(format("converted property name %s to column name %s", property, columnName));
     return columnName;
   }
 }

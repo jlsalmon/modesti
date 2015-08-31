@@ -1,9 +1,21 @@
 package cern.modesti.config;
 
+import cern.modesti.request.Request;
+import cern.modesti.request.RequestDeserialiser;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.*;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
+import com.fasterxml.jackson.databind.module.SimpleDeserializers;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.module.SimpleSerializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.rest.SpringBootRepositoryRestMvcConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +39,8 @@ import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.SearchTextConverter;
 import cern.modesti.request.point.Point;
 import cern.modesti.security.ldap.User;
+
+import java.io.IOException;
 
 @Configuration
 @EnableEntityLinks
@@ -53,6 +67,20 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);
+  }
+
+  @Override
+  protected void configureJacksonObjectMapper(ObjectMapper objectMapper) {
+    objectMapper.registerModule(new SimpleModule("MyCustomModule") {
+      @Override
+      public void setupModule(SetupContext context) {
+        SimpleDeserializers deserializers = new SimpleDeserializers();
+
+        deserializers.addDeserializer(Request.class, new RequestDeserialiser());
+
+        context.addDeserializers(deserializers);
+      }
+    });
   }
 
   @Bean
