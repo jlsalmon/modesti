@@ -29,6 +29,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
@@ -101,7 +102,7 @@ public class Request implements Serializable {
   @NotNull(message = "At least one category is compulsory")
   private Set<String> categories = new HashSet<>();
 
-  @TextIndexed
+  @DBRef
   @Valid
   private List<Point> points = new ArrayList<>();
 

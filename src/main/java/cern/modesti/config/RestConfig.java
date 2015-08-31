@@ -6,6 +6,7 @@ import cern.modesti.schema.Schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.*;
+import cern.modesti.security.ldap.RoleConverter;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -17,13 +18,13 @@ import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.rest.SpringBootRepositoryRestMvcConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.support.ConfigurableConversionService;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.event.ValidatingRepositoryEventListener;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.validation.Validator;
 
@@ -45,19 +46,19 @@ import java.io.IOException;
 @Configuration
 @EnableEntityLinks
 @Profile({"test", "dev", "prod"})
-public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
+public class RestConfig extends RepositoryRestConfigurerAdapter {
 
   @Autowired
   private Validator validator;
 
   @Override
-  protected void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
+  public void configureValidatingRepositoryEventListener(ValidatingRepositoryEventListener validatingListener) {
     validatingListener.addValidator("beforeCreate", validator);
     validatingListener.addValidator("beforeSave", validator);
   }
 
   @Override
-  protected void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+  public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
     super.configureRepositoryRestConfiguration(config);
 
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
@@ -70,7 +71,7 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
   }
 
   @Override
-  protected void configureJacksonObjectMapper(ObjectMapper objectMapper) {
+  public void configureJacksonObjectMapper(ObjectMapper objectMapper) {
     objectMapper.registerModule(new SimpleModule("MyCustomModule") {
       @Override
       public void setupModule(SetupContext context) {
@@ -82,14 +83,15 @@ public class RestConfig extends SpringBootRepositoryRestMvcConfiguration {
       }
     });
   }
-
-  @Bean
-  public SearchTextConverter searchTextConverter() {
-    return new SearchTextConverter();
-  }
-
+//
+//  @Bean
+//  public SearchTextConverter searchTextConverter() {
+//    return new SearchTextConverter();
+//  }
+//
   @Override
-  protected void configureConversionService(ConfigurableConversionService conversionService) {
-    conversionService.addConverter(searchTextConverter());
+  public void configureConversionService(ConfigurableConversionService conversionService) {
+    conversionService.addConverter(new RoleConverter());
+    conversionService.addConverter(new SearchTextConverter());
   }
 }

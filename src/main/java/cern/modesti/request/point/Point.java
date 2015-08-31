@@ -17,11 +17,14 @@
  ******************************************************************************/
 package cern.modesti.request.point;
 
+import cern.modesti.request.Request;
 import cern.modesti.request.point.state.*;
 import cern.modesti.request.point.state.Error;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ import java.util.Map;
 /**
  * @author Justin Lewis Salmon
  */
+@Document
 @Data
 @NoArgsConstructor
 public class Point implements Serializable {
@@ -43,6 +47,9 @@ public class Point implements Serializable {
    */
   @Id
   private Long id;
+
+  @DBRef
+  private Request request;
 
   /**
    * Flag to check if this point has been modified by the requestor.

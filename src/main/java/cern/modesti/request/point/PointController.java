@@ -5,6 +5,7 @@ import cern.modesti.security.ldap.UserRepository;
 import com.mysema.query.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.querydsl.QuerydslPredicate;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +20,18 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author Justin Lewis Salmon
  */
-@Controller
-public class PointController {
-
-  @Autowired
-  private UserRepository repository;
-
+//@Controller
+//public class PointController {
+//
+//  @Autowired
+//  private UserRepository repository;
+//
 //  @RequestMapping(value = "/points", method = RequestMethod.GET)
-//  ResponseEntity<Resources<User>> index(@QuerydslPredicate(root = User.class) Predicate predicate, @RequestParam MultiValueMap<String, String> parameters) {
+//  ResponseEntity<Resources<User>> index(@QuerydslPredicate(root = User.class) Predicate predicate) {
 //
 //    Iterable<User> users = repository.findAll(predicate);
 //
 //    Resources<User> resources = new Resources<>(users);
 //    return new ResponseEntity<>(resources, HttpStatus.OK);
 //  }
-}
+//}

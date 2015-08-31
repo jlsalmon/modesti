@@ -1,0 +1,60 @@
+package cern.modesti.security.ldap;
+
+import static com.mysema.query.types.PathMetadataFactory.*;
+
+import com.mysema.query.types.path.*;
+
+import com.mysema.query.types.PathMetadata;
+import javax.annotation.Generated;
+import com.mysema.query.types.Path;
+import com.mysema.query.types.path.PathInits;
+
+
+/**
+ * QUser is a Querydsl query type for User
+ */
+@Generated("com.mysema.query.codegen.EntitySerializer")
+public class QUser extends EntityPathBase<User> {
+
+    private static final long serialVersionUID = -175399587L;
+
+    public static final QUser user = new QUser("user");
+
+    public final BooleanPath accountNonExpired = createBoolean("accountNonExpired");
+
+    public final BooleanPath accountNonLocked = createBoolean("accountNonLocked");
+
+    public final SetPath<org.springframework.security.core.GrantedAuthority, org.springframework.security.core.QGrantedAuthority> authorities = this.<org.springframework.security.core.GrantedAuthority, org.springframework.security.core.QGrantedAuthority>createSet("authorities", org.springframework.security.core.GrantedAuthority.class, org.springframework.security.core.QGrantedAuthority.class, PathInits.DIRECT2);
+
+    public final BooleanPath credentialsNonExpired = createBoolean("credentialsNonExpired");
+
+    public final StringPath email = createString("email");
+
+    public final NumberPath<Integer> employeeId = createNumber("employeeId", Integer.class);
+
+    public final BooleanPath enabled = createBoolean("enabled");
+
+    public final StringPath firstName = createString("firstName");
+
+    public final StringPath id = createString("id");
+
+    public final StringPath lastName = createString("lastName");
+
+    public final StringPath password = createString("password");
+
+    public final StringPath username = createString("username");
+
+    public QUser(String variable) {
+        super(User.class, forVariable(variable));
+    }
+
+    public QUser(Path<? extends User> path) {
+        super(path.getType(), path.getMetadata());
+    }
+
+    public QUser(PathMetadata<?> metadata) {
+        super(User.class, metadata);
+    }
+
+}
+
