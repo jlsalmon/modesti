@@ -91,6 +91,16 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
       }
 
     }
+  }).state('points', {
+    url: '/points',
+    templateUrl: 'components/point/points.html',
+    controller: 'PointsController as ctrl',
+    resolve: {
+      $title: function ($stateParams, $translate) {
+        return $translate('SEARCHING_FOR', { q: $stateParams.q });
+      }
+    }
+
   }).state('search', {
     url: '/search/:q',
     templateUrl: 'components/search/search.html',

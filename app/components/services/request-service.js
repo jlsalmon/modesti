@@ -103,7 +103,7 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
 
         // Cache the request
         self.cache[request.requestId] = request;
-        console.log('cached request (with ' + request.points.length + ' points)');
+        //console.log('cached request (with ' + request.points.length + ' points)');
 
         // Make a copy for sorting/filtering
         request = Restangular.copy(request);
