@@ -36,7 +36,9 @@ public class QPoint extends EntityPathBase<Point> {
 
     public final ListPath<cern.modesti.request.point.state.Error, cern.modesti.request.point.state.QError> errors = this.<cern.modesti.request.point.state.Error, cern.modesti.request.point.state.QError>createList("errors", cern.modesti.request.point.state.Error.class, cern.modesti.request.point.state.QError.class, PathInits.DIRECT2);
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath id = createString("id");
+
+    public final NumberPath<Long> lineNo = createNumber("lineNo", Long.class);
 
     public final MapPath<String, Object, SimplePath<Object>> properties = this.<String, Object, SimplePath<Object>>createMap("properties", String.class, Object.class, SimplePath.class);
 

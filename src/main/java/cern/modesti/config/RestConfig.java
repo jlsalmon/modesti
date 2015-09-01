@@ -6,7 +6,6 @@ import cern.modesti.schema.Schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.*;
-import cern.modesti.security.ldap.RoleConverter;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -83,15 +82,14 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
       }
     });
   }
-//
+
 //  @Bean
 //  public SearchTextConverter searchTextConverter() {
 //    return new SearchTextConverter();
 //  }
-//
+
   @Override
   public void configureConversionService(ConfigurableConversionService conversionService) {
-    conversionService.addConverter(new RoleConverter());
     conversionService.addConverter(new SearchTextConverter());
   }
 }

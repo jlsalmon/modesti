@@ -173,7 +173,7 @@ public abstract class RequestParser {
     // Use the "line number" as the point id.
     Double id = getNumericCellValue(row.getCell(getPointIdColumn()));
     if (id != null) {
-      point.setId(id.longValue());
+      point.setLineNo(id.longValue());
     }
 
     // Loop over all filled cells and add it as a property to the point.

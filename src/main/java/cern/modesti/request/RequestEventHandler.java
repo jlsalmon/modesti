@@ -71,7 +71,7 @@ public class RequestEventHandler {
     for (Point point : request.getPoints()) {
       if (point.getId() == null) {
         // Point IDs are 1-based
-        point.setId((long) (request.getPoints().indexOf(point) + 1));
+        point.setLineNo((long) (request.getPoints().indexOf(point) + 1));
         log.debug("beforeCreate() generated point id: " + point.getId());
       }
     }
@@ -90,7 +90,7 @@ public class RequestEventHandler {
     for (Point point : request.getPoints()) {
       if (point.getId() == null) {
         // Point IDs are 1-based
-        point.setId((long) (request.getPoints().indexOf(point) + 1));
+        point.setLineNo((long) (request.getPoints().indexOf(point) + 1));
         log.debug("beforeSave() generated point id: " + point.getId());
       }
     }

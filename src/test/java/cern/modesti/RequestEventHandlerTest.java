@@ -77,8 +77,8 @@ public class RequestEventHandlerTest {
 
     Request request = getTestRequest();
     requestEventHandler.handleRequestSave(request);
-    assertTrue(request.getPoints().get(0).getId() == 1L);
-    assertTrue(request.getPoints().get(1).getId() == 2L);
+    assertTrue(request.getPoints().get(0).getLineNo() == 1L);
+    assertTrue(request.getPoints().get(1).getLineNo() == 2L);
   }
 
   @Test

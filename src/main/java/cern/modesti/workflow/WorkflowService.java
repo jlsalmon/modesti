@@ -345,14 +345,14 @@ public class WorkflowService {
       if (pointToSplit != null) {
         childPoints.add(pointToSplit);
         parent.getPoints().remove(pointToSplit);
-        pointToSplit.setId((long) (childPoints.indexOf(pointToSplit) + 1));
+        pointToSplit.setLineNo((long) (childPoints.indexOf(pointToSplit) + 1));
       }
     }
 
     // Rebase the point IDs back to starting from 1.
     for (Point point : parent.getPoints()) {
       //if (pointIdsToSplit.contains(point.getId())) {
-      point.setId((long) (parent.getPoints().indexOf(point) + 1));
+      point.setLineNo((long) (parent.getPoints().indexOf(point) + 1));
       //}
     }
 

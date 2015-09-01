@@ -20,18 +20,20 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author Justin Lewis Salmon
  */
-//@Controller
-//public class PointController {
-//
-//  @Autowired
-//  private UserRepository repository;
-//
-//  @RequestMapping(value = "/points", method = RequestMethod.GET)
-//  ResponseEntity<Resources<User>> index(@QuerydslPredicate(root = User.class) Predicate predicate) {
-//
-//    Iterable<User> users = repository.findAll(predicate);
-//
-//    Resources<User> resources = new Resources<>(users);
-//    return new ResponseEntity<>(resources, HttpStatus.OK);
-//  }
-//}
+@Controller
+public class PointController {
+
+  @Autowired
+  private PointRepository repository;
+
+  @RequestMapping(value = "/points", method = RequestMethod.GET)
+  ResponseEntity<Resources<Point>> index(@QuerydslPredicate(root = Point.class) Predicate predicate) {
+
+    Iterable<Point> points = repository.findAll(predicate);
+
+    
+
+    Resources<Point> resources = new Resources<>(points);
+    return new ResponseEntity<>(resources, HttpStatus.OK);
+  }
+}

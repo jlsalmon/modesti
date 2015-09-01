@@ -46,10 +46,9 @@ public class Point implements Serializable {
    *
    */
   @Id
-  private Long id;
+  private String id;
 
-  @DBRef
-  private Request request;
+  private Long lineNo;
 
   /**
    * Flag to check if this point has been modified by the requestor.
@@ -80,8 +79,12 @@ public class Point implements Serializable {
    */
   private Map<String, Object> properties = new HashMap<>();
 
-  public Point(Long id) {
+  public Point(String id) {
     this.id = id;
+  }
+
+  public Point(Long lineNo) {
+    this.lineNo = lineNo;
   }
 
   /**
