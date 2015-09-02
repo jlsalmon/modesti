@@ -52,12 +52,6 @@ import org.springframework.plugin.core.config.EnablePluginRegistries;
 public class Application {
 
   public static void main(String[] args) {
-    ConfigurableApplicationContext context = new SpringApplicationBuilder(Application.class).properties("spring.config.name:modesti").sources(Application.class).build().run(args);
-
-    RequestRepository requestRepository = context.getBean(RequestRepository.class);
-    PointRepository pointRepository = context.getBean(PointRepository.class);
-
-    Request request = requestRepository.findOneByRequestId("2018");
-    pointRepository.save(request.getPoints());
+    new SpringApplicationBuilder(Application.class).properties("spring.config.name:modesti").sources(Application.class).build().run(args);
   }
 }

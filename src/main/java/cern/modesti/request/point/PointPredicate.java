@@ -1,6 +1,5 @@
 package cern.modesti.request.point;
 
-import cern.modesti.request.point.rsql.RsqlSearchOperation;
 import com.mysema.query.types.expr.BooleanExpression;
 import com.mysema.query.types.path.NumberPath;
 import com.mysema.query.types.path.PathBuilder;
@@ -9,6 +8,8 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
+import static cz.jirutka.rsql.parser.ast.RSQLOperators.EQUAL;
+import static cz.jirutka.rsql.parser.ast.RSQLOperators.NOT_EQUAL;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 /**
@@ -27,36 +28,38 @@ public class PointPredicate {
     final List<String> args = criteria.getArguments();
     String argument = args.get(0);
 
-    switch (RsqlSearchOperation.getSimpleOperator(criteria.getOperation())) {
-
-      case EQUAL: {
-        if (isNumeric(argument)) {
-          NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
-          int value = Integer.parseInt(argument);
-          return path.eq(value);
-          //return builder.like(root.<String>get(property), argument.toString().replace('*', '%'));
-        }
+    if (EQUAL.equals(criteria.getOperation())) {
+      //if (isNumeric(argument)) {
+        //NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
+        //int value = Integer.parseInt(argument);
+        //return path.eq(value);
+      //}
 //        else if (argument == null) {
-//          return builder.isNull(root.get(property));
+//
 //        }
-        else {
-          StringPath path = entityPath.getString(criteria.getKey());
-          return path.containsIgnoreCase(argument);
-          //return builder.equal(root.get(property), argument);
-        }
-      }
+      //else {
+        PathBuilder path = entityPath.get(criteria.getKey());
+        //return path.containsIgnoreCase(argument);
+      return path.eq(argument);
+      //}
+    }
 
-      // TODO implement remaining operations
-
-//      case NOT_EQUAL: {
-//        if (argument instanceof String) {
+    // TODO implement remaining operations
+    else if (NOT_EQUAL.equals(criteria.getOperation())) {
+      if (isNumeric(argument)) {
+        NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
+        int value = Integer.parseInt(argument);
+        return path.ne(value);
 //          return builder.notLike(root.<String>get(property), argument.toString().replace('*', '%'));
-//        } else if (argument == null) {
-//          return builder.isNotNull(root.get(property));
-//        } else {
-//          return builder.notEqual(root.get(property), argument);
+      }
+//        else if (argument == null) {
+//
 //        }
-//      }
+      else {
+        StringPath path = entityPath.getString(criteria.getKey());
+        return path.notLike(argument);
+      }
+    }
 //      case GREATER_THAN: {
 //        return builder.greaterThan(root.<String>get(property), argument.toString());
 //      }
@@ -75,10 +78,10 @@ public class PointPredicate {
 //      case NOT_IN: {
 //        return builder.not(root.get(property).in(args));
 //      }
-      default: {
-        return null;
-      }
+    else {
+      return null;
     }
+  }
 
 //    if (isNumeric(criteria.getValue().toString())) {
 //      NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
@@ -106,5 +109,5 @@ public class PointPredicate {
 //      }
 //    }
 //    return null;
-  }
+
 }
