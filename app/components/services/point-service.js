@@ -18,13 +18,20 @@ function PointService($http, $q) {
 
   /**
    *
+   * @param query
    * @returns {*}
    */
-  function getPoints() {
+  function getPoints(query) {
     var q = $q.defer();
 
-    $http.get(BACKEND_BASE_URL + '/points/', {params: {lineNo: 1}}).then(function (points) {
-      q.resolve(points.data);
+    $http.get(BACKEND_BASE_URL + '/points/', {params: {search: query}}).then(function (response) {
+      var points = [];
+
+      if (response.data.hasOwnProperty('_embedded')) {
+        points = response.data._embedded.points
+      }
+
+      q.resolve(points);
     },
 
     function (error) {

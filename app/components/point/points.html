@@ -4,7 +4,30 @@
     <div class="row">
       <div class="col-lg-12">
 
-        {{ctrl.points}}
+        <form class="form-horizontal" autocomplete="on" novalidate>
+          <div class="form-group">
+
+            <div class="input-group">
+              <input type="text" autocomplete="on" class="form-control" placeholder="Query" ng-model="ctrl.query">
+
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="submit" ng-click="ctrl.search()">Submit</button>
+                </span>
+            </div>
+          </div>
+        </form>
+
+        <alert ng-if="ctrl.error" type="danger">{{ctrl.error.status}} {{ctrl.error.statusText}}</alert>
+
+        <div ng-repeat="point in ctrl.points track by point.id">
+          <span>id: {{point.id}}</span>
+          <span>lineNo: {{point.lineNo}}</span>
+          <span ng-repeat="(k, v) in point.properties">
+            {{k}}: {{v}}
+          </span>
+        </div>
+
+
       </div>
     </div>
   </div>
