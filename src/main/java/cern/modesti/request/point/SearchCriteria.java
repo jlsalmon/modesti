@@ -1,8 +1,11 @@
 package cern.modesti.request.point;
 
+import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * TODO
@@ -14,6 +17,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SearchCriteria {
   private String key;
-  private String operation;
-  private Object value;
+  private ComparisonOperator operation;
+  private List<String> arguments;
 }

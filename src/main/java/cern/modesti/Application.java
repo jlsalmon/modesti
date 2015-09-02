@@ -57,10 +57,7 @@ public class Application {
     RequestRepository requestRepository = context.getBean(RequestRepository.class);
     PointRepository pointRepository = context.getBean(PointRepository.class);
 
-    for (Request request : requestRepository.findAll()) {
-      pointRepository.save(request.getPoints());
-    }
-
-    System.out.println("loaded points");
+    Request request = requestRepository.findOneByRequestId("2018");
+    pointRepository.save(request.getPoints());
   }
 }

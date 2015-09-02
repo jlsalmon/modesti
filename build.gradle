@@ -71,6 +71,7 @@ dependencies {
     compile "org.apache.poi:poi-ooxml:3.12-beta1"
     compile "org.apache.commons:commons-lang3:3.4"
     compile "com.google.code.gson:gson:2.3.1"
+    compile "cz.jirutka.rsql:rsql-parser:2.0.0"
     compile "ch.qos.logback:logback-classic:1.1.2"
     compile "org.slf4j:slf4j-api:1.7.+"
     compile "org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16"

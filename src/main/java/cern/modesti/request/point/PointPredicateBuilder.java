@@ -1,6 +1,7 @@
 package cern.modesti.request.point;
 
 import com.mysema.query.types.expr.BooleanExpression;
+import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,8 @@ public class PointPredicateBuilder {
     params = new ArrayList<>();
   }
 
-  public PointPredicateBuilder with(String key, String operation, Object value) {
-    params.add(new SearchCriteria(key, operation, value));
+  public PointPredicateBuilder with(String key, ComparisonOperator operation, List<String> arguments) {
+    params.add(new SearchCriteria(key, operation, arguments));
     return this;
   }
 
