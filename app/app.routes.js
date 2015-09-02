@@ -96,8 +96,13 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     templateUrl: 'components/point/points.html',
     controller: 'PointsController as ctrl',
     resolve: {
+
+      schemas: function getSchemas(SchemaService) {
+        return SchemaService.getSchemas();
+      },
+
       $title: function ($stateParams, $translate) {
-        return $translate('SEARCHING_FOR', { q: $stateParams.q });
+        return "Points";
       }
     }
 
