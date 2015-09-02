@@ -4,13 +4,15 @@
     <div class="row">
       <div class="col-lg-12">
 
+        <h3>Search for points</h3>
+
         <div class="form-group form-inline">
 
           <div class="btn-group" dropdown>
             <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
               <i class="fa fa-fw fa-crosshairs"></i>
-            <span class="text-muted">{{'DOMAIN'|translate|lowercase}}:
-            </span>{{ctrl.filter.domain != '' ? ctrl.filter.domain : ('ANY'|translate)}} <span class="caret"></span>
+              Domain:
+              </span>{{ctrl.schema.id}} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
               <li>
@@ -25,8 +27,8 @@
 
           <div class="btn-group" dropdown ng-repeat="category in ctrl.schema.categories">
             <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-            <span class="text-muted">{{category.name_en}}:
-            </span> <span class="caret"></span>
+              {{category.name_en}}:
+              </span> <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
               <li>
@@ -41,8 +43,8 @@
 
           <div class="btn-group" dropdown ng-repeat="datasource in ctrl.schema.datasources">
             <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-            <span class="text-muted">{{datasource.name_en}}:
-            </span> <span class="caret"></span>
+              {{datasource.name_en}}:
+              </span> <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
               <li>
