@@ -42,6 +42,8 @@ public class QPoint extends EntityPathBase<Point> {
 
     public final MapPath<String, Object, SimplePath<Object>> properties = this.<String, Object, SimplePath<Object>>createMap("properties", String.class, Object.class, SimplePath.class);
 
+    public final cern.modesti.request.QRequest request;
+
     public final BooleanPath selected = createBoolean("selected");
 
     public final cern.modesti.request.point.state.QTesting testing;
@@ -69,6 +71,7 @@ public class QPoint extends EntityPathBase<Point> {
         this.addressing = inits.isInitialized("addressing") ? new cern.modesti.request.point.state.QAddressing(forProperty("addressing")) : null;
         this.approval = inits.isInitialized("approval") ? new cern.modesti.request.point.state.QApproval(forProperty("approval")) : null;
         this.cabling = inits.isInitialized("cabling") ? new cern.modesti.request.point.state.QCabling(forProperty("cabling")) : null;
+        this.request = inits.isInitialized("request") ? new cern.modesti.request.QRequest(forProperty("request"), inits.get("request")) : null;
         this.testing = inits.isInitialized("testing") ? new cern.modesti.request.point.state.QTesting(forProperty("testing")) : null;
     }
 

@@ -34,6 +34,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -101,7 +102,7 @@ public class Request implements Serializable {
   @TextIndexed
   @NotNull(message = "At least one category is compulsory")
   private Set<String> categories = new HashSet<>();
-
+  
   @DBRef
   @Valid
   private List<Point> points = new ArrayList<>();

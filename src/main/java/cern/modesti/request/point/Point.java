@@ -17,16 +17,13 @@
  ******************************************************************************/
 package cern.modesti.request.point;
 
-import cern.modesti.request.Request;
 import cern.modesti.request.point.state.*;
 import cern.modesti.request.point.state.Error;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,15 +35,15 @@ import java.util.Map;
 @Document
 @Data
 @NoArgsConstructor
-public class Point implements Serializable {
-
-  private static final long serialVersionUID = -6275036449999835583L;
+public class Point {
 
   /**
    *
    */
   @Id
   private String id;
+
+  private String thing;
 
   private Long lineNo;
 

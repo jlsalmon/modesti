@@ -79,7 +79,7 @@ public class TestUtil {
   public static List<Point> getDefaultPoints() {
     List<Point> points = new ArrayList<>();
 
-    Point point1 = new Point(1L);
+    Point point1 = new Point();
     point1.setProperties(new HashMap<String, Object>() {{
       put("pointDescription", "TEST POINT 1");
       put("pointDataType", "Boolean");
@@ -96,7 +96,7 @@ public class TestUtil {
   public static List<Point> getDefaultAlarms() {
     List<Point> points = new ArrayList<>();
 
-    Point point1 = new Point(1L);
+    Point point1 = new Point();
     point1.setProperties(new HashMap<String, Object>() {{
       put("pointDescription", "TEST ALARM 1");
       put("pointDataType", "Boolean");
@@ -115,7 +115,7 @@ public class TestUtil {
   private static List<Point> getDefaultCabledPoints() {
     List<Point> points = new ArrayList<>();
 
-    Point point1 = new Point(1L);
+    Point point1 = new Point();
     point1.setProperties(new HashMap<String, Object>() {{
       put("pointDescription", "TEST CABLED POINT 1");
       put("pointDataType", "Boolean");
@@ -133,7 +133,7 @@ public class TestUtil {
   private static List<Point> getDefaultCabledAlarms() {
     List<Point> points = new ArrayList<>();
 
-    Point point1 = new Point(1L);
+    Point point1 = new Point();
     point1.setProperties(new HashMap<String, Object>() {{
       put("pointDescription", "TEST CABLED ALARM 1");
       put("pointDataType", "Boolean");

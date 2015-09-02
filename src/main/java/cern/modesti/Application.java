@@ -1,8 +1,12 @@
 package cern.modesti;
 
 import cern.modesti.plugin.RequestProvider;
+import cern.modesti.request.Request;
+import cern.modesti.request.RequestRepository;
+import cern.modesti.request.point.PointRepository;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.plugin.core.config.EnablePluginRegistries;
 
 /**
@@ -48,6 +52,15 @@ import org.springframework.plugin.core.config.EnablePluginRegistries;
 public class Application {
 
   public static void main(String[] args) {
-    new SpringApplicationBuilder(Application.class).properties("spring.config.name:modesti").sources(Application.class).build().run(args);
+    ConfigurableApplicationContext context = new SpringApplicationBuilder(Application.class).properties("spring.config.name:modesti").sources(Application.class).build().run(args);
+
+    RequestRepository requestRepository = context.getBean(RequestRepository.class);
+    PointRepository pointRepository = context.getBean(PointRepository.class);
+
+    for (Request request : requestRepository.findAll()) {
+      pointRepository.save(request.getPoints());
+    }
+
+    System.out.println("loaded points");
   }
 }

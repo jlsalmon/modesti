@@ -56,7 +56,7 @@ public class ValidationServiceTest {
     request.setType(CREATE);
 
     List<Point> points = new ArrayList<>();
-    Point point = new Point(1L);
+    Point point = new Point();
 
     Map<String, Object> properties = new HashMap<>();
     properties.put("pointDescription", "test");

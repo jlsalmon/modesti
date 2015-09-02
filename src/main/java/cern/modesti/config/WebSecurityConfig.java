@@ -20,8 +20,8 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.access.event.LoggerListener;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
@@ -51,7 +51,7 @@ import cern.modesti.security.ldap.LdapUserDetailsMapper;
  * @author Justin Lewis Salmon
  */
 @Configuration
-@EnableWebMvcSecurity
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(1)
 @Profile({"dev", "prod"})
