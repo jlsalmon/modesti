@@ -76,6 +76,7 @@ dependencies {
     compile "org.slf4j:slf4j-api:1.7.+"
     compile "org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16"
     compile "com.mysema.querydsl:querydsl-mongodb:3.6.6"
+    compile "com.mysema.querydsl:querydsl-jpa:3.6.6"
     querydslapt "com.mysema.querydsl:querydsl-apt:3.6.6"
 
     testCompile "junit:junit:4.11"
@@ -126,7 +127,7 @@ task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates
     classpath = configurations.compile + configurations.querydslapt
     options.compilerArgs = [
             "-proc:only",
-            "-processor", "org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor"
+            "-processor", "org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor,com.mysema.query.apt.jpa.JPAAnnotationProcessor"
     ]
     destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
 }
