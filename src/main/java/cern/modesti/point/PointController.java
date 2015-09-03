@@ -7,13 +7,26 @@ import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
+import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
@@ -26,50 +39,44 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class PointController {
 
   @Autowired
-  private RefPointRepository repository;
+  private PointRepository repository;
 
-//  @RequestMapping(value = "/points", method = GET, produces = "application/json")
-//  ResponseEntity<Resources<Point>> getPoints(@RequestParam("search") String search) {
-//
-//    PointPredicateBuilder builder = new PointPredicateBuilder();
-//    Pattern pattern = Pattern.compile("([\\w.]+?)(:|<|>)(\\w.+?),");
-//    Matcher matcher = pattern.matcher(search + ",");
-//    while (matcher.find()) {
-//      builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-//    }
-//
-//    BooleanExpression predicate = builder.build();
-//    if (predicate == null) {
-//      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
-//
-//
-//    Iterable<Point> points = repository.findAll(predicate);
-//
-//
-//    Resources<Point> resources = new Resources<>(points);
-//    return new ResponseEntity<>(resources, HttpStatus.OK);
-//  }
-//
-//  @RequestMapping(value = "/points2", method = GET, produces = "application/json")
-//  ResponseEntity<Resources<Point>> getPoints(@QuerydslPredicate(root = Point.class) Predicate predicate) {
-//
-//    Iterable<Point> points = repository.findAll(predicate);
-//
-//    Resources<Point> resources = new Resources<>(points);
-//    return new ResponseEntity<>(resources, HttpStatus.OK);
-//  }
+  @Autowired
+  private PointResourceAssembler pointResourceAssembler;
 
   @RequestMapping(value = "/points", method = GET, produces = "application/json")
-  ResponseEntity<Resources<RefPoint>> getPointsByRsql(@RequestParam("search") String search) {
+  HttpEntity<PagedResources<Point>> getPointsByRsql(@RequestParam("search") String search, Pageable pageable, PagedResourcesAssembler assembler) {
 
     final Node rootNode = new RSQLParser().parse(search);
     final BooleanExpression predicate = rootNode.accept(new CustomRsqlVisitor());
     log.debug(predicate.toString());
 
-    Iterable<RefPoint> points = repository.findAll(predicate);
+    Page<Point> points = repository.findAll(predicate, pageable);
 
-    Resources<RefPoint> resources = new Resources<>(points);
-    return new ResponseEntity<>(resources, HttpStatus.OK);
+    return new ResponseEntity<>(assembler.toResource(points, pointResourceAssembler), HttpStatus.OK);
+  }
+
+  @Component
+  public static class PointResourceAssembler extends ResourceAssemblerSupport<Point, Resource> {
+
+    public PointResourceAssembler() {
+      super(PointController.class, Resource.class);
+    }
+
+    @Override
+    public List<Resource> toResources(Iterable<? extends Point> points) {
+      List<Resource> resources = new ArrayList<>();
+
+      for(Point point : points) {
+        resources.add(new Resource<>(point));
+      }
+
+      return resources;
+    }
+
+    @Override
+    public Resource toResource(Point point) {
+      return new Resource<>(point);
+    }
   }
 }

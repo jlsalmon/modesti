@@ -76,6 +76,6 @@ public class PointRsqlSpecBuilder {
   }
 
   public BooleanExpression createSpecification(final ComparisonNode comparisonNode) {
-    return new PointPredicateBuilder().with(comparisonNode.getSelector(), comparisonNode.getOperator(), comparisonNode.getArguments()).build();
+    return new PointPredicateBuilder().with("properties." + comparisonNode.getSelector(), comparisonNode.getOperator(), comparisonNode.getArguments()).build();
   }
 }

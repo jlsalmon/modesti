@@ -23,7 +23,7 @@ public class PointPredicate {
   private SearchCriteria criteria;
 
   public BooleanExpression getPredicate() {
-    PathBuilder<RefPoint> entityPath = new PathBuilder<>(RefPoint.class, "refPoint");
+    PathBuilder<Point> entityPath = new PathBuilder<>(Point.class, "point");
 
     final List<String> args = criteria.getArguments();
     String argument = args.get(0);

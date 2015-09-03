@@ -38,7 +38,7 @@ import java.util.Map;
 public class Point {
 
   @Id
-  private String id;
+  private Long id;
 
   private Long lineNo;
 
@@ -62,13 +62,13 @@ public class Point {
 
   private Map<String, Object> properties = new HashMap<>();
 
-  public Point(String id) {
+  public Point(Long id) {
     this.id = id;
   }
 
-  public Point(Long lineNo) {
-    this.lineNo = lineNo;
-  }
+//  public Point(Long lineNo) {
+//    this.lineNo = lineNo;
+//  }
 
   /**
    *
