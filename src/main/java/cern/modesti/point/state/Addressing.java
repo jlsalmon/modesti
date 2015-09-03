@@ -1,4 +1,4 @@
-package cern.modesti.request.point.state;
+package cern.modesti.point.state;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cabling {
-  private Boolean cabled;
+public class Addressing {
+  private Boolean addressed;
   private String message;
 }

@@ -23,7 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import cern.modesti.request.point.Point;
+import cern.modesti.point.Point;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestStatus;
 import cern.modesti.schema.Schema;

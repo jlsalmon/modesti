@@ -12,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-import cern.modesti.request.point.Point;
 import cern.modesti.schema.category.Datasource;
 import org.springframework.stereotype.Service;
 

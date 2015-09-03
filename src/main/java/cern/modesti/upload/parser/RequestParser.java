@@ -21,7 +21,7 @@ import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.repository.subsystem.SubSystemRepository;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
-import cern.modesti.request.point.Point;
+import cern.modesti.point.Point;
 import com.google.common.base.CaseFormat;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.text.WordUtils;

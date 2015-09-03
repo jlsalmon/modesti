@@ -29,7 +29,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import cern.modesti.request.point.Point;
+import cern.modesti.point.Point;
 import cern.modesti.request.Request;
 import cern.modesti.upload.exception.RequestParseException;
 import cern.modesti.upload.exception.VersionNotSupportedException;

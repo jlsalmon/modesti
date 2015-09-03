@@ -1,4 +1,4 @@
-package cern.modesti.request.point;
+package cern.modesti.point;
 
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import lombok.AllArgsConstructor;

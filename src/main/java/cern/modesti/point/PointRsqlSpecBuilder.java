@@ -1,6 +1,6 @@
-package cern.modesti.request.point.rsql;
+package cern.modesti.point;
 
-import cern.modesti.request.point.PointPredicateBuilder;
+import cern.modesti.point.PointPredicateBuilder;
 import com.mysema.query.types.expr.BooleanExpression;
 import cz.jirutka.rsql.parser.ast.ComparisonNode;
 import cz.jirutka.rsql.parser.ast.LogicalNode;
@@ -76,9 +76,6 @@ public class PointRsqlSpecBuilder {
   }
 
   public BooleanExpression createSpecification(final ComparisonNode comparisonNode) {
-
     return new PointPredicateBuilder().with(comparisonNode.getSelector(), comparisonNode.getOperator(), comparisonNode.getArguments()).build();
-
-//    return Specifications.where(new PointRsqlSpecification(comparisonNode.getSelector(), comparisonNode.getOperator(), comparisonNode.getArguments()));
   }
 }

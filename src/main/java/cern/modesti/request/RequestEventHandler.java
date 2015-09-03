@@ -18,7 +18,7 @@
 package cern.modesti.request;
 
 import cern.modesti.request.counter.CounterService;
-import cern.modesti.request.point.Point;
+import cern.modesti.point.Point;
 import cern.modesti.workflow.WorkflowService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

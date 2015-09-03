@@ -1,23 +1,16 @@
 package cern.modesti.config;
 
+import cern.modesti.repository.point.RefPoint;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestDeserialiser;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.*;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.module.SimpleSerializers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.support.ConfigurableConversionService;
@@ -37,10 +30,8 @@ import cern.modesti.repository.location.zone.SafetyZone;
 import cern.modesti.repository.person.Person;
 import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.SearchTextConverter;
-import cern.modesti.request.point.Point;
+import cern.modesti.point.Point;
 import cern.modesti.security.ldap.User;
-
-import java.io.IOException;
 
 @Configuration
 @EnableEntityLinks
@@ -63,7 +54,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
     config.exposeIdsFor(Point.class, Person.class, Functionality.class, Location.class, SafetyZone.class, SubSystem.class, AlarmCategory.class, Field.class,
         TextField.class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class, BuildingName.class, GmaoCode.class,
-        MonitoringEquipment.class, User.class, Schema.class, Category.class, Datasource.class, Option.class);
+        MonitoringEquipment.class, User.class, Schema.class, Category.class, Datasource.class, Option.class, RefPoint.class);
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);

@@ -9,7 +9,7 @@ import cern.modesti.repository.location.functionality.Functionality;
 import cern.modesti.repository.location.zone.SafetyZone;
 import cern.modesti.repository.person.Person;
 import cern.modesti.repository.subsystem.SubSystem;
-import cern.modesti.request.point.Point;
+import cern.modesti.point.Point;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;

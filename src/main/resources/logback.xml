@@ -6,9 +6,9 @@
     <logger name="org.springframework.security" level="INFO" />
     <logger name="org.springframework.web.servlet.mvc.method.annotation" level="TRACE" />
     <logger name="org.activiti" level="INFO" />
-    <logger name="org.hibernate.SQL" level="DEBUG"/>
-    <logger name="org.hibernate.type" level="TRACE"/>
-    <logger name="org.hibernate.jdbc" level="TRACE"/>
-    <logger name="org.hibernate.engine.query" level="TRACE"/>
-    <logger name="jdbc.resultsettable" level="TRACE"/>
+    <logger name="org.hibernate.SQL" level="INFO"/>
+    <logger name="org.hibernate.type" level="INFO"/>
+    <logger name="org.hibernate.jdbc" level="INFO"/>
+    <logger name="org.hibernate.engine.query" level="INFO"/>
+    <logger name="jdbc.resultsettable" level="INFO"/>
 </configuration>

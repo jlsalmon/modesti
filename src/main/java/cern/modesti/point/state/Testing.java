@@ -1,4 +1,4 @@
-package cern.modesti.request.point.state;
+package cern.modesti.point.state;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

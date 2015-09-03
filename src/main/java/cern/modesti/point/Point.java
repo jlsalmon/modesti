@@ -15,10 +15,10 @@
  *
  * Author: TIM team, tim.support@cern.ch
  ******************************************************************************/
-package cern.modesti.request.point;
+package cern.modesti.point;
 
-import cern.modesti.request.point.state.*;
-import cern.modesti.request.point.state.Error;
+import cern.modesti.point.state.*;
+import cern.modesti.point.state.Error;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -37,28 +37,17 @@ import java.util.Map;
 @NoArgsConstructor
 public class Point {
 
-  /**
-   *
-   */
   @Id
   private String id;
 
-  private String thing;
-
   private Long lineNo;
 
-  /**
-   * Flag to check if this point has been modified by the requestor.
-   */
   private Boolean dirty = true;
 
   private Boolean selected = false;
 
   private Boolean valid;
 
-  /**
-   * Map of property names -> errors
-   */
   private List<Error> errors = new ArrayList<>();
 
   private Approval approval = new Approval();
@@ -71,9 +60,6 @@ public class Point {
 
   private Testing testing = new Testing();
 
-  /**
-   *
-   */
   private Map<String, Object> properties = new HashMap<>();
 
   public Point(String id) {

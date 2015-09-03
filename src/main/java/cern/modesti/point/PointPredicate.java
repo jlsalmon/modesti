@@ -1,5 +1,6 @@
-package cern.modesti.request.point;
+package cern.modesti.point;
 
+import cern.modesti.repository.point.RefPoint;
 import com.mysema.query.types.expr.BooleanExpression;
 import com.mysema.query.types.path.NumberPath;
 import com.mysema.query.types.path.PathBuilder;
@@ -8,8 +9,7 @@ import lombok.AllArgsConstructor;
 
 import java.util.List;
 
-import static cz.jirutka.rsql.parser.ast.RSQLOperators.EQUAL;
-import static cz.jirutka.rsql.parser.ast.RSQLOperators.NOT_EQUAL;
+import static cz.jirutka.rsql.parser.ast.RSQLOperators.*;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 
 /**
@@ -23,25 +23,25 @@ public class PointPredicate {
   private SearchCriteria criteria;
 
   public BooleanExpression getPredicate() {
-    PathBuilder<Point> entityPath = new PathBuilder<>(Point.class, "point");
+    PathBuilder<RefPoint> entityPath = new PathBuilder<>(RefPoint.class, "refPoint");
 
     final List<String> args = criteria.getArguments();
     String argument = args.get(0);
 
     if (EQUAL.equals(criteria.getOperation())) {
-      //if (isNumeric(argument)) {
-        //NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
-        //int value = Integer.parseInt(argument);
-        //return path.eq(value);
-      //}
+      if (isNumeric(argument)) {
+        NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
+        int value = Integer.parseInt(argument);
+        return path.eq(value);
+      }
 //        else if (argument == null) {
 //
 //        }
-      //else {
-        PathBuilder path = entityPath.get(criteria.getKey());
+      else {
+        StringPath path = entityPath.getString(criteria.getKey());
         //return path.containsIgnoreCase(argument);
-      return path.eq(argument);
-      //}
+        return path.containsIgnoreCase(argument);
+      }
     }
 
     // TODO implement remaining operations
@@ -60,6 +60,32 @@ public class PointPredicate {
         return path.notLike(argument);
       }
     }
+
+    else if (GREATER_THAN.equals(criteria.getOperation())) {
+      throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    else if (GREATER_THAN_OR_EQUAL.equals(criteria.getOperation())) {
+      throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    else if (LESS_THAN.equals(criteria.getOperation())) {
+      throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    else if (LESS_THAN_OR_EQUAL.equals(criteria.getOperation())) {
+      throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    else if (IN.equals(criteria.getOperation())) {
+      throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    else if (NOT_IN.equals(criteria.getOperation())) {
+      throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+
 //      case GREATER_THAN: {
 //        return builder.greaterThan(root.<String>get(property), argument.toString());
 //      }

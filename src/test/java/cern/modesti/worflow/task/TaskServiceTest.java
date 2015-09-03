@@ -1,7 +1,7 @@
 package cern.modesti.worflow.task;
 
 import cern.modesti.request.Request;
-import cern.modesti.request.point.state.Approval;
+import cern.modesti.point.state.Approval;
 import cern.modesti.util.BaseIntegrationTest;
 import cern.modesti.workflow.task.TaskAction;
 import cern.modesti.workflow.task.TaskInfo;

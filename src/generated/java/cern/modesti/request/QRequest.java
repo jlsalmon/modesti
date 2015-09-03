@@ -22,11 +22,11 @@ public class QRequest extends EntityPathBase<Request> {
 
     public static final QRequest request = new QRequest("request");
 
-    public final cern.modesti.request.point.state.QAddressing addressing;
+    public final cern.modesti.point.state.QAddressing addressing;
 
-    public final cern.modesti.request.point.state.QApproval approval;
+    public final cern.modesti.point.state.QApproval approval;
 
-    public final cern.modesti.request.point.state.QCabling cabling;
+    public final cern.modesti.point.state.QCabling cabling;
 
     public final SetPath<String, StringPath> categories = this.<String, StringPath>createSet("categories", String.class, StringPath.class, PathInits.DIRECT2);
 
@@ -46,7 +46,7 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final StringPath parentRequestId = createString("parentRequestId");
 
-    public final ListPath<cern.modesti.request.point.Point, cern.modesti.request.point.QPoint> points = this.<cern.modesti.request.point.Point, cern.modesti.request.point.QPoint>createList("points", cern.modesti.request.point.Point.class, cern.modesti.request.point.QPoint.class, PathInits.DIRECT2);
+    public final ListPath<cern.modesti.point.Point, cern.modesti.point.QPoint> points = this.<cern.modesti.point.Point, cern.modesti.point.QPoint>createList("points", cern.modesti.point.Point.class, cern.modesti.point.QPoint.class, PathInits.DIRECT2);
 
     public final StringPath requestId = createString("requestId");
 
@@ -56,7 +56,7 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final cern.modesti.repository.subsystem.QSubSystem subsystem;
 
-    public final cern.modesti.request.point.state.QTesting testing;
+    public final cern.modesti.point.state.QTesting testing;
 
     public final EnumPath<RequestType> type = createEnum("type", RequestType.class);
 
@@ -80,13 +80,13 @@ public class QRequest extends EntityPathBase<Request> {
 
     public QRequest(Class<? extends Request> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.addressing = inits.isInitialized("addressing") ? new cern.modesti.request.point.state.QAddressing(forProperty("addressing")) : null;
-        this.approval = inits.isInitialized("approval") ? new cern.modesti.request.point.state.QApproval(forProperty("approval")) : null;
-        this.cabling = inits.isInitialized("cabling") ? new cern.modesti.request.point.state.QCabling(forProperty("cabling")) : null;
+        this.addressing = inits.isInitialized("addressing") ? new cern.modesti.point.state.QAddressing(forProperty("addressing")) : null;
+        this.approval = inits.isInitialized("approval") ? new cern.modesti.point.state.QApproval(forProperty("approval")) : null;
+        this.cabling = inits.isInitialized("cabling") ? new cern.modesti.point.state.QCabling(forProperty("cabling")) : null;
         this.configurationResult = inits.isInitialized("configurationResult") ? new cern.modesti.workflow.result.QConfigurationResult(forProperty("configurationResult")) : null;
         this.creator = inits.isInitialized("creator") ? new cern.modesti.security.ldap.QUser(forProperty("creator")) : null;
         this.subsystem = inits.isInitialized("subsystem") ? new cern.modesti.repository.subsystem.QSubSystem(forProperty("subsystem")) : null;
-        this.testing = inits.isInitialized("testing") ? new cern.modesti.request.point.state.QTesting(forProperty("testing")) : null;
+        this.testing = inits.isInitialized("testing") ? new cern.modesti.point.state.QTesting(forProperty("testing")) : null;
     }
 
 }

@@ -2,16 +2,10 @@ package cern.modesti.point;
 
 import cern.modesti.Application;
 import cern.modesti.repository.person.Person;
-import cern.modesti.repository.subsystem.SubSystem;
-import cern.modesti.request.point.Point;
-import cern.modesti.request.point.PointPredicateBuilder;
-import cern.modesti.request.point.PointRepository;
-import cern.modesti.request.point.rsql.CustomRsqlVisitor;
 import com.google.common.collect.ImmutableMap;
 import com.mysema.query.types.expr.BooleanExpression;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.Node;
-import org.bson.types.ObjectId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,14 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import javax.transaction.Transactional;
-
-import java.util.HashMap;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -55,14 +46,12 @@ public class PointPredicateTest {
   @Before
   public void init() {
     point1 = new Point();
-    point1.setThing("a");
     point1.setLineNo(1L);
     point1.setValid(true);
     point1.setProperties(ImmutableMap.of("pointDescription", "point1", "pointDatatype", "Boolean", "responsiblePerson", new Person(1L, "Bert", "bert")));
     repository.save(point1);
 
     point2 = new Point();
-    point2.setThing("b");
     point2.setLineNo(2L);
     point2.setValid(false);
     point2.setProperties(ImmutableMap.of("pointDescription", "point2", "pointDatatype", "Double", "responsiblePerson", new Person(2L, "Ernie", "ernie")));

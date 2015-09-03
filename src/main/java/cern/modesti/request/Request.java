@@ -18,11 +18,11 @@
 package cern.modesti.request;
 
 import cern.modesti.repository.subsystem.SubSystem;
-import cern.modesti.request.point.state.Addressing;
-import cern.modesti.request.point.state.Approval;
-import cern.modesti.request.point.Point;
-import cern.modesti.request.point.state.Cabling;
-import cern.modesti.request.point.state.Testing;
+import cern.modesti.point.state.Addressing;
+import cern.modesti.point.state.Approval;
+import cern.modesti.point.Point;
+import cern.modesti.point.state.Cabling;
+import cern.modesti.point.state.Testing;
 import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.result.ConfigurationResult;
 import lombok.Data;
@@ -34,7 +34,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -102,7 +101,7 @@ public class Request implements Serializable {
   @TextIndexed
   @NotNull(message = "At least one category is compulsory")
   private Set<String> categories = new HashSet<>();
-  
+
   @DBRef
   @Valid
   private List<Point> points = new ArrayList<>();
