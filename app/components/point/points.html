@@ -25,44 +25,60 @@
             </ul>
           </div>
 
-          <div class="btn-group" dropdown ng-repeat="category in ctrl.schema.categories">
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-              {{category.name_en}}:
-              </span> <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="" ng-click="">{{'ANY'|translate}}</a>
-              </li>
-              <li class="divider"></li>
-              <li ng-repeat="field in category.fields">
-                <a href="" ng-click="">{{field.name_en}}</a>
-              </li>
-            </ul>
+          <div class="well well-sm">
+            <form class="form-inline">
+              <div class="input-group">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+                  <ul class="dropdown-menu">
+                    <li ng-repeat="field in ctrl.schema.categories[0].fields">
+                      <a href="#" ng-click="ctrl.filter[field.id] = ">{{field.name_en}}</a>
+                    </li>
+                  </ul>
+                </div>
+                <input type="text" class="form-control">
+              </div>
+            </form>
           </div>
 
-          <div class="btn-group" dropdown ng-repeat="datasource in ctrl.schema.datasources">
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-              {{datasource.name_en}}:
-              </span> <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="" ng-click="">{{'ANY'|translate}}</a>
-              </li>
-              <li class="divider"></li>
-              <li ng-repeat="field in datasource.fields">
-                <a href="" ng-click="">{{field.name_en}}</a>
-              </li>
-            </ul>
-          </div>
+          <!--<div class="btn-group" dropdown ng-repeat="category in ctrl.schema.categories">-->
+            <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>-->
+              <!--{{category.name_en}}:-->
+              <!--</span> <span class="caret"></span>-->
+            <!--</button>-->
+            <!--<ul class="dropdown-menu" role="menu">-->
+              <!--<li>-->
+                <!--<a href="" ng-click="">{{'ANY'|translate}}</a>-->
+              <!--</li>-->
+              <!--<li class="divider"></li>-->
+              <!--<li ng-repeat="field in category.fields">-->
+                <!--<a href="" ng-click="ctrl.query = ctrl.query + ' and ' + field.id + ' == '">{{field.name_en}}</a>-->
+              <!--</li>-->
+            <!--</ul>-->
+          <!--</div>-->
+
+          <!--<div class="btn-group" dropdown ng-repeat="datasource in ctrl.schema.datasources">-->
+            <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>-->
+              <!--{{datasource.name_en}}:-->
+              <!--</span> <span class="caret"></span>-->
+            <!--</button>-->
+            <!--<ul class="dropdown-menu" role="menu">-->
+              <!--<li>-->
+                <!--<a href="" ng-click="">{{'ANY'|translate}}</a>-->
+              <!--</li>-->
+              <!--<li class="divider"></li>-->
+              <!--<li ng-repeat="field in datasource.fields">-->
+                <!--<a href="" ng-click="">{{field.name_en}}</a>-->
+              <!--</li>-->
+            <!--</ul>-->
+          <!--</div>-->
         </div>
 
-        <form class="form-group" autocomplete="on">
+        <form class="form-group">
           <div class="input-group">
-            <input type="text" id="searchQuery" name="searchQuery" class="form-control" placeholder="Query" ng-model="ctrl.query">
+            <input type="text" id="searchQuery" name="searchQuery" class="form-control" ng-model="ctrl.query">
               <span class="input-group-btn">
-                <input class="btn btn-default" type="submit" ng-click="ctrl.search()">Submit</input>
+                <input class="btn btn-default" type="submit" ng-click="ctrl.search(ctrl.query)">Submit</input>
               </span>
           </div>
         </form>
@@ -91,30 +107,38 @@
 
           <tbody>
             <tr ng-repeat="point in ctrl.points">
-              <td>{{point.pointId}}</td>
-              <td>{{point.pointDescription}}</td>
-              <td>{{point.pointDatatype}}</td>
-              <td>{{point.pointAttribute}}</td>
-              <td>{{point.gmaoCode}}</td>
-              <td>{{point.timTagName}}</td>
-              <td>{{point.systemName}}</td>
-              <td>{{point.subSystemName}}</td>
-              <td>{{point.buildingNumber}}</td>
-              <td>{{point.buildingFloor}}</td>
-              <td>{{point.buildingRoom}}</td>
-              <td>{{point.responsibleFirstName}}</td>
-              <td>{{point.responsibleLastName}}</td>
+              <td>{{point.properties.pointId}}</td>
+              <td>{{point.properties.pointDescription}}</td>
+              <td>{{point.properties.pointDatatype}}</td>
+              <td>{{point.properties.pointAttribute}}</td>
+              <td>{{point.properties.gmaoCode}}</td>
+              <td>{{point.properties.timTagName}}</td>
+              <td>{{point.properties.systemName}}</td>
+              <td>{{point.properties.subSystemName}}</td>
+              <td>{{point.properties.buildingNumber}}</td>
+              <td>{{point.properties.buildingFloor}}</td>
+              <td>{{point.properties.buildingRoom}}</td>
+              <td>{{point.properties.responsibleFirstName}}</td>
+              <td>{{point.properties.responsibleLastName}}</td>
             </tr>
           </tbody>
         </table>
 
-        <!--<div ng-repeat="point in ctrl.points track by point.id">-->
-          <!--<span>id: {{point.id}}</span>-->
-          <!--<span>lineNo: {{point.lineNo}}</span>-->
-          <!--<span ng-repeat="(k, v) in point.properties">-->
-            <!--{{k}}: {{v}}-->
-          <!--</span>-->
-        <!--</div>-->
+
+        <div class="text-center" ng-if="ctrl.points.length > 0">
+          <pagination boundary-links="true"
+                      max-size="5"
+                      total-items="ctrl.page.totalElements"
+                      items-per-page="ctrl.page.size"
+                      rotate="false"
+                      ng-model="ctrl.page.number"
+                      ng-change="ctrl.onPageChanged()"
+                      class="pagination-sm"
+                      previous-text="&lsaquo;"
+                      next-text="&rsaquo;"
+                      first-text="&laquo;"
+                      last-text="&raquo;"></pagination>
+        </div>
 
 
       </div>

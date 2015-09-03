@@ -48,8 +48,8 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
         size: size,
         sort: sort
       }
-    }).then(function (requests) {
-      q.resolve(requests.data);
+    }).then(function (response) {
+      q.resolve(response.data);
     },
 
     function (error) {

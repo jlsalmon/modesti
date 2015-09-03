@@ -10,7 +10,6 @@ angular.module('modesti').service('PointService', PointService);
 function PointService($http, $q) {
   var self = this;
 
-
   // Public API
   var service = {
     getPoints: getPoints
@@ -19,19 +18,27 @@ function PointService($http, $q) {
   /**
    *
    * @param query
+   * @param page
+   * @param size
+   * @param sort
    * @returns {*}
    */
-  function getPoints(query) {
+  function getPoints(query, page, size, sort) {
     var q = $q.defer();
+    page = page || 0;
+    size = size || 20;
+    sort = sort || 'id,desc';
 
-    $http.get(BACKEND_BASE_URL + '/points', {params: {search: query}}).then(function (response) {
-      var points = [];
-
-      if (response.data.hasOwnProperty('_embedded')) {
-        points = response.data._embedded.refPoints
+    $http.get(BACKEND_BASE_URL + '/points',
+    {
+      params: {
+        search: query,
+        page: page - 1,
+        size: size,
+        sort:sort
       }
-
-      q.resolve(points);
+    }).then(function (response) {
+      q.resolve(response.data);
     },
 
     function (error) {

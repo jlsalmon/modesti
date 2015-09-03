@@ -2061,8 +2061,8 @@ a:focus {
  */
 .btn {
   border-radius: 3px;
-  box-shadow: none;
-  border: 1px solid transparent;
+  /* box-shadow: none; */
+  /* border: 1px solid transparent; */
 }
 .btn.uppercase {
   text-transform: uppercase;
