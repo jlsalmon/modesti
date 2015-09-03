@@ -58,25 +58,63 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <form class="form-group" autocomplete="on">
           <div class="input-group">
-            <input type="text" id="searchQuery" autocomplete="on" class="form-control" placeholder="Query" ng-model="ctrl.query">
+            <input type="text" id="searchQuery" name="searchQuery" class="form-control" placeholder="Query" ng-model="ctrl.query">
               <span class="input-group-btn">
                 <input class="btn btn-default" type="submit" ng-click="ctrl.search()">Submit</input>
               </span>
           </div>
-        </div>
+        </form>
 
 
         <alert ng-if="ctrl.error" type="danger">{{ctrl.error.status}} {{ctrl.error.statusText}}</alert>
 
-        <div ng-repeat="point in ctrl.points track by point.id">
-          <span>id: {{point.id}}</span>
-          <span>lineNo: {{point.lineNo}}</span>
-          <span ng-repeat="(k, v) in point.properties">
-            {{k}}: {{v}}
-          </span>
-        </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>pointId</th>
+              <th>pointDescription</th>
+              <th>pointDatatype</th>
+              <th>pointAttribute</th>
+              <th>gmaoCode</th>
+              <th>timTagName</th>
+              <th>systemName</th>
+              <th>subsystemName</th>
+              <th>buildingNumber</th>
+              <th>floor</th>
+              <th>room</th>
+              <th>responsibleFirstName</th>
+              <th>responsibleLastName</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr ng-repeat="point in ctrl.points">
+              <td>{{point.pointId}}</td>
+              <td>{{point.pointDescription}}</td>
+              <td>{{point.pointDatatype}}</td>
+              <td>{{point.pointAttribute}}</td>
+              <td>{{point.gmaoCode}}</td>
+              <td>{{point.timTagName}}</td>
+              <td>{{point.systemName}}</td>
+              <td>{{point.subSystemName}}</td>
+              <td>{{point.buildingNumber}}</td>
+              <td>{{point.buildingFloor}}</td>
+              <td>{{point.buildingRoom}}</td>
+              <td>{{point.responsibleFirstName}}</td>
+              <td>{{point.responsibleLastName}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!--<div ng-repeat="point in ctrl.points track by point.id">-->
+          <!--<span>id: {{point.id}}</span>-->
+          <!--<span>lineNo: {{point.lineNo}}</span>-->
+          <!--<span ng-repeat="(k, v) in point.properties">-->
+            <!--{{k}}: {{v}}-->
+          <!--</span>-->
+        <!--</div>-->
 
 
       </div>

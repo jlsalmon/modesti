@@ -24,11 +24,11 @@ function PointService($http, $q) {
   function getPoints(query) {
     var q = $q.defer();
 
-    $http.get(BACKEND_BASE_URL + '/points/', {params: {search: query}}).then(function (response) {
+    $http.get(BACKEND_BASE_URL + '/points', {params: {search: query}}).then(function (response) {
       var points = [];
 
       if (response.data.hasOwnProperty('_embedded')) {
-        points = response.data._embedded.points
+        points = response.data._embedded.refPoints
       }
 
       q.resolve(points);
