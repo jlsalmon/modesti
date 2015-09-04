@@ -6,14 +6,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.support.LdapUtils;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.naming.InvalidNameException;
 import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapName;
+import javax.naming.ldap.Rdn;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -46,7 +49,7 @@ public class LdapSynchroniser {
    * Get all users of the configured groups and add them. Runs once per hour
    */
   @Scheduled(cron = "0 0 * * * *")
-  public void synchroniseUsersAndGroups() {
+  public void synchroniseUsersAndGroups() throws InvalidNameException {
     log.debug("synchronising users and groups with LDAP server");
     Set<String> groupIds = new HashSet<>();
 
@@ -56,12 +59,12 @@ public class LdapSynchroniser {
     groupIds.addAll(env.getRequiredProperty("modesti.role.administrators", List.class));
 
     for (String groupId : groupIds) {
-      DistinguishedName dn = new DistinguishedName(env.getRequiredProperty("ldap.group.filter"));
-      dn.append("cn", groupId);
+      LdapName ln = new LdapName(env.getRequiredProperty("ldap.group.filter"));
+      ln.add(new Rdn("cn", groupId));
 
       // E.g.: (memberOf=CN=modesti-developers,OU=e-groups,OU=Workgroups,DC=cern,DC=ch)
-      EqualsFilter filter = new EqualsFilter("memberOf", dn.toString());
-      List users = ldapTemplate.search(DistinguishedName.EMPTY_PATH, filter.encode(), SearchControls.SUBTREE_SCOPE, null, (Object ctx) -> ctx);
+      EqualsFilter filter = new EqualsFilter("memberOf", ln.toString());
+      List users = ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), SearchControls.SUBTREE_SCOPE, null, (Object ctx) -> ctx);
 
       for (Object object : users) {
         DirContextAdapter adapter = (DirContextAdapter) object;
