@@ -1,6 +1,6 @@
 package cern.modesti.util;
 
-import cern.modesti.point.Point;
+import cern.modesti.request.point.Point;
 
 import java.util.Map;
 

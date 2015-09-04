@@ -3,7 +3,7 @@ package cern.modesti.util;
 import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
-import cern.modesti.point.Point;
+import cern.modesti.request.point.Point;
 import cern.modesti.security.ldap.Role;
 import cern.modesti.security.ldap.User;
 

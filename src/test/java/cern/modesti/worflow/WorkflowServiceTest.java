@@ -2,10 +2,10 @@ package cern.modesti.worflow;
 
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestStatus;
-import cern.modesti.point.state.Addressing;
-import cern.modesti.point.state.Approval;
-import cern.modesti.point.state.Cabling;
-import cern.modesti.point.state.Testing;
+import cern.modesti.request.point.state.Addressing;
+import cern.modesti.request.point.state.Approval;
+import cern.modesti.request.point.state.Cabling;
+import cern.modesti.request.point.state.Testing;
 import cern.modesti.security.ldap.User;
 import cern.modesti.util.BaseIntegrationTest;
 import cern.modesti.workflow.task.TaskAction;

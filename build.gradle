@@ -127,7 +127,7 @@ task generateQueryDSL(type: JavaCompile, group: 'build', description: 'Generates
     classpath = configurations.compile + configurations.querydslapt
     options.compilerArgs = [
             "-proc:only",
-            "-processor", "org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor" // com.mysema.query.apt.jpa.JPAAnnotationProcessor
+            "-processor", "org.springframework.data.mongodb.repository.support.MongoAnnotationProcessor,com.mysema.query.apt.jpa.JPAAnnotationProcessor"
     ]
     destinationDir = sourceSets.generated.java.srcDirs.iterator().next()
 }

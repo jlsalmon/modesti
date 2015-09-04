@@ -29,7 +29,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import cern.modesti.point.Point;
+import cern.modesti.request.point.Point;
 import cern.modesti.request.Request;
 import cern.modesti.upload.exception.RequestParseException;
 import cern.modesti.upload.exception.VersionNotSupportedException;
@@ -404,7 +404,7 @@ public class RequestParserTest {
     assertTrue(points.size() == 279);
 
     for (Point point : points) {
-      assertTrue(point.getId() != null);
+      assertTrue(point.getLineNo() != null);
       assertFalse(point.getProperties().isEmpty());
     }
   }
@@ -420,7 +420,7 @@ public class RequestParserTest {
     assertTrue(points.size() == 14);
 
     for (Point point : points) {
-      assertTrue(point.getId() != null);
+      assertTrue(point.getLineNo() != null);
       assertFalse(point.getProperties().isEmpty());
     }
   }
@@ -440,7 +440,7 @@ public class RequestParserTest {
     assertTrue(points.size() == 14);
 
     for (Point point : points) {
-      assertTrue(point.getId() != null);
+      assertTrue(point.getLineNo() != null);
       assertFalse(point.getProperties().isEmpty());
     }
   }
@@ -457,7 +457,7 @@ public class RequestParserTest {
     assertTrue(points.size() == 43);
 
     for (Point point : points) {
-      assertTrue(point.getId() != null);
+      assertTrue(point.getLineNo() != null);
       assertFalse(point.getProperties().isEmpty());
     }
   }

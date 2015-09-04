@@ -2,6 +2,8 @@ package cern.modesti.point;
 
 import static com.mysema.query.types.PathMetadataFactory.*;
 
+import cern.modesti.request.point.Point;
+import cern.modesti.request.point.state.Error;
 import com.mysema.query.types.path.*;
 
 import com.mysema.query.types.PathMetadata;
@@ -34,7 +36,7 @@ public class QPoint extends EntityPathBase<Point> {
 
     public final BooleanPath dirty = createBoolean("dirty");
 
-    public final ListPath<cern.modesti.point.state.Error, cern.modesti.point.state.QError> errors = this.<cern.modesti.point.state.Error, cern.modesti.point.state.QError>createList("errors", cern.modesti.point.state.Error.class, cern.modesti.point.state.QError.class, PathInits.DIRECT2);
+    public final ListPath<Error, cern.modesti.point.state.QError> errors = this.<Error, cern.modesti.point.state.QError>createList("errors", Error.class, cern.modesti.point.state.QError.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

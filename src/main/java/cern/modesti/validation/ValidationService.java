@@ -10,8 +10,8 @@ import cern.modesti.repository.location.zone.SafetyZone;
 import cern.modesti.repository.person.Person;
 import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.Request;
-import cern.modesti.point.state.Error;
-import cern.modesti.point.Point;
+import cern.modesti.request.point.state.Error;
+import cern.modesti.request.point.Point;
 import com.google.common.base.CaseFormat;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +77,7 @@ public class ValidationService {
 
       // These are always required
       properties.put("requestId", request.getRequestId());
-      properties.put("lineno", point.getId());
+      properties.put("lineno", point.getLineNo());
 
       // Some properties are stored as complex objects, so we need to retrieve the appropriate properties from them, ready for validation.
 
@@ -198,7 +198,7 @@ public class ValidationService {
 
     // Set the error messages on the points
     for (Point point : request.getPoints()) {
-      if (point.getId().equals(new Long(result.getLineno()))) {
+      if (point.getLineNo().equals(new Long(result.getLineno()))) {
         Integer exitCode = result.getExitCode();
         String exitText = result.getExitText();
 

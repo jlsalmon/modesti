@@ -18,7 +18,7 @@
 package cern.modesti.request;
 
 import cern.modesti.request.counter.CounterService;
-import cern.modesti.point.Point;
+import cern.modesti.request.point.Point;
 import cern.modesti.workflow.WorkflowService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,8 @@ import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
+
+import static java.lang.String.format;
 
 /**
  * TODO
@@ -57,22 +59,19 @@ public class RequestEventHandler {
   @HandleBeforeCreate
   public void handleRequestCreate(Request request) {
     request.setRequestId(counterService.getNextSequence(CounterService.REQUEST_ID_SEQUENCE).toString());
-    log.trace("beforeCreate() generated request id: " + request.getRequestId());
+    log.trace(format("generated request id: %s", request.getRequestId()));
 
     // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
       for (int i = 0; i < 10; i++) {
-        // Point IDs are 1-based
         Point point = new Point((long) (i + 1));
         request.getPoints().add(point);
       }
     }
 
     for (Point point : request.getPoints()) {
-      if (point.getId() == null) {
-        // Point IDs are 1-based
+      if (point.getLineNo() == null) {
         point.setLineNo((long) (request.getPoints().indexOf(point) + 1));
-        log.debug("beforeCreate() generated point id: " + point.getId());
       }
     }
 
@@ -88,10 +87,8 @@ public class RequestEventHandler {
   @HandleBeforeSave
   public void handleRequestSave(Request request) {
     for (Point point : request.getPoints()) {
-      if (point.getId() == null) {
-        // Point IDs are 1-based
+      if (point.getLineNo() == null) {
         point.setLineNo((long) (request.getPoints().indexOf(point) + 1));
-        log.debug("beforeSave() generated point id: " + point.getId());
       }
     }
   }

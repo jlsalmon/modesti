@@ -1,12 +1,8 @@
 package cern.modesti;
 
 import cern.modesti.plugin.RequestProvider;
-import cern.modesti.point.PointRepository;
-import cern.modesti.request.Request;
-import cern.modesti.request.RequestRepository;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.plugin.core.config.EnablePluginRegistries;
 
 /**

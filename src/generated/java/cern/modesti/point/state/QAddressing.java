@@ -2,6 +2,7 @@ package cern.modesti.point.state;
 
 import static com.mysema.query.types.PathMetadataFactory.*;
 
+import cern.modesti.request.point.state.Addressing;
 import com.mysema.query.types.path.*;
 
 import com.mysema.query.types.PathMetadata;

@@ -31,7 +31,7 @@ import org.subethamail.wiser.Wiser;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @TestPropertySource("classpath:modesti-test.properties")
-@WebIntegrationTest
+@WebIntegrationTest(randomPort = true)
 @ActiveProfiles("test")
 public abstract class BaseIntegrationTest {
 

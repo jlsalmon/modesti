@@ -1,6 +1,6 @@
 package cern.modesti.config;
 
-import cern.modesti.repository.point.RefPoint;
+import cern.modesti.repository.refpoint.RefPoint;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestDeserialiser;
 import cern.modesti.schema.Schema;
@@ -30,7 +30,7 @@ import cern.modesti.repository.location.zone.SafetyZone;
 import cern.modesti.repository.person.Person;
 import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.SearchTextConverter;
-import cern.modesti.point.Point;
+import cern.modesti.request.point.Point;
 import cern.modesti.security.ldap.User;
 
 @Configuration

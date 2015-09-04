@@ -11,7 +11,7 @@ import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.request.RequestStatus;
 import cern.modesti.request.counter.CounterService;
-import cern.modesti.point.Point;
+import cern.modesti.request.point.Point;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
@@ -332,11 +332,11 @@ public class WorkflowService {
     List<Point> childPoints = new ArrayList<>();
 
     // Give the split points to the child.
-    for (Long pointId : pointsToSplit) {
+    for (Long lineNo : pointsToSplit) {
       Point pointToSplit = null;
 
       for (Point point : parent.getPoints()) {
-        if (point.getId().equals(pointId)) {
+        if (point.getLineNo().equals(lineNo)) {
           pointToSplit = point;
           break;
         }
