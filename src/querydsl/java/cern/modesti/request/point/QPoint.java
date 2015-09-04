@@ -1,9 +1,7 @@
-package cern.modesti.point;
+package cern.modesti.request.point;
 
 import static com.mysema.query.types.PathMetadataFactory.*;
 
-import cern.modesti.request.point.Point;
-import cern.modesti.request.point.state.Error;
 import com.mysema.query.types.path.*;
 
 import com.mysema.query.types.PathMetadata;
@@ -15,30 +13,28 @@ import com.mysema.query.types.path.PathInits;
 /**
  * QPoint is a Querydsl query type for Point
  */
-@Generated("com.mysema.query.codegen.EntitySerializer")
-public class QPoint extends EntityPathBase<Point> {
+@Generated("com.mysema.query.codegen.EmbeddableSerializer")
+public class QPoint extends BeanPath<Point> {
 
-    private static final long serialVersionUID = -1306888967L;
+    private static final long serialVersionUID = -1746245350L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QPoint point = new QPoint("point");
 
-    public final cern.modesti.point.state.QAddressing addressing;
+    public final cern.modesti.request.point.state.QAddressing addressing;
 
     public final BooleanPath alarm = createBoolean("alarm");
 
-    public final cern.modesti.point.state.QApproval approval;
+    public final cern.modesti.request.point.state.QApproval approval;
 
-    public final cern.modesti.point.state.QCabling cabling;
+    public final cern.modesti.request.point.state.QCabling cabling;
 
     public final BooleanPath configured = createBoolean("configured");
 
     public final BooleanPath dirty = createBoolean("dirty");
 
-    public final ListPath<Error, cern.modesti.point.state.QError> errors = this.<Error, cern.modesti.point.state.QError>createList("errors", Error.class, cern.modesti.point.state.QError.class, PathInits.DIRECT2);
-
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final ListPath<cern.modesti.request.point.state.Error, SimplePath<cern.modesti.request.point.state.Error>> errors = this.<cern.modesti.request.point.state.Error, SimplePath<cern.modesti.request.point.state.Error>>createList("errors", cern.modesti.request.point.state.Error.class, SimplePath.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> lineNo = createNumber("lineNo", Long.class);
 
@@ -46,7 +42,7 @@ public class QPoint extends EntityPathBase<Point> {
 
     public final BooleanPath selected = createBoolean("selected");
 
-    public final cern.modesti.point.state.QTesting testing;
+    public final cern.modesti.request.point.state.QTesting testing;
 
     public final BooleanPath valid = createBoolean("valid");
 
@@ -68,10 +64,10 @@ public class QPoint extends EntityPathBase<Point> {
 
     public QPoint(Class<? extends Point> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.addressing = inits.isInitialized("addressing") ? new cern.modesti.point.state.QAddressing(forProperty("addressing")) : null;
-        this.approval = inits.isInitialized("approval") ? new cern.modesti.point.state.QApproval(forProperty("approval")) : null;
-        this.cabling = inits.isInitialized("cabling") ? new cern.modesti.point.state.QCabling(forProperty("cabling")) : null;
-        this.testing = inits.isInitialized("testing") ? new cern.modesti.point.state.QTesting(forProperty("testing")) : null;
+        this.addressing = inits.isInitialized("addressing") ? new cern.modesti.request.point.state.QAddressing(forProperty("addressing")) : null;
+        this.approval = inits.isInitialized("approval") ? new cern.modesti.request.point.state.QApproval(forProperty("approval")) : null;
+        this.cabling = inits.isInitialized("cabling") ? new cern.modesti.request.point.state.QCabling(forProperty("cabling")) : null;
+        this.testing = inits.isInitialized("testing") ? new cern.modesti.request.point.state.QTesting(forProperty("testing")) : null;
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Justin Lewis Salmon
  */
-public interface UserRepository extends MongoRepository<User, String>, QueryDslPredicateExecutor<User>, QuerydslBinderCustomizer<QUser> {
+public interface UserRepository extends MongoRepository<User, String>, QueryDslPredicateExecutor<User>/*, QuerydslBinderCustomizer<QUser>*/ {
 
   User findOneByUsername(@Param("username") String username);
 
@@ -32,8 +32,8 @@ public interface UserRepository extends MongoRepository<User, String>, QueryDslP
          "}                                                         ")
   List<User> find(@Param("query") String query, @Param("authority") String authority);
 
-  @Override
-  default void customize(QuerydslBindings bindings, QUser root) {
-    bindings.bind(root.username).first(StringExpression::equalsIgnoreCase);
-  }
+//  @Override
+//  default void customize(QuerydslBindings bindings, QUser root) {
+//    bindings.bind(root.username).first(StringExpression::equalsIgnoreCase);
+//  }
 }

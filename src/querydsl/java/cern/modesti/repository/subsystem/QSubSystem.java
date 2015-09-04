@@ -12,8 +12,8 @@ import com.mysema.query.types.Path;
 /**
  * QSubSystem is a Querydsl query type for SubSystem
  */
-@Generated("com.mysema.query.codegen.EmbeddableSerializer")
-public class QSubSystem extends BeanPath<SubSystem> {
+@Generated("com.mysema.query.codegen.EntitySerializer")
+public class QSubSystem extends EntityPathBase<SubSystem> {
 
     private static final long serialVersionUID = -1545920443L;
 

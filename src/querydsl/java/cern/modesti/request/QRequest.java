@@ -54,8 +54,6 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final EnumPath<RequestStatus> status = createEnum("status", RequestStatus.class);
 
-    public final cern.modesti.repository.subsystem.QSubSystem subsystem;
-
     public final cern.modesti.request.point.state.QTesting testing;
 
     public final EnumPath<RequestType> type = createEnum("type", RequestType.class);
@@ -85,7 +83,6 @@ public class QRequest extends EntityPathBase<Request> {
         this.cabling = inits.isInitialized("cabling") ? new cern.modesti.request.point.state.QCabling(forProperty("cabling")) : null;
         this.configurationResult = inits.isInitialized("configurationResult") ? new cern.modesti.workflow.result.QConfigurationResult(forProperty("configurationResult")) : null;
         this.creator = inits.isInitialized("creator") ? new cern.modesti.security.ldap.QUser(forProperty("creator")) : null;
-        this.subsystem = inits.isInitialized("subsystem") ? new cern.modesti.repository.subsystem.QSubSystem(forProperty("subsystem")) : null;
         this.testing = inits.isInitialized("testing") ? new cern.modesti.request.point.state.QTesting(forProperty("testing")) : null;
     }
 

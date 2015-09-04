@@ -93,7 +93,7 @@ public abstract class RequestParser {
     request.setCategories(parseCategories(points));
 
     // Figure out the subsystem: assume first
-    request.setSubsystem((SubSystem) points.get(0).getProperties().get("subsystem"));
+    //request.setSubsystem((SubSystem) points.get(0).getProperties().get("subsystem"));
 
     return request;
   }

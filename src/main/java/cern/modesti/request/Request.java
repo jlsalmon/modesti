@@ -92,10 +92,10 @@ public class Request implements Serializable {
   @NotNull(message = "Domain is compulsory")
   private String domain;
 
-  @Indexed
-  @TextIndexed
-  @NotNull(message = "Subsystem is compulsory")
-  private SubSystem subsystem;
+//  @Indexed
+//  @TextIndexed
+//  @NotNull(message = "Subsystem is compulsory")
+//  private String subsystem;
 
   @Indexed
   @TextIndexed
@@ -158,7 +158,7 @@ public class Request implements Serializable {
     this.creator = request.creator;
     this.description = request.description;
     this.domain = request.domain;
-    this.subsystem = request.subsystem;
+//    this.subsystem = request.subsystem;
     this.categories = request.categories;
     this.points = request.points;
   }
