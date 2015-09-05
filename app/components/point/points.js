@@ -31,7 +31,7 @@ function PointsController(schemas, PointService) {
       if (schema.id === domain) {
         self.schema = schema;
       }
-    })
+    });
   }
 
   /**
