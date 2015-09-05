@@ -27,9 +27,9 @@ function PointService($http, $q) {
     var q = $q.defer();
     page = page || 0;
     size = size || 20;
-    sort = sort || 'id,desc';
+    sort = sort || 'pointId,desc';
 
-    $http.get(BACKEND_BASE_URL + '/points',
+    $http.get(BACKEND_BASE_URL + '/points/ref',
     {
       params: {
         search: query,

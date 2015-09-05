@@ -21,7 +21,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-      
+
         <div ng-if="ctrl.searching == 'started'">
           <!-- <h3 translate>SEARCH</h3> -->
           <h3>
@@ -29,7 +29,7 @@
             Searching for <strong>{{ctrl.q}}</strong> &hellip;
           </h3>
         </div>
-        
+
         <div ng-if="ctrl.searching == 'success'">
 
           <div class="alert" ng-if="ctrl.requests.length == 0">
@@ -38,9 +38,9 @@
             </h4>
             {{'NO_MATCHING_RESULTS'|translate}} <strong>{{ctrl.q}}</strong>.
           </div>
-        
+
           <div ng-if="ctrl.requests.length != 0">
-  
+
             <h3>{{ctrl.requests.length}} {{'RESULTS'|translate}} matching <strong>{{ctrl.q}}</strong>:</h3>
 
             <div class="list-group">
@@ -48,7 +48,7 @@
                  ng-if="ctrl.requests.length > 0"
                  ng-click="ctrl.editRequest(request)"
                  class="list-group-item">
-    
+
                 <i class="fa fa-list-ol fa-fw text-muted"></i>
                 <span class=""><strong>{{request.description}}</strong></span>
                 <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
@@ -56,7 +56,7 @@
                 <span class="" style="font-size: 11px;">
                   <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} &middot;</span>
                   <span class="text-muted"> <i class="fa fa-fw fa-crosshairs"></i> {{request.domain}} &middot; </span>
-                  <span class="text-muted"> <i class="fa fa-fw fa-sitemap"></i>    {{request.subsystem.value}} &middot; </span>
+                  <!--<span class="text-muted"> <i class="fa fa-fw fa-sitemap"></i>    {{request.subsystem.value}} &middot; </span>-->
                   <span class="text-muted"> <i class="fa fa-fw fa-cogs"></i>       {{request.categories.join(', ')}}</span>
                 </span>
               </a>
@@ -64,11 +64,11 @@
                 No requests to show
               </div>
             </div>
-      
-      
+
+
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>

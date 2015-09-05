@@ -50,7 +50,7 @@ function PointsController(schemas, PointService) {
 
     PointService.getPoints(query, page, size, sort).then(function (response) {
       if (response.hasOwnProperty('_embedded')) {
-        self.points = response._embedded.points;
+        self.points = response._embedded.refPoints;
       } else {
         self.points = [];
       }
@@ -84,6 +84,6 @@ function PointsController(schemas, PointService) {
    *
    */
   function onPageChanged() {
-    search(self.query, self.page.number, self.page.size, "id,desc");
+    search(self.query, self.page.number, self.page.size, "pointId,desc");
   }
 }
