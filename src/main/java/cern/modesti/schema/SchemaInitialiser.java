@@ -257,6 +257,11 @@ public class SchemaInitialiser {
       T t = loadResource(resource, klass);
       String pathToJar = getPathToJar(resource);
 
+      // When running as a jar, dont detect ourselves as a plugin
+      if (pathToJar.contains("modesti-api")) {
+        continue;
+      }
+
       if (resources.containsKey(pathToJar)) {
         resources.get(pathToJar).add(t);
       } else {
