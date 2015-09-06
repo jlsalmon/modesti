@@ -368,6 +368,23 @@ module.exports = function (grunt) {
       }
     },
 
+    // Replace the backend base URL with either default (localhost:8080) or as specified by --backend-base-url
+    replace: {
+      dist: {
+        options: {
+          patterns: [
+            {
+              match: 'BACKEND_BASE_URL',
+              replacement: grunt.option('backend-base-url') || 'http://localhpst:8080'
+            }
+          ]
+        },
+        files: [
+          {expand: true, flatten: true, src: ['app/app.config.js'], dest: '<%= yeoman.dist %>'}
+        ]
+      }
+    },
+
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       server: [
@@ -436,7 +453,8 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'replace'
   ]);
 
   grunt.registerTask('default', [
