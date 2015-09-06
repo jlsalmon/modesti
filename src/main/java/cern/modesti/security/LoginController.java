@@ -37,7 +37,15 @@ public class LoginController {
   @RequestMapping(value = "/proxy.html", produces = "text/html")
   public String proxy() {
     String base = environment.getRequiredProperty("modesti.base");
-    return "<!DOCTYPE HTML><script src=\"http://localhost:9000/bower_components/xdomain/dist/xdomain.js\" master=\"" + base + "\"></script>";
+    return "" +
+        "<!DOCTYPE HTML>" +
+        "<script src=\"" + base +"/bower_components/xdomain/dist/xdomain.js\"></script>" +
+        "<script>" +
+        "xdomain.masters({                  " +
+        "    'http://localhost:9000': '/*', " +
+        "    '" + base + "': '/*'           " +
+        "});                                " +
+        "</script>";
   }
 
 //  @RequestMapping(value = "/xdomain", produces = "text/javascript")
