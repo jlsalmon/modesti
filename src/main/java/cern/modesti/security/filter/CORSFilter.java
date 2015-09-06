@@ -28,6 +28,8 @@ public class CORSFilter implements Filter {
     response.setHeader("Access-Control-Expose-Headers", "Location");
     response.setHeader("Access-Control-Allow-Credentials", "true");
 
+    response.setHeader("X-Frame-Options", "");
+
     if (!((HttpServletRequest) req).getMethod().equals("OPTIONS")) {
       chain.doFilter(req, res);
     }
