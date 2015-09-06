@@ -26,7 +26,7 @@ import java.security.Principal;
 public class LoginController {
 
   @Autowired
-  Environment environmet;
+  Environment environment;
 
   @RequestMapping(value = "/login")
   public UserDetails login(Principal principal) {
@@ -36,7 +36,7 @@ public class LoginController {
 
   @RequestMapping(value = "/proxy.html", produces = "text/html")
   public String proxy() {
-    String base = environmet.getRequiredProperty("modesti.base");
+    String base = environment.getRequiredProperty("modesti.base");
     return "<!DOCTYPE HTML><script src=\"http://localhost:9000/bower_components/xdomain/dist/xdomain.js\" master=\"" + base + "\"></script>";
   }
 
