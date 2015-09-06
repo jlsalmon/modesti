@@ -380,7 +380,7 @@ module.exports = function (grunt) {
           ]
         },
         files: [
-          {expand: true, flatten: true, src: ['app/app.config.js'], dest: '<%= yeoman.dist %>'}
+          {expand: true, flatten: true, src: ['app/index.html', 'app/app.config.js'], dest: '<%= yeoman.dist %>'}
         ]
       }
     },
@@ -418,6 +418,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
+      'replace',
       'concurrent:server',
       'autoprefixer:server',
       'connect:livereload',
