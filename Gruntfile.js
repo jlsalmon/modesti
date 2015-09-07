@@ -346,7 +346,8 @@ module.exports = function (grunt) {
             '*.html',
             'components/{,*/}*.html',
             'images/{,*/}*.{webp}',
-            'styles/fonts/{,*/}*.*'
+            'styles/fonts/{,*/}*.*',
+            'translations/*.json'
           ]
         }, {
           expand: true,
@@ -355,9 +356,21 @@ module.exports = function (grunt) {
           src: ['generated/*']
         }, {
           expand: true,
-          cwd: 'bower_components/bootstrap/dist',
+          cwd: '<%= yeoman.app %>/bower_components/bootstrap/dist',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>'
+        }, {
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>/bower_components/font-awesome',
+          src: ['fonts/*.*'],
+          dest: '<%= yeoman.dist %>'
+        }, {
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>/bower_components/famfamfam-flags-sprite/src',
+          src: ['*.png'],
+          dest: '<%= yeoman.dist %>/styles'
         }]
       },
       styles: {
@@ -380,8 +393,9 @@ module.exports = function (grunt) {
           ]
         },
         files: [
-          {expand: true, flatten: true, src: ['app/index.html', 'app/app.config.js'], dest: '<%= yeoman.dist %>'}
-        ]
+          {expand: true, flatten: true, src: '<%= yeoman.dist %>/scripts/*.js', dest: '<%= yeoman.dist %>/scripts'}
+        ],
+        pedantic: true
       }
     },
 
@@ -418,7 +432,6 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
-      'replace',
       'concurrent:server',
       'autoprefixer:server',
       'connect:livereload',
