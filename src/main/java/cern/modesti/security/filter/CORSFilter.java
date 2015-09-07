@@ -13,22 +13,28 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class CORSFilter implements Filter {
+
+  @Autowired
+  private Environment environment;
 
   @Override
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
     HttpServletResponse response = (HttpServletResponse) res;
-    response.setHeader("Access-Control-Allow-Origin", "http://localhost:9000");
+    response.setHeader("Access-Control-Allow-Origin", environment.getRequiredProperty("modesti.base"));
     response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
     response.setHeader("Access-Control-Max-Age", "3600");
     response.setHeader("Access-Control-Allow-Headers", "x-requested-with, content-type, accept, authorization");
     response.setHeader("Access-Control-Expose-Headers", "Location");
     response.setHeader("Access-Control-Allow-Credentials", "true");
-
-    response.setHeader("X-Frame-Options", "");
 
     if (!((HttpServletRequest) req).getMethod().equals("OPTIONS")) {
       chain.doFilter(req, res);
