@@ -25,35 +25,9 @@ import java.security.Principal;
 @RestController
 public class LoginController {
 
-  @Autowired
-  Environment environment;
-
   @RequestMapping(value = "/login")
   public UserDetails login(Principal principal) {
     UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
     return (User) token.getPrincipal();
   }
-
-  @RequestMapping(value = "/proxy.html", produces = "text/html")
-  public String proxy() {
-    String base = environment.getRequiredProperty("modesti.base");
-    return "" +
-        "<!DOCTYPE HTML>" +
-        "<script src=\"" + base +"/bower_components/xdomain/dist/xdomain.js\"></script>" +
-        "<script>" +
-        "xdomain.masters({                  " +
-        "    'http://localhost:9000': '/*', " +
-        "    '" + base + "': '/*'           " +
-        "});                                " +
-        "</script>";
-  }
-
-//  @RequestMapping(value = "/xdomain", produces = "text/javascript")
-//  public ResponseEntity xdomain() throws IOException {
-//    ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
-//    Resource resource = resolver.getResource("classpath:security/xdomain.min.js");
-//
-//    InputStreamResource inputStreamResource = new InputStreamResource(resource.getInputStream());
-//    return new ResponseEntity(inputStreamResource, HttpStatus.OK);
-//  }
 }
