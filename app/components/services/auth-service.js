@@ -96,7 +96,8 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
    */
   function logout() {
     $localStorage.user = undefined;
-    delete $cookies["JSESSIONID"];
+    $cookies.remove('JSESSIONID');
+    delete $cookies['JSESSIONID'];
     return $q.when();
   }
 

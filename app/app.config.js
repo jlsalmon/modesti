@@ -9,12 +9,15 @@
  */
 angular.module('modesti').config(configure);
 
-var BACKEND_BASE_URL = 'http://localhost:8080';
+var BACKEND_BASE_URL = '@@BACKEND_BASE_URL';
+if (BACKEND_BASE_URL.lastIndexOf("@@", 0) === 0) {
+  BACKEND_BASE_URL = 'http://localhost:8080';
+}
 
 function configure($httpProvider, $translateProvider, RestangularProvider) {
 
   // Needed so that Spring Security sends us back a WWW-Authenticate header,
-  // which will prevent th browser from showing a basic auth popup
+  // which will prevent the browser from showing a basic auth popup
   $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
   // Needed to make sure that the JSESSIONCOOKIE is sent with every request

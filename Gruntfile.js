@@ -346,7 +346,8 @@ module.exports = function (grunt) {
             '*.html',
             'components/**/*.html',
             'images/**/*.{webp}',
-            'styles/fonts/**/*.*'
+            'styles/fonts/**/*.*',
+            'translations/*.json'
           ]
         }, {
           expand: true,
@@ -355,9 +356,21 @@ module.exports = function (grunt) {
           src: ['generated/*']
         }, {
           expand: true,
-          cwd: 'bower_components/bootstrap/dist',
+          cwd: '<%= yeoman.app %>/bower_components/bootstrap/dist',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>'
+        }, {
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>/bower_components/font-awesome',
+          src: ['fonts/*.*'],
+          dest: '<%= yeoman.dist %>'
+        }, {
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>/bower_components/famfamfam-flags-sprite/src',
+          src: ['*.png'],
+          dest: '<%= yeoman.dist %>/styles'
         }]
       },
       styles: {
@@ -365,6 +378,24 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '**/*.css'
+      }
+    },
+
+    // Replace the backend base URL with either default (localhost:8080) or as specified by --backend-base-url
+    replace: {
+      dist: {
+        options: {
+          patterns: [
+            {
+              match: 'BACKEND_BASE_URL',
+              replacement: grunt.option('backend-base-url') || 'http://localhost:8080'
+            }
+          ]
+        },
+        files: [
+          {expand: true, flatten: true, src: '<%= yeoman.dist %>/scripts/*.js', dest: '<%= yeoman.dist %>/scripts'}
+        ],
+        pedantic: true
       }
     },
 
@@ -436,7 +467,8 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'replace'
   ]);
 
   grunt.registerTask('default', [
