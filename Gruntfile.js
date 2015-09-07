@@ -420,6 +420,25 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+
+    // Download required fonts locally
+    "goog-webfont-dl": {
+      "source-sans-pro": {
+        options: {
+          ttf: true,
+          eot: true,
+          woff: true,
+          woff2: true,
+          svg: true,
+          fontname: 'Source Sans Pro',
+          fontstyles: '300,400,600,700',
+          fontdest: '<%= yeoman.app %>/styles/fonts',
+          cssdest: '<%= yeoman.app %>/styles/fonts/source-sans-pro.css',
+          cssprefix: '',
+          subset: ''
+        }
+      }
     }
   });
 
@@ -456,6 +475,7 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
+    'goog-webfont-dl',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
