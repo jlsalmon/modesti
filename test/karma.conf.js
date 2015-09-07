@@ -51,7 +51,6 @@ module.exports = function(config) {
       'app/bower_components/angular-ui-select/dist/select.js',
       'app/bower_components/select2/select2.js',
       'app/bower_components/angular-ui-router-title/angular-ui-router-title.js',
-      'app/bower_components/xdomain/dist/xdomain.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       'app/bower_components/chai/chai.js',
       'app/bower_components/mocha/mocha.js',
