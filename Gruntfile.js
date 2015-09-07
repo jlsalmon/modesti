@@ -388,7 +388,7 @@ module.exports = function (grunt) {
           patterns: [
             {
               match: 'BACKEND_BASE_URL',
-              replacement: grunt.option('backend-base-url') || 'http://localhost:8080'
+              replacement: grunt.option('backend-base-url')
             }
           ]
         },
