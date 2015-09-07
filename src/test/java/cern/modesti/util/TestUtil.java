@@ -32,7 +32,7 @@ public class TestUtil {
     request.setCreator(BEN);
     request.setDescription("description");
     request.setDomain("DEFAULT");
-    //request.setSubsystem(new SubSystem(1L, "EAU DEMI", "EAU", "A", "DEMI", "B"));
+    request.setSubsystem("EAU DEMI");
     request.setCategories(new HashSet<>(Collections.singletonList("PLC")));
 
     request.setPoints(getDefaultPoints());

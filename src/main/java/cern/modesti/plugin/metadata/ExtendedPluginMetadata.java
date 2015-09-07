@@ -38,7 +38,7 @@ public class ExtendedPluginMetadata implements PluginMetadata {
     switch (type) {
       case CREATE:
         return createProcessKey;
-      case MODIFY:
+      case UPDATE:
         return updateProcessKey;
       case DELETE:
         return deleteProcessKey;

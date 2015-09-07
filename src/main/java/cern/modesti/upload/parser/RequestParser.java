@@ -87,7 +87,7 @@ public abstract class RequestParser {
     request.setCategories(parseCategories(points));
 
     // Figure out the subsystem: assume first
-    //request.setSubsystem((SubSystem) points.get(0).getProperties().get("subsystem"));
+    request.setSubsystem(((SubSystem) points.get(0).getProperties().get("subsystem")).getValue());
 
     return request;
   }
@@ -124,7 +124,7 @@ public abstract class RequestParser {
     if (type.contains("creation")) {
       return RequestType.CREATE;
     } else if (type.contains("modification")) {
-      return RequestType.MODIFY;
+      return RequestType.UPDATE;
     } else if (type.contains("deletion")) {
       return RequestType.DELETE;
     } else {

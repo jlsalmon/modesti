@@ -7,7 +7,6 @@ package cern.modesti.request;
  */
 public enum RequestType {
   CREATE,
-  MODIFY,
-  DELETE;
-
+  UPDATE,
+  DELETE
 }

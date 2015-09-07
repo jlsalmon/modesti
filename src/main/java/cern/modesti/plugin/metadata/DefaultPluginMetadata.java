@@ -35,7 +35,7 @@ public class DefaultPluginMetadata implements PluginMetadata {
     switch (type) {
       case CREATE:
         return DEFAULT_CREATE_PROCESS;
-      case MODIFY:
+      case UPDATE:
         return DEFAULT_UPDATE_PROCESS;
       case DELETE:
         return DEFAULT_DELETE_PROCESS;

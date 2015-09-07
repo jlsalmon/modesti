@@ -54,6 +54,8 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final EnumPath<RequestStatus> status = createEnum("status", RequestStatus.class);
 
+    public final StringPath subsystem = createString("subsystem");
+
     public final cern.modesti.request.point.state.QTesting testing;
 
     public final EnumPath<RequestType> type = createEnum("type", RequestType.class);

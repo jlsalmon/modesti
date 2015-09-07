@@ -24,7 +24,7 @@ import cern.modesti.request.SkinnyRequest;
  */
 
 @RepositoryRestResource(excerptProjection = SkinnyRequest.class)
-public interface RequestRepository extends MongoRepository<Request, String>, QueryDslPredicateExecutor<Request> {
+public interface RequestRepository extends MongoRepository<Request, String> {
 
   /**
    * @param requestId
@@ -62,8 +62,8 @@ public interface RequestRepository extends MongoRepository<Request, String>, Que
       "{ 'status': { '$regex': '?0' } }, " +
       "{ 'domain': { '$regex': '?1' } }, " +
       "{ 'type':   { '$regex': '?2' } }, " +
-      "{ 'subsystem.system'   : { '$regex': '?3' } }, " +
-      "{ 'subsystem.subsystem': { '$regex': '?4' } }, " +
+//      "{ 'subsystem.system'   : { '$regex': '?3' } }, " +
+//      "{ 'subsystem.subsystem': { '$regex': '?4' } }, " +
       "{ 'creator.username'   : { '$regex': '?5' } } ] }")
   Page<Request> find(@Param("status") String status, @Param("domain") String domain, @Param("type") String type, @Param("system") String system, @Param
       ("subsystem") String subsystem, @Param("creator") String creator, Pageable page);
