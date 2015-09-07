@@ -63,11 +63,11 @@ public class RequestParserFactory {
     Row header = sheet.getRow(0);
 
     String domain = header.getCell(0).getStringCellValue().trim();
-    if (domain.equals(RequestParser.Domain.TIM.toString())) {
+    if (domain.equals("TIM")) {
       requestParser = new TIMRequestParser(sheet);
-    } else if (domain.equals(RequestParser.Domain.CSAM.toString())) {
+    } else if (domain.equals("CSAM")) {
       requestParser = new CSAMRequestParser(sheet);
-    } else if (domain.equals(RequestParser.Domain.PVSS.toString())) {
+    } else if (domain.equals("PVSS")) {
       requestParser = new PVSSRequestParser(sheet);
     } else {
       throw new RequestParseException("Domain " + domain + " is not valid and/or supported");

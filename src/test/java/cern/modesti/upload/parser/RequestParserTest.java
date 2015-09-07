@@ -209,13 +209,13 @@ public class RequestParserTest {
   }
 
   /**
-   * Tests that version 1.1 of a legacy PVSS request is correctly parsed
+   * Tests that version 1.1 of a legacy WINCC request is correctly parsed
    */
   @Test
   public void pvss11isParsedCorrectly() throws IOException {
     Resource sheet = sheets.get("pvss-1.1.xlsx");
     Request request = requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
-    assertTrue(request.getDomain().equals("PVSS"));
+    assertTrue(request.getDomain().equals("WINCC"));
     assertTrue(request.getType().equals(RequestType.CREATE));
     assertTrue(request.getPoints().size() == 1);
 
@@ -450,7 +450,7 @@ public class RequestParserTest {
     Resource sheet = sheets.get("pvss-alarms.xlsx");
     Request request = requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
 
-    assertTrue(request.getDomain().equals("PVSS"));
+    assertTrue(request.getDomain().equals("WINCC"));
     assertTrue(request.getType().equals(RequestType.CREATE));
 
     List<Point> points = request.getPoints();

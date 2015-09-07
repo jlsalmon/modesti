@@ -74,7 +74,7 @@ public class PVSSRequestParser extends RequestParser {
 
   @Override
   protected String parsePointType(Map<String, Object> properties) {
-    // PVSS points don't really have different types
+    // WINCC points don't really have different types
     return null;
   }
 

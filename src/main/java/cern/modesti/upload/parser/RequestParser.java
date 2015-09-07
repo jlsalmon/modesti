@@ -57,12 +57,6 @@ public abstract class RequestParser {
   private MonitoringEquipmentRepository monitoringEquipmentRepository;
   private Map<String, MonitoringEquipment> monitoringEquipmentCache = new HashMap<>();
 
-  public enum Domain {
-    TIM,
-    CSAM,
-    PVSS;
-  }
-
   /**
    * @param sheet
    */
@@ -103,7 +97,8 @@ public abstract class RequestParser {
    * @return
    */
   private String parseDomain() {
-    return sheet.getRow(0).getCell(0).getStringCellValue().trim();
+    String domain = sheet.getRow(0).getCell(0).getStringCellValue().trim();
+    return domain.equals("PVSS") ? "WINCC" : domain;
   }
 
   /**
