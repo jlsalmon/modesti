@@ -456,7 +456,6 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
-    'goog-webfont-dl',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',
