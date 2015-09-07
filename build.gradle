@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.2.5.RELEASE"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.3.0.M5"
     }
 }
 
@@ -101,6 +101,16 @@ idea {
         sourceDirs += file("src/querydsl/java")
     }
 }
+
+/**
+ * Tell Spring Boot to make the JAR executable by appending a script to the JAR with
+ * start/stop/restart/status commands
+ */
+springBoot {
+    executable = true
+}
+
+bootRun.systemProperties = System.properties
 
 /** Configure publishing to Artifactory */
 publishing {
