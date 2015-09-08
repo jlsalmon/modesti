@@ -3914,6 +3914,9 @@ fieldset[disabled] .btn-vk.active {
 .modal-danger .modal-body,
 .modal-danger .modal-header,
 .modal-danger .modal-footer {
+  /* color: #fff !important; */
+}
+.alert-danger.bg-red {
   color: #fff !important;
 }
 .bg-gray {
