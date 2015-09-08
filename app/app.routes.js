@@ -14,7 +14,12 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
   $stateProvider.state('home', {
     url: '/',
     templateUrl: 'components/home/home.html',
-    controller: 'HomeController as ctrl'
+    controller: 'HomeController as ctrl',
+    resolve: {
+      $title: function ($translate) {
+        return 'HOME';
+      }
+    }
 
   }).state('requests', {
     url: '/requests',
