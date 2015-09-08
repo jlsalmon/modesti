@@ -26,6 +26,7 @@ body {
   font-weight: 400;
   overflow-x: hidden;
   overflow-y: auto;
+  /* font-size: 16px; */
 }
 /* Layout */
 .wrapper {
@@ -164,7 +165,7 @@ a:focus {
 /* Page Header */
 .page-header {
   margin: 10px 0 20px 0;
-  font-size: 22px;
+  /* font-size: 22px; */
 }
 .page-header > small {
   color: #666;
@@ -2213,6 +2214,9 @@ a:focus {
   margin: 0 0 20px 0;
   padding: 15px 30px 15px 15px;
   border-left: 5px solid #eee;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
 }
 .callout a {
   color: #fff;
@@ -2232,6 +2236,9 @@ a:focus {
 .callout .highlight {
   background-color: #fff;
 }
+.callout.callout-primary {
+  border-left-color: #428bca;
+}
 .callout.callout-danger {
   border-color: #c23321;
 }
@@ -2239,7 +2246,8 @@ a:focus {
   border-color: #c87f0a;
 }
 .callout.callout-info {
-  border-color: #0097bc;
+  /* border-color: #0097bc; */
+  border-left-color: #5bc0de;
 }
 .callout.callout-success {
   border-color: #00733e;
@@ -3946,7 +3954,7 @@ fieldset[disabled] .btn-vk.active {
 .alert-info,
 .label-info,
 .modal-info .modal-body {
-  /*background-color: #00c0ef !important;*/
+  /* background-color: #00c0ef !important; */
 }
 .bg-blue {
   /*background-color: #0073b7 !important;*/

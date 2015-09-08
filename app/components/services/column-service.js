@@ -155,21 +155,21 @@ function ColumnService($http, $translate) {
 
         // TODO reimplement this
 
-        //// The parameter might be a sub-property of another property (i.e. contains a dot). In
-        //// that case, find the property of the point and add it as a search parameter. This
-        //// acts like a filter for a search, based on another property.
-        //// TODO: add "filter" parameter to schema instead of this?
-        //if (param.indexOf('.') > -1) {
-        //  var props = param.split('.');
-        //  if (point.properties[props[0]] && point.properties[props[0]].hasOwnProperty(props[1])) {
-        //    params[props[1]] = point.properties[props[0]][props[1]];
-        //  } else {
-        //    params[props[1]] = '';
-        //  }
-        //}
-        //else {
+        // The parameter might be a sub-property of another property (i.e. contains a dot). In
+        // that case, find the property of the point and add it as a search parameter. This
+        // acts like a filter for a search, based on another property.
+        // TODO: add "filter" parameter to schema instead of this?
+        if (param.indexOf('.') > -1) {
+          var props = param.split('.');
+          //if (point.properties[props[0]] && point.properties[props[0]].hasOwnProperty(props[1])) {
+          //  params[props[1]] = point.properties[props[0]][props[1]];
+          //} else {
+            params[props[1]] = '';
+          //}
+        }
+        else {
          params[param] = query;
-        //}
+        }
 
       });
     }

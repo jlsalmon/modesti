@@ -8,7 +8,7 @@
  */
 angular.module('modesti').factory('errorInterceptor', errorInterceptor);
 
-function errorInterceptor($q, $rootScope) {
+function errorInterceptor($q, $location) {
   return {
     request : function(config) {
       return config || $q.when(config);
@@ -23,7 +23,7 @@ function errorInterceptor($q, $rootScope) {
       if (response && response.status === 0) {
         // Backend not connected
         console.log('error: backend not connected');
-        $rootScope.$broadcast("server.error.connection", response.status);
+        $location.path('/error');
       }
       if (response && response.status === 404) {
         console.log('error: page not found');

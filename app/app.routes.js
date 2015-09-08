@@ -9,9 +9,14 @@
 angular.module('modesti').config(configureRoutes);
 
 function configureRoutes($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('/requests');
+  $urlRouterProvider.otherwise('/');
 
-  $stateProvider.state('requests', {
+  $stateProvider.state('home', {
+    url: '/',
+    templateUrl: 'components/home/home.html',
+    controller: 'HomeController as ctrl'
+
+  }).state('requests', {
     url: '/requests',
     templateUrl: 'components/request/requests.html',
     controller: 'RequestsController as ctrl',
@@ -123,6 +128,15 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     resolve: {
       $title: function ($stateParams, $translate) {
         return $translate('USER', { id: $stateParams.id });
+      }
+    }
+
+  }).state('error', {
+    url: '/error',
+    templateUrl: 'components/errors/error.html',
+    resolve: {
+      $title: function ($translate) {
+        return $translate('ERROR');
       }
     }
 
