@@ -36,7 +36,7 @@ import static java.lang.String.format;
 @Profile({"dev", "prod"})
 public class SchemaInitialiser {
 
-  private static final String BUILTIN_RESOURCE_PREFIX     = "classpath:/";
+  private static final String BUILTIN_RESOURCE_PREFIX     = "classpath*:/";
   private static final String PLUGIN_RESOURCE_PREFIX      = "classpath*:/";
   private static final String SCHEMA_RESOURCE_PATTERN     = "schemas/*.json";
   private static final String DATASOURCE_RESOURCE_PATTERN = "schemas/datasources/*.json";
@@ -232,7 +232,9 @@ public class SchemaInitialiser {
     List<T> resources = new ArrayList<>();
 
     for (Resource resource : resolver.getResources(pattern)) {
-      resources.add(loadResource(resource, klass));
+      if (!resource.getURI().toString().contains("plugins")) {
+        resources.add(loadResource(resource, klass));
+      }
     }
 
     return resources;
