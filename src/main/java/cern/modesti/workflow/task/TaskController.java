@@ -108,9 +108,12 @@ public class TaskController {
     User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
     TaskInfo task = taskService.execute(id, taskName, action, user);
 
-    Resource<TaskInfo> resource = new Resource<>(task);
-    resource.add(linkTo(methodOn(TaskController.class).getTask(id, resource.getContent().getName())).withSelfRel());
+    if (task != null) {
+      Resource<TaskInfo> resource = new Resource<>(task);
+      resource.add(linkTo(methodOn(TaskController.class).getTask(id, resource.getContent().getName())).withSelfRel());
+      return new ResponseEntity<>(resource, HttpStatus.OK);
+    }
 
-    return new ResponseEntity<>(resource, HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }
