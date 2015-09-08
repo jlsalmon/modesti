@@ -62,7 +62,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
 
   @Override
   public void configureJacksonObjectMapper(ObjectMapper objectMapper) {
-    objectMapper.registerModule(new SimpleModule("MyCustomModule") {
+    objectMapper.registerModule(new SimpleModule("CustomModule") {
       @Override
       public void setupModule(SetupContext context) {
         SimpleDeserializers deserializers = new SimpleDeserializers();
