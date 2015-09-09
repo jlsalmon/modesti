@@ -15,7 +15,8 @@ function SchemaService($q, $http) {
     getSchema: getSchema,
     getSchemas: getSchemas,
     generateTagnames: generateTagnames,
-    generateFaultStates: generateFaultStates
+    generateFaultStates: generateFaultStates,
+    generateAlarmCategories: generateAlarmCategories
   };
 
   /**
@@ -237,6 +238,61 @@ function SchemaService($q, $http) {
     }
 
     return equipmentIdentifier;
+  }
+
+  /**
+   * Alarm category format: 'CERN.SRVS.'|FUNC_GEN|'.'|TES_SYSTEM_NAME
+   */
+  function generateAlarmCategories(request) {
+    request.points.forEach(function (point) {
+
+      if (point.properties.priorityCode || point.properties.alarmValue) {
+
+        if (!point.properties.subsystem) {
+          return;
+        }
+
+        (function (point) {
+          $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
+            params: {query: point.properties.subsystem.value},
+            cache: true
+          }).then(function (response) {
+
+            if (!response.data.hasOwnProperty('_embedded')) {
+              return;
+            }
+
+            var systemName;
+
+            if (response.data._embedded.subsystems.length == 1) {
+              var subsystem = response.data._embedded.subsystems[0];
+              systemName = subsystem.system;
+            }
+
+            if (point.properties.functionality && point.properties.functionality.value) {
+              $http.get(BACKEND_BASE_URL + '/functionalities/search/find', {
+                params: {query: point.properties.functionality.value},
+                cache: true
+              }).then(function (response) {
+                if (!response.data.hasOwnProperty('_embedded')) {
+                  return;
+                }
+
+                var generalFunctionality;
+                if (response.data._embedded.functionalities.length == 1) {
+                  var functionality = response.data._embedded.functionalities[0];
+                  generalFunctionality = functionality.generalFunctionality;
+                }
+
+                if (systemName && generalFunctionality) {
+                  point.properties.alarmCategory = {value: 'CERN.SRVS.' + generalFunctionality + '.' + systemName};
+                }
+              });
+            }
+          });
+        })(point);
+      }
+    });
   }
 
   return service;
