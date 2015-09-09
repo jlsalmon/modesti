@@ -505,3 +505,6 @@ ul.category-headings {
   float: none;
 }
 
+.justify {
+  text-align: justify;
+}

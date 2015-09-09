@@ -2,16 +2,11 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:AboutCtrl
- * @description
- * # AboutCtrl
- * Controller of the modesti
+ * @name modesti.controller:AboutController
+ * @description # AboutController
  */
-angular.module('modesti')
-  .controller('AboutCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+angular.module('modesti').controller('AboutController', AboutController);
+
+function AboutController() {
+  var self = this;
+}

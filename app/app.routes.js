@@ -136,22 +136,27 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
       }
     }
 
+  }).state('about', {
+    url: '/about',
+    templateUrl: 'components/about/about.html',
+    controller: 'AboutController as ctrl',
+    resolve: {
+      $title: function () { return 'ABOUT'; }
+    }
+
   }).state('error', {
     url: '/error',
     templateUrl: 'components/errors/error.html',
+    controller: 'ErrorController as ctrl',
     resolve: {
-      $title: function ($translate) {
-        return $translate('ERROR');
-      }
+      $title: function () { return 'ERROR'; }
     }
 
   }).state('404', {
     url: '/404',
     templateUrl: 'components/errors/404.html',
     resolve: {
-      $title: function ($translate) {
-        return $translate('PAGE_NOT_FOUND');
-      }
+      $title: function () { return 'PAGE_NOT_FOUND'; }
     }
   });
 }
