@@ -50,7 +50,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
         var cellProperties = {};
         var pointType = self.parent.hot.getDataAtRowProp(row, 'properties.pointType');
 
-        if (pointType !== self.parent.activeCategory.name) {
+        if (pointType !== self.parent.activeCategory.id.toUpperCase()) {
           cellProperties.readOnly = true;
         }
 
