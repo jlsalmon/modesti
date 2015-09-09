@@ -92,14 +92,14 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
 
   self.activateCategory = activateCategory;
   self.activateDefaultCategory = activateDefaultCategory;
-  self.resetSorting = resetSorting;
+  //self.resetSorting = resetSorting;
   self.save = save;
   self.undo = undo;
   self.redo = redo;
   self.cut = cut;
   self.copy = copy;
   self.paste = paste;
-  self.search = search;
+  //self.search = search;
   self.showHelp = showHelp;
   self.showComments = showComments;
   self.showHistory = showHistory;
@@ -265,7 +265,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    * @returns {boolean}
    */
   function hasCheckboxColumn() {
-    var checkboxStates = ['FOR_CORRECTION', 'FOR_APPROVAL', 'FOR_ADDRESSING', 'FOR_CABLING', 'FOR_TESTING'];
+    var checkboxStates = ['FOR_CORRECTION', 'FOR_APPROVAL', 'FOR_CABLING', 'FOR_TESTING'];
 
     var assigned = false;
     for (var key in self.tasks) {
@@ -391,6 +391,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
 
     SchemaService.generateTagnames(self.request);
     SchemaService.generateFaultStates(self.request);
+    SchemaService.generateAlarmCategories(self.request);
   }
 
   /**
@@ -489,24 +490,24 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     })
   }
 
-  /**
-   *
-   * @param query
-   */
-  function search(query) {
+  ///**
+  // *
+  // * @param query
+  // */
+  //function search(query) {
+  //
+  //  var result = self.hot.search.query(query);
+  //  //self.hot.loadData(result);
+  //}
 
-    var result = self.hot.search.query(query);
-    //self.hot.loadData(result);
-  }
-
-  /**
-   *
-   */
-  function resetSorting() {
-    // Hack to clear sorting
-    self.hot.updateSettings({columnSorting: false});
-    self.hot.updateSettings({columnSorting: true});
-  }
+  ///**
+  // *
+  // */
+  //function resetSorting() {
+  //  // Hack to clear sorting
+  //  self.hot.updateSettings({columnSorting: false});
+  //  self.hot.updateSettings({columnSorting: true});
+  //}
 
   /**
    *
