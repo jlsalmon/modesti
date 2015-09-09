@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationControlsController', CreationControlsController);
 
-function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService) {
+function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService, ColumnService) {
   var self = this;
 
   self.parent = {};
@@ -43,7 +43,6 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     self.tasks = parent.tasks;
     self.signals = parent.signals;
     self.hot = parent.hot;
-
 
     // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
     // state and the user makes a modification
@@ -358,22 +357,19 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         self.rows[row].dirty = true;
       }
 
-      //// If the change was to the "pointType" field, make sure that the corresponding category is added (but not
-      //// activated) unless we already have it.
-      //if (property === 'properties.pointType') {
-      //  var found = false;
-      //  for (var key in self.parent.schema.categories) {
-      //    if (self.parent.schema.categories[key].name === newValue) {
-      //      found = true;
-      //      break;
-      //    }
-      //  }
-      //
-      //  if (!found) {
-      //    //console.log('adding extra category for point type ' + newValue);
-      //    //self.parent.addExtraCategory(newValue, false);
-      //  }
-      //}
+      // If the value was cleared, make sure any other properties of the object are also cleared.
+      if (newValue === undefined || newValue === null || newValue === '') {
+        var point = self.hot.getSourceDataAtRow(row);
+        var propName = property.split('.')[1];
+
+        var prop = point.properties[propName];
+
+        for (var attribute in prop) {
+          if (prop.hasOwnProperty(attribute)) {
+            prop[attribute] = null;
+          }
+        }
+      }
 
       // This is a workaround. See function documentation for info.
       saveNewValue(row, property, newValue);
@@ -429,11 +425,14 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         // acts like a filter for a search, based on another property.
         // TODO: add "filter" parameter to schema instead of this?
         if (param.indexOf('.') > -1) {
-          var props = param.split('.');
-          if (point.properties[props[0]] && point.properties[props[0]].hasOwnProperty(props[1])) {
-            params[props[1]] = point.properties[props[0]][props[1]];
+          var parts = param.split('.');
+          var property = parts[0];
+          var subProp = parts[1];
+
+          if (point.properties[property] && point.properties[property].hasOwnProperty(subProp) && point.properties[property][subProp]) {
+            params[subProp] = point.properties[property][subProp];
           } else {
-            params[props[1]] = '';
+            params[subProp] = '';
           }
         }
         else {
@@ -460,10 +459,40 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
             console.log('saving new value');
             delete item._links;
             point.properties[prop] = item;
+
+            // Automatically update dependent dropdowns.
+            updateDependentValues(row, property);
           }
         });
       });
     }
+  }
+
+  /**
+   *
+   */
+  function updateDependentValues(row, property) {
+    self.parent.activeCategory.fields.forEach(function (field) {
+
+      if (field.params) {
+        field.params.forEach(function (param) {
+          if (param.indexOf('.') > -1) {
+            var thisProp = property.split('.')[1];
+            var dependentProp = param.split('.')[0];
+
+            if (thisProp === dependentProp) {
+              ColumnService.getOptions(field, self.hot, row, '').then(function (results) {
+                console.log('got ' + results.length + ' results for dependent field ' + field.id + ' for ' + thisProp);
+
+                if (results.length == 1) {
+                  self.hot.setDataAtRowProp(row, 'properties.' + field.id + '.value', results[0].text);
+                }
+              })
+            }
+          }
+        });
+      }
+    });
   }
 
   /**

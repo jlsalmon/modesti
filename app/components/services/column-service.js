@@ -12,7 +12,8 @@ function ColumnService($http, $translate) {
 
   // Public API
   var service = {
-    getColumn: getColumn
+    getColumn: getColumn,
+    getOptions: getOptions
   };
 
   /**
@@ -132,7 +133,11 @@ function ColumnService($http, $translate) {
    */
   function getQueryFunction(column, field) {
     return function (query) {
-      getOptions(field, query.term, query.callback).then(function (results) {
+      var hot = query.element.context.instance;
+      var row = query.element.context.row;
+      var term = query.term;
+
+      getOptions(field, hot, row, term).then(function (results) {
         query.callback({results: results, text: 'text'});
       });
     }
@@ -141,10 +146,12 @@ function ColumnService($http, $translate) {
   /**
    *
    * @param field
+   * @param hot
+   * @param row
    * @param query
-   * @returns {*}
+   * @returns {Promise.<T>}
    */
-  function getOptions(field, query) {
+  function getOptions(field, hot, row, query) {
 
     var params = {};
     if (field.params == undefined) {
@@ -153,19 +160,21 @@ function ColumnService($http, $translate) {
     } else {
       field.params.forEach(function (param) {
 
-        // TODO reimplement this
-
         // The parameter might be a sub-property of another property (i.e. contains a dot). In
         // that case, find the property of the point and add it as a search parameter. This
         // acts like a filter for a search, based on another property.
         // TODO: add "filter" parameter to schema instead of this?
         if (param.indexOf('.') > -1) {
-          var props = param.split('.');
-          //if (point.properties[props[0]] && point.properties[props[0]].hasOwnProperty(props[1])) {
-          //  params[props[1]] = point.properties[props[0]][props[1]];
-          //} else {
-            params[props[1]] = '';
-          //}
+          var point = hot.getSourceDataAtRow(row);
+          var parts = param.split('.');
+          var prop = parts[0];
+          var subProp = parts[1];
+
+          if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
+            params[subProp] = point.properties[prop][subProp];
+          } else {
+            params[subProp] = '';
+          }
         }
         else {
          params[param] = query;
