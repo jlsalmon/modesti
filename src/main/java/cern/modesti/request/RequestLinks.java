@@ -67,14 +67,17 @@ public class RequestLinks {
     List<Link> links = new ArrayList<>();
     Task task = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).active().singleResult();
 
-    // Query the signals that are subscribed to by the current process instance.
-    // TODO this is a non-public API, is there a supported way of doing this?
-    CommandExecutor executor = ((ProcessEngineConfigurationImpl) ProcessEngines.getDefaultProcessEngine().getProcessEngineConfiguration()).getCommandExecutor();
-    EventSubscriptionQueryImpl query = new EventSubscriptionQueryImpl(executor);
-    List<EventSubscriptionEntity> signals = query.processInstanceId(task.getProcessInstanceId()).list();
+    if (task != null) {
+      // Query the signals that are subscribed to by the current process instance.
+      // TODO this is a non-public API, is there a supported way of doing this?
+      CommandExecutor executor = ((ProcessEngineConfigurationImpl) ProcessEngines.getDefaultProcessEngine().getProcessEngineConfiguration()).getCommandExecutor();
 
-    for (EventSubscriptionEntity signal : signals) {
-      links.add(linkTo(SignalController.class, request.getRequestId()).slash(signal.getEventName()).withRel("signals"));
+      EventSubscriptionQueryImpl query = new EventSubscriptionQueryImpl(executor);
+      List<EventSubscriptionEntity> signals = query.processInstanceId(task.getProcessInstanceId()).list();
+
+      for (EventSubscriptionEntity signal : signals) {
+        links.add(linkTo(SignalController.class, request.getRequestId()).slash(signal.getEventName()).withRel("signals"));
+      }
     }
 
     return links;

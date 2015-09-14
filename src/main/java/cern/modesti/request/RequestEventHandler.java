@@ -17,6 +17,8 @@
  ******************************************************************************/
 package cern.modesti.request;
 
+import cern.modesti.plugin.RequestProvider;
+import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.counter.CounterService;
 import cern.modesti.request.point.Point;
 import cern.modesti.workflow.WorkflowService;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Component;
 
 import static java.lang.String.format;
@@ -46,6 +49,9 @@ import static java.lang.String.format;
 public class RequestEventHandler {
 
   @Autowired
+  private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
+
+  @Autowired
   private CounterService counterService;
 
   @Autowired
@@ -58,6 +64,11 @@ public class RequestEventHandler {
    */
   @HandleBeforeCreate
   public void handleRequestCreate(Request request) {
+    // Do not create a request if there is no appropriate domain
+    if (!requestProviderRegistry.hasPluginFor(request)) {
+      throw new UnsupportedRequestException(request);
+    }
+
     request.setRequestId(counterService.getNextSequence(CounterService.REQUEST_ID_SEQUENCE).toString());
     log.trace(format("generated request id: %s", request.getRequestId()));
 

@@ -91,16 +91,16 @@ public class WorkflowService {
   public ProcessInstance startProcessInstance(final Request request) {
     log.info(format("starting process for %s request %s", request.getDomain(), request.getRequestId()));
 
+    // Figure out which process to start, based on the domain and type
+    RequestProvider plugin = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
+    String processKey = plugin.getMetadata().getProcessKey(request.getType());
+
     request.setStatus(RequestStatus.IN_PROGRESS);
     requestRepository.save(request);
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
     variables.put("creator", request.getCreator().getUsername());
-
-    // Figure out which process to start, based on the domain and type
-    RequestProvider provider = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
-    String processKey = provider.getMetadata().getProcessKey(request.getType());
 
     return runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
   }
@@ -140,9 +140,9 @@ public class WorkflowService {
     log.info("validating request " + requestId);
     Request request = getRequest(requestId);
 
-    RequestProvider provider = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
+    RequestProvider plugin = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
 
-    boolean valid = provider.validate(request);
+    boolean valid = plugin.validate(request);
 
 
     // TODO: add dirty check: don't need to validate if all the points have already been validated

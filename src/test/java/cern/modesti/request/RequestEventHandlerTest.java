@@ -3,17 +3,9 @@
  */
 package cern.modesti.request;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-
-import cern.modesti.request.RequestType;
 import cern.modesti.request.counter.CounterServiceImpl;
+import cern.modesti.request.point.Point;
+import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaRepository;
 import cern.modesti.workflow.WorkflowService;
 import org.junit.Ignore;
@@ -23,11 +15,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import cern.modesti.request.point.Point;
-import cern.modesti.request.Request;
-import cern.modesti.request.RequestStatus;
-import cern.modesti.schema.Schema;
-import cern.modesti.request.RequestEventHandler;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Justin Lewis Salmon

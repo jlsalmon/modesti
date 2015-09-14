@@ -2,6 +2,8 @@ package cern.modesti.plugin;
 
 import cern.modesti.request.Request;
 
+import static java.lang.String.format;
+
 /**
  * TODO
  *
@@ -14,6 +16,7 @@ public class UnsupportedRequestException extends RuntimeException {
   private final Request request;
 
   public UnsupportedRequestException(Request request) {
+    super(format("no plugin found for domain %s", request.getDomain()));
     this.request = request;
   }
 

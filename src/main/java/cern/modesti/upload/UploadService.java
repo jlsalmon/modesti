@@ -3,6 +3,8 @@
  */
 package cern.modesti.upload;
 
+import cern.modesti.plugin.RequestProvider;
+import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.counter.CounterService;
 import cern.modesti.upload.parser.RequestParser;
 import cern.modesti.upload.parser.RequestParserFactory;
@@ -12,6 +14,7 @@ import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.WorkflowService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,9 @@ import java.security.Principal;
 @Service
 @Slf4j
 public class UploadService {
+
+  @Autowired
+  private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
   @Autowired
   private RequestRepository requestRepository;
@@ -55,6 +61,11 @@ public class UploadService {
 
     request.setCreator((User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
+    // Do not create a request if there is no appropriate domain
+    if (!requestProviderRegistry.hasPluginFor(request)) {
+      throw new UnsupportedRequestException(request);
+    }
+
     // Generate a request id
     request.setRequestId(counterService.getNextSequence("requests").toString());
     log.debug("generated request id: " + request.getRequestId());
@@ -64,7 +75,7 @@ public class UploadService {
 
     // Kick off the workflow process
     workflowService.startProcessInstance(request);
-    
+
     return request;
   }
 }

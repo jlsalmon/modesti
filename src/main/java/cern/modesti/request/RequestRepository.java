@@ -51,7 +51,6 @@ public interface RequestRepository extends MongoRepository<Request, String> {
    * @param status
    * @param domain
    * @param type
-   * @param system
    * @param subsystem
    * @param creator
    * @param page
@@ -62,11 +61,12 @@ public interface RequestRepository extends MongoRepository<Request, String> {
       "{ 'status': { '$regex': '?0' } }, " +
       "{ 'domain': { '$regex': '?1' } }, " +
       "{ 'type':   { '$regex': '?2' } }, " +
+      "{ 'subsystem'   : { '$regex': '?3' } }, " +
 //      "{ 'subsystem.system'   : { '$regex': '?3' } }, " +
 //      "{ 'subsystem.subsystem': { '$regex': '?4' } }, " +
-      "{ 'creator.username'   : { '$regex': '?5' } } ] }")
-  Page<Request> find(@Param("status") String status, @Param("domain") String domain, @Param("type") String type, @Param("system") String system, @Param
-      ("subsystem") String subsystem, @Param("creator") String creator, Pageable page);
+      "{ 'creator.username'   : { '$regex': '?4' } } ] }")
+  Page<Request> find(@Param("status") String status, @Param("domain") String domain, @Param("type") String type, @Param("subsystem") String subsystem, @Param
+      ("creator") String creator, Pageable page);
 
   /**
    * TODO
