@@ -11,6 +11,7 @@ function NewRequestController($http, $location, RequestService, SchemaService, A
   var self = this;
 
   self.schemas = [];
+  self.submitting = undefined;
 
   self.getSchemas = getSchemas;
   self.getSubsystems = getSubsystems;
@@ -60,14 +61,19 @@ function NewRequestController($http, $location, RequestService, SchemaService, A
     }
 
     else {
-      console.log('form valid');
+      self.submitting = 'started';
 
       // Post form to server to create new request.
       RequestService.createRequest(self.request).then(function(location) {
+        self.submitting = 'success';
         // Strip request ID from location.
         var id = location.substring(location.lastIndexOf('/') + 1);
         // Redirect to point entry page.
         $location.path("/requests/" + id);
+      },
+
+      function (error) {
+        self.submitting = 'error';
       });
     }
   }

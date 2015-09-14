@@ -173,7 +173,7 @@
               <ui-select-choices repeat="request.creator.username as request in ctrl.requests | unique:'creator.username'">
                 <div ng-bind-html="request.creator.firstName + ' ' + request.creator.lastName | highlight: $select.search"></div>
                 <small>
-                  <span style="color: #999;" ng-bind-html=" '' + request.creator.username | highlight: $select.search"></span>
+                  <span style="color: #c7c7c7;" ng-bind-html=" '' + request.creator.username | highlight: $select.search"></span>
                 </small>
               </ui-select-choices>
             </ui-select>
