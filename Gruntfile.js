@@ -372,6 +372,12 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>/bower_components/famfamfam-flags-sprite/src',
           src: ['*.png'],
           dest: '<%= yeoman.dist %>/styles'
+        }, {
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>/bower_components/select2',
+          src: ['*.{png,gif}'],
+          dest: '<%= yeoman.dist %>/styles'
         }]
       },
       styles: {
