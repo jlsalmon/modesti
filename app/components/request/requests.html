@@ -138,96 +138,56 @@
 
 
       <div class="col-md-9">
-
         <div class="tasklist-controls">
+
           <div class="btn-group">
-            <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-                <i class="fa fa-fw fa-square"></i>
-                  <span class="text-muted">{{'SYSTEM'|translate|lowercase}}:
-                  </span>{{ctrl.filter.subsystem.system != '' ? ctrl.filter.subsystem.system : ('ANY'|translate)}} <span
-                  class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li>
-                  <a href="" ng-click="ctrl.filter.subsystem.system = ''; ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
-                </li>
-                <li class="divider"></li>
-                <li ng-repeat="subsystem in ctrl.subsystems | unique:'system'">
-                  <a href="" ng-click="ctrl.filter.subsystem.system = subsystem.system; ctrl.filter.subsystem.subsystem = ''">{{subsystem.system}}</a>
-                </li>
-              </ul>
-            </div>
-            <div class="btn-group" dropdown>
-              <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle
-                      ng-disabled="ctrl.filter.subsystem.system == ''">
-                <i class="fa fa-fw fa-sitemap"></i>
-                  <span class="text-muted">{{'SUBSYSTEM'|translate|lowercase}}:
-                  </span>{{ctrl.filter.subsystem.subsystem != '' ? ctrl.filter.subsystem.subsystem : ('ANY'|translate)}}
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu">
-                <li>
-                  <a href="" ng-click="ctrl.filter.subsystem.subsystem = ''">{{'ANY'|translate}}</a>
-                </li>
-                <li class="divider"></li>
-                <li ng-repeat="subsystem in ctrl.subsystems | filter:ctrl.filter.subsystem.system | unique:'subsystem'">
-                  <a href="" ng-click="ctrl.filter.subsystem.subsystem = subsystem.subsystem">{{subsystem.subsystem}}</a>
-                </li>
-                | filter: ctrl.filter
-              </ul>
-            </div>
+            <ui-select ng-model="ctrl.filter.domain" theme="bootstrap" style="width:130px">
+              <ui-select-match placeholder="{{'DOMAIN'|translate}}" allow-clear="true">
+                {{$select.selected}}
+              </ui-select-match>
+              <ui-select-choices repeat="domain in ctrl.domains track by $index">
+                <div ng-bind-html="domain | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
-          <div class="btn-group" dropdown>
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-              <i class="fa fa-fw fa-crosshairs"></i>
-                <span class="text-muted">{{'DOMAIN'|translate|lowercase}}:
-                </span>{{ctrl.filter.domain != '' ? ctrl.filter.domain : ('ANY'|translate)}} <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="" ng-click="ctrl.filter.domain = ''">{{'ANY'|translate}}</a>
-              </li>
-              <li class="divider"></li>
-              <li ng-repeat="domain in ctrl.domains">
-                <a href="" ng-click="ctrl.filter.domain = domain">{{domain}}</a>
-              </li>
-            </ul>
+          <div class="btn-group">
+            <ui-select ng-model="ctrl.filter.subsystem" theme="bootstrap" style="width:180px">
+              <ui-select-match placeholder="{{'SUBSYSTEM'|translate}}" allow-clear="true">
+                {{$select.selected.value}}
+              </ui-select-match>
+              <ui-select-choices repeat="subsystem.value as subsystem in ctrl.subsystems track by $index"
+                                 refresh="ctrl.getSubsystems($select.search)"
+                                 refresh-delay="0">
+                <div ng-bind-html="subsystem.value | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
-          <div class="btn-group" dropdown>
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-              <i class="fa fa-fw fa-user"></i>
-                <span class="text-muted">{{'CREATOR'|translate|lowercase}}:
-                </span>{{ctrl.filter.creator.username != '' ? ctrl.filter.creator.username : ('ANY'|translate)}} <span
-                class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="" ng-click="ctrl.filter.creator.username = ''">{{'ANY'|translate}}</a>
-              </li>
-              <li class="divider"></li>
-              <li ng-repeat="request in ctrl.requests | unique:'creator.username'">
-                <a href="" ng-click="ctrl.filter.creator.username = request.creator.username">{{request.creator.username}}</a>
-              </li>
-            </ul>
+          <!--TODO: use /users endpoint instead of doing a unique filter on requests-->
+          <div class="btn-group">
+            <ui-select ng-model="ctrl.filter.creator.username" theme="bootstrap" style="width:180px">
+              <ui-select-match placeholder="{{'CREATOR'|translate}}" allow-clear="true">
+                {{$select.selected.creator.firstName}} {{$select.selected.creator.lastName}}
+              </ui-select-match>
+              <ui-select-choices repeat="request.creator.username as request in ctrl.requests | unique:'creator.username'">
+                <div ng-bind-html="request.creator.firstName + ' ' + request.creator.lastName | highlight: $select.search"></div>
+                <small>
+                  <span style="color: #999;" ng-bind-html=" '' + request.creator.username | highlight: $select.search"></span>
+                </small>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
-          <div class="btn-group" dropdown>
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-              <span class="text-muted">type: </span>{{ctrl.filter.type != '' ? ctrl.filter.type : ('ANY'|translate)}}
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="" ng-click="ctrl.filter.type = ''">{{'ANY'|translate}}</a>
-              </li>
-              <li class="divider"></li>
-              <li ng-repeat="type in ctrl.types">
-                <a href="" ng-click="ctrl.filter.type = type">{{type}}</a>
-              </li>
-            </ul>
+          <div class="btn-group">
+            <ui-select ng-model="ctrl.filter.type" theme="bootstrap" style="width:130px">
+              <ui-select-match placeholder="{{'Type'|translate}}" allow-clear="true">
+                {{$select.selected}}
+              </ui-select-match>
+              <ui-select-choices repeat="type in ctrl.types track by $index">
+                <div ng-bind-html="type | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
           </div>
 
           <div class="pull-right" style="margin-top: 12px;" ng-if="ctrl.page.totalElements">

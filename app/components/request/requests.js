@@ -19,11 +19,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.filter = {
     status: '',
     domain: '',
-    subsystem: {
-      system: '',
-      subsystem: ''
-    },
-    //categories: '',
+    subsystem: '',
     creator: {
       username: ''
     },
@@ -32,6 +28,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
 
   self.loading = undefined;
 
+  self.getSubsystems = getSubsystems;
   self.isUserAuthenticated = isUserAuthenticated;
   self.deleteRequest = deleteRequest;
   self.editRequest = editRequest;
@@ -40,7 +37,6 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
 
   getRequests(1, 10, "requestId,desc", self.filter);
   getRequestMetrics();
-  getSubsystems();
 
   /**
    *
@@ -140,9 +136,9 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     return 0;
   }
 
-  function getSubsystems() {
+  function getSubsystems(query) {
     // TODO refactor this into a service
-    $http.get(BACKEND_BASE_URL + '/subsystems/search/find').then(function(response) {
+    $http.get(BACKEND_BASE_URL + '/subsystems/search/find', { params: {query: query}}).then(function(response) {
       self.subsystems = response.data._embedded.subsystems;
     });
   }

@@ -38,12 +38,12 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
     $http.get(BACKEND_BASE_URL + '/requests/search/find',
     {
       params: {
-        status: filter.status,
-        domain: filter.domain,
-        type: filter.type,
+        status: filter.status || '',
+        domain: filter.domain || '',
+        type: filter.type || '',
         //system: filter.subsystem.system,
-        //subsystem: filter.subsystem.subsystem,
-        creator: filter.creator.username,
+        subsystem: filter.subsystem || '',
+        creator: filter.creator.username || '',
         page: page - 1,
         size: size,
         sort: sort
