@@ -3,6 +3,7 @@
  */
 package cern.modesti.request;
 
+import cern.modesti.plugin.RequestProvider;
 import cern.modesti.request.counter.CounterServiceImpl;
 import cern.modesti.request.point.Point;
 import cern.modesti.schema.Schema;
@@ -14,6 +15,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.plugin.core.PluginRegistry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +40,9 @@ public class RequestEventHandlerTest {
    */
   @InjectMocks
   RequestEventHandler requestEventHandler;
+
+  @Mock
+  private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
   @Mock
   CounterServiceImpl counterService;
@@ -58,6 +65,7 @@ public class RequestEventHandlerTest {
 
   @Test
   public void requestIdIsGenerated() {
+    when(requestProviderRegistry.hasPluginFor(anyObject())).thenReturn(true);
     when(counterService.getNextSequence(anyString())).thenReturn(1L);
     when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
 
@@ -78,6 +86,7 @@ public class RequestEventHandlerTest {
 
   @Test
   public void requestSchemaIsLinked() {
+    when(requestProviderRegistry.hasPluginFor(anyObject())).thenReturn(true);
     when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
 
     Request request = getTestRequest();
