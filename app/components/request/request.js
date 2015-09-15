@@ -90,6 +90,13 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
   self.getRowHeaders = getRowHeaders;
   self.getColumns = getColumns;
 
+  self.canAssignTask = canAssignTask;
+  self.assignTask = assignTask;
+  self.getAssignee = getAssignee;
+  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
+  self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.canEdit = canEdit;
+
   self.activateCategory = activateCategory;
   self.activateDefaultCategory = activateDefaultCategory;
   //self.resetSorting = resetSorting;
@@ -104,8 +111,6 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
   self.showComments = showComments;
   self.showHistory = showHistory;
   self.getSelectedPointIds = getSelectedPointIds;
-  self.delegateTask = delegateTask;
-  self.unclaimTask = unclaimTask;
 
 
   /**
@@ -323,13 +328,71 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    *
    * @returns {boolean}
    */
-  function isCurrentUserAuthorised() {
-    for (var key in self.tasks) {
-      if (TaskService.isCurrentUserAuthorised(self.tasks[key])) {
-        return true;
+  function canAssignTask() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+    return TaskService.isCurrentUserAuthorised(task) && TaskService.isCurrentUserAssigned(task);
+  }
+
+  /**
+   *
+   */
+  function assignTask() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/request/modals/assignment-modal.html',
+      controller: 'AssignmentModalController as ctrl',
+      resolve: {
+        task: function () {
+          return task;
+        }
       }
-    }
-    return false;
+    });
+
+    modalInstance.result.then(function (assignee) {
+      console.log('assigning request to user ' + assignee.username);
+
+      TaskService.assignTask(task.name, self.request.requestId, assignee.username).then(function (task) {
+        console.log('assigned request');
+        self.tasks[task.name] = task;
+      });
+    })
+  }
+
+  /**
+   *
+   */
+  function getAssignee() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+    return task.assignee;
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAuthorised() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+    return TaskService.isCurrentUserAuthorised(task);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAssigned() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+    return TaskService.isCurrentUserAssigned(task);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function canEdit() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+    return TaskService.isCurrentUserAuthorised(task) && TaskService.isCurrentUserAssigned(task);
   }
 
   /**
@@ -508,40 +571,6 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
   //  self.hot.updateSettings({columnSorting: false});
   //  self.hot.updateSettings({columnSorting: true});
   //}
-
-  /**
-   *
-   */
-  function delegateTask() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-
-    var modalInstance = $modal.open({
-      animation: false,
-      templateUrl: 'components/request/modals/delegation-modal.html',
-      controller: 'DelegationModalController as ctrl',
-      resolve: {
-        task: function () {
-          return task;
-        }
-      }
-    });
-
-    modalInstance.result.then(function (assignee) {
-      console.log('delegating request to user ' + assignee.username);
-
-      TaskService.delegateTask(task.name, self.request.requestId, assignee).then(function (task) {
-        console.log('delegated request');
-        self.tasks[task.name] = task;
-      })
-    })
-  }
-
-  /**
-   *
-   */
-  function unclaimTask() {
-
-  }
 
   /**
    *

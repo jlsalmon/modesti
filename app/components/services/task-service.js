@@ -16,6 +16,7 @@ function TaskService($q, $http, AuthService) {
   var service = {
     getTasksForRequest: getTasksForRequest,
     getSignalsForRequest: getSignalsForRequest,
+    assignTask: assignTask,
     claimTask: claimTask,
     completeTask: completeTask,
     delegateTask: delegateTask,
@@ -84,6 +85,34 @@ function TaskService($q, $http, AuthService) {
 
     function (error) {
       console.log('error fetching signals: ' + error);
+      q.reject(error);
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
+   * @param taskName
+   * @param requestId
+   * @param assignee
+   * @returns {*}
+   */
+  function assignTask(taskName, requestId, assignee) {
+    var q = $q.defer();
+
+    var params = {
+      action: 'ASSIGN',
+      assignee: assignee
+    };
+
+    $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function (response) {
+      console.log('assigned task ' + taskName + ' to user ' + params.assignee);
+      q.resolve(response.data);
+    },
+
+    function (error) {
+      console.log('error assigning task ' + taskName + ': ' + error.data.message);
       q.reject(error);
     });
 
@@ -204,11 +233,11 @@ function TaskService($q, $http, AuthService) {
     var q = $q.defer();
 
     var params = {
-      action: 'UNCLAIM',
+      action: 'UNCLAIM'
     };
 
     $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function (response) {
-      console.log('unclaimed task ' + taskName + ' to user ' + params.assignee);
+      console.log('unclaimed task ' + taskName);
       q.resolve(response.data);
     },
 

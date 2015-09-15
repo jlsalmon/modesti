@@ -287,6 +287,11 @@ function SchemaService($q, $http) {
                 if (systemName && generalFunctionality) {
                   point.properties.alarmCategory = {value: 'CERN.SRVS.' + generalFunctionality + '.' + systemName};
                 }
+
+                // TODO remove this domain-specific code...
+                if (request.domain === 'CSAM' && point.properties.priorityCode && point.properties.priorityCode === 3) {
+                  point.properties.alarmCategory = 'POMPIER';
+                }
               });
             }
           });

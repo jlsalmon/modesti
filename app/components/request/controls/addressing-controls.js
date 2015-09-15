@@ -74,8 +74,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
    * @returns {boolean}
    */
   function isCurrentUserAuthorised() {
-    var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
-    return TaskService.isCurrentUserAuthorised(task);
+    return self.parent.isCurrentUserAuthorised();
   }
 
   /**
@@ -92,8 +91,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
    * @returns {boolean}
    */
   function isCurrentUserAssigned() {
-    var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
-    return TaskService.isCurrentUserAssigned(task);
+    return self.parent.isCurrentUserAssigned();
   }
 
   /**

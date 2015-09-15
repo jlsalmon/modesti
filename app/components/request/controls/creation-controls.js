@@ -22,7 +22,9 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   self.splitting = undefined;
 
   self.init = init;
-  self.isCurrentUserOwner = isCurrentUserOwner;
+  self.canEdit = canEdit;
+  self.isCurrentUserAssigned = isCurrentUserAssigned;
+  self.getAssignee = getAssignee;
   self.validate = validate;
   self.submit = submit;
   self.split = split;
@@ -32,6 +34,8 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   self.hasErrors = hasErrors;
   self.getTotalErrors = getTotalErrors;
   self.getNumValidationErrors = getNumValidationErrors;
+
+
 
   /**
    *
@@ -60,22 +64,38 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     //  });
     //}
 
-    // Possibly show an alert, depending on how we got here
-    //if (self.request.status === 'FOR_CORRECTION') {
-    //  AlertService.add('danger', 'Request <b>' + self.request.requestId
-    //      + '</b> requires correction. Please see the request log for details.');
-    //} else if (self.request.valid === true) {
-    //  AlertService.add('success', 'Request <b>' + self.request.requestId
-    //      + '</b> was validated successfully.');
-    //}
+    AlertService.clear();
+
+    if (self.getNumValidationErrors() > 0) {
+      self.validating = 'error';
+      AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
+    } else {
+      self.validating = 'success';
+      AlertService.add('success', 'Request has been validated successfully');
+    }
   }
 
   /**
    *
    * @returns {boolean}
    */
-  function isCurrentUserOwner() {
-    return RequestService.isCurrentUserOwner(self.request);
+  function canEdit() {
+    return self.parent.canEdit();
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentUserAssigned() {
+    return self.parent.isCurrentUserAssigned();
+  }
+
+  /**
+   *
+   */
+  function getAssignee() {
+    return self.parent.getAssignee();
   }
 
   /**
@@ -191,8 +211,16 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
             RequestService.clearCache();
 
             $state.reload().then(function () {
-              self.validating = 'success';
-              AlertService.add('success', 'Request has been validated successfully');
+
+
+              //if (self.getNumValidationErrors() > 0) {
+              //  self.validating = 'error';
+              //  AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
+              //} else {
+              //  self.validating = 'success';
+              //  AlertService.add('success', 'Request has been validated successfully');
+              //}
+
             });
           },
 

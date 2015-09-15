@@ -75,7 +75,9 @@
         <!--</div>-->
 
         <div class="col-md-4 pull-right">
-          <div ng-if="ctrl.isCurrentUserOwner()" class="pull-right">
+
+          <!-- Request is assigned to us -->
+          <div ng-if="ctrl.canEdit()" class="pull-right">
             <div class="btn-group">
               <!-- Button to split the request -->
               <button class="btn btn-danger"
@@ -126,6 +128,12 @@
               </button>
             </div>
           </div>
+
+          <!-- Request is assigned to someone else -->
+          <div ng-if="!ctrl.isCurrentUserAssigned()"  class="pull-right">
+            <div>Request assigned to: <a href="#/users/{{ctrl.getAssignee()}}" ng-click="$event.stopPropagation();">{{ctrl.getAssignee()}}</a></div>
+          </div>
+
         </div>
       </div>
 

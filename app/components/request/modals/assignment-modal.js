@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:DelegationModalController
- * @description # DelegationModalController
+ * @name modesti.controller:AssignmentModalController
+ * @description # AssignmentModalController
  */
-angular.module('modesti').controller('DelegationModalController', DelegationModalController);
+angular.module('modesti').controller('AssignmentModalController', AssignmentModalController);
 
-function DelegationModalController($modalInstance, $http, task) {
+function AssignmentModalController($modalInstance, $http, task) {
   var self = this;
 
   self.task = task;
