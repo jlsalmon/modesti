@@ -76,6 +76,8 @@ public class TaskService {
     }
 
     switch (action.getAction()) {
+      case ASSIGN:
+        return assignTask(requestId, taskName, action.getAssignee());
       case CLAIM:
         return claimTask(requestId, taskName, action.getAssignee());
       case COMPLETE:
@@ -90,6 +92,20 @@ public class TaskService {
       default:
         throw new UnsupportedOperationException(format("'%s' is not a valid action", action.getAction()));
     }
+  }
+
+  /**
+   *
+   * @param requestId
+   * @param taskName
+   * @param username
+   * @return
+   */
+  private TaskInfo assignTask(String requestId, String taskName, String username) {
+    Task task = getTaskForRequest(requestId, taskName);
+    taskService.setAssignee(task.getId(), username);
+    task = getTaskForRequest(requestId, taskName);
+    return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(), getCandidateGroups(task));
   }
 
   /**
