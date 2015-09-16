@@ -21,7 +21,7 @@
   </label>
   <div class="col-sm-9">
 
-    <input type="text" ng-model="ctrl.request.subsystem" placeholder="System/Subsystem"
+    <input type="text" ng-model="ctrl.request.subsystem" placeholder="System/Subsystem" autocomplete="off"
       typeahead="subsystem.value as subsystem.value for subsystem in ctrl.getSubsystems($viewValue)"
       typeahead-loading="loadingSubsystems"
       typeahead-editable="false" class="form-control" name="system" required>
