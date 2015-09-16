@@ -52,27 +52,14 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     // state and the user makes a modification
     self.hot.addHook('afterChange', afterChange);
 
-    //// Update the table settings to paint the row backgrounds depending on if they have already been approved
-    //// or rejected
-    //if (self.request.approvalResult) {
-    //  self.hot.updateSettings({
-    //    cells: function (row, col, prop) {
-    //      if (self.request.approvalResult.items[row].approved == false) {
-    //        return {renderer: self.parent.dangerCellRenderer};
-    //      }
-    //    }
-    //  });
-    //}
-
-    AlertService.clear();
-
     if (self.getNumValidationErrors() > 0) {
       self.validating = 'error';
       AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
-    } else {
-      self.validating = 'success';
-      AlertService.add('success', 'Request has been validated successfully');
     }
+    //else {
+    //  self.validating = 'success';
+    //  AlertService.add('success', 'Request has been validated successfully');
+    //}
   }
 
   /**
@@ -117,7 +104,6 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
    */
   function canSplit() {
     return self.hasErrors();
-    //return self.parent.getSelectedPointIds().length > 0;
   }
 
   /**
@@ -143,17 +129,23 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   function getNumValidationErrors() {
     var n = 0;
 
-    for (var i in self.rows) {
-      var point = self.rows[i];
-
-      for (var j in point.errors) {
-        n += point.errors[j].errors.length;
-      }
+    if (self.request.hasOwnProperty('points')) {
+      self.request.points.forEach(function (point) {
+        if (point.hasOwnProperty('errors')) {
+          point.errors.forEach(function (error) {
+            n += error.errors.length;
+          });
+        }
+      });
     }
 
     return n;
   }
 
+  /**
+   *
+   * @returns {number}
+   */
   function getNumApprovalRejections() {
     var n = 0;
 
@@ -211,15 +203,6 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
             RequestService.clearCache();
 
             $state.reload().then(function () {
-
-
-              //if (self.getNumValidationErrors() > 0) {
-              //  self.validating = 'error';
-              //  AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
-              //} else {
-              //  self.validating = 'success';
-              //  AlertService.add('success', 'Request has been validated successfully');
-              //}
 
             });
           },
