@@ -1,8 +1,11 @@
 package cern.modesti;
 
 import cern.modesti.plugin.RequestProvider;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.TaskService;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.plugin.core.config.EnablePluginRegistries;
 
 import java.net.URL;
@@ -52,13 +55,5 @@ public class Application {
 
   public static void main(String[] args) {
     new SpringApplicationBuilder(Application.class).properties("spring.config.name:modesti").sources(Application.class).build().run(args);
-
-    ClassLoader cl = Thread.currentThread().getContextClassLoader();
-
-    URL[] urls = ((URLClassLoader)cl).getURLs();
-
-    for(URL url: urls){
-      System.out.println(url.getFile());
-    }
   }
 }
