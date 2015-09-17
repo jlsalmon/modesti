@@ -84,7 +84,7 @@ function TaskService($q, $http, AuthService) {
     },
 
     function (error) {
-      console.log('error fetching signals: ' + error);
+      console.log('error fetching signals: ' + error.statusText);
       q.reject(error);
     });
 

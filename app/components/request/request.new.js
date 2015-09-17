@@ -65,11 +65,11 @@ function NewRequestController($http, $location, RequestService, SchemaService, A
 
       // Post form to server to create new request.
       RequestService.createRequest(self.request).then(function(location) {
-        self.submitting = 'success';
         // Strip request ID from location.
         var id = location.substring(location.lastIndexOf('/') + 1);
         // Redirect to point entry page.
         $location.path("/requests/" + id);
+        self.submitting = 'success';
       },
 
       function (error) {
