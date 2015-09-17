@@ -99,7 +99,7 @@
     <div class="container">
 
       <h3>Search for requests</h3>
-      <span class="help-block">Use the controls below to search, filter and sort the list of MODESTI requests.</span>
+      <span class="help-block">Use the cont below to search for requests.</span>
 
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -177,9 +177,9 @@
 
         <div class="loading-container" style="height: 400px; width: 100%"
              ng-if="ctrl.loading == 'started' || ctrl.loading == 'error'">
-          <span us-spinner="{position: 'absolute', zIndex: '200'}" ng-if="ctrl.loading == 'started'"></span>
-          <i class="fa fa-2x fa-exclamation-triangle" ng-if="ctrl.loading == 'error'"
-             style="position: absolute; top: 50%; left: 50%;"></i>
+          <span us-spinner="{position: 'relative', top: '50px', zIndex: '200'}" ng-if="ctrl.loading == 'started'"></span>
+          <i class="fa fa-3x fa-exclamation-triangle" ng-if="ctrl.loading == 'error'"
+             style="position: relative; top: 31px; left: 48.2%;"></i>
         </div>
 
 
