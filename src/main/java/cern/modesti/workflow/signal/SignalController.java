@@ -71,6 +71,10 @@ public class SignalController {
     List<SignalInfo> signals = new ArrayList<>();
     Task task = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).active().singleResult();
 
+    if (task == null) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     // Query the signals that are subscribed to by the current process instance.
     // TODO this is a non-public API, is there a supported way of doing this?
     CommandExecutor executor = ((ProcessEngineConfigurationImpl) ProcessEngines.getDefaultProcessEngine().getProcessEngineConfiguration()).getCommandExecutor();
