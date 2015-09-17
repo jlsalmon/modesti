@@ -414,6 +414,10 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
       oldValue = change[2];
       newValue = change[3];
 
+      if (typeof property !== 'string') {
+        continue;
+      }
+
       // get the outer object i.e. properties.location.value -> location
       var prop = property.split('.')[1];
 

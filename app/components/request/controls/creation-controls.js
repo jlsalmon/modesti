@@ -266,7 +266,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     },
 
     function (error) {
-      console.log('error completing task: ' + error);
+      console.log('error completing task: ' + error.statusText);
       self.submitting = 'error';
     });
   }
