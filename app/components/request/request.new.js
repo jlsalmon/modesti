@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('NewRequestController', NewRequestController);
 
-function NewRequestController($http, $location, RequestService, SchemaService, AuthService) {
+function NewRequestController($http, $state, RequestService, SchemaService, AuthService) {
   var self = this;
 
   self.schemas = [];
@@ -68,8 +68,9 @@ function NewRequestController($http, $location, RequestService, SchemaService, A
         // Strip request ID from location.
         var id = location.substring(location.lastIndexOf('/') + 1);
         // Redirect to point entry page.
-        $location.path("/requests/" + id);
-        self.submitting = 'success';
+        $state.go('request', { id: id }).then(function () {
+          self.submitting = 'success';
+        });
       },
 
       function (error) {
