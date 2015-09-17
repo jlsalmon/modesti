@@ -46,6 +46,11 @@ public class RequestDeserialiser extends JsonDeserializer<Request> {
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     Request updated = mapper.readValue(parser, Request.class);
 
+    // The request status may not be modified manually.
+    if (updated.getStatus() != requestToUpdate.getStatus()) {
+      throw new IllegalArgumentException("Request status cannot not be updated manually!");
+    }
+
     // Make sure all the nested object properties (gmaoCode, etc.) are properly deserialised.
 
     for (Point point : updated.getPoints()) {
