@@ -6,6 +6,7 @@ package cern.modesti.upload.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import cern.modesti.repository.equipment.MonitoringEquipment;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
@@ -161,7 +162,15 @@ public class TIMRequestParser extends RequestParser {
     } else if (properties.containsKey("dipItem")) {
       return "DIP";
     } else if (properties.containsKey("plcBlockType")) {
-      return "PLC";
+      if (properties.containsKey("monitoringEquipment")) {
+        MonitoringEquipment equipment = (MonitoringEquipment) properties.get("monitoringEquipment");
+
+        if (equipment.getName() != null && equipment.getName().contains("APIMMD")) {
+          return "APIMMD";
+        } else {
+          return "JEC";
+        }
+      }
     } else if (properties.containsKey("japcProtocol")) {
       return "JAPC";
     } else if (properties.containsKey("laserCategory")) {
