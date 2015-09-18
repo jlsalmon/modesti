@@ -131,7 +131,7 @@ function ValidationService($q) {
 
         if (subCondition.operation === 'equals' && value === subCondition.value) {
           result = true;
-        } else if (subCondition.operation === 'contains' && value && value.indexOf(subCondition.value) > -1) {
+        } else if (subCondition.operation === 'contains' && value && value.toString().indexOf(subCondition.value) > -1) {
           result = true;
         }
       });
@@ -143,7 +143,7 @@ function ValidationService($q) {
 
       if (condition.operation === 'equals' && value === condition.value) {
         result = true;
-      } else if (condition.operation === 'contains' && value && value.indexOf(condition.value) > -1) {
+      } else if (condition.operation === 'contains' && value && value.toString().indexOf(condition.value) > -1) {
         result = true;
       }
     }
