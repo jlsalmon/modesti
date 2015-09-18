@@ -65,7 +65,7 @@ public class NotificationService {
     // Prepare the evaluation context
     final Context ctx = new Context(Locale.UK);
     ctx.setVariable("request", request);
-    ctx.setVariable("url", env.getRequiredProperty("modesti.base") + "/requests/" + request.getRequestId());
+    ctx.setVariable("url", env.getRequiredProperty("modesti.base") + "/#/requests/" + request.getRequestId());
 
     // Prepare message using a Spring helper
     final MimeMessage mimeMessage = mailSender.createMimeMessage();
