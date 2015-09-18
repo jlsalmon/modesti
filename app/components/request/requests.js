@@ -29,7 +29,9 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.loading = undefined;
 
   self.getSubsystems = getSubsystems;
+  self.getUsers = getUsers;
   self.isUserAuthenticated = isUserAuthenticated;
+  self.getCurrentUsername = getCurrentUsername;
   self.deleteRequest = deleteRequest;
   self.editRequest = editRequest;
   self.onPageChanged = onPageChanged;
@@ -37,6 +39,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
 
   getRequests(1, 10, "requestId,desc", self.filter);
   getRequestMetrics();
+  getUsers();
 
   /**
    *
@@ -44,6 +47,14 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
    */
   function isUserAuthenticated() {
     return AuthService.isCurrentUserAuthenticated();
+  }
+
+  /**
+   *
+   * @returns {string}
+   */
+  function getCurrentUsername() {
+    return AuthService.getCurrentUser().username;
   }
 
   /**
@@ -136,6 +147,20 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     return 0;
   }
 
+  /**
+   *
+   */
+  function getUsers(username) {
+    // TODO refactor this into a service
+    $http.get(BACKEND_BASE_URL + '/users', { params: {username: username}}).then(function(response) {
+      self.users = response.data._embedded.users;
+    });
+  }
+
+  /**
+   *
+   * @param query
+   */
   function getSubsystems(query) {
     // TODO refactor this into a service
     $http.get(BACKEND_BASE_URL + '/subsystems/search/find', { params: {query: query}}).then(function(response) {

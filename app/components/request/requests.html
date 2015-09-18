@@ -106,6 +106,10 @@
         <div class="panel-heading">
           <div class="tasklist-controls">
 
+            <button class="btn btn-primary filter" ng-click="ctrl.filter.creator.username = ctrl.getCurrentUsername()">
+              My Requests
+            </button>
+
             <div class="filter">
               <ui-select ng-model="ctrl.filter.status" theme="bootstrap">
                 <ui-select-match placeholder="{{'STATUS'|translate}}" allow-clear="true">
@@ -145,17 +149,18 @@
                 </ui-select-choices>
               </ui-select>
             </div>
-
-            <!--TODO: use /users endpoint instead of doing a unique filter on requests-->
+            
             <div class="filter">
               <ui-select ng-model="ctrl.filter.creator.username" theme="bootstrap">
                 <ui-select-match placeholder="{{'CREATOR'|translate}}" allow-clear="true">
-                  {{$select.selected.creator.firstName}} {{$select.selected.creator.lastName}}
+                  {{$select.selected.firstName}} {{$select.selected.lastName}}
                 </ui-select-match>
-                <ui-select-choices repeat="request.creator.username as request in ctrl.requests | unique:'creator.username'">
-                  <div ng-bind-html="request.creator.firstName + ' ' + request.creator.lastName | highlight: $select.search"></div>
+                <ui-select-choices repeat="user.username as user in ctrl.users"
+                                   refresh="ctrl.getUsers($select.search)"
+                                   refresh-delay="0">
+                  <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
                   <small>
-                    <span class="text-muted" ng-bind-html=" '' + request.creator.username | highlight: $select.search"></span>
+                    <span class="text-muted" ng-bind-html=" '' + user.username | highlight: $select.search"></span>
                   </small>
                 </ui-select-choices>
               </ui-select>
