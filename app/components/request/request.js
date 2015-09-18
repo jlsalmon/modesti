@@ -33,7 +33,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     columnSorting: false,
     //currentRowClassName: 'currentRow',
     //comments: true,
-    minSpareRows: 0,
+    minSpareRows: 50,
     search: true,
     // pasteMode: 'shift_down', // problematic
     outsideClickDeselects: false,
