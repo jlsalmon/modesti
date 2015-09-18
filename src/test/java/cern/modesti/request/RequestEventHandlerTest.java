@@ -99,7 +99,7 @@ public class RequestEventHandlerTest {
     request.setType(RequestType.CREATE);
     request.setDescription("description");
     request.setDomain("TIM");
-    request.setCategories(new HashSet<>(Arrays.asList("PLC")));
+    request.setCategories(new HashSet<>(Arrays.asList("APIMMD")));
     request.setPoints(getTestPoints());
     return request;
   }

@@ -22,6 +22,8 @@ public class QSchema extends EntityPathBase<Schema> {
 
     public final ListPath<cern.modesti.schema.category.Category, cern.modesti.schema.category.QCategory> categories = this.<cern.modesti.schema.category.Category, cern.modesti.schema.category.QCategory>createList("categories", cern.modesti.schema.category.Category.class, cern.modesti.schema.category.QCategory.class, PathInits.DIRECT2);
 
+    public final ListPath<cern.modesti.schema.category.Datasource, cern.modesti.schema.category.QDatasource> datasourceOverrides = this.<cern.modesti.schema.category.Datasource, cern.modesti.schema.category.QDatasource>createList("datasourceOverrides", cern.modesti.schema.category.Datasource.class, cern.modesti.schema.category.QDatasource.class, PathInits.DIRECT2);
+
     public final ListPath<cern.modesti.schema.category.Datasource, cern.modesti.schema.category.QDatasource> datasources = this.<cern.modesti.schema.category.Datasource, cern.modesti.schema.category.QDatasource>createList("datasources", cern.modesti.schema.category.Datasource.class, cern.modesti.schema.category.QDatasource.class, PathInits.DIRECT2);
 
     public final StringPath domain = createString("domain");

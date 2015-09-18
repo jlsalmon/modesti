@@ -67,7 +67,7 @@ public class ValidationServiceTest {
     properties.put("subsystem", new SubSystem(7092L, "ACLR GENERALE", "ACLR", "A", "GENERALE", "Z"));
     properties.put("responsiblePerson", new Person(413122L, "Robin Martini", "martini"));
     properties.put("pointAttribute", "test");
-    properties.put("pointType", "PLC");
+    properties.put("pointType", "APIMMD");
     properties.put("location", new Location("104/R-A01", "104", "R", "A01"));
     properties.put("functionality", new Functionality("ADE"));
     point.setProperties(properties);

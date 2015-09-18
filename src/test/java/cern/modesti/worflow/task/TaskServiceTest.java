@@ -46,8 +46,8 @@ public class TaskServiceTest extends BaseIntegrationTest {
   @Test
   public void delegate() {
     TaskInfo task = taskService.getTask(request.getRequestId(), "edit");
-    assertTrue(task.getOwner().equals(BEN.getUsername()));
-    //assertTrue(task.getAssignee().equals(BEN.getUsername()));
+    //assertTrue(task.getOwner().equals(BEN.getUsername()));
+    assertTrue(task.getAssignee().equals(BEN.getUsername()));
 
     // Ben delegates the task to Joe
     task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(DELEGATE, JOE.getUsername()), BEN);
@@ -108,14 +108,14 @@ public class TaskServiceTest extends BaseIntegrationTest {
   @Test
   public void unclaim() {
     TaskInfo task = taskService.getTask(request.getRequestId(), "edit");
-    assertTrue(task.getOwner().equals(BEN.getUsername()));
+    //assertTrue(task.getOwner().equals(BEN.getUsername()));
 
     task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(CLAIM, BEN.getUsername()), BEN);
-    assertTrue(task.getOwner().equals(BEN.getUsername()));
+    //assertTrue(task.getOwner().equals(BEN.getUsername()));
     assertTrue(task.getAssignee().equals(BEN.getUsername()));
 
     task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(UNCLAIM, null), BEN);
-    assertTrue(task.getOwner().equals(BEN.getUsername()));
+    //assertTrue(task.getOwner().equals(BEN.getUsername()));
     assertNull(task.getAssignee());
   }
 }

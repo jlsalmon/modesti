@@ -33,7 +33,7 @@ public class TestUtil {
     request.setDescription("description");
     request.setDomain("DEFAULT");
     request.setSubsystem("EAU DEMI");
-    request.setCategories(new HashSet<>(Collections.singletonList("PLC")));
+    request.setCategories(new HashSet<>(Collections.singletonList("APIMMD")));
 
     request.setPoints(getDefaultPoints());
     return request;
@@ -119,7 +119,7 @@ public class TestUtil {
     point1.setProperties(new HashMap<String, Object>() {{
       put("pointDescription", "TEST CABLED POINT 1");
       put("pointDataType", "Boolean");
-      put("pointType", "PLC");
+      put("pointType", "APIMMD");
     }});
 
     points.add(point1);
@@ -137,7 +137,7 @@ public class TestUtil {
     point1.setProperties(new HashMap<String, Object>() {{
       put("pointDescription", "TEST CABLED ALARM 1");
       put("pointDataType", "Boolean");
-      put("pointType", "PLC");
+      put("pointType", "APIMMD");
       put("priorityCode", 1);
       put("alarmValue", 0);
     }});

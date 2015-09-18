@@ -5,6 +5,7 @@ package cern.modesti.upload.parser;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cern.modesti.repository.equipment.MonitoringEquipment;
 import cern.modesti.repository.equipment.MonitoringEquipmentRepository;
 import cern.modesti.repository.location.functionality.FunctionalityRepository;
 import cern.modesti.repository.location.zone.SafetyZoneRepository;
@@ -391,12 +393,13 @@ public class RequestParserTest {
   @Test
   public void timPlcRequestWithAlarmsIsAccepted() throws IOException {
     Resource sheet = sheets.get("tim-plc-with-alarms.xls");
+    when(monitoringEquipmentRepository.findOneByName("E_JEC_YZPOWERMAN")).thenReturn(new MonitoringEquipment(1, "E_JEC_YZPOWERMAN", "E_JEC_YZPOWERMAN"));
     Request request = requestParserFactory.createRequestParser(sheet.getInputStream()).parseRequest();
 
     assertTrue(request.getDomain().equals("TIM"));
     assertTrue(request.getType().equals(RequestType.CREATE));
     assertTrue(request.getCategories().size() == 3);
-    assertTrue(request.getCategories().contains("PLC"));
+    assertTrue(request.getCategories().contains("JEC"));
     assertTrue(request.getCategories().contains("Commands"));
     assertTrue(request.getCategories().contains("Binary Points"));
 
@@ -432,7 +435,7 @@ public class RequestParserTest {
 
     assertTrue(request.getDomain().equals("CSAM"));
     assertTrue(request.getType().equals(RequestType.CREATE));
-    assertTrue(request.getCategories().size() == 2); // has PLC and LSAC points
+    assertTrue(request.getCategories().size() == 2); // has APIMMD and LSAC points
     assertTrue(request.getCategories().contains("LSAC"));
     assertTrue(request.getCategories().contains("APIMMD"));
 
