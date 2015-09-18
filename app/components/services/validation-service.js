@@ -128,7 +128,10 @@ function ValidationService($q) {
     if (condition.or) {
       condition.or.forEach(function (subCondition) {
         var value = point.properties[subCondition.field];
-        if (value === subCondition.value) {
+
+        if (subCondition.operation === 'equals' && value === subCondition.value) {
+          result = true;
+        } else if (subCondition.operation === 'contains' && value && value.indexOf(subCondition.value) > -1) {
           result = true;
         }
       });
@@ -137,7 +140,10 @@ function ValidationService($q) {
     // Simple condition
     else {
       var value = point.properties[condition.field];
-      if (value === condition.value) {
+
+      if (condition.operation === 'equals' && value === condition.value) {
+        result = true;
+      } else if (condition.operation === 'contains' && value && value.indexOf(condition.value) > -1) {
         result = true;
       }
     }
