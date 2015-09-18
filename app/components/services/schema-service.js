@@ -47,7 +47,7 @@ function SchemaService($q, $http) {
     },
 
     function (error) {
-      console.log('error fetching schema: ' + error);
+      console.log('error fetching schema: ' + error.statusText);
       q.reject();
     });
 

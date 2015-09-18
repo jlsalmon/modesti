@@ -77,8 +77,16 @@ function ValidationService($q) {
           setErrorMessage(point, propertyName, 'Value "' + value + '" is not a legal option for field "' + field.name_en + '". Please select a value from the list.');
         }
 
-        // Required fields
+
+        // Required fields (can be simple boolean or condition list)
+        var required;
         if (field.required === true) {
+          required = true;
+        } else if (field.required !== null && typeof field.required === 'object') {
+          required = evaluateCondition(point, field.required);
+        }
+
+        if (required === true) {
           if (value === '' || value === undefined || value === null) {
             point.valid = category.valid = valid = false;
             setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" is mandatory');
@@ -105,6 +113,36 @@ function ValidationService($q) {
     });
 
     return valid;
+  }
+
+  /**
+   *
+   * @param point
+   * @param condition
+   * @returns {boolean}
+   */
+  function evaluateCondition(point, condition) {
+    var result = false;
+
+    // Chained OR condition
+    if (condition.or) {
+      condition.or.forEach(function (subCondition) {
+        var value = point.properties[subCondition.field];
+        if (value === subCondition.value) {
+          result = true;
+        }
+      });
+    }
+
+    // Simple condition
+    else {
+      var value = point.properties[condition.field];
+      if (value === condition.value) {
+        result = true;
+      }
+    }
+
+    return result;
   }
 
   /**
