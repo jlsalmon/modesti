@@ -240,7 +240,11 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
       // A column is editable only if the category is marked as an editable state for the current request status.
       // TODO: don't allow editing until the task is claimed (if it is a claimable task)
       if (isCurrentUserAuthorised()) {
-        editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
+        if (!isCurrentUserAssigned()) {
+          editable = false;
+        } else {
+          editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
+        }
       } else {
         editable = false;
       }
