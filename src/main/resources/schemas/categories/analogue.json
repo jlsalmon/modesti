@@ -53,6 +53,20 @@
     {
       "id": "plcAdConversion",
       "type": "options",
+      "required": {
+        "or": [
+          {
+            "field": "pointType",
+            "operation": "equals",
+            "value": "JEC"
+          },
+          {
+            "field": "pointType",
+            "operation": "equals",
+            "value": "APIMMD"
+          }
+        ]
+      },
       "name_en": "Conversion Factor",
       "name_fr": "Conversion Factor",
       "help_en": "Analogue/Digital conversion factor",

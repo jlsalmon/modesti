@@ -65,7 +65,7 @@ public class Field {
 
   private Integer maxLength;
 
-  private Boolean required;
+  private Object required;
 
   private Boolean editable;
 
