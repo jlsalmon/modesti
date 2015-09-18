@@ -20,7 +20,7 @@
     #<b th:text="${request.requestId} + '(' + ${request.description} + ')'"></b>
   </p>
   <p>
-    has been <b th:text="${request.getApproval().getApproved()} ? 'approved' : 'rejected'"></b> by TI operators.
+    has been <b th:text="${request.getApproval().getApproved()} ? 'approved' : 'rejected'"></b>.
   </p>
 
   <p th:if="${!request.getApproval().getApproved()}">

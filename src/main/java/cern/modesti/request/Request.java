@@ -193,7 +193,7 @@ public class Request implements Serializable {
       String pointType = (String) point.getProperties().get("pointType");
 
       if (pointType != null) {
-        if (pointType.equals("PLC") || pointType.equals("APIMMD") || pointType.equals("LSAC")) {
+        if (pointType.equals("APIMMD") || pointType.equals("LSAC")) {
           return true;
         }
       }
