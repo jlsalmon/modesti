@@ -64,6 +64,8 @@ public class Schema {
 
   private List<Category> overrides = new ArrayList<>();
 
+  private List<Datasource> datasourceOverrides = new ArrayList<>();
+
   /**
    * @param id
    * @param name

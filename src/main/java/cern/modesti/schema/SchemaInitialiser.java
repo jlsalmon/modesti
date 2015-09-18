@@ -125,35 +125,20 @@ public class SchemaInitialiser {
           }
         }
 
-        // Process any overrides to the core schema
+        // Process any overrides to the core categories
         for (Category override : schema.getOverrides()) {
-          Category overridden = new Category(categories.get(categories.indexOf(override)));
-
-          List<Field> newFields = new ArrayList<>();
-
-          for (Field newField : override.getFields()) {
-            if (!overridden.getFields().contains(newField)) {
-              newFields.add(newField);
-            }
+          if (categories.contains(override)) {
+            Category overridden = mergeCategories(categories.get(categories.indexOf(override)), override);
+            categories.set(categories.indexOf(override), overridden);
           }
+        }
 
-          // Copy the disabled state list if the child doesn't specify it.
-          if (override.getDisabledStates() != null && overridden.getDisabledStates() == null) {
-            overridden.setDisabledStates(override.getDisabledStates());
+        // Process any overrides to the core datasources
+        for (Datasource override : schema.getDatasourceOverrides()) {
+          if (datasources.contains(override)) {
+            Category overridden = mergeCategories(datasources.get(datasources.indexOf(override)), override);
+            datasources.set(datasources.indexOf(override), new Datasource(overridden));
           }
-
-          // Copy the editable state list if the child doesn't specify it.
-          if (override.getEditableStates() != null && overridden.getEditableStates() == null) {
-            overridden.setEditableStates(override.getEditableStates());
-          }
-
-          // Copy the constraint list
-          if (override.getConstraints() != null && overridden.getConstraints() == null) {
-            overridden.setConstraints(override.getConstraints());
-          }
-
-          overridden.getFields().addAll(newFields);
-          categories.set(categories.indexOf(override), overridden);
         }
 
         schema.setCategories(categories);
@@ -168,6 +153,42 @@ public class SchemaInitialiser {
 
     log.trace(format("loaded %d schemas", schemas.size()));
     return schemas;
+  }
+
+  /**
+   *
+   * @param overridden
+   * @param override
+   * @return
+   */
+  private Category mergeCategories(Category overridden, Category override) {
+    overridden = new Category(overridden);
+
+    List<Field> newFields = new ArrayList<>();
+
+    for (Field newField : override.getFields()) {
+      if (!overridden.getFields().contains(newField)) {
+        newFields.add(newField);
+      }
+    }
+
+    // Copy the disabled state list if the child doesn't specify it.
+    if (override.getDisabledStates() != null && overridden.getDisabledStates() == null) {
+      overridden.setDisabledStates(override.getDisabledStates());
+    }
+
+    // Copy the editable state list if the child doesn't specify it.
+    if (override.getEditableStates() != null && overridden.getEditableStates() == null) {
+      overridden.setEditableStates(override.getEditableStates());
+    }
+
+    // Copy the constraint list
+    if (override.getConstraints() != null && overridden.getConstraints() == null) {
+      overridden.setConstraints(override.getConstraints());
+    }
+
+    overridden.getFields().addAll(newFields);
+    return overridden;
   }
 
   /**
