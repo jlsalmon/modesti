@@ -1,0 +1,68 @@
+{
+  "id": "apimmd",
+  "name_en": "APIMMD",
+  "name_fr": "APIMMD",
+  "editableStates": [ "FOR_ADDRESSING" ],
+  "constraints": [
+    {
+      "type": "and",
+      "members": [ "plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix", "plcSlaveAddress", "plcConnectId" ],
+      "activeStates": [ "FOR_ADDRESSING" ],
+      "condition": {
+        "field": "pointType",
+        "operation": "equals",
+        "value": "APIMMD"
+      }
+    }
+  ],
+  "fields": [
+    {
+      "id": "plcBlockType",
+      "type": "options",
+      "name_en": "Block Type",
+      "name_fr": "Code du block",
+      "help_en": "For PLC cabled points, the block type.",
+      "help_fr": "Pour les points cables sur PLC, le code du block."
+    },
+    {
+      "id": "plcWordId",
+      "type": "numeric",
+      "name_en": "Word ID",
+      "name_fr": "Numero du mot",
+      "help_en": "For PLC cabled points, the word number that stores the value of the point",
+      "help_fr": "Pour les points cables sur PLC, le numero du mot qui stocke la valeur du point"
+    },
+    {
+      "id": "plcBitId",
+      "type": "options",
+      "name_en": "Bit ID",
+      "name_fr": "Numero du bit",
+      "help_en": "",
+      "help_fr": ""
+    },
+    {
+      "id": "plcNativePrefix",
+      "type": "options",
+      "name_en": "Native Prefix",
+      "name_fr": "Native Prefix",
+      "help_en": "",
+      "help_fr": ""
+    },
+    {
+      "id": "plcSlaveAddress",
+      "type": "numeric",
+      "name_en": "Slave Address",
+      "name_fr": "Slave Address",
+      "help_en": "",
+      "help_fr": ""
+    },
+    {
+      "id": "plcConnectId",
+      "type": "text",
+      "name_en": "Connect ID",
+      "name_fr": "Connect ID",
+      "help_en": "",
+      "help_fr": ""
+    }
+  ]
+}
