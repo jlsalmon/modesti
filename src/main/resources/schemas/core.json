@@ -162,8 +162,8 @@
         {
           "id": "alarmValue",
           "type": "numeric",
-          "name_en": "Value",
-          "name_fr": "Valeur",
+          "name_en": "Alarm Value",
+          "name_fr": "Valeur d'alarme",
           "help_en": "The value indicating the presence of the alarm",
           "help_fr": "La valeur qui indique la présence de l'alarme"
         }
@@ -221,6 +221,20 @@
         {
           "id": "workHoursTask",
           "type": "text",
+          "required": {
+            "or": [
+              {
+                "field": "priorityCode",
+                "operation": "contains",
+                "value": "1"
+              },
+              {
+                "field": "priorityCode",
+                "operation": "contains",
+                "value": "2"
+              }
+            ]
+          },
           "name_en": "Task During Working Hours",
           "name_fr": "Action Heures Ouvrables",
           "help_en": "",
@@ -229,6 +243,11 @@
         {
           "id": "outsideHoursTask",
           "type": "text",
+          "required": {
+            "field": "priorityCode",
+            "operation": "contains",
+            "value": "2"
+          },
           "name_en": "Task Outside Working Hours",
           "name_fr": "Action Hors Heures Ouvrables",
           "help_en": "",
