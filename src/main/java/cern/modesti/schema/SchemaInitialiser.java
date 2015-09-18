@@ -172,18 +172,18 @@ public class SchemaInitialiser {
       }
     }
 
-    // Copy the disabled state list if the child doesn't specify it.
-    if (override.getDisabledStates() != null && overridden.getDisabledStates() == null) {
+    // Copy the disabled state list.
+    if (override.getDisabledStates() != null) {
       overridden.setDisabledStates(override.getDisabledStates());
     }
 
-    // Copy the editable state list if the child doesn't specify it.
-    if (override.getEditableStates() != null && overridden.getEditableStates() == null) {
+    // Copy the editable state list.
+    if (override.getEditableStates() != null) {
       overridden.setEditableStates(override.getEditableStates());
     }
 
     // Copy the constraint list
-    if (override.getConstraints() != null && overridden.getConstraints() == null) {
+    if (override.getConstraints() != null) {
       overridden.setConstraints(override.getConstraints());
     }
 
