@@ -78,6 +78,7 @@ public class SchemaInitialiser {
     List<Schema> schemas = new ArrayList<>();
 
     List<Category> builtinCategories = loadBuiltinCategories();
+    List<Datasource> builtinDatasources = loadBuiltinDatasources();
 
     Map<String, List<Schema>> pluginSchemas = loadPluginSchemas();
     Map<String, List<Category>> pluginCategories = loadPluginCategories();
@@ -117,6 +118,8 @@ public class SchemaInitialiser {
         for (Datasource datasource : schema.getDatasources()) {
           if (pluginDatasources.get(pathToJar) != null && pluginDatasources.get(pathToJar).contains(datasource)) {
             datasources.add(pluginDatasources.get(pathToJar).get(pluginDatasources.get(pathToJar).indexOf(datasource)));
+          } else if (builtinDatasources.contains(datasource)) {
+            datasources.add(builtinDatasources.get(builtinDatasources.indexOf(datasource)));
           } else {
             throw new IllegalArgumentException(format("Datasource %s was not found for schema %s", datasource.getId(), schema.getId()));
           }
@@ -207,6 +210,16 @@ public class SchemaInitialiser {
   private Map<String, List<Category>> loadPluginCategories() throws IOException, URISyntaxException {
     log.info("Loading plugin categories");
     return loadPluginResources(PLUGIN_RESOURCE_PREFIX + CATEGORY_RESOURCE_PATTERN, Category.class);
+  }
+
+  /**
+   *
+   * @return
+   * @throws IOException
+   */
+  private List<Datasource> loadBuiltinDatasources() throws IOException {
+    log.info("Loading builtin datasources");
+    return loadBuiltinResources(BUILTIN_RESOURCE_PREFIX + DATASOURCE_RESOURCE_PATTERN, Datasource.class);
   }
 
   /**
