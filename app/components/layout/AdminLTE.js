@@ -135,9 +135,9 @@ $(function () {
   }
 
   //Activate box widget
-  if (o.enableBoxWidget) {
-    $.AdminLTE.boxWidget.activate();
-  }
+  //if (o.enableBoxWidget) {
+  //  $.AdminLTE.boxWidget.activate();
+  //}
 
   //if(o.enableFastclick && typeof FastClick !== 'undefined') {
   //  FastClick.attach(document.body);
