@@ -46,6 +46,7 @@ module.exports = function(config) {
       'app/bower_components/moment/moment.js',
       'app/bower_components/pikaday/pikaday.js',
       'app/bower_components/handsontable/dist/handsontable.js',
+      'app/bower_components/handsontable-select2-editor/select2-editor.js',
       'app/bower_components/ngHandsontable/dist/ngHandsontable.js',
       'app/bower_components/ngstorage/ngStorage.js',
       'app/bower_components/lodash/dist/lodash.compat.js',

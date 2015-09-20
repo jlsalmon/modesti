@@ -2,7 +2,6 @@
   "name": "modesti",
   "version": "0.0.1",
   "dependencies": {
-    "Handsontable-select2-editor": "*",
     "angular": "^1.4.0",
     "angular-bootstrap": "~0.12.1",
     "angular-cookies": "^1.4.0",
@@ -25,6 +24,7 @@
     "famfamfam-flags-sprite": "~1.0.0",
     "font-awesome": "~4.3.0",
     "handsontable": "0.16.1",
+    "handsontable-select2-editor": "0.0.2",
     "modernizr": "~2.8.3",
     "ngHandsontable": "0.6.0",
     "ngstorage": "~0.3.0",
