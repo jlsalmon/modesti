@@ -41,7 +41,7 @@ function TestingControlsController($state, RequestService, TaskService) {
    * @returns {boolean}
    */
   function isCurrentUserAuthorised() {
-    return TaskService.isCurrentUserAuthorised(self.tasks['test']);
+    return TaskService.isCurrentUserAuthorised(self.tasks.test);
   }
 
   /**
@@ -49,7 +49,7 @@ function TestingControlsController($state, RequestService, TaskService) {
    * @returns {boolean}
    */
   function isCurrentTaskClaimed() {
-    return TaskService.isTaskClaimed(self.tasks['test']);
+    return TaskService.isTaskClaimed(self.tasks.test);
   }
 
   /**
@@ -57,7 +57,7 @@ function TestingControlsController($state, RequestService, TaskService) {
    * @returns {boolean}
    */
   function isCurrentUserAssigned() {
-    return TaskService.isCurrentUserAssigned(self.tasks['test']);
+    return TaskService.isCurrentUserAssigned(self.tasks.test);
   }
 
   /**
@@ -65,16 +65,16 @@ function TestingControlsController($state, RequestService, TaskService) {
    * @returns {*}
    */
   function getCurrentAssignee() {
-    return self.tasks['test'].assignee;
+    return self.tasks.test.assignee;
   }
 
   /**
    *
    */
   function claim() {
-    TaskService.claimTask(self.tasks['test'].name, self.request.requestId).then(function (task) {
+    TaskService.claimTask(self.tasks.test.name, self.request.requestId).then(function (task) {
       console.log('claimed task successfully');
-      self.tasks['test'] = task;
+      self.tasks.test = task;
       self.parent.activateDefaultCategory();
     });
   }
@@ -112,7 +112,7 @@ function TestingControlsController($state, RequestService, TaskService) {
       event.stopPropagation();
     }
 
-    var task = self.tasks['test'];
+    var task = self.tasks.test;
     if (!task) {
       console.log('error testing request: no task');
       return;
@@ -136,7 +136,7 @@ function TestingControlsController($state, RequestService, TaskService) {
         });
       },
 
-      function (error) {
+      function () {
         console.log('error completing task ' + task.name);
         self.submitting = 'error';
       });

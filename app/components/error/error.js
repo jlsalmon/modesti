@@ -8,5 +8,5 @@
 angular.module('modesti').controller('ErrorController', ErrorController);
 
 function ErrorController() {
-  var self = this;
+
 }

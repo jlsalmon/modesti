@@ -118,6 +118,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    */
   function afterInit() {
     console.log('afterInit()');
+    /*jshint validthis:true */
     self.hot = this;
 
     calculateTableHeight();
@@ -156,17 +157,17 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
   function getRows() {
     var rows = [];
 
-    if (self.request.status == 'FOR_APPROVAL') {
+    if (self.request.status === 'FOR_APPROVAL') {
 
       self.request.points.forEach(function (point) {
         // Display only alarms
-        if (point.properties['priorityCode']) {
+        if (point.properties.priorityCode) {
           rows.push(point);
         }
       });
     }
 
-    else if (self.request.status == 'FOR_ADDRESSING' || self.request.status == 'FOR_CABLING') {
+    else if (self.request.status === 'FOR_ADDRESSING' || self.request.status === 'FOR_CABLING') {
 
       // TODO display only points which require cabling
       rows = self.request.points;
@@ -256,16 +257,16 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     });
   }
 
-  function iconRenderer(instance, td, row, col, prop, value, cellProperties) {
-    var point = self.rows[row];
-    td.innerHTML = '';
-
-    if (point.properties.priorityCode) {
-      td.innerHTML += '<i class="fa fa-fw fa-bell"></i>';
-    } else {
-      td.innerHTML += '<i class="fa fa-fw fa-bell-o text-muted"></i>';
-    }
-  }
+  //function iconRenderer(instance, td, row, col, prop, value, cellProperties) {
+  //  var point = self.rows[row];
+  //  td.innerHTML = '';
+  //
+  //  if (point.properties.priorityCode) {
+  //    td.innerHTML += '<i class="fa fa-fw fa-bell"></i>';
+  //  } else {
+  //    td.innerHTML += '<i class="fa fa-fw fa-bell-o text-muted"></i>';
+  //  }
+  //}
 
   /**
    * The "select-all" checkbox column is shown when the request is in either state FOR_APPROVAL, FOR_ADDRESSING,
@@ -310,7 +311,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    * @returns {{data: string, type: string, title: string}}
    */
   function getCheckboxColumn() {
-    return {data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />', renderer: customRenderer}
+    return {data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />', renderer: customRenderer};
   }
 
   /**
@@ -319,13 +320,13 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    */
   function getCommentColumn() {
     var property;
-    if (self.request.status == 'FOR_APPROVAL') {
+    if (self.request.status === 'FOR_APPROVAL') {
       property = 'approval.message';
-    } else if (self.request.status == 'FOR_TESTING') {
+    } else if (self.request.status === 'FOR_TESTING') {
       property = 'testing.message';
     }
 
-    return {data: property, type: 'text', title: 'Comment', renderer: customRenderer}
+    return {data: property, type: 'text', title: 'Comment', renderer: customRenderer};
   }
 
   /**
@@ -361,7 +362,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
         console.log('assigned request');
         self.tasks[task.name] = task;
       });
-    })
+    });
   }
 
   /**
@@ -403,10 +404,10 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    * Called before a change is made to the table.
    *
    * @param changes a 2D array containing information about each of the edited cells [ [row, prop, oldVal, newVal], ... ]
-   * @param source one of the strings: "alter", "empty", "edit", "populateFromArray", "loadData", "autofill", "paste"
+   * @param source one of the strings: 'alter', 'empty', 'edit', 'populateFromArray', 'loadData', 'autofill', 'paste'
    */
   function beforeChange(changes, source) {
-    if (source == 'loadData') {
+    if (source === 'loadData') {
       return;
     }
 
@@ -447,11 +448,8 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
 
   /**
    * Called after a change is made to the table (edit, paste, etc.)
-   *
-   * @param changes a 2D array containing information about each of the edited cells [ [row, prop, oldVal, newVal], ... ]
-   * @param source one of the strings: "alter", "empty", "edit", "populateFromArray", "loadData", "autofill", "paste"
    */
-  function afterChange(changes, source) {
+  function afterChange() {
     console.log('afterChange()');
 
     // Normalise point ids.
@@ -467,10 +465,8 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
 
   /**
    *
-   * @param index
-   * @param amount
    */
-  function afterCreateRow(index, amount) {
+  function afterCreateRow() {
     // Fix the point IDs
     for (var i = 0, len = self.rows.length; i < len; i++) {
       self.rows[i].id = i + 1;
@@ -479,10 +475,8 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
 
   /**
    *
-   * @param index
-   * @param amount
    */
-  function afterRemoveRow(index, amount) {
+  function afterRemoveRow() {
     // Fix the point IDs
     for (var i = 0, len = self.rows.length; i < len; i++) {
       self.rows[i].id = i + 1;
@@ -518,7 +512,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
 
     RequestService.saveRequest(request).then(function () {
       console.log('saved request');
-    }, function (error) {
+    }, function () {
       console.log('error saving request');
     });
   }
@@ -558,7 +552,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     self.hot.copyPaste.triggerPaste();
     self.hot.copyPaste.copyPasteInstance.onPaste(function (value) {
       console.log('onPaste(): ' + value);
-    })
+    });
   }
 
   ///**
@@ -584,7 +578,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    *
    */
   function showHelp() {
-    var modalInstance = $modal.open({
+    $modal.open({
       animation: false,
       templateUrl: 'components/request/modals/help-modal.html',
       controller: 'HelpModalController as ctrl'
@@ -595,7 +589,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    *
    */
   function showComments() {
-    var modalInstance = $modal.open({
+    $modal.open({
       animation: false,
       templateUrl: 'components/request/modals/comments-modal.html',
       controller: 'CommentsModalController as ctrl',
@@ -611,7 +605,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    *
    */
   function showHistory() {
-    var modalInstance = $modal.open({
+    $modal.open({
       animation: false,
       size: 'lg',
       templateUrl: 'components/request/modals/history-modal.html',
@@ -638,8 +632,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     //var log = $('.log');
     var footer = $('.footer');
 
-    var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight()
-    - /* log.outerHeight() - */ footer.outerHeight();
+    var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight() - footer.outerHeight();
 
     console.log($(window).height());
     console.log(mainHeader.height());
@@ -661,6 +654,8 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    * @param cellProperties
    */
   function customRenderer(instance, td, row, col, prop, value, cellProperties) {
+    /*jshint validthis:true */
+
     switch (cellProperties.type) {
       case 'text':
         Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -703,10 +698,10 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
   function afterRender() {
 
     // Initialise the popovers in the row headers
-    $('.row-header').popover({trigger: 'hover', delay: {"show": 100, "hide": 100}});
+    $('.row-header').popover({trigger: 'hover', delay: {'show': 100, 'hide': 100}});
 
     // Initialise the help text popovers on the column headers
-    $('.help-text').popover({trigger: 'hover', delay: {"show": 500, "hide": 100}});
+    $('.help-text').popover({trigger: 'hover', delay: {'show': 500, 'hide': 100}});
 
     if (hasCheckboxColumn()) {
 
@@ -714,7 +709,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
       var lastColumnHeader = $('.htCore colgroup col:last-child');
       var checkboxColumn = $('.htCore colgroup col:nth-child(2)');
 
-      // Fix the width of the "select-all" checkbox column (second column) and add the surplus to the last column
+      // Fix the width of the 'select-all' checkbox column (second column) and add the surplus to the last column
       var lastColumnHeaderWidth = lastColumnHeader.width() + (checkboxColumn.width() - 30);
       lastColumnHeader.width(lastColumnHeaderWidth);
       checkboxColumn.width('30px');
@@ -743,7 +738,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
       header.css('border-right', '5px double #ccc');
       cells.css('border-right', '5px double #ccc');
 
-      // Listen for the change event on the "select-all" checkbox and act accordingly
+      // Listen for the change event on the 'select-all' checkbox and act accordingly
       checkboxHeader.change(function () {
         for (var i = 0, len = self.rows.length; i < len; i++) {
           self.rows[i].selected = this.checked;
@@ -769,7 +764,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     if (self.getSelectedPointIds().length === self.rows.length) {
       return 'checked';
     } else if (self.getSelectedPointIds().length > 0) {
-      return 'indeterminate'
+      return 'indeterminate';
     } else {
       return 'unchecked';
     }

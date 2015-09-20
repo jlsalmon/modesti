@@ -8,7 +8,6 @@
 angular.module('modesti').service('PointService', PointService);
 
 function PointService($http, $q) {
-  var self = this;
 
   // Public API
   var service = {

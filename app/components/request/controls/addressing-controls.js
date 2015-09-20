@@ -82,7 +82,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
    * @returns {boolean}
    */
   function isCurrentTaskClaimed() {
-    var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
+    var task = self.tasks[Object.keys(self.tasks)[0]];
     return TaskService.isTaskClaimed(task);
   }
 
@@ -99,7 +99,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
    * @returns {*}
    */
   function getCurrentAssignee() {
-    var task = self.tasks['edit'] ? self.tasks['edit'] : self.tasks['submit'];
+    var task = self.tasks[Object.keys(self.tasks)[0]];
     return task.assignee;
   }
 
@@ -130,11 +130,11 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
       event.stopPropagation();
     }
 
-    var taskName = self.tasks['edit'] ? self.tasks['edit'].name : self.tasks['submit'].name;
+    var task = self.tasks[Object.keys(self.tasks)[0]];
 
-    TaskService.claimTask(taskName, self.request.requestId).then(function (task) {
+    TaskService.claimTask(task.name, self.request.requestId).then(function (task) {
       console.log('claimed task successfully');
-      self.tasks[taskName] = task;
+      self.tasks[task.name] = task;
       self.parent.activateDefaultCategory();
     });
   }
@@ -158,7 +158,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
    * @returns {*}
    */
   function canValidate() {
-    return self.tasks['edit'];
+    return self.tasks.edit;
   }
 
   /**
@@ -169,7 +169,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
    * @returns {boolean}
    */
   function canSubmit() {
-    return self.tasks['submit'];
+    return self.tasks.submit;
   }
 
   /**
@@ -196,7 +196,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
         }
 
         // Validate server-side
-        var task = self.tasks['edit'];
+        var task = self.tasks.edit;
 
         if (!task) {
           console.log('warning: no validate task found');
@@ -237,7 +237,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
         });
       });
 
-    })
+    });
   }
 
   /**
@@ -249,7 +249,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
       event.stopPropagation();
     }
 
-    var task = self.tasks['submit'];
+    var task = self.tasks.submit;
     if (!task) {
       console.log('error addressing request: no task');
       return;
@@ -278,7 +278,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
         });
       },
 
-      function (error) {
+      function () {
         console.log('error completing task ' + task.name);
         self.submitting = 'error';
       });
@@ -301,7 +301,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
 
     // When the table is initially loaded, this callback is invoked with source == 'loadData'. In that case, we don't
     // want to save the request or send the modification signal.
-    if (source == 'loadData') {
+    if (source === 'loadData') {
       return;
     }
 
@@ -314,7 +314,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
       newValue = change[3];
 
       // Mark the point as dirty.
-      if (newValue != oldValue) {
+      if (newValue !== oldValue) {
         console.log('dirty point: ' + self.rows[row].id);
         dirty = true;
         self.rows[row].dirty = true;
@@ -326,7 +326,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
       RequestService.saveRequest(self.request).then(function () {
         // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
         // revalidated. This is done by sending the "requestModified" signal.
-        if (self.tasks['submit']) {
+        if (self.tasks.submit) {
           sendModificationSignal();
         }
       });
@@ -338,7 +338,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
    * back to the "validate" stage.
    */
   function sendModificationSignal() {
-    var signal = self.signals['requestModified'];
+    var signal = self.signals.requestModified;
 
     if (signal) {
       console.log('form modified whilst in submit state: sending signal');

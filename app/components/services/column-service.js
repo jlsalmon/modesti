@@ -8,7 +8,6 @@
 angular.module('modesti').service('ColumnService', ColumnService);
 
 function ColumnService($http, $translate) {
-  var self = this;
 
   // Public API
   var service = {
@@ -29,19 +28,19 @@ function ColumnService($http, $translate) {
       readOnly: !editable || field.editable === false
     };
 
-    if (field.type == 'autocomplete') {
+    if (field.type === 'autocomplete') {
       column = getAutocompleteColumn(column, field);
     }
 
-    if (field.type == 'options') {
+    if (field.type === 'options') {
       column = getDropdownColumn(column, field);
     }
 
-    if (field.type == 'numeric') {
-      column.type = 'numeric'
+    if (field.type === 'numeric') {
+      column.type = 'numeric';
     }
 
-    if (field.type == 'checkbox') {
+    if (field.type === 'checkbox') {
       // Just use true/false dropdown until copy/paste issues are fixed.
       // See https://github.com/handsontable/handsontable/issues/2497
       field.options = ['true', 'false'];
@@ -58,8 +57,9 @@ function ColumnService($http, $translate) {
    */
   function getColumnHeader(field) {
     var html = '<span class="help-text" data-container="body" data-toggle="popover" data-placement="bottom" ';
-    html += 'data-content="' + ($translate.use() == 'en' ? field.help_en : field.help_fr) + '">';
-    html += $translate.use() == 'en' ? field.name_en : field.name_fr;
+    /*jshint camelcase: false */
+    html += 'data-content="' + ($translate.use() === 'en' ? field.help_en : field.help_fr) + '">';
+    html += $translate.use() === 'en' ? field.name_en : field.name_fr;
     html += field.required ? '*' : '';
     html += '</span>';
     return html;
@@ -75,7 +75,7 @@ function ColumnService($http, $translate) {
     column.editor = 'select2';
 
     column.select2Options = {
-      data: {results: field.options.map(function (option) { return {id: option, text: option} })},
+      data: {results: field.options.map(function (option) { return {id: option, text: option}; })},
       dropdownAutoWidth: true
     };
 
@@ -118,7 +118,7 @@ function ColumnService($http, $translate) {
         callback(element.context.value);
       },
 
-      nextSearchTerm: function(selectedObject, currentSearchTerm) {
+      nextSearchTerm: function(selectedObject) {
         return selectedObject;
       },
 
@@ -144,7 +144,7 @@ function ColumnService($http, $translate) {
       getOptions(field, hot, row, term).then(function (results) {
         query.callback({results: results, text: 'text'});
       });
-    }
+    };
   }
 
   /**
@@ -158,7 +158,7 @@ function ColumnService($http, $translate) {
   function getOptions(field, hot, row, query) {
 
     var params = {};
-    if (field.params == undefined) {
+    if (field.params === undefined) {
       // By default, searches are done via parameter called 'query'
       params.query = query;
     } else {

@@ -8,7 +8,6 @@
 angular.module('modesti').service('AlertService', AlertService);
 
 function AlertService($rootScope, $timeout) {
-  var self = this;
 
   // Create an array of globally available alerts
   $rootScope.alerts = [];
@@ -18,7 +17,7 @@ function AlertService($rootScope, $timeout) {
    */
   var service = {
     add: add,
-    close: close,
+    closeAlert: closeAlert,
     closeAlertByIndex: closeAlertByIndex,
     clear: clear
   };
@@ -36,7 +35,7 @@ function AlertService($rootScope, $timeout) {
       'type': type,
       'message': message,
       close: function () {
-        return service.close(this);
+        return service.closeAlert(this);
       }
     };
 
@@ -52,8 +51,8 @@ function AlertService($rootScope, $timeout) {
    * @param alert
    * @returns {*}
    */
-  function close(alert) {
-    return this.closeAlertByIndex($rootScope.alerts.indexOf(alert));
+  function closeAlert(alert) {
+    return closeAlertByIndex($rootScope.alerts.indexOf(alert));
   }
 
   /**
@@ -71,7 +70,7 @@ function AlertService($rootScope, $timeout) {
   function clear() {
     angular.forEach($rootScope.alerts, function(alert) {
       alert.close();
-    })
+    });
   }
 
   return service;

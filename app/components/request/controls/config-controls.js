@@ -44,7 +44,7 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
       event.stopPropagation();
     }
 
-    var task = self.tasks['configure'];
+    var task = self.tasks.configure;
     if (!task) {
       console.log('error configuring request: no task');
       return;
@@ -65,11 +65,11 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
       $state.reload().then(function() {
         self.configuring = 'success';
 
-        AlertService.add('info', 'Your request has been configured successfully.')
+        AlertService.add('info', 'Your request has been configured successfully.');
       });
     },
 
-    function (error) {
+    function () {
       console.log('error completing task ' + task.name);
       self.configuring = 'error';
     });
@@ -87,7 +87,7 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
         self.progress = response.data;
       }
 
-      if (self.configuring != 'success' && self.configuring != 'error') {
+      if (self.configuring !== 'success' && self.configuring !== 'error') {
         $timeout(getProgress, 100);
       }
     });

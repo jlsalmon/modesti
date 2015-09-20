@@ -20,10 +20,10 @@ function UploadController($location, $cookies, $http, FileUploader) {
 
   self.uploader.filters.push({
     name : 'excelFilter',
-    fn : function(item, options) {
+    fn : function(item) {
       var re = /(?:\.([^.]+))?$/;
       var extension = re.exec(item.name)[1];
-      return extension == 'xls' || extension == 'xlsx';
+      return extension === 'xls' || extension === 'xlsx';
     }
   });
 
@@ -67,9 +67,6 @@ function UploadController($location, $cookies, $http, FileUploader) {
 
     if (input.length) {
       input.val(log);
-    } else {
-      if (log)
-        alert(log);
     }
   });
 

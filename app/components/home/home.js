@@ -8,5 +8,5 @@
 angular.module('modesti').controller('HomeController', HomeController);
 
 function HomeController() {
-  var self = this;
+
 }

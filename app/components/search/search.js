@@ -28,7 +28,7 @@ function SearchController($location, $stateParams, $http) {
     // TODO refactor this into a service
     $http.get(BACKEND_BASE_URL + '/requests/search/findAllByOrderByScoreDesc', {
       params: {
-        "q": self.q
+        'q': self.q
       }
     }).then(function (response) {
 

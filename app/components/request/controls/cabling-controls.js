@@ -41,7 +41,7 @@ function CablingControlsController($state, RequestService, TaskService) {
    * @returns {boolean}
    */
   function isCurrentUserAuthorised() {
-    return TaskService.isCurrentUserAuthorised(self.tasks['cable']);
+    return TaskService.isCurrentUserAuthorised(self.tasks.cable);
   }
 
   /**
@@ -49,7 +49,7 @@ function CablingControlsController($state, RequestService, TaskService) {
    * @returns {boolean}
    */
   function isCurrentTaskClaimed() {
-    return TaskService.isTaskClaimed(self.tasks['cable']);
+    return TaskService.isTaskClaimed(self.tasks.cable);
   }
 
   /**
@@ -57,7 +57,7 @@ function CablingControlsController($state, RequestService, TaskService) {
    * @returns {boolean}
    */
   function isCurrentUserAssigned() {
-    return TaskService.isCurrentUserAssigned(self.tasks['cable']);
+    return TaskService.isCurrentUserAssigned(self.tasks.cable);
   }
 
   /**
@@ -65,16 +65,16 @@ function CablingControlsController($state, RequestService, TaskService) {
    * @returns {*}
    */
   function getCurrentAssignee() {
-    return self.tasks['cable'].assignee;
+    return self.tasks.cable.assignee;
   }
 
   /**
    *
    */
   function claim() {
-    TaskService.claimTask(self.tasks['cable'].name, self.request.requestId).then(function (task) {
+    TaskService.claimTask(self.tasks.cable.name, self.request.requestId).then(function (task) {
       console.log('claimed task successfully');
-      self.tasks['cable'] = task;
+      self.tasks.cable = task;
       self.parent.activateDefaultCategory();
     });
   }
@@ -112,7 +112,7 @@ function CablingControlsController($state, RequestService, TaskService) {
       event.stopPropagation();
     }
 
-    var task = self.tasks['cable'];
+    var task = self.tasks.cable;
     if (!task) {
       console.log('error cabling request: no task');
       return;
@@ -141,7 +141,7 @@ function CablingControlsController($state, RequestService, TaskService) {
         });
       },
 
-      function (error) {
+      function () {
         console.log('error completing task ' + task.name);
         self.submitting = 'error';
       });

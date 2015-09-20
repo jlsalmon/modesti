@@ -64,7 +64,7 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
 
     // Build a basic auth header
     var headers = credentials ? {
-      authorization: "Basic " + btoa(credentials.username + ":" + credentials.password)
+      authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)
     } : {};
 
     // Set ignoreAuthModule so that angular-http-auth doesn't show another modal
@@ -98,7 +98,7 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
   function logout() {
     $localStorage.user = undefined;
     $cookies.remove('JSESSIONID');
-    delete $cookies['JSESSIONID'];
+    delete $cookies.JSESSIONID;
     return $q.when();
   }
 

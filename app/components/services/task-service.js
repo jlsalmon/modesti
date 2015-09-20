@@ -8,7 +8,6 @@
 angular.module('modesti').service('TaskService', TaskService);
 
 function TaskService($q, $http, AuthService) {
-  var self = this;
 
   /**
    * Public API for the task service.

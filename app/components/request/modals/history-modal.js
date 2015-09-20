@@ -13,9 +13,9 @@ function HistoryModalController($modalInstance, request, history) {
   self.request = request;
   self.history = history;
 
-  self.close = close;
+  self.ok = ok;
 
-  function close() {
+  function ok() {
     $modalInstance.close();
   }
 }

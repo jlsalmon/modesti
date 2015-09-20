@@ -80,7 +80,7 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
       if (unsavedRequest) {
         for (var i in unsavedRequest.points) {
           // If the point has been modified, update it
-          update(request.points, unsavedRequest.points[i])
+          update(request.points, unsavedRequest.points[i]);
         }
       }
 
@@ -147,7 +147,7 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
    * @returns {*}
    */
   function saveRequest(request) {
-    $rootScope.saving = "started";
+    $rootScope.saving = 'started';
     var q = $q.defer();
 
     // Handle points that have been added, removed, modified or filtered since
@@ -184,12 +184,12 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
       self.cache[request.requestId] = savedRequest.data;
 
       q.resolve(self.cache[request.requestId]);
-      $rootScope.saving = "success";
+      $rootScope.saving = 'success';
 
     }, function (error) {
       console.log('error saving request: ' + error.data.message);
       q.reject(error);
-      $rootScope.saving = "error";
+      $rootScope.saving = 'error';
     });
 
     return q.promise;
@@ -314,27 +314,13 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
   }
 
   /**
-   *
-   */
-  function contains(array, point) {
-    var i = array.length;
-    while (i--) {
-      if (array[i].id == point.id) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-
-  /**
    * If the given array contains a modified version of the given point, this
    * function will update it in the array.
    */
   function update(array, point) {
     var i = array.length;
     while (i--) {
-      if (array[i].id == point.id && angular.toJson(array[i]) != angular.toJson(point)) {
+      if (array[i].id === point.id && angular.toJson(array[i]) !== angular.toJson(point)) {
         array[i] = point;
       }
     }

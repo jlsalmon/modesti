@@ -14,7 +14,7 @@ function CommentsModalController($modalInstance, request, RequestService, AuthSe
   self.text = '';
 
   self.addComment = addComment;
-  self.close = close;
+  self.ok = ok;
 
   /**
    *
@@ -36,7 +36,7 @@ function CommentsModalController($modalInstance, request, RequestService, AuthSe
     }
   }
 
-  function close() {
+  function ok() {
     $modalInstance.close();
   }
 }

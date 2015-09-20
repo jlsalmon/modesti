@@ -84,6 +84,6 @@ function PointsController(schemas, PointService) {
    *
    */
   function onPageChanged() {
-    search(self.query, self.page.number, self.page.size, "pointId,desc");
+    search(self.query, self.page.number, self.page.size, 'pointId,desc');
   }
 }

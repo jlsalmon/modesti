@@ -73,7 +73,7 @@ function NewRequestController($http, $state, RequestService, SchemaService, Auth
         });
       },
 
-      function (error) {
+      function () {
         self.submitting = 'error';
       });
     }

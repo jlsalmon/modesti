@@ -44,7 +44,7 @@ function LayoutController($scope, $rootScope, $location, $translate, AuthService
     $translate.use(language);
     // Broadcast that the language changed for any parts of the application
     // that may be interested
-    $rootScope.$broadcast('event:languageChanged')
+    $rootScope.$broadcast('event:languageChanged');
   }
 
   /**
@@ -76,7 +76,7 @@ function LayoutController($scope, $rootScope, $location, $translate, AuthService
    */
   function logout() {
     AuthService.logout().then(function () {
-      $location.path("/");
+      $location.path('/');
     });
   }
 

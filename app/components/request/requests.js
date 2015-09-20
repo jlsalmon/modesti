@@ -40,7 +40,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.onPageChanged = onPageChanged;
   self.getRequestCount = getRequestCount;
 
-  getRequests(1, 10, "requestId,desc", self.filter);
+  getRequests(1, 10, 'requestId,desc', self.filter);
   getRequestMetrics();
   getUsers();
 
@@ -90,7 +90,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
       self.loading = 'success';
     },
 
-    function (error) {
+    function () {
       self.loading = 'error';
     });
   }
@@ -107,7 +107,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
       self.requests.splice(self.requests.indexOf(request), 1);
     },
 
-    function (error) {
+    function () {
       // something went wrong deleting the request
     });
   }
@@ -141,7 +141,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
       if (self.statuses.hasOwnProperty(key)) {
         var s = self.statuses[key];
 
-        if (s.hasOwnProperty('status') && s.status == status) {
+        if (s.hasOwnProperty('status') && s.status === status) {
           return s.count;
         }
       }
@@ -175,7 +175,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
    *
    */
   function onPageChanged() {
-    getRequests(self.page.number, self.page.size, "requestId,desc", self.filter);
+    getRequests(self.page.number, self.page.size, 'requestId,desc', self.filter);
   }
 
   /**
@@ -183,12 +183,12 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
    */
   $scope.$watch(function () {
     return self.filter;
-  }, function (value) {
+  }, function () {
 
     if (!self.page) {
       return;
     }
 
-    getRequests(0, self.page.size, "requestId,desc", self.filter);
+    getRequests(0, self.page.size, 'requestId,desc', self.filter);
   }, true);
 }

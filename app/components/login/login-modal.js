@@ -29,7 +29,7 @@ function LoginModalController($modalInstance, AuthService) {
       $modalInstance.close();
     },
 
-    function(error) {
+    function() {
       self.loginError = true;
       self.loggingIn = 'error';
     });

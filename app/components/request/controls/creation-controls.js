@@ -89,14 +89,14 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
    *
    */
   function canValidate() {
-    return self.tasks['edit'];
+    return self.tasks.edit;
   }
 
   /**
    *
    */
   function canSubmit() {
-    return self.tasks['submit'];
+    return self.tasks.submit;
   }
 
   /**
@@ -184,7 +184,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         }
 
         // Validate server-side
-        var task = self.tasks['edit'];
+        var task = self.tasks.edit;
 
         if (!task) {
           console.log('warning: no validate task found');
@@ -219,7 +219,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         });
       });
 
-    })
+    });
   }
 
   /**
@@ -231,7 +231,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       event.stopPropagation();
     }
 
-    var task = self.tasks['submit'];
+    var task = self.tasks.submit;
 
     if (!task) {
       console.log('warning: no submit task found');
@@ -280,7 +280,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       event.stopPropagation();
     }
 
-    var signal = self.signals['splitRequest'];
+    var signal = self.signals.splitRequest;
     if (!signal) {
       console.log('error splitting request: no signal');
       return;
@@ -321,7 +321,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
 
         $state.reload().then(function () {
           self.splitting = 'success';
-          AlertService.add('info', 'Request <b>' + self.request.requestId + '</b> was successfully split.')
+          AlertService.add('info', 'Request <b>' + self.request.requestId + '</b> was successfully split.');
         });
       },
 
@@ -341,16 +341,16 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
   function afterChange(changes, source) {
     console.log('afterChange()');
 
-    // When the table is initially loaded, this callback is invoked with source == 'loadData'. In that case, we don't
+    // When the table is initially loaded, this callback is invoked with source === 'loadData'. In that case, we don't
     // want to save the request or send the modification signal.
-    if (source == 'loadData') {
+    if (source === 'loadData') {
       return;
     }
 
     // Make sure the point IDs are consecutive
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      self.rows[i].id = i + 1;
-    }
+    self.rows.forEach(function (row, i) {
+      row.id = i + 1;
+    });
 
     // Loop over the changes and check if anything actually changed. Mark any changed points as dirty.
     var change, row, property, oldValue, newValue, dirty = false;
@@ -362,7 +362,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       newValue = change[3];
 
       // Mark the point as dirty.
-      if (newValue != oldValue) {
+      if (newValue !== oldValue) {
         console.log('dirty point: ' + self.rows[row].id);
         dirty = true;
         self.rows[row].dirty = true;
@@ -391,7 +391,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       RequestService.saveRequest(self.request).then(function () {
         // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
         // revalidated. This is done by sending the "requestModified" signal.
-        if (self.tasks['submit']) {
+        if (self.tasks.submit) {
           sendModificationSignal();
         }
       });
@@ -409,7 +409,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
    * @param newValue
    */
   function saveNewValue(row, property, newValue) {
-    if (property.indexOf('.') == -1) {
+    if (property.indexOf('.') === -1) {
       return;
     }
 
@@ -424,7 +424,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     }
 
     var params = {};
-    if (field.params == undefined) {
+    if (field.params === undefined) {
       // By default, searches are done via parameter called 'query'
       params.query = newValue;
     } else {
@@ -437,13 +437,14 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         // TODO: add "filter" parameter to schema instead of this?
         if (param.indexOf('.') > -1) {
           var parts = param.split('.');
-          var property = parts[0];
-          var subProp = parts[1];
+          var dependentProperty = parts[0];
+          var dependentSubProperty = parts[1];
 
-          if (point.properties[property] && point.properties[property].hasOwnProperty(subProp) && point.properties[property][subProp]) {
-            params[subProp] = point.properties[property][subProp];
+          if (point.properties[dependentProperty] && point.properties[dependentProperty].hasOwnProperty(dependentSubProperty) &&
+              point.properties[dependentProperty][dependentSubProperty]) {
+            params[dependentSubProperty] = point.properties[dependentProperty][dependentSubProperty];
           } else {
-            params[subProp] = '';
+            params[dependentSubProperty] = '';
           }
         }
         else {
@@ -452,7 +453,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       }
     }
 
-    if (prop == field.id && field.type == 'autocomplete') {
+    if (prop === field.id && field.type === 'autocomplete') {
 
       $http.get(BACKEND_BASE_URL + '/' + field.url, {
         params: params,
@@ -464,9 +465,9 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
 
         var returnPropertyName = field.url.split('/')[0];
         response.data._embedded[returnPropertyName].map(function (item) {
-          var value = (field.model == undefined && typeof item == 'object') ? item.value : item[field.model];
+          var value = (field.model === undefined && typeof item === 'object') ? item.value : item[field.model];
 
-          if (value == newValue) {
+          if (value === newValue) {
             console.log('saving new value');
             delete item._links;
             point.properties[prop] = item;
@@ -495,10 +496,10 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
               ColumnService.getOptions(field, self.hot, row, '').then(function (results) {
                 console.log('got ' + results.length + ' results for dependent field ' + field.id + ' for ' + thisProp);
 
-                if (results.length == 1) {
+                if (results.length === 1) {
                   self.hot.setDataAtRowProp(row, 'properties.' + field.id + '.value', results[0].text);
                 }
-              })
+              });
             }
           }
         });
@@ -538,7 +539,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
    * back to the "validate" stage.
    */
   function sendModificationSignal() {
-    var signal = self.signals['requestModified'];
+    var signal = self.signals.requestModified;
 
     if (signal) {
       console.log('form modified whilst in submit state: sending signal');

@@ -8,7 +8,6 @@
 angular.module('modesti').service('HistoryService', HistoryService);
 
 function HistoryService($q, Restangular) {
-  var self = this;
 
   /**
    * Public API for the history service.
@@ -28,7 +27,7 @@ function HistoryService($q, Restangular) {
       console.log('fetched history for request ' + requestId);
 
       var history = response.data._embedded.historicEvents;
-      q.resolve(history)
+      q.resolve(history);
     },
 
     function (error) {

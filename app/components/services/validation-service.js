@@ -8,7 +8,7 @@
 angular.module('modesti').service('ValidationService', ValidationService);
 
 function ValidationService($q) {
-  var self = this;
+  /*jshint camelcase: false */
 
   // Public API
   var service = {
@@ -170,7 +170,7 @@ function ValidationService($q) {
       category.constraints.forEach(function (constraint) {
 
         // Some constraints are only active during certain request statuses
-        if (constraint.activeStates && constraint.activeStates.indexOf(request.status) == -1) {
+        if (constraint.activeStates && constraint.activeStates.indexOf(request.status) === -1) {
           return;
         }
 
@@ -232,7 +232,7 @@ function ValidationService($q) {
       // Get a list of fields for the constraint that are empty
       var emptyFields = getEmptyFields(point, fields);
 
-      if (emptyFields.length == constraint.members.length) {
+      if (emptyFields.length === constraint.members.length) {
         point.valid = category.valid = valid = false;
         var fieldNames = getFieldNames(category, constraint.members);
 
@@ -318,7 +318,7 @@ function ValidationService($q) {
       // Get a list of fields for the constraint that are empty
       var emptyFields = getEmptyFields(point, fields);
 
-      if (emptyFields.length != 0 && emptyFields.length != constraint.members.length) {
+      if (emptyFields.length !== 0 && emptyFields.length !== constraint.members.length) {
         point.valid = category.valid = valid = false;
 
         emptyFields.forEach(function (emptyField) {
@@ -371,9 +371,9 @@ function ValidationService($q) {
       var data = $.extend([], concatenatedValues);
       var index = data.indexOf(value);
       data.splice(index, 1);
-      var second_index = data.indexOf(value);
+      var secondIndex = data.indexOf(value);
 
-      if (value && index > -1 && second_index > -1) {
+      if (value && index > -1 && secondIndex > -1) {
         point.valid = category.valid = valid = false;
         setErrorMessage(point, '', 'Columns "' + getFieldNames(category, constraint.members).join(', ') + '" must be unique for all points. Check for duplications.');
       }
@@ -470,7 +470,7 @@ function ValidationService($q) {
       }
     } else {
       if (point.properties.hasOwnProperty(propertyName)) {
-        value = point.properties[propertyName]
+        value = point.properties[propertyName];
       }
     }
 
@@ -484,7 +484,7 @@ function ValidationService($q) {
    */
   function getPropertyName(field) {
     if (field.type === 'autocomplete') {
-      return field.id + '.' + (field.model ? field.model : 'value')
+      return field.id + '.' + (field.model ? field.model : 'value');
     } else {
       return field.id;
     }
@@ -498,7 +498,7 @@ function ValidationService($q) {
    * @returns {boolean} true if the point is empty, false otherwise
    */
   function isEmptyPoint(point) {
-    if (Object.keys(point.properties).length == 0) {
+    if (Object.keys(point.properties).length === 0) {
       return true;
     }
 
@@ -510,7 +510,7 @@ function ValidationService($q) {
         if (typeof property === 'object') {
           for (var subproperty in property) {
             if (property.hasOwnProperty(subproperty)) {
-              if (property[subproperty] !== null && property[subproperty] !== undefined && property[subproperty] != '') {
+              if (property[subproperty] !== null && property[subproperty] !== undefined && property[subproperty] !== '') {
                 return false;
               }
             }
@@ -542,12 +542,12 @@ function ValidationService($q) {
       for (var key in field.options) {
         var option = field.options[key];
 
-        if (value !== undefined && value !== null && value !== '' && value == option) {
+        if (value !== undefined && value !== null && value !== '' && value === option) {
           return true;
         }
 
         // Fiddle with the meaning and check again
-        if (value !== undefined && value !== null && value !== ''  && (value == option.split(':')[0] || value == option.replace(':', ''))) {
+        if (value !== undefined && value !== null && value !== ''  && (value === option.split(':')[0] || value === option.replace(':', ''))) {
           return true;
         }
       }

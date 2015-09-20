@@ -10,9 +10,9 @@ angular.module('modesti').controller('HelpModalController', HelpModalController)
 function HelpModalController($modalInstance) {
   var self = this;
 
-  self.close = close;
+  self.ok = ok;
 
-  function close() {
+  function ok() {
     $modalInstance.close();
   }
 }

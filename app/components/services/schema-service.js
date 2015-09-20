@@ -8,7 +8,6 @@
 angular.module('modesti').service('SchemaService', SchemaService);
 
 function SchemaService($q, $http) {
-  var self = this;
 
   // Public API
   var service = {
@@ -87,16 +86,17 @@ function SchemaService($q, $http) {
    * @returns {*}
    */
   function getTagnameField() {
+    /*jshint camelcase: false */
     return {
       id: 'tagname',
       type: 'text',
       editable: false,
       unique: true,
-      name_en: "Tagname",
-      name_fr: "Tagname",
-      help_en: "",
-      help_fr: ""
-    }
+      name_en: 'Tagname',
+      name_fr: 'Tagname',
+      help_en: '',
+      help_fr: ''
+    };
   }
 
   /**
@@ -122,7 +122,7 @@ function SchemaService($q, $http) {
 
           var subsystemCode;
 
-          if (response.data._embedded.subsystems.length == 1) {
+          if (response.data._embedded.subsystems.length === 1) {
             var subsystem = response.data._embedded.subsystems[0];
             subsystemCode = subsystem.systemCode + subsystem.subsystemCode;
           } else {
@@ -134,7 +134,7 @@ function SchemaService($q, $http) {
           equipmentIdentifier = equipmentIdentifier || '?';
           var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
 
-          if (subsystemCode == '?' && site == '?' && equipmentIdentifier == '?' && attribute == '?') {
+          if (subsystemCode === '?' && site === '?' && equipmentIdentifier === '?' && attribute === '?') {
             point.properties.tagname = '';
           } else {
             point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
@@ -168,7 +168,7 @@ function SchemaService($q, $http) {
 
           var systemName = '?', subsystemName = '?';
 
-          if (response.data._embedded.subsystems.length == 1) {
+          if (response.data._embedded.subsystems.length === 1) {
             var subsystem = response.data._embedded.subsystems[0];
             systemName = subsystem.system;
             subsystemName = subsystem.subsystem;
@@ -184,12 +184,12 @@ function SchemaService($q, $http) {
               }
 
               var func = '?';
-              if (response.data._embedded.functionalities.length == 1) {
+              if (response.data._embedded.functionalities.length === 1) {
                 var functionality = response.data._embedded.functionalities[0];
                 func = functionality.generalFunctionality;
               }
 
-              if (systemName == '?' && subsystemName == '?' && func == '?') {
+              if (systemName === '?' && subsystemName === '?' && func === '?') {
                 point.properties.faultFamily = '';
               } else {
                 point.properties.faultFamily = systemName + '_' + subsystemName + '_' + func;
@@ -210,7 +210,7 @@ function SchemaService($q, $http) {
     var equipmentIdentifier, gmaoCode;
 
     if (point.properties.gmaoCode && point.properties.gmaoCode.value) {
-      gmaoCode = point.properties.gmaoCode.value
+      gmaoCode = point.properties.gmaoCode.value;
     } else if (point.properties.csamCsename && point.properties.csamCsename.value) {
       gmaoCode = point.properties.csamCsename.value;
     }
@@ -264,7 +264,7 @@ function SchemaService($q, $http) {
 
             var systemName;
 
-            if (response.data._embedded.subsystems.length == 1) {
+            if (response.data._embedded.subsystems.length === 1) {
               var subsystem = response.data._embedded.subsystems[0];
               systemName = subsystem.system;
             }
@@ -279,7 +279,7 @@ function SchemaService($q, $http) {
                 }
 
                 var generalFunctionality;
-                if (response.data._embedded.functionalities.length == 1) {
+                if (response.data._embedded.functionalities.length === 1) {
                   var functionality = response.data._embedded.functionalities[0];
                   generalFunctionality = functionality.generalFunctionality;
                 }
