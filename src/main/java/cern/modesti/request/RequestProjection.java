@@ -24,6 +24,8 @@ public interface RequestProjection {
 
   User getCreator();
 
+  User getAssignee();
+
   String getDescription();
 
   String getDomain();

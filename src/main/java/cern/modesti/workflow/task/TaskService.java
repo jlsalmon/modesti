@@ -3,7 +3,9 @@ package cern.modesti.workflow.task;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.user.User;
+import cern.modesti.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.ActivitiException;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
@@ -28,6 +30,9 @@ public class TaskService {
 
   @Autowired
   private RequestRepository requestRepository;
+
+  @Autowired
+  private UserRepository userRepository;
 
   @Autowired
   private org.activiti.engine.TaskService taskService;
@@ -104,6 +109,17 @@ public class TaskService {
   private TaskInfo assignTask(String requestId, String taskName, String username) {
     Task task = getTaskForRequest(requestId, taskName);
     taskService.setAssignee(task.getId(), username);
+
+    // Set the assignee on the request object
+    User user = userRepository.findOneByUsername(username);
+    if (user == null) {
+      throw new IllegalArgumentException("No user with username " + username + " was found");
+    }
+
+    Request request = requestRepository.findOneByRequestId(requestId);
+    request.setAssignee(user);
+    requestRepository.save(request);
+
     task = getTaskForRequest(requestId, taskName);
     return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(), getCandidateGroups(task));
   }

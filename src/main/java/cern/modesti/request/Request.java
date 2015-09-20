@@ -103,6 +103,9 @@ public class Request implements Serializable {
   @NotNull(message = "At least one category is compulsory")
   private Set<String> categories = new HashSet<>();
 
+  @Indexed
+  private User assignee;
+
   @Valid
   private List<Point> points = new ArrayList<>();
 

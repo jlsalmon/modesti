@@ -96,6 +96,7 @@ public class WorkflowService {
     String processKey = plugin.getMetadata().getProcessKey(request.getType());
 
     request.setStatus(RequestStatus.IN_PROGRESS);
+    request.setAssignee(request.getCreator());
     requestRepository.save(request);
 
     Map<String, Object> variables = new HashMap<>();

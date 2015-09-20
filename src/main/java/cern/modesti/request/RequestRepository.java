@@ -51,16 +51,20 @@ public interface RequestRepository extends MongoRepository<Request, String> {
    *
    * @return
    */
-  @Query("{ '$and': [" +
-      "{ 'status': { '$regex': '?0' } }, " +
-      "{ 'domain': { '$regex': '?1' } }, " +
-      "{ 'type':   { '$regex': '?2' } }, " +
-      "{ 'subsystem'   : { '$regex': '?3' } }, " +
-//      "{ 'subsystem.system'   : { '$regex': '?3' } }, " +
-//      "{ 'subsystem.subsystem': { '$regex': '?4' } }, " +
-      "{ 'creator.username'   : { '$regex': '?4' } } ] }")
+  @Query("{ '$and': [                                         " +
+         "    { 'status':            { '$regex': '?0' } },    " +
+         "    { 'domain':            { '$regex': '?1' } },    " +
+         "    { 'type':              { '$regex': '?2' } },    " +
+         "    { 'subsystem':         { '$regex': '?3' } },    " +
+         "    { '$or': [                                      " +
+         "       { 'creator.username':  { '$regex': '?4' } }, " +
+         "       { 'assignee.username': { '$regex': '?5' } }  " +
+         "      ]                                             " +
+         "    }                                               " +
+         "  ]                                                 " +
+         "}                                                   ")
   Page<Request> find(@Param("status") String status, @Param("domain") String domain, @Param("type") String type, @Param("subsystem") String subsystem, @Param
-      ("creator") String creator, Pageable page);
+      ("creator") String creator, @Param("assignee") String assignee, Pageable page);
 
   /**
    * TODO
