@@ -6,7 +6,7 @@ import cern.modesti.request.point.state.Addressing;
 import cern.modesti.request.point.state.Approval;
 import cern.modesti.request.point.state.Cabling;
 import cern.modesti.request.point.state.Testing;
-import cern.modesti.security.ldap.User;
+import cern.modesti.user.User;
 import cern.modesti.util.BaseIntegrationTest;
 import cern.modesti.workflow.task.TaskAction;
 import cern.modesti.workflow.task.TaskInfo;

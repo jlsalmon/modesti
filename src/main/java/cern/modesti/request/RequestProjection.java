@@ -1,6 +1,6 @@
 package cern.modesti.request;
 
-import cern.modesti.security.ldap.User;
+import cern.modesti.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 

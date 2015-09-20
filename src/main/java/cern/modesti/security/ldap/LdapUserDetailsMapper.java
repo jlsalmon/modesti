@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import cern.modesti.user.Role;
+import cern.modesti.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.DirContextAdapter;

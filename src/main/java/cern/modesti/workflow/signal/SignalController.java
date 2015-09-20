@@ -2,8 +2,7 @@ package cern.modesti.workflow.signal;
 
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
-import cern.modesti.security.ldap.User;
-import cern.modesti.workflow.task.TaskInfo;
+import cern.modesti.user.User;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;

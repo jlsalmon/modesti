@@ -2,7 +2,7 @@ package cern.modesti.workflow.task;
 
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
-import cern.modesti.security.ldap.User;
+import cern.modesti.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;

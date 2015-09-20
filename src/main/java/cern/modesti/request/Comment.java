@@ -1,6 +1,6 @@
 package cern.modesti.request;
 
-import cern.modesti.security.ldap.User;
+import cern.modesti.user.User;
 
 import java.util.Date;
 

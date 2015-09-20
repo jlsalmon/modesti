@@ -1,12 +1,8 @@
 package cern.modesti.workflow.task;
 
-import cern.modesti.security.ldap.Role;
-import com.fasterxml.jackson.annotation.JsonRootName;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import org.activiti.engine.task.DelegationState;
 import org.springframework.hateoas.core.Relation;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Set;
 

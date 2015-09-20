@@ -1,4 +1,4 @@
-package cern.modesti.security.ldap;
+package cern.modesti.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

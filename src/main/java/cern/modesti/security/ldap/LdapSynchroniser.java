@@ -1,5 +1,8 @@
 package cern.modesti.security.ldap;
 
+import cern.modesti.user.Role;
+import cern.modesti.user.User;
+import cern.modesti.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

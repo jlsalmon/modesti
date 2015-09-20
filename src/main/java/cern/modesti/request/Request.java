@@ -17,13 +17,12 @@
  ******************************************************************************/
 package cern.modesti.request;
 
-import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.point.state.Addressing;
 import cern.modesti.request.point.state.Approval;
 import cern.modesti.request.point.Point;
 import cern.modesti.request.point.state.Cabling;
 import cern.modesti.request.point.state.Testing;
-import cern.modesti.security.ldap.User;
+import cern.modesti.user.User;
 import cern.modesti.workflow.result.ConfigurationResult;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,7 +31,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.TextScore;
 

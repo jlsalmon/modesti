@@ -1,8 +1,7 @@
-package cern.modesti.security.ldap;
+package cern.modesti.user;
 
 import static com.mysema.query.types.PathMetadataFactory.*;
 
-import cern.modesti.user.User;
 import com.mysema.query.types.path.*;
 
 import com.mysema.query.types.PathMetadata;
@@ -17,7 +16,7 @@ import com.mysema.query.types.path.PathInits;
 @Generated("com.mysema.query.codegen.EntitySerializer")
 public class QUser extends EntityPathBase<User> {
 
-    private static final long serialVersionUID = -175399587L;
+    private static final long serialVersionUID = -600982699L;
 
     public static final QUser user = new QUser("user");
 

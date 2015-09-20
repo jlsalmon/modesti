@@ -1,20 +1,11 @@
 package cern.modesti.security;
 
-import cern.modesti.security.ldap.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import cern.modesti.user.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.security.Principal;
 
 /**

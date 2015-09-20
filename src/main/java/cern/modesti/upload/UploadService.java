@@ -10,7 +10,7 @@ import cern.modesti.upload.parser.RequestParser;
 import cern.modesti.upload.parser.RequestParserFactory;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.request.Request;
-import cern.modesti.security.ldap.User;
+import cern.modesti.user.User;
 import cern.modesti.workflow.WorkflowService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

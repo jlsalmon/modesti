@@ -36,13 +36,17 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final cern.modesti.workflow.result.QConfigurationResult configurationResult;
 
-    public final cern.modesti.security.ldap.QUser creator;
+    public final DateTimePath<org.joda.time.DateTime> createdAt = createDateTime("createdAt", org.joda.time.DateTime.class);
+
+    public final cern.modesti.user.QUser creator;
 
     public final StringPath description = createString("description");
 
     public final StringPath domain = createString("domain");
 
     public final StringPath id = createString("id");
+
+    public final DateTimePath<org.joda.time.DateTime> lastModified = createDateTime("lastModified", org.joda.time.DateTime.class);
 
     public final StringPath parentRequestId = createString("parentRequestId");
 
@@ -84,7 +88,7 @@ public class QRequest extends EntityPathBase<Request> {
         this.approval = inits.isInitialized("approval") ? new cern.modesti.request.point.state.QApproval(forProperty("approval")) : null;
         this.cabling = inits.isInitialized("cabling") ? new cern.modesti.request.point.state.QCabling(forProperty("cabling")) : null;
         this.configurationResult = inits.isInitialized("configurationResult") ? new cern.modesti.workflow.result.QConfigurationResult(forProperty("configurationResult")) : null;
-        this.creator = inits.isInitialized("creator") ? new cern.modesti.security.ldap.QUser(forProperty("creator")) : null;
+        this.creator = inits.isInitialized("creator") ? new cern.modesti.user.QUser(forProperty("creator")) : null;
         this.testing = inits.isInitialized("testing") ? new cern.modesti.request.point.state.QTesting(forProperty("testing")) : null;
     }
 

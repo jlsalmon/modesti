@@ -31,7 +31,7 @@ import cern.modesti.repository.person.Person;
 import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.SearchTextConverter;
 import cern.modesti.request.point.Point;
-import cern.modesti.security.ldap.User;
+import cern.modesti.user.User;
 
 @Configuration
 @EnableEntityLinks

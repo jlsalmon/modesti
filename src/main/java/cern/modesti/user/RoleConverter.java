@@ -1,4 +1,4 @@
-package cern.modesti.security.ldap;
+package cern.modesti.user;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;

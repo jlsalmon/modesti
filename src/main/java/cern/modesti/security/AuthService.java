@@ -1,7 +1,7 @@
 package cern.modesti.security;
 
 import cern.modesti.request.Request;
-import cern.modesti.security.ldap.User;
+import cern.modesti.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;

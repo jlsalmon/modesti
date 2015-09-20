@@ -26,7 +26,7 @@ public class QComment extends BeanPath<Comment> {
 
     public final DateTimePath<java.util.Date> timestamp = createDateTime("timestamp", java.util.Date.class);
 
-    public final cern.modesti.security.ldap.QUser user;
+    public final cern.modesti.user.QUser user;
 
     public QComment(String variable) {
         this(Comment.class, forVariable(variable), INITS);
@@ -46,7 +46,7 @@ public class QComment extends BeanPath<Comment> {
 
     public QComment(Class<? extends Comment> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.user = inits.isInitialized("user") ? new cern.modesti.security.ldap.QUser(forProperty("user")) : null;
+        this.user = inits.isInitialized("user") ? new cern.modesti.user.QUser(forProperty("user")) : null;
     }
 
 }
