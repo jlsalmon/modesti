@@ -25,7 +25,12 @@
         </div>
         <div class="row">
           <div class="col-xs-5 pull-right">
-            <button type="submit" class="btn btn-primary btn-block btn-flat" translate>SIGN_IN</button>
+            <button type="submit" class="btn btn-primary btn-block btn-flat">
+
+              <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.loggingIn == 'started'"></i>
+              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.loggingIn == 'error'"></i>
+              {{ 'SIGN_IN' | translate }}
+            </button>
           </div>
 
         </div>

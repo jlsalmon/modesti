@@ -11,6 +11,7 @@ function LoginModalController($modalInstance, AuthService) {
   var self = this;
 
   self.credentials = {};
+  self.loggingIn = undefined;
 
   self.login = login;
 
@@ -18,9 +19,11 @@ function LoginModalController($modalInstance, AuthService) {
    *
    */
   function login() {
+    self.loggingIn = 'started';
 
     AuthService.doLogin(self.credentials).then(function() {
       self.loginError = false;
+      self.loggingIn = 'success';
 
       // Close the modal
       $modalInstance.close();
@@ -28,6 +31,7 @@ function LoginModalController($modalInstance, AuthService) {
 
     function(error) {
       self.loginError = true;
+      self.loggingIn = 'error';
     });
   }
 }

@@ -146,7 +146,7 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
 
   }).state('error', {
     url: '/error',
-    templateUrl: 'components/errors/error.html',
+    templateUrl: 'components/error/error.html',
     controller: 'ErrorController as ctrl',
     resolve: {
       $title: function () { return 'ERROR'; }
@@ -154,7 +154,7 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
 
   }).state('404', {
     url: '/404',
-    templateUrl: 'components/errors/404.html',
+    templateUrl: 'components/error/404.html',
     resolve: {
       $title: function () { return 'PAGE_NOT_FOUND'; }
     }

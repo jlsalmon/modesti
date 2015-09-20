@@ -118,6 +118,10 @@ function ColumnService($http, $translate) {
         callback(element.context.value);
       },
 
+      nextSearchTerm: function(selectedObject, currentSearchTerm) {
+        return selectedObject;
+      },
+
       dropdownAutoWidth: true,
       width: 'resolve'
     };
