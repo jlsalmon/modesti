@@ -168,7 +168,7 @@
 
             <div class="filter">
               <ui-select ng-model="ctrl.filter.assignee.username" theme="bootstrap">
-                <ui-select-match placeholder="{{'ASSIGNEE'|translate}}" allow-clear="true">
+                <ui-select-match placeholder="Assignee" allow-clear="true">
                   {{$select.selected.firstName}} {{$select.selected.lastName}}
                 </ui-select-match>
                 <ui-select-choices repeat="user.username as user in ctrl.users"
