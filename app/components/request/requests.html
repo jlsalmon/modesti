@@ -207,6 +207,7 @@
                 &middot; <i class="fa fa-fw fa-cogs"></i>{{request.datasources.join(', ')}}
               </span>
             </span>
+            <span class="text-muted pull-right" style="font-size: 11px;"><i class="fa fa-fw fa-clock-o"></i> {{request.createdAt | date:'medium'}}</span>
           </a>
           <div class="list-group-item" ng-if="ctrl.requests.length == 0">
             No requests to show
