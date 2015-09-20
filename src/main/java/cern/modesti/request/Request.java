@@ -27,6 +27,9 @@ import cern.modesti.security.ldap.User;
 import cern.modesti.workflow.result.ConfigurationResult;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.joda.time.DateTime;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -108,39 +111,24 @@ public class Request implements Serializable {
   @TextIndexed
   private List<Comment> comments = new ArrayList<>();
 
-  /**
-   *
-   */
   private Boolean valid;
 
-  /**
-   *
-   */
   private Approval approval = new Approval();
 
-  /**
-   *
-   */
   private Addressing addressing = new Addressing();
 
-  /**
-   *
-   */
   private Cabling cabling = new Cabling();
 
-  /**
-   *
-   */
   private Testing testing = new Testing();
 
-  /**
-   *
-   */
   private ConfigurationResult configurationResult;
 
-  /**
-   *
-   */
+  @CreatedDate
+  private DateTime createdAt;
+
+  @LastModifiedDate
+  private DateTime lastModified;
+
   @TextScore
   private Float score;
 

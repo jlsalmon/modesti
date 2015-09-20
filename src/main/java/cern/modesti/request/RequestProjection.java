@@ -1,6 +1,7 @@
 package cern.modesti.request;
 
 import cern.modesti.security.ldap.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
 import java.util.Set;
@@ -10,8 +11,8 @@ import java.util.Set;
  *
  * @author Justin Lewis Salmon
  */
-@Projection(name = "skinny", types = {Request.class})
-public interface SkinnyRequest {
+@Projection(types = {Request.class})
+public interface RequestProjection {
 
   String getRequestId();
 
@@ -30,4 +31,10 @@ public interface SkinnyRequest {
   String getSubsystem();
 
   Set<String> getCategories();
+
+  @Value("#{target.createdAt.millis}")
+  Long getCreatedAt();
+
+  @Value("#{target.lastModified.millis}")
+  Long getLastModified();
 }
