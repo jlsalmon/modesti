@@ -131,6 +131,9 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
     templateUrl: 'components/users/user.html',
     controller: 'UserController as ctrl',
     resolve: {
+      user: function ($stateParams, AuthService) {
+        return AuthService.getUser($stateParams.id);
+      },
       $title: function ($stateParams, $translate) {
         return $translate('USER', { id: $stateParams.id });
       }

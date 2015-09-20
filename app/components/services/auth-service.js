@@ -20,6 +20,7 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
     doLogin: doLogin,
     logout: logout,
     getCurrentUser: getCurrentUser,
+    getUser: getUser,
     isCurrentUserAuthenticated: isCurrentUserAuthenticated,
     isCurrentUserAdministrator: isCurrentUserAdministrator
   };
@@ -135,6 +136,26 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
     }
 
     return false;
+  }
+
+  /**
+   *
+   * @param username
+   * @returns {*}
+   */
+  function getUser(username) {
+    var q = $q.defer();
+
+    $http.get(BACKEND_BASE_URL + '/users/search/findOneByUsername', {params: {username: username}}).then(function (response) {
+      q.resolve(response.data);
+    },
+
+    function (error) {
+      console.log('failed to get user ' + username);
+      q.reject(error);
+    });
+
+    return q.promise;
   }
 
   return service;

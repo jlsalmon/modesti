@@ -7,8 +7,8 @@
  */
 angular.module('modesti').controller('UserController', UserController);
 
-function UserController($stateParams) {
+function UserController(user) {
   var self = this;
 
-  self.user = $stateParams.id;
+  self.user = user;
 }
