@@ -41,9 +41,9 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
         status: filter.status || '',
         domain: filter.domain || '',
         type: filter.type || '',
-        //system: filter.subsystem.system,
         subsystem: filter.subsystem || '',
         creator: filter.creator.username || '',
+        assignee: filter.assignee.username || '',
         page: page - 1,
         size: size,
         sort: sort

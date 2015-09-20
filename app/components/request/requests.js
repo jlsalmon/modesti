@@ -13,7 +13,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.statuses = [];
   self.domains = ['TIM', 'CSAM', 'WINCC']; // TODO retrieve this dynamically
   self.subsystems = [];
-  self.creators = [];
+  self.users = [];
   self.types = ['CREATE', 'UPDATE', 'DELETE'];
 
   self.filter = {
@@ -21,6 +21,9 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     domain: '',
     subsystem: '',
     creator: {
+      username: ''
+    },
+    assignee: {
       username: ''
     },
     type: ''

@@ -106,7 +106,7 @@
         <div class="panel-heading">
           <div class="tasklist-controls">
 
-            <button class="btn btn-primary filter" ng-click="ctrl.filter.creator.username = ctrl.getCurrentUsername()">
+            <button class="btn btn-primary filter" ng-click="ctrl.filter.creator.username = ctrl.getCurrentUsername(); ctrl.filter.assignee.username = ctrl.getCurrentUsername();">
               My Requests
             </button>
 
@@ -167,6 +167,22 @@
             </div>
 
             <div class="filter">
+              <ui-select ng-model="ctrl.filter.assignee.username" theme="bootstrap">
+                <ui-select-match placeholder="{{'ASSIGNEE'|translate}}" allow-clear="true">
+                  {{$select.selected.firstName}} {{$select.selected.lastName}}
+                </ui-select-match>
+                <ui-select-choices repeat="user.username as user in ctrl.users"
+                                   refresh="ctrl.getUsers($select.search)"
+                                   refresh-delay="0">
+                  <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
+                  <small>
+                    <span class="text-muted" ng-bind-html=" '' + user.username | highlight: $select.search"></span>
+                  </small>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+
+            <div class="filter">
               <ui-select ng-model="ctrl.filter.type" theme="bootstrap">
                 <ui-select-match placeholder="{{'Type'|translate}}" allow-clear="true">
                   {{$select.selected}}
@@ -206,6 +222,7 @@
               <span class="text-muted" ng-if="request.datasources.length > 0">
                 &middot; <i class="fa fa-fw fa-cogs"></i>{{request.datasources.join(', ')}}
               </span>
+              <span class="text-muted"> &middot; <i class="fa fa-fw fa-user"></i> {{request.assignee.username}} </span>
             </span>
             <span class="text-muted pull-right" style="font-size: 11px; margin-top: 5px;"><i class="fa fa-fw fa-clock-o"></i> {{request.createdAt | date:'medium'}}</span>
           </a>
@@ -214,7 +231,6 @@
           </div>
         </div>
       </div>
-
 
 
       <!--<div class="col-md-3">-->
