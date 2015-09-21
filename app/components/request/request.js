@@ -29,13 +29,14 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
     rowHeaders: getRowHeaders,
     contextMenu: {
       items: {
-        "row_above": {},
-        "row_below": {},
-        "hsep1": "---------",
-        "remove_row": {},
-        "hsep2": "---------",
-        "undo": {},
-        "redo": {}
+        /*jshint camelcase: false */
+        row_above: {},
+        row_below: {},
+        hsep1: '---------',
+        remove_row: {},
+        hsep2: '---------',
+        undo: {},
+        redo: {}
       }
     },
     stretchH: 'all',
