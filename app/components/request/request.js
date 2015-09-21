@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $timeout, $modal, $filter, request, children, schema, tasks, signals,
+function RequestController($scope, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
                            RequestService, ColumnService, SchemaService, HistoryService, TaskService) {
   var self = this;
 
@@ -122,11 +122,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
     self.hot = this;
 
     calculateTableHeight();
-
-    //$timeout(function () {
-      // Activate the first category
-      activateCategory(self.schema.categories[0]);
-    //});
+    activateDefaultCategory();
   }
 
   /**
@@ -134,7 +130,13 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
    */
   function activateDefaultCategory() {
     console.log('activating default category');
-    activateCategory(self.schema.categories[0]);
+    var category = $localStorage.lastActiveCategory;
+
+    if (!category) {
+      category = self.schema.categories[0];
+    }
+
+    activateCategory(category);
   }
 
   /**
@@ -144,6 +146,7 @@ function RequestController($scope, $timeout, $modal, $filter, request, children,
   function activateCategory(category) {
     console.log('activating category "' + category.id + '"');
     self.activeCategory = category;
+    $localStorage.lastActiveCategory = category;
     getColumns();
   }
 
