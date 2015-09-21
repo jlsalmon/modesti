@@ -31,6 +31,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 
 import java.util.*;
 
+import static org.apache.commons.lang3.StringUtils.isNumeric;
+import static org.apache.commons.lang3.math.NumberUtils.isNumber;
+
 /**
  * @author Justin Lewis Salmon
  */
@@ -340,7 +343,11 @@ public abstract class RequestParser {
     location.setBuildingNumber(buildingNumber);
 
     if (properties.get("buildingFloor") != null) {
-      location.setFloor(String.valueOf(properties.get("buildingFloor")));
+      String floor = String.valueOf(properties.get("buildingFloor"));
+      if (isNumber(floor)) {
+        floor = String.valueOf((new Double(floor)).intValue());
+      }
+      location.setFloor(floor);
     }
 
     if (properties.get("buildingRoom") != null) {
