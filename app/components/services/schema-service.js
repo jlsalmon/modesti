@@ -38,7 +38,7 @@ function SchemaService($q, $http) {
 
         // Tagname is shown on each category except General and Alarms
         if (category.id !== 'general' && category.id !== 'alarms' && category.id !== 'alarmHelp') {
-          category.fields.unshift(getTagnameField());
+          category.fields.push(getTagnameField());
         }
       });
 
