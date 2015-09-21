@@ -26,6 +26,8 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final cern.modesti.request.point.state.QApproval approval;
 
+    public final cern.modesti.user.QUser assignee;
+
     public final cern.modesti.request.point.state.QCabling cabling;
 
     public final SetPath<String, StringPath> categories = this.<String, StringPath>createSet("categories", String.class, StringPath.class, PathInits.DIRECT2);
@@ -86,6 +88,7 @@ public class QRequest extends EntityPathBase<Request> {
         super(type, metadata, inits);
         this.addressing = inits.isInitialized("addressing") ? new cern.modesti.request.point.state.QAddressing(forProperty("addressing")) : null;
         this.approval = inits.isInitialized("approval") ? new cern.modesti.request.point.state.QApproval(forProperty("approval")) : null;
+        this.assignee = inits.isInitialized("assignee") ? new cern.modesti.user.QUser(forProperty("assignee")) : null;
         this.cabling = inits.isInitialized("cabling") ? new cern.modesti.request.point.state.QCabling(forProperty("cabling")) : null;
         this.configurationResult = inits.isInitialized("configurationResult") ? new cern.modesti.workflow.result.QConfigurationResult(forProperty("configurationResult")) : null;
         this.creator = inits.isInitialized("creator") ? new cern.modesti.user.QUser(forProperty("creator")) : null;
