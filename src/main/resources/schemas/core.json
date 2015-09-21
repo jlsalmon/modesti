@@ -125,6 +125,31 @@
       ],
       "fields": [
         {
+          "id": "priorityCode",
+          "type": "options",
+          "name_en": "Priority",
+          "name_fr": "Niveau",
+          "help_en": "Enter the priority of the alarm between 0 and 3",
+          "help_fr": "Entrez la priorite de l'alarme entre 0 et 3"
+        },
+        {
+          "id": "alarmValue",
+          "type": "numeric",
+          "name_en": "Alarm Value",
+          "name_fr": "Valeur d'alarme",
+          "help_en": "The value indicating the presence of the alarm",
+          "help_fr": "La valeur qui indique la présence de l'alarme"
+        },
+        {
+          "id": "pointDescription",
+          "type": "text",
+          "editable": false,
+          "name_en": "Problem Description",
+          "name_fr": "Problem Description",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
           "id": "faultFamily",
           "type": "text",
           "editable": false,
@@ -141,31 +166,6 @@
           "name_fr": "Fault Member",
           "help_en": "",
           "help_fr": ""
-        },
-        {
-          "id": "pointDescription",
-          "type": "text",
-          "editable": false,
-          "name_en": "Problem Description",
-          "name_fr": "Problem Description",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "priorityCode",
-          "type": "options",
-          "name_en": "Priority",
-          "name_fr": "Niveau",
-          "help_en": "Enter the priority of the alarm between 0 and 3",
-          "help_fr": "Entrez la priorite de l'alarme entre 0 et 3"
-        },
-        {
-          "id": "alarmValue",
-          "type": "numeric",
-          "name_en": "Alarm Value",
-          "name_fr": "Valeur d'alarme",
-          "help_en": "The value indicating the presence of the alarm",
-          "help_fr": "La valeur qui indique la présence de l'alarme"
         }
       ]
     },
