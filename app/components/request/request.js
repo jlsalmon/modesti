@@ -27,18 +27,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
    */
   self.settings = {
     rowHeaders: getRowHeaders,
-    contextMenu: {
-      items: {
-        /*jshint camelcase: false */
-        row_above: {},
-        row_below: {},
-        hsep1: '---------',
-        remove_row: {},
-        hsep2: '---------',
-        undo: {},
-        redo: {}
-      }
-    },
+    contextMenu: ['row_above', 'row_below', '---------', 'remove_row', '---------', 'undo', 'redo'],
     stretchH: 'all',
     // To enable sorting, a mapping needs to be done from the source array to the displayed array
     columnSorting: false,
