@@ -10,6 +10,7 @@ import cern.modesti.schema.field.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -62,13 +63,12 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
 
   @Override
   public void configureJacksonObjectMapper(ObjectMapper objectMapper) {
-    objectMapper.registerModule(new SimpleModule("CustomModule") {
+    // Custom deserialiser for {@link Request} objects
+    objectMapper.registerModule(new SimpleModule("RequestModule") {
       @Override
       public void setupModule(SetupContext context) {
         SimpleDeserializers deserializers = new SimpleDeserializers();
-
         deserializers.addDeserializer(Request.class, new RequestDeserialiser());
-
         context.addDeserializers(deserializers);
       }
     });

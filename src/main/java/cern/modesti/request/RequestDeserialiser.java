@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
@@ -44,6 +45,10 @@ public class RequestDeserialiser extends JsonDeserializer<Request> {
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    // Register a deserialiser for Joda classes
+    mapper.registerModule(new JodaModule());
+
     Request updated = mapper.readValue(parser, Request.class);
 
     // The request status may not be modified manually.

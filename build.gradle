@@ -37,6 +37,38 @@ repositories {
 
 dependencies {
 
+    /*
+
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/afs/workspace/modesti-wincc-plugin/build/libs/modesti-wincc-plugin-0.1-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/afs/workspace/modesti-csam-plugin/build/libs/modesti-csam-plugin-0.1-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/afs/workspace/modesti-tim-plugin/build/libs/modesti-tim-plugin-0.1-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+
+     */
+
     compile "org.springframework.boot:spring-boot-starter-data-rest:1.3.0.M5"
     compile "org.springframework.boot:spring-boot-starter-data-mongodb:1.3.0.M5"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:1.3.0.M5"
@@ -53,6 +85,7 @@ dependencies {
     compile "com.h2database:h2"
     compile "oracle:ojdbc:11.2.0.3"
     compile "commons-dbcp:commons-dbcp"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.1"
     compile "org.apache.poi:poi:3.12-beta1"
     compile "org.apache.poi:poi-ooxml:3.12-beta1"
     compile "org.apache.commons:commons-lang3:3.4"
