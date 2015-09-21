@@ -112,6 +112,9 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
   self.showHistory = showHistory;
   self.getSelectedPointIds = getSelectedPointIds;
 
+  $localStorage.$default({
+    lastActiveCategory: {}
+  });
 
   /**
    * Called when the handsontable table has finished initialising.
@@ -130,7 +133,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
    */
   function activateDefaultCategory() {
     console.log('activating default category');
-    var category = $localStorage.lastActiveCategory;
+    var category = $localStorage.lastActiveCategory[self.request.requestId];
 
     if (!category) {
       category = self.schema.categories[0];
@@ -146,7 +149,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
   function activateCategory(category) {
     console.log('activating category "' + category.id + '"');
     self.activeCategory = category;
-    $localStorage.lastActiveCategory = category;
+    $localStorage.lastActiveCategory[self.request.requestId] = category;
     getColumns();
   }
 
