@@ -106,8 +106,12 @@
         <div class="panel-heading">
           <div class="tasklist-controls">
 
-            <button class="btn btn-primary filter" ng-click="ctrl.filter.creator.username = ctrl.getCurrentUsername(); ctrl.filter.assignee.username = ctrl.getCurrentUsername();">
-              My Requests
+            <button class="btn btn-primary filter" ng-click="ctrl.filter.assignee.username = ctrl.getCurrentUsername()">
+              Assigned to me
+            </button>
+
+            <button class="btn btn-primary filter" ng-click="ctrl.filter.creator.username = ctrl.getCurrentUsername()">
+              Created by me
             </button>
 
             <div class="filter">
