@@ -176,33 +176,6 @@
       "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
       "fields": [
         {
-          "id": "faultFamily",
-          "type": "text",
-          "editable": false,
-          "name_en": "Fault Family",
-          "name_fr": "Fault Family",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "faultMember",
-          "type": "text",
-          "editable": false,
-          "name_en": "Fault Member",
-          "name_fr": "Fault Member",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "pointDescription",
-          "type": "text",
-          "editable": false,
-          "name_en": "Problem Description",
-          "name_fr": "Problem Description",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
           "id": "alarmCauses",
           "type": "text",
           "name_en": "Alarm Causes",
@@ -250,6 +223,33 @@
           },
           "name_en": "Task Outside Working Hours",
           "name_fr": "Action Hors Heures Ouvrables",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "pointDescription",
+          "type": "text",
+          "editable": false,
+          "name_en": "Problem Description",
+          "name_fr": "Problem Description",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "faultFamily",
+          "type": "text",
+          "editable": false,
+          "name_en": "Fault Family",
+          "name_fr": "Fault Family",
+          "help_en": "",
+          "help_fr": ""
+        },
+        {
+          "id": "faultMember",
+          "type": "text",
+          "editable": false,
+          "name_en": "Fault Member",
+          "name_fr": "Fault Member",
           "help_en": "",
           "help_fr": ""
         }
