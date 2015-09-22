@@ -402,13 +402,13 @@ function ValidationService($q) {
         return;
       }
 
-      category.excludes.forEach(function (exclude) {
+      category.excludes.forEach(function () {
 
         // Get the excluded category
 
         // For each point, check that if one or more of the fields of this category and one or more of the fields of the excluded category are filled. If so,
         // say something like "Fields in the "Alarms" group cannot be used if fields in the "Commands" group have been specified.".
-        request.points.forEach(function (point) {
+        request.points.forEach(function () {
 
         });
 
