@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,9 +45,6 @@ public class ValidationService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-  @PersistenceContext
-  private EntityManager entityManager;
-
   /**
    * @param request
    *
@@ -55,11 +53,6 @@ public class ValidationService {
    */
   @Transactional
   public boolean validateRequest(Request request) {
-
-    // TODO: remove this when the validation procedure is ready
-    if (true) {
-      return true;
-    }
 
     // Delete all points with this request id
     String query = "DELETE FROM DRAFT_POINTS WHERE drp_request_id = ?";
@@ -104,14 +97,20 @@ public class ValidationService {
       properties.put("alarmCategory", properties.get("alarmCategory") != null ? ((AlarmCategory) properties.get("alarmCategory")).getValue() : null);
       //properties.put("priorityCode", Integer.valueOf(((String) properties.get("priorityCode")).split(":")[0]));
 
+      /**
+       * DRP_STATEPT_DESCLIST : ON,OFF
+       */
+      properties.put("stateptDesclist", properties.get("trueMeaning") + "," + properties.get("falseMeaning"));
+      properties.remove("trueMeaning");
+      properties.remove("falseMeaning");
+
       // These properties do not go into the table
       // TODO: review these
       properties.remove("pointType");
       properties.remove("tagname");
       properties.remove("faultState");
       properties.remove("cabling");
-      properties.remove("trueMeaning");
-      properties.remove("falseMeaning");
+
       properties.remove("type");
       properties.remove("timeDeadband");
       properties.remove("userApplicationData");
@@ -153,12 +152,20 @@ public class ValidationService {
     }
 
     // Call the stored procedure
-    validate(request);
+    Map<String, Object> exit = validate(request);
+
+    boolean valid = true;
+    Long exitcode = ((BigDecimal) exit.get("p_exitcode")).longValue();
+
+    if (exitcode != 0) {
+      valid = false;
+      // HACK: set the error on the first point...
+      request.getPoints().get(0).setErrors(Collections.singletonList(new Error("", Collections.singletonList((String) exit.get("p_exittext")))));
+    }
 
     // Read the points back to get the exit codes and error messages
     query = "SELECT drp_request_id, drp_lineno, drp_exitcode, drp_exittext FROM DRAFT_POINTS WHERE drp_request_id = ?";
 
-    boolean valid = true;
     List<Result> results = jdbcTemplate.query(query, new Object[]{request.getRequestId()}, (rs, rowNum) -> new Result(rs.getInt("drp_request_id"), rs.getInt
         ("drp_lineno"), rs.getInt("drp_exitcode"), rs.getString("drp_exittext")));
 
@@ -173,9 +180,11 @@ public class ValidationService {
   }
 
   /**
+   *
    * @param request
+   * @return
    */
-  private void validate(Request request) {
+  private Map<String, Object> validate(Request request) {
     log.debug("validating via stored procedure");
 
     SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate).withCatalogName("TIMPKREQCHECK").withProcedureName("STP_CHECK_REQUEST");
@@ -187,6 +196,8 @@ public class ValidationService {
 
     Map<String, Object> results = call.execute(Integer.valueOf(request.getRequestId()), request.getCreator().getEmployeeId(), request.getStatus().toString());
     log.debug(format("exitcode: %s, exittext: %s", results.get("p_exitcode"), results.get("p_exittext")));
+
+    return results;
   }
 
   /**
@@ -215,31 +226,6 @@ public class ValidationService {
     final Integer lineno;
     final Integer exitCode;
     final String exitText;
-  }
-
-  /**
-   * @param properties
-   * @param objectName
-   * @param property
-   * @param klass
-   * @param <T>
-   *
-   * @return
-   */
-  private <T> T getObjectProperty(Map<String, Object> properties, String objectName, String property, Class<T> klass) {
-    Object o = null;
-    T t = null;
-
-    Map map = (Map) properties.get(objectName);
-    if (map != null) {
-      o = map.get(property);
-    }
-
-    if (o != null) {
-      t = klass.cast(o);
-    }
-
-    return t;
   }
 
   /**
