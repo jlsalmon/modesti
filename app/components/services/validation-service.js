@@ -33,17 +33,22 @@ function ValidationService($q) {
 
     var valid = true;
 
+    // Validate the constraints of the schema. This checks things like unique column groups and mutually inclusive fields.
+    if (!validateConstraints(request, schema)) {
+      valid = false;
+    }
+
+    // Validate the mutually exclusive column group specifications.
+    if (!validateMutualExclusions(request, schema)) {
+      valid = false;
+    }
+
     // Validate each point separately. This checks things like required values, min/max length, valid values etc.
     points.forEach(function (point) {
       if (!validatePoint(point, schema)) {
         valid = false;
       }
     });
-
-    // Validate the request as a whole. This checks things like unique column groups, mutually exclusive columns, etc.
-    if (!validateConstraints(request, schema)) {
-      valid = false;
-    }
 
     q.resolve(valid);
     return q.promise;
@@ -377,6 +382,39 @@ function ValidationService($q) {
         point.valid = category.valid = valid = false;
         setErrorMessage(point, '', 'Columns "' + getFieldNames(category, constraint.members).join(', ') + '" must be unique for all points. Check for duplications.');
       }
+    });
+
+    return valid;
+  }
+
+  /**
+   * Some categories are mutually exclusive with some others, i.e. the two cannot be both filled in at the same time.
+   *
+   * @param request
+   * @param schema
+   * @returns {boolean}
+   */
+  function validateMutualExclusions(request, schema) {
+    var valid = true;
+
+    schema.categories.concat(schema.datasources).forEach(function (category) {
+      if (!category.excludes) {
+        return;
+      }
+
+      category.excludes.forEach(function (exclude) {
+
+        // Get the excluded category
+
+        // For each point, check that if one or more of the fields of this category and one or more of the fields of the excluded category are filled. If so,
+        // say something like "Fields in the "Alarms" group cannot be used if fields in the "Commands" group have been specified.".
+        request.points.forEach(function (point) {
+
+        });
+
+      });
+
+
     });
 
     return valid;
