@@ -3,6 +3,7 @@
   "name_en": "Binary Points",
   "name_fr": "Points Binaire",
   "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
+  "excludes": [ "alarms" ],
   "constraints": [
     {
       "type": "xnor",

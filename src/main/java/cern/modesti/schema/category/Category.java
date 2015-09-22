@@ -50,6 +50,11 @@ public class Category {
    */
   private List<String> editableStates;
 
+  /**
+   * List of category IDs which are mutually exclusive with this category.
+   */
+  private List<String> excludes;
+
   private List<Constraint> constraints;
 
   private List<Field> fields;
