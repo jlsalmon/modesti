@@ -773,7 +773,7 @@ body {
 }
 
 .handsontable td.htDimmed {
-  background-color: #fbfbfb !important;
+  background-color: #f5f5f5 !important;
 }
 
 .handsontable td.listbox.htDimmed.current {

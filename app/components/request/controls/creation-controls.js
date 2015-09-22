@@ -52,6 +52,28 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     // state and the user makes a modification
     self.hot.addHook('afterChange', afterChange);
 
+    // Make sure that only datasource group which matches the point type is editable.
+    self.parent.hot.updateSettings( {
+      cells: function (row) {
+        var cellProperties = {};
+
+        // If this is a datasource group and it does not match the point type, make it read only.
+        self.parent.schema.datasources.forEach(function (datasource) {
+          if (datasource.id === self.parent.activeCategory.id) {
+            var pointType = self.parent.hot.getDataAtRowProp(row, 'properties.pointType');
+
+            if (pointType !== datasource.id.toUpperCase()) {
+              cellProperties.readOnly = true;
+            }
+          }
+        });
+
+        return cellProperties;
+      }
+    });
+
+    // Show an alert if the validation failed.
+    // TODO move this to a promise callback in the validate() method
     if (self.getNumValidationErrors() > 0) {
       self.validating = 'error';
       AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
