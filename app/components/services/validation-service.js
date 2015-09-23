@@ -24,27 +24,32 @@ function ValidationService($q) {
    */
   function validateRequest(request, schema) {
     var q = $q.defer();
-    var points = request.points;
 
     // Reset all categories and datasources to valid
     schema.categories.concat(schema.datasources).forEach(function (category) {
       category.valid = true;
     });
 
+    // Reset all points and clear any error messages.
+    request.points.forEach(function (point) {
+      point.valid = undefined;
+      point.errors = [];
+    });
+
     var valid = true;
+
+    // Validate the mutually exclusive column group specifications.
+    //if (!validateMutualExclusions(request, schema)) {
+    //  valid = false;
+    //}
 
     // Validate the constraints of the schema. This checks things like unique column groups and mutually inclusive fields.
     if (!validateConstraints(request, schema)) {
       valid = false;
     }
 
-    // Validate the mutually exclusive column group specifications.
-    if (!validateMutualExclusions(request, schema)) {
-      valid = false;
-    }
-
     // Validate each point separately. This checks things like required values, min/max length, valid values etc.
-    points.forEach(function (point) {
+    request.points.forEach(function (point) {
       if (!validatePoint(point, schema)) {
         valid = false;
       }
@@ -62,8 +67,6 @@ function ValidationService($q) {
    */
   function validatePoint(point, schema) {
     var valid = true;
-    point.valid = undefined;
-    point.errors = [];
 
     // Ignore empty points
     if (isEmptyPoint(point)) {
@@ -402,19 +405,32 @@ function ValidationService($q) {
         return;
       }
 
-      category.excludes.forEach(function () {
+      category.excludes.forEach(function (exclude) {
 
         // Get the excluded category
+        schema.categories.concat(schema.datasources).forEach(function (cat) {
+          if (cat.id === exclude) {
+            var excludedCategory = cat;
 
-        // For each point, check that if one or more of the fields of this category and one or more of the fields of the excluded category are filled. If so,
-        // say something like "Fields in the "Alarms" group cannot be used if fields in the "Commands" group have been specified.".
-        request.points.forEach(function () {
+            // For each point, check that if one or more of the fields of this category and one or more of the fields of the excluded category are filled. If
+            // so, say something like "Fields in the "Alarms" group cannot be used if fields in the "Commands" group have been specified.".
+            request.points.forEach(function (point) {
+              var emptyFields = getEmptyFields(point, category.fields);
 
+              // If at least one of the fields of this category are filled, then we must check the excluded category.
+              if (emptyFields.length !== category.fields.length) {
+                emptyFields = getEmptyFields(point, excludedCategory.fields);
+
+                if (emptyFields.length !== excludedCategory.fields.length) {
+                  point.valid = category.valid = excludedCategory.valid = valid = false;
+                  setErrorMessage(point, '', 'Fields in the "' + category.name_en + '" group cannot be used if fields in the "' + excludedCategory.name_en
+                    + '" group have been specified.');
+                }
+              }
+            });
+          }
         });
-
       });
-
-
     });
 
     return valid;
@@ -473,23 +489,36 @@ function ValidationService($q) {
   }
 
   /**
+   * Set an error message on a single field of a point.
    *
    * @param point
    * @param propertyName
    * @param message
    */
   function setErrorMessage(point, propertyName, message) {
-    var error;
+    var exists = false;
 
-    for (var i in point.errors) {
-      if (point.errors[i].property === propertyName) {
-        error = point.errors[i];
+    point.errors.forEach(function (error) {
+      if (error.property === propertyName) {
+        exists = true;
+        error.errors.push(message);
       }
-    }
+    });
 
-    if (!error) {
+    if (!exists) {
       point.errors.push({property: propertyName, errors: [message]});
     }
+  }
+
+  /**
+   * Set an error message on an entire category of fields.
+   *
+   * @param point
+   * @param category
+   * @param message
+   */
+  function setErrorMessageOnCategory(point, category, message) {
+
   }
 
   /**
@@ -585,7 +614,7 @@ function ValidationService($q) {
         }
 
         // Fiddle with the meaning and check again
-        if (value !== undefined && value !== null && value !== ''  && (value === option.split(':')[0] || value === option.replace(':', ''))) {
+        if (value !== undefined && value !== null && value !== '' && (value === option.split(':')[0] || value === option.replace(':', ''))) {
           return true;
         }
       }
