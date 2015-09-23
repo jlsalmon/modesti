@@ -23,8 +23,6 @@ import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.*;
@@ -53,6 +51,10 @@ public class ValidationService {
    */
   @Transactional
   public boolean validateRequest(Request request) {
+
+//    if (true) {
+//      return true;
+//    }
 
     // Delete all points with this request id
     String query = "DELETE FROM DRAFT_POINTS WHERE drp_request_id = ?";
@@ -100,9 +102,11 @@ public class ValidationService {
       /**
        * DRP_STATEPT_DESCLIST : ON,OFF
        */
-      properties.put("stateptDesclist", properties.get("trueMeaning") + "," + properties.get("falseMeaning"));
-      properties.remove("trueMeaning");
-      properties.remove("falseMeaning");
+      if (properties.get("trueMeaning") != null && properties.get("falseMeaning") != null) {
+        properties.put("stateptDesclist", properties.get("trueMeaning") + "," + properties.get("falseMeaning"));
+        properties.remove("trueMeaning");
+        properties.remove("falseMeaning");
+      }
 
       // These properties do not go into the table
       // TODO: review these
@@ -110,9 +114,11 @@ public class ValidationService {
       properties.remove("tagname");
       properties.remove("faultState");
       properties.remove("cabling");
-
       properties.remove("type");
       properties.remove("timeDeadband");
+      properties.remove("csamDetector");
+
+      // Deprecated properties
       properties.remove("userApplicationData");
       properties.remove("laserCategory");
       properties.remove("laserFaultFamily");
@@ -123,7 +129,6 @@ public class ValidationService {
       properties.remove("electricityFaultFamily");
       properties.remove("detail");
       properties.remove("multiplicityValue");
-      properties.remove("csamDetector");
 
       // HACK ALERT: Loop over all property values and remove their descriptions (i.e. "4: Defaut centrale" -> "4")
       for (Map.Entry<String, Object> entry : properties.entrySet()) {
@@ -159,20 +164,17 @@ public class ValidationService {
 
     if (exitcode != 0) {
       valid = false;
-      // HACK: set the error on the first point...
-      request.getPoints().get(0).setErrors(Collections.singletonList(new Error("", Collections.singletonList((String) exit.get("p_exittext")))));
-    }
 
-    // Read the points back to get the exit codes and error messages
-    query = "SELECT drp_request_id, drp_lineno, drp_exitcode, drp_exittext FROM DRAFT_POINTS WHERE drp_request_id = ?";
+      // Read the points back to get the error messages
+      query = "SELECT mer_request_id, mer_lineno, mer_error_text, mer_column_name FROM MODESTI_REQ_ERRORS WHERE mer_request_id = ?";
 
-    List<Result> results = jdbcTemplate.query(query, new Object[]{request.getRequestId()}, (rs, rowNum) -> new Result(rs.getInt("drp_request_id"), rs.getInt
-        ("drp_lineno"), rs.getInt("drp_exitcode"), rs.getString("drp_exittext")));
+      List<ErrorMessage> errorMessages = jdbcTemplate.query(query, new Object[]{request.getRequestId()}, (rs, rowNum) -> new ErrorMessage(rs.getInt
+          ("mer_request_id"), rs.getInt("mer_lineno"), rs.getString("mer_error_text"), rs.getString("mer_column_name")));
 
-    for (Result result : results) {
-      if (result.getExitCode() != 0) {
-        valid = false;
-        setErrorMessage(request, result);
+      for (ErrorMessage errorMessage : errorMessages) {
+        Point point = request.getPoints().get(errorMessage.getLineno() - 1);
+        point.setValid(false);
+        setErrorMessage(point, errorMessage);
       }
     }
 
@@ -201,31 +203,33 @@ public class ValidationService {
   }
 
   /**
-   * @param request
-   * @param result
+   * @param point
+   * @param errorMessage
    */
-  private void setErrorMessage(Request request, Result result) {
-    log.debug("draft point exit: " + result.toString());
+  private void setErrorMessage(Point point, ErrorMessage errorMessage) {
+    log.debug("draft point exit: " + errorMessage.toString());
 
-    // Set the error messages on the points
-    for (Point point : request.getPoints()) {
-      if (point.getLineNo().equals(new Long(result.getLineno()))) {
-        Integer exitCode = result.getExitCode();
-        String exitText = result.getExitText();
+    // Set the error message on the point
+    boolean exists = false;
 
-        if (exitCode != null && exitCode > 0) {
-          point.setErrors(Collections.singletonList(new Error("", Collections.singletonList(exitText != null ? exitText : "unknown error"))));
-        }
+    for (Error error : point.getErrors()) {
+      if (error.getProperty().equals(columnNameToProperty(errorMessage.getColumnName()))) {
+        exists = true;
+        error.getErrors().add(errorMessage.getErrorText());
       }
+    }
+
+    if (!exists) {
+      point.getErrors().add(new Error(columnNameToProperty(errorMessage.getColumnName()), Collections.singletonList(errorMessage.getErrorText())));
     }
   }
 
   @Data
-  class Result {
+  class ErrorMessage {
     final Integer requestId;
     final Integer lineno;
-    final Integer exitCode;
-    final String exitText;
+    final String errorText;
+    final String columnName;
   }
 
   /**
@@ -235,7 +239,18 @@ public class ValidationService {
    */
   private String propertyToColumnName(String property) {
     String columnName = "drp_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, property);
-    log.debug(format("converted property name %s to column name %s", property, columnName));
+    log.trace(format("converted property name %s to column name %s", property, columnName));
     return columnName;
+  }
+
+  /**
+   * @param columnName
+   *
+   * @return
+   */
+  private String columnNameToProperty(String columnName) {
+    String property = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, columnName.replace("DRP_", ""));
+    log.trace(format("converted column name %s to property name %s", columnName, property));
+    return property;
   }
 }
