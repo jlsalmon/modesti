@@ -202,7 +202,16 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
     var point = self.rows[row];
 
     if (point.valid === false) {
-      return '<div class="row-header">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
+      var text = '';
+
+      point.errors.forEach(function (e) {
+        e.errors.forEach(function (error) {
+          text += '<i class="fa fa-fw fa-exclamation-circle text-danger"></i> ' + error + '<br />';
+        })
+      });
+
+      return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="'
+            + text.replace(/"/g, "&quot;") + '">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
     //else if (point.valid === true) {
     //  return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
@@ -256,7 +265,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
       }
 
       // Build the right type of column based on the schema
-      var column = ColumnService.getColumn(field, editable);
+      var column = ColumnService.getColumn(field, editable, self.request.status);
       column.renderer = customRenderer;
       self.columns.push(column);
     });
@@ -465,7 +474,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
 
     SchemaService.generateTagnames(self.request);
     SchemaService.generateFaultStates(self.request);
-    SchemaService.generateAlarmCategories(self.request);
+    //SchemaService.generateAlarmCategories(self.request);
   }
 
   /**
@@ -688,7 +697,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
       var error = point.errors[i];
 
       // If the property name isn't specified, then the error applies to the whole point.
-      if (error.property === prop || error.property === '') {
+      if (error.property === prop.replace('properties.', '') || error.property === prop.split('.')[0] || error.property === '') {
         td.style.background = '#F2DEDE';
         break;
       }
