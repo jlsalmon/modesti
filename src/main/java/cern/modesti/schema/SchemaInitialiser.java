@@ -7,6 +7,7 @@ import cern.modesti.schema.options.OptionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
@@ -165,10 +166,13 @@ public class SchemaInitialiser {
     overridden = new Category(overridden);
 
     List<Field> newFields = new ArrayList<>();
+    List<Field> oldFields = overridden.getFields();
 
     for (Field newField : override.getFields()) {
-      if (!overridden.getFields().contains(newField)) {
+      if (!oldFields.contains(newField)) {
         newFields.add(newField);
+      } else {
+        oldFields.set(oldFields.indexOf(newField), mergeFields(oldFields.get(oldFields.indexOf(newField)), newField));
       }
     }
 
@@ -188,6 +192,17 @@ public class SchemaInitialiser {
     }
 
     overridden.getFields().addAll(newFields);
+    return overridden;
+  }
+
+  /**
+   *
+   * @param overridden
+   * @param override
+   * @return
+   */
+  private Field mergeFields(Field overridden, Field override) {
+    BeanUtils.copyProperties(override, overridden);
     return overridden;
   }
 
