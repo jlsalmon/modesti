@@ -19,14 +19,31 @@ function ColumnService($http, $translate) {
    *
    * @param field
    * @param editable
+   * @param status
    * @returns {*}
    */
-  function getColumn(field, editable) {
+  function getColumn(field, editable, status) {
     var column = {
       data: 'properties.' + field.id,
       title: getColumnHeader(field),
-      readOnly: !editable || field.editable === false
+      //readOnly: !editable || field.editable === false
     };
+
+    if (editable) {
+      // Editable given as simple boolean
+      if (field.editable === false) {
+        editable = false;
+      }
+
+      // Editable given as condition object
+      else if (field.editable !== null && typeof field.editable === 'object') {
+        if (field.editable.status && status !== field.editable.status) {
+          editable = false;
+        }
+      }
+    }
+
+    column.readOnly = !editable;
 
     if (field.type === 'autocomplete') {
       column = getAutocompleteColumn(column, field);
