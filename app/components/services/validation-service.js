@@ -39,9 +39,9 @@ function ValidationService($q) {
     var valid = true;
 
     // Validate the mutually exclusive column group specifications.
-    //if (!validateMutualExclusions(request, schema)) {
-    //  valid = false;
-    //}
+    if (!validateMutualExclusions(request, schema)) {
+      valid = false;
+    }
 
     // Validate the constraints of the schema. This checks things like unique column groups and mutually inclusive fields.
     if (!validateConstraints(request, schema)) {
@@ -423,8 +423,8 @@ function ValidationService($q) {
 
                 if (emptyFields.length !== excludedCategory.fields.length) {
                   point.valid = category.valid = excludedCategory.valid = valid = false;
-                  setErrorMessage(point, '', 'Fields in the "' + category.name_en + '" group cannot be used if fields in the "' + excludedCategory.name_en
-                    + '" group have been specified.');
+                  setErrorMessage(point, '', 'Fields in the "' + category.name_en + '" group cannot be used if fields in the "' + excludedCategory.name_en +
+                    '" group have been specified.');
                 }
               }
             });
@@ -508,17 +508,6 @@ function ValidationService($q) {
     if (!exists) {
       point.errors.push({property: propertyName, errors: [message]});
     }
-  }
-
-  /**
-   * Set an error message on an entire category of fields.
-   *
-   * @param point
-   * @param category
-   * @param message
-   */
-  function setErrorMessageOnCategory(point, category, message) {
-
   }
 
   /**

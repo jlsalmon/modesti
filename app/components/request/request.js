@@ -207,11 +207,11 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
       point.errors.forEach(function (e) {
         e.errors.forEach(function (error) {
           text += '<i class="fa fa-fw fa-exclamation-circle text-danger"></i> ' + error + '<br />';
-        })
+        });
       });
 
-      return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="'
-            + text.replace(/"/g, "&quot;") + '">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
+      return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="' +
+        text.replace(/"/g, '&quot;') + '">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
     //else if (point.valid === true) {
     //  return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
