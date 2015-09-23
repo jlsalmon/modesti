@@ -897,3 +897,7 @@ body {
 .select2-drop {
     /* box-shadow: none; */
 }
+
+.popover {
+  max-width: 800px;
+}
