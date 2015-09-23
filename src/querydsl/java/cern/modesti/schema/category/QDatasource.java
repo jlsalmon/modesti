@@ -31,6 +31,9 @@ public class QDatasource extends BeanPath<Datasource> {
     public final ListPath<String, StringPath> editableStates = _super.editableStates;
 
     //inherited
+    public final ListPath<String, StringPath> excludes = _super.excludes;
+
+    //inherited
     public final ListPath<cern.modesti.schema.field.Field, SimplePath<cern.modesti.schema.field.Field>> fields = _super.fields;
 
     //inherited

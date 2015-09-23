@@ -26,6 +26,8 @@ public class QCategory extends BeanPath<Category> {
 
     public final ListPath<String, StringPath> editableStates = this.<String, StringPath>createList("editableStates", String.class, StringPath.class, PathInits.DIRECT2);
 
+    public final ListPath<String, StringPath> excludes = this.<String, StringPath>createList("excludes", String.class, StringPath.class, PathInits.DIRECT2);
+
     public final ListPath<cern.modesti.schema.field.Field, SimplePath<cern.modesti.schema.field.Field>> fields = this.<cern.modesti.schema.field.Field, SimplePath<cern.modesti.schema.field.Field>>createList("fields", cern.modesti.schema.field.Field.class, SimplePath.class, PathInits.DIRECT2);
 
     public final StringPath id = createString("id");
