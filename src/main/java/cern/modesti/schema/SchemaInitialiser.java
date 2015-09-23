@@ -202,6 +202,9 @@ public class SchemaInitialiser {
    * @return
    */
   private Field mergeFields(Field overridden, Field override) {
+
+    // TODO: make a copy to avoid accidentally overriding the core schema!
+
     BeanUtils.copyProperties(override, overridden);
     return overridden;
   }
