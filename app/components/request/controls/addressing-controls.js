@@ -45,6 +45,7 @@ function AddressingControlsController($state, $modal, $timeout, RequestService, 
     self.hot = parent.hot;
 
     // Make sure that only those column groups which match the point type are editable.
+    // TODO: remove this code from here and incorporate it in the schema.
     self.parent.hot.updateSettings( {
       cells: function (row, col, prop) {
         var cellProperties = {};
