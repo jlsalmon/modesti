@@ -27,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 
 /**
  * @author Justin Lewis Salmon
@@ -45,7 +47,9 @@ import lombok.NoArgsConstructor;
     @Type(value = OptionsField.class, name = "options"),
     @Type(value = AutocompleteField.class, name = "autocomplete")})
 @JsonInclude(Include.NON_NULL)
-public class Field {
+public class Field implements Serializable {
+
+  private static final long serialVersionUID = 728578311444988751L;
 
   @Id
   private String id;
