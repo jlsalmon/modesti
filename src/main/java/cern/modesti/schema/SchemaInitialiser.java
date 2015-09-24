@@ -199,8 +199,7 @@ public class SchemaInitialiser {
    * @return
    */
   private Field mergeFields(Field overridden, Field override) {
-
-    // TODO: make a copy to avoid accidentally overriding the core schema!
+    // Make a copy to avoid accidentally overriding the core schema
     Field copy = SerializationUtils.clone(overridden);
     BeanUtils.copyProperties(override, copy);
     return copy;
