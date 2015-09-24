@@ -5,8 +5,10 @@ import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.Field;
 import cern.modesti.schema.options.OptionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -176,14 +178,9 @@ public class SchemaInitialiser {
       }
     }
 
-    // Copy the disabled state list.
-    if (override.getDisabledStates() != null) {
-      overridden.setDisabledStates(override.getDisabledStates());
-    }
-
     // Copy the editable state list.
-    if (override.getEditableStates() != null) {
-      overridden.setEditableStates(override.getEditableStates());
+    if (override.getEditable() != null) {
+      overridden.setEditable(override.getEditable());
     }
 
     // Copy the constraint list
@@ -204,9 +201,9 @@ public class SchemaInitialiser {
   private Field mergeFields(Field overridden, Field override) {
 
     // TODO: make a copy to avoid accidentally overriding the core schema!
-
-    BeanUtils.copyProperties(override, overridden);
-    return overridden;
+    Field copy = SerializationUtils.clone(overridden);
+    BeanUtils.copyProperties(override, copy);
+    return copy;
   }
 
   /**
