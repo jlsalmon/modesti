@@ -33,7 +33,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
     columnSorting: false,
     //currentRowClassName: 'currentRow',
     //comments: true,
-    minSpareRows: 50,
+    minSpareRows: 0,
     search: true,
     // pasteMode: 'shift_down', // problematic
     outsideClickDeselects: false,
@@ -126,6 +126,41 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
 
     calculateTableHeight();
     activateDefaultCategory();
+
+    // Evaluate "editable" conditions for the active category. This is because we need to evaluate the editability of individual cells based on the
+    // value of other cells in the row, and we cannot do this in the column service.
+    self.hot.updateSettings( {
+      cells: function (row, col, prop) {
+        if (typeof prop !== 'string') {
+          return;
+        }
+
+        var point = self.rows[row];
+        var editable = false;
+
+        // Evaluate "editable" condition of the category
+        if (self.activeCategory.editable != null && typeof self.activeCategory.editable === 'object') {
+          var conditional = self.activeCategory.editable;
+
+          if (conditional !== undefined && conditional !== null) {
+            editable = SchemaService.evaluateConditional(point, conditional, self.request.status);
+          }
+        }
+
+        // Evaluate "editable" condition of the field as it may override the category
+        self.activeCategory.fields.forEach(function (field) {
+          if (field.id === prop.split('.')[1]) {
+            var conditional = field.editable;
+
+            if (conditional !== undefined && conditional !== null) {
+              editable = SchemaService.evaluateConditional(point, conditional, self.request.status);
+            }
+          }
+        });
+
+        return { readOnly: !editable };
+      }
+    });
   }
 
   /**
@@ -250,22 +285,28 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
       self.columns.push(getCommentColumn());
     }
 
-    var editable;
     self.activeCategory.fields.forEach(function (field) {
 
-      // A column is editable only if the category is marked as an editable state for the current request status.
-      if (isCurrentUserAuthorised()) {
-        if (!isCurrentUserAssigned()) {
-          editable = false;
-        } else {
-          editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
-        }
-      } else {
-        editable = false;
+      var authorised = false;
+      if (isCurrentUserAuthorised() && isCurrentUserAssigned()) {
+        authorised = true;
       }
 
+      var editable;
+      // A column is editable only if the category is marked as an editable state for the current request status.
+      if (self.activeCategory.editable != null && typeof self.activeCategory.editable === 'object') {
+        var status = self.activeCategory.editable.status;
+
+        if (status instanceof Array) {
+          editable = status.indexOf(self.request.status) > -1;
+        } else if (typeof status === 'string') {
+          editable = status === self.request.status;
+        }
+      }
+      //editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
+
       // Build the right type of column based on the schema
-      var column = ColumnService.getColumn(field, editable, self.request.status);
+      var column = ColumnService.getColumn(field, editable, authorised, self.request.status);
       column.renderer = customRenderer;
       self.columns.push(column);
     });
@@ -463,7 +504,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
   /**
    * Called after a change is made to the table (edit, paste, etc.)
    */
-  function afterChange() {
+  function afterChange(changes, source) {
     console.log('afterChange()');
 
     // Normalise point ids.

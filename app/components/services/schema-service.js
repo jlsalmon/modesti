@@ -13,6 +13,7 @@ function SchemaService($q, $http) {
   var service = {
     getSchema: getSchema,
     getSchemas: getSchemas,
+    evaluateConditional: evaluateConditional,
     generateTagnames: generateTagnames,
     generateFaultStates: generateFaultStates,
     generateAlarmCategories: generateAlarmCategories
@@ -39,6 +40,18 @@ function SchemaService($q, $http) {
         // Tagname is shown on each category except General and Alarms
         if (category.id !== 'general' && category.id !== 'alarms' && category.id !== 'alarmHelp') {
           category.fields.push(getTagnameField());
+        }
+
+        // Fault member, fault code and problem description are shown on "alarms" and "alarmHelp" categories
+        if (category.id === 'alarms' || category.id === 'alarmHelp') {
+          category.fields.push(getFaultFamilyField());
+          category.fields.push(getFaultMemberField());
+          category.fields.push(getProblemDescriptionField());
+        }
+
+        // Fault member, fault code and problem description must make a unique triplet.
+        if (category.id === 'alarms') {
+          category.constraints.push(getAlarmTripletConstraint());
         }
       });
 
@@ -83,6 +96,83 @@ function SchemaService($q, $http) {
 
   /**
    *
+   * @param point
+   * @param conditional
+   * @param status
+   * @returns {boolean}
+   */
+  function evaluateConditional(point, conditional, status) {
+    // Simple boolean
+    if (conditional === false || conditional === true) {
+      return conditional;
+    }
+
+    // Chained OR condition
+    if (conditional.or) {
+      var results = [];
+
+      conditional.or.forEach(function (subConditional) {
+        results.push(evaluateConditional(point, subConditional, status));
+      });
+
+      return results.indexOf(true) > -1;
+    }
+
+    var statusResult, valueResult;
+
+    // Conditional based on the status of the request.
+    if (conditional.status) {
+      if (conditional.status instanceof Array) {
+        statusResult = conditional.status.indexOf(status) > -1;
+      } else if (typeof conditional.status === 'string') {
+        statusResult = status === conditional.status;
+      }
+    }
+
+    // Conditional based on the value of another property of the point, used in conjunction with the status conditional
+    if (conditional.condition) {
+      valueResult = evaluateValueCondition(point, conditional.condition);
+    }
+
+    // Simple value conditional without status conditional
+    if (conditional.field) {
+      valueResult = evaluateValueCondition(point, conditional);
+    }
+
+    if (valueResult !== undefined && statusResult !== undefined) {
+      return statusResult && valueResult;
+    } else if (valueResult === undefined && statusResult !== undefined) {
+      return statusResult;
+    } else if (valueResult !== undefined && statusResult === undefined) {
+      return valueResult;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   *
+   * @param point
+   * @param condition
+   * @returns {boolean}
+   */
+  function evaluateValueCondition(point, condition) {
+    var value = point.properties[condition.field];
+    var result = false;
+
+    if (condition.operation === 'equals' && value === condition.value) {
+      result = true;
+    } else if (condition.operation === 'contains' && value && value.toString().indexOf(condition.value) > -1) {
+      result = true;
+    } else if (condition.operation === 'notNull' && value !== null && value !== undefined && value !== '') {
+      result = true;
+    }
+
+    return result;
+  }
+
+  /**
+   *
    * @returns {*}
    */
   function getTagnameField() {
@@ -97,6 +187,68 @@ function SchemaService($q, $http) {
       help_en: '',
       help_fr: ''
     };
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getProblemDescriptionField() {
+    /*jshint camelcase: false */
+    return {
+      "id": "pointDescription",
+      "type": "text",
+      "editable": false,
+      "name_en": "Problem Description",
+      "name_fr": "Problem Description",
+      "help_en": "",
+      "help_fr": ""
+    }
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getFaultFamilyField() {
+    /*jshint camelcase: false */
+    return {
+      "id": "faultFamily",
+      "type": "text",
+      "editable": false,
+      "name_en": "Fault Family",
+      "name_fr": "Fault Family",
+      "help_en": "",
+      "help_fr": ""
+    }
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getFaultMemberField() {
+    /*jshint camelcase: false */
+    return {
+      "id": "faultMember",
+      "type": "text",
+      "editable": false,
+      "name_en": "Fault Member",
+      "name_fr": "Fault Member",
+      "help_en": "",
+      "help_fr": ""
+    }
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getAlarmTripletConstraint() {
+    return {
+      "type": "unique",
+      "members": [ "faultFamily", "faultMember", "pointDescription" ]
+    }
   }
 
   /**
@@ -150,11 +302,17 @@ function SchemaService($q, $http) {
   function generateFaultStates(request) {
     request.points.forEach(function (point) {
 
-      point.properties.faultMember = getEquipmentIdentifier(point);
+      if (point.properties.priorityCode === undefined || point.properties.priorityCode === null || point.properties.priorityCode === '') {
+        point.properties.faultFamily = '';
+        point.properties.faultMember = '';
+        return;
+      }
 
       if (!point.properties.subsystem) {
         return;
       }
+
+      point.properties.faultMember = getEquipmentIdentifier(point);
 
       (function (point) {
         $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {

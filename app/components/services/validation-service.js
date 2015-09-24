@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('ValidationService', ValidationService);
 
-function ValidationService($q) {
+function ValidationService($q, SchemaService) {
   /*jshint camelcase: false */
 
   // Public API
@@ -50,7 +50,7 @@ function ValidationService($q) {
 
     // Validate each point separately. This checks things like required values, min/max length, valid values etc.
     request.points.forEach(function (point) {
-      if (!validatePoint(point, schema)) {
+      if (!validatePoint(point, schema, request.status)) {
         valid = false;
       }
     });
@@ -63,9 +63,10 @@ function ValidationService($q) {
    *
    * @param point
    * @param schema
+   * @param status
    * @returns {boolean}
    */
-  function validatePoint(point, schema) {
+  function validatePoint(point, schema, status) {
     var valid = true;
 
     // Ignore empty points
@@ -91,7 +92,7 @@ function ValidationService($q) {
         if (field.required === true) {
           required = true;
         } else if (field.required !== null && typeof field.required === 'object') {
-          required = evaluateCondition(point, field.required);
+          required = SchemaService.evaluateConditional(point, field.required, status);
         }
 
         if (required === true) {
@@ -125,43 +126,6 @@ function ValidationService($q) {
 
   /**
    *
-   * @param point
-   * @param condition
-   * @returns {boolean}
-   */
-  function evaluateCondition(point, condition) {
-    var result = false;
-
-    // Chained OR condition
-    if (condition.or) {
-      condition.or.forEach(function (subCondition) {
-        var value = point.properties[subCondition.field];
-
-        if (subCondition.operation === 'equals' && value === subCondition.value) {
-          result = true;
-        } else if (subCondition.operation === 'contains' && value && value.toString().indexOf(subCondition.value) > -1) {
-          result = true;
-        }
-      });
-    }
-
-    // Simple condition
-    else {
-      var value = point.properties[condition.field];
-
-      if (condition.operation === 'equals' && value === condition.value) {
-        result = true;
-      } else if (condition.operation === 'contains' && value && value.toString().indexOf(condition.value) > -1) {
-        result = true;
-      }
-    }
-
-    return result;
-  }
-
-  /**
-   * TODO: Mutually exclusive groups validation
-   *
    * @param request
    * @param schema
    * @returns {boolean}
@@ -177,36 +141,31 @@ function ValidationService($q) {
 
       category.constraints.forEach(function (constraint) {
 
-        // Some constraints are only active during certain request statuses
-        if (constraint.activeStates && constraint.activeStates.indexOf(request.status) === -1) {
-          return;
-        }
-
         switch (constraint.type) {
           case 'or':
           {
-            if (!validateOrConstraint(points, category, constraint)) {
+            if (!validateOrConstraint(points, category, constraint, request.status)) {
               valid = false;
             }
             break;
           }
           case 'and':
           {
-            if (!validateAndConstraint(points, category, constraint)) {
+            if (!validateAndConstraint(points, category, constraint, request.status)) {
               valid = false;
             }
             break;
           }
           case 'xnor':
           {
-            if (!validateXnorConstraint(points, category, constraint)) {
+            if (!validateXnorConstraint(points, category, constraint, request.status)) {
               valid = false;
             }
             break;
           }
           case 'unique':
           {
-            if (!validateUniqueConstraint(points, category, constraint)) {
+            if (!validateUniqueConstraint(points, category, constraint, request.status)) {
               valid = false;
             }
             break;
@@ -225,12 +184,18 @@ function ValidationService($q) {
    * @param constraint
    * @returns {boolean}
    */
-  function validateOrConstraint(points, category, constraint) {
+  function validateOrConstraint(points, category, constraint, status) {
     var valid = true;
 
     points.forEach(function (point) {
       // Ignore empty points
       if (isEmptyPoint(point)) {
+        return true;
+      }
+
+      // Constraints are only applied if the category is editable.
+      var editable = SchemaService.evaluateConditional(point, category.editable, status);
+      if (!editable) {
         return true;
       }
 
@@ -260,7 +225,7 @@ function ValidationService($q) {
    * @param constraint
    * @returns {boolean}
    */
-  function validateAndConstraint(points, category, constraint) {
+  function validateAndConstraint(points, category, constraint, status) {
     var valid = true;
 
     points.forEach(function (point) {
@@ -269,12 +234,10 @@ function ValidationService($q) {
         return true;
       }
 
-      // Some constraints are only evaluated when their condition is true
-      if (constraint.condition) {
-        var value = point.properties[constraint.condition.field];
-        if (value !== constraint.condition.value) {
-          return;
-        }
+      // Constraints are only applied if the category is editable.
+      var editable = SchemaService.evaluateConditional(point, category.editable, status);
+      if (!editable) {
+        return true;
       }
 
       // Get all the fields specified as members of the constraint
@@ -283,16 +246,7 @@ function ValidationService($q) {
       // Get a list of fields for the constraint that are empty
       var emptyFields = getEmptyFields(point, fields);
 
-      if (emptyFields.length === constraint.members.length) {
-        // If all fields are empty, say "Address of type X is required"
-        point.valid = category.valid = valid = false;
-
-        emptyFields.forEach(function (emptyField) {
-          setErrorMessage(point, getPropertyName(emptyField), 'All fields in group "' + category.name_en + '" are required for this point');
-        });
-      }
       if (emptyFields.length > 0) {
-        // If some are filled, say "Field X is required"
         point.valid = category.valid = valid = false;
 
         emptyFields.forEach(function (emptyField) {
@@ -311,12 +265,18 @@ function ValidationService($q) {
    * @param constraint
    * @returns {boolean}
    */
-  function validateXnorConstraint(points, category, constraint) {
+  function validateXnorConstraint(points, category, constraint, status) {
     var valid = true;
 
     points.forEach(function (point) {
       // Ignore empty points
       if (isEmptyPoint(point)) {
+        return true;
+      }
+
+      // Constraints are only applied if the category is editable.
+      var editable = SchemaService.evaluateConditional(point, category.editable, status);
+      if (!editable) {
         return true;
       }
 

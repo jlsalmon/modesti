@@ -19,27 +19,25 @@ function ColumnService($http, $translate) {
    *
    * @param field
    * @param editable
+   * @param authorised
    * @param status
    * @returns {*}
    */
-  function getColumn(field, editable, status) {
+  function getColumn(field, editable, authorised, status) {
     var column = {
       data: 'properties.' + field.id,
-      title: getColumnHeader(field),
-      //readOnly: !editable || field.editable === false
+      title: getColumnHeader(field)
     };
 
-    if (editable) {
+    if (authorised) {
       // Editable given as simple boolean
-      if (field.editable === false) {
-        editable = false;
+      if (field.editable === true || field.editable === false) {
+        editable = field.editable;
       }
 
       // Editable given as condition object
       else if (field.editable !== null && typeof field.editable === 'object') {
-        if (field.editable.status && status !== field.editable.status) {
-          editable = false;
-        }
+        editable = !!(field.editable.status && status === field.editable.status);
       }
     }
 

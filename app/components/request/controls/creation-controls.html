@@ -146,13 +146,19 @@
         request should be modified before revalidation.
       </p>
 
-      <div ng-repeat="point in ctrl.rows track by point.id">
-        <div ng-repeat="error in point.errors track by $index">
-          <div ng-repeat="error in error.errors">
-            <i class="fa fa-fw fa-exclamation-circle text-danger"></i> Line {{point.id}}: {{error}}
+      <p>
+
+        <div ng-repeat="point in ctrl.rows track by point.id">
+          <div ng-repeat="error in point.errors track by $index">
+            <div ng-repeat="error in error.errors">
+              <i class="fa fa-fw fa-exclamation-circle text-danger"></i> Line {{point.id}}: {{error}}
+            </div>
           </div>
         </div>
-      </div>
+
+      </p>
+
+
     </div>
 
     <div ng-if="ctrl.request.approval.approved === false">
