@@ -427,6 +427,13 @@ function ValidationService($q, SchemaService) {
       if (value === undefined || value === '' || value === null) {
         emptyFields.push(field);
       }
+
+      // HACK ALERT: treat auto-generated fields as "empty"
+      if (field.id === 'tagname' || field.id === 'faultFamily' || field.id === 'faultMember' || field.id === 'pointDescription') {
+        if (emptyFields.indexOf(field) === -1) {
+          emptyFields.push(field);
+        }
+      }
     });
 
     return emptyFields;
