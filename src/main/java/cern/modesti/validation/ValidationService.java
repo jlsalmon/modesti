@@ -104,9 +104,9 @@ public class ValidationService {
        */
       if (properties.get("trueMeaning") != null && properties.get("falseMeaning") != null) {
         properties.put("stateptDesclist", properties.get("trueMeaning") + "," + properties.get("falseMeaning"));
-        properties.remove("trueMeaning");
-        properties.remove("falseMeaning");
       }
+      properties.remove("trueMeaning");
+      properties.remove("falseMeaning");
 
       // These properties do not go into the table
       // TODO: review these
@@ -114,7 +114,7 @@ public class ValidationService {
       properties.remove("tagname");
       properties.remove("faultState");
       properties.remove("cabling");
-      properties.remove("type");
+      properties.remove("commandType");
       properties.remove("timeDeadband");
       properties.remove("csamDetector");
 
@@ -249,7 +249,7 @@ public class ValidationService {
    * @return
    */
   private String columnNameToProperty(String columnName) {
-    String property = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, columnName.replace("DRP_", ""));
+    String property = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, columnName != null ? columnName.replace("DRP_", "") : "");
     log.trace(format("converted column name %s to property name %s", columnName, property));
     return property;
   }
