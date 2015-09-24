@@ -40,15 +40,7 @@ public class Category {
 
   private String name_fr;
 
-  /**
-   * Enumerates the workflow states for which this category is disabled.
-   */
-  private List<String> disabledStates;
-
-  /**
-   * Enumerates the workflow states for which this category is editable.
-   */
-  private List<String> editableStates;
+  private Object editable;
 
   /**
    * List of category IDs which are mutually exclusive with this category.
@@ -76,8 +68,7 @@ public class Category {
     id = category.id;
     name_en = category.name_en;
     name_fr = category.name_fr;
-    disabledStates = category.disabledStates == null ? null : new ArrayList<>(category.disabledStates);
-    editableStates = category.editableStates == null ? null : new ArrayList<>(category.editableStates);
+    editable = category.editable;
     constraints = category.constraints == null ? null : new ArrayList<>(category.constraints);
     fields = category.fields == null ? null : new ArrayList<>(category.fields);
   }
