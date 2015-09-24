@@ -5,7 +5,9 @@
       "id": "general",
       "name_en": "General",
       "name_fr": "Generale",
-      "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
+      "editable": {
+        "status": [ "IN_PROGRESS", "FOR_CORRECTION" ]
+      },
       "fields": [
         {
           "id": "pointDescription",
@@ -70,7 +72,9 @@
       "id": "location",
       "name_en": "Location",
       "name_fr": "Location",
-      "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
+      "editable": {
+        "status": [ "IN_PROGRESS", "FOR_CORRECTION" ]
+      },
       "fields": [
         {
           "id": "location",
@@ -112,15 +116,13 @@
       "id": "alarms",
       "name_en": "Alarms",
       "name_fr": "Alarmes",
-      "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
+      "editable": {
+        "status": [ "IN_PROGRESS", "FOR_CORRECTION" ]
+      },
       "constraints": [
         {
           "type": "xnor",
           "members": [ "priorityCode", "alarmValue" ]
-        },
-        {
-          "type": "unique",
-          "members": [ "faultFamily", "faultMember", "pointDescription" ]
         }
       ],
       "fields": [
@@ -139,33 +141,6 @@
           "name_fr": "Valeur d'alarme",
           "help_en": "The value indicating the presence of the alarm",
           "help_fr": "La valeur qui indique la présence de l'alarme"
-        },
-        {
-          "id": "pointDescription",
-          "type": "text",
-          "editable": false,
-          "name_en": "Problem Description",
-          "name_fr": "Problem Description",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "faultFamily",
-          "type": "text",
-          "editable": false,
-          "name_en": "Fault Family",
-          "name_fr": "Fault Family",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "faultMember",
-          "type": "text",
-          "editable": false,
-          "name_en": "Fault Member",
-          "name_fr": "Fault Member",
-          "help_en": "",
-          "help_fr": ""
         }
       ]
     },
@@ -173,7 +148,9 @@
       "id": "alarmHelp",
       "name_en": "Alarm Help",
       "name_fr": "Aide Alarme",
-      "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
+      "editable": {
+        "status": [ "IN_PROGRESS", "FOR_CORRECTION" ]
+      },
       "fields": [
         {
           "id": "alarmCauses",
@@ -223,33 +200,6 @@
           },
           "name_en": "Task Outside Working Hours",
           "name_fr": "Action Hors Heures Ouvrables",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "pointDescription",
-          "type": "text",
-          "editable": false,
-          "name_en": "Problem Description",
-          "name_fr": "Problem Description",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "faultFamily",
-          "type": "text",
-          "editable": false,
-          "name_en": "Fault Family",
-          "name_fr": "Fault Family",
-          "help_en": "",
-          "help_fr": ""
-        },
-        {
-          "id": "faultMember",
-          "type": "text",
-          "editable": false,
-          "name_en": "Fault Member",
-          "name_fr": "Fault Member",
           "help_en": "",
           "help_fr": ""
         }

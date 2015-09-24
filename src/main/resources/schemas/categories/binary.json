@@ -2,7 +2,9 @@
   "id": "binary",
   "name_en": "Binary Points",
   "name_fr": "Points Binaire",
-  "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
+  "editable": {
+    "status": [ "IN_PROGRESS", "FOR_CORRECTION" ]
+  },
   "excludes": [ "alarms" ],
   "constraints": [
     {

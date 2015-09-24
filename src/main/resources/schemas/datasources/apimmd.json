@@ -2,17 +2,18 @@
   "id": "apimmd",
   "name_en": "APIMMD",
   "name_fr": "APIMMD",
-  "editableStates": [ "FOR_ADDRESSING" ],
+  "editable": {
+    "status": "FOR_ADDRESSING",
+    "condition": {
+      "field": "pointType",
+      "operation": "equals",
+      "value": "APIMMD"
+    }
+  },
   "constraints": [
     {
       "type": "and",
-      "members": [ "plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix", "plcSlaveAddress", "plcConnectId" ],
-      "activeStates": [ "FOR_ADDRESSING" ],
-      "condition": {
-        "field": "pointType",
-        "operation": "equals",
-        "value": "APIMMD"
-      }
+      "members": [ "plcBlockType", "plcWordId", "plcBitId", "plcNativePrefix", "plcSlaveAddress", "plcConnectId" ]
     }
   ],
   "fields": [

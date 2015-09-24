@@ -2,7 +2,9 @@
   "id": "analogue",
   "name_en": "Analogue Points",
   "name_fr": "Analogue Points",
-  "editableStates": [ "IN_PROGRESS", "FOR_CORRECTION" ],
+  "editable": {
+    "status": [ "IN_PROGRESS", "FOR_CORRECTION" ]
+  },
   "constraints": [
     {
       "type": "xnor",
