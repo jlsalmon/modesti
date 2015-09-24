@@ -139,7 +139,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
         var editable = false;
 
         // Evaluate "editable" condition of the category
-        if (self.activeCategory.editable != null && typeof self.activeCategory.editable === 'object') {
+        if (self.activeCategory.editable !== null && typeof self.activeCategory.editable === 'object') {
           var conditional = self.activeCategory.editable;
 
           if (conditional !== undefined && conditional !== null) {
@@ -294,7 +294,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
 
       var editable;
       // A column is editable only if the category is marked as an editable state for the current request status.
-      if (self.activeCategory.editable != null && typeof self.activeCategory.editable === 'object') {
+      if (self.activeCategory.editable !== null && typeof self.activeCategory.editable === 'object') {
         var status = self.activeCategory.editable.status;
 
         if (status instanceof Array) {
@@ -504,7 +504,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
   /**
    * Called after a change is made to the table (edit, paste, etc.)
    */
-  function afterChange(changes, source) {
+  function afterChange() {
     console.log('afterChange()');
 
     // Normalise point ids.

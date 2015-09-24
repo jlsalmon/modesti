@@ -42,7 +42,7 @@ function SchemaService($q, $http) {
           category.fields.push(getTagnameField());
         }
 
-        // Fault member, fault code and problem description are shown on "alarms" and "alarmHelp" categories
+        // Fault member, fault code and problem description are shown on 'alarms' and 'alarmHelp' categories
         if (category.id === 'alarms' || category.id === 'alarmHelp') {
           category.fields.push(getFaultFamilyField());
           category.fields.push(getFaultMemberField());
@@ -196,14 +196,14 @@ function SchemaService($q, $http) {
   function getProblemDescriptionField() {
     /*jshint camelcase: false */
     return {
-      "id": "pointDescription",
-      "type": "text",
-      "editable": false,
-      "name_en": "Problem Description",
-      "name_fr": "Problem Description",
-      "help_en": "",
-      "help_fr": ""
-    }
+      'id': 'pointDescription',
+      'type': 'text',
+      'editable': false,
+      'name_en': 'Problem Description',
+      'name_fr': 'Problem Description',
+      'help_en': '',
+      'help_fr': ''
+    };
   }
 
   /**
@@ -213,14 +213,14 @@ function SchemaService($q, $http) {
   function getFaultFamilyField() {
     /*jshint camelcase: false */
     return {
-      "id": "faultFamily",
-      "type": "text",
-      "editable": false,
-      "name_en": "Fault Family",
-      "name_fr": "Fault Family",
-      "help_en": "",
-      "help_fr": ""
-    }
+      'id': 'faultFamily',
+      'type': 'text',
+      'editable': false,
+      'name_en': 'Fault Family',
+      'name_fr': 'Fault Family',
+      'help_en': '',
+      'help_fr': ''
+    };
   }
 
   /**
@@ -230,14 +230,14 @@ function SchemaService($q, $http) {
   function getFaultMemberField() {
     /*jshint camelcase: false */
     return {
-      "id": "faultMember",
-      "type": "text",
-      "editable": false,
-      "name_en": "Fault Member",
-      "name_fr": "Fault Member",
-      "help_en": "",
-      "help_fr": ""
-    }
+      'id': 'faultMember',
+      'type': 'text',
+      'editable': false,
+      'name_en': 'Fault Member',
+      'name_fr': 'Fault Member',
+      'help_en': '',
+      'help_fr': ''
+    };
   }
 
   /**
@@ -246,9 +246,9 @@ function SchemaService($q, $http) {
    */
   function getAlarmTripletConstraint() {
     return {
-      "type": "unique",
-      "members": [ "faultFamily", "faultMember", "pointDescription" ]
-    }
+      'type': 'unique',
+      'members': [ 'faultFamily', 'faultMember', 'pointDescription' ]
+    };
   }
 
   /**
