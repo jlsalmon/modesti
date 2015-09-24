@@ -15,6 +15,5 @@ import java.util.List;
 public class Constraint {
   private String type;
   private List<String> members;
-  private List<String> activeStates;
   private Condition condition;
 }
