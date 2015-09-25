@@ -296,12 +296,12 @@ public class WorkflowService {
     log.info("processing testing result for request id " + requestId + "...");
     Request request = getRequest(requestId);
 
-    if (request.getTesting() == null || request.getTesting().getTested() == null) {
+    if (request.getTesting() == null || request.getTesting().getPassed() == null) {
       throw new ActivitiException("Request testing object must not be null!");
     }
 
     // Set the variable for the next stage to evaluate
-    execution.setVariable("accepted", request.getTesting().getTested());
+    execution.setVariable("accepted", request.getTesting().getPassed());
 
     // Store the request
     requestRepository.save(request);

@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Testing {
-  private Boolean tested;
+  private Boolean passed;
   private String message;
 }
