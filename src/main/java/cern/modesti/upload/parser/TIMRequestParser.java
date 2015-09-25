@@ -93,7 +93,7 @@ public class TIMRequestParser extends RequestParser {
 
     // Command mappings
     columnTitleMappings.put("type", "commandType");
-    columnTitleMappings.put("pulseLength", "commandPulseLength");
+//    columnTitleMappings.put("pulseLength", "commandPulseLength");
 
     // Analogue mappings
     columnTitleMappings.put("conversionFactor", "plcAdConversion");

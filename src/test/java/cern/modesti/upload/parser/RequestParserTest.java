@@ -280,7 +280,7 @@ public class RequestParserTest {
     assertTrue(properties.get("falseMeaning") != null);
     // Commands
     assertTrue(properties.get("commandType") != null);
-    assertTrue(properties.get("commandPulseLength") != null);
+    assertTrue(properties.get("pulseLength") != null);
     // Monitoring
     assertTrue(properties.get("monitoringEquipment") != null);
     assertTrue(properties.get("cabling") != null);
