@@ -2,59 +2,40 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:ApprovalControlsController
- * @description # ApprovalControlsController Controller of the modesti
+ * @name modesti.controller:ApprovalController
+ * @description # ApprovalController Controller of the modesti
  */
-angular.module('modesti').controller('ApprovalControlsController', ApprovalControlsController);
+angular.module('modesti').controller('ApprovalController', ApprovalController);
 
-function ApprovalControlsController($state, $modal, $timeout, RequestService, TaskService, ValidationService, AlertService) {
+function ApprovalController($scope, $state, $modal, $timeout, RequestService, TaskService, ValidationService, AlertService) {
   var self = this;
-
-  self.parent = {};
-  self.request = {};
-  self.rows = {};
-  self.tasks = {};
-  self.signals = {};
-  self.hot = {};
+  self.parent = $scope.$parent.ctrl;
 
   self.submitting = undefined;
 
   self.init = init;
-  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
-  self.isCurrentTaskClaimed = isCurrentTaskClaimed;
-  self.isCurrentUserAssigned = isCurrentUserAssigned;
-  self.getCurrentAssignee = getCurrentAssignee;
-  self.claim = claim;
   self.approveSelectedPoints = approveSelectedPoints;
   self.approveAll = approveAll;
   self.rejectSelectedPoints = rejectSelectedPoints;
   self.rejectAll = rejectAll;
-  self.canValidate = canValidate;
-  self.canSubmit = canSubmit;
   self.validate = validate;
   self.submit = submit;
-  self.getNumValidationErrors = getNumValidationErrors;
+
+  init();
 
   /**
    *
    */
-  function init(parent) {
-    self.parent = parent;
-    self.request = parent.request;
-    self.rows = parent.rows;
-    self.tasks = parent.tasks;
-    self.signals = parent.signals;
-    self.hot = parent.hot;
-
+  function init() {
     // Initialise the approval state of the request itself
-    if (!self.request.approval) {
-      self.request.approval = {approved: undefined, message: ''};
+    if (!self.parent.request.approval) {
+      self.parent.request.approval = {approved: undefined, message: ''};
     }
 
     // Initialise the approval state of each point
     var point;
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      point = self.rows[i];
+    for (var i = 0, len = self.parent.rows.length; i < len; i++) {
+      point = self.parent.rows[i];
 
       if (!point.approval) {
         point.approval = {approved: undefined, message: ''};
@@ -63,78 +44,6 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
 
     // Register hooks
     self.parent.hot.addHook('afterChange', afterChange);
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentUserAuthorised() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-    return TaskService.isCurrentUserAuthorised(task);
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentTaskClaimed() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-    return TaskService.isTaskClaimed(task);
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentUserAssigned() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-    return TaskService.isCurrentUserAssigned(task);
-  }
-
-  /**
-   *
-   * @returns {*}
-   */
-  function getCurrentAssignee() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-    return task.assignee;
-  }
-
-  /**
-   *
-   * @returns {number}
-   */
-  function getNumValidationErrors() {
-    var n = 0;
-
-    for (var i in self.rows) {
-      var point = self.rows[i];
-
-      for (var j in point.errors) {
-        n += point.errors[j].errors.length;
-      }
-    }
-
-    return n;
-  }
-
-  /**
-   *
-   */
-  function claim(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-
-    TaskService.claimTask(task.name, self.request.requestId).then(function (task) {
-      console.log('claimed task successfully');
-      self.tasks[task.name] = task;
-      self.parent.activateDefaultCategory();
-    });
   }
 
   /**
@@ -167,24 +76,24 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
       controller: 'RejectionModalController as ctrl',
       resolve: {
         request: function () {
-          return self.request;
+          return self.parent.request;
         }
       }
     });
 
     // Callback fired when the user clicks 'ok'. Not fired if 'cancel' clicked.
     modalInstance.result.then(function () {
-      self.request.approval.approved = false;
+      self.parent.request.approval.approved = false;
 
       var point;
-      for (var i = 0, len = self.rows.length; i < len; i++) {
-        point = self.rows[i];
+      for (var i = 0, len = self.parent.rows.length; i < len; i++) {
+        point = self.parent.rows[i];
         point.approval.approved = false;
-        point.approval.message = self.request.approval.message;
+        point.approval.message = self.parent.request.approval.message;
       }
 
       // Save the request
-      RequestService.saveRequest(self.request);
+      RequestService.saveRequest(self.parent.request);
     });
 
   }
@@ -195,8 +104,8 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
    */
   function rejectPoints(pointIds) {
     var point;
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      point = self.rows[i];
+    for (var i = 0, len = self.parent.rows.length; i < len; i++) {
+      point = self.parent.rows[i];
 
       if (!point.approval) {
         point.approval = {};
@@ -212,7 +121,7 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
     }
 
     // Save the request
-    RequestService.saveRequest(self.request).then(function () {
+    RequestService.saveRequest(self.parent.request).then(function () {
       self.parent.hot.render();
     });
   }
@@ -240,12 +149,12 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
       event.stopPropagation();
     }
 
-    var pointIds = self.rows.map(function (row) {
+    var pointIds = self.parent.rows.map(function (row) {
       return row.id;
     });
     approvePoints(pointIds);
 
-    self.request.approval = {approved: true, message: ''};
+    self.parent.request.approval = {approved: true, message: ''};
   }
 
   /**
@@ -254,8 +163,8 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
    */
   function approvePoints(pointIds) {
     var point;
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      point = self.rows[i];
+    for (var i = 0, len = self.parent.rows.length; i < len; i++) {
+      point = self.parent.rows[i];
 
       if (pointIds.indexOf(point.id) > -1) {
 
@@ -270,22 +179,7 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
     }
 
     // Save the request
-    RequestService.saveRequest(self.request);
-  }
-
-  /**
-   *
-   */
-  function canValidate() {
-    return self.tasks.edit;
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function canSubmit() {
-    return self.tasks.submit;
+    RequestService.saveRequest(self.parent.request);
   }
 
   /**
@@ -305,8 +199,8 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
     // been rejected, there must be an accompanying comment.
 
     var point, valid = true;
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      point = self.rows[i];
+    for (var i = 0, len = self.parent.rows.length; i < len; i++) {
+      point = self.parent.rows[i];
       point.errors = [];
 
       if (!point.approval || point.approval.approved === null) {
@@ -323,16 +217,16 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
 
     if (!valid) {
       self.validating = 'error';
-      AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
-      self.hot.render();
+      AlertService.add('danger', 'Request failed validation with ' + self.parent.getNumValidationErrors() + ' errors');
+      self.parent.hot.render();
       return;
     }
 
     // Run the generic validations
     $timeout(function () {
-      ValidationService.validateRequest(self.request, self.parent.schema).then(function (valid) {
+      ValidationService.validateRequest(self.parent.request, self.parent.schema).then(function (valid) {
         // Render the table to show the error highlights
-        self.hot.render();
+        self.parent.hot.render();
 
         if (!valid) {
           self.validating = 'error';
@@ -340,7 +234,7 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
         }
 
         // Validate server-side
-        var task = self.tasks.edit;
+        var task = self.parent.tasks.edit;
 
         if (!task) {
           console.log('warning: no validate task found');
@@ -348,11 +242,11 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
         }
 
         // First save the request
-        RequestService.saveRequest(self.request).then(function () {
+        RequestService.saveRequest(self.parent.request).then(function () {
           console.log('saved request before validation');
 
           // Complete the task associated with the request
-          TaskService.completeTask(task.name, self.request.requestId).then(function () {
+          TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
             console.log('completed task ' + task.name);
 
             // Clear the cache so that the state reload also pulls a fresh request
@@ -363,8 +257,8 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
               AlertService.add('success', 'Request has been validated successfully');
 
               // The "edit" task will have changed to "submit"
-              TaskService.getTasksForRequest(self.request).then(function (tasks) {
-                self.tasks = tasks;
+              TaskService.getTasksForRequest(self.parent.request).then(function (tasks) {
+                self.parent.tasks = tasks;
               });
             });
           },
@@ -394,7 +288,7 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
       event.stopPropagation();
     }
 
-    var task = self.tasks.submit;
+    var task = self.parent.tasks.submit;
     if (!task) {
       console.log('error approving request: no task');
       return;
@@ -404,24 +298,24 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
 
     // Determine whether the entire request is approved or not
     var point, entireRequestApproved = true;
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      point = self.rows[i];
+    for (var i = 0, len = self.parent.rows.length; i < len; i++) {
+      point = self.parent.rows[i];
 
       if (point.approval && point.approval.approved === false) {
         entireRequestApproved = false;
       }
     }
 
-    self.request.approval.approved = entireRequestApproved;
+    self.parent.request.approval.approved = entireRequestApproved;
 
     // Save the request
-    RequestService.saveRequest(self.request).then(function () {
+    RequestService.saveRequest(self.parent.request).then(function () {
 
       // Complete the task
-      TaskService.completeTask(task.name, self.request.requestId).then(function () {
+      TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
         console.log('completed task ' + task.name);
 
-        var previousStatus = self.request.status;
+        var previousStatus = self.parent.request.status;
 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
@@ -430,7 +324,7 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
           self.submitting = 'success';
 
           // Show a page with information about what happens next
-          $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
+          $state.go('submitted', {id: self.parent.request.requestId, previousStatus: previousStatus});
 
         });
       },
@@ -472,18 +366,18 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
 
       // Mark the point as dirty.
       if (newValue !== oldValue) {
-        console.log('dirty point: ' + self.rows[row].id);
+        console.log('dirty point: ' + self.parent.rows[row].id);
         dirty = true;
-        self.rows[row].dirty = true;
+        self.parent.rows[row].dirty = true;
       }
     }
 
     // If nothing changed, there's nothing to do! Otherwise, save the request.
     if (dirty) {
-      RequestService.saveRequest(self.request).then(function () {
+      RequestService.saveRequest(self.parent.request).then(function () {
         // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
         // revalidated. This is done by sending the "requestModified" signal.
-        if (self.tasks.submit) {
+        if (self.parent.tasks.submit) {
           sendModificationSignal();
         }
       });
@@ -495,15 +389,15 @@ function ApprovalControlsController($state, $modal, $timeout, RequestService, Ta
    * back to the "validate" stage.
    */
   function sendModificationSignal() {
-    var signal = self.signals.requestModified;
+    var signal = self.parent.signals.requestModified;
 
     if (signal) {
       console.log('form modified whilst in submit state: sending signal');
 
       TaskService.sendSignal(signal).then(function () {
         // The "submit" task will have changed back to "edit".
-        TaskService.getTasksForRequest(self.request).then(function (tasks) {
-          self.tasks = tasks;
+        TaskService.getTasksForRequest(self.parent.request).then(function (tasks) {
+          self.parent.tasks = tasks;
         });
       });
     }

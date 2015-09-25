@@ -89,17 +89,27 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
   self.getRows = getRows;
   self.getRowHeaders = getRowHeaders;
   self.getColumns = getColumns;
+  self.activateCategory = activateCategory;
+  self.activateDefaultCategory = activateDefaultCategory;
 
   self.canAssignTask = canAssignTask;
   self.assignTask = assignTask;
   self.assignTaskToCurrentUser = assignTaskToCurrentUser;
+  self.claim = claim;
   self.getAssignee = getAssignee;
   self.isCurrentUserAuthorised = isCurrentUserAuthorised;
   self.isCurrentUserAssigned = isCurrentUserAssigned;
-  self.canEdit = canEdit;
+  self.isCurrentTaskClaimed = isCurrentTaskClaimed;
 
-  self.activateCategory = activateCategory;
-  self.activateDefaultCategory = activateDefaultCategory;
+  self.canEdit = canEdit;
+  self.canValidate = canValidate;
+  self.canSubmit = canSubmit;
+  self.canSplit = canSplit;
+  self.hasErrors = hasErrors;
+  self.getTotalErrors = getTotalErrors;
+  self.getNumValidationErrors = getNumValidationErrors;
+  self.getSelectedPointIds = getSelectedPointIds;
+
   //self.resetSorting = resetSorting;
   self.save = save;
   self.undo = undo;
@@ -111,7 +121,6 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
   self.showHelp = showHelp;
   self.showComments = showComments;
   self.showHistory = showHistory;
-  self.getSelectedPointIds = getSelectedPointIds;
 
   $localStorage.$default({
     lastActiveCategory: {}
@@ -167,7 +176,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
 
           if (hasCheckboxColumn() && prop === 'selected') {
             editable = true;
-          } 
+          }
           else if (hasCommentColumn() && prop.contains('message')) {
             editable = true;
           }
@@ -455,6 +464,18 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
   /**
    *
    */
+  function claim(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    assignTaskToCurrentUser();
+  }
+
+  /**
+   *
+   */
   function getAssignee() {
     var task = self.tasks[Object.keys(self.tasks)[0]];
     return task.assignee;
@@ -482,9 +503,103 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
    *
    * @returns {boolean}
    */
+  function isCurrentTaskClaimed() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+    return TaskService.isTaskClaimed(task);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
   function canEdit() {
     var task = self.tasks[Object.keys(self.tasks)[0]];
     return TaskService.isCurrentUserAuthorised(task) && TaskService.isCurrentUserAssigned(task);
+  }
+
+  /**
+   *
+   */
+  function canValidate() {
+    return self.tasks.edit;
+  }
+
+  /**
+   *
+   */
+  function canSubmit() {
+    return self.tasks.submit;
+  }
+
+  /**
+   *
+   */
+  function canSplit() {
+    return self.hasErrors();
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function hasErrors() {
+    return getNumValidationErrors() > 0 || getNumApprovalRejections() > 0 || getNumConfigurationErrors() > 0;
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  function getTotalErrors() {
+    return getNumValidationErrors() + getNumApprovalRejections() + getNumConfigurationErrors();
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  function getNumValidationErrors() {
+    var n = 0;
+
+    if (self.request.hasOwnProperty('points')) {
+      self.request.points.forEach(function (point) {
+        if (point.hasOwnProperty('errors')) {
+          point.errors.forEach(function (error) {
+            n += error.errors.length;
+          });
+        }
+      });
+    }
+
+    return n;
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  function getNumApprovalRejections() {
+    var n = 0;
+
+    self.rows.forEach(function (point) {
+      if (point.approved && point.approval.approved === false) {
+        n++;
+      }
+    });
+
+    return n;
+  }
+
+  /**
+   *
+   * @returns {number}
+   */
+  function getNumConfigurationErrors() {
+    if (self.request.configurationResult && self.request.configurationResult.errors) {
+      return self.request.configurationResult.errors.length;
+    } else {
+      return 0;
+    }
   }
 
   /**

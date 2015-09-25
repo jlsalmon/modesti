@@ -2,184 +2,55 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:CreationControlsController
- * @description # CreationControlsController Controller of the modesti
+ * @name modesti.controller:CreationController
+ * @description # CreationController
  */
-angular.module('modesti').controller('CreationControlsController', CreationControlsController);
+angular.module('modesti').controller('CreationController', CreationController);
 
-function CreationControlsController($http, $state, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService, ColumnService) {
+function CreationController($scope, $http, $state, $timeout, $modal, RequestService, TaskService, ValidationService, AlertService, ColumnService) {
   var self = this;
-
-  self.parent = {};
-  self.request = {};
-  self.rows = {};
-  self.tasks = {};
-  self.signals = {};
-  self.hot = {};
+  self.parent = $scope.$parent.ctrl;
 
   self.validating = undefined;
   self.submitting = undefined;
   self.splitting = undefined;
 
   self.init = init;
-  self.canEdit = canEdit;
-  self.isCurrentUserAssigned = isCurrentUserAssigned;
-  self.getAssignee = getAssignee;
+
   self.validate = validate;
   self.submit = submit;
   self.split = split;
-  self.canValidate = canValidate;
-  self.canSubmit = canSubmit;
-  self.canSplit = canSplit;
-  self.hasErrors = hasErrors;
-  self.getTotalErrors = getTotalErrors;
-  self.getNumValidationErrors = getNumValidationErrors;
 
-
+  init();
 
   /**
    *
    */
-  function init(parent) {
-    self.parent = parent;
-    self.request = parent.request;
-    self.rows = parent.rows;
-    self.tasks = parent.tasks;
-    self.signals = parent.signals;
-    self.hot = parent.hot;
+  function init() {
 
     // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
     // state and the user makes a modification
-    self.hot.addHook('afterChange', afterChange);
+    self.parent.hot.addHook('afterChange', afterChange);
 
     // Make sure that only datasource group which matches the point type is editable.
-    self.parent.hot.updateSettings( {
-      cells: function (row) {
-        var cellProperties = {};
+//     self.parent.hot.updateSettings( {
+//       cells: function (row) {
+//         var cellProperties = {};
 
-        // If this is a datasource group and it does not match the point type, make it read only.
-        self.parent.schema.datasources.forEach(function (datasource) {
-          if (datasource.id === self.parent.activeCategory.id) {
-            var pointType = self.parent.hot.getDataAtRowProp(row, 'properties.pointType');
+//         // If this is a datasource group and it does not match the point type, make it read only.
+//         self.parent.schema.datasources.forEach(function (datasource) {
+//           if (datasource.id === self.parent.activeCategory.id) {
+//             var pointType = self.parent.hot.getDataAtRowProp(row, 'properties.pointType');
 
-            if (pointType !== datasource.id.toUpperCase()) {
-              cellProperties.readOnly = true;
-            }
-          }
-        });
+//             if (pointType !== datasource.id.toUpperCase()) {
+//               cellProperties.readOnly = true;
+//             }
+//           }
+//         });
 
-        return cellProperties;
-      }
-    });
-
-    // Show an alert if the validation failed.
-    // TODO move this to a promise callback in the validate() method
-    if (self.getNumValidationErrors() > 0) {
-      self.validating = 'error';
-      AlertService.add('danger', 'Request failed validation with ' + self.getNumValidationErrors() + ' errors');
-    }
-    //else {
-    //  self.validating = 'success';
-    //  AlertService.add('success', 'Request has been validated successfully');
-    //}
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function canEdit() {
-    return self.parent.canEdit();
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentUserAssigned() {
-    return self.parent.isCurrentUserAssigned();
-  }
-
-  /**
-   *
-   */
-  function getAssignee() {
-    return self.parent.getAssignee();
-  }
-
-  /**
-   *
-   */
-  function canValidate() {
-    return self.tasks.edit;
-  }
-
-  /**
-   *
-   */
-  function canSubmit() {
-    return self.tasks.submit;
-  }
-
-  /**
-   *
-   */
-  function canSplit() {
-    return self.hasErrors();
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function hasErrors() {
-    return getNumValidationErrors() > 0 || getNumApprovalRejections() > 0;
-  }
-
-  /**
-   *
-   * @returns {number}
-   */
-  function getTotalErrors() {
-    return getNumValidationErrors() + getNumApprovalRejections();
-  }
-
-  /**
-   *
-   * @returns {number}
-   */
-  function getNumValidationErrors() {
-    var n = 0;
-
-    if (self.request.hasOwnProperty('points')) {
-      self.request.points.forEach(function (point) {
-        if (point.hasOwnProperty('errors')) {
-          point.errors.forEach(function (error) {
-            n += error.errors.length;
-          });
-        }
-      });
-    }
-
-    return n;
-  }
-
-  /**
-   *
-   * @returns {number}
-   */
-  function getNumApprovalRejections() {
-    var n = 0;
-
-    for (var i in self.rows) {
-      var point = self.rows[i];
-
-      if (point.approved && point.approval.approved === false) {
-        n++;
-      }
-    }
-
-    return n;
+//         return cellProperties;
+//       }
+//     });
   }
 
   /**
@@ -195,9 +66,9 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     AlertService.clear();
 
     $timeout(function () {
-      ValidationService.validateRequest(self.request, self.parent.schema).then(function (valid) {
+      ValidationService.validateRequest(self.parent.request, self.parent.schema).then(function (valid) {
         // Render the table to show the error highlights
-        self.hot.render();
+        self.parent.hot.render();
 
         if (!valid) {
           self.validating = 'error';
@@ -206,7 +77,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         }
 
         // Validate server-side
-        var task = self.tasks.edit;
+        var task = self.parent.tasks.edit;
 
         if (!task) {
           console.log('warning: no validate task found');
@@ -214,18 +85,31 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         }
 
         // First save the request
-        RequestService.saveRequest(self.request).then(function () {
+        RequestService.saveRequest(self.parent.request).then(function () {
           console.log('saved request before validation');
 
           // Complete the task associated with the request
-          TaskService.completeTask(task.name, self.request.requestId).then(function () {
+          TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
             console.log('completed task ' + task.name);
 
             // Clear the cache so that the state reload also pulls a fresh request
             RequestService.clearCache();
 
             $state.reload().then(function () {
+              // Get the request once again from the cache
+              RequestService.getRequest(self.parent.request.requestId).then(function (request) {
+                self.parent.request = request;
 
+                // Show an alert if the validation failed.
+                if (self.parent.getNumValidationErrors() > 0) {
+                  self.validating = 'error';
+                  AlertService.add('danger', 'Request failed validation with ' + self.parent.getNumValidationErrors() + ' errors');
+                }
+                else {
+                  self.validating = 'success';
+                  AlertService.add('success', 'Request has been validated successfully');
+                }
+              });
             });
           },
 
@@ -253,7 +137,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       event.stopPropagation();
     }
 
-    var task = self.tasks.submit;
+    var task = self.parent.tasks.submit;
 
     if (!task) {
       console.log('warning: no submit task found');
@@ -264,10 +148,10 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     self.submitting = 'started';
 
     // Complete the task associated with the request
-    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+    TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
       console.log('completed task ' + task.name);
 
-      var previousStatus = self.request.status;
+      var previousStatus = self.parent.request.status;
 
       // Clear the cache so that the state reload also pulls a fresh request
       RequestService.clearCache();
@@ -276,13 +160,13 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
         self.submitting = 'success';
 
         // If the request is now FOR_CONFIGURATION, no need to go away from the request page
-        if (self.request.status === 'FOR_CONFIGURATION') {
+        if (self.parent.request.status === 'FOR_CONFIGURATION') {
           AlertService.add('info', 'Your request has been submitted successfully and is ready to be configured.');
         }
 
         // If the request is in any other state, show a page with information about what happens next
         else {
-          $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
+          $state.go('submitted', {id: self.parent.request.requestId, previousStatus: previousStatus});
         }
       });
     },
@@ -302,7 +186,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       event.stopPropagation();
     }
 
-    var signal = self.signals.splitRequest;
+    var signal = self.parent.signals.splitRequest;
     if (!signal) {
       console.log('error splitting request: no signal');
       return;
@@ -324,7 +208,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
           return selectedPointIds;
         },
         rows: function () {
-          return self.rows;
+          return self.parent.rows;
         }
       }
     });
@@ -343,7 +227,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
 
         $state.reload().then(function () {
           self.splitting = 'success';
-          AlertService.add('info', 'Request <b>' + self.request.requestId + '</b> was successfully split.');
+          AlertService.add('info', 'Request <b>' + self.parent.request.requestId + '</b> was successfully split.');
         });
       },
 
@@ -370,7 +254,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
     }
 
     // Make sure the point IDs are consecutive
-    self.rows.forEach(function (row, i) {
+    self.parent.rows.forEach(function (row, i) {
       row.id = i + 1;
     });
 
@@ -385,14 +269,14 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
 
       // Mark the point as dirty.
       if (newValue !== oldValue) {
-        console.log('dirty point: ' + self.rows[row].id);
+        console.log('dirty point: ' + self.parent.rows[row].id);
         dirty = true;
-        self.rows[row].dirty = true;
+        self.parent.rows[row].dirty = true;
       }
 
       // If the value was cleared, make sure any other properties of the object are also cleared.
       if (newValue === undefined || newValue === null || newValue === '') {
-        var point = self.hot.getSourceDataAtRow(row);
+        var point = self.parent.hot.getSourceDataAtRow(row);
         var propName = property.split('.')[1];
 
         var prop = point.properties[propName];
@@ -410,10 +294,10 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
 
     // If nothing changed, there's nothing to do! Otherwise, save the request.
     if (dirty) {
-      RequestService.saveRequest(self.request).then(function () {
+      RequestService.saveRequest(self.parent.request).then(function () {
         // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
         // revalidated. This is done by sending the "requestModified" signal.
-        if (self.tasks.submit) {
+        if (self.parent.tasks.submit) {
           sendModificationSignal();
         }
       });
@@ -435,7 +319,7 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
       return;
     }
 
-    var point = self.hot.getSourceDataAtRow(row);
+    var point = self.parent.hot.getSourceDataAtRow(row);
     // get the outer object i.e. properties.location.value -> location
     var prop = property.split('.')[1];
     var field = getField(prop);
@@ -515,11 +399,11 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
             var dependentProp = param.split('.')[0];
 
             if (thisProp === dependentProp) {
-              ColumnService.getOptions(field, self.hot, row, '').then(function (results) {
+              ColumnService.getOptions(field, self.parent.hot, row, '').then(function (results) {
                 console.log('got ' + results.length + ' results for dependent field ' + field.id + ' for ' + thisProp);
 
                 if (results.length === 1) {
-                  self.hot.setDataAtRowProp(row, 'properties.' + field.id + '.value', results[0].text);
+                  self.parent.hot.setDataAtRowProp(row, 'properties.' + field.id + '.value', results[0].text);
                 }
               });
             }
@@ -561,15 +445,15 @@ function CreationControlsController($http, $state, $timeout, $modal, RequestServ
    * back to the "validate" stage.
    */
   function sendModificationSignal() {
-    var signal = self.signals.requestModified;
+    var signal = self.parent.signals.requestModified;
 
     if (signal) {
       console.log('form modified whilst in submit state: sending signal');
 
       TaskService.sendSignal(signal).then(function () {
         // The "submit" task will have changed back to "edit".
-        TaskService.getTasksForRequest(self.request).then(function (tasks) {
-          self.tasks = tasks;
+        TaskService.getTasksForRequest(self.parent.request).then(function (tasks) {
+          self.parent.tasks = tasks;
         });
       });
     }

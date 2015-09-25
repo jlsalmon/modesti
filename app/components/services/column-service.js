@@ -30,6 +30,8 @@ function ColumnService($http, $translate) {
     };
 
     if (authorised) {
+      editable = true;
+      
       // Editable given as simple boolean
       if (field.editable === true || field.editable === false) {
         editable = field.editable;

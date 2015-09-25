@@ -1,186 +1,74 @@
-<accordion class="accordion">
-  <accordion-group is-open="ctrl.errorLogOpen" is-disabled="ctrl.hasErrors() == 0">
-    <accordion-heading>
+<div class="row">
 
-      <div class="row">
+  <div class="col-md-4">
+    <span class="label pull-left"
+          ng-class="ctrl.parent.hasErrors() > 0 ? 'bg-red' : 'bg-gray'"
+          tooltip="{{ctrl.parent.getTotalErrors()}} problems(s) found. Click to view details."
+          tooltip-placement="right">
+      <i class="fa fa-fw fa-exclamation-circle"></i> {{ctrl.parent.getTotalErrors()}}
+    </span>
+  </div>
 
-        <div class="col-md-4">
-          <span class="label pull-left"
-                ng-class="ctrl.hasErrors() > 0 ? 'bg-red' : 'bg-gray'"
-                tooltip="{{ctrl.getTotalErrors()}} problems(s) found. Click to view details."
-                tooltip-placement="right">
-            <i class="fa fa-fw fa-exclamation-circle"></i> {{ctrl.getTotalErrors()}}
-          </span>
-        </div>
+  <div class="col-md-4 pull-right">
 
-        <!--<style>-->
-          <!--/* Copyright 2013-2015 etc Chris Tabor. Licensed under MIT. */-->
-          <!--.flexer, .progress-indicator { display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex; }-->
-          <!--.no-flexer, .progress-indicator.stacked { display: block; }-->
-          <!--.no-flexer-element { -ms-flex: 0; -webkit-flex: 0; -moz-flex: 0; flex: 0; }-->
-          <!--.flexer-element, .progress-indicator > li { -ms-flex: 1; -webkit-flex: 1; -moz-flex: 1; flex: 1; }-->
-          <!--.progress-indicator { margin: 0; padding: 0; font-size: 80%; text-transform: uppercase; margin-bottom: 0; margin-top: -8px; }-->
-          <!--.progress-indicator > li { list-style: none; text-align: center; width: auto; padding: 0; margin: 0; position: relative; text-overflow: ellipsis; color: #bbbbbb; display: block; }-->
-          <!--.progress-indicator > li:hover { color: #6e6e6e; }-->
-          <!--.progress-indicator > li .bubble { border-radius: 1000px; width: 20px; height: 20px; background-color: #bbbbbb; display: block; margin: 0 auto 0.5em auto; border-bottom: 1px solid #888888; }-->
-          <!--.progress-indicator > li .bubble:before, .progress-indicator > li .bubble:after { display: block; position: absolute; top: 9px; width: 100%; height: 3px; content: ''; background-color: #bbbbbb; }-->
-          <!--.progress-indicator > li .bubble:before { left: 0; }-->
-          <!--.progress-indicator > li .bubble:after { right: 0; }-->
-          <!--.progress-indicator > li.completed { color: green; }-->
-          <!--.progress-indicator > li.completed .bubble { background-color: #65d074; color: #65d074; border-color: #247830; }-->
-          <!--.progress-indicator > li.completed .bubble:before, .progress-indicator > li.completed .bubble:after { background-color: #65d074; border-color: #247830; }-->
-          <!--.progress-indicator > li a:hover .bubble { background-color: #5671d0; color: #5671d0; border-color: #1f306e; }-->
-          <!--.progress-indicator > li a:hover .bubble:before, .progress-indicator > li a:hover .bubble:after { background-color: #5671d0; border-color: #1f306e; }-->
-          <!--.progress-indicator > li.danger .bubble { background-color: #d3140f; color: #d3140f; border-color: #440605; }-->
-          <!--.progress-indicator > li.danger .bubble:before, .progress-indicator > li.danger .bubble:after { background-color: #d3140f; border-color: #440605; }-->
-          <!--.progress-indicator > li.warning .bubble { background-color: #edb10a; color: #edb10a; border-color: #5a4304; }-->
-          <!--.progress-indicator > li.warning .bubble:before, .progress-indicator > li.warning .bubble:after { background-color: #edb10a; border-color: #5a4304; }-->
-          <!--.progress-indicator > li.info .bubble { background-color: #5b32d6; color: #5b32d6; border-color: #25135d; }-->
-          <!--.progress-indicator > li.info .bubble:before, .progress-indicator > li.info .bubble:after { background-color: #5b32d6; border-color: #25135d; }-->
-          <!--.progress-indicator.stacked > li { text-indent: -10px; text-align: center; display: block; }-->
-          <!--.progress-indicator.stacked > li .bubble:before, .progress-indicator.stacked > li .bubble:after { left: 50%; margin-left: -1.5px; width: 3px; height: 100%; }-->
-          <!--.progress-indicator.stacked .stacked-text { position: relative; z-index: 10; top: 0; margin-left: 60% !important; width: 45% !important; display: inline-block; text-align: left; line-height: 1.2em; }-->
-          <!--.progress-indicator.stacked > li a { border: none; }-->
-          <!--@media handheld, screen and (max-width: 400px) { .progress-indicator { font-size: 60%; } }-->
+    <!-- Request is assigned to us -->
+    <div ng-if="ctrl.parent.canEdit()" class="pull-right">
+      <div class="btn-group">
+        <!-- Button to split the request -->
+        <button class="btn btn-danger"
+                ng-click="ctrl.split($event)"
+                ng-disabled="!ctrl.parent.canSplit()"
+                tooltip-append-to-body="true"
+                tooltip="{{'SPLIT_SELECTED'|translate}}">
 
-        <!--</style>-->
-
-        <!--<div class="col-md-4">-->
-          <!--<ul class="progress-indicator">-->
-            <!--<li ng-class="{'completed' : ctrl.request.status === 'FOR_CORRECTION', 'info': ctrl.request.status === 'FOR_CORRECTION'}">-->
-              <!--<span class="bubble"></span>-->
-              <!--Definition-->
-            <!--</li>-->
-            <!--<li ng-class="{'completed' : ctrl.request.status === 'FOR_APPROVAL', 'info': ctrl.request.status === 'FOR_APPROVAL'}">-->
-              <!--<span class="bubble"></span>-->
-              <!--Approval-->
-            <!--</li>-->
-            <!--<li ng-class="{'completed' : ctrl.request.status === 'FOR_ADDRESSING', 'info': ctrl.request.status === 'FOR_ADDRESSING'}">-->
-              <!--<span class="bubble"></span>-->
-              <!--Addressing-->
-            <!--</li>-->
-            <!--<li ng-class="{'completed' : ctrl.request.status === 'FOR_CABLING', 'info': ctrl.request.status === 'FOR_CABLING'}">-->
-              <!--<span class="bubble"></span>-->
-              <!--Cabling-->
-            <!--</li>-->
-            <!--<li ng-class="{'completed' : ctrl.request.status === 'FOR_CONFIGURATION', 'info': ctrl.request.status === 'FOR_CONFIGURATION'}">-->
-              <!--<span class="bubble"></span>-->
-              <!--Configuration-->
-            <!--</li>-->
-            <!--<li ng-class="{'completed' : ctrl.request.status === 'FOR_TESTING', 'info': ctrl.request.status === 'FOR_TESTING'}">-->
-              <!--<span class="bubble"></span>-->
-              <!--Testing-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</div>-->
-
-        <div class="col-md-4 pull-right">
-
-          <!-- Request is assigned to us -->
-          <div ng-if="ctrl.canEdit()" class="pull-right">
-            <div class="btn-group">
-              <!-- Button to split the request -->
-              <button class="btn btn-danger"
-                      ng-click="ctrl.split($event)"
-                      ng-disabled="!ctrl.canSplit()"
-                      tooltip-append-to-body="true"
-                      tooltip="{{'SPLIT_SELECTED'|translate}}">
-
-                <!--Show icon based on the loading state-->
-                <i class="fa fa-fw fa-code-fork"            ng-show="ctrl.splitting == undefined"></i>
-                <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.splitting == 'started'"></i>
-                <i class="fa fa-fw fa-code-fork"            ng-show="ctrl.splitting == 'success'"></i>
-                <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.splitting == 'error'"></i>
-              </button>
-            </div>
-
-            <div class="btn-group">
-              <!--Button to validate the request-->
-              <button class="btn btn-success"
-                      ng-click="ctrl.validate($event)"
-                      ng-disabled="!ctrl.canValidate()"
-                      tooltip-append-to-body="true"
-                      tooltip="{{'VALIDATE_REQUEST'|translate}}">
-
-                <!--Show icon based on the loading state-->
-                <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
-                <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
-                <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
-                <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
-                {{'VALIDATE'|translate}}
-              </button>
-            </div>
-
-            <div class="btn-group">
-              <!-- Button to submit the request -->
-              <button class="btn btn-primary"
-                      ng-click="ctrl.submit($event)"
-                      ng-disabled="!ctrl.canSubmit()"
-                      tooltip-append-to-body="true"
-                      tooltip="{{'SUBMIT_REQUEST'|translate}}">
-
-                <!--Show icon based on the loading state-->
-                <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
-                <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
-                <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
-                <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
-                {{'SUBMIT'|translate}}
-              </button>
-            </div>
-          </div>
-
-          <!-- Request is assigned to someone else -->
-          <div ng-if="!ctrl.isCurrentUserAssigned()"  class="pull-right">
-            <div>Request assigned to: <a href="#/users/{{ctrl.getAssignee()}}" ng-click="$event.stopPropagation();">{{ctrl.getAssignee()}}</a></div>
-          </div>
-
-        </div>
+          <!--Show icon based on the loading state-->
+          <i class="fa fa-fw fa-code-fork"            ng-show="ctrl.splitting == undefined"></i>
+          <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.splitting == 'started'"></i>
+          <i class="fa fa-fw fa-code-fork"            ng-show="ctrl.splitting == 'success'"></i>
+          <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.splitting == 'error'"></i>
+        </button>
       </div>
 
-    </accordion-heading>
+      <div class="btn-group">
+        <!--Button to validate the request-->
+        <button class="btn btn-success"
+                ng-click="ctrl.validate($event)"
+                ng-disabled="!ctrl.parent.canValidate()"
+                tooltip-append-to-body="true"
+                tooltip="{{'VALIDATE_REQUEST'|translate}}">
 
+          <!--Show icon based on the loading state-->
+          <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
+          <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
+          <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
+          <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
+          {{'VALIDATE'|translate}}
+        </button>
+      </div>
 
-    <div ng-if="ctrl.getNumValidationErrors() > 0">
-      <p>
-        The request has failed validation. Please review the following lines which explain the validation failures. The
-        request should be modified before revalidation.
-      </p>
+      <div class="btn-group">
+        <!-- Button to submit the request -->
+        <button class="btn btn-primary"
+                ng-click="ctrl.submit($event)"
+                ng-disabled="!ctrl.parent.canSubmit()"
+                tooltip-append-to-body="true"
+                tooltip="{{'SUBMIT_REQUEST'|translate}}">
 
-      <p>
-
-        <div ng-repeat="point in ctrl.rows track by point.id">
-          <div ng-repeat="error in point.errors track by $index">
-            <div ng-repeat="error in error.errors">
-              <i class="fa fa-fw fa-exclamation-circle text-danger"></i> Line {{point.id}}: {{error}}
-            </div>
-          </div>
-        </div>
-
-      </p>
-
-
-    </div>
-
-    <div ng-if="ctrl.request.approval.approved === false">
-      <p>
-        The request has been rejected by an operator. Please review the following lines which show the reason for the
-        rejection. The request should be modified according to the operator comments before resubmission.
-      </p>
-
-      <div ng-repeat="point in ctrl.rows track by point.id">
-          <span ng-if="point.approval.approved === false">
-            <i class="fa fa-fw fa-exclamation-circle text-danger"></i>
-            Line {{point.id}}: Point rejected by operator. Reason: <strong>{{point.approval.message}}</strong>
-          </span>
+          <!--Show icon based on the loading state-->
+          <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
+          <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
+          <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
+          <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
+          {{'SUBMIT'|translate}}
+        </button>
       </div>
     </div>
 
-    <div ng-if="ctrl.request.configurationResult">
-      <div ng-repeat="error in ctrl.request.configurationResult.errors track by $index">
-        <i class="fa fa-fw fa-exclamation-circle text-danger"></i> {{error}}
-      </div>
+    <!-- Request is assigned to someone else -->
+    <div ng-if="!ctrl.parent.isCurrentUserAssigned()"  class="pull-right">
+      <div>Request assigned to: <a href="#/users/{{ctrl.parent.getAssignee()}}" ng-click="$event.stopPropagation();">{{ctrl.parent.getAssignee()}}</a></div>
     </div>
 
+  </div>
+</div>
 
-  </accordion-group>
-</accordion>

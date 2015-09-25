@@ -2,82 +2,21 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:CablingControlsController
- * @description # CablingControlsController Controller of the modesti
+ * @name modesti.controller:CablingController
+ * @description # CablingController Controller of the modesti
  */
-angular.module('modesti').controller('CablingControlsController', CablingControlsController);
+angular.module('modesti').controller('CablingController', CablingController);
 
-function CablingControlsController($state, RequestService, TaskService) {
+function CablingController($scope, $state, RequestService, TaskService) {
   var self = this;
-
-  self.parent = {};
-  self.request = {};
-  self.tasks = {};
+  self.parent = $scope.$parent.ctrl;
 
   self.submitting = undefined;
   self.cabled = true;
 
-  self.init = init;
-  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
-  self.isCurrentTaskClaimed = isCurrentTaskClaimed;
-  self.isCurrentUserAssigned = isCurrentUserAssigned;
-  self.getCurrentAssignee = getCurrentAssignee;
-  self.claim = claim;
   self.cableSelectedPoints = cableSelectedPoints;
   self.rejectSelectedPoints = rejectSelectedPoints;
   self.submit = submit;
-
-  /**
-   *
-   */
-  function init(parent) {
-    self.parent = parent;
-    self.request = parent.request;
-    self.tasks = parent.tasks;
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentUserAuthorised() {
-    return TaskService.isCurrentUserAuthorised(self.tasks.cable);
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentTaskClaimed() {
-    return TaskService.isTaskClaimed(self.tasks.cable);
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentUserAssigned() {
-    return TaskService.isCurrentUserAssigned(self.tasks.cable);
-  }
-
-  /**
-   *
-   * @returns {*}
-   */
-  function getCurrentAssignee() {
-    return self.tasks.cable.assignee;
-  }
-
-  /**
-   *
-   */
-  function claim() {
-    TaskService.claimTask(self.tasks.cable.name, self.request.requestId).then(function (task) {
-      console.log('claimed task successfully');
-      self.tasks.cable = task;
-      self.parent.activateDefaultCategory();
-    });
-  }
 
   /**
    *
@@ -112,7 +51,7 @@ function CablingControlsController($state, RequestService, TaskService) {
       event.stopPropagation();
     }
 
-    var task = self.tasks.cable;
+    var task = self.parent.tasks.cable;
     if (!task) {
       console.log('error cabling request: no task');
       return;
@@ -120,15 +59,15 @@ function CablingControlsController($state, RequestService, TaskService) {
 
     self.submitting = 'started';
 
-    self.request.cabling = {cabled: self.cabled, message: ''};
+    self.parent.request.cabling = {cabled: self.cabled, message: ''};
 
     // Save the request
-    RequestService.saveRequest(self.request).then(function () {
+    RequestService.saveRequest(self.parent.request).then(function () {
 
-      TaskService.completeTask(task.name, self.request.requestId).then(function () {
+      TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
         console.log('completed task ' + task.name);
 
-        var previousStatus = self.request.status;
+        var previousStatus = self.parent.request.status;
 
         // Clear the cache so that the state reload also pulls a fresh request
         RequestService.clearCache();
@@ -137,7 +76,7 @@ function CablingControlsController($state, RequestService, TaskService) {
           self.submitting = 'success';
 
           // Show a page with information about what happens next
-          $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
+          $state.go('submitted', {id: self.parent.request.requestId, previousStatus: previousStatus});
         });
       },
 

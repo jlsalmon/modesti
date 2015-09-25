@@ -11,13 +11,13 @@
 <div class="pull-right">
 
   <!-- Only show controls when we have permission to cable -->
-  <div ng-if="ctrl.isCurrentUserAuthorised()">
+  <div ng-if="ctrl.parent.isCurrentUserAuthorised()">
 
     <!-- Request has been claimed -->
-    <div ng-if="ctrl.isCurrentTaskClaimed()">
+    <div ng-if="ctrl.parent.isCurrentTaskClaimed()">
 
       <!-- Request has been claimed by us -->
-      <div ng-if="ctrl.isCurrentUserAssigned()">
+      <div ng-if="ctrl.parent.isCurrentUserAssigned()">
 
         <div class="btn-group">
           <button class="btn btn-success" ng-click="ctrl.cableSelectedPoints($event)" translate>CABLE_SELECTED</button>
@@ -46,17 +46,17 @@
       </div>
 
       <!-- Request is assigned to someone else -->
-      <div ng-if="!ctrl.isCurrentUserAssigned()">
-        <div>Request assigned to: <a href="#/users/{{ctrl.getCurrentAssignee()}}" ng-click="$event.stopPropagation();">{{ctrl.getCurrentAssignee()}}</a></div>
+      <div ng-if="!ctrl.parent.isCurrentUserAssigned()">
+        <div>Request assigned to: <a href="#/users/{{ctrl.parent.getCurrentAssignee()}}" ng-click="$event.stopPropagation();">{{ctrl.parent.getCurrentAssignee()}}</a></div>
       </div>
 
     </div>
 
     <!-- Request is unclaimed -->
-    <div ng-if="!ctrl.isCurrentTaskClaimed()">
+    <div ng-if="!ctrl.parent.isCurrentTaskClaimed()">
       <div class="btn-group">
         <button class="btn btn-primary"
-                ng-click="ctrl.claim($event)">
+                ng-click="ctrl.parent.claim($event)">
           Begin cabling
         </button>
       </div>

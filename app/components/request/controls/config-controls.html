@@ -1,9 +1,9 @@
 <style>
   div.progressbar {
     display: inline-block;
-    position: absolute;
-    right: 150px;
-    top: 15px;
+    /*position: absolute;*/
+    /*right: 150px;*/
+    /*top: 15px;*/
   }
 
   div.progressbar .action {
@@ -18,34 +18,77 @@
     display: inline-block; */
     width: 200px;
     background-color: #ccc;
+    margin-bottom: 0;
   }
 </style>
 
-<div ng-if="ctrl.isCurrentUserOwner()">
+<div class="row">
 
-  <div class="progressbar" ng-if="ctrl.progress">
-    <span class="action pull-left">
-      <i ng-if="ctrl.progress.action">{{ctrl.progress.action}}</i>
-      <i ng-if="ctrl.progress.progress">({{ctrl.progress.progress}}%)</i>
+  <div class="col-md-3">
+    <span class="label pull-left"
+          ng-class="ctrl.parent.hasErrors() > 0 ? 'bg-red' : 'bg-gray'"
+          tooltip="{{ctrl.parent.getTotalErrors()}} problems(s) found. Click to view details."
+          tooltip-placement="right">
+      <i class="fa fa-fw fa-exclamation-circle"></i> {{ctrl.parent.getTotalErrors()}}
     </span>
-
-    <progressbar class="progress-striped active" max="100" value="ctrl.progress.progress"></progressbar>
   </div>
 
-  <div class="btn-group pull-right">
+  <div class="col-md-9">
+    <div ng-if="ctrl.parent.isCurrentUserAuthorised()" class="pull-right">
 
-    <button class="btn btn-primary"
-            ng-click="ctrl.configure($event)"
-            tooltip-append-to-body="true"
-            tooltip="Configure request"> <!--tooltip="{{'CONFIGURE_REQUEST'|translate}}">-->
+      <!-- Request has been claimed -->
+      <div ng-if="ctrl.parent.isCurrentTaskClaimed()">
 
-      <!--Show icon based on the loading state-->
-      <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == undefined"></i>
-      <i class="fa fa-fw fa-spin fa-cog" ng-show="ctrl.configuring == 'started'"></i>
-      <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == 'success'"></i>
-      <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.configuring == 'error'"></i>
-      Configure <!--{{'CONFIGURE'|translate}}-->
-    </button>
+        <!-- Request has been claimed by us -->
+        <div ng-if="ctrl.parent.isCurrentUserAssigned()">
+
+          <div class="progressbar" ng-if="ctrl.progress">
+            <span class="action pull-left">
+              <i ng-if="ctrl.progress.action">{{ctrl.progress.action}}</i>
+              <i ng-if="ctrl.progress.progress">({{ctrl.progress.progress}}%)</i>
+            </span>
+
+            <progressbar class="progress-striped active" max="100" value="ctrl.progress.progress"></progressbar>
+          </div>
+
+          <div class="btn-group pull-right">
+
+            <button class="btn btn-primary"
+                    ng-click="ctrl.configure($event)"
+                    tooltip-append-to-body="true"
+                    tooltip="Configure request"> <!--tooltip="{{'CONFIGURE_REQUEST'|translate}}">-->
+
+              <!--Show icon based on the loading state-->
+              <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == undefined"></i>
+              <i class="fa fa-fw fa-spin fa-cog" ng-show="ctrl.configuring == 'started'"></i>
+              <i class="fa fa-fw fa-cog" ng-show="ctrl.configuring == 'success'"></i>
+              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.configuring == 'error'"></i>
+              Configure <!--{{'CONFIGURE'|translate}}-->
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Request is assigned to someone else -->
+        <div ng-if="!ctrl.parent.isCurrentUserAssigned()">
+          <div>
+            Request assigned to:
+            <a href="#/users/{{ctrl.parent.getCurrentAssignee()}}" ng-click="$event.stopPropagation();">
+              {{ctrl.parent.getCurrentAssignee()}}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Request is unclaimed -->
+      <div ng-if="!ctrl.parent.isCurrentTaskClaimed()">
+        <div class="btn-group">
+          <button class="btn btn-primary"
+                  ng-click="ctrl.parent.claim($event)">
+            Claim configuration responsibility
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-
 </div>

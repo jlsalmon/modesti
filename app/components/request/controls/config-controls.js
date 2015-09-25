@@ -2,38 +2,19 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:ConfigControlsController
- * @description # ConfigControlsController Controller of the modesti
+ * @name modesti.controller:ConfigController
+ * @description # ConfigController Controller of the modesti
  */
-angular.module('modesti').controller('ConfigControlsController', ConfigControlsController);
+angular.module('modesti').controller('ConfigController', ConfigController);
 
-function ConfigControlsController($state, $http, $timeout, RequestService, TaskService, AlertService) {
+function ConfigController($scope, $state, $http, $timeout, RequestService, TaskService, AlertService) {
   var self = this;
+  self.parent = $scope.$parent.ctrl;
 
-  self.request = {};
-  self.tasks = {};
   self.progress = undefined;
   self.configuring = undefined;
 
-  self.init = init;
-  self.isCurrentUserOwner = isCurrentUserOwner;
   self.configure = configure;
-
-  /**
-   *
-   */
-  function init(parent) {
-    self.request = parent.request;
-    self.tasks = parent.tasks;
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentUserOwner() {
-    return RequestService.isCurrentUserOwner(self.request);
-  }
 
   /**
    *
@@ -44,7 +25,7 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
       event.stopPropagation();
     }
 
-    var task = self.tasks.configure;
+    var task = self.parent.tasks.configure;
     if (!task) {
       console.log('error configuring request: no task');
       return;
@@ -56,16 +37,27 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
     getProgress();
 
     // Complete the task
-    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+    TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
       console.log('completed task ' + task.name);
 
       // Clear the cache so that the state reload also pulls a fresh request
       RequestService.clearCache();
 
       $state.reload().then(function() {
-        self.configuring = 'success';
+        // Get the request once again from the cache
+        RequestService.getRequest(self.parent.request.requestId).then(function (request) {
+          self.parent.request = request;
 
-        AlertService.add('info', 'Your request has been configured successfully.');
+          // Show an alert if the configuration failed.
+          if (self.parent.request.configurationResult && self.parent.request.configurationResult.success === false) {
+            self.configuring = 'error';
+            AlertService.add('danger', 'Configuration failed, please see error log for details.');
+          }
+          else {
+            self.configuring = 'success';
+            AlertService.add('success', 'Request has been configured successfully.');
+          }
+        });
       });
     },
 
@@ -82,7 +74,7 @@ function ConfigControlsController($state, $http, $timeout, RequestService, TaskS
   function getProgress() {
     console.log('checking progress');
 
-    $http.get(BACKEND_BASE_URL + '/requests/' + self.request.requestId + '/progress').then(function (response) {
+    $http.get(BACKEND_BASE_URL + '/requests/' + self.parent.request.requestId + '/progress').then(function (response) {
       if (response.data) {
         self.progress = response.data;
       }
