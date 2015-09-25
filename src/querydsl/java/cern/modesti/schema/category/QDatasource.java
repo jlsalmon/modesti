@@ -25,10 +25,7 @@ public class QDatasource extends BeanPath<Datasource> {
     public final ListPath<Constraint, SimplePath<Constraint>> constraints = _super.constraints;
 
     //inherited
-    public final ListPath<String, StringPath> disabledStates = _super.disabledStates;
-
-    //inherited
-    public final ListPath<String, StringPath> editableStates = _super.editableStates;
+    public final SimplePath<Object> editable = _super.editable;
 
     //inherited
     public final ListPath<String, StringPath> excludes = _super.excludes;
