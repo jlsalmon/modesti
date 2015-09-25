@@ -4,6 +4,7 @@ import cern.modesti.plugin.RequestProvider;
 import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
+import cern.modesti.workflow.result.ConfigurationResult;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.delegate.DelegateExecution;
@@ -39,8 +40,15 @@ public class ConfigurationService {
     }
 
     RequestProvider provider = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
-
     boolean result = provider.configure(request);
+
+    // Set a configuration result if the plugin didn't do it
+    if (request.getConfigurationResult() == null) {
+      ConfigurationResult configurationResult = new ConfigurationResult();
+      configurationResult.setSuccess(result);
+      request.setConfigurationResult(configurationResult);
+    }
+
     execution.setVariable("configured", result);
 
     // Store the request
