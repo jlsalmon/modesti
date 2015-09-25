@@ -155,11 +155,15 @@
       <!--</button>-->
 
       <!-- Assignment button -->
-      <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.assignTask()" tooltip-append-to-body="true" tooltip="Set Assignee" style="margin-left: 20px;">
+      <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.assignTask()" ng-disabled="!ctrl.isCurrentUserAuthorised()" tooltip-append-to-body="true" tooltip="Set Assignee" style="margin-left: 20px;">
         <i class="fa fa-fw fa-user"></i>
         Assignee:
         <span ng-if="!ctrl.getAssignee()">none</span>
         <span ng-if="ctrl.getAssignee()"><a href="">{{ctrl.getAssignee()}}</a></span>
+      </button>
+
+      <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.assignTaskToCurrentUser()" ng-if="ctrl.isCurrentUserAuthorised()">
+        Assign to me
       </button>
 
       <div class="pull-right">
