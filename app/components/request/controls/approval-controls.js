@@ -33,17 +33,16 @@ function ApprovalController($scope, $state, $modal, $timeout, RequestService, Ta
     }
 
     // Initialise the approval state of each point
-    var point;
-    for (var i = 0, len = self.parent.rows.length; i < len; i++) {
-      point = self.parent.rows[i];
-
+    self.parent.rows.forEach(function (point) {
       if (!point.approval) {
         point.approval = {approved: undefined, message: ''};
       }
-    }
+    });
 
     // Register hooks
     self.parent.hot.addHook('afterChange', afterChange);
+
+    //self.parent.hot.updateSettings({ minSpareRows: 50 });
   }
 
   /**
@@ -162,10 +161,7 @@ function ApprovalController($scope, $state, $modal, $timeout, RequestService, Ta
    * @param pointIds
    */
   function approvePoints(pointIds) {
-    var point;
-    for (var i = 0, len = self.parent.rows.length; i < len; i++) {
-      point = self.parent.rows[i];
-
+    self.parent.rows.forEach(function (point) {
       if (pointIds.indexOf(point.id) > -1) {
 
         // TODO: there may be other errors not related to approval that we don't want to nuke
@@ -176,7 +172,7 @@ function ApprovalController($scope, $state, $modal, $timeout, RequestService, Ta
           message: null
         };
       }
-    }
+    });
 
     // Save the request
     RequestService.saveRequest(self.parent.request);

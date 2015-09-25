@@ -8,7 +8,7 @@
 angular.module('modesti').controller('RequestController', RequestController);
 
 function RequestController($scope, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
-                           RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService) {
+                           RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService, ValidationService) {
   var self = this;
 
   self.request = request;
@@ -180,6 +180,11 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
           else if (hasCommentColumn() && prop.contains('message')) {
             editable = true;
           }
+
+          // Empty points should not be editable
+          //if (ValidationService.isEmptyPoint(point)) {
+          //  editable = false;
+          //}
         }
 
         return { readOnly: !editable };
@@ -224,17 +229,20 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
 
     if (self.request.status === 'FOR_APPROVAL') {
 
-      self.request.points.forEach(function (point) {
-        // Display only alarms
-        if (point.properties.priorityCode) {
-          rows.push(point);
-        }
-      });
+      //self.request.points.forEach(function (point) {
+      //  // Display only alarms
+      //  if (point.properties.priorityCode) {
+      //    rows.push(point);
+      //  }
+      //});
+
+      // TODO display only points which require approval?
+      rows = self.request.points;
     }
 
     else if (self.request.status === 'FOR_ADDRESSING' || self.request.status === 'FOR_CABLING') {
 
-      // TODO display only points which require cabling
+      // TODO display only points which require cabling?
       rows = self.request.points;
     }
 
@@ -285,7 +293,21 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
       return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 
+    else if (point.cabling && point.cabling.cabled === false && self.request.status === 'FOR_CABLING') {
+      return '<div class="row-header">' + point.id + ' <i class="fa fa-plug text-danger"></i></div>';
+    }
 
+    else if (point.cabling && point.cabling.cabled === true && self.request.status === 'FOR_CABLING') {
+      return '<div class="row-header">' + point.id + ' <i class="fa fa-plug text-success"></i></div>';
+    }
+
+    else if (point.testing && point.testing.passed === false && self.request.status === 'FOR_TESTING') {
+      return '<div class="row-header">' + point.id + ' <i class="fa fa-times-circle text-danger"></i></div>';
+    }
+
+    else if (point.testing && point.testing.passed === true && self.request.status === 'FOR_TESTING') {
+      return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
+    }
 
     return point.id;
   }
@@ -373,7 +395,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
    * @returns {boolean}
    */
   function hasCommentColumn() {
-    var commentStates =  ['FOR_APPROVAL', 'FOR_TESTING'];
+    var commentStates =  ['FOR_APPROVAL', 'FOR_CABLING', 'FOR_TESTING'];
 
     var assigned = false;
     for (var key in self.tasks) {
@@ -402,7 +424,9 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
     var property;
     if (self.request.status === 'FOR_APPROVAL') {
       property = 'approval.message';
-    } else if (self.request.status === 'FOR_TESTING') {
+    } else if (self.request.status === 'FOR_CABLING') {
+      property = 'cabling.message';
+    }else if (self.request.status === 'FOR_TESTING') {
       property = 'testing.message';
     }
 

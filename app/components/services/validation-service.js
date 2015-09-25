@@ -13,7 +13,8 @@ function ValidationService($q, SchemaService) {
   // Public API
   var service = {
     validateRequest: validateRequest,
-    setErrorMessage: setErrorMessage
+    setErrorMessage: setErrorMessage,
+    isEmptyPoint: isEmptyPoint
   };
 
   /**
