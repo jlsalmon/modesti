@@ -150,9 +150,9 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
           authorised = true;
         }
 
+        var editable = false;
         if (authorised) {
           var point = self.rows[row];
-          var editable = false;
 
           // Evaluate "editable" condition of the category
           if (self.activeCategory.editable !== null && typeof self.activeCategory.editable === 'object') {
@@ -259,10 +259,9 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
    */
   function getRowHeaders(row) {
     var point = self.rows[row];
+    var text = '';
 
     if (point.valid === false) {
-      var text = '';
-
       point.errors.forEach(function (e) {
         e.errors.forEach(function (error) {
           text += '<i class="fa fa-fw fa-exclamation-circle text-danger"></i> ' + error + '<br />';
@@ -277,7 +276,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
     //}
 
     else if (point.approval && point.approval.approved === false) {
-      var text = 'Point rejected by operator. Reason: <b>' + point.approval.message + '</b>';
+      text = 'Point rejected by operator. Reason: <b>' + point.approval.message + '</b>';
       return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="' +
         text.replace(/"/g, '&quot;') + '">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
