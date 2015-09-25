@@ -8,7 +8,7 @@
 angular.module('modesti').controller('RequestController', RequestController);
 
 function RequestController($scope, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
-                           RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService, ValidationService) {
+                           RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService) {
   var self = this;
 
   self.request = request;
