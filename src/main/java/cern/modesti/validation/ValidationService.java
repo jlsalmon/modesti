@@ -220,7 +220,7 @@ public class ValidationService {
     }
 
     if (!exists) {
-      point.getErrors().add(new Error(columnNameToProperty(errorMessage.getColumnName()), Collections.singletonList(errorMessage.getErrorText())));
+      point.getErrors().add(new Error(columnNameToProperty(errorMessage.getColumnName()), new ArrayList<>(Collections.singletonList(errorMessage.getErrorText()))));
     }
   }
 
