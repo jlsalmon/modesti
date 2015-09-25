@@ -373,8 +373,8 @@ public class WorkflowService {
     // Add variables to the execution so that they are available to the
     // recursive process invocation
     execution.setVariable("childRequestId", child.getRequestId());
-    //    execution.setVariable("childRequiresApproval", child.requiresApproval());
-    //    execution.setVariable("childRequiresCabling", child.requiresCabling());
+    execution.setVariable("childRequiresApproval", child.requiresApproval());
+    execution.setVariable("childRequiresCabling", child.requiresCabling());
   }
 
   /**
