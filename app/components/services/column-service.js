@@ -39,9 +39,13 @@ function ColumnService($http, $translate) {
       else if (field.editable !== null && typeof field.editable === 'object') {
         editable = !!(field.editable.status && status === field.editable.status);
       }
+
+      column.readOnly = !editable;
+    } else {
+      column.readOnly = true;
     }
 
-    column.readOnly = !editable;
+    
 
     if (field.type === 'autocomplete') {
       column = getAutocompleteColumn(column, field);

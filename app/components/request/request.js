@@ -8,7 +8,7 @@
 angular.module('modesti').controller('RequestController', RequestController);
 
 function RequestController($scope, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
-                           RequestService, ColumnService, SchemaService, HistoryService, TaskService) {
+                           RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService) {
   var self = this;
 
   self.request = request;
@@ -92,6 +92,7 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
 
   self.canAssignTask = canAssignTask;
   self.assignTask = assignTask;
+  self.assignTaskToCurrentUser = assignTaskToCurrentUser;
   self.getAssignee = getAssignee;
   self.isCurrentUserAuthorised = isCurrentUserAuthorised;
   self.isCurrentUserAssigned = isCurrentUserAssigned;
@@ -135,28 +136,42 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
           return;
         }
 
-        var point = self.rows[row];
-        var editable = false;
-
-        // Evaluate "editable" condition of the category
-        if (self.activeCategory.editable !== null && typeof self.activeCategory.editable === 'object') {
-          var conditional = self.activeCategory.editable;
-
-          if (conditional !== undefined && conditional !== null) {
-            editable = SchemaService.evaluateConditional(point, conditional, self.request.status);
-          }
+        var authorised = false;
+        if (isCurrentUserAuthorised() && isCurrentUserAssigned()) {
+          authorised = true;
         }
 
-        // Evaluate "editable" condition of the field as it may override the category
-        self.activeCategory.fields.forEach(function (field) {
-          if (field.id === prop.split('.')[1]) {
-            var conditional = field.editable;
+        if (authorised) {
+          var point = self.rows[row];
+          var editable = false;
+
+          // Evaluate "editable" condition of the category
+          if (self.activeCategory.editable !== null && typeof self.activeCategory.editable === 'object') {
+            var conditional = self.activeCategory.editable;
 
             if (conditional !== undefined && conditional !== null) {
               editable = SchemaService.evaluateConditional(point, conditional, self.request.status);
             }
           }
-        });
+
+          // Evaluate "editable" condition of the field as it may override the category
+          self.activeCategory.fields.forEach(function (field) {
+            if (field.id === prop.split('.')[1]) {
+              var conditional = field.editable;
+
+              if (conditional !== undefined && conditional !== null) {
+                editable = SchemaService.evaluateConditional(point, conditional, self.request.status);
+              }
+            }
+          });
+
+          if (hasCheckboxColumn() && prop === 'selected') {
+            editable = true;
+          } 
+          else if (hasCommentColumn() && prop.contains('message')) {
+            editable = true;
+          }
+        }
 
         return { readOnly: !editable };
       }
@@ -253,7 +268,9 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
     //}
 
     else if (point.approval && point.approval.approved === false) {
-      return '<div class="row-header">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
+      var text = 'Point rejected by operator. Reason: <b>' + point.approval.message + '</b>';
+      return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="' +
+        text.replace(/"/g, '&quot;') + '">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
 
     else if (point.approval && point.approval.approved === true && self.request.status === 'FOR_APPROVAL') {
@@ -294,15 +311,15 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
 
       var editable;
       // A column is editable only if the category is marked as an editable state for the current request status.
-      if (self.activeCategory.editable !== null && typeof self.activeCategory.editable === 'object') {
-        var status = self.activeCategory.editable.status;
-
-        if (status instanceof Array) {
-          editable = status.indexOf(self.request.status) > -1;
-        } else if (typeof status === 'string') {
-          editable = status === self.request.status;
-        }
-      }
+      //if (self.activeCategory.editable !== null && typeof self.activeCategory.editable === 'object') {
+      //  var status = self.activeCategory.editable.status;
+      //
+      //  if (status instanceof Array) {
+      //    editable = status.indexOf(self.request.status) > -1;
+      //  } else if (typeof status === 'string') {
+      //    editable = status === self.request.status;
+      //  }
+      //}
       //editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
 
       // Build the right type of column based on the schema
@@ -416,7 +433,22 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
       TaskService.assignTask(task.name, self.request.requestId, assignee.username).then(function (task) {
         console.log('assigned request');
         self.tasks[task.name] = task;
+        activateDefaultCategory();
       });
+    });
+  }
+
+  /**
+   *
+   */
+  function assignTaskToCurrentUser() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+    var username = AuthService.getCurrentUser().username;
+
+    TaskService.assignTask(task.name, self.request.requestId, username).then(function (task) {
+      console.log('assigned request');
+      self.tasks[task.name] = task;
+      activateDefaultCategory();
     });
   }
 
