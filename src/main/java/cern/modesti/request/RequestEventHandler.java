@@ -74,7 +74,7 @@ public class RequestEventHandler {
 
     // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < 50; i++) {
         Point point = new Point((long) (i + 1));
         request.getPoints().add(point);
       }
