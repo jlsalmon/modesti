@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('ValidationService', ValidationService);
 
-function ValidationService($q, SchemaService) {
+function ValidationService($q, SchemaService, RequestService, TaskService) {
   /*jshint camelcase: false */
 
   // Public API
@@ -20,10 +20,11 @@ function ValidationService($q, SchemaService) {
   /**
    *
    * @param request
+   * @param task
    * @param schema
    * @returns {*}
    */
-  function validateRequest(request, schema) {
+  function validateRequest(request, task, schema) {
     var q = $q.defer();
 
     // Reset all categories and datasources to valid
@@ -56,7 +57,42 @@ function ValidationService($q, SchemaService) {
       }
     });
 
-    q.resolve(valid);
+    // If we found errors already, don't bother to call the backend validations.
+    if (valid === false) {
+      q.resolve(valid);
+      return q.promise;
+    }
+
+    // All good so far! Call the backend validations
+
+    // First save the request
+    RequestService.saveRequest(request).then(function () {
+      console.log('saved request before validation');
+
+      // Complete the task associated with the request
+      TaskService.completeTask(task.name, request.requestId).then(function () {
+        console.log('completed task ' + task.name);
+
+        // Clear the cache
+        RequestService.clearCache();
+
+        // Get the request once again
+        RequestService.getRequest(request.requestId).then(function (request) {
+          q.resolve(request.valid);
+        });
+      },
+
+      function (error) {
+        console.log('error completing task: ' + error.statusText);
+        q.reject(error);
+      });
+    },
+
+    function (error) {
+      console.log('error saving before validation: ' + error.statusText);
+      q.reject(error);
+    });
+
     return q.promise;
   }
 

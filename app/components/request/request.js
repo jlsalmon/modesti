@@ -7,8 +7,8 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
-                           RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService) {
+function RequestController($scope, $state, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
+                           RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService, AlertService, ValidationService) {
   var self = this;
 
   self.request = request;
@@ -105,6 +105,8 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
   self.canValidate = canValidate;
   self.canSubmit = canSubmit;
   self.canSplit = canSplit;
+  self.validate = validate;
+  self.sendModificationSignal = sendModificationSignal;
   self.hasErrors = hasErrors;
   self.getTotalErrors = getTotalErrors;
   self.getNumValidationErrors = getNumValidationErrors;
@@ -559,6 +561,54 @@ function RequestController($scope, $timeout, $modal, $filter, $localStorage, req
    */
   function canSplit() {
     return self.hasErrors();
+  }
+
+  function validate(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    self.validating = 'started';
+    AlertService.clear();
+
+    $timeout(function () {
+      ValidationService.validateRequest(self.request, self.tasks.edit, self.schema).then(function (valid) {
+        // Render the table to show the error highlights
+        self.hot.render();
+
+        if (!valid) {
+          self.validating = 'error';
+          AlertService.add('danger', 'Request failed validation with ' + getNumValidationErrors() + ' errors');
+          return;
+        }
+
+        $state.reload().then(function () {
+          self.validating = 'success';
+          AlertService.add('success', 'Request has been validated successfully');
+        });
+      });
+
+    });
+  }
+
+  /**
+   * Sends the "requestModified" signal when in the "submit" stage of the workflow in order to force the request
+   * back to the "validate" stage.
+   */
+  function sendModificationSignal() {
+    var signal = self.signals.requestModified;
+
+    if (signal) {
+      console.log('form modified whilst in submit state: sending signal');
+
+      TaskService.sendSignal(signal).then(function () {
+        // The "submit" task will have changed back to "edit".
+        TaskService.getTasksForRequest(self.request).then(function (tasks) {
+          self.tasks = tasks;
+        });
+      });
+    }
   }
 
   /**

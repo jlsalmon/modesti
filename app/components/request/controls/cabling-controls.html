@@ -59,10 +59,10 @@
                     tooltip="{{'VALIDATE_REQUEST'|translate}}">
 
               <!--Show icon based on the loading state-->
-              <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == undefined"></i>
-              <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.validating == 'started'"></i>
-              <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.validating == 'success'"></i>
-              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.validating == 'error'"></i>
+              <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.parent.validating == undefined"></i>
+              <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.parent.validating == 'started'"></i>
+              <i class="fa fa-fw fa-check-square-o"       ng-show="ctrl.parent.validating == 'success'"></i>
+              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.parent.validating == 'error'"></i>
               {{'VALIDATE'|translate}}
             </button>
           </div>

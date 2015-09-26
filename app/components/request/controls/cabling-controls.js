@@ -147,9 +147,8 @@ function CablingController($scope, $state, RequestService, TaskService, AlertSer
       event.stopPropagation();
     }
 
-    self.validating = 'started';
+    self.parent.validating = 'started';
     AlertService.clear();
-
 
     // The request is only valid if all points in the request have been either calbed or rejected. If they have
     // been rejected, there must be an accompanying comment.
@@ -171,13 +170,13 @@ function CablingController($scope, $state, RequestService, TaskService, AlertSer
     });
 
     if (!valid) {
-      self.validating = 'error';
+      self.parent.validating = 'error';
       AlertService.add('danger', 'Request failed validation with ' + self.parent.getNumValidationErrors() + ' errors');
       self.parent.hot.render();
       return;
     }
 
-    self.validating = 'success';
+    self.parent.validating = 'success';
     AlertService.add('success', 'Request has been validated successfully');
   }
 

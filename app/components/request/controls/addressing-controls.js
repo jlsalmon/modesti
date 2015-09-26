@@ -7,16 +7,14 @@
  */
 angular.module('modesti').controller('AddressingController', AddressingController);
 
-function AddressingController($scope, $state, $modal, $timeout, RequestService, TaskService, ValidationService, AlertService) {
+function AddressingController($scope, $state, RequestService, TaskService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
   self.submitting = undefined;
   self.addressed = true;
 
-  self.init = init;
   self.rejectRequest = rejectRequest;
-  self.validate = validate;
   self.submit = submit;
 
   init();
@@ -44,74 +42,6 @@ function AddressingController($scope, $state, $modal, $timeout, RequestService, 
     // TODO: show comment modal with text box for rejection reason
 
     self.addressed = false;
-  }
-
-  /**
-   *
-   */
-  function validate(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    self.validating = 'started';
-    AlertService.clear();
-
-    $timeout(function () {
-      ValidationService.validateRequest(self.parent.request, self.parent.schema).then(function (valid) {
-        // Render the table to show the error highlights
-        self.parent.hot.render();
-
-        if (!valid) {
-          self.validating = 'error';
-          AlertService.add('danger', 'Request failed validation with ' + self.parent.getNumValidationErrors() + ' errors');
-          return;
-        }
-
-        // Validate server-side
-        var task = self.parent.tasks.edit;
-
-        if (!task) {
-          console.log('warning: no validate task found');
-          return;
-        }
-
-        // First save the request
-        RequestService.saveRequest(self.parent.request).then(function () {
-          console.log('saved request before validation');
-
-          // Complete the task associated with the request
-          TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
-            console.log('completed task ' + task.name);
-
-            // Clear the cache so that the state reload also pulls a fresh request
-            RequestService.clearCache();
-
-            $state.reload().then(function () {
-              self.validating = 'success';
-              AlertService.add('success', 'Request has been validated successfully');
-
-              // The "edit" task will have changed to "submit"
-              TaskService.getTasksForRequest(self.parent.request).then(function (tasks) {
-                self.parent.tasks = tasks;
-              });
-            });
-          },
-
-          function (error) {
-            console.log('error completing task: ' + error.statusText);
-            self.validating = 'error';
-          });
-        },
-
-        function (error) {
-          console.log('error saving before validation: ' + error.statusText);
-          self.validating = 'error';
-        });
-      });
-
-    });
   }
 
   /**
@@ -201,27 +131,8 @@ function AddressingController($scope, $state, $modal, $timeout, RequestService, 
         // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
         // revalidated. This is done by sending the "requestModified" signal.
         if (self.parent.tasks.submit) {
-          sendModificationSignal();
+          self.parent.sendModificationSignal();
         }
-      });
-    }
-  }
-
-  /**
-   * Sends the "requestModified" signal when in the "submit" stage of the workflow in order to force the request
-   * back to the "validate" stage.
-   */
-  function sendModificationSignal() {
-    var signal = self.parent.signals.requestModified;
-
-    if (signal) {
-      console.log('form modified whilst in submit state: sending signal');
-
-      TaskService.sendSignal(signal).then(function () {
-        // The "submit" task will have changed back to "edit".
-        TaskService.getTasksForRequest(self.parent.request).then(function (tasks) {
-          self.parent.tasks = tasks;
-        });
       });
     }
   }
