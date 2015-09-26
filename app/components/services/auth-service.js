@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('AuthService', AuthService);
 
-function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
+function AuthService($http, $q, $localStorage, $cookies, $modal, $state, authService) {
   var self = this;
 
   self.loginModalOpened = false;
@@ -40,8 +40,6 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
 
     var modalInstance = $modal.open({
       animation: false,
-      keyboard: false,
-      backdrop: 'static',
       templateUrl: 'components/login/login-modal.html',
       controller: 'LoginModalController as ctrl'
     });
@@ -49,6 +47,9 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, authService) {
     modalInstance.result.then(function () {
       self.loginModalOpened = false;
       q.resolve($localStorage.user);
+    }, function() {
+      self.loginModalOpened = false;
+      $state.go('home');
     });
 
     return q.promise;
