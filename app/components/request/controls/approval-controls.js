@@ -146,7 +146,7 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
     }
 
     var pointIds = self.parent.rows.map(function (row) {
-      return row.id;
+      return row.lineNo;
     });
     approvePoints(pointIds);
 

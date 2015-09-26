@@ -7,13 +7,14 @@
  */
 angular.module('modesti').controller('AddressingController', AddressingController);
 
-function AddressingController($scope, RequestService) {
+function AddressingController($scope, $state, RequestService, TaskService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
   self.addressed = true;
 
   self.rejectRequest = rejectRequest;
+  self.submit = submit;
 
   init();
 
@@ -40,6 +41,19 @@ function AddressingController($scope, RequestService) {
     // TODO: show comment modal with text box for rejection reason
 
     self.addressed = false;
+  }
+
+  /**
+   *
+   */
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    self.parent.request.addressing = {addressed: self.addressed, message: ''};
+    self.parent.submit();
   }
 
   /**

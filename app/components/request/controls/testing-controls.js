@@ -16,6 +16,7 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
   self.passSelectedPoints = passSelectedPoints;
   self.passAll = passAll;
   self.failSelectedPoints = failSelectedPoints;
+  self.submit = submit;
   self.validate = validate;
 
   init();
@@ -63,7 +64,7 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
     }
 
     var pointIds = self.parent.rows.map(function (row) {
-      return row.id;
+      return row.lineNo;
     });
     passPoints(pointIds);
 
@@ -176,5 +177,18 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
 
     self.parent.validating = 'success';
     AlertService.add('success', 'Request has been validated successfully');
+  }
+
+  /**
+   *
+   */
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    self.parent.request.testing = {passed: self.tested, message: ''};
+    self.parent.submit();
   }
 }

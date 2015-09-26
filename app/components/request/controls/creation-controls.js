@@ -102,7 +102,7 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
 
     // Make sure the point IDs are consecutive
     self.parent.rows.forEach(function (row, i) {
-      row.id = i + 1;
+      row.lineNo = i + 1;
     });
 
     // Loop over the changes and check if anything actually changed. Mark any changed points as dirty.

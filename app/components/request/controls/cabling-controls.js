@@ -17,6 +17,7 @@ function CablingController($scope, RequestService, AlertService, ValidationServi
   self.cableAll = cableAll;
   self.rejectSelectedPoints = rejectSelectedPoints;
   self.validate = validate;
+  self.submit = submit;
 
   init();
 
@@ -63,7 +64,7 @@ function CablingController($scope, RequestService, AlertService, ValidationServi
     }
 
     var pointIds = self.parent.rows.map(function (row) {
-      return row.id;
+      return row.lineNo;
     });
     cablePoints(pointIds);
 
@@ -133,6 +134,20 @@ function CablingController($scope, RequestService, AlertService, ValidationServi
     RequestService.saveRequest(self.parent.request).then(function () {
       self.parent.hot.render();
     });
+  }
+
+  /**
+   *
+   * @param event
+   */
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    self.parent.request.cabling = {cabled: self.cabled, message: ''};
+    self.parent.submit();
   }
 
   /**
