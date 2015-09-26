@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('AddressingController', AddressingController);
 
-function AddressingController($scope, $state, RequestService, TaskService) {
+function AddressingController($scope, RequestService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
