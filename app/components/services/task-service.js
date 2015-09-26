@@ -292,6 +292,10 @@ function TaskService($q, $http, AuthService) {
    * @returns {boolean} true if the current user is authorised to act the given task
    */
   function isCurrentUserAuthorised(task) {
+    if (!task) {
+      return false;
+    }
+
     var user = AuthService.getCurrentUser();
     if (!user) {
       return false;

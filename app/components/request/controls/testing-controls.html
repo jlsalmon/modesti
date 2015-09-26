@@ -74,7 +74,7 @@
 
             <button class="btn btn-primary"
                     ng-click="ctrl.submit($event)"
-                    ng-disabled="ctrl.validating != 'success'"
+                    ng-disabled="ctrl.parent.validating != 'success'"
                     tooltip-append-to-body="true"
                     tooltip="{{ 'SUBMIT_TESTING' | translate}}">
 

@@ -188,7 +188,7 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
       event.stopPropagation();
     }
 
-    self.parent.request.testing = {passed: self.tested, message: ''};
+    self.parent.request.testing = {passed: self.passed, message: ''};
     self.parent.submit();
   }
 }

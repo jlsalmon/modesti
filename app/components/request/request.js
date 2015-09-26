@@ -504,6 +504,11 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
    */
   function getAssignee() {
     var task = self.tasks[Object.keys(self.tasks)[0]];
+
+    if (!task) {
+      return null;
+    }
+
     return task.assignee;
   }
 
@@ -610,7 +615,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
       event.stopPropagation();
     }
 
-    var task = self.tasks.submit;
+    var task = self.tasks.submit || self.tasks.cable || self.tasks.test;
 
     if (!task) {
       console.log('warning: no submit task found');
