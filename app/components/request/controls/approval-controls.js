@@ -7,13 +7,12 @@
  */
 angular.module('modesti').controller('ApprovalController', ApprovalController);
 
-function ApprovalController($scope, $state, $modal, $timeout, RequestService, TaskService, ValidationService, AlertService) {
+function ApprovalController($scope, $state, $modal, RequestService, TaskService, ValidationService, AlertService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
   self.submitting = undefined;
 
-  self.init = init;
   self.approveSelectedPoints = approveSelectedPoints;
   self.approveAll = approveAll;
   self.rejectSelectedPoints = rejectSelectedPoints;
