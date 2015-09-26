@@ -269,10 +269,10 @@
             request should be modified before revalidation.
           </p>
 
-          <div ng-repeat="point in ctrl.rows track by point.id">
+          <div ng-repeat="point in ctrl.rows track by point.lineNo">
             <div ng-repeat="error in point.errors track by $index">
               <div ng-repeat="error in error.errors">
-                <i class="fa fa-fw fa-exclamation-circle text-danger"></i> Line {{point.id}}: {{error}}
+                <i class="fa fa-fw fa-exclamation-circle text-danger"></i> Line {{point.lineNo}}: {{error}}
               </div>
             </div>
           </div>
@@ -285,10 +285,10 @@
             rejection. The request should be modified according to the operator comments before resubmission.
           </p>
 
-          <div ng-repeat="point in ctrl.rows track by point.id">
+          <div ng-repeat="point in ctrl.rows track by point.lineNo">
           <span ng-if="point.approval.approved === false">
             <i class="fa fa-fw fa-exclamation-circle text-danger"></i>
-            Line {{point.id}}: Point rejected by operator. Reason: <strong>{{point.approval.message}}</strong>
+            Line {{point.lineNo}}: Point rejected by operator. Reason: <strong>{{point.approval.message}}</strong>
           </span>
           </div>
         </div>

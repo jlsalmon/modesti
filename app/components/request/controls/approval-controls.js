@@ -7,11 +7,9 @@
  */
 angular.module('modesti').controller('ApprovalController', ApprovalController);
 
-function ApprovalController($scope, $state, $modal, RequestService, TaskService, ValidationService, AlertService) {
+function ApprovalController($scope, $modal, RequestService, ValidationService, AlertService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
-
-  self.submitting = undefined;
 
   self.approveSelectedPoints = approveSelectedPoints;
   self.approveAll = approveAll;
@@ -109,7 +107,7 @@ function ApprovalController($scope, $state, $modal, RequestService, TaskService,
         point.approval = {};
       }
 
-      if (pointIds.indexOf(point.id) > -1) {
+      if (pointIds.indexOf(point.lineNo) > -1) {
         point.approval.approved = false;
 
         if (!point.approval.message) {
@@ -161,7 +159,7 @@ function ApprovalController($scope, $state, $modal, RequestService, TaskService,
    */
   function approvePoints(pointIds) {
     self.parent.rows.forEach(function (point) {
-      if (pointIds.indexOf(point.id) > -1) {
+      if (pointIds.indexOf(point.lineNo) > -1) {
 
         // TODO: there may be other errors not related to approval that we don't want to nuke
         point.errors = [];
@@ -230,14 +228,6 @@ function ApprovalController($scope, $state, $modal, RequestService, TaskService,
       event.stopPropagation();
     }
 
-    var task = self.parent.tasks.submit;
-    if (!task) {
-      console.log('error approving request: no task');
-      return;
-    }
-
-    self.submitting = 'started';
-
     // Determine whether the entire request is approved or not
     var point, entireRequestApproved = true;
     for (var i = 0, len = self.parent.rows.length; i < len; i++) {
@@ -249,38 +239,7 @@ function ApprovalController($scope, $state, $modal, RequestService, TaskService,
     }
 
     self.parent.request.approval.approved = entireRequestApproved;
-
-    // Save the request
-    RequestService.saveRequest(self.parent.request).then(function () {
-
-      // Complete the task
-      TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
-        console.log('completed task ' + task.name);
-
-        var previousStatus = self.parent.request.status;
-
-        // Clear the cache so that the state reload also pulls a fresh request
-        RequestService.clearCache();
-
-        $state.reload().then(function () {
-          self.submitting = 'success';
-
-          // Show a page with information about what happens next
-          $state.go('submitted', {id: self.parent.request.requestId, previousStatus: previousStatus});
-
-        });
-      },
-
-      function () {
-        console.log('error completing task ' + task.name);
-        self.submitting = 'error';
-      });
-    },
-
-    function (error) {
-      console.log('error saving request ' + task.name + ': ' + error.data.message);
-      self.submitting = 'error';
-    });
+    self.parent.submit();
   }
 
   /**
@@ -308,7 +267,7 @@ function ApprovalController($scope, $state, $modal, RequestService, TaskService,
 
       // Mark the point as dirty.
       if (newValue !== oldValue) {
-        console.log('dirty point: ' + self.parent.rows[row].id);
+        console.log('dirty point: ' + self.parent.rows[row].lineNo);
         dirty = true;
         self.parent.rows[row].dirty = true;
       }

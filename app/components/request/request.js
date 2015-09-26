@@ -106,6 +106,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
   self.canSubmit = canSubmit;
   self.canSplit = canSplit;
   self.validate = validate;
+  self.submit = submit;
   self.sendModificationSignal = sendModificationSignal;
   self.hasErrors = hasErrors;
   self.getTotalErrors = getTotalErrors;
@@ -279,39 +280,39 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
       });
 
       return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="' +
-        text.replace(/"/g, '&quot;') + '">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
+        text.replace(/"/g, '&quot;') + '">' + point.lineNo + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
     //else if (point.valid === true) {
-    //  return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
+    //  return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     //}
 
     else if (point.approval && point.approval.approved === false) {
       text = 'Point rejected by operator. Reason: <b>' + point.approval.message + '</b>';
       return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="' +
-        text.replace(/"/g, '&quot;') + '">' + point.id + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
+        text.replace(/"/g, '&quot;') + '">' + point.lineNo + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
 
     else if (point.approval && point.approval.approved === true && self.request.status === 'FOR_APPROVAL') {
-      return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
+      return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 
     else if (point.cabling && point.cabling.cabled === false && self.request.status === 'FOR_CABLING') {
-      return '<div class="row-header">' + point.id + ' <i class="fa fa-plug text-danger"></i></div>';
+      return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-plug text-danger"></i></div>';
     }
 
     else if (point.cabling && point.cabling.cabled === true && self.request.status === 'FOR_CABLING') {
-      return '<div class="row-header">' + point.id + ' <i class="fa fa-plug text-success"></i></div>';
+      return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-plug text-success"></i></div>';
     }
 
     else if (point.testing && point.testing.passed === false && self.request.status === 'FOR_TESTING') {
-      return '<div class="row-header">' + point.id + ' <i class="fa fa-times-circle text-danger"></i></div>';
+      return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-times-circle text-danger"></i></div>';
     }
 
     else if (point.testing && point.testing.passed === true && self.request.status === 'FOR_TESTING') {
-      return '<div class="row-header">' + point.id + ' <i class="fa fa-check-circle text-success"></i></div>';
+      return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 
-    return point.id;
+    return point.lineNo;
   }
 
   /**
@@ -573,11 +574,15 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
     AlertService.clear();
 
     $timeout(function () {
-      ValidationService.validateRequest(self.request, self.tasks.edit, self.schema).then(function (valid) {
+      ValidationService.validateRequest(self.request, self.tasks.edit, self.schema).then(function (request) {
+        // Save the reference to the validated request
+        self.request = request;
+        self.rows = getRows();
+        
         // Render the table to show the error highlights
         self.hot.render();
 
-        if (!valid) {
+        if (!request.valid) {
           self.validating = 'error';
           AlertService.add('danger', 'Request failed validation with ' + getNumValidationErrors() + ' errors');
           return;
@@ -587,8 +592,65 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
           self.validating = 'success';
           AlertService.add('success', 'Request has been validated successfully');
         });
-      });
+      },
 
+      function (error) {
+        console.log('error validating request: ' + error.statusText);
+        self.validating = 'error';
+      });
+    });
+  }
+
+  /**
+   *
+   */
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    var task = self.tasks.submit;
+
+    if (!task) {
+      console.log('warning: no submit task found');
+      return;
+    }
+
+    AlertService.clear();
+    self.submitting = 'started';
+
+    // Complete the task associated with the request
+    TaskService.completeTask(task.name, self.request.requestId).then(function () {
+      console.log('completed task ' + task.name);
+
+      var previousStatus = self.request.status;
+
+      // Clear the cache so that the state reload also pulls a fresh request
+      RequestService.clearCache();
+
+      $state.reload().then(function () {
+        self.submitting = 'success';
+
+        // If the request is now FOR_CONFIGURATION, no need to go away from the request page
+        if (self.request.status === 'FOR_CONFIGURATION') {
+          AlertService.add('info', 'Request has been submitted successfully and is ready to be configured.');
+        }
+
+        if (self.request.status === 'CLOSED') {
+          AlertService.add('info', 'Request has been submitted successfully and is now closed.');
+        }
+
+        // If the request is in any other state, show a page with information about what happens next
+        else {
+          $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
+        }
+      });
+    },
+
+    function (error) {
+      console.log('error completing task: ' + error.statusText);
+      self.submitting = 'error';
     });
   }
 
@@ -730,7 +792,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
     // Normalise point ids.
     // TODO is this necessary anymore?
     for (var i = 0, len = self.rows.length; i < len; i++) {
-      self.rows[i].id = i + 1;
+      self.rows[i].lineNo = i + 1;
     }
 
     SchemaService.generateTagnames(self.request);
@@ -744,7 +806,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
   function afterCreateRow() {
     // Fix the point IDs
     for (var i = 0, len = self.rows.length; i < len; i++) {
-      self.rows[i].id = i + 1;
+      self.rows[i].lineNo = i + 1;
     }
   }
 
@@ -754,7 +816,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
   function afterRemoveRow() {
     // Fix the point IDs
     for (var i = 0, len = self.rows.length; i < len; i++) {
-      self.rows[i].id = i + 1;
+      self.rows[i].lineNo = i + 1;
     }
   }
 
@@ -772,7 +834,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
     for (var i = 0, len = checkboxes.length; i < len; i++) {
       if (checkboxes[i]) {
         // Point IDs are 1-based
-        pointIds.push(self.rows[i].id);
+        pointIds.push(self.rows[i].lineNo);
       }
     }
 

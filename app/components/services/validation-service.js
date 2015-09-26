@@ -59,7 +59,8 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
     // If we found errors already, don't bother to call the backend validations.
     if (valid === false) {
-      q.resolve(valid);
+      request.valid = false;
+      q.resolve(request);
       return q.promise;
     }
 
@@ -78,7 +79,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
         // Get the request once again
         RequestService.getRequest(request.requestId).then(function (request) {
-          q.resolve(request.valid);
+          q.resolve(request);
         });
       },
 

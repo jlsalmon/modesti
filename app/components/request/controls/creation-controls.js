@@ -7,14 +7,10 @@
  */
 angular.module('modesti').controller('CreationController', CreationController);
 
-function CreationController($scope, $http, $state, $modal, RequestService, TaskService, AlertService, ColumnService) {
+function CreationController($scope, $http, $state, $modal, RequestService, AlertService, ColumnService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
-  self.submitting = undefined;
-  self.splitting = undefined;
-
-  self.submit = submit;
   self.split = split;
 
   init();
@@ -26,55 +22,6 @@ function CreationController($scope, $http, $state, $modal, RequestService, TaskS
     // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
     // state and the user makes a modification
     self.parent.hot.addHook('afterChange', afterChange);
-  }
-
-  /**
-   *
-   */
-  function submit(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    var task = self.parent.tasks.submit;
-
-    if (!task) {
-      console.log('warning: no submit task found');
-      return;
-    }
-
-    AlertService.clear();
-    self.submitting = 'started';
-
-    // Complete the task associated with the request
-    TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
-      console.log('completed task ' + task.name);
-
-      var previousStatus = self.parent.request.status;
-
-      // Clear the cache so that the state reload also pulls a fresh request
-      RequestService.clearCache();
-
-      $state.reload().then(function () {
-        self.submitting = 'success';
-
-        // If the request is now FOR_CONFIGURATION, no need to go away from the request page
-        if (self.parent.request.status === 'FOR_CONFIGURATION') {
-          AlertService.add('info', 'Your request has been submitted successfully and is ready to be configured.');
-        }
-
-        // If the request is in any other state, show a page with information about what happens next
-        else {
-          $state.go('submitted', {id: self.parent.request.requestId, previousStatus: previousStatus});
-        }
-      });
-    },
-
-    function (error) {
-      console.log('error completing task: ' + error.statusText);
-      self.submitting = 'error';
-    });
   }
 
   /**
@@ -169,7 +116,7 @@ function CreationController($scope, $http, $state, $modal, RequestService, TaskS
 
       // Mark the point as dirty.
       if (newValue !== oldValue) {
-        console.log('dirty point: ' + self.parent.rows[row].id);
+        console.log('dirty point: ' + self.parent.rows[row].lineNo);
         dirty = true;
         self.parent.rows[row].dirty = true;
       }

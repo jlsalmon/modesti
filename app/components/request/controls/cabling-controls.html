@@ -75,10 +75,10 @@
                     tooltip="{{ 'SUBMIT_CABLING' | translate}}">
 
               <!--Show icon based on the loading state-->
-              <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == undefined"></i>
-              <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.submitting == 'started'"></i>
-              <i class="fa fa-fw fa-external-link"        ng-show="ctrl.submitting == 'success'"></i>
-              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
+              <i class="fa fa-fw fa-external-link"        ng-show="ctrl.parent.submitting == undefined"></i>
+              <i class="fa fa-fw fa-spin fa-cog"          ng-show="ctrl.parent.submitting == 'started'"></i>
+              <i class="fa fa-fw fa-external-link"        ng-show="ctrl.parent.submitting == 'success'"></i>
+              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.parent.submitting == 'error'"></i>
               {{ 'SUBMIT' | translate}}
             </button>
           </div>

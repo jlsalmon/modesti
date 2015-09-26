@@ -320,7 +320,7 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
   function update(array, point) {
     var i = array.length;
     while (i--) {
-      if (array[i].id === point.id && angular.toJson(array[i]) !== angular.toJson(point)) {
+      if (array[i].lineNo === point.lineNo && angular.toJson(array[i]) !== angular.toJson(point)) {
         array[i] = point;
       }
     }

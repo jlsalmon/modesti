@@ -7,18 +7,16 @@
  */
 angular.module('modesti').controller('TestingController', TestingController);
 
-function TestingController($scope, $state, RequestService, TaskService, AlertService, ValidationService) {
+function TestingController($scope, RequestService, AlertService, ValidationService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
-  self.submitting = undefined;
   self.passed = true;
 
   self.passSelectedPoints = passSelectedPoints;
   self.passAll = passAll;
   self.failSelectedPoints = failSelectedPoints;
   self.validate = validate;
-  self.submit = submit;
 
   init();
 
@@ -78,7 +76,7 @@ function TestingController($scope, $state, RequestService, TaskService, AlertSer
    */
   function passPoints(pointIds) {
     self.parent.rows.forEach(function (point) {
-      if (pointIds.indexOf(point.id) > -1) {
+      if (pointIds.indexOf(point.lineNo) > -1) {
 
         // TODO: there may be other unrelated errors that we don't want to nuke
         point.errors = [];
@@ -122,7 +120,7 @@ function TestingController($scope, $state, RequestService, TaskService, AlertSer
         point.testing = {};
       }
 
-      if (pointIds.indexOf(point.id) > -1) {
+      if (pointIds.indexOf(point.lineNo) > -1) {
         point.testing.passed = false;
 
         if (!point.testing.message) {
@@ -178,50 +176,5 @@ function TestingController($scope, $state, RequestService, TaskService, AlertSer
 
     self.parent.validating = 'success';
     AlertService.add('success', 'Request has been validated successfully');
-  }
-
-  /**
-   *
-   */
-  function submit(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    var task = self.parent.tasks.test;
-    if (!task) {
-      console.log('error testing request: no task');
-      return;
-    }
-
-    self.submitting = 'started';
-
-    self.parent.request.testing = {passed: self.tested, message: ''};
-
-    // Save the request
-    RequestService.saveRequest(self.parent.request).then(function () {
-
-      TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
-        console.log('completed task ' + task.name);
-
-        // Clear the cache so that the state reload also pulls a fresh request
-        RequestService.clearCache();
-
-        $state.reload().then(function () {
-          self.submitting = 'success';
-        });
-      },
-
-      function () {
-        console.log('error completing task ' + task.name);
-        self.submitting = 'error';
-      });
-    },
-
-    function (error) {
-      console.log('error saving request ' + task.name + ': ' + error.data.message);
-      self.submitting = 'error';
-    });
   }
 }

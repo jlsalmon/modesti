@@ -7,15 +7,13 @@
  */
 angular.module('modesti').controller('AddressingController', AddressingController);
 
-function AddressingController($scope, $state, RequestService, TaskService) {
+function AddressingController($scope, RequestService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
-  self.submitting = undefined;
   self.addressed = true;
 
   self.rejectRequest = rejectRequest;
-  self.submit = submit;
 
   init();
 
@@ -45,56 +43,6 @@ function AddressingController($scope, $state, RequestService, TaskService) {
   }
 
   /**
-   *
-   */
-  function submit(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    var task = self.parent.tasks.submit;
-    if (!task) {
-      console.log('error addressing request: no task');
-      return;
-    }
-
-    self.submitting = 'started';
-
-    self.parent.request.addressing = {addressed: self.addressed, message: ''};
-
-    // Save the request
-    RequestService.saveRequest(self.parent.request).then(function () {
-
-      TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
-        console.log('completed task ' + task.name);
-
-        var previousStatus = self.parent.request.status;
-
-        // Clear the cache so that the state reload also pulls a fresh request
-        RequestService.clearCache();
-
-        $state.reload().then(function () {
-          self.submitting = 'success';
-
-          // Show a page with information about what happens next
-          $state.go('submitted', {id: self.parent.request.requestId, previousStatus: previousStatus});
-        });
-      },
-
-      function () {
-        console.log('error completing task ' + task.name);
-        self.submitting = 'error';
-      });
-    },
-
-    function (error) {
-      console.log('error saving request ' + task.name + ': ' + error.data.message);
-      self.submitting = 'error';
-    });
-  }
-
-  /**
    * Called after a change is made to the table (edit, paste, etc.)
    *
    * @param changes a 2D array containing information about each of the edited cells [ [row, prop, oldVal, newVal], ... ]
@@ -119,7 +67,7 @@ function AddressingController($scope, $state, RequestService, TaskService) {
 
       // Mark the point as dirty.
       if (newValue !== oldValue) {
-        console.log('dirty point: ' + self.parent.rows[row].id);
+        console.log('dirty point: ' + self.parent.rows[row].lineNo);
         dirty = true;
         self.parent.rows[row].dirty = true;
       }

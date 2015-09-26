@@ -7,18 +7,16 @@
  */
 angular.module('modesti').controller('CablingController', CablingController);
 
-function CablingController($scope, $state, RequestService, TaskService, AlertService, ValidationService) {
+function CablingController($scope, RequestService, AlertService, ValidationService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
-  self.submitting = undefined;
   self.cabled = true;
 
   self.cableSelectedPoints = cableSelectedPoints;
   self.cableAll = cableAll;
   self.rejectSelectedPoints = rejectSelectedPoints;
   self.validate = validate;
-  self.submit = submit;
 
   init();
 
@@ -78,7 +76,7 @@ function CablingController($scope, $state, RequestService, TaskService, AlertSer
    */
   function cablePoints(pointIds) {
     self.parent.rows.forEach(function (point) {
-      if (pointIds.indexOf(point.id) > -1) {
+      if (pointIds.indexOf(point.lineNo) > -1) {
 
         // TODO: there may be other unrelated errors that we don't want to nuke
         point.errors = [];
@@ -122,7 +120,7 @@ function CablingController($scope, $state, RequestService, TaskService, AlertSer
         point.cabling = {};
       }
 
-      if (pointIds.indexOf(point.id) > -1) {
+      if (pointIds.indexOf(point.lineNo) > -1) {
         point.cabling.cabled = false;
 
         if (!point.cabling.message) {
@@ -178,55 +176,5 @@ function CablingController($scope, $state, RequestService, TaskService, AlertSer
 
     self.parent.validating = 'success';
     AlertService.add('success', 'Request has been validated successfully');
-  }
-
-  /**
-   *
-   */
-  function submit(event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    var task = self.parent.tasks.cable;
-    if (!task) {
-      console.log('error cabling request: no task');
-      return;
-    }
-
-    self.submitting = 'started';
-
-    self.parent.request.cabling = {cabled: self.cabled, message: ''};
-
-    // Save the request
-    RequestService.saveRequest(self.parent.request).then(function () {
-
-      TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
-        console.log('completed task ' + task.name);
-
-        var previousStatus = self.parent.request.status;
-
-        // Clear the cache so that the state reload also pulls a fresh request
-        RequestService.clearCache();
-
-        $state.reload().then(function () {
-          self.submitting = 'success';
-
-          // Show a page with information about what happens next
-          $state.go('submitted', {id: self.parent.request.requestId, previousStatus: previousStatus});
-        });
-      },
-
-      function () {
-        console.log('error completing task ' + task.name);
-        self.submitting = 'error';
-      });
-    },
-
-    function (error) {
-      console.log('error saving request ' + task.name + ': ' + error.data.message);
-      self.submitting = 'error';
-    });
   }
 }
