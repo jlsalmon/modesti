@@ -1,5 +1,6 @@
 package cern.modesti.request.search;
 
+import com.google.common.base.CaseFormat;
 import com.mysema.query.types.expr.BooleanExpression;
 import com.mysema.query.types.path.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class Predicate<T> {
    * @return
    */
   public BooleanExpression getPredicate() {
-    PathBuilder<T> entityPath = new PathBuilder<>(klass, klass.getSimpleName());
+    PathBuilder<T> entityPath = new PathBuilder<>(klass, CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, klass.getSimpleName()));
 
     final List<String> args = criteria.getArguments();
     String argument = args.get(0);
