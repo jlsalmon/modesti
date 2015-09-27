@@ -32,7 +32,7 @@
                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
                   <ul class="dropdown-menu">
                     <li ng-repeat="field in ctrl.schema.categories[0].fields">
-                      <a href="#" ng-click="ctrl.filter[field.id] = ">{{field.name_en}}</a>
+                      <a href="#" ng-click="ctrl.filter[field.id] = field.id">{{field.name_en}}</a>
                     </li>
                   </ul>
                 </div>
