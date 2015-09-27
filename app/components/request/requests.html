@@ -87,338 +87,251 @@
   .tasklist-controls .filter {
     display: inline-block;
     margin-right: 10px;
-    vertical-align: middle;
+    vertical-align: top;
   }
 
 </style>
 
 
-<!-- Main content -->
-<section class="content" ng-if="ctrl.isUserAuthenticated()">
-  <div class="row">
+<aside class="main-sidebar">
+  <section class="sidebar" style="height: auto;">
 
-    <div class="container">
-
-      <h3>Search for requests</h3>
-      <span class="help-block">Use the controls below to search, filter and sort the list of MODESTI requests.</span>
-
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <div class="tasklist-controls">
-
-            <button class="btn btn-primary filter" ng-click="ctrl.filter.assignee.username = ctrl.getCurrentUsername()">
+    <ul class="sidebar-menu">
+      <li class="treeview active">
+        <a href="#">
+          <i class="fa fa-filter"></i> <span>My Requests</span> <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu menu-open" style="display: block;">
+          <li>
+            <a href="" ng-click="ctrl.filter.assignee.username = ctrl.getCurrentUsername()">
               Assigned to me
-            </button>
-
-            <button class="btn btn-primary filter" ng-click="ctrl.filter.creator.username = ctrl.getCurrentUsername()">
+            </a>
+          </li>
+          <li>
+            <a href="" ng-click="ctrl.filter.creator.username = ctrl.getCurrentUsername()">
               Created by me
-            </button>
+            </a>
+          </li>
+        </ul>
+      </li>
 
-            <div class="filter">
-              <ui-select ng-model="ctrl.filter.status" theme="bootstrap">
-                <ui-select-match placeholder="{{'STATUS'|translate}}" allow-clear="true">
+      <li class="treeview active">
+        <a href="#">
+          <i class="fa fa-filter"></i> <span>By Status</span> <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu menu-open" style="display: block;">
 
-                  <span class="label request-status small {{$select.selected.status}}">{{$select.selected.status.replace('_', ' ')}}</span>
+          <li ng-repeat="status in ctrl.statuses">
+            <a href="" ng-click="ctrl.filter.status = status.status">
+              <span class="label request-status {{status.status}}">{{::status.status.replace('_', ' ')}}</span>
+              <span class="label request-status {{status.status}} pull-right">{{ctrl.getRequestCount(status.status)}}</span>
+            </a>
+          </li>
 
-                </ui-select-match>
-                <ui-select-choices repeat="status.status as status in ctrl.statuses track by $index">
+        </ul>
+      </li>
 
-                  <span class="label request-status small" ng-class="'{{status.status}}'">{{status.status.replace('_', ' ')}}</span>
-                  <!--<span class="label request-status pull-right" ng-class="'{{status.status}}'"> {{status.count}} </span>-->
+      <!--<li class="treeview active">-->
+        <!--<a href="#">-->
+          <!--<i class="fa fa-filter"></i> <span>My Filters</span> <i class="fa fa-angle-left pull-right"></i>-->
+        <!--</a>-->
+        <!--<ul class="treeview-menu menu-open" style="display: block;">-->
 
-                </ui-select-choices>
-              </ui-select>
-            </div>
+          <!--<li>-->
+            <!--<a href="" ng-click="ctrl.filter.assignee.username = ctrl.getCurrentUsername()">-->
+              <!--Assigned to me-->
+            <!--</a>-->
+          <!--</li>-->
 
-            <div class="filter">
-              <ui-select ng-model="ctrl.filter.domain" theme="bootstrap">
-                <ui-select-match placeholder="{{'DOMAIN'|translate}}" allow-clear="true">
-                  {{$select.selected}}
-                </ui-select-match>
-                <ui-select-choices repeat="domain in ctrl.domains track by $index">
-                  <div ng-bind-html="domain | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-
-            <div class="filter">
-              <ui-select ng-model="ctrl.filter.subsystem" theme="bootstrap">
-                <ui-select-match placeholder="{{'SUBSYSTEM'|translate}}" allow-clear="true">
-                  {{$select.selected.value}}
-                </ui-select-match>
-                <ui-select-choices repeat="subsystem.value as subsystem in ctrl.subsystems track by $index"
-                                   refresh="ctrl.getSubsystems($select.search)"
-                                   refresh-delay="0">
-                  <div ng-bind-html="subsystem.value | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-
-            <div class="filter">
-              <ui-select ng-model="ctrl.filter.creator.username" theme="bootstrap">
-                <ui-select-match placeholder="{{'CREATOR'|translate}}" allow-clear="true">
-                  {{$select.selected.firstName}} {{$select.selected.lastName}}
-                </ui-select-match>
-                <ui-select-choices repeat="user.username as user in ctrl.users"
-                                   refresh="ctrl.getUsers($select.search)"
-                                   refresh-delay="0">
-                  <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
-                  <small>
-                    <span class="text-muted" ng-bind-html=" '' + user.username | highlight: $select.search"></span>
-                  </small>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-
-            <div class="filter">
-              <ui-select ng-model="ctrl.filter.assignee.username" theme="bootstrap">
-                <ui-select-match placeholder="Assignee" allow-clear="true">
-                  {{$select.selected.firstName}} {{$select.selected.lastName}}
-                </ui-select-match>
-                <ui-select-choices repeat="user.username as user in ctrl.users"
-                                   refresh="ctrl.getUsers($select.search)"
-                                   refresh-delay="0">
-                  <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
-                  <small>
-                    <span class="text-muted" ng-bind-html=" '' + user.username | highlight: $select.search"></span>
-                  </small>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-
-            <div class="filter">
-              <ui-select ng-model="ctrl.filter.type" theme="bootstrap">
-                <ui-select-match placeholder="{{'Type'|translate}}" allow-clear="true">
-                  {{$select.selected}}
-                </ui-select-match>
-                <ui-select-choices repeat="type in ctrl.types track by $index">
-                  <div ng-bind-html="type | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-
-          </div>
-        </div>
+        <!--</ul>-->
+      <!--</li>-->
 
 
-        <div class="loading-container" style="height: 400px; width: 100%"
-             ng-if="ctrl.loading == 'started' || ctrl.loading == 'error'">
-          <span us-spinner="{position: 'relative', top: '50px', zIndex: '200'}" ng-if="ctrl.loading == 'started'"></span>
-          <i class="fa fa-3x fa-exclamation-triangle" ng-if="ctrl.loading == 'error'"
-             style="position: relative; top: 31px; left: 48.2%;"></i>
-        </div>
+    </ul>
+  </section>
+</aside>
 
 
-        <div class="list-group" ng-if="ctrl.loading == 'success'">
-          <a ng-repeat="request in ctrl.requests"
-             ng-if="ctrl.requests.length > 0"
-             ng-click="ctrl.editRequest(request)"
-             class="list-group-item">
+<div class="content-wrapper">
+<section class="content" ng-if="ctrl.isUserAuthenticated()">
 
-            <i class="fa fa-list-ol fa-fw text-muted"></i>
-            <span class=""><strong>{{request.description}}</strong></span>
-            <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
-            <br/>
-            <span class="" style="font-size: 11px;">
-              <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} </span>
-              <span class="text-muted"> &middot; <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
-              <span class="text-muted"> &middot; <i class="fa fa-fw fa-sitemap"></i> {{request.subsystem}} </span>
-              <span class="text-muted" ng-if="request.datasources.length > 0">
-                &middot; <i class="fa fa-fw fa-cogs"></i>{{request.datasources.join(', ')}}
+  <!--<h3>Search for requests</h3>-->
+  <!--<span class="help-block">Use the controls below to search, filter and sort the list of MODESTI requests.</span>-->
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="tasklist-controls">
+
+        <style>
+          .bootstrap-select.btn-group .dropdown-menu li small {
+            padding-left: 0;
+          }
+
+          span.filter-option {
+            color: #737373;
+          }
+
+          .dropdown-menu > li > a > .glyphicon, .dropdown-menu > li > a > .fa, .dropdown-menu > li > a > .ion {
+            margin-right: 0;
+          }
+        </style>
+
+        <div class="filter">
+          <select multiple selectpicker="{}" ng-cloak
+                  ng-model="ctrl.filter.status"
+                  data-title="Status"
+                  data-header="Select statuses"
+                  select-model="ctrl.statuses"
+                  data-width="170px">
+            <option ng-repeat="status in ctrl.statuses" ng-cloak value="{{status.status}}" data-content="
+              <span class='label request-status {{::status.status}}' style='margin-right: 20px;'>
+                {{::status.status.replace('_', ' ')}}
               </span>
-              <span class="text-muted"> &middot; <i class="fa fa-fw fa-user"></i> {{request.assignee.username}} </span>
-            </span>
-            <span class="text-muted pull-right" style="font-size: 11px; margin-top: 5px;"><i class="fa fa-fw fa-clock-o"></i> {{request.createdAt | date:'medium'}}</span>
-          </a>
-          <div class="list-group-item" ng-if="ctrl.requests.length == 0">
-            No requests to show
-          </div>
+            ">
+            </option>
+          </select>
         </div>
+
+        <div class="filter">
+          <select multiple selectpicker="{}" ng-cloak
+                  ng-model="ctrl.filter.domain"
+                  data-title="{{'DOMAIN'|translate}}"
+                  data-header="Select domains"
+                  data-width="150px">
+            <option ng-repeat="domain in ctrl.domains" ng-cloak value="{{domain}}">{{domain}}</option>
+          </select>
+        </div>
+
+        <div class="filter">
+          <select multiple selectpicker="{}" ng-cloak
+                  ng-model="ctrl.filter.subsystem"
+                  data-size="20"
+                  data-title="{{'SUBSYSTEM'|translate}}"
+                  data-header="Select subsystems"
+                  select-model="ctrl.subsystems"
+                  data-live-search="true"
+                  data-width="150px"
+                  ng-options="subsystem.value as subsystem.value for subsystem in ctrl.subsystems"></select>
+        </div>
+
+        <div class="filter">
+          <select multiple selectpicker="{}" ng-cloak
+                  ng-model="ctrl.filter.creator.username"
+                  data-title="{{'CREATOR'|translate}}"
+                  data-header="Select users"
+                  select-model="ctrl.users"
+                  data-live-search="true"
+                  data-width="150px">
+            <option ng-repeat="user in ctrl.users" ng-cloak value="{{user.username}}" title="{{user.username}}" data-subtext="{{user.username}}">
+              {{user.firstName}} {{user.lastName}}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter">
+          <select multiple selectpicker="{}" ng-cloak
+                  ng-model="ctrl.filter.assignee.username"
+                  data-title="{{'Assignee'|translate}}"
+                  data-header="Select users"
+                  select-model="ctrl.users"
+                  data-live-search="true"
+                  data-width="150px">
+            <option ng-repeat="user in ctrl.users" ng-cloak value="{{user.username}}" title="{{user.username}}" data-subtext="{{user.username}}">
+              {{user.firstName}} {{user.lastName}}
+            </option>
+          </select>
+        </div>
+
+        <div class="filter">
+          <select multiple selectpicker="{}" ng-cloak
+                  ng-model="ctrl.filter.type"
+                  data-title="{{'Type'|translate}}"
+                  data-header="Select request types"
+                  data-width="150px">
+            <option ng-repeat="type in ctrl.types" ng-cloak value="{{type}}">{{type}}</option>
+          </select>
+        </div>
+
+        <div class="filter">
+          <button class="btn btn-default" ng-click="ctrl.resetFilter()" tooltip="Clear filter" tooltip-append-to-body="true">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+
+        <div class="pull-right">
+          <select selectpicker="{}" ng-cloak
+                  ng-model="ctrl.sort"
+                  data-title="Sort by"
+                  data-width="auto">
+            <option value="createdAt,desc" title="sort: Newest">Newest</option>
+            <option value="createdAt,asc" title="sort: Oldest">Oldest</option>
+            <option value="status,asc" title="sort: Status">Status</option>
+            <option value="domain,asc" title="sort: Domain">Domain</option>
+            <option value="subsystem,asc" title="sort: Subsystem">Subsystem</option>
+            <option value="creator,asc" title="sort: Creator">Creator</option>
+            <option value="assignee,asc" title="sort: Assignee">Assignee</option>
+            <option value="type,asc" title="sort: Type">Type</option>
+          </select>
+        </div>
+
       </div>
+    </div>
 
 
-      <!--<div class="col-md-3">-->
-        <!--<div class="sidebar-menu">-->
-          <!--<ul class="nav nav-pills nav-stacked">-->
-            <!--<li ng-class="{active: ctrl.filter.status == ''}">-->
-              <!--<a href="" ng-click="ctrl.filter.status = ''">-->
-                <!--<i class="fa fa-fw fa-circle-o"></i> All </a>-->
-            <!--</li>-->
-            <!--<li ng-class="{active: ctrl.filter.status == 'IN_PROGRESS'}">-->
-              <!--<a href="" ng-click="ctrl.filter.status = 'IN_PROGRESS'">-->
-                <!--<i class="fa fa-fw fa-inbox"></i> In Progress-->
-                <!--<span class="label request-status pull-right" ng-class="'IN_PROGRESS'">{{ctrl.getRequestCount('IN_PROGRESS')}}</span>-->
-              <!--</a>-->
-            <!--</li>-->
-            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_CORRECTION'}">-->
-              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_CORRECTION'">-->
-                <!--<i class="fa fa-fw fa-exclamation-circle"></i> For Correction-->
-                <!--<span class="label request-status pull-right" ng-class="'FOR_CORRECTION'">{{ctrl.getRequestCount('FOR_CORRECTION')}}</span>-->
-              <!--</a>-->
-            <!--</li>-->
-            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_APPROVAL'}">-->
-              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_APPROVAL'">-->
-                <!--<i class="fa fa-fw fa-bell-o"></i> For Approval-->
-                <!--<span class="label request-status pull-right" ng-class="'FOR_APPROVAL'">{{ctrl.getRequestCount('FOR_APPROVAL')}}</span>-->
-              <!--</a>-->
-            <!--</li>-->
-            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_ADDRESSING'}">-->
-              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_ADDRESSING'">-->
-                <!--<i class="fa fa-fw fa-tasks"></i> For Addressing-->
-                <!--<span class="label request-status pull-right" ng-class="'FOR_ADDRESSING'">{{ctrl.getRequestCount('FOR_ADDRESSING')}}</span>-->
-              <!--</a>-->
-            <!--</li>-->
-            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_CABLING'}">-->
-              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_CABLING'">-->
-                <!--<i class="fa fa-fw fa-plug"></i> For Cabling-->
-                <!--<span class="label request-status pull-right" ng-class="'FOR_CABLING'">{{ctrl.getRequestCount('FOR_CABLING')}}</span>-->
-              <!--</a>-->
-            <!--</li>-->
-            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_CONFIGURATION'}">-->
-              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_CONFIGURATION'">-->
-                <!--<i class="fa fa-fw fa-cog"></i> For Configuration-->
-                <!--<span class="label request-status pull-right" ng-class="'FOR_CONFIGURATION'">{{ctrl.getRequestCount('FOR_CONFIGURATION')}}</span>-->
-              <!--</a>-->
-            <!--</li>-->
-            <!--<li ng-class="{active: ctrl.filter.status == 'FOR_TESTING'}">-->
-              <!--<a href="" ng-click="ctrl.filter.status = 'FOR_TESTING'">-->
-                <!--<i class="fa fa-fw fa-check-square-o"></i> For Testing-->
-                <!--<span class="label request-status pull-right" ng-class="'FOR_TESTING'">{{ctrl.getRequestCount('FOR_TESTING')}}</span>-->
-              <!--</a>-->
-            <!--</li>-->
-            <!--<li ng-class="{active: ctrl.filter.status == 'CLOSED'}">-->
-              <!--<a href="" ng-click="ctrl.filter.status = 'CLOSED'">-->
-                <!--<i class="fa fa-fw fa-lock"></i> Closed-->
-                <!--<span class="label request-status pull-right"-->
-                      <!--ng-class="'CLOSED'">{{ctrl.getRequestCount('CLOSED')}}</span>-->
-              <!--</a>-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</div>-->
-      <!--</div>-->
+    <div class="loading-container" style="height: 400px; width: 100%"
+         ng-if="ctrl.loading == 'started' || ctrl.loading == 'error'">
+      <span us-spinner="{position: 'relative', top: '50px', zIndex: '200'}" ng-if="ctrl.loading == 'started'"></span>
+      <i class="fa fa-3x fa-exclamation-triangle" ng-if="ctrl.loading == 'error'"
+         style="position: relative; top: 31px; left: 48.2%;"></i>
+    </div>
 
 
-      <!--<div class="col-md-9">-->
-        <!--<div class="tasklist-controls">-->
+    <div class="list-group" ng-if="ctrl.loading == 'success'">
+      <a ng-repeat="request in ctrl.requests"
+         ng-if="ctrl.requests.length > 0"
+         ng-click="ctrl.editRequest(request)"
+         class="list-group-item">
 
-          <!--<div class="btn-group">-->
-            <!--<ui-select ng-model="ctrl.filter.domain" theme="bootstrap" style="width:130px">-->
-              <!--<ui-select-match placeholder="{{'DOMAIN'|translate}}" allow-clear="true">-->
-                <!--{{$select.selected}}-->
-              <!--</ui-select-match>-->
-              <!--<ui-select-choices repeat="domain in ctrl.domains track by $index">-->
-                <!--<div ng-bind-html="domain | highlight: $select.search"></div>-->
-              <!--</ui-select-choices>-->
-            <!--</ui-select>-->
-          <!--</div>-->
-
-          <!--<div class="btn-group">-->
-            <!--<ui-select ng-model="ctrl.filter.subsystem" theme="bootstrap" style="width:180px">-->
-              <!--<ui-select-match placeholder="{{'SUBSYSTEM'|translate}}" allow-clear="true">-->
-                <!--{{$select.selected.value}}-->
-              <!--</ui-select-match>-->
-              <!--<ui-select-choices repeat="subsystem.value as subsystem in ctrl.subsystems track by $index"-->
-                                 <!--refresh="ctrl.getSubsystems($select.search)"-->
-                                 <!--refresh-delay="0">-->
-                <!--<div ng-bind-html="subsystem.value | highlight: $select.search"></div>-->
-              <!--</ui-select-choices>-->
-            <!--</ui-select>-->
-          <!--</div>-->
-
-          <!--&lt;!&ndash;TODO: use /users endpoint instead of doing a unique filter on requests&ndash;&gt;-->
-          <!--<div class="btn-group">-->
-            <!--<ui-select ng-model="ctrl.filter.creator.username" theme="bootstrap" style="width:180px">-->
-              <!--<ui-select-match placeholder="{{'CREATOR'|translate}}" allow-clear="true">-->
-                <!--{{$select.selected.creator.firstName}} {{$select.selected.creator.lastName}}-->
-              <!--</ui-select-match>-->
-              <!--<ui-select-choices repeat="request.creator.username as request in ctrl.requests | unique:'creator.username'">-->
-                <!--<div ng-bind-html="request.creator.firstName + ' ' + request.creator.lastName | highlight: $select.search"></div>-->
-                <!--<small>-->
-                  <!--<span style="color: #c7c7c7;" ng-bind-html=" '' + request.creator.username | highlight: $select.search"></span>-->
-                <!--</small>-->
-              <!--</ui-select-choices>-->
-            <!--</ui-select>-->
-          <!--</div>-->
-
-          <!--<div class="btn-group">-->
-            <!--<ui-select ng-model="ctrl.filter.type" theme="bootstrap" style="width:130px">-->
-              <!--<ui-select-match placeholder="{{'Type'|translate}}" allow-clear="true">-->
-                <!--{{$select.selected}}-->
-              <!--</ui-select-match>-->
-              <!--<ui-select-choices repeat="type in ctrl.types track by $index">-->
-                <!--<div ng-bind-html="type | highlight: $select.search"></div>-->
-              <!--</ui-select-choices>-->
-            <!--</ui-select>-->
-          <!--</div>-->
-
-        <!--</div>-->
-
-        <!--<div class="tasklist-controls" style="position: relative;">-->
-          <!--&lt;!&ndash;<form class="form-inline search-form">&ndash;&gt;-->
-            <!--&lt;!&ndash;<div class="form-group input-group">&ndash;&gt;-->
-              <!--&lt;!&ndash;<input type="text" name="q" ng-model="q" class="form-control" placeholder="Search requests..."> <span&ndash;&gt;-->
-                <!--&lt;!&ndash;class="input-group-btn">&ndash;&gt;-->
-                  <!--&lt;!&ndash;<button type="submit" name="search" id="search-btn" class="btn btn-flat">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<i class="fa fa-search"></i>&ndash;&gt;-->
-                  <!--&lt;!&ndash;</button>&ndash;&gt;-->
-                <!--&lt;!&ndash;</span>&ndash;&gt;-->
-            <!--&lt;!&ndash;</div>&ndash;&gt;-->
-          <!--&lt;!&ndash;</form>&ndash;&gt;-->
-
-
-        <!--</div>-->
-
-        <!--<div class="loading-container" style="height: 400px; width: 100%"-->
-             <!--ng-if="ctrl.loading == 'started' || ctrl.loading == 'error'">-->
-          <!--<span us-spinner="{position: 'absolute', zIndex: '200'}" ng-if="ctrl.loading == 'started'"></span>-->
-          <!--<i class="fa fa-2x fa-exclamation-triangle" ng-if="ctrl.loading == 'error'"-->
-             <!--style="position: absolute; top: 50%; left: 50%;"></i>-->
-        <!--</div>-->
-
-        <!--<div class="list-group" ng-if="ctrl.loading == 'success'">-->
-          <!--<a ng-repeat="request in ctrl.requests"-->
-             <!--ng-if="ctrl.requests.length > 0"-->
-             <!--ng-click="ctrl.editRequest(request)"-->
-             <!--class="list-group-item">-->
-
-            <!--<i class="fa fa-list-ol fa-fw text-muted"></i>-->
-            <!--<span class=""><strong>{{request.description}}</strong></span>-->
-            <!--<span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>-->
-            <!--<br/>-->
-            <!--<span class="" style="font-size: 11px;">-->
-              <!--<span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} </span>-->
-              <!--<span class="text-muted"> &middot; <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>-->
-              <!--<span class="text-muted"> &middot; <i class="fa fa-fw fa-sitemap"></i> {{request.subsystem}} </span>-->
-              <!--<span class="text-muted" ng-if="request.datasources.length > 0">-->
-                <!--&middot; <i class="fa fa-fw fa-cogs"></i>{{request.datasources.join(', ')}}-->
-              <!--</span>-->
-            <!--</span>-->
-          <!--</a>-->
-          <!--<div class="list-group-item" ng-if="ctrl.requests.length == 0">-->
-            <!--No requests to show-->
-          <!--</div>-->
-        <!--</div>-->
-
-
-        <div class="pull-left" ng-if="ctrl.loading == 'success' && ctrl.requests.length > 0">
-          <pagination boundary-links="true"
-                      max-size="5"
-                      total-items="ctrl.page.totalElements"
-                      items-per-page="ctrl.page.size"
-                      rotate="false"
-                      ng-model="ctrl.page.number"
-                      ng-change="ctrl.onPageChanged()"
-                      class="pagination-sm"
-                      previous-text="&lsaquo;"
-                      next-text="&rsaquo;"
-                      first-text="&laquo;"
-                      last-text="&raquo;"></pagination>
-        </div>
-
-        <div class="pull-right" ng-if="ctrl.page.totalElements">
-          {{ctrl.page.totalElements}} requests for this filter
-        </div>
+        <i class="fa fa-list-ol fa-fw text-muted"></i>
+        <span class=""><strong>{{request.description}}</strong></span>
+        <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
+        <br/>
+        <span class="" style="font-size: 11px;">
+          <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} </span>
+          <span class="text-muted"> &middot; {{request.type}} </span>
+          <span class="text-muted"> &middot; <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
+          <span class="text-muted"> &middot; <i class="fa fa-fw fa-sitemap"></i> {{request.subsystem}} </span>
+          <span class="text-muted" ng-if="request.datasources.length > 0">
+            &middot; <i class="fa fa-fw fa-cogs"></i>{{request.datasources.join(', ')}}
+          </span>
+          <span class="text-muted"> &middot; <i class="fa fa-fw fa-user"></i> {{request.assignee.username}} </span>
+        </span>
+        <span class="text-muted pull-right" style="font-size: 11px; margin-top: 5px;"><i class="fa fa-fw fa-clock-o"></i> {{request.createdAt | date:'medium'}}</span>
+      </a>
+      <div class="list-group-item" ng-if="ctrl.requests.length == 0">
+        No requests to show
       </div>
     </div>
   </div>
+
+  <div class="pull-left" ng-if="ctrl.loading == 'success' && ctrl.requests.length > 0">
+    <pagination boundary-links="true"
+                max-size="5"
+                total-items="ctrl.page.totalElements"
+                items-per-page="ctrl.page.size"
+                rotate="false"
+                ng-model="ctrl.page.number"
+                ng-change="ctrl.onPageChanged()"
+                class="pagination-sm"
+                previous-text="&lsaquo;"
+                next-text="&rsaquo;"
+                first-text="&laquo;"
+                last-text="&raquo;"></pagination>
+  </div>
+
+  <div class="pull-right" ng-if="ctrl.page.totalElements">
+    {{ctrl.page.totalElements}} requests for this filter
+  </div>
+
 </section>
+</div>

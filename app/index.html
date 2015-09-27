@@ -13,6 +13,7 @@
 <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 <!-- build:css(app) styles/vendor.css -->
 <!-- bower:css -->
+<link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
 <link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
 <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
 <link rel="stylesheet" href="bower_components/famfamfam-flags-sprite/src/flags-sprite.min.css" />
@@ -30,7 +31,7 @@
 <!-- endbuild -->
 </head>
 
-<body class="skin-blue-light sidebar-collapse">
+<body class="skin-blue-light sidebar-mini">
 
 <!--[if lt IE 10]>
 <div class="col-lg-12">
@@ -184,11 +185,14 @@
   <!-- build:js(app) scripts/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/modernizr/modernizr.js"></script>
+  <script src="bower_components/es5-shim/es5-shim.js"></script>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+  <script src="bower_components/angular-bootstrap-select-updated/build/angular-bootstrap-select.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-  <script src="bower_components/angular-file-upload/angular-file-upload.min.js"></script>
+  <script src="bower_components/angular-file-upload/angular-file-upload.js"></script>
   <script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
   <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
   <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>

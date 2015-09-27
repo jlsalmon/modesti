@@ -16,18 +16,8 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.users = [];
   self.types = ['CREATE', 'UPDATE', 'DELETE'];
 
-  self.filter = {
-    status: '',
-    domain: '',
-    subsystem: '',
-    creator: {
-      username: ''
-    },
-    assignee: {
-      username: ''
-    },
-    type: ''
-  };
+  self.filter = {};
+  self.sort = 'createdAt,desc';
 
   self.loading = undefined;
 
@@ -38,11 +28,14 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.deleteRequest = deleteRequest;
   self.editRequest = editRequest;
   self.onPageChanged = onPageChanged;
+  self.resetFilter = resetFilter;
   self.getRequestCount = getRequestCount;
 
-  getRequests(1, 10, 'requestId,desc', self.filter);
+  resetFilter();
+  getRequests(1, 20, self.sort, self.filter);
   getRequestMetrics();
   getUsers();
+  getSubsystems();
 
   /**
    *
@@ -58,6 +51,24 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
    */
   function getCurrentUsername() {
     return AuthService.getCurrentUser().username;
+  }
+
+  /**
+   *
+   */
+  function resetFilter() {
+    self.filter = {
+      status: [],
+      domain: [],
+      subsystem: [],
+      creator: {
+        username: []
+      },
+      assignee: {
+        username: []
+      },
+      type: []
+    };
   }
 
   /**
@@ -117,7 +128,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
    */
   function editRequest(request) {
     var href = request._links.self.href;
-    var id = href.substring(href.lastIndexOf('/') + 1);
+    var id = href.substring(href.lastIndexOf('/') + 1).replace('{?projection}', '');
 
     $location.path('/requests/' + id);
   }
@@ -175,20 +186,23 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
    *
    */
   function onPageChanged() {
-    getRequests(self.page.number, self.page.size, 'requestId,desc', self.filter);
+    getRequests(self.page.number, self.page.size, self.sort, self.filter);
   }
 
   /**
    *
    */
-  $scope.$watch(function () {
-    return self.filter;
-  }, function () {
-
+  function onCriteriaChanged() {
     if (!self.page) {
       return;
     }
 
-    getRequests(0, self.page.size, 'requestId,desc', self.filter);
-  }, true);
+    getRequests(0, self.page.size, self.sort, self.filter);
+  }
+
+  /**
+   *
+   */
+  $scope.$watch(function() { return self.filter; }, onCriteriaChanged, true);
+  $scope.$watch(function() { return self.sort; }, onCriteriaChanged, true);
 }

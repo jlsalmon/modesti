@@ -879,7 +879,7 @@ a:focus {
 .dropdown-menu > li > a > .glyphicon,
 .dropdown-menu > li > a > .fa,
 .dropdown-menu > li > a > .ion {
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 .dropdown-menu > li > a:hover {
   background-color: #e1e3e9;

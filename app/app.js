@@ -24,5 +24,6 @@ var app = angular.module('modesti',
   'http-auth-interceptor',
   'pascalprecht.translate',
   'angularSpinner',
-  'angular.filter'
+  'angular.filter',
+  'angular-bootstrap-select'
 ]);

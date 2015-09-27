@@ -33,17 +33,12 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
     var q = $q.defer();
     page = page || 0;
     size = size || 20;
-    sort = sort || 'requestId,desc';
+    sort = sort || 'createdAt,desc';
 
-    $http.get(BACKEND_BASE_URL + '/requests/search/find',
+    $http.get(BACKEND_BASE_URL + '/requests/search',
     {
       params: {
-        status: filter.status || '',
-        domain: filter.domain || '',
-        type: filter.type || '',
-        subsystem: filter.subsystem || '',
-        creator: filter.creator.username || '',
-        assignee: filter.assignee.username || '',
+        query: parseQuery(filter),
         page: page - 1,
         size: size,
         sort: sort
@@ -58,6 +53,43 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
     });
 
     return q.promise;
+  }
+
+  /**
+   *
+   * @param filter
+   * @returns {string}
+   */
+  function parseQuery(filter) {
+    var expressions = [];
+
+    for (var property in filter) {
+      if (typeof filter[property] === 'string' && filter[property] !== '') {
+        expressions.push(property.toString() + '=="' + filter[property] + '"');
+      }
+
+      else if (filter[property] instanceof Array && filter[property].length > 0) {
+        expressions.push(property.toString() + '=in=' + '("' + filter[property].join('","') + '")');
+      }
+
+      else if (typeof filter[property] === 'object') {
+        for (var subProperty in filter[property]) {
+
+          if (typeof filter[property][subProperty] === 'string' && filter[property][subProperty] !== '') {
+            expressions.push(property.toString() + '.' + subProperty.toString() + '=="' + filter[property][subProperty] + '"');
+          }
+
+          else if (filter[property][subProperty] instanceof Array && filter[property][subProperty].length > 0) {
+            expressions.push(property.toString() + '.' + subProperty.toString() + '=in=' + '("' + filter[property][subProperty].join('","') + '")');
+          }
+        }
+      }
+    }
+
+    var query = expressions.join('; ');
+
+    console.log('parsed query: ' + query);
+    return query;
   }
 
   /**
