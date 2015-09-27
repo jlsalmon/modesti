@@ -19,7 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 
 @RepositoryRestResource(excerptProjection = RequestProjection.class)
-public interface RequestRepository extends MongoRepository<Request, String> /*, QueryDslPredicateExecutor<Request> */{
+public interface RequestRepository extends MongoRepository<Request, String>, QueryDslPredicateExecutor<Request> {
 
   /**
    * @param requestId

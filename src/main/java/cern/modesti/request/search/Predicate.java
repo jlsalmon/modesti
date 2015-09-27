@@ -1,10 +1,7 @@
-package cern.modesti.refpoint;
+package cern.modesti.request.search;
 
-import cern.modesti.repository.refpoint.RefPoint;
 import com.mysema.query.types.expr.BooleanExpression;
-import com.mysema.query.types.path.NumberPath;
-import com.mysema.query.types.path.PathBuilder;
-import com.mysema.query.types.path.StringPath;
+import com.mysema.query.types.path.*;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -18,12 +15,18 @@ import static org.apache.commons.lang3.StringUtils.isNumeric;
  * @author Justin Lewis Salmon
  */
 @AllArgsConstructor
-public class PointPredicate {
+public class Predicate<T> {
 
   private SearchCriteria criteria;
 
+  private final Class<T> klass;
+
+  /**
+   *
+   * @return
+   */
   public BooleanExpression getPredicate() {
-    PathBuilder<RefPoint> entityPath = new PathBuilder<>(RefPoint.class, "refPoint");
+    PathBuilder<T> entityPath = new PathBuilder<>(klass, klass.getSimpleName());
 
     final List<String> args = criteria.getArguments();
     String argument = args.get(0);
@@ -78,7 +81,8 @@ public class PointPredicate {
     }
 
     else if (IN.equals(criteria.getOperation())) {
-      throw new UnsupportedOperationException("Not implemented yet");
+      ListPath path = entityPath.getList(criteria.getKey(), String.class);
+      return path.contains(criteria.getArguments());
     }
 
     else if (NOT_IN.equals(criteria.getOperation())) {

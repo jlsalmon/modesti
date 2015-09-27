@@ -1,4 +1,4 @@
-package cern.modesti.refpoint;
+package cern.modesti.request.search;
 
 import com.mysema.query.types.expr.BooleanExpression;
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
@@ -11,14 +11,16 @@ import java.util.List;
  *
  * @author Justin Lewis Salmon
  */
-public class PointPredicateBuilder {
-  private List<SearchCriteria> params;
+public class PredicateBuilder<T> {
+  private List<SearchCriteria> params = new ArrayList<>();
 
-  public PointPredicateBuilder() {
-    params = new ArrayList<>();
+  private final Class<T> klass;
+
+  public PredicateBuilder(Class<T> klass) {
+    this.klass = klass;
   }
 
-  public PointPredicateBuilder with(String key, ComparisonOperator operation, List<String> arguments) {
+  public PredicateBuilder with(String key, ComparisonOperator operation, List<String> arguments) {
     params.add(new SearchCriteria(key, operation, arguments));
     return this;
   }
@@ -29,9 +31,9 @@ public class PointPredicateBuilder {
     }
 
     List<BooleanExpression> predicates = new ArrayList<>();
-    PointPredicate predicate;
+    Predicate<T> predicate;
     for (SearchCriteria param : params) {
-      predicate = new PointPredicate(param);
+      predicate = new Predicate<>(param, klass);
       BooleanExpression exp = predicate.getPredicate();
       if (exp != null) {
         predicates.add(exp);

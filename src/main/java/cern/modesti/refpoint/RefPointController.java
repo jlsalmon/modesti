@@ -2,9 +2,8 @@ package cern.modesti.refpoint;
 
 import cern.modesti.repository.refpoint.RefPoint;
 import cern.modesti.repository.refpoint.RefPointRepository;
-import com.mysema.query.types.expr.BooleanExpression;
-import cz.jirutka.rsql.parser.RSQLParser;
-import cz.jirutka.rsql.parser.ast.Node;
+import cern.modesti.request.search.RsqlExpressionBuilder;
+import com.mysema.query.types.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,12 +43,10 @@ public class RefPointController {
   @RequestMapping(value = "/points/ref", method = GET, produces = "application/json")
   HttpEntity<PagedResources<RefPoint>> getPointsByRsql(@RequestParam("search") String search, Pageable pageable, PagedResourcesAssembler assembler) {
 
-    final Node rootNode = new RSQLParser().parse(search);
-    final BooleanExpression predicate = rootNode.accept(new CustomRsqlVisitor());
+    Predicate predicate = new RsqlExpressionBuilder<>(RefPoint.class).createExpression(search);
     log.debug(predicate.toString());
 
     Page<RefPoint> points = repository.findAll(predicate, pageable);
-
     return new ResponseEntity<>(assembler.toResource(points, resourceAssembler), HttpStatus.OK);
   }
 

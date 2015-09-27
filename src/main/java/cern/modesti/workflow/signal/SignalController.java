@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.String.format;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -70,7 +67,7 @@ public class SignalController {
     Task task = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).active().singleResult();
 
     if (task == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(new Resources<>(Collections.emptyList()), HttpStatus.OK);
     }
 
     // Query the signals that are subscribed to by the current process instance.

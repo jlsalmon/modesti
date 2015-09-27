@@ -2,10 +2,9 @@ package cern.modesti.refpoint;
 
 import cern.modesti.repository.refpoint.RefPoint;
 import cern.modesti.repository.refpoint.RefPointRepository;
+import cern.modesti.request.search.RsqlExpressionBuilder;
 import cern.modesti.util.BaseIntegrationTest;
-import com.mysema.query.types.expr.BooleanExpression;
-import cz.jirutka.rsql.parser.RSQLParser;
-import cz.jirutka.rsql.parser.ast.Node;
+import com.mysema.query.types.Predicate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,8 +55,7 @@ public class RefPointPredicateTest extends BaseIntegrationTest {
 
   @Test
   public void stringPropertyEquals() {
-    Node rootNode = new RSQLParser().parse("pointDescription == 'point 1'");
-    BooleanExpression predicate = rootNode.accept(new CustomRsqlVisitor());
+    Predicate predicate = new RsqlExpressionBuilder<>(RefPoint.class).createExpression("pointDescription == 'point 1'");
     Iterable<RefPoint> results = repository.findAll(predicate);
 
     assertThat(results, contains(point1));
@@ -66,8 +64,7 @@ public class RefPointPredicateTest extends BaseIntegrationTest {
 
   @Test
   public void stringPropertyNotEquals() {
-    Node rootNode = new RSQLParser().parse("pointDescription != 'point 1'");
-    BooleanExpression predicate = rootNode.accept(new CustomRsqlVisitor());
+    Predicate predicate = new RsqlExpressionBuilder<>(RefPoint.class).createExpression("pointDescription != 'point 1'");
     Iterable<RefPoint> results = repository.findAll(predicate);
 
     assertThat(results, not(contains(point1)));
@@ -76,8 +73,7 @@ public class RefPointPredicateTest extends BaseIntegrationTest {
 
   @Test
   public void numericPropertyEquals() {
-    Node rootNode = new RSQLParser().parse("id == 2");
-    BooleanExpression predicate = rootNode.accept(new CustomRsqlVisitor());
+    Predicate predicate = new RsqlExpressionBuilder<>(RefPoint.class).createExpression("id == 2");
     Iterable<RefPoint> results = repository.findAll(predicate);
 
     assertThat(results, not(contains(point1)));
@@ -86,8 +82,7 @@ public class RefPointPredicateTest extends BaseIntegrationTest {
 
   @Test
   public void numericPropertyNotEquals() {
-    Node rootNode = new RSQLParser().parse("id != 2");
-    BooleanExpression predicate = rootNode.accept(new CustomRsqlVisitor());
+    Predicate predicate = new RsqlExpressionBuilder<>(RefPoint.class).createExpression("id != 2");
     Iterable<RefPoint> results = repository.findAll(predicate);
 
     assertThat(results, contains(point1));
@@ -96,8 +91,7 @@ public class RefPointPredicateTest extends BaseIntegrationTest {
 
   @Test
   public void multiplePropertyEquals() {
-    Node rootNode = new RSQLParser().parse("id == 1 and pointDatatype == Boolean");
-    BooleanExpression predicate = rootNode.accept(new CustomRsqlVisitor());
+    Predicate predicate = new RsqlExpressionBuilder<>(RefPoint.class).createExpression("id == 1 and pointDatatype == Boolean");
     Iterable<RefPoint> results = repository.findAll(predicate);
 
     assertThat(results, contains(point1));
@@ -106,8 +100,7 @@ public class RefPointPredicateTest extends BaseIntegrationTest {
 
   @Test
   public void nonexistentProperty() {
-    Node rootNode = new RSQLParser().parse("id == 999");
-    BooleanExpression predicate = rootNode.accept(new CustomRsqlVisitor());
+    Predicate predicate = new RsqlExpressionBuilder<>(RefPoint.class).createExpression("id == 999");
     Iterable<RefPoint> results = repository.findAll(predicate);
 
     assertThat(results, emptyIterable());
