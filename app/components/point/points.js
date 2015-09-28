@@ -48,6 +48,8 @@ function PointsController(schemas, PointService) {
       return;
     }
 
+    console.log('query: ' + query);
+
     PointService.getPoints(query, page, size, sort).then(function (response) {
       if (response.hasOwnProperty('_embedded')) {
         self.points = response._embedded.refPoints;

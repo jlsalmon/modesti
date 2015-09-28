@@ -45,7 +45,11 @@ function SchemaService($q, $http) {
         // Tagnames must be unique.
         if (category.id === 'location') {
           var constraint = getUniqueTagnameConstraint();
-          category.constraints ? category.constraints.push(constraint) : category.constraints = [constraint];
+          if (category.constraints) {
+            category.constraints.push(constraint);
+          } else {
+            category.constraints = [constraint];
+          }
         }
 
         // Fault member, fault code and problem description are shown on 'alarms' and 'alarmHelp' categories
