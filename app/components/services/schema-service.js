@@ -42,6 +42,12 @@ function SchemaService($q, $http) {
           category.fields.push(getTagnameField());
         }
 
+        // Tagnames must be unique.
+        if (category.id === 'location') {
+          var constraint = getUniqueTagnameConstraint();
+          category.constraints ? category.constraints.push(constraint) : category.constraints = [constraint];
+        }
+
         // Fault member, fault code and problem description are shown on 'alarms' and 'alarmHelp' categories
         if (category.id === 'alarms' || category.id === 'alarmHelp') {
           category.fields.push(getFaultFamilyField());
@@ -186,6 +192,17 @@ function SchemaService($q, $http) {
       name_fr: 'Tagname',
       help_en: '',
       help_fr: ''
+    };
+  }
+
+  /**
+   *
+   * @returns {*}
+   */
+  function getUniqueTagnameConstraint() {
+    return {
+      'type': 'unique',
+      'members': [ 'tagname' ]
     };
   }
 

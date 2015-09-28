@@ -271,7 +271,7 @@
 
           <div ng-repeat="point in ctrl.rows track by point.lineNo">
             <div ng-repeat="error in point.errors track by $index">
-              <div ng-repeat="error in error.errors">
+              <div ng-repeat="error in error.errors track by $index">
                 <i class="fa fa-fw fa-exclamation-circle text-danger"></i> Line {{point.lineNo}}: {{error}}
               </div>
             </div>
