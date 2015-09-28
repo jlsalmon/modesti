@@ -6,6 +6,7 @@ import java.util.Set;
 
 import cern.modesti.user.Role;
 import cern.modesti.user.User;
+import cern.modesti.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -32,6 +33,9 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
 
   @Autowired
   private Environment env;
+
+  @Autowired
+  private UserRepository userRepository;
 
   @Override
   public UserDetails mapUserFromContext(DirContextOperations context, String username, Collection<? extends GrantedAuthority> grantedAuthorities) {
@@ -67,6 +71,12 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
     }
 
     user.setAuthorities(authorities);
+
+    // Add this user to the database if they haven't logged in before.
+    if (userRepository.findOneByUsername(username) == null) {
+      userRepository.save(user);
+    }
+
     return user;
   }
 
