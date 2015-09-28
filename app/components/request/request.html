@@ -186,7 +186,8 @@
         </button>
 
         <!-- Delete button -->
-        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.deleteRequest()" tooltip-append-to-body="true" tooltip="Delete request">
+        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.deleteRequest()" ng-if="ctrl.isCurrentUserAuthorised()"
+                tooltip-append-to-body="true" tooltip="Delete request">
           <i class="fa fa-fw fa-trash"></i>
         </button>
 
