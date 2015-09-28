@@ -47,7 +47,8 @@ public interface SubSystemRepository extends ReadOnlyRepository<SubSystem, Strin
       "       tess_subsystem_name as subsystem,                                              " +
       "       tess_subsystem_code as subsystemCode                                           " +
       "FROM   vpts_sysdet " +
-      "WHERE  tes_system_name || ' ' || tess_subsystem_name LIKE UPPER('%' || :query || '%') ",
+      "WHERE  tes_system_name || ' ' || tess_subsystem_name LIKE UPPER('%' || :query || '%') " +
+      "ORDER BY 1",
       nativeQuery = true)
   @Cacheable("subsystems")
   List<SubSystem> find(@Param("query") String query);
