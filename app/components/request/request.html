@@ -80,8 +80,9 @@
           <ul class="dropdown-menu">
             <li ng-repeat="category in ctrl.schema.categories"
                 ng-click="ctrl.activateCategory(category)">
-              <a>
-                <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger"></i>{{::category.name_en}}
+              <a href="">
+                <span>{{::category.name_en}}
+                <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger fa-pull-right"></i></span>
               </a>
             </li>
 

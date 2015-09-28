@@ -7,10 +7,11 @@
  */
 angular.module('modesti').controller('CreationController', CreationController);
 
-function CreationController($scope, $http, $state, $modal, RequestService, AlertService, ColumnService) {
+function CreationController($scope, $http, $state, $modal, RequestService, AlertService, ColumnService, ValidationService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
+  self.submit = submit;
   self.split = split;
 
   init();
@@ -22,6 +23,20 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
     // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
     // state and the user makes a modification
     self.parent.hot.addHook('afterChange', afterChange);
+  }
+
+  function submit(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    // Remove empty points
+    self.parent.request.points = self.parent.request.points.filter(function (point) {
+      return !ValidationService.isEmptyPoint(point);
+    });
+
+    self.parent.submit();
   }
 
   /**
