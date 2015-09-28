@@ -83,13 +83,13 @@ public interface RequestRepository extends MongoRepository<Request, String>, Que
   @Override
   Request save(@Param("request") Request request);
 
-  @PreAuthorize("hasRole('modesti-administrators')")
+  @PreAuthorize("@authService.isCreator(#request, principal) or @authService.isAssigned(#request, principal) or hasRole('modesti-administrators')")
   @Override
   void delete(String id);
 
-  @PreAuthorize("hasRole('modesti-administrators')")
+  @PreAuthorize("@authService.isCreator(#request, principal) or @authService.isAssigned(#request, principal) or hasRole('modesti-administrators')")
   @Override
-  void delete(Request request);
+  void delete(@Param("request") Request request);
 
   @PreAuthorize("hasRole('modesti-administrators')")
   @Override
