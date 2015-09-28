@@ -152,6 +152,14 @@
 </aside>
 
 
+<!-- Alerts are shown here -->
+<div class="alert-messages">
+  <alert ng-repeat="alert in alerts"  type="{{alert.type}}" close="alert.close()">
+    <span ng-bind-html="alert.message"></span>
+  </alert>
+</div>
+
+
 <div class="content-wrapper">
 <section class="content" ng-if="ctrl.isUserAuthenticated()">
 

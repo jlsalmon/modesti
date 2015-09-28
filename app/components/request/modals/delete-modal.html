@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h3 class="modal-title"><i class="fa fa-fw fa-trash"></i> Delete request {{::ctrl.request.requestId}}</h3>
+</div>
+
+<div class="modal-body">
+
+  <p>
+    Are you sure?
+  </p>
+
+  <p>
+    Deleting a request removes it completely from MODESTI. Note that data points on {{::ctrl.request.domain}} will not be affected.
+  </p>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ctrl.cancel()">Cancel</button>
+  <button class="btn btn-default" ng-click="ctrl.ok()">OK</button>
+</div>

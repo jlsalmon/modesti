@@ -811,13 +811,13 @@ body {
 
 /** Alert styles */
 .alert-messages {
-  position: fixed;
+  position: absolute;
   top: 50px;
   right: 0;
   left: 0;
   margin: 0 auto;
   z-index: 1000;
-  width: 350px;
+  width: 550px;
 }
 
 .alert-messages .alert {

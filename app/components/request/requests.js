@@ -17,6 +17,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.types = ['CREATE', 'UPDATE', 'DELETE'];
 
   self.filter = {};
+
   self.sort = 'createdAt,desc';
 
   self.loading = undefined;

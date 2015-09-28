@@ -124,6 +124,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
   self.showHelp = showHelp;
   self.showComments = showComments;
   self.showHistory = showHistory;
+  self.deleteRequest = deleteRequest;
 
   $localStorage.$default({
     lastActiveCategory: {}
@@ -977,6 +978,38 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
         }
       }
     });
+  }
+
+  /**
+   *
+   */
+  function deleteRequest() {
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/request/modals/delete-modal.html',
+      controller: 'DeleteModalController as ctrl',
+      resolve: {
+        request: function () {
+          return self.request;
+        }
+      }
+    });
+
+    modalInstance.result.then(function () {
+      RequestService.deleteRequest(request.requestId).then(function () {
+        console.log('deleted request');
+        AlertService.add('success', 'Request was deleted successfully.');
+        $state.go('requests');
+      },
+
+      function (error) {
+        console.log('delete failed: ' + error.statusText);
+      });
+    },
+
+    function () {
+      console.log('delete aborted');
+    })
   }
 
   /**

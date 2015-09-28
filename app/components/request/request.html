@@ -57,9 +57,7 @@
 
 <!-- Alerts are shown here -->
 <div class="alert-messages">
-  <alert ng-repeat="alert in alerts"
-         type="{{alert.type}}"
-         close="alert.close()">
+  <alert ng-repeat="alert in alerts"  type="{{alert.type}}" close="alert.close()">
     <span ng-bind-html="alert.message"></span>
   </alert>
 </div>
@@ -183,8 +181,13 @@
         </button>
 
         <!-- Help button -->
-        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHelp()" tooltip-append-to-body="true" tooltip="{{'HELP'|translate}}">
+        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHelp()" tooltip-append-to-body="true" tooltip="Help">
           <i class="fa fa-fw fa-question-circle"></i> Help
+        </button>
+
+        <!-- Delete button -->
+        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.deleteRequest()" tooltip-append-to-body="true" tooltip="Delete request">
+          <i class="fa fa-fw fa-trash"></i>
         </button>
 
 
