@@ -1009,7 +1009,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
 
     function () {
       console.log('delete aborted');
-    })
+    });
   }
 
   /**
