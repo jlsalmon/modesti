@@ -206,8 +206,9 @@
                   ng-model="ctrl.filter.domain"
                   data-title="{{'DOMAIN'|translate}}"
                   data-header="Select domains"
+                  select-model="ctrl.schemas"
                   data-width="150px">
-            <option ng-repeat="domain in ctrl.domains" value="{{domain}}">{{domain}}</option>
+            <option ng-repeat="schema in ctrl.schemas | unique:id" value="{{schema.id}}">{{schema.id}}</option>
           </select>
         </div>
 

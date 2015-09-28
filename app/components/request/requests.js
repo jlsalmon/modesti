@@ -7,12 +7,12 @@
  */
 angular.module('modesti').controller('RequestsController', RequestsController);
 
-function RequestsController($http, $location, $scope, RequestService, AuthService) {
+function RequestsController($http, $location, $scope, RequestService, AuthService, SchemaService) {
   var self = this;
 
   self.statuses = [];
-  self.domains = ['TIM', 'CSAM', 'WINCC']; // TODO retrieve this dynamically
   self.subsystems = [];
+  self.schemas = [];
   self.users = [];
   self.types = ['CREATE', 'UPDATE', 'DELETE'];
 
@@ -35,6 +35,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   resetFilter();
   getRequests(1, 15, self.sort, self.filter);
   getRequestMetrics();
+  getSchemas();
   getUsers();
   getSubsystems();
 
@@ -161,6 +162,15 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     }
 
     return 0;
+  }
+
+  /**
+   * 
+   */
+  function getSchemas() {
+    SchemaService.getSchemas().then(function (schemas) {
+      self.schemas = schemas;
+    });
   }
 
   /**
