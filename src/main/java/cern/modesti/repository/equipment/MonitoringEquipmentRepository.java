@@ -14,7 +14,7 @@ import java.util.List;
 public interface MonitoringEquipmentRepository extends ReadOnlyRepository<MonitoringEquipment, Integer> {
 
   @RestResource(path = "find", rel = "find")
-  List<MonitoringEquipment> findByValueStartsWithIgnoreCase(@Param("query") String query);
+  List<MonitoringEquipment> findByValueStartsWithIgnoreCaseOrderByName(@Param("query") String query);
 
   @RestResource(exported = false)
   MonitoringEquipment findOneByValue(@Param("query") String query);
