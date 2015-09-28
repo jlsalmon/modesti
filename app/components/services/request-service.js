@@ -32,7 +32,7 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
   function getRequests(page, size, sort, filter) {
     var q = $q.defer();
     page = page || 0;
-    size = size || 20;
+    size = size || 15;
     sort = sort || 'createdAt,desc';
 
     $http.get(BACKEND_BASE_URL + '/requests/search',

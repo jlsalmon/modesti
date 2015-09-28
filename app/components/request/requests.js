@@ -32,7 +32,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.getRequestCount = getRequestCount;
 
   resetFilter();
-  getRequests(1, 20, self.sort, self.filter);
+  getRequests(1, 15, self.sort, self.filter);
   getRequestMetrics();
   getUsers();
   getSubsystems();
@@ -57,6 +57,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
    *
    */
   function resetFilter() {
+    console.log('filter reset');
     self.filter = {
       status: [],
       domain: [],
@@ -197,6 +198,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
       return;
     }
 
+    console.log('filter: ' + JSON.stringify(self.filter));
     getRequests(0, self.page.size, self.sort, self.filter);
   }
 
