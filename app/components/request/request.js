@@ -625,31 +625,35 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
     AlertService.clear();
     self.submitting = 'started';
 
-    // Complete the task associated with the request
-    TaskService.completeTask(task.name, self.request.requestId).then(function () {
-      console.log('completed task ' + task.name);
+    RequestService.saveRequest(request).then(function () {
+      console.log('saved request before submitting');
 
-      var previousStatus = self.request.status;
+      // Complete the task associated with the request
+      TaskService.completeTask(task.name, self.request.requestId).then(function () {
+        console.log('completed task ' + task.name);
 
-      // Clear the cache so that the state reload also pulls a fresh request
-      RequestService.clearCache();
+        var previousStatus = self.request.status;
 
-      $state.reload().then(function () {
-        self.submitting = 'success';
+        // Clear the cache so that the state reload also pulls a fresh request
+        RequestService.clearCache();
 
-        // If the request is now FOR_CONFIGURATION, no need to go away from the request page
-        if (self.request.status === 'FOR_CONFIGURATION') {
-          AlertService.add('info', 'Request has been submitted successfully and is ready to be configured.');
-        }
+        $state.reload().then(function () {
+          self.submitting = 'success';
 
-        if (self.request.status === 'CLOSED') {
-          AlertService.add('info', 'Request has been submitted successfully and is now closed.');
-        }
+          // If the request is now FOR_CONFIGURATION, no need to go away from the request page
+          if (self.request.status === 'FOR_CONFIGURATION') {
+            AlertService.add('info', 'Request has been submitted successfully and is ready to be configured.');
+          }
 
-        // If the request is in any other state, show a page with information about what happens next
-        else {
-          $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
-        }
+          if (self.request.status === 'CLOSED') {
+            AlertService.add('info', 'Request has been submitted successfully and is now closed.');
+          }
+
+          // If the request is in any other state, show a page with information about what happens next
+          else {
+            $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
+          }
+        });
       });
     },
 
