@@ -21,7 +21,7 @@ public class QTesting extends BeanPath<Testing> {
 
     public final StringPath message = createString("message");
 
-    public final BooleanPath tested = createBoolean("tested");
+    public final BooleanPath passed = createBoolean("passed");
 
     public QTesting(String variable) {
         super(Testing.class, forVariable(variable));
