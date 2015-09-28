@@ -69,8 +69,6 @@
   color: #444444;
 }
 .skin-blue-light .sidebar-menu > li {
-  -webkit-transition: border-left-color 0.3s ease;
-  -o-transition: border-left-color 0.3s ease;
   transition: border-left-color 0.3s ease;
 }
 .skin-blue-light .sidebar-menu > li.header {
@@ -80,6 +78,7 @@
 .skin-blue-light .sidebar-menu > li > a {
   border-left: 3px solid transparent;
   font-weight: 600;
+  /* border-bottom: 1px solid #ccc; */
 }
 .skin-blue-light .sidebar-menu > li:hover > a,
 .skin-blue-light .sidebar-menu > li.active > a {
@@ -122,8 +121,6 @@
   background-color: #fff;
   border: 1px solid transparent;
   height: 35px;
-  -webkit-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
 }
 .skin-blue-light .sidebar-form input[type="text"] {

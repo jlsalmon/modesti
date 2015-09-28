@@ -124,7 +124,7 @@
           <li ng-repeat="status in ctrl.statuses">
             <a href="" ng-click="ctrl.filter.status = status.status">
               <span class="label request-status {{status.status}}">{{::status.status.replace('_', ' ')}}</span>
-              <span class="label request-status {{status.status}} pull-right">{{ctrl.getRequestCount(status.status)}}</span>
+              <span class=" pull-right">{{ctrl.getRequestCount(status.status)}}</span>
             </a>
           </li>
 
@@ -177,13 +177,14 @@
         </style>
 
         <div class="filter">
-          <select multiple selectpicker="{}" ng-cloak
+          <select multiple selectpicker="{}" class="selectpicker"
                   ng-model="ctrl.filter.status"
                   data-title="Status"
                   data-header="Select statuses"
+                  data-selected-text-format="count"
                   select-model="ctrl.statuses"
                   data-width="170px">
-            <option ng-repeat="status in ctrl.statuses" ng-cloak value="{{status.status}}" data-content="
+            <option ng-repeat="status in ctrl.statuses" value="{{status.status}}" data-content="
               <span class='label request-status {{::status.status}}' style='margin-right: 20px;'>
                 {{::status.status.replace('_', ' ')}}
               </span>
@@ -193,62 +194,67 @@
         </div>
 
         <div class="filter">
-          <select multiple selectpicker="{}" ng-cloak
+          <select multiple selectpicker="{}" class="selectpicker"
                   ng-model="ctrl.filter.domain"
                   data-title="{{'DOMAIN'|translate}}"
                   data-header="Select domains"
                   data-width="150px">
-            <option ng-repeat="domain in ctrl.domains" ng-cloak value="{{domain}}">{{domain}}</option>
+            <option ng-repeat="domain in ctrl.domains" value="{{domain}}">{{domain}}</option>
           </select>
         </div>
 
         <div class="filter">
-          <select multiple selectpicker="{}" ng-cloak
+          <select multiple selectpicker="{}" class="selectpicker"
                   ng-model="ctrl.filter.subsystem"
                   data-size="20"
                   data-title="{{'SUBSYSTEM'|translate}}"
                   data-header="Select subsystems"
+                  data-selected-text-format="count>2"
                   select-model="ctrl.subsystems"
                   data-live-search="true"
-                  data-width="150px"
-                  ng-options="subsystem.value as subsystem.value for subsystem in ctrl.subsystems"></select>
+                  data-width="150px">
+            <option ng-repeat="subsystem in ctrl.subsystems" value="{{subsystem.value}}">{{subsystem.value}}</option>
+          </select>
         </div>
 
         <div class="filter">
-          <select multiple selectpicker="{}" ng-cloak
+          <select multiple selectpicker="{}" class="selectpicker"
                   ng-model="ctrl.filter.creator.username"
                   data-title="{{'CREATOR'|translate}}"
                   data-header="Select users"
+                  data-selected-text-format="count>2"
                   select-model="ctrl.users"
                   data-live-search="true"
                   data-width="150px">
-            <option ng-repeat="user in ctrl.users" ng-cloak value="{{user.username}}" title="{{user.username}}" data-subtext="{{user.username}}">
+            <option ng-repeat="user in ctrl.users" value="{{user.username}}" title="{{user.username}}" data-subtext="{{user.username}}">
               {{user.firstName}} {{user.lastName}}
             </option>
           </select>
         </div>
 
         <div class="filter">
-          <select multiple selectpicker="{}" ng-cloak
+          <select multiple selectpicker="{}" class="selectpicker"
                   ng-model="ctrl.filter.assignee.username"
                   data-title="{{'Assignee'|translate}}"
                   data-header="Select users"
+                  data-selected-text-format="count>2"
+                  data-done-button="true"
                   select-model="ctrl.users"
                   data-live-search="true"
                   data-width="150px">
-            <option ng-repeat="user in ctrl.users" ng-cloak value="{{user.username}}" title="{{user.username}}" data-subtext="{{user.username}}">
+            <option ng-repeat="user in ctrl.users" value="{{user.username}}" title="{{user.username}}" data-subtext="{{user.username}}">
               {{user.firstName}} {{user.lastName}}
             </option>
           </select>
         </div>
 
         <div class="filter">
-          <select multiple selectpicker="{}" ng-cloak
+          <select multiple selectpicker="{}" class="selectpicker"
                   ng-model="ctrl.filter.type"
                   data-title="{{'Type'|translate}}"
                   data-header="Select request types"
                   data-width="150px">
-            <option ng-repeat="type in ctrl.types" ng-cloak value="{{type}}">{{type}}</option>
+            <option ng-repeat="type in ctrl.types" value="{{type}}">{{type}}</option>
           </select>
         </div>
 
@@ -259,7 +265,7 @@
         </div>
 
         <div class="pull-right">
-          <select selectpicker="{}" ng-cloak
+          <select selectpicker="{}" class="selectpicker"
                   ng-model="ctrl.sort"
                   data-title="Sort by"
                   data-width="auto">
