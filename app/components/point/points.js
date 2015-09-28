@@ -7,20 +7,30 @@
  */
 angular.module('modesti').controller('PointsController', PointsController);
 
-function PointsController(schemas, PointService) {
+function PointsController($scope, schemas, PointService) {
   var self = this;
 
   self.schemas = schemas;
   self.domains = schemas.map(function (schema) { return schema.id; });
   self.points = [];
-  self.query = 'pointDatatype == Boolean';
+
+  self.filters = [
+    { property: 'pointDatatype', operation: 'equals', value: 'Boolean' }
+  ];
+
+  self.page = {number: 0, size: 15};
+  self.sort = 'pointId,desc';
 
   self.useDomain = useDomain;
+  self.addFilter = addFilter;
+  self.deleteFilter = deleteFilter;
   self.search = search;
   self.onPageChanged = onPageChanged;
 
   // Load default domain
   useDomain(self.domains[1]);
+  parseQuery();
+  search();
 
   /**
    *
@@ -36,21 +46,31 @@ function PointsController(schemas, PointService) {
 
   /**
    *
-   * @param query
+   */
+  function addFilter() {
+    self.filters.push({ property: 'pointDatatype', operation: 'equals', value: 'Boolean' });
+  }
+
+  /**
+   *
+   * @param filter
+   */
+  function deleteFilter(filter) {
+    self.filters.splice(self.filters.indexOf(filter), 1);
+  }
+
+  /**
+   *
+   * @param filters
    * @param page
    * @param size
    * @param sort
    */
-  function search(query, page, size, sort) {
+  function search() {
     self.loading = 'started';
+    console.log('searching');
 
-    if (!query) {
-      return;
-    }
-
-    console.log('query: ' + query);
-
-    PointService.getPoints(query, page, size, sort).then(function (response) {
+    PointService.getPoints(self.query, self.page.number, self.page.size, self.sort).then(function (response) {
       if (response.hasOwnProperty('_embedded')) {
         self.points = response._embedded.refPoints;
       } else {
@@ -84,8 +104,43 @@ function PointsController(schemas, PointService) {
 
   /**
    *
+   * @returns {string}
+   */
+  function parseQuery() {
+    var expressions = [];
+
+    self.filters.forEach(function (filter) {
+      var expression = filter.property + parseOperation(filter.operation) + filter.value;
+
+      if (expressions.indexOf(expression) === -1) {
+        expressions.push(expression);
+      }
+    });
+
+    self.query = expressions.join(' and ');
+    console.log('parsed query: ' + self.query);
+  }
+
+  /**
+   *
+   * @param operation
+   * @returns {string}
+   */
+  function parseOperation(operation) {
+    if (operation === 'equals') {
+      return ' == ';
+    }
+  }
+
+  /**
+   *
    */
   function onPageChanged() {
-    search(self.query, self.page.number, self.page.size, 'pointId,desc');
+    search();
   }
+
+
+  $scope.$watch('ctrl.filters', function () {
+    parseQuery();
+  }, true);
 }

@@ -1,152 +1,183 @@
-<section class="content">
+<style>
+  .table-wrapper {
+    overflow-y: scroll;
+  }
 
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-lg-12">
+  .pagination {
+    margin: 0;
+  }
+</style>
 
-        <h3>Search for points</h3>
+<aside class="main-sidebar">
+  <section class="sidebar" style="height: auto;">
 
-        <div class="form-group form-inline">
+    <ul class="sidebar-menu">
+      <li class="treeview active">
+        <a href="#">
+          <i class="fa fa-filter"></i> <span>My Filters</span> <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu menu-open" style="display: block;">
 
-          <div class="btn-group" dropdown>
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-              <i class="fa fa-fw fa-crosshairs"></i>
-              Domain:
-              </span>{{ctrl.schema.id}} <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="" ng-click="ctrl.filter.domain = ''">{{'ANY'|translate}}</a>
-              </li>
-              <li class="divider"></li>
-              <li ng-repeat="domain in ctrl.domains">
-                <a href="" ng-click="ctrl.useDomain(domain)">{{domain}}</a>
-              </li>
-            </ul>
-          </div>
+          <li>
+            <a href="">
+              No filters
+            </a>
+          </li>
 
-          <div class="well well-sm">
-            <form class="form-inline">
+        </ul>
+      </li>
+    </ul>
+
+  </section>
+</aside>
+
+<div class="content-wrapper">
+  <section class="content">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+
+        <!--<div class="btn-group" dropdown>-->
+          <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>-->
+            <!--<i class="fa fa-fw fa-crosshairs"></i>-->
+            <!--Domain:-->
+            <!--</span>{{ctrl.schema.id}} <span class="caret"></span>-->
+          <!--</button>-->
+          <!--<ul class="dropdown-menu" role="menu">-->
+            <!--<li>-->
+              <!--<a href="" ng-click="ctrl.filter.domain = ''">{{'ANY'|translate}}</a>-->
+            <!--</li>-->
+            <!--<li class="divider"></li>-->
+            <!--<li ng-repeat="domain in ctrl.domains">-->
+              <!--<a href="" ng-click="ctrl.useDomain(domain)">{{domain}}</a>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
+
+        <!--<form class="form-group form">-->
+          <!--<div class="input-group">-->
+            <!--<input type="text" id="searchQuery" name="searchQuery" class="form-control" ng-model="ctrl.query">-->
+              <!--<span class="input-group-btn">-->
+                <!--<input class="btn btn-default" type="submit" ng-click="ctrl.search()">Submit</input>-->
+              <!--</span>-->
+          <!--</div>-->
+        <!--</form>-->
+
+        <form class="form-horizontal" ng-submit="ctrl.search()" novalidate>
+
+          <div class="form-group" ng-repeat="filter in ctrl.filters">
+            <div class="col-sm-11">
               <div class="input-group">
+
                 <div class="input-group-btn">
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
-                  <ul class="dropdown-menu">
-                    <li ng-repeat="field in ctrl.schema.categories[0].fields">
-                      <a href="#" ng-click="ctrl.filter[field.id] = field.id">{{field.name_en}}</a>
-                    </li>
-                  </ul>
+
+                  <select selectpicker="{}" class="selectpicker" ng-model="filter.property" data-width="auto">
+                    <optgroup ng-repeat="category in ctrl.schema.categories" label="{{category.name_en}}">
+                      <option ng-repeat="field in category.fields" value="{{field.id}}">
+                        {{field.name_en}}
+                      </option>
+                    </optgroup>
+                  </select>
+
+                  <select selectpicker="{}" class="selectpicker" ng-model="filter.operation" data-width="auto">
+                    <option>equals</option>
+                    <option>not equals</option>
+                    <option>like</option>
+                    <option>not like</option>
+                    <option>in</option>
+                    <option>not in</option>
+                  </select>
                 </div>
-                <input type="text" class="form-control">
+
+                <input type="text" class="form-control" ng-model="filter.value">
+
               </div>
-            </form>
+            </div>
+
+            <span class="col-sm-1">
+              <a class="btn btn-default pull-right" ng-click="ctrl.deleteFilter(filter)" tooltip="Delete filter" tooltip-append-to-body="true">
+                <i class="fa fa-minus text-danger"></i>
+              </a>
+            </span>
           </div>
 
-          <!--<div class="btn-group" dropdown ng-repeat="category in ctrl.schema.categories">-->
-            <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>-->
-              <!--{{category.name_en}}:-->
-              <!--</span> <span class="caret"></span>-->
-            <!--</button>-->
-            <!--<ul class="dropdown-menu" role="menu">-->
-              <!--<li>-->
-                <!--<a href="" ng-click="">{{'ANY'|translate}}</a>-->
-              <!--</li>-->
-              <!--<li class="divider"></li>-->
-              <!--<li ng-repeat="field in category.fields">-->
-                <!--<a href="" ng-click="ctrl.query = ctrl.query + ' and ' + field.id + ' == '">{{field.name_en}}</a>-->
-              <!--</li>-->
-            <!--</ul>-->
-          <!--</div>-->
+          <a class="btn btn-primary" ng-click="ctrl.addFilter()" tooltip="Add filter" tooltip-append-to-body="true"><i class="fa fa-plus"></i></a>
 
-          <!--<div class="btn-group" dropdown ng-repeat="datasource in ctrl.schema.datasources">-->
-            <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>-->
-              <!--{{datasource.name_en}}:-->
-              <!--</span> <span class="caret"></span>-->
-            <!--</button>-->
-            <!--<ul class="dropdown-menu" role="menu">-->
-              <!--<li>-->
-                <!--<a href="" ng-click="">{{'ANY'|translate}}</a>-->
-              <!--</li>-->
-              <!--<li class="divider"></li>-->
-              <!--<li ng-repeat="field in datasource.fields">-->
-                <!--<a href="" ng-click="">{{field.name_en}}</a>-->
-              <!--</li>-->
-            <!--</ul>-->
-          <!--</div>-->
-        </div>
-
-        <form class="form-group">
-          <div class="input-group">
-            <input type="text" id="searchQuery" name="searchQuery" class="form-control" ng-model="ctrl.query">
-              <span class="input-group-btn">
-                <input class="btn btn-default" type="submit" ng-click="ctrl.search(ctrl.query)">Submit</input>
-              </span>
-          </div>
+          <button class="btn btn-primary" type="submit" ng-click="ctrl.search()">Search</button>
         </form>
 
+      </div>
 
-        <alert ng-if="ctrl.error" type="danger">{{ctrl.error.status}} {{ctrl.error.statusText}}</alert>
+      <!--<div class="panel-body">-->
+        <!--<alert ng-if="ctrl.error" type="danger">{{ctrl.error.status}} {{ctrl.error.statusText}}</alert>-->
+        <!--filters: {{ctrl.filters}}-->
+        <!--<br/>-->
+        <!--query: {{ctrl.query}}-->
+      <!--</div>-->
 
-        <table class="table table-bordered">
+      <div class="table-wrapper">
+        <table class="table table-bordered table-hover">
           <thead>
-            <tr>
-              <th>pointId</th>
-              <th>pointDescription</th>
-              <th>pointDatatype</th>
-              <th>pointAttribute</th>
-              <th>gmaoCode</th>
-              <th>timTagName</th>
-              <th>systemName</th>
-              <th>subsystemName</th>
-              <th>buildingNumber</th>
-              <th>floor</th>
-              <th>room</th>
-              <th>responsibleFirstName</th>
-              <th>responsibleLastName</th>
-            </tr>
+          <tr>
+            <th>pointId</th>
+            <th>pointDescription</th>
+            <th>pointDatatype</th>
+            <th>pointAttribute</th>
+            <th>gmaoCode</th>
+            <th>timTagName</th>
+            <th>systemName</th>
+            <th>subsystemName</th>
+            <th>buildingNumber</th>
+            <th>floor</th>
+            <th>room</th>
+            <th>responsibleFirstName</th>
+            <th>responsibleLastName</th>
+          </tr>
           </thead>
 
           <tbody>
-            <tr ng-repeat="point in ctrl.points">
-              <td>{{point.pointId}}</td>
-              <td>{{point.pointDescription}}</td>
-              <td>{{point.pointDatatype}}</td>
-              <td>{{point.pointAttribute}}</td>
-              <td>{{point.gmaoCode}}</td>
-              <td>{{point.timTagName}}</td>
-              <td>{{point.systemName}}</td>
-              <td>{{point.subSystemName}}</td>
-              <td>{{point.buildingNumber}}</td>
-              <td>{{point.buildingFloor}}</td>
-              <td>{{point.buildingRoom}}</td>
-              <td>{{point.responsibleFirstName}}</td>
-              <td>{{point.responsibleLastName}}</td>
-            </tr>
+          <tr ng-repeat="point in ctrl.points">
+            <td>{{point.pointId}}</td>
+            <td>{{point.pointDescription}}</td>
+            <td>{{point.pointDatatype}}</td>
+            <td>{{point.pointAttribute}}</td>
+            <td>{{point.gmaoCode}}</td>
+            <td>{{point.timTagName}}</td>
+            <td>{{point.systemName}}</td>
+            <td>{{point.subSystemName}}</td>
+            <td>{{point.buildingNumber}}</td>
+            <td>{{point.buildingFloor}}</td>
+            <td>{{point.buildingRoom}}</td>
+            <td>{{point.responsibleFirstName}}</td>
+            <td>{{point.responsibleLastName}}</td>
+          </tr>
           </tbody>
         </table>
-
-
-        <div class="text-center" ng-if="ctrl.points.length > 0">
-          <pagination boundary-links="true"
-                      max-size="5"
-                      total-items="ctrl.page.totalElements"
-                      items-per-page="ctrl.page.size"
-                      rotate="false"
-                      ng-model="ctrl.page.number"
-                      ng-change="ctrl.onPageChanged()"
-                      class="pagination-sm"
-                      previous-text="&lsaquo;"
-                      next-text="&rsaquo;"
-                      first-text="&laquo;"
-                      last-text="&raquo;"></pagination>
-        </div>
-
-
       </div>
+
     </div>
-  </div>
 
-</section>
+    <div class="pull-left" ng-if="ctrl.points.length > 0">
+      <pagination boundary-links="true"
+                  max-size="5"
+                  total-items="ctrl.page.totalElements"
+                  items-per-page="ctrl.page.size"
+                  rotate="false"
+                  ng-model="ctrl.page.number"
+                  ng-change="ctrl.onPageChanged()"
+                  class="pagination-sm"
+                  previous-text="&lsaquo;"
+                  next-text="&rsaquo;"
+                  first-text="&laquo;"
+                  last-text="&raquo;"></pagination>
+    </div>
 
+    <div class="pull-right" ng-if="ctrl.page.totalElements">
+      page {{ctrl.page.number}} of {{ctrl.page.totalPages}} &middot; {{ctrl.page.totalElements}} points in total for this filter
+    </div>
+
+  </section>
+</div>
 
 
 
