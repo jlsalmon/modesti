@@ -559,6 +559,18 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
    *
    */
   function canSubmit() {
+    var numEmptyPoints = 0;
+    self.request.points.forEach(function (point) {
+      if (ValidationService.isEmptyPoint(point)) {
+        numEmptyPoints++;
+      }
+    });
+
+    // Don't allow submit if all points are empty
+    if (numEmptyPoints === self.request.points.length) {
+      return false;
+    }
+
     return self.tasks.submit;
   }
 
@@ -583,7 +595,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
         // Save the reference to the validated request
         self.request = request;
         self.rows = getRows();
-        
+
         // Render the table to show the error highlights
         self.hot.render();
 
