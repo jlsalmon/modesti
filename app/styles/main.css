@@ -774,6 +774,7 @@ body {
 
 .handsontable td.htDimmed {
   background-color: #f5f5f5 !important;
+  color: #333;
 }
 
 .handsontable td.listbox.htDimmed.current {
