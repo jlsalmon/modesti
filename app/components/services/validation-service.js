@@ -381,7 +381,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
       if (value && index > -1 && secondIndex > -1) {
         point.valid = category.valid = valid = false;
-        setErrorMessage(point, '', 'Columns "' + getFieldNames(category, constraint.members).join(', ') + '" must be unique for all points. Check for duplications.');
+        setErrorMessage(point, '', 'Field(s) "' + getFieldNames(category, constraint.members).join(', ') + '" must be unique for all points. Check for duplications.');
       }
     });
 
