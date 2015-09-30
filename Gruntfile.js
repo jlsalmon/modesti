@@ -1,11 +1,4 @@
-// Generated on 2015-02-21 using generator-angular 0.11.1
 'use strict';
-
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/**/*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
 
@@ -18,7 +11,9 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: 'dist'
+    dist: 'dist',
+    // Artifactory usernames and passwords
+    artifactory: grunt.file.readJSON('artifactory.json')
   };
 
   // Define the configuration for all the tasks
@@ -388,7 +383,7 @@ module.exports = function (grunt) {
       }
     },
 
-    // Replace the backend base URL with either default (localhost:8080) or as specified by --backend-base-url
+    // Replaces the backend base URL as specified by --backend-base-url
     replace: {
       dist: {
         options: {
@@ -403,6 +398,45 @@ module.exports = function (grunt) {
           {expand: true, flatten: true, src: '<%= yeoman.dist %>/scripts/*.js', dest: '<%= yeoman.dist %>/scripts'}
         ],
         pedantic: true
+      }
+    },
+
+    // Bumps the version number of the application. Version number is made
+    // available to other tasks via <%= yeoman.version %>
+    bump: {
+      options: {
+        files: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js'],
+        commitFiles: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js'],
+        pushTo: 'origin',
+        updateConfigs: ['yeoman']
+      }
+    },
+
+    // Publishes a tarball of the built application to artifactory
+    artifactory: {
+      /*jshint camelcase: false */
+      options: {
+        id: 'cern.modesti:modesti:tgz',
+        version: '<%= yeoman.version %>',
+        path: 'build/',
+        url: 'http://artifactory.cern.ch',
+        base_path: ''
+      },
+      dev: {
+        files: [{ src: ['dist/**/*'] } ],
+        options: {
+          repository: 'beco-development-local',
+          username: '<%= yeoman.artifactory.dev.username %>',
+          password: '<%= yeoman.artifactory.dev.password %>'
+        }
+      },
+      prod: {
+        files: [{ src: ['dist/**/*'] }],
+        options: {
+          repository: 'release',
+          username: '<%= yeoman.artifactory.release.username %>',
+          password: '<%= yeoman.artifactory.release.password %>'
+        }
       }
     },
 
@@ -476,6 +510,14 @@ module.exports = function (grunt) {
     'usemin',
     'htmlmin',
     'replace'
+  ]);
+
+  grunt.registerTask('release-dev', [
+    'newer:jshint',
+    'test',
+    'bump',
+    'build',
+    'artifactory:dev:publish'
   ]);
 
   grunt.registerTask('default', [
