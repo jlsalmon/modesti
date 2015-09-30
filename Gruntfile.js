@@ -11,9 +11,7 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: 'dist',
-    // Artifactory usernames and passwords
-    artifactory: grunt.file.readJSON('artifactory.json')
+    dist: 'dist'
   };
 
   // Define the configuration for all the tasks
@@ -22,20 +20,22 @@ module.exports = function (grunt) {
     // Project settings
     yeoman: appConfig,
 
+    // Loads the external configuration file
+    modesti: grunt.file.readYAML('modesti.yaml'),
+
     // Profile-specific settings
     config: {
-      dev: {
+      test: {
         options: {
           variables: {
-            // TODO: change this to modesti-test.cern.ch
-            backendBaseUrl: 'http://modesti.cern.ch:8080'
+            backendBaseUrl: '<%= modesti.test.backendBaseUrl %>'
           }
         }
       },
       prod: {
         options: {
           variables: {
-            backendBaseUrl: 'http://modesti.cern.ch:8080'
+            backendBaseUrl: '<%= modesti.prod.backendBaseUrl %>'
           }
         }
       }
@@ -85,7 +85,7 @@ module.exports = function (grunt) {
       options: {
         port: 9000,
         // Change this to '0.0.0.0' to access the server from outside.
-        hostname: '0.0.0.0',
+        hostname: 'localhost',
         livereload: 35729
       },
       livereload: {
@@ -404,7 +404,7 @@ module.exports = function (grunt) {
     },
 
     // Replaces the backend base URL placeholder with the real value based on
-    // the profile in use (dev, prod)
+    // the profile in use (test, prod)
     replace: {
       dist: {
         options: {
@@ -429,7 +429,7 @@ module.exports = function (grunt) {
         files: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js', '<%= yeoman.dist %>/scripts/scripts.js'],
         commitFiles: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js'],
         pushTo: 'origin',
-        updateConfigs: ['yeoman']
+        updateConfigs: ['modesti']
       }
     },
 
@@ -438,26 +438,29 @@ module.exports = function (grunt) {
       /*jshint camelcase: false */
       options: {
         id: 'cern.modesti:modesti:tgz',
-        version: '<%= yeoman.version %>',
+        version: '<%= modesti.version %>',
         path: 'build/',
-        url: 'http://artifactory.cern.ch',
         base_path: ''
       },
-      dev: {
-        files: [{ src: ['dist/**/*'] } ],
+      test: {
         options: {
-          repository: 'beco-development-local',
-          username: '<%= yeoman.artifactory.dev.username %>',
-          password: '<%= yeoman.artifactory.dev.password %>'
-        }
+          url: '<%= modesti.test.artifactory.url %>',
+          username: '<%= modesti.test.artifactory.username %>',
+          password: '<%= modesti.test.artifactory.password %>'
+        },
+        files: [
+          { src: ['dist/**/*'] }
+        ]
       },
       prod: {
-        files: [{ src: ['dist/**/*'] }],
         options: {
-          repository: 'release',
-          username: '<%= yeoman.artifactory.release.username %>',
-          password: '<%= yeoman.artifactory.release.password %>'
-        }
+          url: '<%= modesti.prod.artifactory.url %>',
+          username: '<%= modesti.prod.artifactory.username %>',
+          password: '<%= modesti.prod.artifactory.password %>'
+        },
+        files: [
+          { src: ['dist/**/*'] }
+        ]
       }
     },
 
@@ -484,7 +487,6 @@ module.exports = function (grunt) {
       }
     }
   });
-
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
@@ -516,6 +518,8 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('build', [
+    'newer:jshint',
+    'test',
     'clean:dist',
     'wiredep',
     'useminPrepare',
@@ -533,26 +537,19 @@ module.exports = function (grunt) {
     'replace'
   ]);
 
-  grunt.registerTask('publish:dev', [
-    'config:dev',
-    'newer:jshint',
-    'test',
-    'build',
-    'artifactory:dev:publish'
-  ]);
-
-  grunt.registerTask('release:dev', [
-    'config:dev',
-    'newer:jshint',
-    'test',
-    'build',
-    'bump',
-    'artifactory:dev:publish'
-  ]);
-
-  grunt.registerTask('default', [
-    'newer:jshint',
-    'test',
+  grunt.registerTask('build:test', [
+    'config:test',
     'build'
+  ]);
+
+  grunt.registerTask('publish:test', [
+    'build:test',
+    'artifactory:test:publish'
+  ]);
+
+  grunt.registerTask('release:test', [
+    'build:test',
+    'bump',
+    'artifactory:test:publish'
   ]);
 };

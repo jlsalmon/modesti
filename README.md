@@ -16,38 +16,25 @@ Now you can run `grunt serve` to run the development server on localhost:9000. I
 
 Running `grunt test` will run the unit tests with karma.
 
-## Build and deployment
+## Building and releasing
 
-Package configurations have been created for the following tasks: 
+To build the source, publish the build artifact and create releases, the following grunt tasks are used:
 
-## `grunt build` 
+## `grunt build:test` 
 
 Runs tests and does a simple, local build (no packaging or publishing). Build results in `dist/`.
 
-## `grunt publish:dev`
+Note: should you need to modify the backend base URL, you can do so in the `modesti.yaml` configuration file.
 
-Tests, builds, packages the results into a tarball and publishes it to Artifactory. 
+## `grunt publish:test`
 
-Note: for the publication to work, you must create an `artifactory.json` file containing the repository details in the following format:
+Tests, builds, packages the results into a tarball and publishes it to Artifactory ready for deployment on the test server.
 
+Note: for the publication to work, you need to modify the `modesti.yaml` configuration file and replace the dummy username and password with real values. 
 
-    {
-      "dev":  { 
-        "repository": "beco-development-local", 
-        "username": "...", 
-        "password": "..." 
-      },
-      "release": { 
-        "repository": "...", 
-        "username": "...", 
-        "password": "..."
-      },
-    }
+## `grunt release:test`
 
-
-## `grunt release:dev`
-
-Tests, builds, packages, creates a development release by incrementing the package version number and committing the released tag. Finally publishes the artifact.
+Tests, builds, packages, creates a test release by incrementing the package version number and committing the released tag. Finally publishes the tarball to Artifactory ready for deployment on the test server.
 
 By default, the patch version number will be incremented. To increment the minor version, use `grunt release:dev bump:minor`. To increment the major version, 
 use `bump:major`.
