@@ -22,6 +22,25 @@ module.exports = function (grunt) {
     // Project settings
     yeoman: appConfig,
 
+    // Profile-specific settings
+    config: {
+      dev: {
+        options: {
+          variables: {
+            // TODO: change this to modesti-test.cern.ch
+            backendBaseUrl: 'http://modesti.cern.ch:8080'
+          }
+        }
+      },
+      prod: {
+        options: {
+          variables: {
+            backendBaseUrl: 'http://modesti.cern.ch:8080'
+          }
+        }
+      }
+    },
+
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       options: {
@@ -383,14 +402,15 @@ module.exports = function (grunt) {
       }
     },
 
-    // Replaces the backend base URL as specified by --backend-base-url
+    // Replaces the backend base URL placeholder with the real value based on
+    // the profile in use (dev, prod)
     replace: {
       dist: {
         options: {
           patterns: [
             {
               match: 'BACKEND_BASE_URL',
-              replacement: grunt.option('backend-base-url')
+              replacement: '<%= grunt.config.get("backendBaseUrl") %>'
             }
           ]
         },
@@ -401,11 +421,11 @@ module.exports = function (grunt) {
       }
     },
 
-    // Bumps the version number of the application. Version number is made
-    // available to other tasks via <%= yeoman.version %>
+    // Bumps the version number of the application. The version number is made
+    // available to other tasks via <%= yeoman.version %>.
     bump: {
       options: {
-        files: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js'],
+        files: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js', '<%= yeoman.dist %>/scripts/scripts.js'],
         commitFiles: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js'],
         pushTo: 'origin',
         updateConfigs: ['yeoman']
@@ -512,11 +532,12 @@ module.exports = function (grunt) {
     'replace'
   ]);
 
-  grunt.registerTask('release-dev', [
+  grunt.registerTask('release:dev', [
+    'config:dev',
     'newer:jshint',
     'test',
-    'bump',
     'build',
+    'bump',
     'artifactory:dev:publish'
   ]);
 
