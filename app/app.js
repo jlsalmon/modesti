@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-var app = angular.module('modesti',
+angular.module('modesti',
 [
   'ng',
   'ngCookies',
@@ -26,4 +26,6 @@ var app = angular.module('modesti',
   'angularSpinner',
   'angular.filter',
   'angular-bootstrap-select'
-]);
+])
+
+.value('version', {'version': '0.0.2'});
