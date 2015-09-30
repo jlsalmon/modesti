@@ -533,6 +533,14 @@ module.exports = function (grunt) {
     'replace'
   ]);
 
+  grunt.registerTask('publish:dev', [
+    'config:dev',
+    'newer:jshint',
+    'test',
+    'build',
+    'artifactory:dev:publish'
+  ]);
+
   grunt.registerTask('release:dev', [
     'config:dev',
     'newer:jshint',
