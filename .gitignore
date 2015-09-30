@@ -15,3 +15,4 @@ modesti.iml
 bin
 test-results
 mocha.json
+artifactory.json
