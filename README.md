@@ -9,14 +9,13 @@ Requirements for running backend:
 * Connection to TN (for C2MON and TIM connections) or appropriate tunnels
 
 Instructions:
-* Clone the repo: `git clone ssh://git@gitlab.cern.ch:7999/modesti/modesti-api.git`
-* Open the project in IDEA/Eclipse (or emacs or whatever)
-* Compile and run: `java cern.modesti.Application -Dspring.profiles.active=(test|dev|prod) -Dc2mon.client.cont.url=http://whatever`
+* Compile and run: `java cern.modesti.Application -Dspring.profiles.active=(test|dev|prod)`
 
-## Testing
-
-`TODO`
+Profiles:
+* `test`: uses in-memory h2 database, in-memory MongoDB and in-memory LDAP authentication
+* `dev`: uses timdb-test, modestidb-test and xldap.cern.ch
+* `prod`: uses timdb, modestidb and xldap.cern.ch
 
 ## Build and deployment
 
-`TODO`
+Build, test, package and publish to Artifactory with Gradle: `./gradlew build bootRepackage publish`
