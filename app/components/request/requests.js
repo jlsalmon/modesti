@@ -165,7 +165,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   }
 
   /**
-   * 
+   *
    */
   function getSchemas() {
     SchemaService.getSchemas().then(function (schemas) {

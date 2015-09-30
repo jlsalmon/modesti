@@ -73,8 +73,9 @@ function ConfigController($scope, $state, $http, $timeout, RequestService, TaskS
    */
   function getProgress() {
     console.log('checking progress');
+    var url = BACKEND_BASE_URL + '/requests/' + self.parent.request.requestId + '/' + self.parent.request.domain.toLowerCase() + '/progress';
 
-    $http.get(BACKEND_BASE_URL + '/requests/' + self.parent.request.requestId + '/progress').then(function (response) {
+    $http.get(url).then(function (response) {
       if (response.data) {
         self.progress = response.data;
       }
