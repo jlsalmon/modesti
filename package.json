@@ -1,6 +1,6 @@
 {
   "name": "modesti",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {},
   "repository": {},
   "devDependencies": {
@@ -41,7 +41,8 @@
     "mocha": "~2.3.2",
     "time-grunt": "^1.0.0",
     "grunt-bump": "~0.6.0",
-    "grunt-artifactory-publish": "~0.8.1"
+    "grunt-artifactory-publish": "~0.8.1",
+    "grunt-config": "~0.4.0"
   },
   "engines": {
     "node": ">=0.10.0"
