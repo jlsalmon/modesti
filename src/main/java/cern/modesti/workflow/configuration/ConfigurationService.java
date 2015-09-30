@@ -1,4 +1,4 @@
-package cern.modesti.configuration;
+package cern.modesti.workflow.configuration;
 
 import cern.modesti.plugin.RequestProvider;
 import cern.modesti.plugin.UnsupportedRequestException;

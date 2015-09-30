@@ -17,7 +17,7 @@
     This is an automatic email notifying you that your MODESTI request
   </p>
   <p>
-    #<b th:text="${request.requestId} + '(' + ${request.description} + ')'"></b>
+    #<b th:text="${request.requestId} + ' (' + ${request.description} + ')'"></b>
   </p>
   <p>
     has been <b th:text="${request.getApproval().getApproved()} ? 'approved' : 'rejected'"></b>.

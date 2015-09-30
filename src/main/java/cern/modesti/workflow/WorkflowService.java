@@ -3,8 +3,8 @@
  */
 package cern.modesti.workflow;
 
-import cern.modesti.notification.NotificationService;
-import cern.modesti.notification.NotificationType;
+import cern.modesti.workflow.notification.NotificationService;
+import cern.modesti.workflow.notification.NotificationType;
 import cern.modesti.plugin.RequestProvider;
 import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.Request;

@@ -1,4 +1,4 @@
-package cern.modesti.notification;
+package cern.modesti.workflow.notification;
 
 import java.util.Arrays;
 import java.util.List;

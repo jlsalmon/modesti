@@ -1,7 +1,7 @@
 package cern.modesti.util;
 
 import cern.modesti.Application;
-import cern.modesti.configuration.ConfigurationService;
+import cern.modesti.workflow.configuration.ConfigurationService;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.workflow.WorkflowService;
 import org.activiti.engine.HistoryService;
