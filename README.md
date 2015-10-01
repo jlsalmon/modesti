@@ -37,7 +37,7 @@ Note: for the publication to work, you need to modify the `modesti.yaml` configu
 Tests, builds, packages, creates a test release by incrementing the package version number and committing the released tag. Finally publishes the tarball to Artifactory ready for deployment on the test server.
 
 By default, the patch version number will be incremented. To increment the minor version, use `grunt release:dev bump:minor`. To increment the major version, 
-use `bump:major`.
+use `bump:major`. For more options, see https://github.com/vojtajina/grunt-bump
 
 
 
