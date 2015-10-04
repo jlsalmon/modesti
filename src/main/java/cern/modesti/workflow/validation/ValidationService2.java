@@ -1,4 +1,4 @@
-package cern.modesti.validation;
+package cern.modesti.workflow.validation;
 
 import cern.modesti.request.Request;
 import lombok.extern.slf4j.Slf4j;

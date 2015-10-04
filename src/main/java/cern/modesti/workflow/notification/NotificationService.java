@@ -1,4 +1,4 @@
-package cern.modesti.notification;
+package cern.modesti.workflow.notification;
 
 import cern.modesti.request.Request;
 import org.slf4j.Logger;

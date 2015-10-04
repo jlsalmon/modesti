@@ -1,4 +1,4 @@
-package cern.modesti.validation;
+package cern.modesti.workflow.validation;
 
 import cern.modesti.repository.alarm.AlarmCategory;
 import cern.modesti.repository.equipment.MonitoringEquipment;

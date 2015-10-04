@@ -17,7 +17,7 @@
     This is an automatic email notifying you that your MODESTI request
   </p>
   <p>
-    #<b><span th:text="${request.requestId}"></span> (<span th:text="${request.description}"></span>)</b>
+    #<b th:text="${request.requestId} + ' (' + ${request.description} + ')'"></b>
   </p>
   <p>
     has been <b>submitted for approval</b>. We will notify you again when a TI operator has

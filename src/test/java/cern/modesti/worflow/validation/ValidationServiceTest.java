@@ -1,4 +1,4 @@
-package cern.modesti.validation;
+package cern.modesti.worflow.validation;
 
 import cern.modesti.Application;
 import cern.modesti.repository.gmao.GmaoCode;
@@ -8,6 +8,7 @@ import cern.modesti.repository.person.Person;
 import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Point;
+import cern.modesti.workflow.validation.ValidationService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
