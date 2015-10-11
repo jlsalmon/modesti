@@ -1,38 +1,14 @@
-/*******************************************************************************
- * This file is part of the Technical Infrastructure Monitoring (TIM) project.
- * See http://ts-project-tim.web.cern.ch
- *
- * Copyright (C) 2004 - 2015 CERN. This program is free software; you can
- * redistribute it and/or modify it under the terms of the GNU General Public
- * License as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version. This program is distributed
- * in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details. You should have received
- * a copy of the GNU General Public License along with this program; if not,
- * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- *
- * Author: TIM team, tim.support@cern.ch
- ******************************************************************************/
 package cern.modesti.request;
 
-import cern.modesti.request.point.state.Addressing;
-import cern.modesti.request.point.state.Approval;
 import cern.modesti.request.point.Point;
-import cern.modesti.request.point.state.Cabling;
-import cern.modesti.request.point.state.Testing;
 import cern.modesti.user.User;
-import cern.modesti.workflow.result.ConfigurationResult;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.TextScore;
 
 import javax.persistence.Id;
 import javax.validation.Valid;
@@ -60,48 +36,36 @@ public class Request implements Serializable {
    * Human-readable id
    */
   @Indexed
-  @TextIndexed(weight = 3)
   private String requestId;
 
-  @TextIndexed
+  @Indexed
   private String parentRequestId;
 
-  @TextIndexed
   private List<String> childRequestIds = new ArrayList<>();
 
   @Indexed
-  @TextIndexed
-  private RequestStatus status;
+  private String status;
 
   @Indexed
-  @TextIndexed
   @NotNull(message = "Request type is compulsory")
   private RequestType type;
 
   @Indexed
-  @TextIndexed
   @NotNull(message = "Request creator is compulsory")
   private User creator;
 
   @Indexed
-  @TextIndexed(weight = 2)
   @NotNull(message = "Description is compulsory")
   private String description;
 
   @Indexed
-  @TextIndexed
   @NotNull(message = "Domain is compulsory")
   private String domain;
 
+  // TODO: remove this from the core request. Maybe add it as a field attached to the request itself
   @Indexed
-  @TextIndexed
   @NotNull(message = "Subsystem is compulsory")
   private String subsystem;
-
-  @Indexed
-  @TextIndexed
-  @NotNull(message = "At least one category is compulsory")
-  private Set<String> categories = new HashSet<>();
 
   @Indexed
   private User assignee;
@@ -109,20 +73,7 @@ public class Request implements Serializable {
   @Valid
   private List<Point> points = new ArrayList<>();
 
-  @TextIndexed
   private List<Comment> comments = new ArrayList<>();
-
-  private Boolean valid;
-
-  private Approval approval = new Approval();
-
-  private Addressing addressing = new Addressing();
-
-  private Cabling cabling = new Cabling();
-
-  private Testing testing = new Testing();
-
-  private ConfigurationResult configurationResult;
 
   @CreatedDate
   private DateTime createdAt;
@@ -130,8 +81,10 @@ public class Request implements Serializable {
   @LastModifiedDate
   private DateTime lastModified;
 
-  @TextScore
-  private Float score;
+  /**
+   * Custom properties
+   */
+  private Map<String, Object> properties = new HashMap<>();
 
   /**
    * Copy constructor
@@ -148,46 +101,27 @@ public class Request implements Serializable {
     this.description = request.description;
     this.domain = request.domain;
     this.subsystem = request.subsystem;
-    this.categories = request.categories;
     this.points = request.points;
   }
 
   /**
-   * @return true if this request requires approval (i.e. contains alarms), false otherwise
+   * TODO remove these properties from the core request
    */
-  public boolean requiresApproval() {
-    for (Point point : points) {
-      if (point.isAlarm()) {
-        return true;
-      }
-    }
+//  private Boolean valid;
+//
+//  private Approval approval = new Approval();
+//
+//  private Addressing addressing = new Addressing();
+//
+//  private Cabling cabling = new Cabling();
+//
+//  private Testing testing = new Testing();
+//
+//  private ConfigurationResult configurationResult;
 
-    return false;
-  }
 
-  /**
-   * TODO remove this TIM/CSAM specific logic from the core
-   *
-   * For TIM requests, a point requires cabling if:
-   *  - it is an APIMMD point
-   *
-   * For CSAM requests, a point requires cabling if:
-   *  - it is an APIMMD point or;
-   *  - it is an LSAC point
-   *
-   * @return true if this request requires cabling, false otherwise
-   */
-  public boolean requiresCabling() {
-    for (Point point : points) {
-      String pointType = (String) point.getProperties().get("pointType");
-
-      if (pointType != null) {
-        if (pointType.equals("APIMMD") || pointType.equals("LSAC")) {
-          return true;
-        }
-      }
-    }
-
-    return false;
+  public <T> T getObjectProperty(String key, Class<T> klass) {
+    Object value = properties.get(key);
+    return klass.cast(value);
   }
 }

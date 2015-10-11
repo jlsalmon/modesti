@@ -5,7 +5,6 @@ import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.Field;
 import cern.modesti.schema.options.OptionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
@@ -30,7 +29,7 @@ import static java.lang.String.format;
 /**
  * This class will delete all schemas stored in the schema repository and re-add them.
  *
- * Schemas are loaded from inside the application and from any plugin JARs on the classpath.
+ * Schemas are loaded from plugin JARs on the classpath.
  *
  * @author Justin Lewis Salmon
  */
@@ -39,20 +38,21 @@ import static java.lang.String.format;
 @Profile({"dev", "prod"})
 public class SchemaInitialiser {
 
-  private static final String BUILTIN_RESOURCE_PREFIX     = "classpath*:/";
   private static final String PLUGIN_RESOURCE_PREFIX      = "classpath*:/";
   private static final String SCHEMA_RESOURCE_PATTERN     = "schemas/*.json";
   private static final String DATASOURCE_RESOURCE_PATTERN = "schemas/datasources/*.json";
   private static final String CATEGORY_RESOURCE_PATTERN   = "schemas/categories/*.json";
 
-  private ObjectMapper mapper;
-  private ResourcePatternResolver resolver;
+  private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
 
   @Autowired
   private SchemaRepository schemaRepository;
 
   @Autowired
   private OptionService optionService;
+
+  @Autowired
+  private ObjectMapper mapper;
 
   /**
    *
@@ -62,8 +62,6 @@ public class SchemaInitialiser {
   @PostConstruct
   public void init() throws IOException, URISyntaxException {
     log.info("Initialising schemas");
-    mapper = new ObjectMapper();
-    resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
 
     schemaRepository.deleteAll();
     schemaRepository.save(loadSchemas());
@@ -71,7 +69,7 @@ public class SchemaInitialiser {
 
 
   /**
-   * Load default schemas and all schemas inside plugins.
+   * Load all schemas inside plugins.
    *
    * @return
    * @throws IOException
@@ -80,49 +78,48 @@ public class SchemaInitialiser {
   private List<Schema> loadSchemas() throws IOException, URISyntaxException {
     List<Schema> schemas = new ArrayList<>();
 
-    List<Category> builtinCategories = loadBuiltinCategories();
-    List<Datasource> builtinDatasources = loadBuiltinDatasources();
-
     Map<String, List<Schema>> pluginSchemas = loadPluginSchemas();
     Map<String, List<Category>> pluginCategories = loadPluginCategories();
     Map<String, List<Datasource>> pluginDatasources = loadPluginDatasources();
 
-    // Load the built-in schemas
-    List<Schema> builtinSchemas = loadBuiltinSchemas();
-    schemas.addAll(builtinSchemas);
-
-    // TODO this will break if more builtin schemas are added
-    Schema core = builtinSchemas.get(0);
-
-    // Attach the categories and datasources specified in the plugin schemas.
     for (Map.Entry<String, List<Schema>> entry : pluginSchemas.entrySet()) {
       String pathToJar = entry.getKey();
 
       for (Schema schema : entry.getValue()) {
         List<Category> categories = new ArrayList<>();
+        List<Datasource> datasources = new ArrayList<>();
 
-        // Attach the core categories
-        categories.addAll(core.getCategories());
+        // Skip over abstract schemas
+        if (schema.isAbstract()) {
+          continue;
+        }
 
-        // Attach categories (either built-in or from the plugin) that are specified in the schema
+        // Merge in the parent schema if it is specified
+        String parent = schema.getParent();
+        if (parent != null) {
+
+          Schema parentSchema = getSchema(pluginSchemas, parent);
+          if (parentSchema == null) {
+            throw new IllegalArgumentException(format("Schema %s extends from unknown parent schema %s", schema.getId(), parent));
+          }
+
+          categories.addAll(parentSchema.getCategories());
+          datasources.addAll(parentSchema.getDatasources());
+        }
+
+        // Attach categories that are specified in the schema
         for (Category category : schema.getCategories()) {
           if (pluginCategories.get(pathToJar) != null && pluginCategories.get(pathToJar).contains(category)) {
             categories.add(pluginCategories.get(pathToJar).get(pluginCategories.get(pathToJar).indexOf(category)));
-          } else if (builtinCategories.contains(category)) {
-            categories.add(builtinCategories.get(builtinCategories.indexOf(category)));
           } else {
             throw new IllegalArgumentException(format("Category %s was not found for schema %s", category.getId(), schema.getId()));
           }
         }
 
-        // Attach datasources (either built-in or from the plugin) that are specified in the schema
-        List<Datasource> datasources = new ArrayList<>();
-
+        // Attach datasources that are specified in the schema
         for (Datasource datasource : schema.getDatasources()) {
           if (pluginDatasources.get(pathToJar) != null && pluginDatasources.get(pathToJar).contains(datasource)) {
             datasources.add(pluginDatasources.get(pathToJar).get(pluginDatasources.get(pathToJar).indexOf(datasource)));
-          } else if (builtinDatasources.contains(datasource)) {
-            datasources.add(builtinDatasources.get(builtinDatasources.indexOf(datasource)));
           } else {
             throw new IllegalArgumentException(format("Datasource %s was not found for schema %s", datasource.getId(), schema.getId()));
           }
@@ -156,6 +153,24 @@ public class SchemaInitialiser {
 
     log.trace(format("loaded %d schemas", schemas.size()));
     return schemas;
+  }
+
+  /**
+   *
+   * @param schemas
+   * @param schemaId
+   * @return
+   */
+  private Schema getSchema(Map<String, List<Schema>> schemas, String schemaId) {
+    for (Map.Entry<String, List<Schema>> entry : schemas.entrySet()) {
+      for (Schema schema : entry.getValue()) {
+        if (schema.getId().equals(schemaId)) {
+          return schema;
+        }
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -209,16 +224,6 @@ public class SchemaInitialiser {
    *
    * @return
    * @throws IOException
-   */
-  private List<Schema> loadBuiltinSchemas() throws IOException {
-    log.info("Loading builtin schemas");
-    return loadBuiltinResources(BUILTIN_RESOURCE_PREFIX + SCHEMA_RESOURCE_PATTERN, Schema.class);
-  }
-
-  /**
-   *
-   * @return
-   * @throws IOException
    * @throws URISyntaxException
    */
   private Map<String, List<Schema>> loadPluginSchemas() throws IOException, URISyntaxException {
@@ -230,31 +235,11 @@ public class SchemaInitialiser {
    *
    * @return
    * @throws IOException
-   */
-  private List<Category> loadBuiltinCategories() throws IOException {
-    log.info("Loading builtin categories");
-    return loadBuiltinResources(BUILTIN_RESOURCE_PREFIX + CATEGORY_RESOURCE_PATTERN, Category.class);
-  }
-
-  /**
-   *
-   * @return
-   * @throws IOException
    * @throws URISyntaxException
    */
   private Map<String, List<Category>> loadPluginCategories() throws IOException, URISyntaxException {
     log.info("Loading plugin categories");
     return loadPluginResources(PLUGIN_RESOURCE_PREFIX + CATEGORY_RESOURCE_PATTERN, Category.class);
-  }
-
-  /**
-   *
-   * @return
-   * @throws IOException
-   */
-  private List<Datasource> loadBuiltinDatasources() throws IOException {
-    log.info("Loading builtin datasources");
-    return loadBuiltinResources(BUILTIN_RESOURCE_PREFIX + DATASOURCE_RESOURCE_PATTERN, Datasource.class);
   }
 
   /**
@@ -276,26 +261,6 @@ public class SchemaInitialiser {
    * @return
    * @throws IOException
    */
-  private <T> List<T> loadBuiltinResources(String pattern, Class<T> klass) throws IOException {
-    List<T> resources = new ArrayList<>();
-
-    for (Resource resource : resolver.getResources(pattern)) {
-      if (!resource.getURI().toString().contains("plugins")) {
-        resources.add(loadResource(resource, klass));
-      }
-    }
-
-    return resources;
-  }
-
-  /**
-   *
-   * @param pattern
-   * @param klass
-   * @param <T>
-   * @return
-   * @throws IOException
-   */
   private <T> Map<String, List<T>> loadPluginResources(String pattern, Class<T> klass) throws IOException, URISyntaxException {
     Map<String, List<T>> resources = new HashMap<>();
 
@@ -306,7 +271,7 @@ public class SchemaInitialiser {
 
       T t = loadResource(resource, klass);
 
-      // When running as a jar, dont detect ourselves as a plugin
+      // When running as a jar, don't detect ourselves as a plugin
       if (resource.getURI().toString().contains("modesti-api")) {
         continue;
       }

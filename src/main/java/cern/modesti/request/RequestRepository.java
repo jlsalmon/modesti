@@ -29,14 +29,6 @@ public interface RequestRepository extends MongoRepository<Request, String>, Que
   Request findOneByRequestId(@Param("requestId") String requestId);
 
   /**
-   * @param criteria
-   * @param page
-   *
-   * @return
-   */
-  Page<Request> findAllByOrderByScoreDesc(@Param("q") TextCriteria criteria, Pageable page);
-
-  /**
    * Find requests by either their status, domain, type, system, subsystem, or creator.
    *
    * TODO: this way of querying is probably horribly inefficient. It could probably benefit from indexing of some kind.

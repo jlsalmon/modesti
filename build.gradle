@@ -12,7 +12,7 @@ plugins {
     id "java"
     id "maven"
     id "maven-publish"
-    id "idea"
+//    id "idea"
     id "eclipse"
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.3"
 }
@@ -28,8 +28,8 @@ targetCompatibility = 1.8
 /** Repositories used when searching for dependencies */
 repositories {
     mavenCentral()
-    maven { url "http://artifactory/release" }
-    maven { url "http://artifactory/development" }
+    maven { url "http://localhost:11112/release" }
+    maven { url "http://localhost:11112/development" }
     maven { url "https://repo.spring.io/release" }
     maven { url "https://repo.spring.io/milestone" }
     maven { url "https://repo.spring.io/snapshot" }
@@ -42,7 +42,7 @@ dependencies {
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/afs/workspace/modesti-wincc-plugin/build/libs/modesti-wincc-plugin-0.1-SNAPSHOT.jar!/" />
+          <root url="jar://$USER_HOME$/workspace/modesti-wincc-plugin/build/libs/modesti-wincc-plugin-0.1-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -51,7 +51,7 @@ dependencies {
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/afs/workspace/modesti-csam-plugin/build/libs/modesti-csam-plugin-0.1-SNAPSHOT.jar!/" />
+          <root url="jar://$USER_HOME$/workspace/modesti-csam-plugin/build/libs/modesti-csam-plugin-0.1-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -60,7 +60,7 @@ dependencies {
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/afs/workspace/modesti-tim-plugin/build/libs/modesti-tim-plugin-0.1-SNAPSHOT.jar!/" />
+          <root url="jar://$USER_HOME$/workspace/modesti-tim-plugin/build/libs/modesti-tim-plugin-0.1-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -124,11 +124,11 @@ querydsl {
 }
 
 /** Tell IDEA to find the QueryDsl generated code */
-idea {
-    module {
-        sourceDirs += file("src/querydsl/java")
-    }
-}
+//idea {
+//    module {
+//        sourceDirs += file("src/querydsl/java")
+//    }
+//}
 
 /**
  * Tell Spring Boot to make the JAR executable by appending a script to the JAR with
@@ -164,7 +164,7 @@ publishing {
     }
     repositories {
         maven {
-            url "http://artifactory/beco-development-local"
+            url "http://localhost:11112/beco-development-local"
             credentials {
                 username artifactoryDevUser
                 password artifactoryDevPassword

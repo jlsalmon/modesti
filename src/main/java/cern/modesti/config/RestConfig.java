@@ -70,6 +70,8 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
         SimpleDeserializers deserializers = new SimpleDeserializers();
         deserializers.addDeserializer(Request.class, new RequestDeserialiser());
         context.addDeserializers(deserializers);
+
+
       }
     });
   }

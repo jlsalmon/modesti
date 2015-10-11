@@ -19,16 +19,6 @@ public class DefaultRequestProvider extends RequestProvider {
   public static final String DEFAULT = "DEFAULT";
 
   @Override
-  public boolean validate(Request request) {
-    return true;
-  }
-
-  @Override
-  public boolean configure(Request request) {
-    return true;
-  }
-
-  @Override
   public PluginMetadata getMetadata() {
     return new DefaultPluginMetadata(DEFAULT);
   }

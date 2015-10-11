@@ -21,6 +21,7 @@ import org.springframework.beans.BeanUtils;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.String.format;
 
@@ -45,34 +46,19 @@ public class RequestDeserialiser extends JsonDeserializer<Request> {
 
     ObjectMapper mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
     // Register a deserialiser for Joda classes
     mapper.registerModule(new JodaModule());
 
     Request updated = mapper.readValue(parser, Request.class);
 
-    // The request status may not be modified manually.
-    if (updated.getStatus() != requestToUpdate.getStatus()) {
-      throw new IllegalArgumentException("Request status cannot not be updated manually!");
+    // The request id may not be modified manually.
+    if (!Objects.equals(updated.getRequestId(), requestToUpdate.getRequestId())) {
+      throw new IllegalArgumentException("Request ID cannot not be updated manually!");
     }
 
-    // Make sure all the nested object properties (gmaoCode, etc.) are properly deserialised.
-
-    for (Point point : updated.getPoints()) {
-      Map<String, Object> properties = point.getProperties();
-
-      if (properties.get("gmaoCode") != null) properties.put("gmaoCode", mapper.convertValue(properties.get("gmaoCode"), GmaoCode.class));
-      if (properties.get("responsiblePerson") != null) properties.put("responsiblePerson", mapper.convertValue(properties.get("responsiblePerson"), Person.class));
-      if (properties.get("subsystem") != null)properties.put("subsystem", mapper.convertValue(properties.get("subsystem"), SubSystem.class));
-      if (properties.get("monitoringEquipment") != null)properties.put("monitoringEquipment", mapper.convertValue(properties.get("monitoringEquipment"), MonitoringEquipment.class));
-      if (properties.get("location") != null)properties.put("location", mapper.convertValue(properties.get("location"), Location.class));
-      if (properties.get("buildingName") != null)properties.put("buildingName", mapper.convertValue(properties.get("buildingName"), BuildingName.class));
-      if (properties.get("functionality") != null) properties.put("functionality", mapper.convertValue(properties.get("functionality"), Functionality.class));
-      if (properties.get("safetyZone") != null)properties.put("safetyZone", mapper.convertValue(properties.get("safetyZone"), SafetyZone.class));
-      if (properties.get("alarmCategory") != null)properties.put("alarmCategory", mapper.convertValue(properties.get("alarmCategory"), AlarmCategory.class));
-
-      // TODO remove this domain-specific code, possibly by introducing a type registry for plugins
-      if (properties.get("csamCsename") != null)properties.put("csamCsename", mapper.convertValue(properties.get("csamCsename"), GmaoCode.class));
+    // The request status may not be modified manually.
+    if (!Objects.equals(updated.getStatus(), requestToUpdate.getStatus())) {
+      throw new IllegalArgumentException("Request status cannot not be updated manually!");
     }
 
     updated.setId(requestToUpdate.getId());

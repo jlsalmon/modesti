@@ -15,22 +15,6 @@ import org.springframework.plugin.core.Plugin;
 public abstract class RequestProvider implements Plugin<Request>, MetadataProvider {
 
   /**
-   * Validate the given request.
-   *
-   * @param request the request to validate
-   * @return true if the request is valid, false otherwise
-   */
-  public abstract boolean validate(Request request);
-
-  /**
-   * Configure the given request on the target system.
-   *
-   * @param request the request to configure
-   * @return true if the request was configured successfully, false otherwise
-   */
-  public abstract boolean configure(Request request);
-
-  /**
    * Returns if a plugin should be invoked according to the given request.
    *
    * @param request

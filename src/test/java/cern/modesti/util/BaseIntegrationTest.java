@@ -1,9 +1,8 @@
 package cern.modesti.util;
 
 import cern.modesti.Application;
-import cern.modesti.workflow.configuration.ConfigurationService;
 import cern.modesti.request.RequestRepository;
-import cern.modesti.workflow.WorkflowService;
+import cern.modesti.workflow.CoreWorkflowService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RuntimeService;
@@ -48,10 +47,10 @@ public abstract class BaseIntegrationTest {
   public HistoryService historyService;
 
   @Autowired
-  public WorkflowService workflowService;
+  public CoreWorkflowService coreWorkflowService;
 
   @Mock
-  public ConfigurationService configurationService;
+//  public ConfigurationService configurationService;
 
   /**
    * In-memory SMTP server for receiving emails sent during the tests.
@@ -65,8 +64,8 @@ public abstract class BaseIntegrationTest {
     SpringProcessEngineConfiguration configuration = (SpringProcessEngineConfiguration) ProcessEngines.getDefaultProcessEngine().getProcessEngineConfiguration();
     configuration.setExpressionManager(new MockExpressionManager());
 
-    Mocks.register("workflowService", workflowService);
-    Mocks.register("configurationService", configurationService);
+    Mocks.register("coreWorkflowService", coreWorkflowService);
+//    Mocks.register("configurationService", configurationService);
 
     wiser = new Wiser();
     wiser.setPort(25000);

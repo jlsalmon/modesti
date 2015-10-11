@@ -53,7 +53,7 @@ public class TaskControllerTest extends BaseIntegrationTest {
   public void setup() throws Exception {
     mockMvc = webAppContextSetup(webApplicationContext).build();
     request = getDefaultRequest();
-    process = workflowService.startProcessInstance(request);
+    process = coreWorkflowService.startProcessInstance(request);
 
     taskList.add(new TaskInfo("edit", "Request in preparation", null, "ben", null, new HashSet<>(Arrays.asList("modesti-creators", "modesti-administrators"))));
   }

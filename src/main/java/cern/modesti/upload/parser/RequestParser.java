@@ -86,9 +86,6 @@ public abstract class RequestParser {
     }
     request.setPoints(points);
 
-    // Figure out the data sources
-    request.setCategories(parseCategories(points));
-
     // Figure out the subsystem: assume first
     request.setSubsystem(((SubSystem) points.get(0).getProperties().get("subsystem")).getValue());
 
@@ -227,45 +224,6 @@ public abstract class RequestParser {
    * @return
    */
   protected abstract String parsePointType(Map<String, Object> properties);
-
-  /**
-   *
-   * @param points
-   * @return
-   */
-  protected Set<String> parseCategories(List<Point> points) {
-    Set<String> categories = new HashSet<>();
-
-    for (Point point : points) {
-      Map<String, Object> properties = point.getProperties();
-
-      String pointType = (String) properties.get("pointType");
-      if (pointType != null && !pointType.isEmpty() && !categories.contains(pointType)) {
-        categories.add((String) properties.get("pointType"));
-      }
-
-      String category = null;
-      if (properties.containsKey("trueMeaning")) {
-        category = "Binary Points";
-      } else if (properties.containsKey("commandType")) {
-        category = "Commands";
-      } else if (properties.containsKey("lowLimit")) {
-        category = "Analogue Points";
-      } else if (properties.containsKey("dipClientApp")) {
-        category = "DIP Client";
-      } else if (properties.containsKey("japcClientApp")) {
-        category = "JAPC Client";
-      } else if (properties.containsKey("logValueDeadband")) {
-        category = "Logging";
-      }
-
-      if (category != null && !categories.contains(category)) {
-        categories.add(category);
-      }
-    }
-
-    return categories;
-  }
 
   /**
    *

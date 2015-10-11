@@ -8,7 +8,6 @@ import cern.modesti.repository.person.Person;
 import cern.modesti.repository.subsystem.SubSystem;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Point;
-import cern.modesti.workflow.validation.ValidationService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,38 +44,38 @@ import static org.junit.Assert.assertFalse;
 @ActiveProfiles("dev")
 public class ValidationServiceTest {
 
-  @Autowired
-  ValidationService validationService;
+//  @Autowired
+//  ValidationService validationService;
 
   @Test
   @Ignore
   public void invalidPlcAddress() {
-    Request request = new Request();
-    request.setRequestId("1");
-    request.setCreator(BEN);
-    request.setDomain("TIM");
-    request.setStatus(IN_PROGRESS);
-    request.setType(CREATE);
-
-    List<Point> points = new ArrayList<>();
-    Point point = new Point();
-
-    Map<String, Object> properties = new HashMap<>();
-    properties.put("pointDescription", "test");
-    properties.put("pointDatatype", "Boolean");
-    properties.put("gmaoCode", new GmaoCode("YCPLC01=LHC0"));
-    properties.put("subsystem", new SubSystem(7092L, "ACLR GENERALE", "ACLR", "A", "GENERALE", "Z"));
-    properties.put("responsiblePerson", new Person(413122L, "Robin Martini", "martini"));
-    properties.put("pointAttribute", "test");
-    properties.put("pointType", "APIMMD");
-    properties.put("location", new Location("104/R-A01", "104", "R", "A01"));
-    properties.put("functionality", new Functionality("ADE"));
-    point.setProperties(properties);
-    points.add(point);
-
-    request.setPoints(points);
-
-    boolean valid = validationService.validateRequest(request);
-    assertFalse(valid);
+//    Request request = new Request();
+//    request.setRequestId("1");
+//    request.setCreator(BEN);
+//    request.setDomain("TIM");
+//    request.setStatus(IN_PROGRESS);
+//    request.setType(CREATE);
+//
+//    List<Point> points = new ArrayList<>();
+//    Point point = new Point();
+//
+//    Map<String, Object> properties = new HashMap<>();
+//    properties.put("pointDescription", "test");
+//    properties.put("pointDatatype", "Boolean");
+//    properties.put("gmaoCode", new GmaoCode("YCPLC01=LHC0"));
+//    properties.put("subsystem", new SubSystem(7092L, "ACLR GENERALE", "ACLR", "A", "GENERALE", "Z"));
+//    properties.put("responsiblePerson", new Person(413122L, "Robin Martini", "martini"));
+//    properties.put("pointAttribute", "test");
+//    properties.put("pointType", "APIMMD");
+//    properties.put("location", new Location("104/R-A01", "104", "R", "A01"));
+//    properties.put("functionality", new Functionality("ADE"));
+//    point.setProperties(properties);
+//    points.add(point);
+//
+//    request.setPoints(points);
+//
+//    boolean valid = validationService.validateRequest(request);
+//    assertFalse(valid);
   }
 }

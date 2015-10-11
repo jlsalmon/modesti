@@ -8,20 +8,16 @@ import cern.modesti.request.counter.CounterServiceImpl;
 import cern.modesti.request.point.Point;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaRepository;
-import cern.modesti.workflow.WorkflowService;
+import cern.modesti.workflow.CoreWorkflowService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.plugin.core.PluginRegistry;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
@@ -48,7 +44,7 @@ public class RequestEventHandlerTest {
   CounterServiceImpl counterService;
 
   @Mock
-  WorkflowService workflowService;
+  CoreWorkflowService workflowService;
 
   @Mock
   SchemaRepository schemaRepository;
@@ -60,7 +56,7 @@ public class RequestEventHandlerTest {
 
     Request request = getTestRequest();
     requestEventHandler.handleRequestCreate(request);
-    assertTrue(request.getStatus() == RequestStatus.IN_PROGRESS);
+    assertTrue(Objects.equals(request.getStatus(), "IN_PROGRESS"));
   }
 
   @Test
@@ -84,22 +80,11 @@ public class RequestEventHandlerTest {
     assertTrue(request.getPoints().get(1).getLineNo() == 2L);
   }
 
-  @Test
-  public void requestSchemaIsLinked() {
-    when(requestProviderRegistry.hasPluginFor(anyObject())).thenReturn(true);
-    when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
-
-    Request request = getTestRequest();
-    requestEventHandler.handleRequestCreate(request);
-    assertTrue(request.getCategories() != null);
-  }
-
   private Request getTestRequest() {
     Request request = new Request();
     request.setType(RequestType.CREATE);
     request.setDescription("description");
     request.setDomain("TIM");
-    request.setCategories(new HashSet<>(Arrays.asList("APIMMD")));
     request.setPoints(getTestPoints());
     return request;
   }

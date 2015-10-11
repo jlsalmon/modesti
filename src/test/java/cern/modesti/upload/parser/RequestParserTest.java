@@ -398,10 +398,10 @@ public class RequestParserTest {
 
     assertTrue(request.getDomain().equals("TIM"));
     assertTrue(request.getType().equals(RequestType.CREATE));
-    assertTrue(request.getCategories().size() == 3);
-    assertTrue(request.getCategories().contains("JEC"));
-    assertTrue(request.getCategories().contains("Commands"));
-    assertTrue(request.getCategories().contains("Binary Points"));
+//    assertTrue(request.getCategories().size() == 3);
+//    assertTrue(request.getCategories().contains("JEC"));
+//    assertTrue(request.getCategories().contains("Commands"));
+//    assertTrue(request.getCategories().contains("Binary Points"));
 
     List<Point> points = request.getPoints();
     assertTrue(points.size() == 279);
@@ -435,9 +435,9 @@ public class RequestParserTest {
 
     assertTrue(request.getDomain().equals("CSAM"));
     assertTrue(request.getType().equals(RequestType.CREATE));
-    assertTrue(request.getCategories().size() == 2); // has APIMMD and LSAC points
-    assertTrue(request.getCategories().contains("LSAC"));
-    assertTrue(request.getCategories().contains("APIMMD"));
+//    assertTrue(request.getCategories().size() == 2); // has APIMMD and LSAC points
+//    assertTrue(request.getCategories().contains("LSAC"));
+//    assertTrue(request.getCategories().contains("APIMMD"));
 
     List<Point> points = request.getPoints();
     assertTrue(points.size() == 14);

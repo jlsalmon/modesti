@@ -32,7 +32,6 @@ public class TestUtil {
     request.setDescription("description");
     request.setDomain("DEFAULT");
     request.setSubsystem("EAU DEMI");
-    request.setCategories(new HashSet<>(Collections.singletonList("APIMMD")));
 
     request.setPoints(getDefaultPoints());
     return request;

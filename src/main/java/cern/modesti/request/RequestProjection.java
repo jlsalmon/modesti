@@ -16,9 +16,7 @@ public interface RequestProjection {
 
   String getRequestId();
 
-  RequestStatus getStatus();
-
-  void setStatus(RequestStatus status);
+  String getStatus();
 
   RequestType getType();
 

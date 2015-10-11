@@ -11,7 +11,7 @@ import cern.modesti.upload.parser.RequestParserFactory;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.request.Request;
 import cern.modesti.user.User;
-import cern.modesti.workflow.WorkflowService;
+import cern.modesti.workflow.CoreWorkflowService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.plugin.core.PluginRegistry;
@@ -42,7 +42,7 @@ public class UploadService {
   private CounterService counterService;
 
   @Autowired
-  private WorkflowService workflowService;
+  private CoreWorkflowService workflowService;
 
   /**
    *

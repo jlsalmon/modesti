@@ -1,7 +1,6 @@
 package cern.modesti.worflow.task;
 
 import cern.modesti.request.Request;
-import cern.modesti.request.point.state.Approval;
 import cern.modesti.util.BaseIntegrationTest;
 import cern.modesti.workflow.task.TaskAction;
 import cern.modesti.workflow.task.TaskInfo;
@@ -34,7 +33,7 @@ public class TaskServiceTest extends BaseIntegrationTest {
   @Before
   public void setUp() {
     request = getDefaultRequestWithAlarms();
-    process = workflowService.startProcessInstance(request);
+    process = coreWorkflowService.startProcessInstance(request);
   }
 
   @After
@@ -90,7 +89,7 @@ public class TaskServiceTest extends BaseIntegrationTest {
 
     // Sue sets the approval result object
     request = requestRepository.findOneByRequestId(request.getRequestId());
-    request.setApproval(new Approval(true, ""));
+//    request.setApproval(new Approval(true, ""));
     requestRepository.save(request);
 
     // Sue resolves the task back to Dan
