@@ -41,8 +41,9 @@ public class TaskServiceTest extends BaseIntegrationTest {
 
   @Test
   public void delegate() {
-    TaskInfo task = taskService.getTask(request.getRequestId(), "edit");
-    //assertTrue(task.getOwner().equals(BEN.getUsername()));
+    TaskInfo task = taskService.getTask(request.getRequestId(), "task1");
+    // Ben claims the task
+    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(CLAIM, BEN.getUsername()), BEN);
     assertTrue(task.getAssignee().equals(BEN.getUsername()));
 
     // Ben delegates the task to Joe
@@ -65,45 +66,14 @@ public class TaskServiceTest extends BaseIntegrationTest {
     assertTrue(task.getDelegationState().equals(DelegationState.RESOLVED));
 
     // Ben may now complete the task
-    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), BEN); // activates "submit" task
-    task = taskService.getTask(request.getRequestId(), "submit");
-
-    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), BEN); // activates "edit" task of "approval" subprocess
-    task = taskService.getTask(request.getRequestId(), "edit");
-    assertNull(task.getOwner());
+    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), BEN);
+    task = taskService.getTask(request.getRequestId(), "task2");
     assertNull(task.getAssignee());
-
-    // Now Dan comes along and claims the approval task
-    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(CLAIM, DAN.getUsername()), DAN);
-    assertTrue(task.getOwner().equals(DAN.getUsername()));
-    assertTrue(task.getAssignee().equals(DAN.getUsername()));
-
-    // Then Dan decides he wants Sue to check the approval, so he delegates to her
-    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(DELEGATE, SUE.getUsername()), DAN);
-    assertTrue(task.getOwner().equals(DAN.getUsername()));
-    assertTrue(task.getAssignee().equals(SUE.getUsername()));
-    assertTrue(task.getDelegationState().equals(DelegationState.PENDING));
-
-    // Sue sets the approval result object
-    request = requestRepository.findOneByRequestId(request.getRequestId());
-//    request.setApproval(new Approval(true, ""));
-    requestRepository.save(request);
-
-    // Sue resolves the task back to Dan
-    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(RESOLVE, null), SUE);
-    assertTrue(task.getOwner().equals(DAN.getUsername()));
-    assertTrue(task.getAssignee().equals(DAN.getUsername()));
-    assertTrue(task.getDelegationState().equals(DelegationState.RESOLVED));
-
-    // Dan completes the task
-    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), DAN);
-    task = taskService.getTask(request.getRequestId(), "submit");
-    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), DAN);
   }
 
   @Test
   public void unclaim() {
-    TaskInfo task = taskService.getTask(request.getRequestId(), "edit");
+    TaskInfo task = taskService.getTask(request.getRequestId(), "task1");
     //assertTrue(task.getOwner().equals(BEN.getUsername()));
 
     task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(CLAIM, BEN.getUsername()), BEN);

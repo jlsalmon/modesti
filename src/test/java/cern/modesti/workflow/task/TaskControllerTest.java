@@ -55,7 +55,7 @@ public class TaskControllerTest extends BaseIntegrationTest {
     request = getDefaultRequest();
     process = coreWorkflowService.startProcessInstance(request);
 
-    taskList.add(new TaskInfo("edit", "Request in preparation", null, "ben", null, new HashSet<>(Arrays.asList("modesti-creators", "modesti-administrators"))));
+    taskList.add(new TaskInfo("task1", null, null, null, null, new HashSet<>(Arrays.asList("modesti-creators"))));
   }
 
   @After

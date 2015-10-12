@@ -1,15 +1,5 @@
 package cern.modesti.request;
 
-import cern.modesti.repository.alarm.AlarmCategory;
-import cern.modesti.repository.equipment.MonitoringEquipment;
-import cern.modesti.repository.gmao.GmaoCode;
-import cern.modesti.repository.location.BuildingName;
-import cern.modesti.repository.location.Location;
-import cern.modesti.repository.location.functionality.Functionality;
-import cern.modesti.repository.location.zone.SafetyZone;
-import cern.modesti.repository.person.Person;
-import cern.modesti.repository.subsystem.SubSystem;
-import cern.modesti.request.point.Point;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -20,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Objects;
 
 import static java.lang.String.format;
