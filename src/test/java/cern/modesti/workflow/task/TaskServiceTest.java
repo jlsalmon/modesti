@@ -29,7 +29,7 @@ public class TaskServiceTest extends BaseIntegrationTest {
 
   @Before
   public void setUp() {
-    request = getDefaultRequestWithAlarms();
+    request = getDummyRequest();
     process = coreWorkflowService.startProcessInstance(request);
   }
 

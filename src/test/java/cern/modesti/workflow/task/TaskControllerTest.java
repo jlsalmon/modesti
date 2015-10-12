@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 
 
-import static cern.modesti.test.TestUtil.getDefaultRequest;
+import static cern.modesti.test.TestUtil.getDummyRequest;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -52,7 +52,7 @@ public class TaskControllerTest extends BaseIntegrationTest {
   @Before
   public void setup() throws Exception {
     mockMvc = webAppContextSetup(webApplicationContext).build();
-    request = getDefaultRequest();
+    request = getDummyRequest();
     process = coreWorkflowService.startProcessInstance(request);
 
     taskList.add(new TaskInfo("task1", null, null, null, null, new HashSet<>(Arrays.asList("modesti-creators"))));
