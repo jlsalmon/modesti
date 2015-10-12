@@ -28,8 +28,8 @@ targetCompatibility = 1.8
 /** Repositories used when searching for dependencies */
 repositories {
     mavenCentral()
-    maven { url "http://localhost:11112/release" }
-    maven { url "http://localhost:11112/development" }
+    maven { url "http://artifactory/release" }
+    maven { url "http://artifactory/development" }
     maven { url "https://repo.spring.io/release" }
     maven { url "https://repo.spring.io/milestone" }
     maven { url "https://repo.spring.io/snapshot" }
@@ -97,13 +97,7 @@ dependencies {
     compile "com.mysema.querydsl:querydsl-mongodb:3.6.6"
     compile "com.mysema.querydsl:querydsl-jpa:3.6.6"
 
-    testCompile "junit:junit:4.11"
-    testCompile "org.hamcrest:hamcrest-all:1.3"
-    testCompile "org.springframework:spring-test:4.1.6.RELEASE"
-    testCompile "org.mockito:mockito-core:1.10.19"
-    testCompile "com.jayway.jsonpath:json-path"
-    testCompile "com.github.fakemongo:fongo:1.6.3"
-    testCompile "org.subethamail:subethasmtp:3.1.7"
+    testCompile "cern.modesti:modesti-test:0.1.0-SNAPSHOT"
 }
 
 task wrapper(type: Wrapper) {
@@ -164,7 +158,7 @@ publishing {
     }
     repositories {
         maven {
-            url "http://localhost:11112/beco-development-local"
+            url "http://artifactory/beco-development-local"
             credentials {
                 username artifactoryDevUser
                 password artifactoryDevPassword

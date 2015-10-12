@@ -1,32 +1,14 @@
-package cern.modesti.worflow.validation;
+package cern.modesti.workflow.validation;
 
 import cern.modesti.Application;
-import cern.modesti.repository.gmao.GmaoCode;
-import cern.modesti.repository.location.Location;
-import cern.modesti.repository.location.functionality.Functionality;
-import cern.modesti.repository.person.Person;
-import cern.modesti.repository.subsystem.SubSystem;
-import cern.modesti.request.Request;
-import cern.modesti.request.point.Point;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static cern.modesti.request.RequestStatus.IN_PROGRESS;
-import static cern.modesti.request.RequestType.CREATE;
-import static cern.modesti.util.TestUtil.BEN;
-import static org.junit.Assert.assertFalse;
 
 /**
  * This class defines a set of unit tests to test the validations which are currently implemented as PL/SQL procedures on timrefdb. Hence, a real connection to

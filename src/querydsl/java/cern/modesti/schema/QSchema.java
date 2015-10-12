@@ -20,6 +20,8 @@ public class QSchema extends EntityPathBase<Schema> {
 
     public static final QSchema schema = new QSchema("schema");
 
+    public final BooleanPath abstract$ = createBoolean("abstract");
+
     public final ListPath<cern.modesti.schema.category.Category, cern.modesti.schema.category.QCategory> categories = this.<cern.modesti.schema.category.Category, cern.modesti.schema.category.QCategory>createList("categories", cern.modesti.schema.category.Category.class, cern.modesti.schema.category.QCategory.class, PathInits.DIRECT2);
 
     public final ListPath<cern.modesti.schema.category.Datasource, cern.modesti.schema.category.QDatasource> datasourceOverrides = this.<cern.modesti.schema.category.Datasource, cern.modesti.schema.category.QDatasource>createList("datasourceOverrides", cern.modesti.schema.category.Datasource.class, cern.modesti.schema.category.QDatasource.class, PathInits.DIRECT2);
@@ -29,6 +31,8 @@ public class QSchema extends EntityPathBase<Schema> {
     public final StringPath domain = createString("domain");
 
     public final StringPath id = createString("id");
+
+    public final BooleanPath isAbstract = createBoolean("isAbstract");
 
     public final StringPath name = createString("name");
 

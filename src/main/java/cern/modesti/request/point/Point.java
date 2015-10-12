@@ -44,4 +44,9 @@ public class Point {
 //  private Boolean configured;
 //
 //  private Testing testing = new Testing();
+
+  public <T> T getObjectProperty(String key, Class<T> klass) {
+    Object value = properties.get(key);
+    return klass.cast(value);
+  }
 }

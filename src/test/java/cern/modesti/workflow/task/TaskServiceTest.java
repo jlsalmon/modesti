@@ -1,10 +1,7 @@
-package cern.modesti.worflow.task;
+package cern.modesti.workflow.task;
 
 import cern.modesti.request.Request;
-import cern.modesti.util.BaseIntegrationTest;
-import cern.modesti.workflow.task.TaskAction;
-import cern.modesti.workflow.task.TaskInfo;
-import cern.modesti.workflow.task.TaskService;
+import cern.modesti.test.BaseIntegrationTest;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.DelegationState;
@@ -13,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static cern.modesti.util.TestUtil.*;
+import static cern.modesti.test.TestUtil.*;
 import static cern.modesti.workflow.task.TaskAction.Action.*;
 import static org.junit.Assert.*;
 

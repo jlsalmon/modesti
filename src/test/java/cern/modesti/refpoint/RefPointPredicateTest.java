@@ -3,7 +3,7 @@ package cern.modesti.refpoint;
 import cern.modesti.repository.refpoint.RefPoint;
 import cern.modesti.repository.refpoint.RefPointRepository;
 import cern.modesti.request.search.RsqlExpressionBuilder;
-import cern.modesti.util.BaseIntegrationTest;
+import cern.modesti.test.BaseIntegrationTest;
 import com.mysema.query.types.Predicate;
 import org.junit.After;
 import org.junit.Before;

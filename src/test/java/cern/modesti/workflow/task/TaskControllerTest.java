@@ -1,8 +1,7 @@
-package cern.modesti.worflow.task;
+package cern.modesti.workflow.task;
 
 import cern.modesti.request.Request;
-import cern.modesti.util.BaseIntegrationTest;
-import cern.modesti.workflow.task.TaskInfo;
+import cern.modesti.test.BaseIntegrationTest;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.junit.After;
 import org.junit.Assert;
@@ -23,7 +22,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import static cern.modesti.util.TestUtil.getDefaultRequest;
+
+import static cern.modesti.test.TestUtil.getDefaultRequest;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

@@ -22,8 +22,6 @@ import org.slf4j.LoggerFactory;
 @RunWith(MockitoJUnitRunner.class)
 public class UploadServiceTest {
 
-  private static final Logger LOG = LoggerFactory.getLogger(UploadServiceTest.class);
-
   /**
    * The class to be tested
    */

@@ -20,21 +20,15 @@ public class QPoint extends BeanPath<Point> {
 
     public static final QPoint point = new QPoint("point");
 
-    public final BooleanPath alarm = createBoolean("alarm");
-
-    public final BooleanPath configured = createBoolean("configured");
-
     public final BooleanPath dirty = createBoolean("dirty");
 
-    public final ListPath<cern.modesti.request.point.Error, SimplePath<cern.modesti.request.point.Error>> errors = this.<cern.modesti.request.point.Error, SimplePath<cern.modesti.request.point.Error>>createList("errors", cern.modesti.request.point.Error.class, SimplePath.class, PathInits.DIRECT2);
+    public final ListPath<Error, SimplePath<Error>> errors = this.<Error, SimplePath<Error>>createList("errors", Error.class, SimplePath.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> lineNo = createNumber("lineNo", Long.class);
 
     public final MapPath<String, Object, SimplePath<Object>> properties = this.<String, Object, SimplePath<Object>>createMap("properties", String.class, Object.class, SimplePath.class);
 
     public final BooleanPath selected = createBoolean("selected");
-
-    public final BooleanPath valid = createBoolean("valid");
 
     public QPoint(String variable) {
         super(Point.class, forVariable(variable));
