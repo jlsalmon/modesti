@@ -4,12 +4,14 @@ import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.Field;
 import cern.modesti.schema.options.OptionService;
+import cern.modesti.schema.processor.SchemaPostProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -49,7 +51,7 @@ public class SchemaInitialiser {
   private SchemaRepository schemaRepository;
 
   @Autowired
-  private OptionService optionService;
+  private ApplicationContext applicationContext;
 
   @Autowired
   private ObjectMapper mapper;
@@ -158,8 +160,12 @@ public class SchemaInitialiser {
         schema.setCategories(categories);
         schema.setDatasources(datasources);
 
-        // Parse options
-        optionService.parseOptions(schema);
+        // Invoke any post processors
+        Map<String, SchemaPostProcessor> postProcessors = applicationContext.getBeansOfType(SchemaPostProcessor.class);
+
+        for (SchemaPostProcessor postProcessor : postProcessors.values()) {
+          schema = postProcessor.postProcess(schema);
+        }
 
         schemas.add(schema);
       }
