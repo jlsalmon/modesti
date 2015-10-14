@@ -3,7 +3,6 @@ package cern.modesti.schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.Field;
-import cern.modesti.schema.options.OptionService;
 import cern.modesti.schema.processor.SchemaPostProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteStreams;
