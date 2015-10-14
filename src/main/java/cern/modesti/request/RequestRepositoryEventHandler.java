@@ -14,6 +14,8 @@ import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static java.lang.String.format;
@@ -42,15 +44,16 @@ public class RequestRepositoryEventHandler {
   private CoreWorkflowService workflowService;
 
   @Autowired
-  private ApplicationContext applicationContext;
+  private ApplicationContext context;
 
-  private Collection<RequestEventHandler> requestEventHandlers;
+  private Collection<RequestEventHandler> requestEventHandlers = new ArrayList<>();
 
   /**
    *
    */
-  public RequestRepositoryEventHandler() {
-    this.requestEventHandlers = applicationContext.getBeansOfType(RequestEventHandler.class).values();
+  @PostConstruct
+  public void init() {
+    this.requestEventHandlers = context.getBeansOfType(RequestEventHandler.class).values();
   }
 
   /**

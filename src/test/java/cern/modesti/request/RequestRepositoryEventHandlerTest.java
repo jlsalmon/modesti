@@ -9,6 +9,7 @@ import cern.modesti.request.point.Point;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaRepository;
 import cern.modesti.workflow.CoreWorkflowService;
+import org.apache.catalina.core.ApplicationContext;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +49,9 @@ public class RequestRepositoryEventHandlerTest {
 
   @Mock
   SchemaRepository schemaRepository;
+
+  @Mock
+  ApplicationContext applicationContext;
 
   @Test
   @Ignore
