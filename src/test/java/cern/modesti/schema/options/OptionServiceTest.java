@@ -5,8 +5,6 @@ import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.field.Field;
 import cern.modesti.schema.field.OptionsField;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,7 +48,7 @@ public class OptionServiceTest {
     when(entityManager.createNativeQuery(contains("OPTION_LIST"))).thenReturn(q);
     when(q.getSingleResult()).thenReturn("a,b,c", (Object) null);
 
-    optionService.injectOptions(schema);
+    optionService.parseOptions(schema);
 
     List<String> options = (List<String>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
 
@@ -74,7 +71,7 @@ public class OptionServiceTest {
     when(entityManager.createNativeQuery(contains("OPTIONS_WITH_MEANINGS"))).thenReturn(q);
     when(q.getSingleResult()).thenReturn("a,b,c", "a desc", "b desc", "c desc");
 
-    optionService.injectOptions(schema);
+    optionService.parseOptions(schema);
 
     List<String> options = (List<String>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
 
@@ -97,7 +94,7 @@ public class OptionServiceTest {
     when(entityManager.createNativeQuery(contains("OPTION_RANGE"))).thenReturn(q);
     when(q.getSingleResult()).thenReturn("-2:2", (Object) null);
 
-    optionService.injectOptions(schema);
+    optionService.parseOptions(schema);
 
     List<String> options = (List<String>) ((OptionsField) schema.getCategories().iterator().next().getFields().get(0)).getOptions();
 
@@ -119,7 +116,7 @@ public class OptionServiceTest {
     datasource.setFields(Collections.singletonList(field));
     schema.setDatasources(Collections.singletonList(datasource));
 
-    optionService.injectOptions(schema);
+    optionService.parseOptions(schema);
 
     List<String> options = (List<String>) ((OptionsField) schema.getDatasources().iterator().next().getFields().get(0)).getOptions();
 

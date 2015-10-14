@@ -109,18 +109,32 @@ public class SchemaInitialiser {
 
         // Attach categories that are specified in the schema
         for (Category category : schema.getCategories()) {
-          if (pluginCategories.get(pathToJar) != null && pluginCategories.get(pathToJar).contains(category)) {
-            categories.add(pluginCategories.get(pathToJar).get(pluginCategories.get(pathToJar).indexOf(category)));
-          } else {
+          boolean categoryFound = false;
+
+          for (Map.Entry<String, List<Category>> categoryEntry : pluginCategories.entrySet()) {
+            if (categoryEntry.getValue().contains(category)) {
+              categories.add(categoryEntry.getValue().get(categoryEntry.getValue().indexOf(category)));
+              categoryFound = true;
+            }
+          }
+
+          if (!categoryFound) {
             throw new IllegalArgumentException(format("Category %s was not found for schema %s", category.getId(), schema.getId()));
           }
         }
 
         // Attach datasources that are specified in the schema
         for (Datasource datasource : schema.getDatasources()) {
-          if (pluginDatasources.get(pathToJar) != null && pluginDatasources.get(pathToJar).contains(datasource)) {
-            datasources.add(pluginDatasources.get(pathToJar).get(pluginDatasources.get(pathToJar).indexOf(datasource)));
-          } else {
+          boolean datasourceFound = false;
+
+          for (Map.Entry<String, List<Datasource>> datasourceEntry : pluginDatasources.entrySet()) {
+            if (datasourceEntry.getValue().contains(datasource)) {
+              categories.add(datasourceEntry.getValue().get(datasourceEntry.getValue().indexOf(datasource)));
+              datasourceFound = true;
+            }
+          }
+
+          if (!datasourceFound) {
             throw new IllegalArgumentException(format("Datasource %s was not found for schema %s", datasource.getId(), schema.getId()));
           }
         }
@@ -144,8 +158,8 @@ public class SchemaInitialiser {
         schema.setCategories(categories);
         schema.setDatasources(datasources);
 
-        // Inject options
-        optionService.injectOptions(schema);
+        // Parse options
+        optionService.parseOptions(schema);
 
         schemas.add(schema);
       }

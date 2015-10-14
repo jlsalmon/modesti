@@ -23,7 +23,9 @@ import cern.modesti.schema.field.OptionsField;
 import com.google.common.base.CaseFormat;
 
 /**
- * TODO
+ * TODO: pull this out into modesti-common
+ *
+ * TODO: implement SPI for plugins to retrieve dynamically a list of options for a given field?
  *
  * @author Justin Lewis Salmon
  */
@@ -41,13 +43,13 @@ public class OptionService {
    *
    * @param schema
    */
-  public void injectOptions(Schema schema) {
+  public void parseOptions(Schema schema) {
     for (Category category : schema.getCategories()) {
-      category.getFields().forEach(field -> injectOptions(schema, field));
+      category.getFields().forEach(field -> parseOptions(schema, field));
     }
 
     for (Datasource datasource : schema.getDatasources()) {
-      datasource.getFields().forEach(field -> injectOptions(schema, field));
+      datasource.getFields().forEach(field -> parseOptions(schema, field));
     }
   }
 
@@ -56,7 +58,7 @@ public class OptionService {
    * @param schema
    * @param field
    */
-  private void injectOptions(Schema schema, Field field) {
+  private void parseOptions(Schema schema, Field field) {
     if (field instanceof OptionsField && ((OptionsField) field).getOptions() == null) {
 
       // The "pointType" field is treated specially. Its options are the possible datasources of the schema.
