@@ -29,13 +29,13 @@ import static org.mockito.Mockito.when;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class RequestEventHandlerTest {
+public class RequestRepositoryEventHandlerTest {
 
   /**
    * The class to be tested
    */
   @InjectMocks
-  RequestEventHandler requestEventHandler;
+  RequestRepositoryEventHandler requestRepositoryEventHandler;
 
   @Mock
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
@@ -55,7 +55,7 @@ public class RequestEventHandlerTest {
     when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
 
     Request request = getTestRequest();
-    requestEventHandler.handleRequestCreate(request);
+    requestRepositoryEventHandler.handleRequestCreate(request);
     assertTrue(Objects.equals(request.getStatus(), "IN_PROGRESS"));
   }
 
@@ -66,7 +66,7 @@ public class RequestEventHandlerTest {
     when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
 
     Request request = getTestRequest();
-    requestEventHandler.handleRequestCreate(request);
+    requestRepositoryEventHandler.handleRequestCreate(request);
     assertTrue(request.getRequestId().equals("1"));
   }
 
@@ -75,7 +75,7 @@ public class RequestEventHandlerTest {
     when(counterService.getNextSequence(anyString())).thenReturn(1L).thenReturn(2L);
 
     Request request = getTestRequest();
-    requestEventHandler.handleRequestSave(request);
+    requestRepositoryEventHandler.handleRequestSave(request);
     assertTrue(request.getPoints().get(0).getLineNo() == 1L);
     assertTrue(request.getPoints().get(1).getLineNo() == 2L);
   }
