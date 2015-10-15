@@ -19,34 +19,6 @@ import java.net.URLClassLoader;
  *  - In-memory MongoDB datasource (fongo)
  *  - In-memory LDAP authentication
  *
- * The "dev" profile uses timdb-test, and the "prod" profile uses timdb-pro.
- *
- *
- * Service                      Profiles
- * --------------------------------------------------------------------
- * ConfigurationService
- * UploadService
- * NotificationService
- * CounterService
- * OptionService
- * LdapSynchroniser             dev, prod
- * ValidationService
- * WorkflowService
- * HistoryService
- *
- *
- * Configuration                Profiles
- * --------------------------------------------------------------------
- * CacheConfig
- * DataSourceConfig
- * JpaConfig
- * Mongoconfig
- * RestConfig
- * WebSecurityconfig            dev, prod
- * WorkflowConfig               dev, prod (usersAndGroupsInitializer)
- *
- *
- *
  * @author Justin Lewis Salmon
  */
 @SpringBootApplication
