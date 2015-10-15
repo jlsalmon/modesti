@@ -5,7 +5,7 @@
 //
 //import cern.modesti.request.counter.CounterServiceImpl;
 //import cern.modesti.schema.SchemaRepository;
-//import cern.modesti.upload.parser.RequestParser;
+//import cern.modesti.common.request.parser.CommonRequestParser;
 //import cern.modesti.request.RequestRepository;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
@@ -29,7 +29,7 @@
 //  UploadService uploadService;
 //
 //  @Mock
-//  RequestParser parser;
+//  CommonRequestParser parser;
 //
 //  @Mock
 //  RequestRepository requestRepository;

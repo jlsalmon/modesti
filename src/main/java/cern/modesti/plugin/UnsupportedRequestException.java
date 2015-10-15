@@ -20,6 +20,11 @@ public class UnsupportedRequestException extends RuntimeException {
     this.request = request;
   }
 
+  public UnsupportedRequestException(String message) {
+    super(format(message));
+    this.request = null;
+  }
+
   /**
    * @return the request
    */
