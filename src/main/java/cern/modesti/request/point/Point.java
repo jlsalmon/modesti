@@ -1,6 +1,7 @@
 package cern.modesti.request.point;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -47,6 +48,6 @@ public class Point {
 
   public <T> T getObjectProperty(String key, Class<T> klass) {
     Object value = properties.get(key);
-    return klass.cast(value);
+    return new ObjectMapper().convertValue(value, klass);
   }
 }
