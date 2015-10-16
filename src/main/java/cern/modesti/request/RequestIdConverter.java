@@ -1,6 +1,3 @@
-/**
- *
- */
 package cern.modesti.request;
 
 import org.springframework.beans.factory.annotation.Autowired;

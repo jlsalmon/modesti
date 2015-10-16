@@ -1,6 +1,3 @@
-/**
- *
- */
 package cern.modesti.upload;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;

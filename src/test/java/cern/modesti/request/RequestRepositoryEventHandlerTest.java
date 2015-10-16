@@ -1,6 +1,3 @@
-/**
- *
- */
 package cern.modesti.request;
 
 import cern.modesti.plugin.RequestProvider;

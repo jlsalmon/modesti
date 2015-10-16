@@ -1,6 +1,3 @@
-/**
- *
- */
 package cern.modesti.security;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

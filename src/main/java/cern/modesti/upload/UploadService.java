@@ -1,6 +1,3 @@
-/**
- *
- */
 package cern.modesti.upload;
 
 import cern.modesti.request.Request;

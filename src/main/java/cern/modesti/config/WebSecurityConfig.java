@@ -1,6 +1,3 @@
-/**
- *
- */
 package cern.modesti.config;
 
 import org.apache.catalina.Context;
