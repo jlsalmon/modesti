@@ -58,11 +58,12 @@
 .skin-blue-light .wrapper,
 .skin-blue-light .main-sidebar,
 .skin-blue-light .left-side {
-  background-color: #f9fafc;
+  background-color: #F5F5F5;
+  border-right: 1px solid #ccc;
 }
 .skin-blue-light .content-wrapper,
 .skin-blue-light .main-footer {
-  border-left: 1px solid #d2d6de;
+  /* border-left: 1px solid #d2d6de; */
 }
 .skin-blue-light .user-panel > .info,
 .skin-blue-light .user-panel > .info > a {
@@ -83,7 +84,7 @@
 .skin-blue-light .sidebar-menu > li:hover > a,
 .skin-blue-light .sidebar-menu > li.active > a {
   color: #000000;
-  background: #f4f4f5;
+  background: #F5F5F5;
 }
 .skin-blue-light .sidebar-menu > li.active {
   border-left-color: #3c8dbc;
@@ -92,7 +93,7 @@
   font-weight: 600;
 }
 .skin-blue-light .sidebar-menu > li > .treeview-menu {
-  background: #f4f4f5;
+  background: #F5F5F5;
 }
 .skin-blue-light .sidebar a {
   color: #444444;

@@ -410,8 +410,21 @@ a:focus {
   min-height: 100%;
   width: 230px;
   z-index: 810;
-  transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
+  transition: 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
   transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+  border-right: 1px solid #ccc;
 }
 @media (max-width: 767px) {
   .main-sidebar,
