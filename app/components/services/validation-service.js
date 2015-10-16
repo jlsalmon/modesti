@@ -59,7 +59,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
     // If we found errors already, don't bother to call the backend validations.
     if (valid === false) {
-      request.valid = false;
+      request.properties.valid = false;
       q.resolve(request);
       return q.promise;
     }

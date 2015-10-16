@@ -600,7 +600,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
         // Render the table to show the error highlights
         self.hot.render();
 
-        if (!request.valid) {
+        if (!request.properties.valid) {
           self.validating = 'error';
           AlertService.add('danger', 'Request failed validation with ' + getNumValidationErrors() + ' errors');
           return;
