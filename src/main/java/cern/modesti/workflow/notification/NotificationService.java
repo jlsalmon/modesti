@@ -12,10 +12,13 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * TODO
@@ -36,37 +39,59 @@ public class NotificationService {
   private Environment env;
 
   /**
-   *
-   * @param request
-   * @param type
+   * @param notification
    */
-  public void sendNotification(Request request, NotificationType type) {
+  public void sendNotification(Notification notification, Request request) {
+    List<String> recipients = new ArrayList<>();
 
-    List<String> to = new ArrayList<>();
-
-    // Build the list of recipient addresses based on the notification type
-    for (String recipient : type.getRecipients()) {
-      if (recipient.equals("creator")) {
-        to.add(request.getCreator().getEmail());
-      }
-
-      else {
-        String[] addresses = env.getRequiredProperty(recipient, String[].class);
-        for (String address : addresses) {
-          to.add(address + "@cern.ch");
-        }
+    // Build the list of recipient addresses
+    for (String recipient : notification.getRecipients()) {
+      InternetAddress email;
+      try {
+        email = new InternetAddress(recipient);
+        email.validate();
+        recipients.add(recipient);
+      } catch (AddressException e) {
+        throw new IllegalArgumentException("Not a valid email address: " + recipient);
       }
     }
 
+    if (recipients.isEmpty()) {
+      throw new IllegalArgumentException("Notification must specify one or more recipients");
+    }
+
     String from = env.getRequiredProperty("spring.mail.from");
-    String subject = type.getSubject();
-    String template = type.getTemplate();
+
+    String subject = notification.getSubject();
+    if (subject == null) throw new IllegalArgumentException("Notification subject must not be null");
+
+    String template = notification.getTemplate();
+    if (template == null) throw new IllegalArgumentException("Notification template must not be null");
 
     // Prepare the evaluation context
-    final Context ctx = new Context(Locale.UK);
-    ctx.setVariable("request", request);
-    ctx.setVariable("url", env.getRequiredProperty("modesti.base") + "/#/requests/" + request.getRequestId());
+    final Context context = new Context(Locale.UK);
 
+    // Set default context variables
+    context.setVariable("request", request);
+    context.setVariable("url", env.getRequiredProperty("modesti.base") + "/#/requests/" + request.getRequestId());
+
+    // Set user variables
+    for (Map.Entry<String, Object> entry : notification.getParameters().entrySet()) {
+      context.setVariable(entry.getKey(), entry.getValue());
+    }
+
+    send(recipients, from, subject, template, context);
+  }
+
+  /**
+   *
+   * @param to
+   * @param from
+   * @param subject
+   * @param template
+   * @param context
+   */
+  private void send(List<String> to, String from, String subject, String template, Context context) {
     // Prepare message using a Spring helper
     final MimeMessage mimeMessage = mailSender.createMimeMessage();
     final MimeMessageHelper message;
@@ -79,7 +104,7 @@ public class NotificationService {
       message.setFrom(from);
 
       // Create the HTML body using Thymeleaf
-      final String htmlContent = templateEngine.process(template, ctx);
+      final String htmlContent = templateEngine.process(template, context);
       message.setText(htmlContent, true);
 
     } catch (MessagingException e) {
