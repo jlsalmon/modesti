@@ -1,6 +1,3 @@
-/**
- *
- */
 package cern.modesti.upload.parser;
 
 import cern.modesti.plugin.RequestProvider;
@@ -43,6 +40,11 @@ public class RequestParserFactory {
     RequestParser parser = null;
     for (RequestProvider provider : requestProviderRegistry.getPlugins()) {
       if (provider.getMetadata().getName().equals(domain)) {
+        parser = provider.getRequestParser();
+      }
+
+      // HACK: WINCC excel sheets use the old PVSS name...
+      else if (provider.getMetadata().getName().equals("WINCC") && domain.equals("PVSS")) {
         parser = provider.getRequestParser();
       }
     }
