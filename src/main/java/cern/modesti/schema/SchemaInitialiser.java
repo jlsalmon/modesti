@@ -130,7 +130,7 @@ public class SchemaInitialiser {
 
           for (Map.Entry<String, List<Datasource>> datasourceEntry : pluginDatasources.entrySet()) {
             if (datasourceEntry.getValue().contains(datasource)) {
-              categories.add(datasourceEntry.getValue().get(datasourceEntry.getValue().indexOf(datasource)));
+              datasources.add(datasourceEntry.getValue().get(datasourceEntry.getValue().indexOf(datasource)));
               datasourceFound = true;
             }
           }
