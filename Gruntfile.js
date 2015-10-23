@@ -11,7 +11,8 @@ module.exports = function (grunt) {
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
-    dist: 'dist'
+    dist: 'dist',
+    version: require('./package.json').version
   };
 
   // Define the configuration for all the tasks
@@ -429,7 +430,7 @@ module.exports = function (grunt) {
         files: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js', '<%= yeoman.dist %>/scripts/scripts.js'],
         commitFiles: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js'],
         pushTo: 'origin',
-        updateConfigs: ['modesti']
+        updateConfigs: ['yeoman']
       }
     },
 
@@ -438,7 +439,7 @@ module.exports = function (grunt) {
       /*jshint camelcase: false */
       options: {
         id: 'cern.modesti:modesti:tgz',
-        version: '<%= modesti.version %>',
+        version: '<%= yeoman.version %>',
         path: 'build/',
         base_path: ''
       },
