@@ -16,3 +16,4 @@ bin
 test-results
 mocha.json
 artifactory.json
+modesti.yaml
