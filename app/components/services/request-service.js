@@ -96,11 +96,9 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
   /**
    *
    * @param id
-   * @param params
-   * @param unsavedRequest
    * @returns {*}
    */
-  function getRequest(id, params, unsavedRequest) {
+  function getRequest(id) {
     var q = $q.defer();
 
     if (self.cache[id]) {
@@ -254,7 +252,7 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
     return q.promise;
   }
 
-  function cloneRequest(id) {
+  function cloneRequest(/*id*/) {
     var q = $q.defer();
 
     // TODO
