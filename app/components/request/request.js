@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $state, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
+function RequestController($scope, $q, $state, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
                            RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService, AlertService, ValidationService) {
   var self = this;
 
@@ -124,6 +124,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
   self.showHelp = showHelp;
   self.showComments = showComments;
   self.showHistory = showHistory;
+  self.cloneRequest = cloneRequest;
   self.deleteRequest = deleteRequest;
 
   $localStorage.$default({
@@ -638,7 +639,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
     AlertService.clear();
     self.submitting = 'started';
 
-    RequestService.saveRequest(request).then(function () {
+    RequestService.saveRequest(self.request).then(function () {
       console.log('saved request before submitting');
 
       // Complete the task associated with the request
@@ -817,7 +818,7 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
       self.rows[i].lineNo = i + 1;
     }
 
-    SchemaService.generateTagnames(self.request);
+    //SchemaService.generateTagnames(self.request);
     SchemaService.generateFaultStates(self.request);
     //SchemaService.generateAlarmCategories(self.request);
   }
@@ -1009,6 +1010,38 @@ function RequestController($scope, $state, $timeout, $modal, $filter, $localStor
 
     function () {
       console.log('delete aborted');
+    });
+  }
+
+  /**
+   *
+   */
+  function cloneRequest() {
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/request/modals/clone-modal.html',
+      controller: 'CloneModalController as ctrl',
+      resolve: {
+        request: function () {
+          return self.request;
+        }
+      }
+    });
+
+    modalInstance.result.then(function () {
+      RequestService.cloneRequest(request.requestId).then(function (clone) {
+        console.log('cloned request ' + request.requestId + ' to new request ' + clone.requestId);
+        AlertService.add('success', 'Request was cloned successfully with id ' + clone.requestId);
+        $state.go('request', { id: clone.requestId });
+      },
+
+      function (error) {
+        console.log('clone failed: ' + error.statusText);
+      });
+    },
+
+    function () {
+      console.log('clone aborted');
     });
   }
 

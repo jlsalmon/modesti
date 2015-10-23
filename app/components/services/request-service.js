@@ -3,11 +3,11 @@
 /**
  * @ngdoc service
  * @name modesti.RequestService
- * @description # RequestService Service in the modesti.
+ * @description # RequestService
  */
 angular.module('modesti').service('RequestService', RequestService);
 
-function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService) {
+function RequestService($http, $rootScope, $q, Restangular, AuthService) {
   var self = this;
 
   self.cache = {};
@@ -19,6 +19,7 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
     getChildRequests: getChildRequests,
     saveRequest: saveRequest,
     createRequest: createRequest,
+    cloneRequest: cloneRequest,
     deleteRequest: deleteRequest,
     isCurrentUserOwner : isCurrentUserOwner,
     getRequestMetrics: getRequestMetrics,
@@ -106,23 +107,23 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
       var request = self.cache[id];
       console.log('using cached request');
 
-      // Merge the given potentially unsaved request with the cached
-      // request. This is because we don't want to lose any unsaved
-      // changes.
-      if (unsavedRequest) {
-        for (var i in unsavedRequest.points) {
-          // If the point has been modified, update it
-          update(request.points, unsavedRequest.points[i]);
-        }
-      }
+      //// Merge the given potentially unsaved request with the cached
+      //// request. This is because we don't want to lose any unsaved
+      //// changes.
+      //if (unsavedRequest) {
+      //  for (var i in unsavedRequest.points) {
+      //    // If the point has been modified, update it
+      //    update(request.points, unsavedRequest.points[i]);
+      //  }
+      //}
 
       // Make a copy for sorting/filtering
       request = Restangular.copy(request);
 
-      if (params) {
-        // Sort/filter the points
-        request.points = transformData(request.points, params.filter(), params);
-      }
+      //if (params) {
+      //  // Sort/filter the points
+      //  request.points = transformData(request.points, params.filter(), params);
+      //}
 
       q.resolve(request);
     }
@@ -140,10 +141,10 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
         // Make a copy for sorting/filtering
         request = Restangular.copy(request);
 
-        if (params) {
-          // Perform initial sorting/filtering/slicing
-          request.points = transformData(request.points, params.filter(), params);
-        }
+        //if (params) {
+        //  // Perform initial sorting/filtering/slicing
+        //  request.points = transformData(request.points, params.filter(), params);
+        //}
 
         q.resolve(request);
       },
@@ -253,6 +254,14 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
     return q.promise;
   }
 
+  function cloneRequest(id) {
+    var q = $q.defer();
+
+    // TODO
+
+    return q.promise;
+  }
+
   /**
    *
    * @param id
@@ -314,49 +323,49 @@ function RequestService($http, $filter, $rootScope, $q, Restangular, AuthService
     self.cache = {};
   }
 
-  /**
-   *
-   * @param data
-   * @param filter
-   * @returns {*}
-   */
-  function filterData(data, filter) {
-    return $filter('filter')(data, filter);
-  }
-
-  /**
-   *
-   * @param data
-   * @param params
-   * @returns {*}
-   */
-  function orderData(data, params) {
-    return params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
-  }
-
-  /**
-   *
-   * @param data
-   * @param filter
-   * @param params
-   * @returns {*}
-   */
-  function transformData(data, filter, params) {
-    return orderData(filterData(data, filter), params);
-  }
-
-  /**
-   * If the given array contains a modified version of the given point, this
-   * function will update it in the array.
-   */
-  function update(array, point) {
-    var i = array.length;
-    while (i--) {
-      if (array[i].lineNo === point.lineNo && angular.toJson(array[i]) !== angular.toJson(point)) {
-        array[i] = point;
-      }
-    }
-  }
+  ///**
+  // *
+  // * @param data
+  // * @param filter
+  // * @returns {*}
+  // */
+  //function filterData(data, filter) {
+  //  return $filter('filter')(data, filter);
+  //}
+  //
+  ///**
+  // *
+  // * @param data
+  // * @param params
+  // * @returns {*}
+  // */
+  //function orderData(data, params) {
+  //  return params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
+  //}
+  //
+  ///**
+  // *
+  // * @param data
+  // * @param filter
+  // * @param params
+  // * @returns {*}
+  // */
+  //function transformData(data, filter, params) {
+  //  return orderData(filterData(data, filter), params);
+  //}
+  //
+  ///**
+  // * If the given array contains a modified version of the given point, this
+  // * function will update it in the array.
+  // */
+  //function update(array, point) {
+  //  var i = array.length;
+  //  while (i--) {
+  //    if (array[i].lineNo === point.lineNo && angular.toJson(array[i]) !== angular.toJson(point)) {
+  //      array[i] = point;
+  //    }
+  //  }
+  //}
 
   return service;
 }

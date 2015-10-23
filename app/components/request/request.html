@@ -180,17 +180,20 @@
           <i class="fa fa-fw fa-history"></i>
         </button>
 
-        <!-- Help button -->
-        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.showHelp()" tooltip-append-to-body="true" tooltip="Help">
-          <i class="fa fa-fw fa-question-circle"></i> Help
-        </button>
-
-        <!-- Delete button -->
-        <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.deleteRequest()" ng-if="ctrl.isCurrentUserAuthorised()"
-                tooltip-append-to-body="true" tooltip="Delete request">
-          <i class="fa fa-fw fa-trash"></i>
-        </button>
-
+        <!-- Actions dropdown -->
+        <div class="btn-group toolbar-item" dropdown dropdown-append-to-body>
+          <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+            <i class="fa fa-fw fa-cog"></i> Actions <span class="caret text-muted"></span>
+          </button>
+          <ul class="dropdown-menu pull-right">
+            <li>
+              <a ng-click="ctrl.cloneRequest()">Clone request</a>
+            </li>
+            <li>
+              <a ng-click="ctrl.deleteRequest()" ng-if="ctrl.isCurrentUserAuthorised()">Delete request</a>
+            </li>
+          </ul>
+        </div>
 
         <!-- Search form -->
         <!--<form class="search-form toolbar-item form-inline pull-right">-->

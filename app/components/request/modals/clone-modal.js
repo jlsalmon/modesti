@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name modesti.controller:DeleteModalController
- * @description # DeleteModalController
+ * @name modesti.controller:CloneModalController
+ * @description # CloneModalController
  */
-angular.module('modesti').controller('DeleteModalController', DeleteModalController);
+angular.module('modesti').controller('CloneModalController', CloneModalController);
 
-function DeleteModalController($modalInstance, request) {
+function CloneModalController($modalInstance, request) {
   var self = this;
 
   self.request = request;

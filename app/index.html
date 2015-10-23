@@ -51,13 +51,24 @@
 
       <nav class="navbar navbar-static-top" role="navigation">
 
-        <div class="navbar-custom-menu pull-left">
+        <div class="pull-left">
           <ul class="nav navbar-nav">
             <li>
               <a ui-sref="requests"  tooltip="{{'REQUESTS'|translate}}" tooltip-placement="bottom">
                 <i class="fa fa-list-ol"></i>
               </a>
             </li>
+
+
+            <!--<li class="dropdown">-->
+              <!--<a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i></a>-->
+              <!--<ul class="dropdown-menu" role="menu">-->
+                <!--<li><a ui-sref="new">New request</a></li>-->
+                <!--<li><a ui-sref="templates.new">New request template</a></li>-->
+              <!--</ul>-->
+            <!--</li>-->
+
+
             <li>
               <a ui-sref="new" tooltip="{{'NEW_REQUEST'|translate}}" tooltip-placement="bottom">
                 <i class="fa fa-plus"></i>
@@ -235,10 +246,10 @@
   <script src="components/request/request.upload.js"></script>
   <script src="components/request/request.js"></script>
   <script src="components/request/requests.js"></script>
-  <script src="components/request/modals/help-modal.js"></script>
   <script src="components/request/modals/comments-modal.js"></script>
   <script src="components/request/modals/history-modal.js"></script>
   <script src="components/request/modals/assignment-modal.js"></script>
+  <script src="components/request/modals/clone-modal.js"></script>
   <script src="components/request/modals/delete-modal.js"></script>
   <script src="components/request/controls/creation-controls.js"></script>
   <script src="components/request/controls/approval-controls.js"></script>
