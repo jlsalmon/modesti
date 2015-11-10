@@ -26,14 +26,14 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
    */
   function init() {
     // Initialise the testing state of the request itself
-    if (!self.parent.request.testing) {
-      self.parent.request.testing = {passed: undefined, message: ''};
+    if (!self.parent.request.properties.testResult) {
+      self.parent.request.properties.testResult = {passed: null, message: ''};
     }
 
-    // Initialise the testing state of each point
+    // Initialise the test result of each point
     self.parent.rows.forEach(function (point) {
-      if (!point.testing) {
-        point.testing = {passed: undefined, message: ''};
+      if (!point.properties.testResult) {
+        point.properties.testResult = {passed: null, message: ''};
       }
     });
   }
@@ -68,7 +68,7 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
     });
     passPoints(pointIds);
 
-    self.parent.request.testing = {passed: true, message: ''};
+    self.parent.request.properties.testResult = {passed: true, message: ''};
   }
 
   /**
@@ -82,7 +82,7 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
         // TODO: there may be other unrelated errors that we don't want to nuke
         point.errors = [];
 
-        point.testing = {
+        point.properties.testResult = {
           passed: true,
           message: null
         };
@@ -117,15 +117,15 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
     for (var i = 0, len = self.parent.rows.length; i < len; i++) {
       point = self.parent.rows[i];
 
-      if (!point.testing) {
-        point.testing = {};
+      if (!point.properties.testResult) {
+        point.properties.testResult = {};
       }
 
       if (pointIds.indexOf(point.lineNo) > -1) {
-        point.testing.passed = false;
+        point.properties.testResult.passed = false;
 
-        if (!point.testing.message) {
-          ValidationService.setErrorMessage(point, 'testing.message', 'Reason for rejection must be given in the comment field');
+        if (!point.properties.testResult.message) {
+          ValidationService.setErrorMessage(point, 'testResult.message', 'Reason for rejection must be given in the comment field');
         }
       }
     }
@@ -156,14 +156,14 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
     self.parent.rows.forEach(function (point) {
       point.errors = [];
 
-      if (!point.testing || point.testing.passed === null) {
-        ValidationService.setErrorMessage(point, 'testing.message', 'Each point in the request must be either passed or failed');
+      if (!point.properties.testResult || point.properties.testResult.passed === null) {
+        ValidationService.setErrorMessage(point, 'testResult.message', 'Each point in the request must be either passed or failed');
         valid = false;
       }
 
-      else if (point.testing.passed === false &&
-      (point.testing.message === undefined || point.testing.message === null || point.testing.message === '')) {
-        ValidationService.setErrorMessage(point, 'testing.message', 'Reason for failure must be given in the comment field');
+      else if (point.properties.testResult.passed === false &&
+      (point.properties.testResult.message === undefined || point.properties.testResult.message === null || point.properties.testResult.message === '')) {
+        ValidationService.setErrorMessage(point, 'testResult.message', 'Reason for failure must be given in the comment field');
         valid = false;
       }
     });

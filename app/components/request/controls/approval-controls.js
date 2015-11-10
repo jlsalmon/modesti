@@ -25,14 +25,14 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
    */
   function init() {
     // Initialise the approval state of the request itself
-    if (!self.parent.request.approval) {
-      self.parent.request.approval = {approved: undefined, message: ''};
+    if (!self.parent.request.properties.approvalResult) {
+      self.parent.request.properties.approvalResult = {approved: null, message: ''};
     }
 
     // Initialise the approval state of each point
     self.parent.rows.forEach(function (point) {
-      if (!point.approval) {
-        point.approval = {approved: undefined, message: ''};
+      if (!point.properties.approvalResult) {
+        point.properties.approvalResult = {approved: null, message: ''};
       }
     });
 
@@ -84,8 +84,8 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
       var point;
       for (var i = 0, len = self.parent.rows.length; i < len; i++) {
         point = self.parent.rows[i];
-        point.approval.approved = false;
-        point.approval.message = self.parent.request.approval.message;
+        point.properties.approvalResult.approved = false;
+        point.properties.approvalResult.message = self.parent.request.properties.approvalResult.message;
       }
 
       // Save the request
@@ -103,15 +103,15 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
     for (var i = 0, len = self.parent.rows.length; i < len; i++) {
       point = self.parent.rows[i];
 
-      if (!point.approval) {
-        point.approval = {};
+      if (!point.properties.approvalResult) {
+        point.properties.approvalResult = {};
       }
 
       if (pointIds.indexOf(point.lineNo) > -1) {
-        point.approval.approved = false;
+        point.properties.approvalResult.approved = false;
 
-        if (!point.approval.message) {
-          ValidationService.setErrorMessage(point, 'approval.message', 'Reason for rejection must be given in the comment field');
+        if (!point.properties.approvalResult.message) {
+          ValidationService.setErrorMessage(point, 'approvalResult.message', 'Reason for rejection must be given in the comment field');
         }
       }
     }
@@ -150,7 +150,7 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
     });
     approvePoints(pointIds);
 
-    self.parent.request.approval = {approved: true, message: ''};
+    self.parent.request.properties.approvalResult = {approved: true, message: ''};
   }
 
   /**
@@ -164,7 +164,7 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
         // TODO: there may be other errors not related to approval that we don't want to nuke
         point.errors = [];
 
-        point.approval = {
+        point.properties.approvalResult = {
           approved: true,
           message: null
         };
@@ -195,14 +195,14 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
       point = self.parent.rows[i];
       point.errors = [];
 
-      if (!point.approval || point.approval.approved === null) {
-        ValidationService.setErrorMessage(point, 'approval.message', 'Each point in the request must be either approved or rejected');
+      if (point.properties.approvalResult.approved !== true && point.properties.approvalResult.approved !== false) {
+        ValidationService.setErrorMessage(point, 'approvalResult.message', 'Each point in the request must be either approved or rejected');
         valid = false;
       }
 
-      else if (point.approval.approved === false &&
-      (point.approval.message === undefined || point.approval.message === null || point.approval.message === '')) {
-        ValidationService.setErrorMessage(point, 'approval.message', 'Reason for rejection must be given in the comment field');
+      else if (point.properties.approvalResult.approved === false &&
+      (point.properties.approvalResult.message === undefined || point.properties.approvalResult.message === null || point.properties.approvalResult.message === '')) {
+        ValidationService.setErrorMessage(point, 'approvalResult.message', 'Reason for rejection must be given in the comment field');
         valid = false;
       }
     }
@@ -233,12 +233,12 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
     for (var i = 0, len = self.parent.rows.length; i < len; i++) {
       point = self.parent.rows[i];
 
-      if (point.approval && point.approval.approved === false) {
+      if (point.properties.approvalResult && point.properties.approvalResult.approved === false) {
         entireRequestApproved = false;
       }
     }
 
-    self.parent.request.approval.approved = entireRequestApproved;
+    self.parent.request.properties.approvalResult.approved = entireRequestApproved;
     self.parent.submit();
   }
 

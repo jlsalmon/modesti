@@ -52,7 +52,7 @@ function AddressingController($scope, RequestService) {
       event.stopPropagation();
     }
 
-    self.parent.request.addressing = {addressed: self.addressed, message: ''};
+    self.parent.request.properties.addressingResult = {addressed: self.addressed, message: ''};
     self.parent.submit();
   }
 

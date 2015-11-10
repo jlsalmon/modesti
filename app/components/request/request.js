@@ -274,7 +274,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     var point = self.rows[row];
     var text = '';
 
-    if (point.valid === false) {
+    if (point.properties.valid === false) {
       point.errors.forEach(function (e) {
         e.errors.forEach(function (error) {
           text += '<i class="fa fa-fw fa-exclamation-circle text-danger"></i> ' + error + '<br />';
@@ -284,33 +284,33 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="' +
         text.replace(/"/g, '&quot;') + '">' + point.lineNo + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
-    //else if (point.valid === true) {
+    //else if (point.properties.valid === true) {
     //  return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     //}
 
-    else if (point.approval && point.approval.approved === false) {
-      text = 'Point rejected by operator. Reason: <b>' + point.approval.message + '</b>';
+    else if (point.properties.approvalResult && point.properties.approvalResult.approved === false) {
+      text = 'Point rejected by operator. Reason: <b>' + point.properties.approvalResult.message + '</b>';
       return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="' +
         text.replace(/"/g, '&quot;') + '">' + point.lineNo + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
     }
 
-    else if (point.approval && point.approval.approved === true && self.request.status === 'FOR_APPROVAL') {
+    else if (point.properties.approvalResult && point.properties.approvalResult.approved === true && self.request.status === 'FOR_APPROVAL') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 
-    else if (point.cabling && point.cabling.cabled === false && self.request.status === 'FOR_CABLING') {
+    else if (point.properties.cablingResult && point.properties.cablingResult.cabled === false && self.request.status === 'FOR_CABLING') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-plug text-danger"></i></div>';
     }
 
-    else if (point.cabling && point.cabling.cabled === true && self.request.status === 'FOR_CABLING') {
+    else if (point.properties.cablingResult && point.properties.cablingResult.cabled === true && self.request.status === 'FOR_CABLING') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-plug text-success"></i></div>';
     }
 
-    else if (point.testing && point.testing.passed === false && self.request.status === 'FOR_TESTING') {
+    else if (point.properties.testingResult && point.properties.testingResult.passed === false && self.request.status === 'FOR_TESTING') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-times-circle text-danger"></i></div>';
     }
 
-    else if (point.testing && point.testing.passed === true && self.request.status === 'FOR_TESTING') {
+    else if (point.properties.testingResult && point.properties.testingResult.passed === true && self.request.status === 'FOR_TESTING') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 

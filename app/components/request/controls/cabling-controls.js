@@ -27,13 +27,13 @@ function CablingController($scope, RequestService, AlertService, ValidationServi
   function init() {
     // Initialise the cabling state of the request itself
     if (!self.parent.request.cabling) {
-      self.parent.request.cabling = {cabled: undefined, message: ''};
+      self.parent.request.properties.cablingResult = {cabled: null, message: ''};
     }
 
     // Initialise the cabling state of each point
     self.parent.rows.forEach(function (point) {
-      if (!point.cabling) {
-        point.cabling = {cabled: undefined, message: ''};
+      if (!point.properties.cablingResult) {
+        point.properties.cablingResult = {cabled: null, message: ''};
       }
     });
   }
@@ -68,7 +68,7 @@ function CablingController($scope, RequestService, AlertService, ValidationServi
     });
     cablePoints(pointIds);
 
-    self.parent.request.cabling = {cabled: true, message: ''};
+    self.parent.request.properties.cablingResult = {cabled: true, message: ''};
   }
 
   /**
@@ -82,7 +82,7 @@ function CablingController($scope, RequestService, AlertService, ValidationServi
         // TODO: there may be other unrelated errors that we don't want to nuke
         point.errors = [];
 
-        point.cabling = {
+        point.properties.cablingResult = {
           cabled: true,
           message: null
         };
@@ -117,15 +117,15 @@ function CablingController($scope, RequestService, AlertService, ValidationServi
     for (var i = 0, len = self.parent.rows.length; i < len; i++) {
       point = self.parent.rows[i];
 
-      if (!point.cabling) {
-        point.cabling = {};
+      if (!point.properties.cablingResult) {
+        point.properties.cablingResult = {};
       }
 
       if (pointIds.indexOf(point.lineNo) > -1) {
-        point.cabling.cabled = false;
+        point.properties.cablingResult.cabled = false;
 
-        if (!point.cabling.message) {
-          ValidationService.setErrorMessage(point, 'cabling.message', 'Reason for rejection must be given in the comment field');
+        if (!point.properties.cablingResult.message) {
+          ValidationService.setErrorMessage(point, 'cablingResult.message', 'Reason for rejection must be given in the comment field');
         }
       }
     }
@@ -146,7 +146,7 @@ function CablingController($scope, RequestService, AlertService, ValidationServi
       event.stopPropagation();
     }
 
-    self.parent.request.cabling = {cabled: self.cabled, message: ''};
+    self.parent.request.properties.cablingResult = {cabled: self.cabled, message: ''};
     self.parent.submit();
   }
 
@@ -170,14 +170,14 @@ function CablingController($scope, RequestService, AlertService, ValidationServi
     self.parent.rows.forEach(function (point) {
       point.errors = [];
 
-      if (!point.cabling || point.cabling.cabled === null) {
-        ValidationService.setErrorMessage(point, 'cabling.message', 'Each point in the request must be either cabled or rejected');
+      if (!point.properties.cablingResult || point.properties.cablingResult.cabled === null) {
+        ValidationService.setErrorMessage(point, 'cablingResult.message', 'Each point in the request must be either cabled or rejected');
         valid = false;
       }
 
-      else if (point.cabling.cabled === false &&
-      (point.cabling.message === undefined || point.cabling.message === null || point.cabling.message === '')) {
-        ValidationService.setErrorMessage(point, 'cabling.message', 'Reason for rejection must be given in the comment field');
+      else if (point.properties.cablingResult.cabled === false &&
+      (point.properties.cablingResult.message === undefined || point.properties.cablingResult.message === null || point.properties.cablingResult.message === '')) {
+        ValidationService.setErrorMessage(point, 'cablingResult.message', 'Reason for rejection must be given in the comment field');
         valid = false;
       }
     });

@@ -34,7 +34,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
     // Reset all points and clear any error messages.
     request.points.forEach(function (point) {
-      point.valid = undefined;
+      point.properties.valid = undefined;
       point.errors = [];
     });
 
@@ -120,7 +120,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
         // Check for invalid fields
         if (!isValidValue(value, point, field)) {
-          point.valid = category.valid = valid = false;
+          point.properties.valid = category.valid = valid = false;
           setErrorMessage(point, propertyName, 'Value "' + value + '" is not a legal option for field "' + field.name_en + '". Please select a value from the list.');
         }
 
@@ -135,7 +135,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
         if (required === true) {
           if (value === '' || value === undefined || value === null) {
-            point.valid = category.valid = valid = false;
+            point.properties.valid = category.valid = valid = false;
             setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" is mandatory');
           }
         }
@@ -143,7 +143,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
         // Min length
         if (field.minLength) {
           if (value && value.length < field.minLength) {
-            point.valid = category.valid = valid = false;
+            point.properties.valid = category.valid = valid = false;
             setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
           }
         }
@@ -152,7 +152,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
         if (field.maxLength) {
           if (value && value.length > field.maxLength) {
             //cell.valid = false;
-            point.valid = category.valid = valid = false;
+            point.properties.valid = category.valid = valid = false;
             setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
           }
         }
@@ -244,7 +244,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
       var emptyFields = getEmptyFields(point, fields);
 
       if (emptyFields.length === constraint.members.length) {
-        point.valid = category.valid = valid = false;
+        point.properties.valid = category.valid = valid = false;
         var fieldNames = getFieldNames(category, constraint.members);
 
         emptyFields.forEach(function (emptyField) {
@@ -285,7 +285,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
       var emptyFields = getEmptyFields(point, fields);
 
       if (emptyFields.length > 0) {
-        point.valid = category.valid = valid = false;
+        point.properties.valid = category.valid = valid = false;
 
         emptyFields.forEach(function (emptyField) {
           setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name_en + '"');
@@ -325,7 +325,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
       var emptyFields = getEmptyFields(point, fields);
 
       if (emptyFields.length !== 0 && emptyFields.length !== constraint.members.length) {
-        point.valid = category.valid = valid = false;
+        point.properties.valid = category.valid = valid = false;
 
         emptyFields.forEach(function (emptyField) {
           setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name_en + '"');
@@ -380,7 +380,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
       var secondIndex = data.indexOf(value);
 
       if (value && index > -1 && secondIndex > -1) {
-        point.valid = category.valid = valid = false;
+        point.properties.valid = category.valid = valid = false;
         setErrorMessage(point, '', 'Field(s) "' + getFieldNames(category, constraint.members).join(', ') + '" must be unique for all points. Check for duplications.');
       }
     });
@@ -420,7 +420,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
                 emptyFields = getEmptyFields(point, excludedCategory.fields);
 
                 if (emptyFields.length !== excludedCategory.fields.length) {
-                  point.valid = category.valid = excludedCategory.valid = valid = false;
+                  point.properties.valid = category.valid = excludedCategory.valid = valid = false;
                   setErrorMessage(point, '', 'Fields in the "' + category.name_en + '" group cannot be used if fields in the "' + excludedCategory.name_en +
                     '" group have been specified.');
                 }
