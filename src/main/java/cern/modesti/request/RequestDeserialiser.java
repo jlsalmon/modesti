@@ -50,6 +50,9 @@ public class RequestDeserialiser extends JsonDeserializer<Request> {
       throw new IllegalArgumentException("Request status cannot not be updated manually!");
     }
 
+    // TODO: this shouldn't be necessary, and could cause side effects. Why do we lose properties when saving?
+    updated.setProperties(requestToUpdate.getProperties());
+
     updated.setId(requestToUpdate.getId());
     BeanUtils.copyProperties(updated, requestToUpdate);
     return updated;
