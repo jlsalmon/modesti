@@ -2,8 +2,10 @@ package cern.modesti.request;
 
 import cern.modesti.request.point.Point;
 import cern.modesti.user.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.WordUtils;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -119,9 +121,15 @@ public class Request implements Serializable {
 //
 //  private ConfigurationResult configurationResult;
 
-
+  /**
+   *
+   * @param key
+   * @param klass
+   * @param <T>
+   * @return
+   */
   public <T> T getObjectProperty(String key, Class<T> klass) {
     Object value = properties.get(key);
-    return klass.cast(value);
+    return new ObjectMapper().convertValue(value, klass);
   }
 }
