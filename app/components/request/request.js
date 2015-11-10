@@ -668,6 +668,11 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
             $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
           }
         });
+      },
+
+      function (error) {
+        console.log('error completing task: ' + error.statusText);
+        self.submitting = 'error';
       });
     },
 
