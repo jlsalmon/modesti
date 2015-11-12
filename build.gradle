@@ -156,3 +156,5 @@ release {
     tagCommitMessage = '[Release] - creating tag: '
     newVersionCommitMessage = '[Release] - new version commit: '
 }
+
+afterReleaseBuild.dependsOn publish
