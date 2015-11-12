@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 import static java.lang.String.format;
@@ -51,7 +52,9 @@ public class RequestDeserialiser extends JsonDeserializer<Request> {
     }
 
     // TODO: this shouldn't be necessary, and could cause side effects. Why do we lose properties when saving?
-    updated.setProperties(requestToUpdate.getProperties());
+    Map<String, Object> properties = requestToUpdate.getProperties();
+    properties.putAll(updated.getProperties());
+    updated.setProperties(properties);
 
     updated.setId(requestToUpdate.getId());
     BeanUtils.copyProperties(updated, requestToUpdate);
