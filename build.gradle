@@ -139,12 +139,16 @@ publishing {
     }
     repositories {
         maven {
-            url "http://artifactory/beco-development-local"
             credentials {
-                username artifactoryDevUser
-                password artifactoryDevPassword
+                username artifactoryUser
+                password artifactoryPassword
             }
 
+            if(project.version.endsWith('-SNAPSHOT')) {
+                url "http://artifactory/beco-development-local"
+            } else {
+                url "http://artifactory/beco-release-local"
+            }
         }
     }
 }
