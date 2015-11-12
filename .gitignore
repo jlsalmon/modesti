@@ -14,5 +14,5 @@ make_tunnels.sh
 .xml/
 modesti-api.iml
 # Exclude properties files in the root directory
-/*.properties
+/modesti*.properties
 .~lock*
