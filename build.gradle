@@ -44,7 +44,7 @@ task fatJarTar(type: Tar, dependsOn: 'bootRepackage') {
 
     into('lib') {
         from libsDir
-        include '*.jar'
+        include project.name + "-" + version + ".jar"
     }
     from 'src/dist'
 }
@@ -156,3 +156,4 @@ release {
     tagCommitMessage = 'Tagging version '
     newVersionCommitMessage = 'Bumped version to '
 }
+
