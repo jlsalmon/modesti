@@ -156,9 +156,9 @@ publishing {
 /** Configure release options */
 release {
     failOnSnapshotDependencies = false
-    preTagCommitMessage = '[Release] - pre tag commit: '
-    tagCommitMessage = '[Release] - creating tag: '
-    newVersionCommitMessage = '[Release] - new version commit: '
+    preTagCommitMessage = 'Set version before release: '
+    tagCommitMessage = 'Tagging version '
+    newVersionCommitMessage = 'Bumped version to '
 }
 
 afterReleaseBuild.dependsOn publish

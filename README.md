@@ -18,4 +18,7 @@ Profiles:
 
 ## Build and deployment
 
-Build, test, package and publish to Artifactory with Gradle: `./gradlew build bootRepackage publish`
+Build, test, package and publish a snapshot to Artifactory with Gradle: `./gradlew publish`
+
+Release a new version and publish it: `./gradlew release` (note that you will need to set `artifactoryUser` and `artifactoryPassword` 
+in your ~/.gradle/gradle.properties)
