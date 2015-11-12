@@ -1,4 +1,3 @@
-/** Until the spring-boot plugin is included at plugins.gradle.org, we have to use the old mechanism to include it */
 buildscript {
     repositories {
         mavenCentral()
@@ -12,18 +11,51 @@ plugins {
     id "java"
     id "maven"
     id "maven-publish"
-//    id "idea"
+    id "idea"
     id "eclipse"
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.3"
+    id 'net.researchgate.release' version '2.3.4'
 }
 
+/** Until the spring-boot plugin is included at plugins.gradle.org, we have to use the old mechanism to include it */
 apply plugin: "spring-boot"
 
 group "cern.modesti"
-version = "0.1-SNAPSHOT"
+version = "0.0.1-SNAPSHOT"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+/**
+ * Tell Spring Boot to make the JAR executable by appending a script to the JAR with
+ * start/stop/restart/status commands
+ */
+springBoot {
+    executable = true
+    layout = 'ZIP'
+}
+
+/**
+ * Make a tarball containing the executable fat jar created by bootRepackage, and everything
+ * in the src/dist directory
+ */
+task fatJarTar(type: Tar, dependsOn: 'bootRepackage') {
+    compression Compression.GZIP
+    extension "tar.gz"
+
+    into('lib') {
+        from libsDir
+        include '*.jar'
+    }
+    from 'src/dist'
+}
+
+/** Add version information to the manifest file */
+jar {
+    manifest {
+        attributes("Implementation-Version": version)
+    }
+}
 
 /** Repositories used when searching for dependencies */
 repositories {
@@ -37,47 +69,17 @@ repositories {
 
 dependencies {
 
-    /*
-
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/workspace/modesti-wincc-plugin/build/libs/modesti-wincc-plugin-0.1-SNAPSHOT.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/workspace/modesti-csam-plugin/build/libs/modesti-csam-plugin-0.1-SNAPSHOT.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$USER_HOME$/workspace/modesti-tim-plugin/build/libs/modesti-tim-plugin-0.1-SNAPSHOT.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-
-     */
-
     compile "org.springframework.boot:spring-boot-starter-data-rest:1.3.0.M5"
-    compile "org.springframework.data:spring-data-rest-webmvc:2.5.0.BUILD-SNAPSHOT"
-
     compile "org.springframework.boot:spring-boot-starter-data-mongodb:1.3.0.M5"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:1.3.0.M5"
     compile "org.springframework.boot:spring-boot-starter-security:1.3.0.M5"
     compile "org.springframework.boot:spring-boot-starter-mail:1.3.0.M5"
     compile "org.springframework.boot:spring-boot-starter-thymeleaf:1.3.0.M5"
     compile "org.springframework.security:spring-security-ldap:4.0.2.RELEASE"
+
+    compile "org.springframework.data:spring-data-rest-webmvc:2.5.0.BUILD-SNAPSHOT"
+    compile "org.springframework.boot:spring-boot:1.3.0.RC1"
+
     compile "org.apache.directory.server:apacheds-server-jndi:1.5.5"
     compile "org.activiti:activiti-spring-boot-starter-basic:5.18.0"
     compile "org.activiti:activiti-spring-boot-starter-jpa:5.18.0"
@@ -120,32 +122,6 @@ querydsl {
     jpa = true
 }
 
-/** Tell IDEA to find the QueryDsl generated code */
-//idea {
-//    module {
-//        sourceDirs += file("src/querydsl/java")
-//    }
-//}
-
-/**
- * Tell Spring Boot to make the JAR executable by appending a script to the JAR with
- * start/stop/restart/status commands
- */
-springBoot {
-//    executable = true
-    layout = 'ZIP'
-}
-
-jar {
-    manifest {
-        attributes(
-                "Loader-Path": "/opt/modesti/plugins/, /opt/modesti/conf",
-        )
-    }
-}
-
-bootRun.systemProperties = System.properties
-
 /** Configure publishing to Artifactory */
 publishing {
     publications {
@@ -156,6 +132,9 @@ publishing {
                 parentNode.appendNode('groupId', 'org.springframework.boot')
                 parentNode.appendNode('artifactId', 'spring-boot-starter-parent')
                 parentNode.appendNode('version', '1.3.0.M5')
+            }
+            artifact(fatJarTar) {
+                classifier "dist"
             }
         }
     }
@@ -169,4 +148,11 @@ publishing {
 
         }
     }
+}
+
+/** Configure release options */
+release {
+    preTagCommitMessage = '[Release] - pre tag commit: '
+    tagCommitMessage = '[Release] - creating tag: '
+    newVersionCommitMessage = '[Release] - new version commit: '
 }
