@@ -101,16 +101,11 @@ dependencies {
     compile "com.mysema.querydsl:querydsl-mongodb:3.6.6"
     compile "com.mysema.querydsl:querydsl-jpa:3.6.6"
 
-    testCompile "cern.modesti:modesti-test:0.1.0-SNAPSHOT"
+    testCompile "cern.modesti:modesti-test:0.1.1"
 }
 
 task wrapper(type: Wrapper) {
     gradleVersion = "2.5"
-}
-
-/** Make sure "test" profile is used for tests */
-test {
-    systemProperty "spring.profiles.active", "test"
 }
 
 /** Generate QueryDsl classes */
@@ -154,11 +149,10 @@ publishing {
 }
 
 /** Configure release options */
+afterReleaseBuild.dependsOn publish
 release {
     failOnSnapshotDependencies = false
     preTagCommitMessage = 'Set version before release: '
     tagCommitMessage = 'Tagging version '
     newVersionCommitMessage = 'Bumped version to '
 }
-
-afterReleaseBuild.dependsOn publish

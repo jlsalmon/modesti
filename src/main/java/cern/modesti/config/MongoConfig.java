@@ -17,7 +17,7 @@ import com.mongodb.MongoClient;
 
 @Configuration
 @EnableMongoAuditing
-@Profile({"dev", "prod"})
+@Profile({"test", "prod"})
 public class MongoConfig extends AbstractMongoConfiguration {
 
   @Autowired

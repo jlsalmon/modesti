@@ -35,7 +35,7 @@ import static java.lang.String.format;
 @Service
 @EnableScheduling
 @Slf4j
-@Profile({"dev", "prod"})
+@Profile({"test", "prod"})
 public class LdapSynchroniser {
 
   @Autowired

@@ -19,7 +19,7 @@ import java.io.IOException;
  */
 @Slf4j
 @Component
-@Profile({ "dev", "prod" })
+@Profile({ "test", "prod" })
 public class WorkflowInitialiser {
 
   private static final String PROCESS_RESOURCE_PATTERN = "classpath*:/processes/*.bpmn20.xml";

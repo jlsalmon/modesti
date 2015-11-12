@@ -13,7 +13,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import javax.sql.DataSource;
 
 @Configuration
-@Profile({"test", "dev", "prod"})
+@Profile({"dev", "test", "prod"})
 public class JpaConfig {
 
   @Bean(destroyMethod = "close")

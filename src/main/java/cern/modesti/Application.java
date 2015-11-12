@@ -12,9 +12,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
- * To activate a profile, pass -Dspring.profiles.active=[test|dev|prod]
+ * To activate a profile, pass -Dspring.profiles.active=[dev|test|prod]
  *
- * The "test" profile uses:
+ * The "dev" profile uses:
  *  - In-memory JDBC datasource (h2)
  *  - In-memory MongoDB datasource (fongo)
  *  - In-memory LDAP authentication

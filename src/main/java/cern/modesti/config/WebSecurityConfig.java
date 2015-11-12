@@ -51,7 +51,7 @@ import cern.modesti.security.ldap.LdapUserDetailsMapper;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(1)
-@Profile({"dev", "prod"})
+@Profile({"test", "prod"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired

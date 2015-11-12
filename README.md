@@ -9,11 +9,11 @@ Requirements for running backend:
 * Connection to TN (for C2MON and TIM connections) or appropriate tunnels
 
 Instructions:
-* Compile and run: `java cern.modesti.Application -Dspring.profiles.active=(test|dev|prod)`
+* Compile and run: `java cern.modesti.Application -Dspring.profiles.active=(dev|test|prod)`
 
 Profiles:
-* `test`: uses in-memory h2 database, in-memory MongoDB and in-memory LDAP authentication
-* `dev`: uses timdb-test, modestidb-test and xldap.cern.ch
+* `dev`: uses in-memory h2 database, in-memory MongoDB and in-memory LDAP authentication
+* `test`: uses timdb-test, modestidb-test and xldap.cern.ch
 * `prod`: uses timdb, modestidb and xldap.cern.ch
 
 ## Build and deployment

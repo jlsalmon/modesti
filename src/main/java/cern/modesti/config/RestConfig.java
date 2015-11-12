@@ -22,7 +22,7 @@ import org.springframework.validation.Validator;
 
 @Configuration
 @EnableEntityLinks
-@Profile({"test", "dev", "prod"})
+@Profile({"dev", "test", "prod"})
 public class RestConfig extends RepositoryRestConfigurerAdapter {
 
   @Autowired

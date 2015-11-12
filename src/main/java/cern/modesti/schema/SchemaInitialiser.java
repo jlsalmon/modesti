@@ -36,7 +36,7 @@ import static java.lang.String.format;
  */
 @Component
 @Slf4j
-@Profile({"dev", "prod"})
+@Profile({"test", "prod"})
 public class SchemaInitialiser {
 
   private static final String PLUGIN_RESOURCE_PREFIX      = "classpath*:/";
