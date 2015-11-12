@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+  <product name="modesti">
+
+    <application name="default">
+      <deployment installLocation="/opt/modesti/">
+        <backupPolicy keepBackups="2">
+          <preserve type="dir" name="log"/>
+        </backupPolicy>
+      </deployment>
+    </application>
+
+
+    <application name="modesti-pro" extends="default">
+      <deployment installLocation="/opt/modesti-pro">
+
+        <directory name="conf">
+          <file name="modesti.properties" source="/user/timoper/rep/modesti/modesti-pro.properties" mask="400"/>
+        </directory>
+
+        <notification>
+          <mail address="modesti-administrators@cern.ch"/>
+        </notification>
+
+      </deployment>
+    </application>
+
+
+    <application name="modesti-dev" extends="default">
+      <deployment installLocation="/opt/modesti-dev">
+
+        <directory name="conf">
+          <file name="modesti.properties" source="/user/timoper/rep/modesti/modesti-dev.properties" mask="400"/>
+        </directory>
+
+        <notification>
+          <mail address="modesti-administrators@cern.ch" />
+        </notification>
+
+      </deployment>
+    </application>
+
+  </product>
+</products>
