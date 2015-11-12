@@ -53,6 +53,7 @@ public class RequestRepositoryEventHandler {
    */
   @PostConstruct
   public void init() {
+    // TODO: associate event handlers of a domain to requests of that domain only
     this.requestEventHandlers = context.getBeansOfType(RequestEventHandler.class).values();
   }
 

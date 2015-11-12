@@ -3,6 +3,7 @@ package cern.modesti.upload.parser;
 import cern.modesti.plugin.RequestProvider;
 import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.Request;
+import cern.modesti.schema.SchemaRepository;
 import cern.modesti.upload.exception.RequestParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,6 +25,9 @@ public class RequestParserFactory {
 
   @Autowired
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
+
+  @Autowired
+  private SchemaRepository schemaRepository;
 
   /**
    * @param stream
