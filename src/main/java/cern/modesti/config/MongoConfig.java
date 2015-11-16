@@ -1,5 +1,6 @@
 package cern.modesti.config;
 
+import cern.modesti.util.DateToTimestampConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,13 +8,15 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.data.mongodb.repository.support.MongoRepositoryFactory;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+
+import java.util.Collections;
 
 @Configuration
 @EnableMongoAuditing
@@ -46,5 +49,10 @@ public class MongoConfig extends AbstractMongoConfiguration {
   @Bean
   public LocalValidatorFactoryBean validator() {
     return new LocalValidatorFactoryBean();
+  }
+
+  @Override
+  public CustomConversions customConversions() {
+    return new CustomConversions(Collections.singletonList(new DateToTimestampConverter()));
   }
 }
