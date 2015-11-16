@@ -428,11 +428,11 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   function getCommentColumn() {
     var property;
     if (self.request.status === 'FOR_APPROVAL') {
-      property = 'approval.message';
+      property = 'properties.approvalResult.message';
     } else if (self.request.status === 'FOR_CABLING') {
-      property = 'cabling.message';
+      property = 'properties.cablingResult.message';
     }else if (self.request.status === 'FOR_TESTING') {
-      property = 'testing.message';
+      property = 'properties.testResult.message';
     }
 
     return {data: property, type: 'text', title: 'Comment', renderer: customRenderer};
@@ -745,7 +745,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     var n = 0;
 
     self.rows.forEach(function (point) {
-      if (point.approved && point.approval.approved === false) {
+      if (point.properties.approvalResult && point.properties.approvalResult.approved === false) {
         n++;
       }
     });
@@ -758,8 +758,8 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    * @returns {number}
    */
   function getNumConfigurationErrors() {
-    if (self.request.configurationResult && self.request.configurationResult.errors) {
-      return self.request.configurationResult.errors.length;
+    if (self.request.properties.configurationResult && self.request.properties.configurationResult.errors) {
+      return self.request.properties.configurationResult.errors.length;
     } else {
       return 0;
     }
@@ -823,7 +823,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       self.rows[i].lineNo = i + 1;
     }
 
-    //SchemaService.generateTagnames(self.request);
+    SchemaService.generateTagnames(self.request);
     SchemaService.generateFaultStates(self.request);
     //SchemaService.generateAlarmCategories(self.request);
   }

@@ -191,7 +191,7 @@
                   data-header="Select statuses"
                   data-selected-text-format="count"
                   select-model="ctrl.statuses"
-                  data-width="170px">
+                  data-width="160px">
             <option ng-repeat="status in ctrl.statuses" value="{{status.status}}" data-content="
               <span class='label request-status {{::status.status}}' style='margin-right: 20px;'>
                 {{::status.status.replace('_', ' ')}}
@@ -262,7 +262,7 @@
                   ng-model="ctrl.filter.type"
                   data-title="{{'Type'|translate}}"
                   data-header="Select request types"
-                  data-width="150px">
+                  data-width="140px">
             <option ng-repeat="type in ctrl.types" value="{{type}}">{{type}}</option>
           </select>
         </div>
