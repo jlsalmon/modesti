@@ -48,14 +48,17 @@ function ConfigController($scope, $state, $http, $timeout, RequestService, TaskS
         RequestService.getRequest(self.parent.request.requestId).then(function (request) {
           self.parent.request = request;
 
+          var configurationResult = self.parent.request.properties.configurationResult;
+          var url = '<a href="' + configurationResult.reportUrl + '" target="_blank">' + configurationResult.reportUrl + '</a>';
+
           // Show an alert if the configuration failed.
-          if (self.parent.request.configurationResult && self.parent.request.configurationResult.success === false) {
+          if (!configurationResult || configurationResult.success === false) {
             self.configuring = 'error';
-            AlertService.add('danger', 'Configuration failed, please see error log for details.');
+            AlertService.add('danger', 'Configuration failed, please see error log for details. Full configuration report available at: ' + url);
           }
           else {
             self.configuring = 'success';
-            AlertService.add('success', 'Request has been configured successfully.');
+            AlertService.add('success', 'Request has been configured successfully. Full configuration report available at:' + url);
           }
         });
       });
