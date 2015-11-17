@@ -102,6 +102,10 @@ module.exports = function(config) {
       filename: 'mocha.json'
     },
 
+    junitReporter: {
+      outputDir: 'build/test-results'
+    },
+
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
     singleRun: false,
