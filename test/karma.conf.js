@@ -91,11 +91,12 @@ module.exports = function(config) {
       'karma-phantomjs-launcher',
       'karma-jasmine',
       'karma-spec-reporter',
-      'karma-atlassian-bamboo-reporter'
+      'karma-atlassian-bamboo-reporter',
+      'karma-junit-reporter'
     ],
 
     // reporters configuration
-    reporters: ['progress', 'spec', 'bamboo'],
+    reporters: ['progress', 'spec', 'bamboo', 'junit'],
 
     bambooReporter:{
       filename: 'mocha.json'
