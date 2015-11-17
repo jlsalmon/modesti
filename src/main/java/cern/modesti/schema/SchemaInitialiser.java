@@ -16,12 +16,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
+import sun.net.www.protocol.file.FileURLConnection;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -284,16 +286,12 @@ public class SchemaInitialiser {
     Map<String, List<T>> resources = new HashMap<>();
 
     for (Resource resource : resolver.getResources(pattern)) {
-      if (!resource.getURI().getSchemeSpecificPart().contains(".jar")) {
-        continue;
-      }
-
-      T t = loadResource(resource, klass);
-
       // When running as a jar, don't detect ourselves as a plugin
       if (resource.getURI().toString().contains("modesti-server")) {
         continue;
       }
+
+      T t = loadResource(resource, klass);
 
       String pathToJar = getPathToJar(resource);
 
@@ -315,7 +313,19 @@ public class SchemaInitialiser {
    * @throws URISyntaxException
    */
   private String getPathToJar(Resource resource) throws IOException, URISyntaxException {
-    return new File(((JarURLConnection) resource.getURL().openConnection()).getJarFileURL().toURI()).getAbsolutePath();
+    URLConnection urlConnection = resource.getURL().openConnection();
+
+    if (urlConnection instanceof JarURLConnection) {
+      return new File(((JarURLConnection) urlConnection).getJarFileURL().toURI()).getAbsolutePath();
+    } else {
+      log.warn(format("loading resource outside of JAR file: %s", resource.getFile().getAbsolutePath()));
+
+      if (resource.getFile().getParentFile().getName().equals("schemas")) {
+        return resource.getFile().getParentFile().getAbsolutePath();
+      } else {
+        return resource.getFile().getParentFile().getParentFile().getAbsolutePath();
+      }
+    }
   }
 
   /**
