@@ -12,7 +12,7 @@ make_tunnels.sh
 .DS_Store
 .idea/
 .xml/
-modesti-api.iml
+*.iml
 # Exclude properties files in the root directory
 /modesti*.properties
 .~lock*

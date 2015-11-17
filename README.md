@@ -1,6 +1,6 @@
-# modesti-api
+# modesti-server
 
-Monitoring Data Entry System for Technical Infrastructure (backend API)
+Monitoring Data Entry System for Technical Infrastructure (backend server)
 
 ## Development
 
