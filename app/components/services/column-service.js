@@ -31,7 +31,7 @@ function ColumnService($http, $translate) {
 
     if (authorised) {
       editable = true;
-      
+
       // Editable given as simple boolean
       if (field.editable === true || field.editable === false) {
         editable = field.editable;
@@ -47,7 +47,7 @@ function ColumnService($http, $translate) {
       column.readOnly = true;
     }
 
-    
+
 
     if (field.type === 'autocomplete') {
       column = getAutocompleteColumn(column, field);
@@ -189,22 +189,30 @@ function ColumnService($http, $translate) {
         // that case, find the property of the point and add it as a search parameter. This
         // acts like a filter for a search, based on another property.
         // TODO: add "filter" parameter to schema instead of this?
-        if (param.indexOf('.') > -1) {
-          var point = hot.getSourceDataAtRow(row);
-          var parts = param.split('.');
-          var prop = parts[0];
-          var subProp = parts[1];
 
-          if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
-            params[subProp] = point.properties[prop][subProp];
+        if (param === 'query') {
+          params.query = query;
+        } else {
+          var point = hot.getSourceDataAtRow(row);
+
+          if (param.indexOf('.') > -1) {
+            var parts = param.split('.');
+            var prop = parts[0];
+            var subProp = parts[1];
+
+            if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
+              params[subProp] = point.properties[prop][subProp];
+            } else {
+              params[subProp] = '';
+            }
           } else {
-            params[subProp] = '';
+            if (point.properties[param]) {
+              params[param] = point.properties[param];
+            } else {
+              params[param] = '';
+            }
           }
         }
-        else {
-         params[param] = query;
-        }
-
       });
     }
 

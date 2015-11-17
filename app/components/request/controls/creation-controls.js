@@ -183,8 +183,8 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
 
     var point = self.parent.hot.getSourceDataAtRow(row);
     // get the outer object i.e. properties.location.value -> location
-    var prop = property.split('.')[1];
-    var field = getField(prop);
+    var outerProp = property.split('.')[1];
+    var field = getField(outerProp);
 
     // Don't make a call if the query is less than the minimum length
     if (field.minLength && newValue < field.minLength) {
@@ -203,25 +203,33 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
         // that case, find the property of the point and add it as a search parameter. This
         // acts like a filter for a search, based on another property.
         // TODO: add "filter" parameter to schema instead of this?
-        if (param.indexOf('.') > -1) {
-          var parts = param.split('.');
-          var dependentProperty = parts[0];
-          var dependentSubProperty = parts[1];
 
-          if (point.properties[dependentProperty] && point.properties[dependentProperty].hasOwnProperty(dependentSubProperty) &&
-              point.properties[dependentProperty][dependentSubProperty]) {
-            params[dependentSubProperty] = point.properties[dependentProperty][dependentSubProperty];
+        if (param === 'query') {
+          params.query = newValue;
+        } else {
+
+          if (param.indexOf('.') > -1) {
+            var parts = param.split('.');
+            var prop = parts[0];
+            var subProp = parts[1];
+
+            if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
+              params[subProp] = point.properties[prop][subProp];
+            } else {
+              params[subProp] = '';
+            }
           } else {
-            params[dependentSubProperty] = '';
+            if (point.properties[param]) {
+              params[param] = point.properties[param];
+            } else {
+              params[param] = '';
+            }
           }
-        }
-        else {
-          params[param] = newValue;
         }
       }
     }
 
-    if (prop === field.id && field.type === 'autocomplete') {
+    if (outerProp === field.id && field.type === 'autocomplete') {
 
       $http.get(BACKEND_BASE_URL + '/' + field.url, {
         params: params,
@@ -238,7 +246,7 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
           if (value === newValue) {
             console.log('saving new value');
             delete item._links;
-            point.properties[prop] = item;
+            point.properties[outerProp] = item;
 
             // Automatically update dependent dropdowns.
             updateDependentValues(row, property);
@@ -246,17 +254,22 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
         });
       });
     }
+
+    else if (outerProp === field.id && field.type === 'options') {
+      // Automatically update dependent fields.
+      updateDependentValues(row, property);
+    }
   }
 
   /**
    *
    */
   function updateDependentValues(row, property) {
-    self.parent.activeCategory.fields.forEach(function (field) {
+    self.parent.schema.categories.concat(self.parent.schema.datasources).forEach(function (category) {
+      category.fields.forEach(function (field) {
 
-      if (field.params) {
-        field.params.forEach(function (param) {
-          if (param.indexOf('.') > -1) {
+        if (field.params) {
+          field.params.forEach(function (param) {
             var thisProp = property.split('.')[1];
             var dependentProp = param.split('.')[0];
 
@@ -269,9 +282,9 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
                 }
               });
             }
-          }
-        });
-      }
+          });
+        }
+      });
     });
   }
 
