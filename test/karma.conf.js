@@ -103,7 +103,7 @@ module.exports = function(config) {
     },
 
     junitReporter: {
-      outputDir: 'build/test-results'
+      outputDir: 'test/results'
     },
 
     // Continuous Integration mode
