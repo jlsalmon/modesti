@@ -79,7 +79,7 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
 
     // Callback fired when the user clicks 'ok'. Not fired if 'cancel' clicked.
     modalInstance.result.then(function () {
-      self.parent.request.approval.approved = false;
+      self.parent.request.properties.approvalResult.approved = false;
 
       var point;
       for (var i = 0, len = self.parent.rows.length; i < len; i++) {
