@@ -24,13 +24,11 @@ To build the source, publish the build artifact and create releases, the followi
 
 Runs tests and does a simple, local build (no packaging or publishing). Build results in `dist/`.
 
-Note: should you need to modify the backend base URL, you can do so in the `modesti.yaml` configuration file.
-
 ## `grunt publish:test`
 
 Tests, builds, packages the results into a tarball and publishes it to Artifactory ready for deployment on the test server.
 
-Note: for the publication to work, you need to modify the `modesti.yaml` configuration file and replace the dummy username and password with real values. 
+Note: for the publication to work, you need to pass `--artifactoryUser` and `--artifactoryPassword`.
 
 ## `grunt release:test`
 

@@ -21,22 +21,19 @@ module.exports = function (grunt) {
     // Project settings
     yeoman: appConfig,
 
-    // Loads the external configuration file
-    modesti: grunt.file.readYAML('modesti.yaml'),
-
     // Profile-specific settings
     config: {
       test: {
         options: {
           variables: {
-            backendBaseUrl: '<%= modesti.test.backendBaseUrl %>'
+            backendBaseUrl: 'http://modesti-test.cern.ch:8080'
           }
         }
       },
       prod: {
         options: {
           variables: {
-            backendBaseUrl: '<%= modesti.prod.backendBaseUrl %>'
+            backendBaseUrl: 'http://modesti.cern.ch:8080'
           }
         }
       }
@@ -438,16 +435,16 @@ module.exports = function (grunt) {
     artifactory: {
       /*jshint camelcase: false */
       options: {
-        id: 'cern.modesti:modesti:tgz',
+        id: 'cern.modesti:modesti:tar.gz',
         version: '<%= yeoman.version %>',
         path: 'build/',
-        base_path: ''
+        base_path: '',
+        username: grunt.option('artifactoryUser')     || grunt.fail.fatal('Publishing artifact requires --artifactoryUser'),
+        password: grunt.option('artifactoryPassword') || grunt.fail.fatal('Publishing artifact requires --artifactoryPassword')
       },
       test: {
         options: {
-          url: '<%= modesti.test.artifactory.url %>',
-          username: '<%= modesti.test.artifactory.username %>',
-          password: '<%= modesti.test.artifactory.password %>'
+          url: 'http://artifactory/beco-development-local'
         },
         files: [
           { src: ['dist/**/*'] }
@@ -455,9 +452,7 @@ module.exports = function (grunt) {
       },
       prod: {
         options: {
-          url: '<%= modesti.prod.artifactory.url %>',
-          username: '<%= modesti.prod.artifactory.username %>',
-          password: '<%= modesti.prod.artifactory.password %>'
+          url: 'http://artifactory/beco-release-local'
         },
         files: [
           { src: ['dist/**/*'] }
