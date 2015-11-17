@@ -9,4 +9,4 @@ export PID_FOLDER=${INSTALL_DIR}/run
 export LOG_FOLDER=${INSTALL_DIR}/log
 export JAVA_OPTS="-Dspring.config.location=${INSTALL_DIR}/conf/modesti.properties -Dloader.path=${INSTALL_DIR}/plugins -Dlogging.config=${INSTALL_DIR}/conf/logback.xml"
 
-exec ${INSTALL_DIR}/lib/modesti-api-*.jar $1
+exec ${INSTALL_DIR}/lib/modesti-server-*.jar $1

@@ -291,7 +291,7 @@ public class SchemaInitialiser {
       T t = loadResource(resource, klass);
 
       // When running as a jar, don't detect ourselves as a plugin
-      if (resource.getURI().toString().contains("modesti-api")) {
+      if (resource.getURI().toString().contains("modesti-server")) {
         continue;
       }
 
