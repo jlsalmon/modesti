@@ -306,11 +306,11 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-plug text-success"></i></div>';
     }
 
-    else if (point.properties.testingResult && point.properties.testingResult.passed === false && self.request.status === 'FOR_TESTING') {
+    else if (point.properties.testResult && point.properties.testResult.passed === false && self.request.status === 'FOR_TESTING') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-times-circle text-danger"></i></div>';
     }
 
-    else if (point.properties.testingResult && point.properties.testingResult.passed === true && self.request.status === 'FOR_TESTING') {
+    else if (point.properties.testResult && point.properties.testResult.passed === true && self.request.status === 'FOR_TESTING') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 
