@@ -209,7 +209,7 @@ function ColumnService($http, $translate) {
             if (point.properties[param]) {
               params[param] = point.properties[param];
             } else {
-              params[param] = '';
+              params[param] = query;
             }
           }
         }
