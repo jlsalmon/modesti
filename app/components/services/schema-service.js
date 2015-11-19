@@ -128,6 +128,17 @@ function SchemaService($q, $http) {
       return results.indexOf(true) > -1;
     }
 
+    // Chained AND condition
+    else if (conditional.and) {
+      var results = [];
+
+      conditional.and.forEach(function (subConditional) {
+        results.push(evaluateConditional(point, subConditional, status));
+      });
+
+      return results.reduce(function(a, b){ return (a === b) ? a : false; }) === true;
+    }
+
     var statusResult, valueResult;
 
     // Conditional based on the status of the request.
@@ -176,7 +187,9 @@ function SchemaService($q, $http) {
       result = true;
     } else if (condition.operation === 'notNull' && (value !== null && value !== undefined && value !== '')) {
       result = true;
-    } else if (condition.operation === 'null' && (value === null || value === undefined || value === '')) {
+    } else if (condition.operation === 'isNull' && (value === null || value === undefined || value === '')) {
+      result = true;
+    } else if (condition.operation === 'in' && (condition.value.indexOf(value) > -1)) {
       result = true;
     }
 
