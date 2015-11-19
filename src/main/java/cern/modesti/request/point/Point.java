@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 /**
  * @author Justin Lewis Salmon
@@ -32,22 +33,33 @@ public class Point {
   }
 
   /**
-   * TODO remove these domain-specific properties
+   * @param key
+   * @param klass
+   * @param <T>
+   * @return
    */
-//  private Boolean valid;
-//
-//  private Approval approval = new Approval();
-//
-//  private Addressing addressing = new Addressing();
-//
-//  private Cabling cabling = new Cabling();
-//
-//  private Boolean configured;
-//
-//  private Testing testing = new Testing();
-
   public <T> T getObjectProperty(String key, Class<T> klass) {
     Object value = properties.get(key);
     return new ObjectMapper().convertValue(value, klass);
+  }
+
+  /**
+   * @param property
+   * @param message
+   */
+  public void addErrorMessage(String property, String message) {
+    boolean exists = false;
+
+    for (Error error : errors) {
+      if (error.getProperty().equals(property)) {
+        exists = true;
+        error.getErrors().add(message);
+      }
+    }
+
+    if (!exists) {
+      Error error = new Error(property, new ArrayList<>(Collections.singletonList(message)));
+      errors.add(error);
+    }
   }
 }

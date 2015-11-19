@@ -1,5 +1,6 @@
 package cern.modesti.request.point;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Error {
   private String property;
   private List<String> errors;

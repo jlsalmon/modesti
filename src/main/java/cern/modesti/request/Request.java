@@ -107,21 +107,6 @@ public class Request implements Serializable {
   }
 
   /**
-   * TODO remove these properties from the core request
-   */
-//  private Boolean valid;
-//
-//  private Approval approval = new Approval();
-//
-//  private Addressing addressing = new Addressing();
-//
-//  private Cabling cabling = new Cabling();
-//
-//  private Testing testing = new Testing();
-//
-//  private ConfigurationResult configurationResult;
-
-  /**
    *
    * @param key
    * @param klass
