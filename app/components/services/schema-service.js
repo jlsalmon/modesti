@@ -117,10 +117,10 @@ function SchemaService($q, $http) {
       return conditional;
     }
 
+    var results = [];
+
     // Chained OR condition
     if (conditional.or) {
-      var results = [];
-
       conditional.or.forEach(function (subConditional) {
         results.push(evaluateConditional(point, subConditional, status));
       });
@@ -130,8 +130,6 @@ function SchemaService($q, $http) {
 
     // Chained AND condition
     else if (conditional.and) {
-      var results = [];
-
       conditional.and.forEach(function (subConditional) {
         results.push(evaluateConditional(point, subConditional, status));
       });
