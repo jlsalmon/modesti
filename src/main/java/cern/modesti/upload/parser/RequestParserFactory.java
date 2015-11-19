@@ -48,7 +48,7 @@ public class RequestParserFactory {
       }
 
       // HACK: WINCC excel sheets use the old PVSS name...
-      else if (provider.getMetadata().getName().equals("WINCC") && domain.equals("PVSS")) {
+      else if (provider.getMetadata().getName().equals("WinCC OA (CV)") && domain.equals("PVSS")) {
         parser = provider.getRequestParser();
       }
     }
