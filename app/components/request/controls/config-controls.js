@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:ConfigController
- * @description # ConfigController Controller of the modesti
+ * @description # ConfigController
  */
 angular.module('modesti').controller('ConfigController', ConfigController);
 

@@ -257,6 +257,11 @@
                 <ng-include src="'components/request/controls/cabling-controls.html'"></ng-include>
               </div>
             </span>
+            <span ng-switch-when="FOR_INSERTION">
+              <div ng-controller="InsertionController as ctrl">
+                <ng-include src="'components/request/controls/insertion-controls.html'"></ng-include>
+              </div>
+            </span>
             <span ng-switch-when="FOR_CONFIGURATION">
               <div ng-controller="ConfigController as ctrl">
                 <ng-include src="'components/request/controls/config-controls.html'"></ng-include>
@@ -299,6 +304,12 @@
             <i class="fa fa-fw fa-exclamation-circle text-danger"></i>
             Line {{point.lineNo}}: Point rejected by operator. Reason: <strong>{{point.properties.approvalResult.message}}</strong>
           </span>
+          </div>
+        </div>
+
+        <div ng-if="ctrl.request.properties.insertionResult">
+          <div ng-repeat="error in ctrl.request.properties.insertionResult.errors track by $index">
+            <i class="fa fa-fw fa-exclamation-circle text-danger"></i> <span ng-bind-html="error" ></span>
           </div>
         </div>
 

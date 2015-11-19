@@ -437,6 +437,8 @@ ul.category-headings {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+  color: #594300;
+  background-color: #F6C342;
 }
 
 .label.request-status.small {
@@ -465,35 +467,42 @@ ul.category-headings {
   */
 
 .label.request-status.IN_PROGRESS {
+  color: #fff;
   background-color: #4A6785;
 }
 
 .label.request-status.FOR_CORRECTION {
+  color: #fff;
   background-color: #D04437;
 }
 
 .label.request-status.FOR_APPROVAL {
-  background-color: #F6C342;
   color: #594300;
+  background-color: #F6C342;
 }
 
 .label.request-status.FOR_ADDRESSING {
+  color: #fff;
   background-color: #815B3A;
 }
 
 .label.request-status.FOR_CABLING {
+  color: #fff;
   background-color: #654982;
 }
 
 .label.request-status.FOR_CONFIGURATION {
+  color: #fff;
   background-color: #ac707a;
 }
 
 .label.request-status.FOR_TESTING {
+  color: #fff;
   background-color: #14892C;
 }
 
 .label.request-status.CLOSED {
+  color: #fff;
   background-color: #707070;
 }
 

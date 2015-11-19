@@ -706,7 +706,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    * @returns {boolean}
    */
   function hasErrors() {
-    return getNumValidationErrors() > 0 || getNumApprovalRejections() > 0 || getNumConfigurationErrors() > 0;
+    return getNumValidationErrors() > 0 || getNumApprovalRejections() > 0 || getNumConfigurationErrors() > 0 || getNumInsertionErrors() > 0;
   }
 
   /**
@@ -714,7 +714,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    * @returns {number}
    */
   function getTotalErrors() {
-    return getNumValidationErrors() + getNumApprovalRejections() + getNumConfigurationErrors();
+    return getNumValidationErrors() + getNumApprovalRejections() + getNumConfigurationErrors() + getNumInsertionErrors();
   }
 
   /**
@@ -764,6 +764,19 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       return 0;
     }
   }
+
+  /**
+   *
+   * @returns {number}
+   */
+  function getNumInsertionErrors() {
+    if (self.request.properties.insertionResult && self.request.properties.insertionResult.errors) {
+      return self.request.properties.insertionResult.errors.length;
+    } else {
+      return 0;
+    }
+  }
+
 
   /**
    * Called before a change is made to the table.
