@@ -171,7 +171,7 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
           }
         });
       }
-    })
+    });
 
   }
 
