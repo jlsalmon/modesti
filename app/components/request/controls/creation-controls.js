@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationController', CreationController);
 
-function CreationController($scope, $http, $state, $modal, RequestService, AlertService, ColumnService, ValidationService) {
+function CreationController($scope, $http, $q, $state, $modal, RequestService, AlertService, ColumnService, ValidationService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
@@ -120,6 +120,8 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
       row.lineNo = i + 1;
     });
 
+    var promises = [];
+
     // Loop over the changes and check if anything actually changed. Mark any changed points as dirty.
     var change, row, property, oldValue, newValue, dirty = false;
     for (var i = 0, len = changes.length; i < len; i++) {
@@ -138,7 +140,8 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
 
       // If the value was cleared, make sure any other properties of the object are also cleared.
       if (newValue === undefined || newValue === null || newValue === '') {
-        var point = self.parent.hot.getSourceDataAtRow(row);
+        //var point = self.parent.hot.getSourceDataAtRow(row);
+        var point = self.parent.rows[row];
         var propName = property.split('.')[1];
 
         var prop = point.properties[propName];
@@ -151,19 +154,25 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
       }
 
       // This is a workaround. See function documentation for info.
-      saveNewValue(row, property, newValue);
+      var promise = saveNewValue(row, property, newValue);
+      promises.push(promise);
     }
 
-    // If nothing changed, there's nothing to do! Otherwise, save the request.
-    if (dirty) {
-      RequestService.saveRequest(self.parent.request).then(function () {
-        // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
-        // revalidated. This is done by sending the "requestModified" signal.
-        if (self.parent.tasks.submit) {
-          self.parent.sendModificationSignal();
-        }
-      });
-    }
+    // Wait for all new values to be updated
+    $q.all(promises).then(function () {
+
+      // If nothing changed, there's nothing to do! Otherwise, save the request.
+      if (dirty) {
+        RequestService.saveRequest(self.parent.request).then(function () {
+          // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
+          // revalidated. This is done by sending the "requestModified" signal.
+          if (self.parent.tasks.submit) {
+            self.parent.sendModificationSignal();
+          }
+        });
+      }
+    })
+
   }
 
   /**
@@ -177,17 +186,24 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
    * @param newValue
    */
   function saveNewValue(row, property, newValue) {
+    var q = $q.defer();
+
+    // Don't need to process non-object properties
     if (property.indexOf('.') === -1) {
+      q.resolve();
       return;
     }
 
-    var point = self.parent.hot.getSourceDataAtRow(row);
+    //var point = self.parent.hot.getSourceDataAtRow(row);
+    var point = self.parent.rows[row];
+
     // get the outer object i.e. properties.location.value -> location
     var outerProp = property.split('.')[1];
     var field = getField(outerProp);
 
     // Don't make a call if the query is less than the minimum length
     if (field.minLength && newValue < field.minLength) {
+      q.resolve();
       return;
     }
 
@@ -252,13 +268,18 @@ function CreationController($scope, $http, $state, $modal, RequestService, Alert
             updateDependentValues(row, property);
           }
         });
+
+        q.resolve();
       });
     }
 
     else if (outerProp === field.id && field.type === 'options') {
       // Automatically update dependent fields.
       updateDependentValues(row, property);
+      q.resolve();
     }
+
+    return q.promise;
   }
 
   /**
