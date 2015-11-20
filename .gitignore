@@ -17,3 +17,4 @@ test-results
 mocha.json
 artifactory.json
 modesti.yaml
+test/results
