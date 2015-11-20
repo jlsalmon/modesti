@@ -166,6 +166,10 @@
         Assign to me
       </button>
 
+      <span class="toolbar-item" ng-if="ctrl.isCurrentTaskRestricted() && !ctrl.isCurrentUserAuthorised()" ng-disabled="true" style="vertical-align: middle">
+        <span class="text-danger"><i class="fa fa-fw fa-exclamation-triangle"></i> Restricted to administrators</span>
+      </span>
+
       <div class="pull-right">
 
         <!-- Comments button -->

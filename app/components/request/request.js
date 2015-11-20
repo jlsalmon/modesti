@@ -100,6 +100,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   self.isCurrentUserAuthorised = isCurrentUserAuthorised;
   self.isCurrentUserAssigned = isCurrentUserAssigned;
   self.isCurrentTaskClaimed = isCurrentTaskClaimed;
+  self.isCurrentTaskRestricted = isCurrentTaskRestricted;
 
   self.canEdit = canEdit;
   self.canValidate = canValidate;
@@ -539,6 +540,15 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   function isCurrentTaskClaimed() {
     var task = self.tasks[Object.keys(self.tasks)[0]];
     return TaskService.isTaskClaimed(task);
+  }
+
+  /**
+   *
+   * @returns {boolean}
+   */
+  function isCurrentTaskRestricted() {
+    var task = self.tasks[Object.keys(self.tasks)[0]];
+    return task.candidateGroups.length === 1 && task.candidateGroups[0] === 'modesti-administrators';
   }
 
   /**
