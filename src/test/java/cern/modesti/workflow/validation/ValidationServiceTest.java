@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@TestPropertySource("classpath:modesti-dev.properties")
+@TestPropertySource("classpath:modesti.properties")
 @WebIntegrationTest(randomPort = true)
 @ActiveProfiles("dev")
 public class ValidationServiceTest {
