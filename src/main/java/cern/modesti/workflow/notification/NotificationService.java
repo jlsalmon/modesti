@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static java.lang.String.format;
+
 /**
  * TODO
  *
@@ -41,7 +43,7 @@ public class NotificationService {
   /**
    * @param notification
    */
-  public void sendNotification(Notification notification, Request request) {
+  public void sendNotification(Notification notification) {
     List<String> recipients = new ArrayList<>();
 
     // Build the list of recipient addresses
@@ -72,15 +74,15 @@ public class NotificationService {
     final Context context = new Context(Locale.UK);
 
     // Set default context variables
-    context.setVariable("request", request);
-    context.setVariable("url", env.getRequiredProperty("modesti.base") + "/#/requests/" + request.getRequestId());
+    context.setVariable("request", notification.getRequest());
+    context.setVariable("url", env.getRequiredProperty("modesti.base") + "/#/requests/" + notification.getRequest().getRequestId());
 
     // Set user variables
-    for (Map.Entry<String, Object> entry : notification.getParameters().entrySet()) {
+    for (Map.Entry<String, Object> entry : notification.getTemplateParameters().entrySet()) {
       context.setVariable(entry.getKey(), entry.getValue());
     }
 
-    send(recipients, from, subject, template, context);
+    send(recipients, from, format("[MODESTI] %s", subject), template, context);
   }
 
   /**

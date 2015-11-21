@@ -1,5 +1,6 @@
 package cern.modesti.workflow.notification;
 
+import cern.modesti.request.Request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,13 +15,18 @@ import java.util.Map;
  * @author Justin Lewis Salmon
  */
 @Data
-@AllArgsConstructor
 @Builder
 public class Notification {
-  private String subject;
-  private String template;
+
+  private final String subject;
+
   @Singular
-  private List<String> recipients;
+  private final List<String> recipients;
+
+  private final String template;
+
   @Singular
-  private Map<String, Object> parameters;
+  private Map<String, Object> templateParameters;
+
+  private Request request;
 }
