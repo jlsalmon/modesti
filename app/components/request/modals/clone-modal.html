@@ -16,6 +16,11 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" ng-click="ctrl.cancel()">Cancel</button>
-  <button class="btn btn-default" ng-click="ctrl.ok()">OK</button>
+  <button class="btn btn-primary" ng-click="ctrl.clone()">
+    <i class="fa fa-cog fa-spin"          ng-if="ctrl.cloning === 'started'"></i>
+    <i class="fa fa-exclamation-triangle" ng-if="ctrl.cloning === 'error'"></i>
+    Clone
+  </button>
+
+  <button class="btn btn-default" ng-click="ctrl.cancel()">Cancel</button>
 </div>

@@ -7,16 +7,36 @@
  */
 angular.module('modesti').controller('CloneModalController', CloneModalController);
 
-function CloneModalController($modalInstance, request) {
+function CloneModalController($modalInstance, request, RequestService) {
   var self = this;
 
   self.request = request;
+  self.cloning = undefined;
 
-  self.ok = ok;
+  self.clone  = clone;
   self.cancel = cancel;
 
-  function ok() {
-    $modalInstance.close();
+  function clone() {
+    self.cloning = 'started';
+
+    RequestService.cloneRequest(request).then(function (location) {
+      // Strip request ID from location
+      var id = location.substring(location.lastIndexOf('/') + 1);
+      console.log('cloned request ' + request.requestId + ' to new request ' + id);
+
+      AlertService.add('success', 'Request was cloned successfully with id ' + id);
+
+        $modalInstance.close();
+
+      //$state.go('request', {id: id}).then(function () {
+      //  self.cloning = 'success';
+      //});
+    },
+
+    function (error) {
+      console.log('clone failed: ' + error.statusText);
+      self.cloning = 'error';
+    });
   }
 
   function cancel() {

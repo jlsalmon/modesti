@@ -252,12 +252,37 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
     return q.promise;
   }
 
-  function cloneRequest(/*id*/) {
+  /**
+   *
+   * @param request
+   * @returns {*}
+   */
+  function cloneRequest(request) {
     var q = $q.defer();
 
-    // TODO
+    var clone = {
+      domain: request.domain,
+      type : request.type,
+      description : request.description,
+      creator : request.creator,
+      subsystem: request.subsystem,
+      points: request.points.slice()
+    };
 
-    return q.promise;
+    clone.points.forEach(function (point) {
+      point.dirty = true;
+      point.selected = false;
+      point.errors = [];
+
+      // TODO: delete properties that are not in the schema
+      delete point.properties.valid;
+      delete point.properties.approvalResult;
+      delete point.properties.addressingResult;
+      delete point.properties.cablingResult;
+      delete point.properties.testResult;
+    });
+
+    return createRequest(clone);
   }
 
   /**

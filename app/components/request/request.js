@@ -1057,15 +1057,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     });
 
     modalInstance.result.then(function () {
-      RequestService.cloneRequest(request.requestId).then(function (clone) {
-        console.log('cloned request ' + request.requestId + ' to new request ' + clone.requestId);
-        AlertService.add('success', 'Request was cloned successfully with id ' + clone.requestId);
-        $state.go('request', { id: clone.requestId });
-      },
 
-      function (error) {
-        console.log('clone failed: ' + error.statusText);
-      });
     },
 
     function () {
