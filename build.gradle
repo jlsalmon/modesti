@@ -59,8 +59,8 @@ jar {
 /** Repositories used when searching for dependencies */
 repositories {
     mavenCentral()
-    maven { url "http://artifactory/release" }
-    maven { url "http://artifactory/development" }
+    maven { url "http://localhost:11112/release" }
+    maven { url "http://localhost:11112/development" }
     maven { url "https://repo.spring.io/release" }
     maven { url "https://repo.spring.io/milestone" }
     maven { url "https://repo.spring.io/snapshot" }
@@ -88,7 +88,7 @@ dependencies {
     compile "com.h2database:h2"
     compile "oracle:ojdbc:11.2.0.3"
     compile "mysql:mysql-connector-java:5.1.36"
-    compile "commons-dbcp:commons-dbcp"
+//    compile "commons-dbcp:commons-dbcp"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.1"
     compile "org.apache.poi:poi:3.12-beta1"
     compile "org.apache.poi:poi-ooxml:3.12-beta1"

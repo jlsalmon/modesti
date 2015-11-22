@@ -15,4 +15,5 @@ make_tunnels.sh
 *.iml
 # Exclude properties files in the root directory
 /modesti*.properties
+common.properties
 .~lock*

@@ -17,28 +17,28 @@ import java.util.List;
 @Component
 public class RequestResourceAssembler extends ResourceAssemblerSupport<Request, Resource> {
 
-public RequestResourceAssembler() {
-  super(RequestSearchController.class, Resource.class);
-}
-
-@Autowired
-private EntityLinks entityLinks;
-
-@Override
-public List<Resource> toResources(Iterable<? extends Request> requests) {
-  List<Resource> resources = new ArrayList<>();
-
-  for(Request request : requests) {
-    Link self = entityLinks.linkToSingleResource(Request.class, request.getRequestId());
-    resources.add(new Resource<>(request, self));
+  public RequestResourceAssembler() {
+    super(RequestSearchController.class, Resource.class);
   }
 
-  return resources;
-}
+  @Autowired
+  private EntityLinks entityLinks;
 
-@Override
-public Resource toResource(Request request) {
-  Link self = entityLinks.linkToSingleResource(Request.class, request.getId()).withSelfRel();
-  return new Resource<>(request, self);
-}
+  @Override
+  public List<Resource> toResources(Iterable<? extends Request> requests) {
+    List<Resource> resources = new ArrayList<>();
+
+    for (Request request : requests) {
+      Link self = entityLinks.linkToSingleResource(Request.class, request.getRequestId());
+      resources.add(new Resource<>(request, self));
+    }
+
+    return resources;
+  }
+
+  @Override
+  public Resource toResource(Request request) {
+    Link self = entityLinks.linkToSingleResource(Request.class, request.getId()).withSelfRel();
+    return new Resource<>(request, self);
+  }
 }
