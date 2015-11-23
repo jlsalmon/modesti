@@ -548,7 +548,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    */
   function isCurrentTaskRestricted() {
     var task = self.tasks[Object.keys(self.tasks)[0]];
-    return task.candidateGroups.length === 1 && task.candidateGroups[0] === 'modesti-administrators';
+    return task && task.candidateGroups.length === 1 && task.candidateGroups[0] === 'modesti-administrators';
   }
 
   /**

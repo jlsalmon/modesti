@@ -280,6 +280,7 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
       delete point.properties.addressingResult;
       delete point.properties.cablingResult;
       delete point.properties.testResult;
+      delete point.properties.timTagId;
     });
 
     return createRequest(clone);
