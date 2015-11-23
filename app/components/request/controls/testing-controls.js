@@ -196,7 +196,7 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
 
     var message;
     if (passed) {
-      message = 'All points passed'
+      message = 'All points passed';
     } else {
       message = (self.parent.rows.length - numFailures) + ' out of ' + self.parent.rows.length + ' points failed';
     }
