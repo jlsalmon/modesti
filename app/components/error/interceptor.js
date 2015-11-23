@@ -20,7 +20,7 @@ function errorInterceptor($q, $location) {
       return response || $q.when(response);
     },
     responseError : function(response) {
-      if (response && response.status === 0) {
+      if (response && (response.status === 0 || response.status === -1)) {
         // Backend not connected
         console.log('error: backend not connected');
         $location.path('/error');
