@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('RequestService', RequestService);
 
-function RequestService($http, $rootScope, Restangular, AuthService) {
+function RequestService($http, $rootScope, $q, Restangular, AuthService) {
   var self = this;
 
   self.cache = {};
@@ -258,8 +258,6 @@ function RequestService($http, $rootScope, Restangular, AuthService) {
    * @returns {*}
    */
   function cloneRequest(request) {
-    var q = $q.defer();
-
     var clone = {
       domain: request.domain,
       type : request.type,
