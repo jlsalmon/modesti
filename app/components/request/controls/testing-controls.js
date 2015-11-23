@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:TestingController
- * @description # TestingController Controller of the modesti
+ * @description # TestingController
  */
 angular.module('modesti').controller('TestingController', TestingController);
 
@@ -11,7 +11,7 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
-  self.passed = true;
+  self.passed = false;
 
   self.passSelectedPoints = passSelectedPoints;
   self.passAll = passAll;
@@ -46,8 +46,6 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
       event.preventDefault();
       event.stopPropagation();
     }
-
-    self.passed = true;
 
     var selectedPointIds = self.parent.getSelectedPointIds();
     passPoints(selectedPointIds);
@@ -101,8 +99,6 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
       event.preventDefault();
       event.stopPropagation();
     }
-
-    self.passed = false;
 
     var selectedPointIds = self.parent.getSelectedPointIds();
     failPoints(selectedPointIds);
@@ -188,7 +184,24 @@ function TestingController($scope, RequestService, AlertService, ValidationServi
       event.stopPropagation();
     }
 
-    self.parent.request.testing = {passed: self.passed, message: ''};
+    var passed = true;
+    var numFailures = 0;
+
+    self.parent.rows.forEach(function (point) {
+      if (!point.properties.testResult || point.properties.testResult.passed === false) {
+        passed = false;
+        numFailures++;
+      }
+    });
+
+    var message;
+    if (passed) {
+      message = 'All points passed'
+    } else {
+      message = (self.parent.rows.length - numFailures) + ' out of ' + self.parent.rows.length + ' points failed';
+    }
+
+    self.parent.request.properties.testResult = {passed: passed, message: message};
     self.parent.submit();
   }
 }

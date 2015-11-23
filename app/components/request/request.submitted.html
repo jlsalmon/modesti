@@ -75,6 +75,12 @@
 
           </div>
 
+          <!--Shown when the request creator submits for addressing-->
+          <p ng-if="ctrl.request.status == 'FOR_TESTING' && ctrl.request.properties.testResult.passed == false">
+            Since some points failed tests, the request remains in state <strong>{{ctrl.request.status}}</strong>.
+            <b>Those points which have passed tests have been configured in operational mode.</b>
+          </p>
+
 
           <a class="btn btn-primary" href="#/requests/{{ctrl.request.requestId}}">Back to request &raquo;</a>
           <a class="btn btn-default" href="#/requests"><i class="fa fa-home"></i> Home</a>
