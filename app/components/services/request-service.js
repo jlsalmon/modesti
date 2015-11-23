@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('RequestService', RequestService);
 
-function RequestService($http, $rootScope, $q, Restangular, AuthService) {
+function RequestService($http, $rootScope, Restangular, AuthService) {
   var self = this;
 
   self.cache = {};
