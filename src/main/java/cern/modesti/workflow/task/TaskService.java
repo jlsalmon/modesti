@@ -5,7 +5,6 @@ import cern.modesti.request.RequestRepository;
 import cern.modesti.user.User;
 import cern.modesti.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.ActivitiException;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;

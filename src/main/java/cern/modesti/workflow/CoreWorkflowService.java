@@ -7,12 +7,10 @@ import cern.modesti.request.RequestRepository;
 import cern.modesti.request.counter.CounterService;
 import cern.modesti.request.point.Point;
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.plugin.core.PluginRegistry;
@@ -180,7 +178,7 @@ public class CoreWorkflowService {
   private Request getRequest(String requestId) {
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
-      throw new ActivitiException("No request with id " + requestId + " was found");
+      throw new RuntimeException("No request with id " + requestId + " was found");
     }
     return request;
   }
