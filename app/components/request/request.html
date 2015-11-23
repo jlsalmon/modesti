@@ -101,7 +101,11 @@
 
 
       <!-- Button to save the request -->
-      <button class="btn btn-sm btn-default toolbar-item" ng-click="ctrl.save()" tooltip-append-to-body="true" tooltip="{{'SAVE'|translate}}">
+      <button class="btn btn-sm btn-default toolbar-item"
+              ng-disabled="!ctrl.isCurrentUserAuthorised() || !ctrl.isCurrentUserAssigned()"
+              ng-click="ctrl.save()"
+              tooltip-append-to-body="true"
+              tooltip="{{'SAVE'|translate}}">
         <i class="fa fa-fw fa-save saving-state"></i>
 
         <!-- Saving state indicators -->
@@ -136,13 +140,15 @@
 
       <!-- Cut/copy/paste buttons -->
       <div class="btn-group toolbar-item">
-        <button class="btn btn-sm btn-default" ng-click="ctrl.cut()" tooltip-append-to-body="true" tooltip="{{'CUT'|translate}}">
+        <button class="btn btn-sm btn-default" ng-disabled="!ctrl.isCurrentUserAuthorised() || !ctrl.isCurrentUserAssigned()" ng-click="ctrl.cut()"
+                tooltip-append-to-body="true" tooltip="{{'CUT'|translate}}">
           <i class="fa fa-fw fa-scissors"></i>
         </button>
         <button class="btn btn-sm btn-default" ng-click="ctrl.copy()" tooltip-append-to-body="true" tooltip="{{'COPY'|translate}}">
           <i class="fa fa-fw fa-copy"></i>
         </button>
-        <button class="btn btn-sm btn-default" ng-click="ctrl.paste()" tooltip-append-to-body="true" tooltip="{{'PASTE'|translate}}">
+        <button class="btn btn-sm btn-default" ng-disabled="!ctrl.isCurrentUserAuthorised() || !ctrl.isCurrentUserAssigned()" ng-click="ctrl.paste()"
+                tooltip-append-to-body="true" tooltip="{{'PASTE'|translate}}">
           <i class="fa fa-fw fa-paste"></i>
         </button>
       </div>
