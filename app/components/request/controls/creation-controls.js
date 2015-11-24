@@ -277,6 +277,10 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
       // Automatically update dependent fields.
       updateDependentValues(row, property);
       q.resolve();
+    } 
+
+    else {
+      q.resolve();
     }
 
     return q.promise;

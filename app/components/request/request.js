@@ -315,6 +315,10 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     }
 
+    else if (point.properties.testResult && point.properties.testResult.postponed === true && self.request.status === 'FOR_TESTING') {
+      return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-minus-circle text-muted"></i></div>';
+    }
+
     return point.lineNo;
   }
 

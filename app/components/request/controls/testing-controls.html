@@ -37,12 +37,23 @@
             <button class="btn btn-default"
                     ng-click="ctrl.passSelectedPoints($event)"
                     ng-disabled="!ctrl.parent.getSelectedPointIds().length">
+              <i class="fa fa-fw fa-check-circle text-success"></i>
               {{'PASS_SELECTED'|translate}}
             </button>
 
             <button class="btn btn-default"
                     ng-click="ctrl.passAll($event)">
+              <i class="fa fa-fw fa-check-circle text-success"></i>
               Pass all
+            </button>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-default"
+                    ng-click="ctrl.postponeSelectedPoints($event)"
+                    ng-disabled="!ctrl.parent.getSelectedPointIds().length">
+              <i class="fa fa-fw fa-minus-circle text-muted"></i>
+              Postpone selected
             </button>
           </div>
 
@@ -50,6 +61,7 @@
             <button class="btn btn-default"
                     ng-click="ctrl.failSelectedPoints($event)"
                     ng-disabled="!ctrl.parent.getSelectedPointIds().length">
+              <i class="fa fa-fw fa-times-circle text-danger"></i>
               {{'FAIL_SELECTED'|translate}}
             </button>
           </div>

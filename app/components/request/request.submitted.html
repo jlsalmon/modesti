@@ -75,9 +75,12 @@
 
           </div>
 
-          <!--Shown when the request creator submits for addressing-->
-          <p ng-if="ctrl.request.status == 'FOR_TESTING' && ctrl.request.properties.testResult.passed == false">
-            Since some points failed tests, the request remains in state <strong>{{ctrl.request.status}}</strong>.
+          <!--Shown when the test results are submitted-->
+          <p ng-if="ctrl.request.status == 'FOR_TESTING' && ctrl.request.properties.testResult.passed === false">
+
+            <p>Test result: <b>{{ctrl.request.properties.testResult.message}}</b></p>
+
+            Since some points either failed or were postponed, the request remains in state {{ctrl.request.status}}.
             <b>Those points which have passed tests have been configured in operational mode.</b>
           </p>
 
