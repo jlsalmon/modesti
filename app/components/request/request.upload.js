@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:UploadController
- * @description # UploadController Controller of the modesti
+ * @description # UploadController
  */
 angular.module('modesti').controller('UploadController', UploadController);
 

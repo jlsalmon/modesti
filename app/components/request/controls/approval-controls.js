@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:ApprovalController
- * @description # ApprovalController Controller of the modesti
+ * @description # ApprovalController
  */
 angular.module('modesti').controller('ApprovalController', ApprovalController);
 

@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:CommentsModalController
- * @description # CommentsModalController Controller of the modesti
+ * @description # CommentsModalController
  */
 angular.module('modesti').controller('CommentsModalController', CommentsModalController);
 

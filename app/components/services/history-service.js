@@ -3,7 +3,7 @@
 /**
  * @ngdoc service
  * @name modesti.HistoryService
- * @description # HistoryService Service in the modesti.
+ * @description # HistoryService
  */
 angular.module('modesti').service('HistoryService', HistoryService);
 

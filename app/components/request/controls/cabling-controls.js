@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:CablingController
- * @description # CablingController Controller of the modesti
+ * @description # CablingController
  */
 angular.module('modesti').controller('CablingController', CablingController);
 

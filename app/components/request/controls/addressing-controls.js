@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:AddressingController
- * @description # AddressingController Controller of the modesti
+ * @description # AddressingController
  */
 angular.module('modesti').controller('AddressingController', AddressingController);
 

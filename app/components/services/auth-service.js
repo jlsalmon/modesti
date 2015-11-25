@@ -3,7 +3,7 @@
 /**
  * @ngdoc service
  * @name modesti.AuthService
- * @description # AuthService Service in the modesti.
+ * @description # AuthService
  */
 angular.module('modesti').service('AuthService', AuthService);
 

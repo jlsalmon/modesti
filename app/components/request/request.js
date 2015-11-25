@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:RequestController
- * @description # RequestController Controller of the modesti
+ * @description # RequestController
  */
 angular.module('modesti').controller('RequestController', RequestController);
 

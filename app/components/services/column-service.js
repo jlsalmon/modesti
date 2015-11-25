@@ -3,7 +3,7 @@
 /**
  * @ngdoc service
  * @name modesti.ColumnService
- * @description # ColumnService Service in the modesti.
+ * @description # ColumnService
  */
 angular.module('modesti').service('ColumnService', ColumnService);
 

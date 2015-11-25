@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:SplittingModalController
- * @description # SplittingModalController Controller of the modesti
+ * @description # SplittingModalController
  */
 angular.module('modesti').controller('SplittingModalController', SplittingModalController);
 

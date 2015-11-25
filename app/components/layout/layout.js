@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:LayoutController
- * @description # LayoutController Controller of the modesti
+ * @description # LayoutController
  */
 angular.module('modesti').controller('LayoutController', LayoutController);
 

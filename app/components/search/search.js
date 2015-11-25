@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:SearchController
- * @description # SearchController Controller of the modesti
+ * @description # SearchController
  */
 angular.module('modesti').controller('SearchController', SearchController);
 

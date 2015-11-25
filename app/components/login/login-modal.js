@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:LoginModalController
- * @description # LoginModalController Controller of the modesti
+ * @description # LoginModalController
  */
 angular.module('modesti').controller('LoginModalController', LoginModalController);
 

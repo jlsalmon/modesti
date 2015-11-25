@@ -3,7 +3,7 @@
 /**
  * @ngdoc service
  * @name modesti.PointService
- * @description # PointService Service in the modesti.
+ * @description # PointService
  */
 angular.module('modesti').service('PointService', PointService);
 

@@ -3,7 +3,7 @@
 /**
  * @ngdoc service
  * @name modesti.AlertService
- * @description # AlertService Service in the modesti.
+ * @description # AlertService
  */
 angular.module('modesti').service('AlertService', AlertService);
 

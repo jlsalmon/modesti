@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:RejectionModalController
- * @description # RejectionModalController Controller of the modesti
+ * @description # RejectionModalController
  */
 angular.module('modesti').controller('RejectionModalController', RejectionModalController);
 

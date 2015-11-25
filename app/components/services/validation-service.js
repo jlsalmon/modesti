@@ -3,7 +3,7 @@
 /**
  * @ngdoc service
  * @name modesti.ValidationService
- * @description # ValidationService Service in the modesti.
+ * @description # ValidationService
  */
 angular.module('modesti').service('ValidationService', ValidationService);
 

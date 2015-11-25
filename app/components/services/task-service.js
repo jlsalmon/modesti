@@ -3,7 +3,7 @@
 /**
  * @ngdoc service
  * @name modesti.TaskService
- * @description # TaskService Service in the modesti.
+ * @description # TaskService
  */
 angular.module('modesti').service('TaskService', TaskService);
 

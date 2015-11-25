@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:HistoryModalController
- * @description # HistoryModalController Controller of the modesti
+ * @description # HistoryModalController
  */
 angular.module('modesti').controller('HistoryModalController', HistoryModalController);
 

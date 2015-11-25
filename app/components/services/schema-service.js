@@ -3,7 +3,7 @@
 /**
  * @ngdoc service
  * @name modesti.SchemaService
- * @description # SchemaService Service in the modesti.
+ * @description # SchemaService
  */
 angular.module('modesti').service('SchemaService', SchemaService);
 

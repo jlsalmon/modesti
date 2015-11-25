@@ -3,7 +3,7 @@
 /**
  * @ngdoc function
  * @name modesti.controller:UserController
- * @description # UserController Controller of the modesti
+ * @description # UserController
  */
 angular.module('modesti').controller('UserController', UserController);
 
