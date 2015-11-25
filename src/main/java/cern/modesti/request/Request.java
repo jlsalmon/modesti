@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -77,11 +78,14 @@ public class Request implements Serializable {
 
   private List<Comment> comments = new ArrayList<>();
 
-  @CreatedDate
-  private DateTime createdAt;
-
-  @LastModifiedDate
-  private DateTime lastModified;
+//  @CreatedDate
+//  private DateTime createdAt;
+//
+//  @LastModifiedDate
+//  private DateTime lastModified;
+//
+//  @Version
+//  private Long version;
 
   /**
    * Custom properties
