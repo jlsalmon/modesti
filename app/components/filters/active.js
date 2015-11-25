@@ -10,7 +10,7 @@ angular.module('modesti').filter('active', active);
 
 function active() {
   /*jshint camelcase: false */
-  
+
   return function (datasources, request) {
     var result = [];
 
