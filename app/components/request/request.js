@@ -1131,6 +1131,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       var error = point.errors[i];
 
       // If the property name isn't specified, then the error applies to the whole point.
+      // TODO: highlight an entire category if the property matches a category name.
       if (error.property === prop.replace('properties.', '') || error.property === prop.split('.')[0] || error.property === '') {
         td.style.background = '#F2DEDE';
         break;
