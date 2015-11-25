@@ -1,6 +1,8 @@
 package cern.modesti.config;
 
 import cern.modesti.util.DateToTimestampConverter;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +14,6 @@ import org.springframework.data.mongodb.core.convert.CustomConversions;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
 import org.springframework.data.mongodb.repository.support.MongoRepositoryFactory;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
 
 import java.util.Collections;
 
@@ -28,12 +27,12 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
   @Override
   protected String getDatabaseName() {
-    return env.getProperty("mongodb.db");
+    return env.getRequiredProperty("mongodb.db");
   }
 
   @Override
   public Mongo mongo() throws Exception {
-    return new MongoClient(env.getProperty("mongodb.host"));
+    return new MongoClient(env.getRequiredProperty("mongodb.host"));
   }
 
   @Bean
