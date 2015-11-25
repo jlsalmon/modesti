@@ -5,11 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * @author Justin Lewis Salmon
@@ -61,5 +57,30 @@ public class Point {
       Error error = new Error(property, new ArrayList<>(Collections.singletonList(message)));
       errors.add(error);
     }
+  }
+
+  public boolean equals(Object o) {
+    if (o == this) return true;
+    if (!(o instanceof Point)) return false;
+    final Point other = (Point) o;
+    final Object this$lineNo = this.lineNo;
+    final Object other$lineNo = other.lineNo;
+    return !(this$lineNo == null ? other$lineNo != null : !this$lineNo.equals(other$lineNo));
+  }
+
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final Object $lineNo = this.lineNo;
+    result = result * PRIME + ($lineNo == null ? 0 : $lineNo.hashCode());
+    final Object $dirty = this.dirty;
+    result = result * PRIME + ($dirty == null ? 0 : $dirty.hashCode());
+    final Object $selected = this.selected;
+    result = result * PRIME + ($selected == null ? 0 : $selected.hashCode());
+    final Object $errors = this.errors;
+    result = result * PRIME + ($errors == null ? 0 : $errors.hashCode());
+    final Object $properties = this.properties;
+    result = result * PRIME + ($properties == null ? 0 : $properties.hashCode());
+    return result;
   }
 }
