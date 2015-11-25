@@ -321,7 +321,7 @@ function SchemaService($q, $http) {
           var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
 
           if (subsystemCode === '?' && site === '?' && equipmentIdentifier === '?' && attribute === '?') {
-            point.properties.tagname = '';
+            point.properties.tagname = null;
           } else {
             point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
           }
@@ -337,8 +337,8 @@ function SchemaService($q, $http) {
     request.points.forEach(function (point) {
 
       if (point.properties.priorityCode === undefined || point.properties.priorityCode === null || point.properties.priorityCode === '') {
-        point.properties.faultFamily = '';
-        point.properties.faultMember = '';
+        point.properties.faultFamily = null;
+        point.properties.faultMember = null;
         return;
       }
 
@@ -382,7 +382,7 @@ function SchemaService($q, $http) {
               }
 
               if (systemName === '?' && subsystemName === '?' && func === '?') {
-                point.properties.faultFamily = '';
+                point.properties.faultFamily = null;
               } else {
                 point.properties.faultFamily = systemName + '_' + subsystemName + '_' + func;
               }
@@ -426,7 +426,7 @@ function SchemaService($q, $http) {
     } else if (!gmaoCode && otherEquipCode) {
       equipmentIdentifier = otherEquipCode;
     } else {
-      equipmentIdentifier = '';
+      equipmentIdentifier = null;
     }
 
     return equipmentIdentifier;
