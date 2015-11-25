@@ -36,7 +36,8 @@ function UploadController($location, $cookies, $http, FileUploader) {
       return;
     }
 
-    item.formData.push({description: item.description});
+
+    item.formData[0] = {description: item.description};
     item.upload();
   }
 
