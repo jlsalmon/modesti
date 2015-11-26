@@ -20,10 +20,7 @@ import javax.naming.InvalidNameException;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -82,19 +79,20 @@ public class LdapSynchroniser {
           user.setFirstName(adapter.getStringAttribute("givenName"));
           user.setLastName(adapter.getStringAttribute("sn"));
           user.setEmail(adapter.getStringAttribute("mail"));
-          user.setAuthorities(new HashSet<>(Collections.singleton(new Role(groupId))));
+          user.setAuthorities(new ArrayList<>(Collections.singleton(new Role(groupId))));
           log.debug(format("adding new user %s", user));
 
         } else {
-          Set<Role> authorities = (Set<Role>) user.getAuthorities();
+//          List<Role> authorities = user.getAuthorities();
           Role role = new Role(groupId);
 
-          if (!authorities.contains(role)) {
+          if (!user.getAuthorities().contains(role)) {
             log.debug(format("adding user %s to group '%s'", user, groupId));
-            authorities.add(new Role(groupId));
+            user.getAuthorities().add(role);
+//            authorities.add(new Role(groupId));
           }
 
-          user.setAuthorities(authorities);
+//          user.setAuthorities(authorities);
         }
 
         userRepository.save(user);

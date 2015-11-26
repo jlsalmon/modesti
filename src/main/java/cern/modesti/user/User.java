@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -41,9 +43,9 @@ public class User implements UserDetails {
 
   @Indexed
   @JsonDeserialize(contentAs = Role.class)
-  private Set<? extends GrantedAuthority> authorities;
+  private List<Role> authorities = new ArrayList<>();
 
-  public User(String username, Integer employeeId, String firstName, String lastName, String email, Set<Role> authorities) {
+  public User(String username, Integer employeeId, String firstName, String lastName, String email, List<Role> authorities) {
     this.username = username;
     this.employeeId = employeeId;
     this.firstName = firstName;

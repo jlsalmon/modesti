@@ -70,7 +70,9 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
       }
     }
 
-    user.setAuthorities(authorities);
+    for (GrantedAuthority authority : authorities) {
+      user.getAuthorities().add((Role) authority);
+    }
 
     // Add this user to the database if they haven't logged in before.
     if (userRepository.findOneByUsername(username) == null) {
