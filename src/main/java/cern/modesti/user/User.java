@@ -24,8 +24,6 @@ public class User implements UserDetails {
   private static final long serialVersionUID = -8591164895383946725L;
 
   @Id
-  private String id;
-
   @Indexed
   private String username;
 

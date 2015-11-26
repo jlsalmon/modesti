@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 /**
  * @author Justin Lewis Salmon
  */
-public interface HistoricRequestRepository extends MongoRepository<Request, String> {
+public interface RequestDiffRepository extends MongoRepository<Request, String> {
 }
