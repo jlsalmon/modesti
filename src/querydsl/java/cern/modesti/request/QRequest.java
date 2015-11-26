@@ -28,8 +28,6 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
 
-    public final DateTimePath<org.joda.time.DateTime> createdAt = createDateTime("createdAt", org.joda.time.DateTime.class);
-
     public final cern.modesti.user.QUser creator;
 
     public final StringPath description = createString("description");
@@ -37,8 +35,6 @@ public class QRequest extends EntityPathBase<Request> {
     public final StringPath domain = createString("domain");
 
     public final StringPath id = createString("id");
-
-    public final DateTimePath<org.joda.time.DateTime> lastModified = createDateTime("lastModified", org.joda.time.DateTime.class);
 
     public final StringPath parentRequestId = createString("parentRequestId");
 

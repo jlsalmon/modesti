@@ -3,33 +3,28 @@ package cern.modesti.request;
 import cern.modesti.plugin.RequestProvider;
 import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.counter.CounterService;
+import cern.modesti.request.history.*;
 import cern.modesti.request.point.Point;
 import cern.modesti.workflow.CoreWorkflowService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchOperation;
-import com.github.fge.jsonpatch.diff.JsonDiff;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
-import de.danielbechler.diff.node.PrintingVisitor;
-import de.danielbechler.diff.node.Visit;
 import lombok.extern.slf4j.Slf4j;
+import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.rest.core.annotation.HandleAfterSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
+import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static java.lang.String.format;
 
@@ -52,6 +47,9 @@ public class RequestRepositoryEventHandler {
 
   @Autowired
   private RequestRepository requestRepository;
+
+  @Autowired
+  private RequestHistoryRepository requestHistoryRepository;
 
   @Autowired
   private CounterService counterService;
@@ -88,6 +86,8 @@ public class RequestRepositoryEventHandler {
     request.setRequestId(counterService.getNextSequence(CounterService.REQUEST_ID_SEQUENCE).toString());
     log.trace(format("generated request id: %s", request.getRequestId()));
 
+    request.setCreatedAt(new DateTime());
+
     // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
       for (int i = 0; i < 50; i++) {
@@ -101,9 +101,6 @@ public class RequestRepositoryEventHandler {
         point.setLineNo((long) (request.getPoints().indexOf(point) + 1));
       }
     }
-
-    // Archive the initial request version
-
 
     // Kick off the workflow process
     workflowService.startProcessInstance(request);
@@ -127,62 +124,42 @@ public class RequestRepositoryEventHandler {
       requestEventHandler.onBeforeSave(request);
     }
 
-    // Get the old value
     Request base = requestRepository.findOneByRequestId(request.getRequestId());
-
-    DiffNode diff = ObjectDifferBuilder.buildDefault().compare(request, base);
-    diff.visit(new PrintingVisitor(request, base));
-
-
-//    diff.visit((node, visit) -> {
-//      if (node.hasChanges() && !node.hasChildren()) {
-//        final Object baseValue = node.canonicalGet(base);
-//        final Object workingValue = node.canonicalGet(request);
-//        final String message = node.getPath() + " changed from " + baseValue + " to " + workingValue;
-//        log.debug(message);
-//      }
-//    });
-
-//    JsonNode first = mapper.valueToTree(previous);
-//    JsonNode second = mapper.valueToTree(request);
-//    JsonNode patch = JsonDiff.asJson(first, second);
-
-//    JsonPatch p = JsonDiff.asJsonPatch(first, second);
-
-//    List<JsonPatchOperation> diff = null;
-//    try {
-//      diff = mapper.readValue(mapper.writeValueAsString(patch), new TypeReference<List<JsonPatchOperation>>() {});
-//      StringBuilder builder = new StringBuilder();
-//
-//      for (JsonPatchOperation operation : diff) {
-//        builder.append(operation.toString());
-//      }
-//
-//      log.info(builder.toString());
-//    } catch (IOException e) {
-//      log.warn("Error creating request diff", e);
-//    }
-
-//    JsonMergePatch mergePatch = null;
-//    try {
-//      mergePatch = JsonMergePatch.fromJson(second);
-//      log.debug(mergePatch.toString());
-//    } catch (JsonPatchException e) {
-//      log.warn("Error creating merge patch");
-//    }
-//
-
-
-//    log.info(String.valueOf(diff));
+    saveChangeHistory(request, base);
   }
 
-  @HandleAfterSave
-  public void handleAfterRequestSave(Request request) {
+  @HandleBeforeDelete
+  public void handleRequestDelete(Request request) {
+    // TODO: mark the request as deleted in the history collection
+  }
 
-//    historicRequestRepository.save(request);
-//
-//    List<Change> changes = javers.findChanges(QueryBuilder.byInstanceId(request.getId(), Request.class).withNewObjectChanges(false).build());
-//    String changeLog = javers.processChangeList(changes, new SimpleTextChangeLog());
-//    log.debug(changeLog);
+  /**
+   *
+   * @param working
+   * @param base
+   */
+  private void saveChangeHistory(Request working, Request base) {
+    Assert.notNull(working);
+    Assert.notNull(base);
+    Assert.isTrue(working.getId().equals(base.getId()));
+
+    RequestHistoryEntry entry = requestHistoryRepository.findByRequestId(base.getId());
+    if (entry == null) {
+      log.info(format("creating new base history record for request #%s", base.getRequestId()));
+      entry = new RequestHistoryEntry(new ObjectId().toString(), base.getId(), base, new ArrayList<>(), false);
+      requestHistoryRepository.save(entry);
+      return;
+    }
+
+    final RequestHistoryChange change = new RequestHistoryChange(new DateTime(DateTimeZone.UTC));
+    DiffNode root = ObjectDifferBuilder.startBuilding()
+        .comparison().ofType(DateTime.class).toUseEqualsMethod().and().build()
+        .compare(working, base);
+
+    root.visit(new PrintingVisitor(working, base));
+    root.visit(new RequestHistoryChangeVisitor(change, working, base));
+
+    entry.getDifferences().add(change);
+    requestHistoryRepository.save(entry);
   }
 }

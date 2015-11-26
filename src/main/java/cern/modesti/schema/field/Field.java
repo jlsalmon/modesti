@@ -56,6 +56,8 @@ public class Field implements Serializable {
 
   private Object editable;
 
+  private Object unique;
+
   private String help_en = "";
 
   private String help_fr = "";

@@ -33,9 +33,6 @@ public class QTemplate extends EntityPathBase<Template> {
     //inherited
     public final ListPath<cern.modesti.request.Comment, cern.modesti.request.QComment> comments;
 
-    //inherited
-    public final DateTimePath<org.joda.time.DateTime> createdAt;
-
     // inherited
     public final cern.modesti.user.QUser creator;
 
@@ -47,9 +44,6 @@ public class QTemplate extends EntityPathBase<Template> {
 
     //inherited
     public final StringPath id;
-
-    //inherited
-    public final DateTimePath<org.joda.time.DateTime> lastModified;
 
     //inherited
     public final StringPath parentRequestId;
@@ -94,12 +88,10 @@ public class QTemplate extends EntityPathBase<Template> {
         this.assignee = _super.assignee;
         this.childRequestIds = _super.childRequestIds;
         this.comments = _super.comments;
-        this.createdAt = _super.createdAt;
         this.creator = _super.creator;
         this.description = _super.description;
         this.domain = _super.domain;
         this.id = _super.id;
-        this.lastModified = _super.lastModified;
         this.parentRequestId = _super.parentRequestId;
         this.points = _super.points;
         this.properties = _super.properties;

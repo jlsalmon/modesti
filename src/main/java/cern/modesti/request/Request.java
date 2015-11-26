@@ -78,14 +78,10 @@ public class Request implements Serializable {
 
   private List<Comment> comments = new ArrayList<>();
 
-//  @CreatedDate
-//  private DateTime createdAt;
-//
-//  @LastModifiedDate
-//  private DateTime lastModified;
-//
-//  @Version
-//  private Long version;
+  private DateTime createdAt;
+
+  @Version
+  private Long version;
 
   /**
    * Custom properties

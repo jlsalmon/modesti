@@ -3,7 +3,6 @@ package cern.modesti.request;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -17,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  *
  * @author Justin Lewis Salmon
  */
-
 @RepositoryRestResource(excerptProjection = RequestProjection.class)
 public interface RequestRepository extends MongoRepository<Request, String>, QueryDslPredicateExecutor<Request> {
 
