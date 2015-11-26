@@ -34,7 +34,7 @@ function PointService($http, $q) {
         search: query,
         page: page - 1,
         size: size,
-        sort:sort
+        sort: sort
       }
     }).then(function (response) {
       q.resolve(response.data);
