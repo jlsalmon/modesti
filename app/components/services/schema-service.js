@@ -45,6 +45,7 @@ function SchemaService($q, $http) {
         // Tagnames must be unique.
         if (category.id === 'location') {
           var constraint = getUniqueTagnameConstraint();
+
           if (category.constraints) {
             category.constraints.push(constraint);
           } else {
@@ -61,7 +62,13 @@ function SchemaService($q, $http) {
 
         // Fault member, fault code and problem description must make a unique triplet.
         if (category.id === 'alarms') {
-          category.constraints.push(getAlarmTripletConstraint());
+          var constraint = getAlarmTripletConstraint();
+          
+          if (category.constraints) {
+            category.constraints.push(constraint);
+          } else {
+            category.constraints = [constraint];
+          }
         }
       });
 
