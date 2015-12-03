@@ -1,6 +1,6 @@
 # modesti
 
-Monitoring and Data Entry System for Technical Infrastructure (frontend UI)
+Monitoring Data Entry System for Technical Infrastructure (frontend UI)
 
 ## Development
 
@@ -36,7 +36,3 @@ Tests, builds, packages, creates a test release by incrementing the package vers
 
 By default, the patch version number will be incremented. To increment the minor version, use `grunt release:dev bump:minor`. To increment the major version, 
 use `bump:major`. For more options, see https://github.com/vojtajina/grunt-bump
-
-
-
-
