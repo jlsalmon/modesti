@@ -33,6 +33,9 @@ public class QTemplate extends EntityPathBase<Template> {
     //inherited
     public final ListPath<cern.modesti.request.Comment, cern.modesti.request.QComment> comments;
 
+    //inherited
+    public final DateTimePath<org.joda.time.DateTime> createdAt;
+
     // inherited
     public final cern.modesti.user.QUser creator;
 
@@ -66,6 +69,9 @@ public class QTemplate extends EntityPathBase<Template> {
     //inherited
     public final EnumPath<cern.modesti.request.RequestType> type;
 
+    //inherited
+    public final NumberPath<Long> version;
+
     public QTemplate(String variable) {
         this(Template.class, forVariable(variable), INITS);
     }
@@ -88,6 +94,7 @@ public class QTemplate extends EntityPathBase<Template> {
         this.assignee = _super.assignee;
         this.childRequestIds = _super.childRequestIds;
         this.comments = _super.comments;
+        this.createdAt = _super.createdAt;
         this.creator = _super.creator;
         this.description = _super.description;
         this.domain = _super.domain;
@@ -99,6 +106,7 @@ public class QTemplate extends EntityPathBase<Template> {
         this.status = _super.status;
         this.subsystem = _super.subsystem;
         this.type = _super.type;
+        this.version = _super.version;
     }
 
 }

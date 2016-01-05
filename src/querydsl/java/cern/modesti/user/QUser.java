@@ -24,7 +24,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final BooleanPath accountNonLocked = createBoolean("accountNonLocked");
 
-    public final SetPath<org.springframework.security.core.GrantedAuthority, org.springframework.security.core.QGrantedAuthority> authorities = this.<org.springframework.security.core.GrantedAuthority, org.springframework.security.core.QGrantedAuthority>createSet("authorities", org.springframework.security.core.GrantedAuthority.class, org.springframework.security.core.QGrantedAuthority.class, PathInits.DIRECT2);
+    public final ListPath<Role, QRole> authorities = this.<Role, QRole>createList("authorities", Role.class, QRole.class, PathInits.DIRECT2);
 
     public final BooleanPath credentialsNonExpired = createBoolean("credentialsNonExpired");
 
@@ -35,8 +35,6 @@ public class QUser extends EntityPathBase<User> {
     public final BooleanPath enabled = createBoolean("enabled");
 
     public final StringPath firstName = createString("firstName");
-
-    public final StringPath id = createString("id");
 
     public final StringPath lastName = createString("lastName");
 

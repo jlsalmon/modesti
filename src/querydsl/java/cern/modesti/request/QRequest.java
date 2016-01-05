@@ -28,6 +28,8 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
 
+    public final DateTimePath<org.joda.time.DateTime> createdAt = createDateTime("createdAt", org.joda.time.DateTime.class);
+
     public final cern.modesti.user.QUser creator;
 
     public final StringPath description = createString("description");
@@ -49,6 +51,8 @@ public class QRequest extends EntityPathBase<Request> {
     public final StringPath subsystem = createString("subsystem");
 
     public final EnumPath<RequestType> type = createEnum("type", RequestType.class);
+
+    public final NumberPath<Long> version = createNumber("version", Long.class);
 
     public QRequest(String variable) {
         this(Request.class, forVariable(variable), INITS);
