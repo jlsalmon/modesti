@@ -8,6 +8,8 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  var modRewrite = require('connect-modrewrite');
+
   // Configurable paths for the application
   var appConfig = {
     app: require('./bower.json').appPath || 'app',
@@ -26,14 +28,14 @@ module.exports = function (grunt) {
       test: {
         options: {
           variables: {
-            backendBaseUrl: 'http://modesti-test.cern.ch:8080'
+            backendBaseUrl: 'https://modesti-test.cern.ch:8443'
           }
         }
       },
       prod: {
         options: {
           variables: {
-            backendBaseUrl: 'http://modesti.cern.ch:8080'
+            backendBaseUrl: 'https://modesti.cern.ch:8443'
           }
         }
       }
@@ -82,8 +84,11 @@ module.exports = function (grunt) {
     connect: {
       options: {
         port: 9000,
+        key: grunt.file.read('../modesti-server/src/main/resources/security/saml/modesti-test/privkey.pem'),
+        cert: grunt.file.read('../modesti-server/src/main/resources/security/saml/modesti-test/host.cert'),
         // Change this to '0.0.0.0' to access the server from outside.
-        hostname: 'localhost',
+        hostname: '0.0.0.0',
+        protocol: 'https',
         livereload: 35729
       },
       livereload: {
@@ -91,6 +96,7 @@ module.exports = function (grunt) {
           open: true,
           middleware: function (connect) {
             return [
+              modRewrite(['^[^\\.]*$ /index.html [L]']),
               connect.static('.tmp'),
               connect().use(
                 '/bower_components',
