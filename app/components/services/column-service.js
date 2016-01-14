@@ -7,12 +7,11 @@
  */
 angular.module('modesti').service('ColumnService', ColumnService);
 
-function ColumnService($http, $translate) {
+function ColumnService($translate, SchemaService) {
 
   // Public API
   var service = {
-    getColumn: getColumn,
-    getOptions: getOptions
+    getColumn: getColumn
   };
 
   /**
@@ -160,82 +159,90 @@ function ColumnService($http, $translate) {
     return function (query) {
       var hot = query.element.context.instance;
       var row = query.element.context.row;
-      var term = query.term;
+      var point = hot.getSourceDataAtRow(row);
 
-      getOptions(field, hot, row, term).then(function (results) {
+      SchemaService.queryFieldValues(field, query.term, point).then(function (values) {
+
+        // Re-map the values in a format that the select2 editor likes
+        var results = values.map(function (value) {
+          return {id: value[getModelAttribute(field)], text: value[getModelAttribute(field)]};
+        });
+
+        // Invoke the editor callback so it can populate itself
         query.callback({results: results, text: 'text'});
       });
     };
   }
 
-  /**
-   *
-   * @param field
-   * @param hot
-   * @param row
-   * @param query
-   * @returns {Promise.<T>}
-   */
-  function getOptions(field, hot, row, query) {
+  ///**
+  // *
+  // * @param field
+  // * @param hot
+  // * @param row
+  // * @param query
+  // * @returns {Promise.<T>}
+  // */
+  //function queryFieldValues(field, hot, row, query) {
+  //  var point = hot.getSourceDataAtRow(row);
 
-    var params = {};
-    if (field.params === undefined) {
-      // By default, searches are done via parameter called 'query'
-      params.query = query;
-    } else {
-      field.params.forEach(function (param) {
-
-        // The parameter might be a sub-property of another property (i.e. contains a dot). In
-        // that case, find the property of the point and add it as a search parameter. This
-        // acts like a filter for a search, based on another property.
-        // TODO: add "filter" parameter to schema instead of this?
-
-        if (param === 'query') {
-          params.query = query;
-        } else {
-          var point = hot.getSourceDataAtRow(row);
-
-          if (param.indexOf('.') > -1) {
-            var parts = param.split('.');
-            var prop = parts[0];
-            var subProp = parts[1];
-
-            if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
-              params[subProp] = point.properties[prop][subProp];
-            } else {
-              params[subProp] = '';
-            }
-          } else {
-            if (point.properties[param]) {
-              params[param] = point.properties[param];
-            } else {
-              params[param] = query;
-            }
-          }
-        }
-      });
-    }
-
-
-    return $http.get(BACKEND_BASE_URL + '/' + field.url, {
-      params: params,
-      cache: true
-    }).then(function (response) {
-      var results = [];
-
-      if (response.data.hasOwnProperty('_embedded')) {
-
-        // Relies on the fact that the property name inside the JSON response is the same
-        // as the first part of the URL, before the first forward slash
-        var returnPropertyName = field.url.split('/')[0];
-        results = response.data._embedded[returnPropertyName].map(function (option) {
-          return {id: option[getModelAttribute(field)], text: option[getModelAttribute(field)]};
-        });
-      }
-
-      return results;
-    });
-  }
+    //var params = {};
+    //if (field.params === undefined) {
+    //  // By default, searches are done via parameter called 'query'
+    //  params.query = query;
+    //} else {
+    //  field.params.forEach(function (param) {
+    //
+    //    // The parameter might be a sub-property of another property (i.e. contains a dot). In
+    //    // that case, find the property of the point and add it as a search parameter. This
+    //    // acts like a filter for a search, based on another property.
+    //    // TODO: add "filter" parameter to schema instead of this?
+    //
+    //    if (param === 'query') {
+    //      params.query = query;
+    //    } else {
+    //      var point = hot.getSourceDataAtRow(row);
+    //
+    //      if (param.indexOf('.') > -1) {
+    //        var parts = param.split('.');
+    //        var prop = parts[0];
+    //        var subProp = parts[1];
+    //
+    //        if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
+    //          params[subProp] = point.properties[prop][subProp];
+    //        } else {
+    //          params[subProp] = '';
+    //        }
+    //      } else {
+    //        if (point.properties[param]) {
+    //          params[param] = point.properties[param];
+    //        } else {
+    //          params[param] = query;
+    //        }
+    //      }
+    //    }
+    //  });
+    //}
+    //
+    //
+    //return $http.get(BACKEND_BASE_URL + '/' + field.url, {
+    //  params: params,
+    //  cache: true
+    //}).then(function (response) {
+    //  var results = [];
+    //
+    //  if (response.data.hasOwnProperty('_embedded')) {
+    //
+    //    // Relies on the fact that the property name inside the JSON response is the same
+    //    // as the first part of the URL, before the first forward slash
+    //    var returnPropertyName = field.url.split('/')[0];
+    //    results = response.data._embedded[returnPropertyName].map(function (option) {
+    //      return {id: option[getModelAttribute(field)], text: option[getModelAttribute(field)]};
+    //    });
+    //  }
+    //
+    //  return results;
+    //});
+  //}
 
   /**
    *

@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationController', CreationController);
 
-function CreationController($scope, $http, $q, $state, $modal, RequestService, AlertService, ColumnService, ValidationService) {
+function CreationController($scope, $http, $q, $state, $modal, RequestService, AlertService, SchemaService, ValidationService) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
@@ -199,7 +199,7 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
 
     // get the outer object i.e. properties.location.value -> location
     var outerProp = property.split('.')[1];
-    var field = getField(outerProp);
+    var field = SchemaService.getField(self.parent.schema, outerProp);
 
     // Don't make a call if the query is less than the minimum length
     if (field.minLength && newValue < field.minLength) {
@@ -277,7 +277,7 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
       // Automatically update dependent fields.
       updateDependentValues(row, property);
       q.resolve();
-    } 
+    }
 
     else {
       q.resolve();
@@ -287,7 +287,7 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
   }
 
   /**
-   *
+   * @deprecated
    */
   function updateDependentValues(row, property) {
     self.parent.schema.categories.concat(self.parent.schema.datasources).forEach(function (category) {
@@ -299,7 +299,9 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
             var dependentProp = param.split('.')[0];
 
             if (thisProp === dependentProp) {
-              ColumnService.getOptions(field, self.parent.hot, row, '').then(function (results) {
+              var point = self.parent.hot.getSourceDataAtRow(row);
+
+              SchemaService.queryFieldValues(field, '', point).then(function (results) {
                 console.log('got ' + results.length + ' results for dependent field ' + field.id + ' for ' + thisProp);
 
                 if (results.length === 1) {
@@ -311,32 +313,5 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
         }
       });
     });
-  }
-
-  /**
-   *
-   * @param property
-   * @returns {*}
-   */
-  function getField(property) {
-    var result;
-
-    self.parent.schema.categories.forEach(function (category) {
-      category.fields.forEach(function (field) {
-        if (field.id === property) {
-          result = field;
-        }
-      });
-    });
-
-    self.parent.schema.datasources.forEach(function (datasource) {
-      datasource.fields.forEach(function (field) {
-        if (field.id === property) {
-          result = field;
-        }
-      });
-    });
-
-    return result;
   }
 }

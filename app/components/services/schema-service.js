@@ -13,6 +13,8 @@ function SchemaService($q, $http) {
   var service = {
     getSchema: getSchema,
     getSchemas: getSchemas,
+    getField: getField,
+    queryFieldValues: queryFieldValues,
     evaluateConditional: evaluateConditional,
     generateTagnames: generateTagnames,
     generateFaultStates: generateFaultStates,
@@ -63,7 +65,7 @@ function SchemaService($q, $http) {
         // Fault member, fault code and problem description must make a unique triplet.
         if (category.id === 'alarms') {
           var constraint = getAlarmTripletConstraint();
-          
+
           if (category.constraints) {
             category.constraints.push(constraint);
           } else {
@@ -104,7 +106,109 @@ function SchemaService($q, $http) {
     },
 
     function (error) {
-      console.log('error fetching schemas: ' + error);
+      console.log('error fetching schemas: ' + error.statusText);
+      q.reject();
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
+   * @param property
+   * @returns {*}
+   */
+  function getField(schema, property) {
+    var result;
+
+    schema.categories.forEach(function (category) {
+      category.fields.forEach(function (field) {
+        if (field.id === property) {
+          result = field;
+        }
+      });
+    });
+
+    schema.datasources.forEach(function (datasource) {
+      datasource.fields.forEach(function (field) {
+        if (field.id === property) {
+          result = field;
+        }
+      });
+    });
+
+    return result;
+  }
+
+  /**
+   *
+   * @param field
+   * @param query
+   * @param point
+   * @returns {*}
+   */
+  function queryFieldValues(field, query, point) {
+    console.log('querying values for field ' + field.id + ' with query string "' + query + '"');
+    var q = $q.defer();
+
+    // Figure out the query parameters we need to put in the URI.
+    var params = {};
+    if (field.params === undefined) {
+      // By default, searches are done via parameter called 'query'
+      params.query = query;
+    } else {
+      field.params.forEach(function (param) {
+
+        // The parameter might be a sub-property of another property (i.e. contains a dot). In
+        // that case, find the property of the point and add it as a search parameter. This
+        // acts like a filter for a search, based on another property.
+        // TODO: add "filter" parameter to schema instead of this?
+
+        if (param === 'query') {
+          params.query = query;
+        } else {
+          if (param.indexOf('.') > -1) {
+            var parts = param.split('.');
+            var prop = parts[0];
+            var subProp = parts[1];
+
+            if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
+              params[subProp] = point.properties[prop][subProp];
+            } else {
+              params[subProp] = '';
+            }
+          } else {
+            if (point.properties[param]) {
+              params[param] = point.properties[param];
+            } else {
+              params[param] = query;
+            }
+          }
+        }
+      });
+    }
+
+    // Call the endpoint asynchronously and resolve the promise when we're done.
+    $http.get(BACKEND_BASE_URL + '/' + field.url, {
+      params: params,
+      cache: true
+    }).then(function (response) {
+      var values = [];
+
+      if (response.data.hasOwnProperty('_embedded')) {
+
+        // Relies on the fact that the property name inside the JSON response is the same
+        // as the first part of the URL, before the first forward slash
+        var returnPropertyName = field.url.split('/')[0];
+        values = response.data._embedded[returnPropertyName];
+      }
+
+      console.log('found ' + values.length + ' values');
+      q.resolve(values);
+    },
+
+    function (error) {
+      console.log('error querying values: ' + error.statusText);
       q.reject();
     });
 

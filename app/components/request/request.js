@@ -1125,16 +1125,75 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     }
 
     var point = self.rows[row];
-    prop = prop.replace('properties.', '');
+    if (ValidationService.isEmptyPoint(point)) {
+      return;
+    }
 
+    var props = prop.split('.').slice(1, 3);
+    //prop = prop.replace('properties.', '');
+
+    // Check if we need to fill in a default value for this point.
+    var field = SchemaService.getField(self.schema, props[0]);
+    fillDefaultValues(point, field);
+
+    // Highlight errors in a cell by making the background red.
     for (var i in point.errors) {
       var error = point.errors[i];
 
       // If the property name isn't specified, then the error applies to the whole point.
       // TODO: highlight an entire category if the property matches a category name.
-      if (error.property === prop.replace('properties.', '') || error.property === prop.split('.')[0] || error.property === '') {
+      if (error.property === prop.replace('properties.', '') || error.property === props[0] || error.property === '') {
         td.style.background = '#F2DEDE';
         break;
+      }
+    }
+  }
+
+  /**
+   *
+   * @param point
+   * @param field
+   */
+  function fillDefaultValues(point, field) {
+    var currentValue;
+
+    if (field.type === 'autocomplete') {
+      if (point.properties.hasOwnProperty(field.id)) {
+        currentValue = field.model ? point.properties[field.id][field.model] : point.properties[field.id].value;
+      }
+    } else {
+      currentValue = point.properties[field.id];
+    }
+
+
+    if (currentValue === undefined || currentValue === null || currentValue === '') {
+      var regex = /^\{\{\s*[\w\.]+\s*}}/g;
+
+      if (field.default && typeof field.default === 'string' && regex.test(field.default)) {
+        var matches = field.default.match(regex).map(function(x) {
+          return x.match(/[\w\.]+/)[0];
+        });
+
+        console.log('found stuff to replace: ' + matches);
+        var props = matches[0].split('.');
+
+        if (point.properties.hasOwnProperty(props[0])) {
+          var outerProp = point.properties[props[0]];
+
+          if (outerProp.hasOwnProperty(props[1])) {
+            var value = outerProp[props[1]];
+            var model = field.model ? field.model : 'value';
+
+            console.log('setting default value ' + value + ' for ' + field.id + '.' + model + ' on point ' + point.lineNo);
+
+            if (point.properties.hasOwnProperty(field.id)) {
+              point.properties[field.id][model] = value;
+            } else {
+              point.properties[field.id] = {};
+              point.properties[field.id][model] = value;
+            }
+          }
+        }
       }
     }
   }
