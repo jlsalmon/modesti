@@ -71,14 +71,14 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
       console.log('saved request before validation');
 
       // Complete the task associated with the request
-      TaskService.completeTask(task.name, request.requestId).then(function () {
+      TaskService.completeTask(task.name, request.id).then(function () {
         console.log('completed task ' + task.name);
 
         // Clear the cache
         RequestService.clearCache();
 
         // Get the request once again
-        RequestService.getRequest(request.requestId).then(function (request) {
+        RequestService.getRequest(request.id).then(function (request) {
           q.resolve(request);
         });
       },

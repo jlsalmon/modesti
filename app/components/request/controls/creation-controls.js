@@ -89,7 +89,7 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
 
         $state.reload().then(function () {
           self.splitting = 'success';
-          AlertService.add('info', 'Request <b>' + self.parent.request.requestId + '</b> was successfully split.');
+          AlertService.add('info', 'Request <b>' + self.parent.request.id + '</b> was successfully split.');
         });
       },
 

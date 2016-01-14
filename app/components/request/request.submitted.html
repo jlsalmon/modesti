@@ -8,7 +8,7 @@
 
         <alert type="info">
           <p>
-            Request <strong>{{ctrl.request.requestId}}</strong> has been submitted and is now in state <strong>{{ctrl.request.status}}</strong>.
+            Request <strong>{{ctrl.request.id}}</strong> has been submitted and is now in state <strong>{{ctrl.request.status}}</strong>.
           </p>
 
           <!-- Messages to show if the current user is the request owner -->
@@ -85,7 +85,7 @@
           </p>
 
 
-          <a class="btn btn-primary" href="#/requests/{{ctrl.request.requestId}}">Back to request &raquo;</a>
+          <a class="btn btn-primary" href="#/requests/{{ctrl.request.id}}">Back to request &raquo;</a>
           <a class="btn btn-default" href="#/requests"><i class="fa fa-home"></i> Home</a>
         </alert>
       </div>

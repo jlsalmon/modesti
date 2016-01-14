@@ -11,7 +11,7 @@ angular.module('modesti').config(configure);
 
 var BACKEND_BASE_URL = '@@BACKEND_BASE_URL';
 if (BACKEND_BASE_URL.lastIndexOf("@@", 0) === 0) {
-  BACKEND_BASE_URL = 'http://localhost:8080';
+  BACKEND_BASE_URL = 'http://localhost:8080/api';
 }
 
 function configure($httpProvider, $translateProvider, RestangularProvider) {

@@ -128,10 +128,10 @@ function AuthService($http, $q, $localStorage, $cookies, $modal, $state, authSer
       return false;
     }
 
-    for (var i = 0, len = $localStorage.user.authorities.length; i < len; i++) {
-      var authority = $localStorage.user.authorities[i];
+    for (var i = 0, len = $localStorage.user.roles.length; i < len; i++) {
+      var role = $localStorage.user.roles[i];
 
-      if (authority.authority === 'modesti-administrators') {
+      if (role.authority === 'modesti-administrators') {
         return true;
       }
     }

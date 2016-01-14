@@ -22,7 +22,7 @@ function CloneModalController($modalInstance, $state, request, RequestService, A
     RequestService.cloneRequest(request).then(function (location) {
       // Strip request ID from location
       var id = location.substring(location.lastIndexOf('/') + 1);
-      console.log('cloned request ' + request.requestId + ' to new request ' + id);
+      console.log('cloned request ' + request.id + ' to new request ' + id);
 
       $state.go('request', {id: id}).then(function () {
         self.cloning = 'success';

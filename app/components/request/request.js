@@ -203,7 +203,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    */
   function activateDefaultCategory() {
     console.log('activating default category');
-    var category = $localStorage.lastActiveCategory[self.request.requestId];
+    var category = $localStorage.lastActiveCategory[self.request.id];
 
     if (!category) {
       category = self.schema.categories[0];
@@ -219,7 +219,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   function activateCategory(category) {
     console.log('activating category "' + category.id + '"');
     self.activeCategory = category;
-    $localStorage.lastActiveCategory[self.request.requestId] = category;
+    $localStorage.lastActiveCategory[self.request.id] = category;
     getColumns();
   }
 
@@ -472,7 +472,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     modalInstance.result.then(function (assignee) {
       console.log('assigning request to user ' + assignee.username);
 
-      TaskService.assignTask(task.name, self.request.requestId, assignee.username).then(function (task) {
+      TaskService.assignTask(task.name, self.request.id, assignee.username).then(function (task) {
         console.log('assigned request');
         self.tasks[task.name] = task;
         activateDefaultCategory();
@@ -487,7 +487,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     var task = self.tasks[Object.keys(self.tasks)[0]];
     var username = AuthService.getCurrentUser().username;
 
-    TaskService.assignTask(task.name, self.request.requestId, username).then(function (task) {
+    TaskService.assignTask(task.name, self.request.id, username).then(function (task) {
       console.log('assigned request');
       self.tasks[task.name] = task;
       activateDefaultCategory();
@@ -657,7 +657,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       console.log('saved request before submitting');
 
       // Complete the task associated with the request
-      TaskService.completeTask(task.name, self.request.requestId).then(function () {
+      TaskService.completeTask(task.name, self.request.id).then(function () {
         console.log('completed task ' + task.name);
 
         var previousStatus = self.request.status;
@@ -679,7 +679,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
 
           // If the request is in any other state, show a page with information about what happens next
           else {
-            $state.go('submitted', {id: self.request.requestId, previousStatus: previousStatus});
+            $state.go('submitted', {id: self.request.id, previousStatus: previousStatus});
           }
         });
       },
@@ -1007,7 +1007,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
           return self.request;
         },
         history: function () {
-          return HistoryService.getHistory(self.request.requestId);
+          return HistoryService.getHistory(self.request.id);
         }
       }
     });
@@ -1029,7 +1029,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     });
 
     modalInstance.result.then(function () {
-      RequestService.deleteRequest(request.requestId).then(function () {
+      RequestService.deleteRequest(request.id).then(function () {
         console.log('deleted request');
         AlertService.add('success', 'Request was deleted successfully.');
         $state.go('requests');

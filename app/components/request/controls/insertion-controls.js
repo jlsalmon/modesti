@@ -33,7 +33,7 @@ function InsertionController($scope, $state, $http, $timeout, RequestService, Ta
     self.inserting = 'started';
 
     // Complete the task
-    TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
+    TaskService.completeTask(task.name, self.parent.request.id).then(function () {
         console.log('completed task ' + task.name);
 
         // Clear the cache so that the state reload also pulls a fresh request
@@ -41,7 +41,7 @@ function InsertionController($scope, $state, $http, $timeout, RequestService, Ta
 
         $state.reload().then(function() {
           // Get the request once again from the cache
-          RequestService.getRequest(self.parent.request.requestId).then(function (request) {
+          RequestService.getRequest(self.parent.request.id).then(function (request) {
             self.parent.request = request;
 
             var insertionResult = self.parent.request.properties.insertionResult;

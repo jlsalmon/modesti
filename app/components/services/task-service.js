@@ -34,11 +34,11 @@ function TaskService($q, $http, AuthService) {
    * @returns {*}
    */
   function getTasksForRequest(request) {
-    console.log('fetching tasks for request ' + request.requestId);
+    console.log('fetching tasks for request ' + request.id);
 
     var q = $q.defer();
 
-    $http.get(BACKEND_BASE_URL + '/requests/' + request.requestId + '/tasks').then(function (response) {
+    $http.get(BACKEND_BASE_URL + '/requests/' + request.id + '/tasks').then(function (response) {
       var tasks = {};
 
       if (response.data.hasOwnProperty('_embedded')) {
@@ -65,11 +65,11 @@ function TaskService($q, $http, AuthService) {
    * @returns {*}
    */
   function getSignalsForRequest(request) {
-    console.log('fetching signals for request ' + request.requestId);
+    console.log('fetching signals for request ' + request.id);
 
     var q = $q.defer();
 
-    $http.get(BACKEND_BASE_URL + '/requests/' + request.requestId + '/signals').then(function (response) {
+    $http.get(BACKEND_BASE_URL + '/requests/' + request.id + '/signals').then(function (response) {
       var signals = {};
 
       if (response.data.hasOwnProperty('_embedded')) {
@@ -302,8 +302,8 @@ function TaskService($q, $http, AuthService) {
     }
 
     var role;
-    for (var i = 0, len = user.authorities.length; i < len; i++) {
-      role = user.authorities[i].authority;
+    for (var i = 0, len = user.roles.length; i < len; i++) {
+      role = user.roles[i].authority;
 
       if (task.candidateGroups.indexOf(role) > -1) {
         return true;

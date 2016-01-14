@@ -78,7 +78,7 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
       },
 
       $title: function (request, $translate) {
-        return $translate('REQUEST', { id: request.requestId });
+        return $translate('REQUEST', { id: request.id });
       }
 
     }
@@ -97,7 +97,7 @@ function configureRoutes($stateProvider, $urlRouterProvider) {
       },
 
       $title: function (request, $translate) {
-        return $translate('REQUEST', { id: request.requestId });
+        return $translate('REQUEST', { id: request.id });
       }
 
     }

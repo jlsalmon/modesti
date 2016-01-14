@@ -38,10 +38,12 @@ function NewRequestController($http, $state, RequestService, SchemaService, Auth
    *
    */
   function getSubsystems(value) {
-    return $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
+    return $http.get(/*BACKEND_BASE_URL*/ 'http://localhost:2222' + '/subsystems/search/find', {
       params : {
-        query : value
-      }
+        system: value,
+        subsystem : value
+      },
+      withCredentials: false,
     }).then(function(response) {
       if (!response.data.hasOwnProperty('_embedded')) {
         return [];
@@ -62,6 +64,12 @@ function NewRequestController($http, $state, RequestService, SchemaService, Auth
 
     else {
       self.submitting = 'started';
+
+      self.schemas.forEach(function (schema) {
+        if (schema.id === self.request.domain){
+          self.request.applicationName = schema.applicationName;
+        }
+      });
 
       // Post form to server to create new request.
       RequestService.createRequest(self.request).then(function(location) {

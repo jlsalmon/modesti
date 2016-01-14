@@ -216,8 +216,15 @@ function ColumnService($http, $translate) {
       });
     }
 
+    var url;
+    if (field.url.lastIndexOf("http://", 0) === 0) {
+      url = field.url;
+    } else {
+      //url = BACKEND_BASE_URL + '/' + field.url;
+      url = 'http://localhost:8080/' + field.url;
+    }
 
-    return $http.get(BACKEND_BASE_URL + '/' + field.url, {
+    return $http.get(url, {
       params: params,
       cache: true
     }).then(function (response) {
@@ -227,7 +234,7 @@ function ColumnService($http, $translate) {
 
         // Relies on the fact that the property name inside the JSON response is the same
         // as the first part of the URL, before the first forward slash
-        var returnPropertyName = field.url.split('/')[0];
+        var returnPropertyName = field.url.split('/')[1];
         results = response.data._embedded[returnPropertyName].map(function (option) {
           return {id: option[getModelAttribute(field)], text: option[getModelAttribute(field)]};
         });

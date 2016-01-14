@@ -37,7 +37,7 @@ function ConfigController($scope, $state, $http, $timeout, RequestService, TaskS
     getProgress();
 
     // Complete the task
-    TaskService.completeTask(task.name, self.parent.request.requestId).then(function () {
+    TaskService.completeTask(task.name, self.parent.request.id).then(function () {
       console.log('completed task ' + task.name);
 
       // Clear the cache so that the state reload also pulls a fresh request
@@ -45,7 +45,7 @@ function ConfigController($scope, $state, $http, $timeout, RequestService, TaskS
 
       $state.reload().then(function() {
         // Get the request once again from the cache
-        RequestService.getRequest(self.parent.request.requestId).then(function (request) {
+        RequestService.getRequest(self.parent.request.id).then(function (request) {
           self.parent.request = request;
 
           var configurationResult = self.parent.request.properties.configurationResult;
@@ -76,7 +76,7 @@ function ConfigController($scope, $state, $http, $timeout, RequestService, TaskS
    */
   function getProgress() {
     console.log('checking progress');
-    var url = BACKEND_BASE_URL + '/requests/' + self.parent.request.requestId + '/progress';
+    var url = BACKEND_BASE_URL + '/requests/' + self.parent.request.id + '/progress';
 
     $http.get(url).then(function (response) {
       if (response.data) {

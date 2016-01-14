@@ -6,7 +6,7 @@
       <div class="pull-left">
         <h4 class="request-id">
           <i class="fa fa-list-ol fa-fw text-muted"></i>
-          {{ 'REQUESTS' | translate | lowercase }} <span class="text-muted">/</span> {{::ctrl.request.requestId}}
+          {{ 'REQUESTS' | translate | lowercase }} <span class="text-muted">/</span> {{::ctrl.request.id}}
           <small class="request-description">{{::ctrl.request.description}}</small>
         </h4>
       </div>
@@ -39,7 +39,7 @@
         <span class="request-detail-item" ng-if="ctrl.children.length > 0">
            {{'CHILDREN'|translate}}:
           <span ng-repeat="child in ctrl.children">
-            <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
+            <a href="#/requests/{{child.id}}">{{::child.id}}</a>
           </span>
         </span>
 

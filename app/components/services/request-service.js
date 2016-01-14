@@ -133,7 +133,7 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
         var request = response.data;
 
         // Cache the request
-        self.cache[request.requestId] = request;
+        self.cache[request.id] = request;
         //console.log('cached request (with ' + request.points.length + ' points)');
 
         // Make a copy for sorting/filtering
@@ -187,9 +187,9 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
     // Merge the given request with the cached request. This is because
     // the given request may have been filtered, and thus contain less
     // points. We don't want to accidentally delete points!
-    //if (request.points.length < self.cache[request.requestId].points.length) {
-    //  for (var i in self.cache[request.requestId].points) {
-    //    var point = self.cache[request.requestId].points[i];
+    //if (request.points.length < self.cache[request.id].points.length) {
+    //  for (var i in self.cache[request.id].points) {
+    //    var point = self.cache[request.id].points[i];
     //    // If the cached point isn't in the given request, add it
     //    if (!contains(request.points, point)) {
     //      request.points.push(point);
@@ -212,9 +212,9 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
       console.log('saved request');
 
       // Cache the newly saved request
-      self.cache[request.requestId] = savedRequest.data;
+      self.cache[request.id] = savedRequest.data;
 
-      q.resolve(self.cache[request.requestId]);
+      q.resolve(self.cache[request.id]);
       $rootScope.saving = 'success';
 
     }, function (error) {
