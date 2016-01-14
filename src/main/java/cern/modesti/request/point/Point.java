@@ -40,6 +40,15 @@ public class Point {
   }
 
   /**
+   *
+   * @param key
+   * @param value
+   */
+  public void addProperty(String key, Object value) {
+    properties.put(key, value);
+  }
+
+  /**
    * @param property
    * @param message
    */
