@@ -33,19 +33,19 @@ public class Predicate<T> {
     String argument = args.get(0);
 
     if (EQUAL.equals(criteria.getOperation())) {
-      if (isNumeric(argument)) {
-        NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
-        int value = Integer.parseInt(argument);
-        return path.eq(value);
-      }
+//      if (isNumeric(argument)) {
+//        NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
+//        int value = Integer.parseInt(argument);
+//        return path.eq(value);
+//      }
 //        else if (argument == null) {
 //
 //        }
-      else {
+//      else {
         StringPath path = entityPath.getString(criteria.getKey());
         //return path.containsIgnoreCase(argument);
-        return path.containsIgnoreCase(argument);
-      }
+        return path.startsWithIgnoreCase(argument);
+//      }
     }
 
     // TODO implement remaining operations
