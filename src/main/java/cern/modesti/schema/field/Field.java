@@ -1,15 +1,15 @@
 package cern.modesti.schema.field;
 
-import javax.persistence.Id;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Id;
 import java.io.Serializable;
 
 
@@ -57,6 +57,9 @@ public class Field implements Serializable {
   private Object editable;
 
   private Object unique;
+
+  @JsonProperty("default")
+  private Object defaultValue;
 
   private String help_en = "";
 
