@@ -7,14 +7,13 @@
  */
 angular.module('modesti').service('ValidationService', ValidationService);
 
-function ValidationService($q, SchemaService, RequestService, TaskService) {
+function ValidationService($q, SchemaService, RequestService, TaskService, Utils) {
   /*jshint camelcase: false */
 
   // Public API
   var service = {
     validateRequest: validateRequest,
     setErrorMessage: setErrorMessage,
-    isEmptyPoint: isEmptyPoint
   };
 
   /**
@@ -108,7 +107,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
     points.forEach(function (point) {
 
       // Ignore empty points
-      if (isEmptyPoint(point)) {
+      if (Utils.isEmptyPoint(point)) {
         return true;
       }
 
@@ -234,7 +233,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
     points.forEach(function (point) {
       // Ignore empty points
-      if (isEmptyPoint(point)) {
+      if (Utils.isEmptyPoint(point)) {
         return true;
       }
 
@@ -275,7 +274,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
     points.forEach(function (point) {
       // Ignore empty points
-      if (isEmptyPoint(point)) {
+      if (Utils.isEmptyPoint(point)) {
         return true;
       }
 
@@ -315,7 +314,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
     points.forEach(function (point) {
       // Ignore empty points
-      if (isEmptyPoint(point)) {
+      if (Utils.isEmptyPoint(point)) {
         return true;
       }
 
@@ -375,7 +374,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
 
     points.forEach(function (point, i) {
       // Ignore empty points
-      if (isEmptyPoint(point)) {
+      if (Utils.isEmptyPoint(point)) {
         return true;
       }
 
@@ -563,40 +562,6 @@ function ValidationService($q, SchemaService, RequestService, TaskService) {
     } else {
       return field.id;
     }
-  }
-
-  /**
-   * Check if a point is empty. A point is considered to be empty if it contains no properties, or if the values of all
-   * its properties are either null, undefined or empty strings.
-   *
-   * @param point the point to check
-   * @returns {boolean} true if the point is empty, false otherwise
-   */
-  function isEmptyPoint(point) {
-    if (Object.keys(point.properties).length === 0) {
-      return true;
-    }
-
-    var property;
-    for (var key in point.properties) {
-      if (point.properties.hasOwnProperty(key)) {
-        property = point.properties[key];
-
-        if (typeof property === 'object') {
-          for (var subproperty in property) {
-            if (property.hasOwnProperty(subproperty)) {
-              if (property[subproperty] !== null && property[subproperty] !== undefined && property[subproperty] !== '') {
-                return false;
-              }
-            }
-          }
-        } else if (property !== null && property !== undefined && property !== '') {
-          return false;
-        }
-      }
-    }
-
-    return true;
   }
 
   /**

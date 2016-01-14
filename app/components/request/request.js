@@ -8,7 +8,7 @@
 angular.module('modesti').controller('RequestController', RequestController);
 
 function RequestController($scope, $q, $state, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
-                           RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService, AlertService, ValidationService) {
+                           RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService, AlertService, ValidationService, Utils) {
   var self = this;
 
   self.request = request;
@@ -188,7 +188,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
           }
 
           // Empty points should not be editable
-          //if (ValidationService.isEmptyPoint(point)) {
+          //if (Utils.isEmptyPoint(point)) {
           //  editable = false;
           //}
         }
@@ -577,7 +577,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   function canSubmit() {
     var numEmptyPoints = 0;
     self.request.points.forEach(function (point) {
-      if (ValidationService.isEmptyPoint(point)) {
+      if (Utils.isEmptyPoint(point)) {
         numEmptyPoints++;
       }
     });
@@ -1125,7 +1125,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     }
 
     var point = self.rows[row];
-    if (ValidationService.isEmptyPoint(point)) {
+    if (Utils.isEmptyPoint(point)) {
       return;
     }
 
@@ -1133,8 +1133,8 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     //prop = prop.replace('properties.', '');
 
     // Check if we need to fill in a default value for this point.
-    var field = SchemaService.getField(self.schema, props[0]);
-    fillDefaultValues(point, field);
+    var field = Utils.getField(self.schema, props[0]);
+    setDefaultValue(point, field);
 
     // Highlight errors in a cell by making the background red.
     for (var i in point.errors) {
@@ -1150,11 +1150,13 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   }
 
   /**
+   * Inspect the given field and set the default value in the point if supplied. The default value can refer
+   * to another property of the point via mustache-syntax, so interpolate that as well.
    *
    * @param point
    * @param field
    */
-  function fillDefaultValues(point, field) {
+  function setDefaultValue(point, field) {
     var currentValue;
 
     if (field.type === 'autocomplete') {
@@ -1165,7 +1167,6 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       currentValue = point.properties[field.id];
     }
 
-
     if (currentValue === undefined || currentValue === null || currentValue === '') {
       var regex = /^\{\{\s*[\w\.]+\s*}}/g;
 
@@ -1174,7 +1175,6 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
           return x.match(/[\w\.]+/)[0];
         });
 
-        console.log('found stuff to replace: ' + matches);
         var props = matches[0].split('.');
 
         if (point.properties.hasOwnProperty(props[0])) {

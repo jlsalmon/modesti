@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('CreationController', CreationController);
 
-function CreationController($scope, $http, $q, $state, $modal, RequestService, AlertService, SchemaService, ValidationService) {
+function CreationController($scope, $http, $q, $state, $modal, RequestService, AlertService, SchemaService, Utils) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
@@ -33,7 +33,7 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
 
     // Remove empty points
     self.parent.request.points = self.parent.request.points.filter(function (point) {
-      return !ValidationService.isEmptyPoint(point);
+      return !Utils.isEmptyPoint(point);
     });
 
     self.parent.submit();
@@ -179,139 +179,39 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
    * It would be really great to get rid of this code, but currently Handsontable does not support columns backed
    * by complex objects, so it's necessary until then. See https://github.com/handsontable/handsontable/issues/2578.
    *
-   * TODO: consolidate common functionality with column.source() function in ColumnService
-   *
    * @param row
    * @param property
    * @param newValue
    */
   function saveNewValue(row, property, newValue) {
     var q = $q.defer();
-
-    // Don't need to process non-object properties
-    if (property.indexOf('.') === -1) {
-      q.resolve();
-      return;
-    }
-
-    //var point = self.parent.hot.getSourceDataAtRow(row);
     var point = self.parent.rows[row];
 
     // get the outer object i.e. properties.location.value -> location
     var outerProp = property.split('.')[1];
-    var field = SchemaService.getField(self.parent.schema, outerProp);
+    var field = Utils.getField(self.parent.schema, outerProp);
 
-    // Don't make a call if the query is less than the minimum length
-    if (field.minLength && newValue < field.minLength) {
+    // Don't need to process non-object properties
+    if (field.type !== 'autocomplete') {
       q.resolve();
       return;
     }
 
-    var params = {};
-    if (field.params === undefined) {
-      // By default, searches are done via parameter called 'query'
-      params.query = newValue;
-    } else {
-      for (var i in field.params) {
-        var param = field.params[i];
+    SchemaService.queryFieldValues(field, newValue, point).then(function (values) {
 
-        // The parameter might be a sub-property of another property (i.e. contains a dot). In
-        // that case, find the property of the point and add it as a search parameter. This
-        // acts like a filter for a search, based on another property.
-        // TODO: add "filter" parameter to schema instead of this?
+      values.forEach(function (item) {
+        var value = (field.model === undefined && typeof item === 'object') ? item.value : item[field.model];
 
-        if (param === 'query') {
-          params.query = newValue;
-        } else {
-
-          if (param.indexOf('.') > -1) {
-            var parts = param.split('.');
-            var prop = parts[0];
-            var subProp = parts[1];
-
-            if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
-              params[subProp] = point.properties[prop][subProp];
-            } else {
-              params[subProp] = '';
-            }
-          } else {
-            if (point.properties[param]) {
-              params[param] = point.properties[param];
-            } else {
-              params[param] = '';
-            }
-          }
+        if (value === newValue) {
+          console.log('saving new value');
+          delete item._links;
+          point.properties[outerProp] = item;
         }
-      }
-    }
-
-    if (outerProp === field.id && field.type === 'autocomplete') {
-
-      $http.get(BACKEND_BASE_URL + '/' + field.url, {
-        params: params,
-        cache: true
-      }).then(function (response) {
-        if (!response.data.hasOwnProperty('_embedded')) {
-          return [];
-        }
-
-        var returnPropertyName = field.url.split('/')[0];
-        response.data._embedded[returnPropertyName].map(function (item) {
-          var value = (field.model === undefined && typeof item === 'object') ? item.value : item[field.model];
-
-          if (value === newValue) {
-            console.log('saving new value');
-            delete item._links;
-            point.properties[outerProp] = item;
-
-            // Automatically update dependent dropdowns.
-            updateDependentValues(row, property);
-          }
-        });
-
-        q.resolve();
       });
-    }
 
-    else if (outerProp === field.id && field.type === 'options') {
-      // Automatically update dependent fields.
-      updateDependentValues(row, property);
       q.resolve();
-    }
-
-    else {
-      q.resolve();
-    }
+    });
 
     return q.promise;
-  }
-
-  /**
-   * @deprecated
-   */
-  function updateDependentValues(row, property) {
-    self.parent.schema.categories.concat(self.parent.schema.datasources).forEach(function (category) {
-      category.fields.forEach(function (field) {
-
-        if (field.params) {
-          field.params.forEach(function (param) {
-            var thisProp = property.split('.')[1];
-            var dependentProp = param.split('.')[0];
-
-            if (thisProp === dependentProp) {
-              var point = self.parent.hot.getSourceDataAtRow(row);
-
-              SchemaService.queryFieldValues(field, '', point).then(function (results) {
-                console.log('got ' + results.length + ' results for dependent field ' + field.id + ' for ' + thisProp);
-
-                if (results.length === 1) {
-                  self.parent.hot.setDataAtRowProp(row, 'properties.' + field.id + '.value', results[0].text);
-                }
-              });
-            }
-          });
-        }
-      });
-    });
   }
 }

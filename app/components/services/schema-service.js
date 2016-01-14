@@ -7,13 +7,12 @@
  */
 angular.module('modesti').service('SchemaService', SchemaService);
 
-function SchemaService($q, $http) {
+function SchemaService($q, $http, Utils) {
 
   // Public API
   var service = {
     getSchema: getSchema,
     getSchemas: getSchemas,
-    getField: getField,
     queryFieldValues: queryFieldValues,
     evaluateConditional: evaluateConditional,
     generateTagnames: generateTagnames,
@@ -34,7 +33,7 @@ function SchemaService($q, $http) {
 
     $http.get(url).then(function (response) {
       var schema = response.data;
-      console.log('fetched schema: ' + schema.name);
+      console.log('fetched schema: ' + schema.id);
 
       // Prepend tagname and fault state fields
       schema.categories.concat(schema.datasources).forEach(function (category) {
@@ -115,33 +114,6 @@ function SchemaService($q, $http) {
 
   /**
    *
-   * @param property
-   * @returns {*}
-   */
-  function getField(schema, property) {
-    var result;
-
-    schema.categories.forEach(function (category) {
-      category.fields.forEach(function (field) {
-        if (field.id === property) {
-          result = field;
-        }
-      });
-    });
-
-    schema.datasources.forEach(function (datasource) {
-      datasource.fields.forEach(function (field) {
-        if (field.id === property) {
-          result = field;
-        }
-      });
-    });
-
-    return result;
-  }
-
-  /**
-   *
    * @param field
    * @param query
    * @param point
@@ -150,6 +122,12 @@ function SchemaService($q, $http) {
   function queryFieldValues(field, query, point) {
     console.log('querying values for field ' + field.id + ' with query string "' + query + '"');
     var q = $q.defer();
+
+    // Don't make a call if the query is less than the minimum length
+    if (field.minLength && query < field.minLength) {
+      q.resolve([]);
+      return q.promise;
+    }
 
     // Figure out the query parameters we need to put in the URI.
     var params = {};
@@ -209,7 +187,7 @@ function SchemaService($q, $http) {
 
     function (error) {
       console.log('error querying values: ' + error.statusText);
-      q.reject();
+      q.reject(error);
     });
 
     return q.promise;
@@ -402,12 +380,12 @@ function SchemaService($q, $http) {
   function generateTagnames(request) {
 
     request.points.forEach(function (point) {
-
-      if (!point.properties.subsystem) {
+      if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
         return;
       }
 
       (function (point) {
+        console.log('point: ' + point.lineNo + ' subsystem: ' + JSON.stringify(point.properties.subsystem));
         $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
           params: {query: point.properties.subsystem.value},
           cache: true
@@ -436,7 +414,7 @@ function SchemaService($q, $http) {
           } else {
             point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
           }
-        });
+        }, function(error) {console.log('generateTagnames ' + error.statusText)});
       })(point);
     });
   }
@@ -445,15 +423,15 @@ function SchemaService($q, $http) {
    * Fault state format: system_name|’_’|subsystem_name|’_’|general_functionality|’:’|equipment_identifier|’:’|point_description
    */
   function generateFaultStates(request) {
+
     request.points.forEach(function (point) {
+      if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
+        return;
+      }
 
       if (point.properties.priorityCode === undefined || point.properties.priorityCode === null || point.properties.priorityCode === '') {
         point.properties.faultFamily = null;
         point.properties.faultMember = null;
-        return;
-      }
-
-      if (!point.properties.subsystem) {
         return;
       }
 
@@ -499,7 +477,7 @@ function SchemaService($q, $http) {
               }
             });
           }
-        });
+        }, function(error) {console.log('generateFaultStates ' + error.statusText)});
       })(point);
     });
   }
@@ -547,13 +525,13 @@ function SchemaService($q, $http) {
    * Alarm category format: 'CERN.SRVS.'|FUNC_GEN|'.'|TES_SYSTEM_NAME
    */
   function generateAlarmCategories(request) {
+
     request.points.forEach(function (point) {
+      if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
+        return;
+      }
 
       if (point.properties.priorityCode || point.properties.alarmValue) {
-
-        if (!point.properties.subsystem) {
-          return;
-        }
 
         (function (point) {
           $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
@@ -597,7 +575,7 @@ function SchemaService($q, $http) {
                 }
               });
             }
-          });
+          }, function(error) {console.log('generateAlarmCategories ' + error.statusText)});
         })(point);
       }
     });
