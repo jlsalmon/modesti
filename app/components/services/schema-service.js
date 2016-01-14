@@ -124,46 +124,76 @@ function SchemaService($q, $http, Utils) {
     var q = $q.defer();
 
     // Don't make a call if the query is less than the minimum length
-    if (field.minLength && query < field.minLength) {
+    if (field.minLength && query.length < field.minLength) {
       q.resolve([]);
       return q.promise;
     }
 
     // Figure out the query parameters we need to put in the URI.
     var params = {};
+
+    // If no params are specified, then by default the query string will be mapped to a parameter
+    // called 'query'.
     if (field.params === undefined) {
-      // By default, searches are done via parameter called 'query'
       params.query = query;
-    } else {
-      field.params.forEach(function (param) {
+    }
 
-        // The parameter might be a sub-property of another property (i.e. contains a dot). In
-        // that case, find the property of the point and add it as a search parameter. This
-        // acts like a filter for a search, based on another property.
-        // TODO: add "filter" parameter to schema instead of this?
+    // Otherwise, an array of params will have been given.
+    else if (field.params instanceof Array) {
 
-        if (param === 'query') {
-          params.query = query;
+      if (field.params.length === 1) {
+        var param = field.params[0];
+
+        if (point && point.properties[param]) {
+          params[param] = point.properties[param];
         } else {
-          if (param.indexOf('.') > -1) {
-            var parts = param.split('.');
-            var prop = parts[0];
-            var subProp = parts[1];
+          params[param] = query;
+        }
+      } else if (field.params.length > 1) {
 
-            if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
-              params[subProp] = point.properties[prop][subProp];
-            } else {
-              params[subProp] = '';
+        // If we've been given a point object, then we can query stuff based on other properties
+        // of that point. So we take all parameters into account.
+        if (point) {
+          field.params.forEach(function (param) {
+
+            // Conventionally the first parameter will be called 'query'.
+            if (param === 'query') {
+              params.query = query;
             }
-          } else {
+
+            // If the specified parameter name matches a property of the point, then we will use the
+            // value of that property as the corresponding parameter value. Otherwise, it will be
+            // mapped to the query string.
             if (point.properties[param]) {
               params[param] = point.properties[param];
             } else {
               params[param] = query;
             }
-          }
+
+            // The parameter might be a sub-property of another property (i.e. contains a dot). In
+            // that case, find the property of the point and add it as a search parameter. This
+            // acts like a filter for a search, based on another property.
+            // TODO: add "filter" parameter to schema instead of this?
+            if (param.indexOf('.') > -1) {
+              var parts = param.split('.');
+              var prop = parts[0];
+              var subProp = parts[1];
+
+              if (point.properties[prop] && point.properties[prop].hasOwnProperty(subProp) && point.properties[prop][subProp]) {
+                params[subProp] = point.properties[prop][subProp];
+              } else {
+                params[subProp] = '';
+              }
+            }
+          });
         }
-      });
+
+        // If we haven't been given a point, then we can't do point-contextual queries. In that
+        // case, we ignore all params except the first one and bind the query string to it.
+        else {
+          params[field.params[0]] = query;
+        }
+      }
     }
 
     // Call the endpoint asynchronously and resolve the promise when we're done.
@@ -385,7 +415,6 @@ function SchemaService($q, $http, Utils) {
       }
 
       (function (point) {
-        console.log('point: ' + point.lineNo + ' subsystem: ' + JSON.stringify(point.properties.subsystem));
         $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
           params: {query: point.properties.subsystem.value},
           cache: true
@@ -414,7 +443,11 @@ function SchemaService($q, $http, Utils) {
           } else {
             point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
           }
-        }, function(error) {console.log('generateTagnames ' + error.statusText)});
+        },
+
+        function(error) {
+          console.log('error generating generating tagnames: ' + error.statusText)
+        });
       })(point);
     });
   }
@@ -477,7 +510,11 @@ function SchemaService($q, $http, Utils) {
               }
             });
           }
-        }, function(error) {console.log('generateFaultStates ' + error.statusText)});
+        },
+
+        function(error) {
+          console.log('error generating fault states: ' + error.statusText)
+        });
       })(point);
     });
   }
@@ -575,7 +612,11 @@ function SchemaService($q, $http, Utils) {
                 }
               });
             }
-          }, function(error) {console.log('generateAlarmCategories ' + error.statusText)});
+          },
+
+          function(error) {
+            console.log('error generating alarm categories: ' + error.statusText)
+          });
         })(point);
       }
     });
