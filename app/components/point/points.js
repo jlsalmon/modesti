@@ -7,29 +7,29 @@
  */
 angular.module('modesti').controller('PointsController', PointsController);
 
-function PointsController($scope, schemas, PointService) {
+function PointsController(schemas, PointService, SchemaService, Utils) {
   var self = this;
 
   self.schemas = schemas;
   self.domains = schemas.map(function (schema) { return schema.id; });
   self.points = [];
 
-  self.filters = [
-    { property: 'pointDatatype', operation: 'equals', value: 'Boolean' }
-  ];
+  self.filters = { 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
 
   self.page = {number: 0, size: 15};
   self.sort = 'pointId,desc';
 
   self.useDomain = useDomain;
-  self.addFilter = addFilter;
-  self.deleteFilter = deleteFilter;
   self.search = search;
   self.onPageChanged = onPageChanged;
+  self.activateCategory = activateCategory;
+  self.queryFieldValues = queryFieldValues;
+
 
   // Load default domain
-  useDomain(self.domains[1]);
-  parseQuery();
+  useDomain(self.domains[0]);
+  self.activeCategory = self.schema.categories[0];
+
   search();
 
   /**
@@ -44,20 +44,6 @@ function PointsController($scope, schemas, PointService) {
     });
   }
 
-  /**
-   *
-   */
-  function addFilter() {
-    self.filters.push({ property: 'pointDatatype', operation: 'equals', value: 'Boolean' });
-  }
-
-  /**
-   *
-   * @param filter
-   */
-  function deleteFilter(filter) {
-    self.filters.splice(self.filters.indexOf(filter), 1);
-  }
 
   /**
    *
@@ -70,12 +56,16 @@ function PointsController($scope, schemas, PointService) {
     self.loading = 'started';
     console.log('searching');
 
-    PointService.getPoints(self.query, self.page.number, self.page.size, self.sort).then(function (response) {
+    parseQuery();
+
+    PointService.getPoints(self.schema.id, self.query, self.page.number, self.page.size, self.sort).then(function (response) {
       if (response.hasOwnProperty('_embedded')) {
-        self.points = response._embedded.refPoints;
+        self.points = response._embedded.points;
       } else {
         self.points = [];
       }
+
+      console.log('fetched ' + self.points.length + ' points');
 
       self.page = response.page;
       // Backend pages 0-based, Bootstrap pagination 1-based
@@ -109,11 +99,29 @@ function PointsController($scope, schemas, PointService) {
   function parseQuery() {
     var expressions = [];
 
-    self.filters.forEach(function (filter) {
-      var expression = filter.property + parseOperation(filter.operation) + filter.value;
+    Object.keys(self.filters).forEach(function(id) {
+      var filter = self.filters[id];
+      var field = Utils.getField(self.schema, id);
 
-      if (expressions.indexOf(expression) === -1) {
-        expressions.push(expression);
+      //if (typeof filter.field === 'string') {
+      //  filter.field = JSON.parse(filter.field);
+      //}
+
+      if (filter.value !== null && filter.value !== undefined && filter.value !== '') {
+
+        var property;
+        if (field.type === 'autocomplete') {
+          var modelAttribute = field.model ? field.model : 'value';
+          property = id + '.' + modelAttribute;
+        } else {
+          property = id;
+        }
+
+        var expression = property + /*parseOperation(filter.operation)*/ ' == "' + filter.value + '"';
+
+        if (expressions.indexOf(expression) === -1) {
+          expressions.push(expression);
+        }
       }
     });
 
@@ -139,8 +147,24 @@ function PointsController($scope, schemas, PointService) {
     search();
   }
 
+  /**
+   *
+   * @param category
+   */
+  function activateCategory(category) {
+    console.log('activating category "' + category.id + '"');
+    self.activeCategory = category;
+    //$localStorage.lastActiveCategory[self.request.requestId] = category;
+    //getColumns();
+  }
 
-  $scope.$watch('ctrl.filters', function () {
-    parseQuery();
-  }, true);
+  /**
+   *
+   * @param field
+   * @param value
+   * @returns {*}
+   */
+  function queryFieldValues(field, value) {
+    return SchemaService.queryFieldValues(field, value);
+  }
 }

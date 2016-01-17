@@ -3,7 +3,7 @@
   "version": "0.0.4",
   "dependencies": {
     "angular": "^1.4.0",
-    "angular-bootstrap": "~0.12.1",
+    "angular-bootstrap": "0.12.1",
     "angular-bootstrap-select-updated": "~0.1.0",
     "angular-cookies": "^1.4.0",
     "angular-file-upload": "~1.1.5",
