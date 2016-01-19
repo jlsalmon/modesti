@@ -76,17 +76,17 @@
           </div>
 
           <!--Shown when the test results are submitted-->
-          <p ng-if="ctrl.request.status == 'FOR_TESTING' && ctrl.request.properties.testResult.passed === false">
+          <span ng-if="ctrl.request.status == 'FOR_TESTING' && ctrl.request.properties.testResult.passed === false">
 
             <p>Test result: <b>{{ctrl.request.properties.testResult.message}}</b></p>
 
             Since some points either failed or were postponed, the request remains in state {{ctrl.request.status}}.
             <b>Those points which have passed tests have been configured in operational mode.</b>
-          </p>
+          </span>
 
 
-          <a class="btn btn-primary" href="#/requests/{{ctrl.request.requestId}}">Back to request &raquo;</a>
-          <a class="btn btn-default" href="#/requests"><i class="fa fa-home"></i> Home</a>
+          <a class="btn btn-primary" href="requests/{{ctrl.request.requestId}}">Back to request &raquo;</a>
+          <a class="btn btn-default" href="requests"><i class="fa fa-home"></i> Home</a>
         </alert>
       </div>
     </div>

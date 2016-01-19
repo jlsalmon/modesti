@@ -411,6 +411,7 @@ function SchemaService($q, $http, Utils) {
 
     request.points.forEach(function (point) {
       if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
+        point.properties.tagname = null;
         return;
       }
 

@@ -103,7 +103,7 @@
 
         <!-- Request is assigned to someone else -->
         <div ng-if="!ctrl.parent.isCurrentUserAssigned()">
-          <div>Request assigned to: <a href="#/users/{{ctrl.parent.getCurrentAssignee()}}" ng-click="$event.stopPropagation();">{{ctrl.parent.getCurrentAssignee()}}</a></div>
+          <div>Request assigned to: <a href="users/{{ctrl.parent.getCurrentAssignee()}}" ng-click="$event.stopPropagation();">{{ctrl.parent.getCurrentAssignee()}}</a></div>
         </div>
 
       </div>

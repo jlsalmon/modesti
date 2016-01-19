@@ -15,7 +15,7 @@
 
         <span class="request-detail-item text-muted" tooltip="{{'CREATOR'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <i class="fa fa-fw fa-user-md"></i>
-          <a href="#/users/{{ctrl.request.creator.username}}">{{::ctrl.request.creator.username}}</a>
+          <a href="users/{{ctrl.request.creator.username}}">{{::ctrl.request.creator.username}}</a>
         </span>
 
         <!-- <span class="text-muted">
@@ -32,14 +32,14 @@
 
         <!--If this is a child request, reference its parent-->
         <span class="request-detail-item" ng-if="ctrl.request.parentRequestId">
-           {{'PARENT'|translate}}: <a href="#/requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
+           {{'PARENT'|translate}}: <a href="requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
         </span>
 
         <!--If this is a parent request, list its children-->
         <span class="request-detail-item" ng-if="ctrl.children.length > 0">
            {{'CHILDREN'|translate}}:
           <span ng-repeat="child in ctrl.children">
-            <a href="#/requests/{{child.requestId}}">{{::child.requestId}}</a>
+            <a href="requests/{{child.requestId}}">{{::child.requestId}}</a>
           </span>
         </span>
 

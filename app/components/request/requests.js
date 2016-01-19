@@ -188,6 +188,8 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
    * @param query
    */
   function getSubsystems(query) {
+    query = query || '';
+
     // TODO refactor this into a service
     $http.get(BACKEND_BASE_URL + '/subsystems/search/find', { params: {query: query}}).then(function(response) {
       self.subsystems = response.data._embedded.subsystems;
