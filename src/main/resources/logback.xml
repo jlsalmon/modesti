@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true">
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="cern.modesti" level="TRACE" />
     <logger name="org.springframework" level="INFO" />

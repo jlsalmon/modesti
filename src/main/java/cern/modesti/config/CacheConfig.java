@@ -19,6 +19,7 @@ public class CacheConfig {
 
   @Bean
   public CacheManager cacheManager() {
+    // TODO: remove this
     return new ConcurrentMapCacheManager("gmaoCodes", "locations", "functionalities", "zones", "persons", "subsystems");
   }
 }
