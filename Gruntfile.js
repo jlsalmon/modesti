@@ -84,8 +84,8 @@ module.exports = function (grunt) {
     connect: {
       options: {
         port: 9000,
-        key: grunt.file.read('../modesti-server/src/main/resources/security/saml/modesti-test/privkey.pem'),
-        cert: grunt.file.read('../modesti-server/src/main/resources/security/saml/modesti-test/host.cert'),
+        key: grunt.file.read('../modesti-server/src/main/resources/security/privkey.pem'),
+        cert: grunt.file.read('../modesti-server/src/main/resources/security/host.cert'),
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: '0.0.0.0',
         protocol: 'https',
@@ -143,7 +143,7 @@ module.exports = function (grunt) {
       },
       all: {
         src: [
-          'Gruntfile.js',
+          //'Gruntfile.js',
           '<%= yeoman.app %>/components/**/*.js'
         ]
       },
@@ -445,8 +445,8 @@ module.exports = function (grunt) {
         version: '<%= yeoman.version %>',
         path: 'build/',
         base_path: '',
-        username: grunt.option('artifactoryUser')     || grunt.fail.fatal('Publishing artifact requires --artifactoryUser'),
-        password: grunt.option('artifactoryPassword') || grunt.fail.fatal('Publishing artifact requires --artifactoryPassword')
+        username: grunt.option('artifactoryUser'),
+        password: grunt.option('artifactoryPassword')
       },
       test: {
         options: {
@@ -544,14 +544,27 @@ module.exports = function (grunt) {
     'build'
   ]);
 
-  grunt.registerTask('publish:test', [
-    'build:test',
-    'artifactory:test:publish'
-  ]);
+  grunt.registerTask('publish:test', 'Publish a test tarball.', function() {
+    checkPublicationOptions();
 
-  grunt.registerTask('release:test', [
-    'build:test',
-    'bump',
-    'artifactory:test:publish'
-  ]);
+    grunt.task.run([
+      'build:test',
+      'artifactory:test:publish'
+    ]);
+  });
+
+  grunt.registerTask('release:test', 'Release a test tarball.', function() {
+    checkPublicationOptions();
+
+    grunt.task.run([
+      'build:test',
+      'bump',
+      'artifactory:test:publish'
+    ]);
+  });
+
+  function checkPublicationOptions() {
+    grunt.option('artifactoryUser')     || grunt.fail.fatal('Publishing artifact requires --artifactoryUser');
+    grunt.option('artifactoryPassword') || grunt.fail.fatal('Publishing artifact requires --artifactoryPassword');
+  }
 };
