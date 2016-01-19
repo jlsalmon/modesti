@@ -136,7 +136,7 @@ publishing {
                 password artifactoryPassword
             }
 
-            if(project.version.endsWith('-SNAPSHOT')) {
+            if (project.version.endsWith('-SNAPSHOT')) {
                 url "http://artifactory/beco-development-local"
             } else {
                 url "http://artifactory/beco-release-local"

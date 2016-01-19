@@ -143,23 +143,25 @@ public class RequestRepositoryEventHandler {
     Assert.notNull(base);
     Assert.isTrue(working.getId().equals(base.getId()));
 
-    RequestHistoryEntry entry = requestHistoryRepository.findByRequestId(base.getId());
-    if (entry == null) {
-      log.info(format("creating new base history record for request #%s", base.getRequestId()));
-      entry = new RequestHistoryEntry(new ObjectId().toString(), base.getId(), base, new ArrayList<>(), false);
-      requestHistoryRepository.save(entry);
-      return;
-    }
+    // TODO: fix this. If the type of a point property changes, the differ craps out. See https://github.com/SQiShER/java-object-diff/issues/56
 
-    final RequestHistoryChange change = new RequestHistoryChange(new DateTime(DateTimeZone.UTC));
-    DiffNode root = ObjectDifferBuilder.startBuilding()
-        .comparison().ofType(DateTime.class).toUseEqualsMethod().and().build()
-        .compare(working, base);
+//    RequestHistoryEntry entry = requestHistoryRepository.findByRequestId(base.getId());
+//    if (entry == null) {
+//      log.info(format("creating new base history record for request #%s", base.getRequestId()));
+//      entry = new RequestHistoryEntry(new ObjectId().toString(), base.getId(), base, new ArrayList<>(), false);
+//      requestHistoryRepository.save(entry);
+//      return;
+//    }
 
-    root.visit(new PrintingVisitor(working, base));
-    root.visit(new RequestHistoryChangeVisitor(change, working, base));
-
-    entry.getDifferences().add(change);
-    requestHistoryRepository.save(entry);
+//    final RequestHistoryChange change = new RequestHistoryChange(new DateTime(DateTimeZone.UTC));
+//    DiffNode root = ObjectDifferBuilder.startBuilding()
+//        .comparison().ofType(DateTime.class).toUseEqualsMethod().and().build()
+//        .compare(working, base);
+//
+//    root.visit(new PrintingVisitor(working, base));
+//    root.visit(new RequestHistoryChangeVisitor(change, working, base));
+//
+//    entry.getDifferences().add(change);
+//    requestHistoryRepository.save(entry);
   }
 }
