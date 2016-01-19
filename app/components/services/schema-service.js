@@ -43,9 +43,11 @@ function SchemaService($q, $http, Utils) {
           category.fields.push(getTagnameField());
         }
 
+        var constraint;
+
         // Tagnames must be unique.
         if (category.id === 'location') {
-          var constraint = getUniqueTagnameConstraint();
+          constraint = getUniqueTagnameConstraint();
 
           if (category.constraints) {
             category.constraints.push(constraint);
@@ -63,7 +65,7 @@ function SchemaService($q, $http, Utils) {
 
         // Fault member, fault code and problem description must make a unique triplet.
         if (category.id === 'alarms') {
-          var constraint = getAlarmTripletConstraint();
+          constraint = getAlarmTripletConstraint();
 
           if (category.constraints) {
             category.constraints.push(constraint);
@@ -447,7 +449,7 @@ function SchemaService($q, $http, Utils) {
         },
 
         function(error) {
-          console.log('error generating generating tagnames: ' + error.statusText)
+          console.log('error generating generating tagnames: ' + error.statusText);
         });
       })(point);
     });
@@ -514,7 +516,7 @@ function SchemaService($q, $http, Utils) {
         },
 
         function(error) {
-          console.log('error generating fault states: ' + error.statusText)
+          console.log('error generating fault states: ' + error.statusText);
         });
       })(point);
     });
@@ -616,7 +618,7 @@ function SchemaService($q, $http, Utils) {
           },
 
           function(error) {
-            console.log('error generating alarm categories: ' + error.statusText)
+            console.log('error generating alarm categories: ' + error.statusText);
           });
         })(point);
       }

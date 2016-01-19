@@ -117,7 +117,8 @@ function PointsController(schemas, PointService, SchemaService, Utils) {
           property = id;
         }
 
-        var expression = property + /*parseOperation(filter.operation)*/ ' == "' + filter.value + '"';
+        var operation = parseOperation(filter.operation);
+        var expression = property + ' ' + operation + ' "' + filter.value + '"';
 
         if (expressions.indexOf(expression) === -1) {
           expressions.push(expression);
@@ -136,6 +137,8 @@ function PointsController(schemas, PointService, SchemaService, Utils) {
    */
   function parseOperation(operation) {
     if (operation === 'equals') {
+      return ' == ';
+    } else {
       return ' == ';
     }
   }

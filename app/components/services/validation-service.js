@@ -392,7 +392,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
           var fieldName = getFieldNames(category, constraint.members)[0];
           setErrorMessage(point, constraint.members[0], 'Field "' + fieldName + '" must be unique for all points. Check for duplications.');
         } else {
-          var fieldNames = getFieldNames(category, constraint.members).join(', ')
+          var fieldNames = getFieldNames(category, constraint.members).join(', ');
           setErrorMessage(point, '', 'Field(s) "' + fieldNames + '" must be unique for all points. Check for duplications.');
         }
       }
