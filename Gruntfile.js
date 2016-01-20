@@ -431,7 +431,8 @@ module.exports = function (grunt) {
         files: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js', '<%= yeoman.dist %>/scripts/scripts.js'],
         commitFiles: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js'],
         pushTo: 'origin',
-        updateConfigs: ['yeoman']
+        updateConfigs: ['yeoman'],
+        createTag: grunt.option('createTag') !== false
       }
     },
 
@@ -567,7 +568,8 @@ module.exports = function (grunt) {
       'build:prod',
       'bump',
       'artifactory:prod:publish',
-      'bump-snapshot:' + version
+      'bump-snapshot:' + version,
+      'publish:test'
     ]);
   });
 
@@ -577,12 +579,9 @@ module.exports = function (grunt) {
     var nextSnapshotVersion = semver.inc(version, 'patch') + '-SNAPSHOT';
     grunt.log.writeln('Bumping development version to ' + nextSnapshotVersion);
     grunt.option('setversion', nextSnapshotVersion);
+    grunt.option('createTag', false);
 
-    grunt.task.run([
-      'bump',
-      'build:test',
-      'artifactory:test:publish'
-    ]);
+    grunt.task.run('bump');
   });
 
   function checkPublicationOptions() {
