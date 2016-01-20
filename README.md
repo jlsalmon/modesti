@@ -20,19 +20,19 @@ Running `grunt test` will run the unit tests with karma.
 
 To build the source, publish the build artifact and create releases, the following grunt tasks are used:
 
-## `grunt build:test` 
+## `grunt build:test`
 
 Runs tests and does a simple, local build (no packaging or publishing). Build results in `dist/`.
 
 ## `grunt publish:test`
 
-Tests, builds, packages the results into a tarball and publishes it to Artifactory ready for deployment on the test server.
+Tests, builds, packages the results into a tarball and publishes it to the snapshot repo ready for deployment on the test server.
 
 Note: for the publication to work, you need to pass `--artifactoryUser` and `--artifactoryPassword`.
 
-## `grunt release:test`
+## `grunt release:prod`
 
-Tests, builds, packages, creates a test release by incrementing the package version number and committing the released tag. Finally publishes the tarball to Artifactory ready for deployment on the test server.
+Tests, builds and packages a production release, then publishes the tarball to Artifactory ready for deployment on the production server. Finally bumps the
+development version to e.g. 0.0.1-SNAPSHOT and publishes it to the snapshot repo.
 
-By default, the patch version number will be incremented. To increment the minor version, use `grunt release:dev bump:minor`. To increment the major version, 
-use `bump:major`. For more options, see https://github.com/vojtajina/grunt-bump
+Note: you need to pass the release version via `--setversion`. 
