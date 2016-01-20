@@ -84,11 +84,8 @@ module.exports = function (grunt) {
     connect: {
       options: {
         port: 9000,
-        key: grunt.file.read('../modesti-server/src/main/resources/security/privkey.pem'),
-        cert: grunt.file.read('../modesti-server/src/main/resources/security/host.cert'),
         // Change this to '0.0.0.0' to access the server from outside.
-        hostname: '0.0.0.0',
-        protocol: 'https',
+        hostname: 'localhost',
         livereload: 35729
       },
       livereload: {
@@ -453,7 +450,7 @@ module.exports = function (grunt) {
           url: 'http://artifactory/beco-development-local'
         },
         files: [
-          { src: ['dist/**/*'] }
+          { src: ['dist/**/*', 'dist/.htaccess', 'deployment.xml'] }
         ]
       },
       prod: {
@@ -461,7 +458,7 @@ module.exports = function (grunt) {
           url: 'http://artifactory/beco-release-local'
         },
         files: [
-          { src: ['dist/**/*'] }
+          { src: ['dist/**/*', 'dist/.htaccess', 'deployment.xml'] }
         ]
       }
     },
