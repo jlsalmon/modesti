@@ -30,8 +30,6 @@ public interface RequestProjection {
 
   String getSubsystem();
 
-  Set<String> getCategories();
-
   @Value("#{target.createdAt.millis}")
   Long getCreatedAt();
 
