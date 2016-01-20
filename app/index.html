@@ -53,12 +53,6 @@
 
         <div class="pull-left">
           <ul class="nav navbar-nav">
-            <li>
-              <a ui-sref="requests"  tooltip="{{'REQUESTS'|translate}}" tooltip-placement="bottom">
-                <i class="fa fa-list-ol"></i>
-              </a>
-            </li>
-
 
             <!--<li class="dropdown">-->
               <!--<a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i></a>-->
@@ -68,46 +62,53 @@
               <!--</ul>-->
             <!--</li>-->
 
+            <li>
+              <button  class="btn btn-sm btn-success navbar-btn" ui-sref="new" tooltip-placement="bottom" style="margin-left: 15px;">
+                <i class="fa fa-plus"></i> New Request
+              </button>
+            </li>
 
             <li>
-              <a ui-sref="new" tooltip="{{'NEW_REQUEST'|translate}}" tooltip-placement="bottom">
-                <i class="fa fa-plus"></i>
+              <a  ui-sref="requests"  tooltip="View All Requests" tooltip-placement="bottom">
+                <i class="fa fa-list-ol"></i>
               </a>
             </li>
-            <li>
-              <a ui-sref="upload" tooltip="{{'UPLOAD_REQUEST'|translate}}" tooltip-placement="bottom">
-                <i class="fa fa-upload"></i>
-              </a>
-            </li>
+
+            <!--<li>-->
+              <!--<a ui-sref="upload" tooltip="{{'UPLOAD_REQUEST'|translate}}" tooltip-placement="bottom">-->
+                <!--<i class="fa fa-upload"></i>-->
+              <!--</a>-->
+            <!--</li>-->
           </ul>
         </div>
 
         <div class="navbar-custom-menu" ng-cloak>
           <ul class="nav navbar-nav">
 
-            <li class="dropdown user user-menu">
-              <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-cloak>
-                <span class="hidden-xs">
-                  <div class="flag-icon {{ctrl.getCurrentLanguage() == 'en' ? 'gb' : 'fr'}}"
-                       style="vertical-align: middle"></div>
-                  {{ctrl.getCurrentLanguage()}}
-                </span>
-              </a>
-              <ul class="dropdown-menu"  ng-cloak>
-                <li>
-                  <a href="" ng-click="ctrl.changeLanguage('en')" class="header">
-                    <div class="flag-icon gb" style="vertical-align: middle; margin-right: 10px;"></div>
-                    English
-                  </a>
-                </li>
-                <li>
-                  <a href="" ng-click="ctrl.changeLanguage('fr')" class="header">
-                    <div class="flag-icon fr" style="vertical-align: middle; margin-right: 10px;"></div>
-                    Français
-                  </a>
-                </li>
-              </ul>
-            </li>
+            <!-- TODO: reinstate the language selector once everything has been translated properly -->
+            <!--<li class="dropdown user user-menu">-->
+              <!--<a href="" class="dropdown-toggle" data-toggle="dropdown" ng-cloak>-->
+                <!--<span class="hidden-xs">-->
+                  <!--<div class="flag-icon {{ctrl.getCurrentLanguage() == 'en' ? 'gb' : 'fr'}}"-->
+                       <!--style="vertical-align: middle"></div>-->
+                  <!--{{ctrl.getCurrentLanguage()}}-->
+                <!--</span>-->
+              <!--</a>-->
+              <!--<ul class="dropdown-menu"  ng-cloak>-->
+                <!--<li>-->
+                  <!--<a href="" ng-click="ctrl.changeLanguage('en')" class="header">-->
+                    <!--<div class="flag-icon gb" style="vertical-align: middle; margin-right: 10px;"></div>-->
+                    <!--English-->
+                  <!--</a>-->
+                <!--</li>-->
+                <!--<li>-->
+                  <!--<a href="" ng-click="ctrl.changeLanguage('fr')" class="header">-->
+                    <!--<div class="flag-icon fr" style="vertical-align: middle; margin-right: 10px;"></div>-->
+                    <!--Français-->
+                  <!--</a>-->
+                <!--</li>-->
+              <!--</ul>-->
+            <!--</li>-->
 
             <li class="dropdown user user-menu">
               <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-cloak>
@@ -196,14 +197,13 @@
   <!-- build:js(app) scripts/vendor.js -->
   <!-- bower:js -->
   <script src="bower_components/modernizr/modernizr.js"></script>
-  <script src="bower_components/es5-shim/es5-shim.js"></script>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
   <script src="bower_components/angular-bootstrap-select/build/angular-bootstrap-select.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-  <script src="bower_components/angular-file-upload/angular-file-upload.js"></script>
+  <script src="bower_components/angular-file-upload/angular-file-upload.min.js"></script>
   <script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
   <script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
   <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
