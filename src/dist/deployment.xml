@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <products>
-  <product name="modesti">
+  <product name="modesti-server">
 
     <application name="default">
-      <deployment installLocation="/opt/modesti/">
+      <startscript>
+        <main-class name="org.springframework.boot.loader.PropertiesLauncher" />
+        <property name="spring.config.location" value="conf/modesti.properties" />
+        <property name="loader.path" value="/opt/modesti-plugins" />
+        <property name="logging.config" value="conf/logback.xml" />
+        <property name="logging.file" value="log/modesti.log" />
+      </startscript>
+      <deployment installLocation="/opt/modesti-server/">
         <backupPolicy keepBackups="2">
           <preserve type="dir" name="log"/>
         </backupPolicy>
@@ -11,32 +18,30 @@
     </application>
 
 
-    <application name="modesti-pro" extends="default">
-      <deployment installLocation="/opt/modesti-pro">
-
+    <application name="modesti-server-pro" extends="default">
+      <startscript name="MODESTI-SERVER-PRO"/>
+      <deployment installLocation="/opt/modesti-server">
         <directory name="conf">
           <file name="modesti.properties" source="/user/timoper/rep/modesti/modesti-pro.properties" mask="400"/>
+          <file name="keystore.pkcs12" source="/user/timoper/rep/modesti/keystore.pkcs12" mask="400"/>
         </directory>
-
         <notification>
           <mail address="modesti-administrators@cern.ch"/>
         </notification>
-
       </deployment>
     </application>
 
 
-    <application name="modesti-test" extends="default">
-      <deployment installLocation="/opt/modesti-test">
-
+    <application name="modesti-server-test" extends="default">
+      <startscript name="MODESTI-SERVER-TEST"/>
+      <deployment installLocation="/opt/modesti-server">
         <directory name="conf">
-          <file name="modesti.properties" source="/user/timoper/rep/modesti/modesti-test.properties" mask="400"/>
+          <file name="modesti.properties" source="/user/timtest/rep/modesti/modesti-test.properties" mask="400"/>
+          <file name="keystore.pkcs12" source="/user/timtest/rep/modesti/keystore.pkcs12" mask="400"/>
         </directory>
-
         <notification>
           <mail address="modesti-administrators@cern.ch"/>
         </notification>
-
       </deployment>
     </application>
 
