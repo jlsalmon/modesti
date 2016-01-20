@@ -83,16 +83,12 @@ public class LdapSynchroniser {
           log.debug(format("adding new user %s", user));
 
         } else {
-//          List<Role> authorities = user.getAuthorities();
           Role role = new Role(groupId);
 
           if (!user.getAuthorities().contains(role)) {
             log.debug(format("adding user %s to group '%s'", user, groupId));
             user.getAuthorities().add(role);
-//            authorities.add(new Role(groupId));
           }
-
-//          user.setAuthorities(authorities);
         }
 
         userRepository.save(user);
