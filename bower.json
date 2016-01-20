@@ -1,6 +1,6 @@
 {
   "name": "modesti",
-  "version": "0.0.6",
+  "version": "0.0.7-SNAPSHOT",
   "dependencies": {
     "angular": "^1.4.0",
     "angular-bootstrap": "0.12.1",
