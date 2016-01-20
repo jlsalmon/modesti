@@ -11,7 +11,7 @@ angular.module('modesti').config(configure);
 
 var BACKEND_BASE_URL = '@@BACKEND_BASE_URL';
 if (BACKEND_BASE_URL.lastIndexOf("@@", 0) === 0) {
-  BACKEND_BASE_URL = 'https://modesti-test.cern.ch:8443';
+  BACKEND_BASE_URL = 'http://localhost:8080';
 }
 
 function configure($httpProvider, $translateProvider, RestangularProvider) {
@@ -46,7 +46,7 @@ function configureRestangular(RestangularProvider) {
 
     if (operation === "getList") {
       if (data.hasOwnProperty('_embedded')) {
-        extractedData = data //._embedded.requests;
+        extractedData = data; //._embedded.requests;
       } else {
         extractedData = data.data;
       }
