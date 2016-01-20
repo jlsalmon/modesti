@@ -567,7 +567,7 @@ module.exports = function (grunt) {
       'build:prod',
       'bump',
       'artifactory:prod:publish',
-      'bump-snapshot'
+      'bump-snapshot:' + version
     ]);
   });
 
