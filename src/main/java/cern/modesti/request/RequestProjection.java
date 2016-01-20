@@ -33,6 +33,6 @@ public interface RequestProjection {
   @Value("#{target.createdAt.millis}")
   Long getCreatedAt();
 
-  @Value("#{target.lastModified.millis}")
-  Long getLastModified();
+//  @Value("#{target.lastModified.millis}")
+//  Long getLastModified();
 }
