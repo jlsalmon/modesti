@@ -8,6 +8,7 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
+  var semver = require('semver');
   var modRewrite = require('connect-modrewrite');
 
   // Configurable paths for the application
@@ -541,7 +542,12 @@ module.exports = function (grunt) {
     'build'
   ]);
 
-  grunt.registerTask('publish:test', 'Publish a test tarball.', function() {
+  grunt.registerTask('build:prod', [
+    'config:prod',
+    'build'
+  ]);
+
+  grunt.registerTask('publish:test', 'Publish a test tarball.', function () {
     checkPublicationOptions();
 
     grunt.task.run([
@@ -550,12 +556,31 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('release:test', 'Release a test tarball.', function() {
+  grunt.registerTask('release:prod', 'Release a production tarball.', function (version) {
+    version || grunt.fail.fatal('You must supply a release version');
     checkPublicationOptions();
 
+    grunt.log.writeln('Setting release version to ' + version);
+    grunt.option('setversion', version);
+
     grunt.task.run([
-      'build:test',
+      'build:prod',
       'bump',
+      'artifactory:prod:publish',
+      'bump-snapshot'
+    ]);
+  });
+
+  grunt.registerTask('bump-snapshot', 'Bump the version to ', function (version) {
+    checkPublicationOptions();
+
+    var nextSnapshotVersion = semver.inc(version, 'patch') + '-SNAPSHOT';
+    grunt.log.writeln('Bumping development version to ' + nextSnapshotVersion);
+    grunt.option('setversion', nextSnapshotVersion);
+
+    grunt.task.run([
+      'bump',
+      'build:test',
       'artifactory:test:publish'
     ]);
   });
