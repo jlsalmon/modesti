@@ -1,12 +1,9 @@
 package cern.modesti.security.ldap;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import cern.modesti.user.Role;
 import cern.modesti.user.User;
 import cern.modesti.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -15,6 +12,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import static java.lang.String.format;
 
 /**
  * This class is responsible for mapping the attributes of an LDAP user object
@@ -29,6 +32,7 @@ import org.springframework.stereotype.Component;
  * @author Justin Lewis Salmon
  */
 @Component
+@Slf4j
 public class LdapUserDetailsMapper implements UserDetailsContextMapper {
 
   @Autowired
@@ -40,8 +44,8 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
   @Override
   public UserDetails mapUserFromContext(DirContextOperations context, String username, Collection<? extends GrantedAuthority> grantedAuthorities) {
     User user = new User();
+    user.setId(Integer.valueOf(context.getStringAttribute("employeeID")));
     user.setUsername(username);
-    user.setEmployeeId(Integer.valueOf(context.getStringAttribute("employeeID")));
     user.setFirstName(context.getStringAttribute("givenName"));
     user.setLastName(context.getStringAttribute("sn"));
     user.setEmail(context.getStringAttribute("mail"));
@@ -76,6 +80,7 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
 
     // Add this user to the database if they haven't logged in before.
     if (userRepository.findOneByUsername(username) == null) {
+      log.info(format("adding previously unknown user %s to database", username));
       userRepository.save(user);
     }
 

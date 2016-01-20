@@ -1,6 +1,7 @@
 package cern.modesti.user;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -20,17 +21,17 @@ import java.util.Set;
  */
 @Document
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
 
   private static final long serialVersionUID = -8591164895383946725L;
 
   @Id
-  @Indexed
-  private String username;
+  private Integer id;
 
   @Indexed
-  private Integer employeeId;
+  private String username;
 
   @Indexed
   private String firstName;
@@ -44,15 +45,6 @@ public class User implements UserDetails {
   @Indexed
   @JsonDeserialize(contentAs = Role.class)
   private List<Role> authorities = new ArrayList<>();
-
-  public User(String username, Integer employeeId, String firstName, String lastName, String email, List<Role> authorities) {
-    this.username = username;
-    this.employeeId = employeeId;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.authorities = authorities;
-  }
 
   @Override
   public String getPassword() {

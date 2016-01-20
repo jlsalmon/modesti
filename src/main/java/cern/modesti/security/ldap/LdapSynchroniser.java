@@ -74,8 +74,8 @@ public class LdapSynchroniser {
 
         if (user == null) {
           user = new User();
+          user.setId(Integer.valueOf(adapter.getStringAttribute("employeeID")));
           user.setUsername(username);
-          user.setEmployeeId(Integer.valueOf(adapter.getStringAttribute("employeeID")));
           user.setFirstName(adapter.getStringAttribute("givenName"));
           user.setLastName(adapter.getStringAttribute("sn"));
           user.setEmail(adapter.getStringAttribute("mail"));
