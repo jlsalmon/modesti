@@ -1134,7 +1134,9 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
 
     // Check if we need to fill in a default value for this point.
     var field = Utils.getField(self.schema, props[0]);
-    setDefaultValue(point, field);
+    if (field) {
+      setDefaultValue(point, field);
+    }
 
     // Highlight errors in a cell by making the background red.
     for (var i in point.errors) {
