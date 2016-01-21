@@ -42,7 +42,7 @@ function AssignmentModalController($modalInstance, $http, task) {
   function parseQuery(query) {
     var q = 'authorities.authority =in= (' + task.candidateGroups.join() + ')';
 
-    if (query.length != 0) {
+    if (query.length !== 0) {
       q += ' and (username == ' + query;
       q += ' or firstName == ' + query;
       q += ' or lastName == ' + query + ')';
