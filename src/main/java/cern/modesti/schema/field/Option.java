@@ -1,6 +1,8 @@
 package cern.modesti.schema.field;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * TODO
@@ -8,7 +10,9 @@ import lombok.Data;
  * @author Justin Lewis Salmon
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Option {
-  private final Integer id;
-  private final String value;
+  private Object value;
+  private Object description;
 }
