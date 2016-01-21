@@ -194,6 +194,7 @@ function SchemaService($q, $http, Utils) {
         // case, we ignore all params except the first one and bind the query string to it.
         else {
           params[field.params[0]] = query;
+          params[field.params[1]] = '';
         }
       }
     }
