@@ -25,14 +25,10 @@ function AssignmentModalController($modalInstance, $http, task) {
     $modalInstance.dismiss('cancel');
   }
 
-  /**
-   * TODO: which authority to assign to? I guess all...
-   */
   function refreshUsers(query) {
-    return $http.get(BACKEND_BASE_URL + '/users/search/find', {
+    return $http.get(BACKEND_BASE_URL + '/users/search', {
       params : {
-        query : query,
-        authority: task.candidateGroups[1]
+        query : parseQuery(query)
       }
     }).then(function(response) {
       if (!response.data.hasOwnProperty('_embedded')) {
@@ -41,5 +37,18 @@ function AssignmentModalController($modalInstance, $http, task) {
 
       self.users = response.data._embedded.users;
     });
+  }
+
+  function parseQuery(query) {
+    var q = 'authorities.authority =in= (' + task.candidateGroups.join() + ')';
+
+    if (query.length != 0) {
+      q += ' and (username == ' + query;
+      q += ' or firstName == ' + query;
+      q += ' or lastName == ' + query + ')';
+    }
+
+    console.log('parsed query: ' + query);
+    return q;
   }
 }
