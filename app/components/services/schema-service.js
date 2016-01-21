@@ -487,8 +487,8 @@ function SchemaService($q, $http, Utils) {
 
           if (response.data._embedded.subsystems.length === 1) {
             var subsystem = response.data._embedded.subsystems[0];
-            systemName = subsystem.system;
-            subsystemName = subsystem.subsystem;
+            systemName = subsystem.systemName;
+            subsystemName = subsystem.subsystemName;
           }
 
           if (point.properties.functionality && point.properties.functionality.value) {
@@ -587,7 +587,7 @@ function SchemaService($q, $http, Utils) {
 
             if (response.data._embedded.subsystems.length === 1) {
               var subsystem = response.data._embedded.subsystems[0];
-              systemName = subsystem.system;
+              systemName = subsystem.systemName;
             }
 
             if (point.properties.functionality && point.properties.functionality.value) {
