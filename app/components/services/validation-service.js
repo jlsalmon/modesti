@@ -577,17 +577,17 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
       return true;
     }
 
-    // If we have an options field, check that the value is in the static list of options
+    // If we have an options field, check that the value is in the list of options
     if (field.type === 'options' && field.options && field.options instanceof Array) {
+
       for (var key in field.options) {
         var option = field.options[key];
 
-        if (value !== undefined && value !== null && value !== '' && value === option) {
+        if (typeof option === 'object' && value === option.value) {
           return true;
         }
 
-        // Fiddle with the meaning and check again
-        if (value !== undefined && value !== null && value !== '' && (value === option.split(':')[0] || value === option.replace(':', ''))) {
+        if (typeof option === 'string' && value === option) {
           return true;
         }
       }

@@ -94,8 +94,18 @@ function ColumnService($translate, SchemaService) {
   function getDropdownColumn(column, field) {
     column.editor = 'select2';
 
+    var options = field.options.map(function (option) {
+      if (typeof option === 'object') {
+        return {id: option.value, text: option.value + ': ' + option.description};
+      }
+
+      else if (typeof (option === 'string')) {
+        return {id: option, text: option};
+      }
+    });
+
     column.select2Options = {
-      data: {results: field.options.map(function (option) { return {id: option, text: option}; })},
+      data: {results: options},
       dropdownAutoWidth: true
     };
 
