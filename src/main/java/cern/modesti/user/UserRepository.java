@@ -16,18 +16,18 @@ public interface UserRepository extends MongoRepository<User, String>, QueryDslP
 
   User findOneByUsername(@Param("username") String username);
 
-  @Query("{ '$or':  [                                               " +
-         "    { '_id': '?0' },                                      " +
-         "    { 'employeeId': { '$regex': '^?0', $options: 'i' } }, " +
-         "    { 'username':   { '$regex': '^?0', $options: 'i' } }, " +
-         "    { 'firstName':  { '$regex': '^?0', $options: 'i' } }, " +
-         "    { 'lastName':   { '$regex': '^?0', $options: 'i' } }  " +
-         "  ],                                                      " +
-         "  '$and': [                                               " +
-         "    { 'authorities.authority': '?1' }                     " +
-         "  ]                                                       " +
-         "}                                                         ")
-  List<User> find(@Param("query") String query, @Param("authority") String authority);
+//  @Query("{ '$or':  [                                               " +
+//         "    { '_id': '?0' },                                      " +
+//         "    { 'employeeId': { '$regex': '^?0', $options: 'i' } }, " +
+//         "    { 'username':   { '$regex': '^?0', $options: 'i' } }, " +
+//         "    { 'firstName':  { '$regex': '^?0', $options: 'i' } }, " +
+//         "    { 'lastName':   { '$regex': '^?0', $options: 'i' } }  " +
+//         "  ],                                                      " +
+//         "  '$and': [                                               " +
+//         "    { 'authorities.authority': '?1' }                     " +
+//         "  ]                                                       " +
+//         "}                                                         ")
+//  List<User> find(@Param("query") String query, @Param("authority") String authority);
 
 //  @Override
 //  default void customize(QuerydslBindings bindings, QUser root) {

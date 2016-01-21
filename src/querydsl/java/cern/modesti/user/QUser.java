@@ -30,11 +30,11 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath email = createString("email");
 
+    public final NumberPath<Integer> employeeId = createNumber("employeeId", Integer.class);
+
     public final BooleanPath enabled = createBoolean("enabled");
 
     public final StringPath firstName = createString("firstName");
-
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
     public final StringPath lastName = createString("lastName");
 

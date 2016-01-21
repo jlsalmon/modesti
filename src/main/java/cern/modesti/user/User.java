@@ -17,6 +17,8 @@ import java.util.Set;
 /**
  * TODO
  *
+ * Note: the username is marked as {@link Id} to support secondary accounts where the CERN ID is the same.
+ *
  * @author Justin Lewis Salmon
  */
 @Document
@@ -28,10 +30,11 @@ public class User implements UserDetails {
   private static final long serialVersionUID = -8591164895383946725L;
 
   @Id
-  private Integer id;
-
   @Indexed
   private String username;
+
+  @Indexed
+  private Integer employeeId;
 
   @Indexed
   private String firstName;

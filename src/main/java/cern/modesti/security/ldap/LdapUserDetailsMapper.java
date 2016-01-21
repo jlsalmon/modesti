@@ -44,7 +44,7 @@ public class LdapUserDetailsMapper implements UserDetailsContextMapper {
   @Override
   public UserDetails mapUserFromContext(DirContextOperations context, String username, Collection<? extends GrantedAuthority> grantedAuthorities) {
     User user = new User();
-    user.setId(Integer.valueOf(context.getStringAttribute("employeeID")));
+    user.setEmployeeId(Integer.valueOf(context.getStringAttribute("employeeID")));
     user.setUsername(username);
     user.setFirstName(context.getStringAttribute("givenName"));
     user.setLastName(context.getStringAttribute("sn"));
