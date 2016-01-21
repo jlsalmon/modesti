@@ -3,8 +3,6 @@ package cern.modesti.request.point.search;
 import cern.modesti.plugin.RequestProvider;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Point;
-import cern.modesti.request.search.RsqlExpressionBuilder;
-import com.mysema.query.types.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

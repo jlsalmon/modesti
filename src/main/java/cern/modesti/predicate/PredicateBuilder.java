@@ -1,4 +1,4 @@
-package cern.modesti.request.search;
+package cern.modesti.predicate;
 
 import com.mysema.query.types.expr.BooleanExpression;
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;

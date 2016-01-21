@@ -1,4 +1,4 @@
-package cern.modesti.request.search;
+package cern.modesti.predicate;
 
 import com.google.common.base.CaseFormat;
 import com.mysema.query.types.expr.BooleanExpression;

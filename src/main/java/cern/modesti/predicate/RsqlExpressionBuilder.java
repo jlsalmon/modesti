@@ -1,4 +1,4 @@
-package cern.modesti.request.search;
+package cern.modesti.predicate;
 
 import com.mysema.query.types.Predicate;
 import com.mysema.query.types.expr.BooleanExpression;

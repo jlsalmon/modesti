@@ -1,4 +1,4 @@
-package cern.modesti.request.search;
+package cern.modesti.predicate;
 
 import cz.jirutka.rsql.parser.ast.ComparisonOperator;
 import lombok.AllArgsConstructor;
