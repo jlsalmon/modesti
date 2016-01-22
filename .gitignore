@@ -1,6 +1,7 @@
 /bin/
 /build/
 /data/
+/out/
 .rest-shell.log
 spring-shell.log
 .springBeans
