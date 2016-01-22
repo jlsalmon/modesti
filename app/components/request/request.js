@@ -1162,7 +1162,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     var currentValue;
 
     if (field.type === 'autocomplete') {
-      if (point.properties.hasOwnProperty(field.id)) {
+      if (point.properties.hasOwnProperty(field.id) && point.properties[field.id]) {
         currentValue = field.model ? point.properties[field.id][field.model] : point.properties[field.id].value;
       }
     } else {

@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('PointsController', PointsController);
 
-function PointsController(schemas, PointService, SchemaService, Utils) {
+function PointsController($modal, $state, schemas, PointService, SchemaService, RequestService, Utils) {
   var self = this;
 
   self.schemas = schemas;
@@ -24,6 +24,9 @@ function PointsController(schemas, PointService, SchemaService, Utils) {
   self.onPageChanged = onPageChanged;
   self.activateCategory = activateCategory;
   self.queryFieldValues = queryFieldValues;
+  self.updatePoints = updatePoints;
+  self.getOptionValue = getOptionValue;
+  self.getOptionDisplayValue = getOptionDisplayValue;
 
 
   // Load TIM domain by default
@@ -48,7 +51,6 @@ function PointsController(schemas, PointService, SchemaService, Utils) {
       }
     });
   }
-
 
   /**
    *
@@ -151,6 +153,46 @@ function PointsController(schemas, PointService, SchemaService, Utils) {
   /**
    *
    */
+  function updatePoints() {
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/point/modals/update-points-modal.html',
+      controller: 'UpdatePointsModalController as ctrl',
+      size: 'lg',
+      resolve: {
+        points: function () {
+          return self.points;
+        },
+        schema: function () {
+          return self.schema;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (request) {
+      console.log('creating update request');
+
+      self.submitting = 'started';
+
+      // Post form to server to create new request.
+      RequestService.createRequest(request).then(function(location) {
+          // Strip request ID from location.
+          var id = location.substring(location.lastIndexOf('/') + 1);
+          // Redirect to point entry page.
+          $state.go('request', { id: id }).then(function () {
+            self.submitting = 'success';
+          });
+        },
+
+        function () {
+          self.submitting = 'error';
+        });
+    });
+  }
+
+  /**
+   *
+   */
   function onPageChanged() {
     search();
   }
@@ -174,5 +216,23 @@ function PointsController(schemas, PointService, SchemaService, Utils) {
    */
   function queryFieldValues(field, value) {
     return SchemaService.queryFieldValues(field, value);
+  }
+
+  /**
+   *
+   * @param option
+   * @returns {*}
+   */
+  function getOptionValue(option) {
+    return typeof option === 'object' ? option.value : option;
+  }
+
+  /**
+   *
+   * @param option
+   * @returns {string}
+   */
+  function getOptionDisplayValue(option) {
+    return typeof option === 'object' ? option.value + (option.description ? ': ' + option.description : '') : option;
   }
 }

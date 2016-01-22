@@ -1,0 +1,50 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Modify points
+  </h3>
+</div>
+
+<div class="modal-body">
+
+  <p>You are about to create a new MODESTI request to update <b>{{ctrl.points.length}}</b> points.</p>
+
+
+    <form class="form-horizontal" name="form">
+
+      <div class="form-group has-feedback"
+           ng-class="{ 'has-error': (form.description.$invalid && form.description.$dirty)
+                                    || (form.$submitted && form.description.$invalid) }">
+        <label class="col-sm-3 control-label" translate>DESCRIPTION</label>
+
+        <div class="col-sm-9">
+          <input type="text" class="form-control" ng-model="ctrl.request.description" name="description"
+                 placeholder="Description" required>
+          <span class="help-block" translate>ENTER_DESCRIPTION</span>
+        </div>
+      </div>
+
+      <div class="form-group has-feedback"
+           ng-class="{ 'has-error': (form.$submitted && form.system.$invalid) }">
+        <label class="col-sm-3 control-label">
+          {{'SYSTEM_SUBSYSTEM'|translate}}
+          <i class="fa fa-fw fa-sitemap"></i>
+        </label>
+        <div class="col-sm-9">
+
+          <input type="text" ng-model="ctrl.request.subsystem" placeholder="System/Subsystem" autocomplete="off"
+                 typeahead="subsystem.value as subsystem.value for subsystem in ctrl.getSubsystems($viewValue)"
+                 typeahead-loading="loadingSubsystems"
+                 typeahead-editable="false" class="form-control" name="system" required>
+          <i ng-show="loadingSubsystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
+          <span class="help-block" translate>SELECT_SUBSYSTEM</span>
+        </div>
+      </div>
+
+    </form>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="ctrl.cancel()" translate>CANCEL</button>
+  <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="form.$invalid">OK</button>
+</div>
