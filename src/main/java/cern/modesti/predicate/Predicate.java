@@ -5,10 +5,11 @@ import com.mysema.query.types.expr.BooleanExpression;
 import com.mysema.query.types.path.*;
 import lombok.AllArgsConstructor;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import static cz.jirutka.rsql.parser.ast.RSQLOperators.*;
-import static org.apache.commons.lang3.StringUtils.isNumeric;
+import static java.lang.String.format;
 
 /**
  * TODO
@@ -32,33 +33,38 @@ public class Predicate<T> {
     final List<String> args = criteria.getArguments();
     String argument = args.get(0);
 
+    Field field = getField(criteria.getKey(), klass);
+
+    boolean isString = false, isNumeric = false;
+    if (field.getType().isAssignableFrom(String.class)) {
+      isString = true;
+    } else if (field.getType().isAssignableFrom(Integer.class) || field.getType().isAssignableFrom(Long.class)) {
+      isNumeric = true;
+    }
+
     if (EQUAL.equals(criteria.getOperation())) {
-//      if (isNumeric(argument)) {
-//        NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
-//        int value = Integer.parseInt(argument);
-//        return path.eq(value);
-//      }
-//        else if (argument == null) {
-//
-//        }
-//      else {
+      if (isNumeric) {
+        NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
+        int value = Integer.parseInt(argument);
+        return path.eq(value);
+      }
+      else if (isString) {
         StringPath path = entityPath.getString(criteria.getKey());
-        //return path.containsIgnoreCase(argument);
         return path.startsWithIgnoreCase(argument);
-//      }
+      }
+      else {
+        throw new RuntimeException(format("Field type %s is not currently supported", field.getType()));
+      }
     }
 
     // TODO implement remaining operations
     else if (NOT_EQUAL.equals(criteria.getOperation())) {
-      if (isNumeric(argument)) {
+      if (isNumeric) {
         NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
         int value = Integer.parseInt(argument);
         return path.ne(value);
-//          return builder.notLike(root.<String>get(property), argument.toString().replace('*', '%'));
+        // return builder.notLike(root.<String>get(property), argument.toString().replace('*', '%'));
       }
-//        else if (argument == null) {
-//
-//        }
       else {
         StringPath path = entityPath.getString(criteria.getKey());
         return path.notLike(argument);
@@ -112,6 +118,35 @@ public class Predicate<T> {
     else {
       return null;
     }
+  }
+
+  /**
+   *
+   * @param fieldName
+   * @param klass
+   * @return
+   */
+  private Field getField(String fieldName, Class<T> klass) {
+    Field field;
+    String nestedFieldName = null;
+
+    if (fieldName.contains(".")) {
+      String[] parts = fieldName.split("\\.");
+      fieldName = parts[0];
+      nestedFieldName = parts[1];
+    }
+
+    try {
+      field = klass.getDeclaredField(fieldName);
+
+      if (nestedFieldName != null) {
+        field = field.getType().getDeclaredField(nestedFieldName);
+      }
+    } catch (NoSuchFieldException e) {
+      throw new RuntimeException("Error creating predicate", e);
+    }
+
+    return field;
   }
 
 //    if (isNumeric(criteria.getValue().toString())) {
