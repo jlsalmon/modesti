@@ -37,7 +37,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">
 
-        <div class="btn-group form-group" dropdown>
+        <div class="btn-group form-group" dropdown style="display: inline;">
           <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
             <i class="fa fa-fw fa-crosshairs"></i>
             Domain: {{ctrl.schema.id}} <span class="caret"></span>
@@ -52,6 +52,36 @@
             </li>
           </ul>
         </div>
+
+        <!--<div class="request-category-selector">-->
+          <!-- Dropdown button to select category -->
+          <div class="btn-group toolbar-item" dropdown>
+            <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+              <span class="text-muted">category:</span>
+              {{ctrl.activeCategory.name_en}} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li ng-repeat="category in ctrl.schema.categories"
+                  ng-click="ctrl.activateCategory(category)">
+                <a href="">
+                <span>{{::category.name_en}}
+                <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
+                </a>
+              </li>
+
+              <li class="divider"></li>
+
+              <li ng-repeat="datasource in ctrl.schema.datasources"
+                  ng-click="ctrl.activateCategory(datasource)">
+                <a href="">
+                <span>{{::datasource.name_en}}
+                <i ng-if="datasource.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <button class="btn btn-primary" ng-click="ctrl.search()">Search</button>
+        <!--</div>-->
 
         <!--<form class="form-group form">-->
           <!--<div class="input-group">-->
@@ -118,36 +148,6 @@
 
           <!--<button class="btn btn-primary" type="submit" ng-click="ctrl.search()">Search</button>-->
         <!--</form>-->
-
-        <div class="request-category-selector">
-          <!-- Dropdown button to select category -->
-          <div class="btn-group toolbar-item" dropdown>
-            <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-              <span class="text-muted">category:</span>
-              {{ctrl.activeCategory.name_en}} <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <li ng-repeat="category in ctrl.schema.categories"
-                  ng-click="ctrl.activateCategory(category)">
-                <a href="">
-                <span>{{::category.name_en}}
-                <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
-                </a>
-              </li>
-
-              <li class="divider"></li>
-
-              <li ng-repeat="datasource in ctrl.schema.datasources"
-                  ng-click="ctrl.activateCategory(datasource)">
-                <a href="">
-                <span>{{::datasource.name_en}}
-                <i ng-if="datasource.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <button class="btn btn-primary" ng-click="ctrl.search()">Search</button>
-        </div>
 
       </div>
 
