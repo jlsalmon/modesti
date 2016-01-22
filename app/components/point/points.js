@@ -26,8 +26,13 @@ function PointsController(schemas, PointService, SchemaService, Utils) {
   self.queryFieldValues = queryFieldValues;
 
 
-  // Load default domain
-  useDomain(self.domains[0]);
+  // Load TIM domain by default
+  self.domains.forEach(function (domain) {
+    if (domain === 'TIM') {
+      useDomain(domain);
+    }
+  });
+
   self.activeCategory = self.schema.categories[0];
 
   search();
