@@ -33,16 +33,16 @@ public class Predicate<T> {
     final List<String> args = criteria.getArguments();
     String argument = args.get(0);
 
-    Field field = getField(criteria.getKey(), klass);
-
-    boolean isString = false, isNumeric = false;
-    if (field.getType().isAssignableFrom(String.class)) {
-      isString = true;
-    } else if (field.getType().isAssignableFrom(Integer.class) || field.getType().isAssignableFrom(Long.class)) {
-      isNumeric = true;
-    }
-
     if (EQUAL.equals(criteria.getOperation())) {
+      Field field = getField(criteria.getKey(), klass);
+
+      boolean isString = false, isNumeric = false;
+      if (field.getType().isAssignableFrom(String.class)) {
+        isString = true;
+      } else if (field.getType().isAssignableFrom(Integer.class) || field.getType().isAssignableFrom(Long.class)) {
+        isNumeric = true;
+      }
+
       if (isNumeric) {
         NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
         int value = Integer.parseInt(argument);
@@ -59,6 +59,15 @@ public class Predicate<T> {
 
     // TODO implement remaining operations
     else if (NOT_EQUAL.equals(criteria.getOperation())) {
+      Field field = getField(criteria.getKey(), klass);
+
+      boolean isString = false, isNumeric = false;
+      if (field.getType().isAssignableFrom(String.class)) {
+        isString = true;
+      } else if (field.getType().isAssignableFrom(Integer.class) || field.getType().isAssignableFrom(Long.class)) {
+        isNumeric = true;
+      }
+
       if (isNumeric) {
         NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
         int value = Integer.parseInt(argument);
