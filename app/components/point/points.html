@@ -31,210 +31,176 @@
   <!--</section>-->
 <!--</aside>-->
 
-<!--<div class="content-wrapper">-->
-  <section class="content">
 
-    <div class="alert alert-warning">
-      <b><i class="icon fa fa-ban"></i> Warning!</b>
-      This functionality is still in beta stage. Use at your own risk.
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-
-        <div class="btn-group" dropdown>
-          <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-            <i class="fa fa-fw fa-crosshairs"></i>
-            Domain: {{ctrl.schema.id}} <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <li ng-repeat="domain in ctrl.domains">
-              <a href="" ng-click="ctrl.useDomain(domain)">{{domain}}</a>
-            </li>
-          </ul>
-        </div>
+<!-- Alerts are shown here -->
+<div class="alert-messages">
+  <alert ng-repeat="alert in alerts"  type="{{alert.type}}" close="alert.close()">
+    <span ng-bind-html="alert.message"></span>
+  </alert>
+</div>
 
 
-        <!-- Dropdown button to select category -->
-        <div class="btn-group" dropdown>
-          <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-            <span class="text-muted">category:</span>
-            {{ctrl.activeCategory.name_en}} <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li ng-repeat="category in ctrl.schema.categories"
-                ng-click="ctrl.activateCategory(category)">
-              <a href="">
-              <span>{{::category.name_en}}
-              <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
-              </a>
-            </li>
 
-            <li class="divider"></li>
 
-            <li ng-repeat="datasource in ctrl.schema.datasources"
-                ng-click="ctrl.activateCategory(datasource)">
-              <a href="">
-              <span>{{::datasource.name_en}}
-              <i ng-if="datasource.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
-              </a>
-            </li>
-          </ul>
-        </div>
 
-        <!-- Search button -->
-        <button class="btn btn-primary" ng-click="ctrl.search()">Search</button>
 
-        <!-- "Modify points" button -->
-        <button class="btn btn-warning pull-right" ng-click="ctrl.updatePoints()">Update selected points</button>
 
-        <!--<form class="form-group form">-->
-          <!--<div class="input-group">-->
-            <!--<input type="text" id="searchQuery" name="searchQuery" class="form-control" ng-model="ctrl.query">-->
-              <!--<span class="input-group-btn">-->
-                <!--<input class="btn btn-default" type="submit" ng-click="ctrl.search()">Submit</input>-->
-              <!--</span>-->
-          <!--</div>-->
-        <!--</form>-->
+<section class="request-header container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
 
-        <!--<form class="form-horizontal" ng-submit="ctrl.search()" novalidate>-->
+      <div class="pull-left">
+        <h4 class="request-id">
+          <i class="fa fa-list-ol fa-fw text-muted"></i>
+          Search for requests
+        </h4>
+      </div>
 
-          <!--<div class="form-group" ng-repeat="filter in ctrl.filters">-->
-            <!--<div class="col-sm-11">-->
-              <!--<div class="input-group">-->
+      <div class="pull-right">
 
-                <!--<div class="input-group-btn">-->
 
-                  <!--<select selectpicker class="selectpicker" ng-model="filter.field" data-width="auto">-->
-                    <!--<optgroup ng-repeat="category in ctrl.schema.categories" label="{{category.name_en}}">-->
-                      <!--<option ng-repeat="field in category.fields" value="{{field}}" ng-if="field.type !== 'autocomplete'">-->
-                        <!--{{field.name_en}}-->
-                      <!--</option>-->
-                    <!--</optgroup>-->
-                  <!--</select>-->
-
-                  <!--<select selectpicker class="selectpicker" ng-model="filter.operation" data-width="auto">-->
-                    <!--<option>equals</option>-->
-                    <!--<option>not equals</option>-->
-                    <!--<option>like</option>-->
-                    <!--<option>not like</option>-->
-                    <!--<option>in</option>-->
-                    <!--<option>not in</option>-->
-                  <!--</select>-->
-                <!--</div>-->
-
-                <!--<div ng-if="filter.field.type === 'text'">-->
-                  <!--<input type="text" class="form-control" ng-model="filter.value">-->
-                <!--</div>-->
-
-                <!--<div ng-if="filter.field.type === 'numeric'">-->
-                  <!--<input type="number" class="form-control" ng-model="filter.value">-->
-                <!--</div>-->
-
-                <!--<div ng-if="filter.field.type === 'options'">-->
-                  <!--<select selectpicker class="selectpicker" ng-model="filter.value" data-width="auto">-->
-                    <!--<option ng-repeat="option in filter.field.options" value="{{option}}">-->
-                      <!--{{option}}-->
-                    <!--</option>-->
-                  <!--</select>-->
-                <!--</div>-->
-
-              <!--</div>-->
-            <!--</div>-->
-
-            <!--<span class="col-sm-1">-->
-              <!--<a class="btn btn-default pull-right" ng-click="ctrl.deleteFilter(filter)" tooltip="Delete filter" tooltip-append-to-body="true">-->
-                <!--<i class="fa fa-minus text-danger"></i>-->
-              <!--</a>-->
-            <!--</span>-->
-          <!--</div>-->
-
-          <!--<a class="btn btn-primary" ng-click="ctrl.addFilter()" tooltip="Add filter" tooltip-append-to-body="true"><i class="fa fa-plus"></i></a>-->
-
-          <!--<button class="btn btn-primary" type="submit" ng-click="ctrl.search()">Search</button>-->
-        <!--</form>-->
 
       </div>
 
-      <!--<div class="panel-body">-->
-        <!--<alert ng-if="ctrl.error" type="danger">{{ctrl.error.status}} {{ctrl.error.statusText}}</alert>-->
-        <!--filters: {{ctrl.filters}}-->
-        <!--<br/>-->
-        <!--query: {{ctrl.query}}-->
-      <!--</div>-->
+    </div>
+  </div>
+</section>
 
-      <style>
-        .table-wrapper {
-          position: relative;
-          min-height: 544px;
-        }
-      </style>
+<!-- Alerts are shown here -->
+<div class="alert-messages">
+  <alert ng-repeat="alert in alerts"  type="{{alert.type}}" close="alert.close()">
+    <span ng-bind-html="alert.message"></span>
+  </alert>
+</div>
 
-      <div class="table-wrapper">
-        <table class="table table-bordered table-hover table-condensed">
-          <thead>
-            <tr>
-              <th ng-repeat="field in ctrl.activeCategory.fields">
-                {{field.name_en}}
-              </th>
-            </tr>
 
-            <tr>
-              <th ng-repeat="field in ctrl.activeCategory.fields">
-                <div ng-if="field.type === 'text'">
-                  <input type="text" class="form-control" ng-model="ctrl.filters[field.id].value" ng-change="ctrl.search()">
-                </div>
+<section class="toolbar container-fluid">
 
-                <div ng-if="field.type === 'numeric'">
-                  <input type="number" class="form-control" ng-model="ctrl.filters[field.id].value" ng-change="ctrl.search()">
-                </div>
+  <div class="row">
+    <div class="col-lg-12">
 
-                <div ng-if="field.type === 'options'">
+      <div class="btn-group" dropdown>
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+          <i class="fa fa-fw fa-crosshairs"></i>
+          Domain: {{ctrl.schema.id}} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li ng-repeat="domain in ctrl.domains">
+            <a href="" ng-click="ctrl.useDomain(domain)">{{domain}}</a>
+          </li>
+        </ul>
+      </div>
 
-                  <select class="form-control"
-                          ng-options="ctrl.getOptionValue(option) as
+
+      <!-- Dropdown button to select category -->
+      <div class="btn-group" dropdown>
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+          <span class="text-muted">category:</span>
+          {{ctrl.activeCategory.name_en}} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li ng-repeat="category in ctrl.schema.categories"
+              ng-click="ctrl.activateCategory(category)">
+            <a href="">
+              <span>{{::category.name_en}}
+              <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
+            </a>
+          </li>
+
+          <li class="divider"></li>
+
+          <li ng-repeat="datasource in ctrl.schema.datasources"
+              ng-click="ctrl.activateCategory(datasource)">
+            <a href="">
+              <span>{{::datasource.name_en}}
+              <i ng-if="datasource.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Search button -->
+      <button class="btn btn-sm btn-primary" ng-click="ctrl.search()">Search</button>
+
+      <!-- "Modify points" button -->
+      <button class="btn btn-sm btn-warning pull-right" ng-click="ctrl.updatePoints()">Update selected points</button>
+
+
+
+      <div class="pull-right">
+
+        <!-- Actions dropdown -->
+        <div class="btn-group toolbar-item" dropdown dropdown-append-to-body>
+          <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+            <i class="fa fa-fw fa-cog"></i> Actions <span class="caret text-muted"></span>
+          </button>
+          <ul class="dropdown-menu pull-right">
+            <li>
+              <a ng-click="ctrl.cloneRequest()">Clone request</a>
+            </li>
+            <li>
+              <a ng-click="ctrl.deleteRequest()" ng-if="ctrl.isCurrentUserAuthorised()">Delete request</a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+<section class="table" style="overflow: hidden; height: 600px;">
+  <div class="table-wrapper">
+    <table class="table table-bordered table-hover table-condensed">
+      <thead>
+      <tr>
+        <th ng-repeat="field in ctrl.activeCategory.fields">
+          {{field.name_en}}
+        </th>
+      </tr>
+
+      <tr>
+        <th ng-repeat="field in ctrl.activeCategory.fields">
+          <div ng-if="field.type === 'text'">
+            <input type="text" class="form-control" ng-model="ctrl.filters[field.id].value" ng-change="ctrl.search()">
+          </div>
+
+          <div ng-if="field.type === 'numeric'">
+            <input type="number" class="form-control" ng-model="ctrl.filters[field.id].value" ng-change="ctrl.search()">
+          </div>
+
+          <div ng-if="field.type === 'options'">
+
+            <select class="form-control"
+                    ng-options="ctrl.getOptionValue(option) as
                                       ctrl.getOptionDisplayValue(option)
                                       for option in field.options"
-                          ng-model="ctrl.filters[field.id].value"
-                          ng-change="ctrl.search()">
-                    <option value=""></option>
-                  </select>
+                    ng-model="ctrl.filters[field.id].value"
+                    ng-change="ctrl.search()">
+              <option value=""></option>
+            </select>
 
-                </div>
+          </div>
 
-                <div ng-if="field.type === 'autocomplete'">
-                  <!--<ui-select ng-model="ctrl.filters[field.id].value" theme="bootstrap">-->
-                    <!--<ui-select-match placeholder="Search...">{{$select.selected.value}}</ui-select-match>-->
-                    <!--<ui-select-choices repeat="user in ctrl.users track by $index"-->
-                                       <!--refresh="ctrl.refreshUsers($select.search)"-->
-                                       <!--refresh-delay="0">-->
-                      <!--<div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>-->
-                      <!--<small>-->
-                        <!--<span style="color: #c7c7c7;" ng-bind-html="''+user.username | highlight: $select.search"></span>-->
-                      <!--</small>-->
-                    <!--</ui-select-choices>-->
-                  <!--</ui-select>-->
+          <div ng-if="field.type === 'autocomplete'">
 
-                  <input type="text" class="form-control" autocomplete="off" placeholder="Type to search..."
-                         ng-model="ctrl.filters[field.id].value"
-                         typeahead="(field.model ? item[field.model] : item.value) for item in ctrl.queryFieldValues(field, $viewValue)"
+            <input type="text" class="form-control" autocomplete="off" placeholder="Type to search..."
+                   ng-model="ctrl.filters[field.id].value"
+                   typeahead="(field.model ? item[field.model] : item.value) for item in ctrl.queryFieldValues(field, $viewValue)"
+                   typeahead-on-select="ctrl.search()"
+                   typeahead-append-to-body="true">
 
-                         typeahead-on-select="ctrl.search()"
+          </div>
+        </th>
+      </tr>
+      </thead>
 
-                         typeahead-append-to-body="true">
-
-                  <!--typeahead-editable="false"-->
-                  <!--typeahead-loading="loading_{{field.id}}"-->
-                  <!--<i ng-show="loading_{{field.id}}" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>-->
-
-                </div>
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr ng-repeat="point in ctrl.points">
-              <td ng-repeat="field in ctrl.activeCategory.fields">
+      <tbody>
+      <tr ng-repeat="point in ctrl.points">
+        <td ng-repeat="field in ctrl.activeCategory.fields">
 
                 <span ng-if="field.type === 'autocomplete'">
                   <span ng-if="field.model">
@@ -254,45 +220,45 @@
                              point.properties[field.id] == ''">
                   &nbsp;
                 </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
-        <style>
-          .loading-overlay {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255,255,255,0.7);
-          }
+    <style>
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255,255,255,0.7);
+      }
 
-          .loading-overlay i  {
-            position: absolute;
-            width: 100%;
-            top: 46.5%;
-            text-align: center;
-            vertical-align: middle;
-          }
+      .loading-overlay i  {
+        position: absolute;
+        width: 100%;
+        top: 46.5%;
+        text-align: center;
+        vertical-align: middle;
+      }
 
-          .bg-grey {
-            background-color: #fafafa;
-          }
-        </style>
+      .bg-grey {
+        background-color: #fafafa;
+      }
+    </style>
 
-        <div class="loading-overlay" ng-if="ctrl.loading == 'started' || ctrl.loading == 'error'">
-          <span us-spinner ng-if="ctrl.loading === 'started'"></span>
-          <i class="fa fa-3x fa-exclamation-triangle" ng-if="ctrl.loading === 'error'"></i>
-        </div>
-
-      </div>
-
+    <div class="loading-overlay" ng-if="ctrl.loading == 'started' || ctrl.loading == 'error'">
+      <span us-spinner ng-if="ctrl.loading === 'started'"></span>
+      <i class="fa fa-3x fa-exclamation-triangle" ng-if="ctrl.loading === 'error'"></i>
     </div>
 
+  </div>
+</section>
 
 
 
+<footer class="footer">
+  <div class="toolbar container-fluid">
 
     <div class="pull-left" ng-if="ctrl.points.length > 0">
       <pagination boundary-links="true"
@@ -313,13 +279,7 @@
       page {{ctrl.page.number}} of {{ctrl.page.totalPages}} &middot; {{ctrl.page.totalElements}} points in total for this filter
     </div>
 
-    <br /><br />
-    <div>
-      {{ctrl.filters}}
-    </div>
-  </section>
-<!--</div>-->
-
-
+  </div>
+</footer>
 
 

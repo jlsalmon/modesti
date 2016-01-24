@@ -1070,7 +1070,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   }
 
   /**
-   * Calculate the required height for the table so tha tit fills the screen.
+   * Calculate the required height for the table so that it fills the screen.
    */
   function calculateTableHeight() {
     var mainHeader = $('.main-header');

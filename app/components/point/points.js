@@ -27,7 +27,9 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
   self.updatePoints = updatePoints;
   self.getOptionValue = getOptionValue;
   self.getOptionDisplayValue = getOptionDisplayValue;
+  self.calculateTableHeight = calculateTableHeight;
 
+  calculateTableHeight();
 
   // Load TIM domain by default
   self.domains.forEach(function (domain) {
@@ -36,8 +38,9 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
     }
   });
 
-  self.activeCategory = self.schema.categories[0];
+  AlertService.add('warning', '<b><i class="icon fa fa-ban"></i>Warning!</b> This functionality is still in alpha stage. Use at your own risk.');
 
+  self.activeCategory = self.schema.categories[0];
   search();
 
   /**
@@ -239,5 +242,27 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
    */
   function getOptionDisplayValue(option) {
     return typeof option === 'object' ? option.value + (option.description ? ': ' + option.description : '') : option;
+  }
+
+  /**
+   * Calculate the required height for the table so that it fills the screen.
+   */
+  function calculateTableHeight() {
+    var mainHeader = $('.main-header');
+    var requestHeader = $('.request-header');
+    var toolbar = $('.toolbar');
+    var table = $('.table');
+    //var log = $('.log');
+    var footer = $('.footer');
+
+    var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight() - footer.outerHeight();
+
+    console.log($(window).height());
+    console.log(mainHeader.height());
+    console.log(requestHeader.height());
+    console.log(toolbar.height());
+    console.log(footer.height());
+
+    table.height(height + 'px');
   }
 }
