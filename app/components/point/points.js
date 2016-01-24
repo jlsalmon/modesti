@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('PointsController', PointsController);
 
-function PointsController($modal, $state, schemas, PointService, SchemaService, RequestService, Utils) {
+function PointsController($modal, $state, schemas, PointService, SchemaService, RequestService, AlertService, Utils) {
   var self = this;
 
   self.schemas = schemas;
@@ -181,6 +181,8 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
           // Redirect to point entry page.
           $state.go('request', { id: id }).then(function () {
             self.submitting = 'success';
+
+            AlertService.add('success', 'Update request #' + id + ' has been created.');
           });
         },
 
