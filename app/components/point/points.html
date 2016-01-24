@@ -8,31 +8,36 @@
   }
 </style>
 
-<aside class="main-sidebar">
-  <section class="sidebar" style="height: auto;">
+<!--<aside class="main-sidebar">-->
+  <!--<section class="sidebar" style="height: auto;">-->
 
-    <ul class="sidebar-menu">
-      <li class="treeview active">
-        <a href="#">
-          <i class="fa fa-filter"></i> <span>My Filters</span> <i class="fa fa-angle-left pull-right"></i>
-        </a>
-        <ul class="treeview-menu menu-open" style="display: block;">
+    <!--<ul class="sidebar-menu">-->
+      <!--<li class="treeview active">-->
+        <!--<a href="#">-->
+          <!--<i class="fa fa-filter"></i> <span>My Filters</span> <i class="fa fa-angle-left pull-right"></i>-->
+        <!--</a>-->
+        <!--<ul class="treeview-menu menu-open" style="display: block;">-->
 
-          <li>
-            <a href="">
-              No filters
-            </a>
-          </li>
+          <!--<li>-->
+            <!--<a href="">-->
+              <!--No filters-->
+            <!--</a>-->
+          <!--</li>-->
 
-        </ul>
-      </li>
-    </ul>
+        <!--</ul>-->
+      <!--</li>-->
+    <!--</ul>-->
 
-  </section>
-</aside>
+  <!--</section>-->
+<!--</aside>-->
 
-<div class="content-wrapper">
+<!--<div class="content-wrapper">-->
   <section class="content">
+
+    <div class="alert alert-warning">
+      <b><i class="icon fa fa-ban"></i> Warning!</b>
+      This functionality is still in beta stage. Use at your own risk.
+    </div>
 
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -43,10 +48,6 @@
             Domain: {{ctrl.schema.id}} <span class="caret"></span>
           </button>
           <ul class="dropdown-menu" role="menu">
-            <li>
-              <a href="" ng-click="ctrl.filter.domain = ''">{{'ANY'|translate}}</a>
-            </li>
-            <li class="divider"></li>
             <li ng-repeat="domain in ctrl.domains">
               <a href="" ng-click="ctrl.useDomain(domain)">{{domain}}</a>
             </li>
@@ -317,7 +318,7 @@
       {{ctrl.filters}}
     </div>
   </section>
-</div>
+<!--</div>-->
 
 
 

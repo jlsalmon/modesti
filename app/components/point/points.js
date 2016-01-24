@@ -14,7 +14,7 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
   self.domains = schemas.map(function (schema) { return schema.id; });
   self.points = [];
 
-  self.filters = { 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
+  self.filters = {}; // { 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
 
   self.page = {number: 0, size: 15};
   self.sort = 'pointId,desc';
@@ -48,6 +48,9 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
     self.schemas.forEach(function (schema) {
       if (schema.id === domain) {
         self.schema = schema;
+        self.activeCategory = self.schema.categories[0];
+        self.filters = {};
+        search();
       }
     });
   }
