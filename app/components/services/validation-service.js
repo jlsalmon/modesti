@@ -582,12 +582,11 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
 
       for (var key in field.options) {
         var option = field.options[key];
+        option = typeof option === 'object' ? option.value : option;
 
-        if (typeof option === 'object' && value === option.value) {
+        if (!isNaN(option) && !isNaN(value) && parseInt(option, 10) === value) {
           return true;
-        }
-
-        if (typeof option === 'string' && value === option) {
+        } else if (option === value) {
           return true;
         }
       }
