@@ -7,6 +7,7 @@ import cern.modesti.upload.parser.RequestParserFactory;
 import cern.modesti.user.User;
 import cern.modesti.workflow.CoreWorkflowService;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ public class UploadService {
       request.setDescription(description);
     }
 
+    request.setCreatedAt(new DateTime());
     request.setCreator((User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
     // Generate a request id
