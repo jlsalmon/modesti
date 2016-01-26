@@ -7,12 +7,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * TODO
@@ -29,7 +27,10 @@ public class User implements UserDetails {
 
   private static final long serialVersionUID = -8591164895383946725L;
 
+  /** Internal mongodb id  */
   @Id
+  private String id;
+
   @Indexed
   private String username;
 

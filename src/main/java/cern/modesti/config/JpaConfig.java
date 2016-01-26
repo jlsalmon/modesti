@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 @Profile({"dev", "test", "prod"})
 public class JpaConfig {
 
-  @Bean(destroyMethod = "close")
+  @Bean
   @Primary
   @ConfigurationProperties(prefix = "modesti.jdbc")
   public DataSource coreDataSource() {
