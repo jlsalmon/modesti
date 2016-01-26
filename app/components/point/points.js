@@ -16,7 +16,7 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
 
   self.filters = {}; // { 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
 
-  self.page = {number: 0, size: 15};
+  self.page = {number: 0, size: 50};
   self.sort = 'pointId,desc';
 
   self.useDomain = useDomain;
@@ -60,10 +60,6 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
 
   /**
    *
-   * @param filters
-   * @param page
-   * @param size
-   * @param sort
    */
   function search() {
     self.loading = 'started';
@@ -251,7 +247,7 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
     var mainHeader = $('.main-header');
     var requestHeader = $('.request-header');
     var toolbar = $('.toolbar');
-    var table = $('.table');
+    var table = $('.table-wrapper');
     //var log = $('.log');
     var footer = $('.footer');
 
@@ -266,3 +262,21 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
     table.height(height + 'px');
   }
 }
+
+
+self.loadMore = function () {
+
+};
+
+
+angular.module('scroll', []).directive('whenScrolled', function() {
+  return function(scope, elm, attr) {
+    var raw = elm[0];
+
+    elm.bind('scroll', function() {
+      if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+        scope.$apply(attr.whenScrolled);
+      }
+    });
+  };
+});

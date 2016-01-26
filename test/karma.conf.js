@@ -20,13 +20,14 @@ module.exports = function(config) {
     files: [
       // bower:js
       'app/bower_components/modernizr/modernizr.js',
+      'app/bower_components/es5-shim/es5-shim.js',
       'app/bower_components/jquery/dist/jquery.js',
       'app/bower_components/angular/angular.js',
       'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'app/bower_components/bootstrap-select/dist/js/bootstrap-select.js',
       'app/bower_components/angular-bootstrap-select/build/angular-bootstrap-select.js',
       'app/bower_components/angular-cookies/angular-cookies.js',
-      'app/bower_components/angular-file-upload/angular-file-upload.min.js',
+      'app/bower_components/angular-file-upload/angular-file-upload.js',
       'app/bower_components/angular-filter/dist/angular-filter.min.js',
       'app/bower_components/angular-http-auth/src/http-auth-interceptor.js',
       'app/bower_components/angular-local-storage/dist/angular-local-storage.js',
@@ -53,6 +54,7 @@ module.exports = function(config) {
       'app/bower_components/lodash/dist/lodash.compat.js',
       'app/bower_components/restangular/dist/restangular.js',
       'app/bower_components/select2/select2.js',
+      'app/bower_components/slimscroll/jquery.slimscroll.min.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       'app/bower_components/chai/chai.js',
       'app/bower_components/mocha/mocha.js',
