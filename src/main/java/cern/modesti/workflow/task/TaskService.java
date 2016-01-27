@@ -230,6 +230,11 @@ public class TaskService {
     Set<String> roles = getRoles(user);
     Set<String> candidateGroups = getCandidateGroups(task);
 
+    if (candidateGroups.isEmpty()) {
+      log.debug(format("task %s specifies no candidate groups, hence user %s is authorised", task, user));
+      return true;
+    }
+
     for (String candidateGroup : candidateGroups) {
       if (roles.contains(candidateGroup)) {
         log.debug(format("user %s authorised for task %s", user, task));
