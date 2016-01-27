@@ -146,11 +146,16 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
 
         var prop = point.properties[propName];
 
-        for (var attribute in prop) {
-          if (prop.hasOwnProperty(attribute)) {
-            prop[attribute] = null;
+        if (typeof prop === 'object') {
+          for (var attribute in prop) {
+            if (prop.hasOwnProperty(attribute)) {
+              prop[attribute] = null;
+            }
           }
+        } else {
+          prop = null;
         }
+
       }
 
       // This is a workaround. See function documentation for info.
