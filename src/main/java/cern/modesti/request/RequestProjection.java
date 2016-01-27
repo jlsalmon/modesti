@@ -28,7 +28,7 @@ public interface RequestProjection {
 
   String getDomain();
 
-  String getSubsystem();
+//  String getSubsystem();
 
   @Value("#{target.createdAt.millis}")
   Long getCreatedAt();
