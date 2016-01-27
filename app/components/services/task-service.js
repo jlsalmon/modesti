@@ -301,6 +301,10 @@ function TaskService($q, $http, AuthService) {
       return false;
     }
 
+    if (!task.candidateGroups || task.candidateGroups.length === 0) {
+      return true;
+    }
+
     var role;
     for (var i = 0, len = user.authorities.length; i < len; i++) {
       role = user.authorities[i].authority;

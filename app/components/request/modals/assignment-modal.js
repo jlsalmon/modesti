@@ -40,10 +40,18 @@ function AssignmentModalController($modalInstance, $http, task) {
   }
 
   function parseQuery(query) {
-    var q = 'authorities.authority =in= (' + task.candidateGroups.join() + ')';
+    var q = '';
+
+    if (task.candidateGroups.length > 1) {
+      q += 'authorities.authority =in= (' + task.candidateGroups.join() + ')';
+    }
 
     if (query.length !== 0) {
-      q += ' and (username == ' + query;
+      if (q.length > 0) {
+        q += ' and ';
+      }
+
+      q += '(username == ' + query;
       q += ' or firstName == ' + query;
       q += ' or lastName == ' + query + ')';
     }
