@@ -66,9 +66,9 @@ public class Request implements Serializable {
   private String domain;
 
   // TODO: remove this from the core request. Maybe add it as a field attached to the request itself
-  @Indexed
-  @NotNull(message = "Subsystem is compulsory")
-  private String subsystem;
+//  @Indexed
+//  @NotNull(message = "Subsystem is compulsory")
+//  private String subsystem;
 
   @Indexed
   private User assignee;
@@ -102,7 +102,7 @@ public class Request implements Serializable {
     this.creator = request.creator;
     this.description = request.description;
     this.domain = request.domain;
-    this.subsystem = request.subsystem;
+//    this.subsystem = request.subsystem;
     this.points = request.points;
   }
 
