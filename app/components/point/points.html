@@ -231,6 +231,7 @@
                    ng-model="ctrl.filters[field.id].value"
                    typeahead="(field.model ? item[field.model] : item.value) for item in ctrl.queryFieldValues(field, $viewValue)"
                    typeahead-on-select="ctrl.search()"
+                   typeahead-min-length="field.minLength"
                    typeahead-append-to-body="true">
 
           </div>
