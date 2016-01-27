@@ -16,7 +16,7 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
 
   self.filters = {}; // { 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
 
-  self.page = {number: 0, size: 50};
+  self.page = {number: 0, size: 15};
   self.sort = 'pointId,desc';
 
   self.useDomain = useDomain;
@@ -264,9 +264,7 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
 }
 
 
-self.loadMore = function () {
-
-};
+self.loadMore = function () {}
 
 
 angular.module('scroll', []).directive('whenScrolled', function() {

@@ -7,14 +7,16 @@
  */
 angular.module('modesti').controller('NewRequestController', NewRequestController);
 
-function NewRequestController($http, $state, RequestService, SchemaService, AuthService) {
+function NewRequestController($state, RequestService, SchemaService, AuthService) {
   var self = this;
 
   self.schemas = [];
+  self.domainSpecificFields = [];
   self.submitting = undefined;
 
   self.getSchemas = getSchemas;
-  self.getSubsystems = getSubsystems;
+  self.onDomainChanged = onDomainChanged;
+  self.queryFieldValues = queryFieldValues;
   self.submit = submit;
 
   self.request = {
@@ -37,17 +39,25 @@ function NewRequestController($http, $state, RequestService, SchemaService, Auth
   /**
    *
    */
-  function getSubsystems(value) {
-    return $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
-      params : {
-        query : value
-      }
-    }).then(function(response) {
-      if (!response.data.hasOwnProperty('_embedded')) {
-        return [];
-      }
+  function onDomainChanged() {
+    var domain = self.request.domain;
 
-      return response.data._embedded.subsystems;
+    self.schemas.forEach(function (schema) {
+      if (schema.id === domain) {
+        self.domainSpecificFields = schema.fields;
+      }
+    });
+  }
+
+  /**
+   *
+   * @param field
+   * @param query
+   * @returns {*}
+   */
+  function queryFieldValues(field, query) {
+    return SchemaService.queryFieldValues(field, query).then(function (values) {
+      self.fieldValues = values;
     });
   }
 

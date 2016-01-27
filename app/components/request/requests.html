@@ -212,19 +212,19 @@
           </select>
         </div>
 
-        <div class="filter">
-          <select multiple selectpicker="{}" class="selectpicker"
-                  ng-model="ctrl.filter.subsystem"
-                  data-size="20"
-                  data-title="{{'SUBSYSTEM'|translate}}"
-                  data-header="Select subsystems"
-                  data-selected-text-format="count>2"
-                  select-model="ctrl.subsystems"
-                  data-live-search="true"
-                  data-width="150px">
-            <option ng-repeat="subsystem in ctrl.subsystems" value="{{subsystem.value}}">{{subsystem.value}}</option>
-          </select>
-        </div>
+        <!--<div class="filter">-->
+          <!--<select multiple selectpicker="{}" class="selectpicker"-->
+                  <!--ng-model="ctrl.filter.subsystem"-->
+                  <!--data-size="20"-->
+                  <!--data-title="{{'SUBSYSTEM'|translate}}"-->
+                  <!--data-header="Select subsystems"-->
+                  <!--data-selected-text-format="count>2"-->
+                  <!--select-model="ctrl.subsystems"-->
+                  <!--data-live-search="true"-->
+                  <!--data-width="150px">-->
+            <!--<option ng-repeat="subsystem in ctrl.subsystems" value="{{subsystem.value}}">{{subsystem.value}}</option>-->
+          <!--</select>-->
+        <!--</div>-->
 
         <div class="filter">
           <select multiple selectpicker="{}" class="selectpicker"
@@ -281,7 +281,7 @@
             <option value="createdAt,asc" title="sort: Oldest">Oldest</option>
             <option value="status,asc" title="sort: Status">Status</option>
             <option value="domain,asc" title="sort: Domain">Domain</option>
-            <option value="subsystem,asc" title="sort: Subsystem">Subsystem</option>
+            <!--<option value="subsystem,asc" title="sort: Subsystem">Subsystem</option>-->
             <option value="creator,asc" title="sort: Creator">Creator</option>
             <option value="assignee,asc" title="sort: Assignee">Assignee</option>
             <option value="type,asc" title="sort: Type">Type</option>
@@ -314,7 +314,7 @@
           <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} </span>
           <span class="text-muted"> &middot; {{request.type}} </span>
           <span class="text-muted"> &middot; <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
-          <span class="text-muted"> &middot; <i class="fa fa-fw fa-sitemap"></i> {{request.subsystem}} </span>
+          <!--<span class="text-muted"> &middot; <i class="fa fa-fw fa-sitemap"></i> {{request.subsystem}} </span>-->
           <span class="text-muted" ng-if="request.datasources.length > 0">
             &middot; <i class="fa fa-fw fa-cogs"></i>{{request.datasources.join(', ')}}
           </span>
