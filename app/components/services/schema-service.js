@@ -35,45 +35,49 @@ function SchemaService($q, $http, Utils) {
       var schema = response.data;
       console.log('fetched schema: ' + schema.id);
 
-      // Prepend tagname and fault state fields
-      schema.categories.concat(schema.datasources).forEach(function (category) {
+      // TODO: remove this domain-specific code into a SchemaPostProcessor inside a plugin
+      if (schema.id in ['TIM', 'CSAM', 'WinCC OA (CV)']) {
 
-        // Tagname is shown on each category except General and Alarms
-        if (category.id !== 'general' && category.id !== 'alarms' && category.id !== 'alarmHelp') {
-          category.fields.push(getTagnameField());
-        }
+        // Prepend tagname and fault state fields
+        schema.categories.concat(schema.datasources).forEach(function (category) {
 
-        var constraint;
-
-        // Tagnames must be unique.
-        if (category.id === 'location') {
-          constraint = getUniqueTagnameConstraint();
-
-          if (category.constraints) {
-            category.constraints.push(constraint);
-          } else {
-            category.constraints = [constraint];
+          // Tagname is shown on each category except General and Alarms
+          if (category.id !== 'general' && category.id !== 'alarms' && category.id !== 'alarmHelp') {
+            category.fields.push(getTagnameField());
           }
-        }
 
-        // Fault member, fault code and problem description are shown on 'alarms' and 'alarmHelp' categories
-        if (category.id === 'alarms' || category.id === 'alarmHelp') {
-          category.fields.push(getFaultFamilyField());
-          category.fields.push(getFaultMemberField());
-          category.fields.push(getProblemDescriptionField());
-        }
+          var constraint;
 
-        // Fault member, fault code and problem description must make a unique triplet.
-        if (category.id === 'alarms') {
-          constraint = getAlarmTripletConstraint();
+          // Tagnames must be unique.
+          if (category.id === 'location') {
+            constraint = getUniqueTagnameConstraint();
 
-          if (category.constraints) {
-            category.constraints.push(constraint);
-          } else {
-            category.constraints = [constraint];
+            if (category.constraints) {
+              category.constraints.push(constraint);
+            } else {
+              category.constraints = [constraint];
+            }
           }
-        }
-      });
+
+          // Fault member, fault code and problem description are shown on 'alarms' and 'alarmHelp' categories
+          if (category.id === 'alarms' || category.id === 'alarmHelp') {
+            category.fields.push(getFaultFamilyField());
+            category.fields.push(getFaultMemberField());
+            category.fields.push(getProblemDescriptionField());
+          }
+
+          // Fault member, fault code and problem description must make a unique triplet.
+          if (category.id === 'alarms') {
+            constraint = getAlarmTripletConstraint();
+
+            if (category.constraints) {
+              category.constraints.push(constraint);
+            } else {
+              category.constraints = [constraint];
+            }
+          }
+        });
+      }
 
       q.resolve(schema);
     },
