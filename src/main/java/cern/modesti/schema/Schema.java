@@ -10,6 +10,7 @@ import javax.persistence.Id;
 
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
+import cern.modesti.schema.field.Field;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -45,6 +46,8 @@ public class Schema {
 
   @JsonProperty("extends")
   private String parent;
+
+  private List<Field> fields;
 
   @JsonDeserialize(using = CategoryDeserializer.class)
   private List<Category> categories = new ArrayList<>();
