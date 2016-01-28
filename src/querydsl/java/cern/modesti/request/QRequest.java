@@ -48,8 +48,6 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final StringPath status = createString("status");
 
-    public final StringPath subsystem = createString("subsystem");
-
     public final EnumPath<RequestType> type = createEnum("type", RequestType.class);
 
     public final NumberPath<Long> version = createNumber("version", Long.class);
