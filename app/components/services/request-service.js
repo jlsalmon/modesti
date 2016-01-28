@@ -263,9 +263,11 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
       type : request.type,
       description : request.description,
       creator : request.creator,
-      subsystem: request.subsystem,
+      //subsystem: request.subsystem,
       points: request.points.slice()
     };
+
+    // TODO: clone request-level properties that are defined in the schema
 
     clone.points.forEach(function (point) {
       point.dirty = true;

@@ -11,7 +11,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   var self = this;
 
   self.statuses = [];
-  self.subsystems = [];
+  //self.subsystems = [];
   self.schemas = [];
   self.users = [];
   self.types = ['CREATE', 'UPDATE', 'DELETE'];
@@ -22,7 +22,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
 
   self.loading = undefined;
 
-  self.getSubsystems = getSubsystems;
+  //self.getSubsystems = getSubsystems;
   self.getUsers = getUsers;
   self.isUserAuthenticated = isUserAuthenticated;
   self.getCurrentUsername = getCurrentUsername;
@@ -183,18 +183,18 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     });
   }
 
-  /**
-   *
-   * @param query
-   */
-  function getSubsystems(query) {
-    query = query || '';
-
-    // TODO refactor this into a service
-    $http.get(BACKEND_BASE_URL + '/subsystems/search/find', { params: {query: query}}).then(function(response) {
-      self.subsystems = response.data._embedded.subsystems;
-    });
-  }
+  ///**
+  // *
+  // * @param query
+  // */
+  //function getSubsystems(query) {
+  //  query = query || '';
+  //
+  //  // TODO refactor this into a service
+  //  $http.get(BACKEND_BASE_URL + '/subsystems/search/find', { params: {query: query}}).then(function(response) {
+  //    self.subsystems = response.data._embedded.subsystems;
+  //  });
+  //}
 
   /**
    *
