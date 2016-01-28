@@ -1,6 +1,7 @@
 package cern.modesti.workflow.notification;
 
 import cern.modesti.request.Request;
+import cern.modesti.schema.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,4 +30,6 @@ public class Notification {
   private Map<String, Object> templateParameters;
 
   private Request request;
+
+  private Schema schema;
 }

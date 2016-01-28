@@ -75,6 +75,7 @@ public class NotificationService {
 
     // Set default context variables
     context.setVariable("request", notification.getRequest());
+    context.setVariable("schema", notification.getSchema());
     context.setVariable("url", env.getRequiredProperty("modesti.base") + "/requests/" + notification.getRequest().getRequestId());
 
     // Set user variables
