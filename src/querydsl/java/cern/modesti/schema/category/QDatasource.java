@@ -31,7 +31,7 @@ public class QDatasource extends BeanPath<Datasource> {
     public final ListPath<String, StringPath> excludes = _super.excludes;
 
     //inherited
-    public final ListPath<cern.modesti.schema.field.Field, SimplePath<cern.modesti.schema.field.Field>> fields = _super.fields;
+    public final ListPath<cern.modesti.schema.field.Field, cern.modesti.schema.field.QField> fields = _super.fields;
 
     //inherited
     public final StringPath id = _super.id;

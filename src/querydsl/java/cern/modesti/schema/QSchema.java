@@ -30,6 +30,8 @@ public class QSchema extends EntityPathBase<Schema> {
 
     public final StringPath domain = createString("domain");
 
+    public final ListPath<cern.modesti.schema.field.Field, cern.modesti.schema.field.QField> fields = this.<cern.modesti.schema.field.Field, cern.modesti.schema.field.QField>createList("fields", cern.modesti.schema.field.Field.class, cern.modesti.schema.field.QField.class, PathInits.DIRECT2);
+
     public final StringPath id = createString("id");
 
     public final BooleanPath isAbstract = createBoolean("isAbstract");
