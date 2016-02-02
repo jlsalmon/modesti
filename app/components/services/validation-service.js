@@ -485,6 +485,13 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
           emptyFields.push(field);
         }
       }
+
+      // HACK ALERT #2: ignore the monitoringEquipment field because it can be in multiple categories...
+      if (field.id === 'monitoringEquipment') {
+        if (emptyFields.indexOf(field) === -1) {
+          emptyFields.push(field);
+        }
+      }
     });
 
     return emptyFields;
