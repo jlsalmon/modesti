@@ -199,7 +199,7 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
     // Don't need to process non-object properties
     if (field.type !== 'autocomplete') {
       q.resolve();
-      return;
+      return q.promise;
     }
 
     SchemaService.queryFieldValues(field, newValue, point).then(function (values) {
