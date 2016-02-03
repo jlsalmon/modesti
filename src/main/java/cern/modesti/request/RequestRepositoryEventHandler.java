@@ -124,8 +124,8 @@ public class RequestRepositoryEventHandler {
       requestEventHandler.onBeforeSave(request);
     }
 
-    Request base = requestRepository.findOneByRequestId(request.getRequestId());
-    saveChangeHistory(request, base);
+//    Request base = requestRepository.findOneByRequestId(request.getRequestId());
+//    saveChangeHistory(request, base);
   }
 
   @HandleBeforeDelete
