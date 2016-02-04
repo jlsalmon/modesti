@@ -2,6 +2,7 @@ package cern.modesti.request;
 
 import cern.modesti.request.point.Point;
 import cern.modesti.user.User;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -114,7 +115,9 @@ public class Request implements Serializable {
    * @return
    */
   public <T> T getObjectProperty(String key, Class<T> klass) {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     Object value = properties.get(key);
-    return new ObjectMapper().convertValue(value, klass);
+    return mapper.convertValue(value, klass);
   }
 }
