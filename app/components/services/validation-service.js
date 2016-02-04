@@ -526,7 +526,9 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
     point.errors.forEach(function (error) {
       if (error.property === propertyName) {
         exists = true;
-        error.errors.push(message);
+        if (!error.errors.indexOf(message > -1)) {
+          error.errors.push(message);
+        }
       }
     });
 
