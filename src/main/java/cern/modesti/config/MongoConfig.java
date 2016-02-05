@@ -17,7 +17,9 @@ import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventL
 import org.springframework.data.mongodb.repository.support.MongoRepositoryFactory;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 
@@ -36,10 +38,16 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
   @Override
   public Mongo mongo() throws Exception {
-    String host = env.getRequiredProperty("mongodb.host");
+    List<ServerAddress> hosts = new ArrayList<>();
+    for (Object host : env.getRequiredProperty("mongodb.host", List.class)) {
+      hosts.add(new ServerAddress((String) host));
+    }
+
     String username = env.getRequiredProperty("mongodb.username");
     String password = env.getRequiredProperty("mongodb.password");
-    return new MongoClient(new ServerAddress(host), singletonList(MongoCredential.createCredential(username, getDatabaseName(), password.toCharArray())));
+    MongoCredential credential = MongoCredential.createCredential(username, getDatabaseName(), password.toCharArray());
+
+    return new MongoClient(hosts, singletonList(credential));
   }
 
   @Bean
