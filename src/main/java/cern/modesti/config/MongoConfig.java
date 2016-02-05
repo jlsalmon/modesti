@@ -3,6 +3,8 @@ package cern.modesti.config;
 import cern.modesti.util.DateToTimestampConverter;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,8 @@ import org.springframework.data.mongodb.repository.support.MongoRepositoryFactor
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Collections;
+
+import static java.util.Collections.singletonList;
 
 @Configuration
 @EnableMongoAuditing
@@ -32,7 +36,10 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
   @Override
   public Mongo mongo() throws Exception {
-    return new MongoClient(env.getRequiredProperty("mongodb.host"));
+    String host = env.getRequiredProperty("mongodb.host");
+    String username = env.getRequiredProperty("mongodb.username");
+    String password = env.getRequiredProperty("mongodb.password");
+    return new MongoClient(new ServerAddress(host), singletonList(MongoCredential.createCredential(username, getDatabaseName(), password.toCharArray())));
   }
 
   @Bean
@@ -52,6 +59,6 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
   @Override
   public CustomConversions customConversions() {
-    return new CustomConversions(Collections.singletonList(new DateToTimestampConverter()));
+    return new CustomConversions(singletonList(new DateToTimestampConverter()));
   }
 }
