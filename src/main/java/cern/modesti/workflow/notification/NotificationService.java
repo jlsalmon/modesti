@@ -15,10 +15,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.String.format;
 
@@ -63,6 +60,11 @@ public class NotificationService {
     }
 
     String from = env.getRequiredProperty("spring.mail.from");
+
+    // If we're on the test server, send all emails to the developers group
+    if (from.contains("test")) {
+      recipients = Collections.singletonList("modesti-developers@cern.ch");
+    }
 
     String subject = notification.getSubject();
     if (subject == null) throw new IllegalArgumentException("Notification subject must not be null");
