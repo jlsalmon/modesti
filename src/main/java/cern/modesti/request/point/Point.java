@@ -53,16 +53,25 @@ public class Point {
    * @param message
    */
   public void addErrorMessage(String property, String message) {
-    boolean exists = false;
+    boolean errorPropertyExists = false, propertyMessageExists = false;
 
     for (Error error : errors) {
       if (error.getProperty().equals(property)) {
-        exists = true;
-        error.getErrors().add(message);
+        errorPropertyExists = true;
+
+        for (String e : error.getErrors()) {
+          if (e.equals(message)) {
+            propertyMessageExists = true;
+          }
+        }
+
+        if (!propertyMessageExists) {
+          error.getErrors().add(message);
+        }
       }
     }
 
-    if (!exists) {
+    if (!errorPropertyExists) {
       Error error = new Error(property, new ArrayList<>(Collections.singletonList(message)));
       errors.add(error);
     }
