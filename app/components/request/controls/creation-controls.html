@@ -8,7 +8,7 @@
       <i class="fa fa-fw fa-exclamation-circle"></i> {{ctrl.parent.getNumValidationErrors()}}
     </span>
 
-    <span class="label pull-left"
+    <span class="label pull-left" ng-if="ctrl.parent.getNumApprovalRejections() > 0"
           ng-class="ctrl.parent.getNumApprovalRejections() > 0 ? 'bg-yellow' : 'bg-gray'"
           tooltip="{{ctrl.parent.getNumApprovalRejections()}} operator comment(s) found. Click to view details."
           tooltip-placement="right">
