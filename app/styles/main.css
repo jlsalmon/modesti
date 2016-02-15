@@ -812,3 +812,7 @@ body {/* Margin bottom by footer height */
 .popover {
   max-width: 800px;
 }
+
+.bg-yellow, .callout.callout-warning, .alert-warning, .label-waring, .modal-warning .modal-body {
+  background-color: #fcf8e3 !important;
+}
