@@ -357,7 +357,7 @@ function SchemaService($q, $http, Utils) {
   function getProblemDescriptionField() {
     /*jshint camelcase: false */
     return {
-      'id': 'pointDescription',
+      'id': 'problemDescription',
       'type': 'text',
       'editable': false,
       'name_en': 'Problem Description',
@@ -474,10 +474,12 @@ function SchemaService($q, $http, Utils) {
       if (point.properties.priorityCode === undefined || point.properties.priorityCode === null || point.properties.priorityCode === '') {
         point.properties.faultFamily = null;
         point.properties.faultMember = null;
+        point.properties.problemDescription = null;
         return;
       }
 
       point.properties.faultMember = getEquipmentIdentifier(point);
+      point.properties.problemDescription = point.properties.pointDescription;
 
       (function (point) {
         $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
