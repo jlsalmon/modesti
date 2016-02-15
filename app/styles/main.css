@@ -800,8 +800,9 @@ body {/* Margin bottom by footer height */
 }
 
 .footer .label {
-  /*margin: 15px;*/
+  /* margin: 15px; */
   font-size: 14px;
+  margin-right: 10px;
 }
 
 .select2-drop {

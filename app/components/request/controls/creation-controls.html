@@ -2,10 +2,17 @@
 
   <div class="col-md-4">
     <span class="label pull-left"
-          ng-class="ctrl.parent.hasErrors() > 0 ? 'bg-red' : 'bg-gray'"
-          tooltip="{{ctrl.parent.getTotalErrors()}} problems(s) found. Click to view details."
+          ng-class="ctrl.parent.getNumValidationErrors() > 0 ? 'bg-red' : 'bg-gray'"
+          tooltip="{{ctrl.parent.getNumValidationErrors()}} validation error(s) found. Click to view details."
           tooltip-placement="right">
-      <i class="fa fa-fw fa-exclamation-circle"></i> {{ctrl.parent.getTotalErrors()}}
+      <i class="fa fa-fw fa-exclamation-circle"></i> {{ctrl.parent.getNumValidationErrors()}}
+    </span>
+
+    <span class="label pull-left"
+          ng-class="ctrl.parent.getNumApprovalRejections() > 0 ? 'bg-yellow' : 'bg-gray'"
+          tooltip="{{ctrl.parent.getNumApprovalRejections()}} operator comment(s) found. Click to view details."
+          tooltip-placement="right">
+      <i class="fa fa-fw fa-comments"></i> {{ctrl.parent.getNumApprovalRejections()}}
     </span>
   </div>
 

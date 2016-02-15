@@ -112,6 +112,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   self.hasErrors = hasErrors;
   self.getTotalErrors = getTotalErrors;
   self.getNumValidationErrors = getNumValidationErrors;
+  self.getNumApprovalRejections = getNumApprovalRejections;
   self.getSelectedPointIds = getSelectedPointIds;
 
   //self.resetSorting = resetSorting;
