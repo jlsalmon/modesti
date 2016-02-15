@@ -293,7 +293,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     else if (point.properties.approvalResult && point.properties.approvalResult.approved === false) {
       text = 'Point rejected by operator. Reason: <b>' + point.properties.approvalResult.message + '</b>';
       return '<div class="row-header" data-container="body" data-toggle="popover" data-placement="right" data-html="true" data-content="' +
-        text.replace(/"/g, '&quot;') + '">' + point.lineNo + ' <i class="fa fa-exclamation-circle text-danger"></i></div>';
+        text.replace(/"/g, '&quot;') + '">' + point.lineNo + ' <i class="fa fa-comments text-warning"></i></div>';
     }
 
     else if (point.properties.approvalResult && point.properties.approvalResult.approved === true && self.request.status === 'FOR_APPROVAL') {
