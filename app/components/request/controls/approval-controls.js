@@ -112,6 +112,7 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
 
         if (!point.properties.approvalResult.message) {
           ValidationService.setErrorMessage(point, 'approvalResult.message', 'Reason for rejection must be given in the comment field');
+          self.parent.sendModificationSignal();
         }
       }
     }
