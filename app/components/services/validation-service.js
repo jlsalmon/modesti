@@ -361,14 +361,21 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
     // Build a new array containing the concatenation of the values of all constraint members
     points.forEach(function (point) {
       var concatenatedValue = '';
+      var atLeastOneNullMember = false;
 
       constraint.members.forEach(function (member) {
         var value = getValueByPropertyName(point, member);
         if (value !== undefined && value !== null && value !== '') {
           concatenatedValue += value;
+        } else {
+          atLeastOneNullMember = true;
         }
       });
 
+      if (atLeastOneNullMember) {
+        concatenatedValue = '';
+      }
+      
       concatenatedValues.push(concatenatedValue);
     });
 
