@@ -107,7 +107,6 @@ public class TaskService {
    */
   private TaskInfo assignTask(String requestId, String taskName, String username) {
     Task task = getTaskForRequest(requestId, taskName);
-    taskService.setAssignee(task.getId(), username);
 
     // Set the assignee on the request object
     User user = userRepository.findOneByUsername(username);
@@ -118,6 +117,9 @@ public class TaskService {
     Request request = requestRepository.findOneByRequestId(requestId);
     request.setAssignee(user);
     requestRepository.save(request);
+
+    // Assign the task itself
+    taskService.setAssignee(task.getId(), username);
 
     task = getTaskForRequest(requestId, taskName);
     return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(), getCandidateGroups(task));
