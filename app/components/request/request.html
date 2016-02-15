@@ -410,7 +410,8 @@
 
         </div>
 
-        <div ng-if="ctrl.request.properties.approvalResult.approved === false" class="callout callout-warning bg-transparent">
+        <div ng-if="ctrl.request.properties.approvalResult.approved === false && ctrl.request.status === 'FOR_CORRECTION'"
+             class="callout callout-warning bg-transparent">
           <h4>Operator comments</h4>
           <p>
             The request has been rejected by an operator. Please review the following lines which show the reason for the
