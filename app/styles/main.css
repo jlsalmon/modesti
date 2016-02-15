@@ -813,6 +813,6 @@ body {/* Margin bottom by footer height */
   max-width: 800px;
 }
 
-.bg-yellow, .callout.callout-warning, .alert-warning, .label-waring, .modal-warning .modal-body {
+.alert-warning {
   background-color: #fcf8e3 !important;
 }
