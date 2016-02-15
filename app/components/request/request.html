@@ -101,10 +101,6 @@
   .callout-danger.bg-transparent, .callout-warning.bg-transparent {
     background-color: transparent !important;
   }
-
-  .fa.text-warning {
-    color: #F39C12;
-  }
 </style>
 
 <section class="request-header container-fluid">
@@ -423,7 +419,7 @@
 
           <div ng-repeat="point in ctrl.rows track by point.lineNo">
             <span ng-if="point.properties.approvalResult.approved === false">
-              <i class="fa fa-fw fa-comments text-warning"></i>
+              <i class="fa fa-fw fa-comments text-yellow"></i>
               Line {{point.lineNo}}: <strong>{{point.properties.approvalResult.message}}</strong>
             </span>
           </div>
