@@ -181,8 +181,11 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
   }
 
   /**
-   * It would be really great to get rid of this code, but currently Handsontable does not support columns backed
-   * by complex objects, so it's necessary until then. See https://github.com/handsontable/handsontable/issues/2578.
+   * Currently Handsontable does not support columns backed by complex objects, so for now it's necessary to manually save the object in the background.
+   * See https://github.com/handsontable/handsontable/issues/2578.
+   *
+   * Also, sometimes after a modification, Handsontable does not properly save the new value to the underlying point. So we manually save the value in
+   * the background to be doubly sure that the new value is persisted.
    *
    * @param row
    * @param property
@@ -196,26 +199,29 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
     var outerProp = property.split('.')[1];
     var field = Utils.getField(self.parent.schema, outerProp);
 
-    // Don't need to process non-object properties
-    if (field.type !== 'autocomplete') {
-      q.resolve();
-      return q.promise;
+    // For autocomplete fields, re-query the values and manually save it back to the point.
+    if (field.type === 'autocomplete') {
+      SchemaService.queryFieldValues(field, newValue, point).then(function (values) {
+
+        values.forEach(function (item) {
+          var value = (field.model === undefined && typeof item === 'object') ? item.value : item[field.model];
+
+          if (value === newValue) {
+            console.log('saving new value');
+            delete item._links;
+            point.properties[outerProp] = item;
+          }
+        });
+
+        q.resolve();
+      });
     }
 
-    SchemaService.queryFieldValues(field, newValue, point).then(function (values) {
-
-      values.forEach(function (item) {
-        var value = (field.model === undefined && typeof item === 'object') ? item.value : item[field.model];
-
-        if (value === newValue) {
-          console.log('saving new value');
-          delete item._links;
-          point.properties[outerProp] = item;
-        }
-      });
-
+    // For non-autocomplete fields, just manually save the new value.
+    else {
+      point.properties[outerProp] = newValue;
       q.resolve();
-    });
+    }
 
     return q.promise;
   }
