@@ -161,6 +161,14 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
               setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
             }
           }
+
+          // Numeric fields
+          if (field.type === 'numeric') {
+            if (value && !isNumeric(value)) {
+              point.properties.valid = category.valid = valid = false;
+              setErrorMessage(point, propertyName, 'Value for "' + field.name_en + '" must be numeric');
+            }
+          }
         });
       });
     });
@@ -375,7 +383,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
       if (atLeastOneNullMember) {
         concatenatedValue = '';
       }
-      
+
       concatenatedValues.push(concatenatedValue);
     });
 
@@ -621,6 +629,15 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
     else {
       return true;
     }
+  }
+
+  /**
+   *
+   * @param n
+   * @returns {boolean}
+   */
+  function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
   }
 
   return service;
