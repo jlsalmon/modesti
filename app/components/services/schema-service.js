@@ -394,6 +394,7 @@ function SchemaService($q, $http, Utils) {
       'id': 'faultMember',
       'type': 'text',
       'editable': false,
+      'maxLength': 30,
       'name_en': 'Fault Member',
       'name_fr': 'Fault Member',
       'help_en': '',
