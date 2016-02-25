@@ -816,3 +816,7 @@ body {/* Margin bottom by footer height */
 .alert-warning {
   background-color: #fcf8e3 !important;
 }
+
+.callout-danger.bg-transparent, .callout-warning.bg-transparent {
+  background-color: transparent !important;
+}

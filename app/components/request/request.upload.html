@@ -1,13 +1,3 @@
-<!-- Content Header (Page header) -->
-<!--<section class="content-header">-->
-<!--<h1>Upload request</h1>-->
-<!--<ol class="breadcrumb">-->
-<!--<li><a href="#/"> <i class="fa fa-home"></i> Home-->
-<!--</a></li>-->
-<!--<li class="active">Upload request</li>-->
-<!--</ol>-->
-<!--</section>-->
-
 <style>
   .drop-zone {
     border: 2px dashed #ccc;
@@ -152,13 +142,28 @@
                   </button>
                 </div>
               </div>
-            </form>
 
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10" ng-if="item.warnings">
+                  <div class="callout callout-warning bg-transparent ng-scope">
+                    <h4>Warning</h4>
+                    <p>
+                      Some fields could not be parsed during the upload. This is probably due to incorrect information within the file. Please check
+                      the uploaded request carefully as there may be missing fields.
+                    </p>
+                    <div ng-repeat="warning in item.warnings track by $index">
+                      <span>
+                        <i class="fa fa-fw fa-exclamation-triangle text-yellow"></i>
+                        {{warning}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-
       </div>
     </div>
-
   </div>
 </section>

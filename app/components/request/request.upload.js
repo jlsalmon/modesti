@@ -71,6 +71,7 @@ function UploadController($location, FileUploader) {
     var id = headers.location.substring(headers.location.lastIndexOf('/') + 1);
     // Redirect to point entry page.
     fileItem.location = '/requests/' + id;
+    fileItem.warnings = response;
   };
 
   self.uploader.onErrorItem = function(fileItem, response, status, headers) {
