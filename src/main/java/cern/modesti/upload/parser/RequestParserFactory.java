@@ -26,15 +26,12 @@ public class RequestParserFactory {
   @Autowired
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
-  @Autowired
-  private SchemaRepository schemaRepository;
-
   /**
    * @param stream
    *
    * @return
    */
-  public Request parseRequest(InputStream stream) {
+  public RequestParseResult parseRequest(InputStream stream) {
     Sheet sheet = getSheet(stream);
     Row header = sheet.getRow(0);
 
@@ -57,13 +54,13 @@ public class RequestParserFactory {
       throw new UnsupportedRequestException("No parser found for domain " + domain);
     }
 
-    Request request = parser.parseRequest(sheet);
+    RequestParseResult result = parser.parseRequest(sheet);
 
-    if (request.getPoints().isEmpty()) {
+    if (result.getRequest().getPoints().isEmpty()) {
       throw new RequestParseException("Sheet contains no data points");
     }
 
-    return request;
+    return result;
   }
 
   /**

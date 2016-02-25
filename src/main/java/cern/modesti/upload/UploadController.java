@@ -3,7 +3,9 @@ package cern.modesti.upload;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.security.Principal;
+import java.util.List;
 
+import cern.modesti.upload.parser.RequestParseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -31,11 +33,11 @@ public class UploadController {
 
   @RequestMapping(value = "/requests/upload", method = POST)
   public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("description") String description, UriComponentsBuilder b, Principal user) {
-    Request request;
+    RequestParseResult result;
 
     if (!file.isEmpty()) {
       try {
-        request = service.parseRequestFromExcelSheet(description, file.getInputStream(), user);
+        result = service.parseRequestFromExcelSheet(description, file.getInputStream(), user);
 
         log.info("successfully uploaded " + file.getOriginalFilename());
       } catch (Exception e) {
@@ -48,10 +50,10 @@ public class UploadController {
     }
 
     // Add link to newly created request in Location header
-    UriComponents uriComponents = b.path("/requests/{id}").buildAndExpand(request.getRequestId());
+    UriComponents uriComponents = b.path("/requests/{id}").buildAndExpand(result.getRequest().getRequestId());
     HttpHeaders headers = new HttpHeaders();
     headers.setLocation(uriComponents.toUri());
 
-    return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+    return new ResponseEntity<>(result.getWarnings(), headers, HttpStatus.CREATED);
   }
 }

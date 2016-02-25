@@ -1,6 +1,5 @@
 package cern.modesti.upload.parser;
 
-import cern.modesti.request.Request;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
@@ -15,5 +14,5 @@ public interface RequestParser {
    * @param sheet
    * @return
    */
-  Request parseRequest(Sheet sheet);
+  RequestParseResult parseRequest(Sheet sheet);
 }

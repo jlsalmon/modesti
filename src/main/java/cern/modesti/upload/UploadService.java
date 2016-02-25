@@ -3,6 +3,7 @@ package cern.modesti.upload;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.request.counter.CounterService;
+import cern.modesti.upload.parser.RequestParseResult;
 import cern.modesti.upload.parser.RequestParserFactory;
 import cern.modesti.user.User;
 import cern.modesti.workflow.CoreWorkflowService;
@@ -42,8 +43,9 @@ public class UploadService {
    * @param principal
    * @return
    */
-  public Request parseRequestFromExcelSheet(String description, InputStream stream, Principal principal) {
-    Request request = requestParserFactory.parseRequest(stream);
+  public RequestParseResult parseRequestFromExcelSheet(String description, InputStream stream, Principal principal) {
+    RequestParseResult result = requestParserFactory.parseRequest(stream);
+    Request request = result.getRequest();
 
     if (request.getDescription() == null) {
       request.setDescription(description);
@@ -62,6 +64,6 @@ public class UploadService {
     // Kick off the workflow process
     workflowService.startProcessInstance(request);
 
-    return request;
+    return result;
   }
 }
