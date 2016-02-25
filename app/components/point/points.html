@@ -49,6 +49,10 @@
     text-align: center;
     vertical-align: middle;
   }
+
+  footer {
+    padding: 10px 10px;
+  }
 </style>
 
 <!--<aside class="main-sidebar">-->
@@ -102,14 +106,6 @@
     </div>
   </div>
 </section>
-
-
-<!-- Alerts are shown here -->
-<div class="alert-messages">
-  <alert ng-repeat="alert in alerts"  type="{{alert.type}}" close="alert.close()">
-    <span ng-bind-html="alert.message"></span>
-  </alert>
-</div>
 
 
 <section class="toolbar container-fluid">
