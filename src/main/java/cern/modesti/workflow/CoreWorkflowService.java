@@ -97,21 +97,6 @@ public class CoreWorkflowService {
     requestRepository.save(request);
   }
 
-//  /**
-//   *
-//   * @param requestId
-//   * @param execution
-//   *
-//   * @deprecated
-//   *
-//   */
-//  public void onTaskClaimed(String requestId, DelegateExecution execution) {
-//    // Place the assignee name as a variable "editor" in the execution. This is so that we can automatically assign the
-//    // "submit" task which inevitably follows. The sequence is always "edit" -> "validate" -> "submit".
-//    Task task = taskService.createTaskQuery().processInstanceBusinessKey(requestId).taskName("edit").singleResult();
-//    execution.setVariable("editor", task.getAssignee());
-//  }
-
   /**
    * @param requestId
    * @param execution
