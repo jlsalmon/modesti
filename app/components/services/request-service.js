@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('RequestService', RequestService);
 
-function RequestService($http, $rootScope, $q, Restangular, AuthService) {
+function RequestService($http, $rootScope, $q, Restangular, AuthService, SchemaService) {
   var self = this;
 
   self.cache = {};
@@ -255,19 +255,26 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
   /**
    *
    * @param request
+   * @param schema
    * @returns {*}
    */
-  function cloneRequest(request) {
+  function cloneRequest(request, schema) {
     var clone = {
       domain: request.domain,
       type : request.type,
       description : request.description,
       creator : request.creator,
       //subsystem: request.subsystem,
-      points: request.points.slice()
+      points: request.points.slice(),
+      properties: {}
     };
 
-    // TODO: clone request-level properties that are defined in the schema
+    // Clone request-level properties that are defined in the schema
+    schema.fields.forEach(function (field) {
+      if (request.properties.hasOwnProperty(field.id)) {
+        clone.properties[field.id] = request.properties[field.id];
+      }
+    });
 
     clone.points.forEach(function (point) {
       point.dirty = true;
