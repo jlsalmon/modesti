@@ -1057,6 +1057,9 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       resolve: {
         request: function () {
           return self.request;
+        },
+        schema: function () {
+          return self.schema;
         }
       }
     });
