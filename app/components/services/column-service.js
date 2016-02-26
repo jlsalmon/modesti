@@ -101,7 +101,7 @@ function ColumnService($translate, SchemaService) {
 
       // By default, text fields with URLs are not strict, as the queried
       // values are just suggestions
-      if (!field.strict === true) {
+      if (field.strict !== true) {
         column.select2Options.createSearchChoice = function(term, data) {
           if ( $(data).filter( function() {
               return this.text.localeCompare(term)===0;
