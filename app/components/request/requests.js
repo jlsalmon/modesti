@@ -31,6 +31,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.onPageChanged = onPageChanged;
   self.resetFilter = resetFilter;
   self.getRequestCount = getRequestCount;
+  self.formatCustomProperties = formatCustomProperties;
 
   resetFilter();
   getRequests(1, 15, self.sort, self.filter);
@@ -183,18 +184,22 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     });
   }
 
-  ///**
-  // *
-  // * @param query
-  // */
-  //function getSubsystems(query) {
-  //  query = query || '';
-  //
-  //  // TODO refactor this into a service
-  //  $http.get(BACKEND_BASE_URL + '/subsystems/search/find', { params: {query: query}}).then(function(response) {
-  //    self.subsystems = response.data._embedded.subsystems;
-  //  });
-  //}
+  function formatCustomProperties(request) {
+    var customProperties = '';
+
+    self.schemas.forEach(function (schema) {
+      if (schema.id === request.domain) {
+        schema.fields.forEach(function (field) {
+          if (request.properties.hasOwnProperty(field.id)) {
+            var value = field.model ? request.properties[field.id][field.model] : request.properties[field.id].value;
+            customProperties += value;
+          }
+        });
+      }
+    });
+
+    return customProperties;
+  }
 
   /**
    *
