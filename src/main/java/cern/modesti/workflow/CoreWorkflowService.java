@@ -60,7 +60,6 @@ public class CoreWorkflowService {
     String processKey = plugin.getMetadata().getProcessKey(request.getType());
 
     request.setStatus(DEFAULT_INITIAL_STATUS);
-    request.setAssignee(request.getCreator());
     requestRepository.save(request);
 
     Map<String, Object> variables = new HashMap<>();
