@@ -66,11 +66,6 @@ public class Request implements Serializable {
   @NotNull(message = "Domain is compulsory")
   private String domain;
 
-  // TODO: remove this from the core request. Maybe add it as a field attached to the request itself
-//  @Indexed
-//  @NotNull(message = "Subsystem is compulsory")
-//  private String subsystem;
-
   @Indexed
   private User assignee;
 
