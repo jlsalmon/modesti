@@ -46,7 +46,9 @@ function ColumnService($translate, SchemaService) {
       column.readOnly = true;
     }
 
-
+    if (field.type === 'text') {
+      column = getTextColumn(column, field);
+    }
 
     if (field.type === 'autocomplete') {
       column = getAutocompleteColumn(column, field);
@@ -91,6 +93,54 @@ function ColumnService($translate, SchemaService) {
    * @param field
    * @returns {*}
    */
+  function getTextColumn(column, field) {
+    if (field.url) {
+      column.editor = 'select2';
+
+      column.select2Options = getDefaultSelect2Options(column, field);
+
+      // By default, text fields with URLs are not strict, as the queried
+      // values are just suggestions
+      if (!field.strict === true) {
+        column.select2Options.createSearchChoice = function(term, data) {
+          if ( $(data).filter( function() {
+              return this.text.localeCompare(term)===0;
+            }).length===0) {
+            return {id:term, text:term};
+          }
+        };
+      }
+    }
+
+    return column;
+  }
+
+  /**
+   *
+   * @param column
+   * @param field
+   * @returns {*}
+   */
+  function getAutocompleteColumn(column, field) {
+    column.editor = 'select2';
+
+    if (field.model) {
+      column.data = 'properties.' + field.id + '.' + field.model;
+    } else {
+      column.data = 'properties.' + field.id + '.value';
+    }
+
+    column.select2Options = getDefaultSelect2Options(column, field);
+
+    return column;
+  }
+
+  /**
+   *
+   * @param column
+   * @param field
+   * @returns {*}
+   */
   function getDropdownColumn(column, field) {
     column.editor = 'select2';
 
@@ -120,30 +170,15 @@ function ColumnService($translate, SchemaService) {
    *
    * @param column
    * @param field
-   * @returns {*}
+   * @returns {}
    */
-  function getAutocompleteColumn(column, field) {
-    column.editor = 'select2';
-
-    if (field.model) {
-      column.data = 'properties.' + field.id + '.' + field.model;
-    } else {
-      column.data = 'properties.' + field.id + '.value';
-    }
-
-    //column.renderer = getRenderer(column, field);
-
-    column.select2Options = {
+  function getDefaultSelect2Options(column, field) {
+    return {
       minimumInputLength: field.minLength || 0,
       maximumInputLength: 200,
 
       query: getQueryFunction(column, field),
 
-      //// Formats the items shown in the dropdown list
-      //formatResult: function (option) {
-      //  return option.text;
-      //},
-      //
       formatSelection: function (option) {
         return option;
       },
@@ -159,8 +194,6 @@ function ColumnService($translate, SchemaService) {
       dropdownAutoWidth: true,
       width: 'resolve'
     };
-
-    return column;
   }
 
   /**
@@ -179,7 +212,11 @@ function ColumnService($translate, SchemaService) {
 
         // Re-map the values in a format that the select2 editor likes
         var results = values.map(function (value) {
-          return {id: value[getModelAttribute(field)], text: value[getModelAttribute(field)]};
+          if (typeof value === 'string') {
+            return {id: value, text: value};
+          } else {
+            return {id: value[getModelAttribute(field)], text: value[getModelAttribute(field)]};
+          }
         });
 
         // Invoke the editor callback so it can populate itself

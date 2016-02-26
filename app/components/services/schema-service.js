@@ -219,6 +219,10 @@ function SchemaService($q, $http, Utils) {
         values = response.data._embedded[returnPropertyName];
       }
 
+      else if (response.data instanceof Array) {
+        values = response.data;
+      }
+
       console.log('found ' + values.length + ' values');
       q.resolve(values);
     },
