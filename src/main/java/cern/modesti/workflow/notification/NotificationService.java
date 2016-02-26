@@ -64,6 +64,7 @@ public class NotificationService {
     // If we're on the test server, send all emails to the developers group
     if (from.contains("test")) {
       recipients = Collections.singletonList("modesti-developers@cern.ch");
+      from = "modesti.service@cern.ch";
     }
 
     String subject = notification.getSubject();
