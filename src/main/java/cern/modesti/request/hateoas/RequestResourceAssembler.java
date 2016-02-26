@@ -1,5 +1,6 @@
-package cern.modesti.request;
+package cern.modesti.request.hateoas;
 
+import cern.modesti.request.Request;
 import cern.modesti.request.search.RequestSearchController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;

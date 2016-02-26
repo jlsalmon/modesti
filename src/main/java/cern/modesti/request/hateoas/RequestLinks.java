@@ -1,5 +1,6 @@
-package cern.modesti.request;
+package cern.modesti.request.hateoas;
 
+import cern.modesti.request.Request;
 import cern.modesti.schema.Schema;
 import cern.modesti.workflow.signal.SignalController;
 import cern.modesti.workflow.task.TaskController;

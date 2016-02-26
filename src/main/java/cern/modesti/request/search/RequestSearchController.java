@@ -3,7 +3,7 @@ package cern.modesti.request.search;
 import cern.modesti.predicate.RsqlExpressionBuilder;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
-import cern.modesti.request.RequestResourceAssembler;
+import cern.modesti.request.hateoas.RequestResourceAssembler;
 import com.mysema.query.types.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

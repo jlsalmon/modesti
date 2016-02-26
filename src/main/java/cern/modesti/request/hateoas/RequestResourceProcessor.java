@@ -1,8 +1,7 @@
-package cern.modesti.request;
+package cern.modesti.request.hateoas;
 
+import cern.modesti.request.Request;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
