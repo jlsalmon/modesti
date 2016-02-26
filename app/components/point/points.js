@@ -17,7 +17,7 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
   self.filters = {}; // { 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
 
   self.page = {number: 0, size: 15};
-  self.sort = 'pointId,desc';
+  //self.sort = 'pointId,desc';
 
   self.useDomain = useDomain;
   self.search = search;
@@ -31,12 +31,9 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
 
   calculateTableHeight();
 
-  // Load TIM domain by default
-  self.domains.forEach(function (domain) {
-    if (domain === 'TIM') {
-      useDomain(domain);
-    }
-  });
+  if (self.domains.length > 0) {
+    useDomain(self.domains[0]);
+  }
 
   AlertService.add('warning', '<b><i class="icon fa fa-ban"></i>Warning!</b> This functionality is still in alpha stage. Use at your own risk.');
 
