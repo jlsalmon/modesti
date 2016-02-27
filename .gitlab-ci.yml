@@ -2,4 +2,4 @@ image: java:8
 
 gradle:
   script:
-    - ./gradlew build
+    - ./gradlew build --artifactoryUser=${ARTIFACTORY_USERNAME} --artifactoryPassword=${ARTIFACTORY_PASSWORD}
