@@ -1,3 +1,6 @@
+services:
+  - java:8
+
 gradle:
   script:
     - ./gradlew build
