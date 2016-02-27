@@ -4,10 +4,6 @@ before_script:
   - npm install --silent
   - bower install
 
-ping:
-  script:
-    - ping -c 5 artifactory
-
 grunt:
   script:
-    - grunt publish:test --verbose
+    - grunt publish:test --verbose --artifactoryUser=${ARTIFACTORY_USERNAME} --artifactoryPassword=${ARTIFACTORY_PASSWORD}
