@@ -4,6 +4,10 @@ before_script:
   - npm install --silent
   - bower install
 
+ping:
+  script:
+    - ping -c 5 artifactory
+
 grunt:
   script:
-    - grunt build:test --verbose
+    - grunt publish:test --verbose
