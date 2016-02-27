@@ -1,5 +1,4 @@
-services:
-  - digitallyseamless/nodejs-bower-grunt
+image: digitallyseamless/nodejs-bower-grunt
 
 before_script:
   - npm install
