@@ -1,7 +1,5 @@
 services:
-  - node
-  - bower
-  - grunt
+  - digitallyseamless/nodejs-bower-grunt
 
 before_script:
   - npm install
