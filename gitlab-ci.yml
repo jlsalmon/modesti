@@ -1,0 +1,7 @@
+before_script:
+  - npm install
+  - bower install
+
+grunt:
+  script:
+    - grunt build:test --verbose
