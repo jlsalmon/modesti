@@ -1,7 +1,7 @@
 image: digitallyseamless/nodejs-bower-grunt
 
 before_script:
-  - npm install
+  - npm install -ddd
   - bower install
 
 grunt:
