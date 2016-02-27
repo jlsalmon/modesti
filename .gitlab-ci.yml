@@ -2,4 +2,4 @@ image: java:8
 
 gradle:
   script:
-    - ./gradlew clean build publish --info --stacktrace -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+    - ./gradlew clean build publish --info --stacktrace -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD} -Dmaven.wagon.provider.http=httpclient
