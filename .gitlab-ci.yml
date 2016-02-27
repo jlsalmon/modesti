@@ -1,3 +1,6 @@
+services:
+  - nodejs-bower-grunt
+
 before_script:
   - npm install
   - bower install
