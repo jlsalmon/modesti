@@ -223,7 +223,7 @@
 
           <div ng-if="field.type === 'autocomplete'">
 
-            <input type="text" class="form-control" autocomplete="off" placeholder="Type to search..."
+            <input type="text" class="form-control input-sm" autocomplete="off" placeholder="Type to search..."
                    ng-model="ctrl.filters[field.id].value"
                    typeahead="(field.model ? item[field.model] : item.value) for item in ctrl.queryFieldValues(field, $viewValue)"
                    typeahead-on-select="ctrl.search()"
