@@ -8,7 +8,7 @@ import cern.modesti.workflow.task.TaskInfo;
 import cern.modesti.workflow.task.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static cern.modesti.workflow.task.TaskAction.Action.CLAIM;
+import static cern.modesti.workflow.task.TaskAction.Action.ASSIGN;
 import static cern.modesti.workflow.task.TaskAction.Action.COMPLETE;
 import static org.junit.Assert.assertEquals;
 
@@ -52,7 +52,7 @@ public class CoreWorkflowServiceTest  {
    */
   private void claimCurrentTask(String requestId, String taskName, User user) {
     TaskInfo task = taskService.getTask(requestId, taskName);
-    taskService.execute(requestId, task.getName(), new TaskAction(CLAIM, user.getUsername()), user);
+    taskService.execute(requestId, task.getName(), new TaskAction(ASSIGN, user.getUsername()), user);
   }
 
   /**

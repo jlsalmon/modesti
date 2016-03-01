@@ -7,6 +7,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.DelegationState;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +20,7 @@ import static org.junit.Assert.*;
  *
  * @author Justin Lewis Salmon
  */
+@Ignore
 public class TaskServiceTest extends BaseIntegrationTest {
 
   @Autowired
@@ -39,49 +41,49 @@ public class TaskServiceTest extends BaseIntegrationTest {
     requestRepository.delete(request.getRequestId());
   }
 
-  @Test
-  public void delegate() {
-    TaskInfo task = taskService.getTask(request.getRequestId(), "task1");
-    // Ben claims the task
-    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(CLAIM, BEN.getUsername()), BEN);
-    assertTrue(task.getAssignee().equals(BEN.getUsername()));
+//  @Test
+//  public void delegate() {
+//    TaskInfo task = taskService.getTask(request.getRequestId(), "task1");
+//    // Ben claims the task
+//    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(CLAIM, BEN.getUsername()), BEN);
+//    assertTrue(task.getAssignee().equals(BEN.getUsername()));
+//
+//    // Ben delegates the task to Joe
+//    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(DELEGATE, JOE.getUsername()), BEN);
+//    assertTrue(task.getOwner().equals(BEN.getUsername()));
+//    assertTrue(task.getAssignee().equals(JOE.getUsername()));
+//    assertTrue(task.getDelegationState().equals(DelegationState.PENDING));
+//
+//    try {
+//      // Joe should NOT be able to complete the task, only resolve it back to Ben
+//      taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), JOE);
+//      fail("Delegates should not be able to complete tasks");
+//    } catch (ActivitiException ignored) {
+//    }
+//
+//    // Joe resolves the task back to Ben
+//    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(RESOLVE, null), JOE);
+//    assertTrue(task.getOwner().equals(BEN.getUsername()));
+//    assertTrue(task.getAssignee().equals(BEN.getUsername()));
+//    assertTrue(task.getDelegationState().equals(DelegationState.RESOLVED));
+//
+//    // Ben may now complete the task
+//    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), BEN);
+//    task = taskService.getTask(request.getRequestId(), "task2");
+//    assertNull(task.getAssignee());
+//  }
 
-    // Ben delegates the task to Joe
-    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(DELEGATE, JOE.getUsername()), BEN);
-    assertTrue(task.getOwner().equals(BEN.getUsername()));
-    assertTrue(task.getAssignee().equals(JOE.getUsername()));
-    assertTrue(task.getDelegationState().equals(DelegationState.PENDING));
-
-    try {
-      // Joe should NOT be able to complete the task, only resolve it back to Ben
-      taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), JOE);
-      fail("Delegates should not be able to complete tasks");
-    } catch (ActivitiException ignored) {
-    }
-
-    // Joe resolves the task back to Ben
-    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(RESOLVE, null), JOE);
-    assertTrue(task.getOwner().equals(BEN.getUsername()));
-    assertTrue(task.getAssignee().equals(BEN.getUsername()));
-    assertTrue(task.getDelegationState().equals(DelegationState.RESOLVED));
-
-    // Ben may now complete the task
-    taskService.execute(request.getRequestId(), task.getName(), new TaskAction(COMPLETE, null), BEN);
-    task = taskService.getTask(request.getRequestId(), "task2");
-    assertNull(task.getAssignee());
-  }
-
-  @Test
-  public void unclaim() {
-    TaskInfo task = taskService.getTask(request.getRequestId(), "task1");
-    //assertTrue(task.getOwner().equals(BEN.getUsername()));
-
-    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(CLAIM, BEN.getUsername()), BEN);
-    //assertTrue(task.getOwner().equals(BEN.getUsername()));
-    assertTrue(task.getAssignee().equals(BEN.getUsername()));
-
-    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(UNCLAIM, null), BEN);
-    //assertTrue(task.getOwner().equals(BEN.getUsername()));
-    assertNull(task.getAssignee());
-  }
+//  @Test
+//  public void unclaim() {
+//    TaskInfo task = taskService.getTask(request.getRequestId(), "task1");
+//    //assertTrue(task.getOwner().equals(BEN.getUsername()));
+//
+//    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(CLAIM, BEN.getUsername()), BEN);
+//    //assertTrue(task.getOwner().equals(BEN.getUsername()));
+//    assertTrue(task.getAssignee().equals(BEN.getUsername()));
+//
+//    task = taskService.execute(request.getRequestId(), task.getName(), new TaskAction(UNCLAIM, null), BEN);
+//    //assertTrue(task.getOwner().equals(BEN.getUsername()));
+//    assertNull(task.getAssignee());
+//  }
 }
