@@ -67,7 +67,7 @@ public class TaskController {
    *
    * @return
    */
-  @RequestMapping(method = GET, produces = "application/json")
+  @RequestMapping(method = GET, produces = "application/hal+json")
   public ResponseEntity<Resources<Resource<TaskInfo>>> getTasks(@PathVariable("id") String id) {
     List<TaskInfo> tasks = taskService.getTasks(id);
 
@@ -85,7 +85,7 @@ public class TaskController {
    *
    * @return
    */
-  @RequestMapping(value = "/{name}", method = GET, produces = "application/json")
+  @RequestMapping(value = "/{name}", method = GET, produces = "application/hal+json")
   public ResponseEntity<Resource<TaskInfo>> getTask(@PathVariable("id") String id, @PathVariable("name") String name) {
     TaskInfo task = taskService.getTask(id, name);
     if (task == null) {
@@ -104,7 +104,7 @@ public class TaskController {
    *
    * @return
    */
-  @RequestMapping(value = "/{name}", method = POST, produces = "application/json")
+  @RequestMapping(value = "/{name}", method = POST, produces = "application/hal+json")
   public HttpEntity<Resource<TaskInfo>> action(@PathVariable("id") String id, @PathVariable("name") String taskName, @RequestBody TaskAction action,
                                                Principal principal) {
     User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
