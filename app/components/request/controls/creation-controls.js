@@ -104,8 +104,8 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
    * Called after a change is made to the table (edit, paste, etc.)
    */
   function afterChange() {
-    SchemaService.generateTagnames(self.request);
-    SchemaService.generateFaultStates(self.request);
+    SchemaService.generateTagnames(self.parent.request);
+    SchemaService.generateFaultStates(self.parent.request);
     //SchemaService.generateAlarmCategories(self.request);
   }
 }
