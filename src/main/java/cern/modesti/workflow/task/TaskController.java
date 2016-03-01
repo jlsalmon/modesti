@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,7 +67,7 @@ public class TaskController {
    *
    * @return
    */
-  @RequestMapping(method = GET)
+  @RequestMapping(method = GET, produces = "application/json")
   public ResponseEntity<Resources<Resource<TaskInfo>>> getTasks(@PathVariable("id") String id) {
     List<TaskInfo> tasks = taskService.getTasks(id);
 
@@ -83,7 +85,7 @@ public class TaskController {
    *
    * @return
    */
-  @RequestMapping(value = "/{name}", method = GET)
+  @RequestMapping(value = "/{name}", method = GET, produces = "application/json")
   public ResponseEntity<Resource<TaskInfo>> getTask(@PathVariable("id") String id, @PathVariable("name") String name) {
     TaskInfo task = taskService.getTask(id, name);
     if (task == null) {
@@ -102,7 +104,7 @@ public class TaskController {
    *
    * @return
    */
-  @RequestMapping(value = "/{name}", method = POST)
+  @RequestMapping(value = "/{name}", method = POST, produces = "application/json")
   public HttpEntity<Resource<TaskInfo>> action(@PathVariable("id") String id, @PathVariable("name") String taskName, @RequestBody TaskAction action,
                                                Principal principal) {
     User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();

@@ -3,7 +3,6 @@ package cern.modesti.workflow;
 import cern.modesti.request.Request;
 import cern.modesti.user.User;
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.TaskService;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
@@ -26,10 +25,9 @@ import static java.lang.String.format;
 public class AuthService {
 
   @Autowired
-  private TaskService taskService;
+  private org.activiti.engine.TaskService taskService;
 
   /**
-   *
    * @param request
    * @param user
    * @return
@@ -41,33 +39,21 @@ public class AuthService {
   }
 
   /**
-   *
    * @param request
    * @param user
    * @return
    */
   public boolean isAuthorised(Request request, User user) {
-
     Task currentTask = getTaskForRequest(request.getRequestId());
-    return isUserAuthorisedFor(currentTask, user);
-  }
-
-  /**
-   * @param requestId
-   *
-   * @return
-   */
-  private Task getTaskForRequest(String requestId) {
-    return taskService.createTaskQuery().processInstanceBusinessKey(requestId).active().singleResult();
+    return isAuthorised(currentTask, user);
   }
 
   /**
    * @param task
    * @param user
-   *
    * @return
    */
-  private boolean isUserAuthorisedFor(Task task, User user) {
+  public boolean isAuthorised(Task task, User user) {
     Set<String> roles = getRoles(user);
     Set<String> candidateGroups = getCandidateGroups(task);
 
@@ -88,32 +74,26 @@ public class AuthService {
 
   /**
    * @param task
-   *
    * @return
    */
-  private Set<String> getCandidateGroups(Task task) {
+  public Set<String> getCandidateGroups(Task task) {
     return taskService.getIdentityLinksForTask(task.getId()).stream().filter(link -> link.getType().equals(IdentityLinkType.CANDIDATE)).map
         (IdentityLink::getGroupId).collect(Collectors.toSet());
   }
 
   /**
    * @param user
-   *
    * @return
    */
   private Set<String> getRoles(User user) {
     return user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
   }
 
-//  /**
-//   *
-//   * @param request
-//   * @param user
-//   * @return
-//   */
-//  public boolean isAssigned(Request request, User user) {
-//    boolean assigned = request.getAssignee().getUsername().equals(user.getUsername());
-//    log.debug(format("user %s is assigned to at least one task on request %s: %b", user.getUsername(), request.getRequestId(), assigned));
-//    return assigned;
-//  }
+  /**
+   * @param requestId
+   * @return
+   */
+  private Task getTaskForRequest(String requestId) {
+    return taskService.createTaskQuery().processInstanceBusinessKey(requestId).active().singleResult();
+  }
 }

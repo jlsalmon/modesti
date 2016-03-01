@@ -17,6 +17,6 @@ public class TaskAction {
   private String assignee;
 
   public enum Action {
-    ASSIGN, CLAIM, COMPLETE, DELEGATE, RESOLVE, UNCLAIM
+    ASSIGN, /*CLAIM,*/ COMPLETE /*, DELEGATE, RESOLVE, UNCLAIM*/
   }
 }

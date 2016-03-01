@@ -26,7 +26,7 @@ public interface RequestRepository extends MongoRepository<Request, String>, Que
    * A user may save a request if:
    * <p>
    * - They are the original creator
-   * - They are an approver or cabler and are assigned to the approval/addressing/cabling task
+   * - They are the current assignee
    * - They are an administrator
    * <p>
    * TODO cover this with test cases
@@ -34,15 +34,15 @@ public interface RequestRepository extends MongoRepository<Request, String>, Que
    * @param request
    * @return
    */
-  @PreAuthorize("@authService.isCreator(#request, principal) or @authService.isAssigned(#request, principal) or hasRole('modesti-administrators')")
+  @PreAuthorize("@authService.isCreator(#request, principal) or @authService.isAuthorised(#request, principal) or hasRole('modesti-administrators')")
   @Override
   Request save(@Param("request") Request request);
 
-  @PreAuthorize("@authService.isCreator(#request, principal) or @authService.isAssigned(#request, principal) or hasRole('modesti-administrators')")
+  @PreAuthorize("@authService.isCreator(#request, principal) or hasRole('modesti-administrators')")
   @Override
   void delete(String id);
 
-  @PreAuthorize("@authService.isCreator(#request, principal) or @authService.isAssigned(#request, principal) or hasRole('modesti-administrators')")
+  @PreAuthorize("@authService.isCreator(#request, principal) or hasRole('modesti-administrators')")
   @Override
   void delete(@Param("request") Request request);
 
