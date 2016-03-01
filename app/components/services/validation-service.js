@@ -13,7 +13,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
   // Public API
   var service = {
     validateRequest: validateRequest,
-    setErrorMessage: setErrorMessage,
+    setErrorMessage: setErrorMessage
   };
 
   /**
@@ -147,7 +147,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
 
           // Min length
           if (field.minLength) {
-            if (value && value.length < field.minLength) {
+            if (value && value.toString().length < field.minLength) {
               point.properties.valid = category.valid = valid = false;
               setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
             }
@@ -155,7 +155,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
 
           // Max length
           if (field.maxLength) {
-            if (value && value.length > field.maxLength) {
+            if (value && value.toString().length > field.maxLength) {
               //cell.valid = false;
               point.properties.valid = category.valid = valid = false;
               setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
