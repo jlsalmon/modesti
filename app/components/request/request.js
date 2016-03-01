@@ -128,6 +128,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   self.showHistory = showHistory;
   self.cloneRequest = cloneRequest;
   self.deleteRequest = deleteRequest;
+  self.saveNewValue = saveNewValue;
 
   $localStorage.$default({
     lastActiveCategory: {}
@@ -841,19 +842,127 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
 
   /**
    * Called after a change is made to the table (edit, paste, etc.)
+   *
+   * @param changes a 2D array containing information about each of the edited cells [ [row, prop, oldVal, newVal], ... ]
+   * @param source one of the strings: "alter", "empty", "edit", "populateFromArray", "loadData", "autofill", "paste"
    */
-  function afterChange() {
-    console.log('afterChange()');
-
-    // Normalise point ids.
-    // TODO is this necessary anymore?
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      self.rows[i].lineNo = i + 1;
+  function afterChange(changes, source) {
+    // When the table is initially loaded, this callback is invoked with source === 'loadData'. In that case, we don't
+    // want to do anything.
+    if (source === 'loadData') {
+      return;
     }
 
-    SchemaService.generateTagnames(self.request);
-    SchemaService.generateFaultStates(self.request);
-    //SchemaService.generateAlarmCategories(self.request);
+    console.log('afterChange()');
+
+    // Make sure the line numbers are consecutive
+    self.rows.forEach(function (row, i) {
+      row.lineNo = i + 1;
+    });
+
+    var promises = [];
+
+    // Loop over the changes and check if anything actually changed. Mark any changed points as dirty.
+    var change, row, property, oldValue, newValue, dirty = false;
+    for (var i = 0, len = changes.length; i < len; i++) {
+      change = changes[i];
+      row = change[0];
+      property = change[1];
+      oldValue = change[2];
+      newValue = change[3];
+
+      // Mark the point as dirty.
+      if (newValue !== oldValue) {
+        console.log('dirty point: ' + self.rows[row].lineNo);
+        dirty = true;
+        self.rows[row].dirty = true;
+      }
+
+      // If the value was cleared, make sure any other properties of the object are also cleared.
+      if (newValue === undefined || newValue === null || newValue === '') {
+        //var point = self.parent.hot.getSourceDataAtRow(row);
+        var point = self.rows[row];
+        var propName = property.split('.')[1];
+
+        var prop = point.properties[propName];
+
+        if (typeof prop === 'object') {
+          for (var attribute in prop) {
+            if (prop.hasOwnProperty(attribute)) {
+              prop[attribute] = null;
+            }
+          }
+        } else {
+          prop = null;
+        }
+
+      }
+
+      // This is a workaround. See function documentation for info.
+      var promise = saveNewValue(row, property, newValue);
+      promises.push(promise);
+    }
+
+    // Wait for all new values to be updated
+    $q.all(promises).then(function () {
+
+      // If nothing changed, there's nothing to do! Otherwise, save the request.
+      if (dirty) {
+        RequestService.saveRequest(self.request).then(function () {
+          // If we are in the "submit" stage of the workflow and the form is modified, then it will need to be
+          // revalidated. This is done by sending the "requestModified" signal.
+          if (self.tasks.submit) {
+            self.sendModificationSignal();
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Currently Handsontable does not support columns backed by complex objects, so for now it's necessary to manually save the object in the background.
+   * See https://github.com/handsontable/handsontable/issues/2578.
+   *
+   * Also, sometimes after a modification, Handsontable does not properly save the new value to the underlying point. So we manually save the value in
+   * the background to be doubly sure that the new value is persisted.
+   *
+   * @param row
+   * @param property
+   * @param newValue
+   */
+  function saveNewValue(row, property, newValue) {
+    var q = $q.defer();
+    var point = self.rows[row];
+
+    // get the outer object i.e. properties.location.value -> location
+    var outerProp = property.split('.')[1];
+    var field = Utils.getField(self.schema, outerProp);
+
+    // For autocomplete fields, re-query the values and manually save it back to the point.
+    if (field.type === 'autocomplete') {
+      SchemaService.queryFieldValues(field, newValue, point).then(function (values) {
+
+        values.forEach(function (item) {
+          var value = (field.model === undefined && typeof item === 'object') ? item.value : item[field.model];
+
+          if (value === newValue) {
+            console.log('saving new value');
+            delete item._links;
+            point.properties[outerProp] = item;
+          }
+        });
+
+        q.resolve();
+      });
+    }
+
+    // For non-autocomplete fields, just manually save the new value.
+    else {
+      point.properties[outerProp] = newValue;
+      q.resolve();
+    }
+
+    return q.promise;
   }
 
   /**
@@ -947,25 +1056,6 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       console.log('onPaste(): ' + value);
     });
   }
-
-  ///**
-  // *
-  // * @param query
-  // */
-  //function search(query) {
-  //
-  //  var result = self.hot.search.query(query);
-  //  //self.hot.loadData(result);
-  //}
-
-  ///**
-  // *
-  // */
-  //function resetSorting() {
-  //  // Hack to clear sorting
-  //  self.hot.updateSettings({columnSorting: false});
-  //  self.hot.updateSettings({columnSorting: true});
-  //}
 
   /**
    *
@@ -1203,7 +1293,6 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       }
     }
   }
-
 
   /**
    * Slightly hacky little function to make sure all the elements on the page are properly
