@@ -938,6 +938,13 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     var outerProp = property.split('.')[1];
     var field = Utils.getField(self.schema, outerProp);
 
+    // If there is no corresponding field in the schema, then it must be a "virtual"
+    // column (such as "comment" or "checkbox")
+    if (field === undefined) {
+      q.resolve();
+      return q.promise;
+    }
+
     // For autocomplete fields, re-query the values and manually save it back to the point.
     if (field.type === 'autocomplete') {
       SchemaService.queryFieldValues(field, newValue, point).then(function (values) {
