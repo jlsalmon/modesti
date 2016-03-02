@@ -242,7 +242,7 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
     },
 
     function (error) {
-      console.log(error.data.message);
+      console.log(error.statusText);
       for (var i in error.data.errors) {
         console.log('error: ' + error.data.errors[i].message);
       }
