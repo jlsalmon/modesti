@@ -25,8 +25,6 @@ import java.util.*;
 import static java.lang.String.format;
 
 /**
- * TODO
- *
  * @author Justin Lewis Salmon
  */
 @Service
@@ -59,40 +57,54 @@ public class LdapSynchroniser {
     groupIds.addAll(env.getRequiredProperty("modesti.role.administrators", List.class));
 
     for (String groupId : groupIds) {
-      LdapName ln = new LdapName(env.getRequiredProperty("ldap.group.filter"));
-      ln.add(new Rdn("cn", groupId));
+      synchroniseGroup(groupId);
+    }
+  }
 
-      // E.g.: (memberOf=CN=modesti-developers,OU=e-groups,OU=Workgroups,DC=cern,DC=ch)
-      EqualsFilter filter = new EqualsFilter("memberOf", ln.toString());
-      List users = ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), SearchControls.SUBTREE_SCOPE, null, (Object ctx) -> ctx);
+  private void synchroniseGroup(String groupId) throws InvalidNameException {
+    LdapName ln = new LdapName(env.getRequiredProperty("ldap.group.filter"));
+    ln.add(new Rdn("cn", groupId));
 
-      for (Object object : users) {
-        DirContextAdapter adapter = (DirContextAdapter) object;
+    // E.g.: (memberOf=CN=modesti-developers,OU=e-groups,OU=Workgroups,DC=cern,DC=ch)
+    EqualsFilter filter = new EqualsFilter("memberOf", ln.toString());
+    List users = ldapTemplate.search(LdapUtils.emptyLdapName(), filter.encode(), SearchControls.SUBTREE_SCOPE, null, (Object ctx) -> ctx);
+
+    for (Object object : users) {
+      DirContextAdapter adapter = (DirContextAdapter) object;
+
+      if (adapter.attributeExists("employeeID")) {
         String username = adapter.getStringAttribute("CN");
+        synchroniseUser(username, groupId, adapter);
+      }
 
-        User user = userRepository.findOneByUsername(username);
-
-        if (user == null) {
-          user = new User();
-          user.setEmployeeId(Integer.valueOf(adapter.getStringAttribute("employeeID")));
-          user.setUsername(username);
-          user.setFirstName(adapter.getStringAttribute("givenName"));
-          user.setLastName(adapter.getStringAttribute("sn"));
-          user.setEmail(adapter.getStringAttribute("mail"));
-          user.setAuthorities(new ArrayList<>(Collections.singleton(new Role(groupId))));
-          log.debug(format("adding new user %s", user));
-
-        } else {
-          Role role = new Role(groupId);
-
-          if (!user.getAuthorities().contains(role)) {
-            log.debug(format("adding user %s to group '%s'", user, groupId));
-            user.getAuthorities().add(role);
-          }
-        }
-
-        userRepository.save(user);
+      // Recursively synchronise groups-in-groups
+      else if (adapter.attributeExists("member")) {
+        synchroniseGroup(adapter.getStringAttribute("CN"));
       }
     }
+  }
+
+  private void synchroniseUser(String username, String groupId, DirContextAdapter adapter) {
+    User user = userRepository.findOneByUsername(username);
+    if (user == null) {
+      user = new User();
+      user.setEmployeeId(Integer.valueOf(adapter.getStringAttribute("employeeID")));
+      user.setUsername(username);
+      user.setFirstName(adapter.getStringAttribute("givenName"));
+      user.setLastName(adapter.getStringAttribute("sn"));
+      user.setEmail(adapter.getStringAttribute("mail"));
+      user.setAuthorities(new ArrayList<>(Collections.singleton(new Role(groupId))));
+      log.debug(format("adding new user %s", user));
+
+    } else {
+      Role role = new Role(groupId);
+
+      if (!user.getAuthorities().contains(role)) {
+        log.debug(format("adding user %s to group '%s'", user, groupId));
+        user.getAuthorities().add(role);
+      }
+    }
+
+    userRepository.save(user);
   }
 }
