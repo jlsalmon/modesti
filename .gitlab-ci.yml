@@ -6,4 +6,4 @@ before_script:
 
 grunt:
   script:
-    - grunt publish:test --verbose --artifactoryUser=${ARTIFACTORY_USERNAME} --artifactoryPassword=${ARTIFACTORY_PASSWORD}
+    - grunt build:test --verbose --artifactoryUser=${ARTIFACTORY_USERNAME} --artifactoryPassword=${ARTIFACTORY_PASSWORD}
