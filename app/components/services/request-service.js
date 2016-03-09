@@ -263,7 +263,7 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
       domain: request.domain,
       type : request.type,
       description : request.description,
-      creator : request.creator,
+      creator : AuthService.getCurrentUser(),
       //subsystem: request.subsystem,
       points: request.points.slice(),
       properties: {}
