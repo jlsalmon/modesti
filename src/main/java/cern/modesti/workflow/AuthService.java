@@ -54,6 +54,10 @@ public class AuthService {
    * @return
    */
   public boolean isAuthorised(Task task, User user) {
+    if (task == null) {
+      return true;
+    }
+
     Set<String> roles = getRoles(user);
     Set<String> candidateGroups = getCandidateGroups(task);
 
