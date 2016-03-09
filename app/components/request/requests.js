@@ -188,7 +188,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     var customProperties = '';
 
     self.schemas.forEach(function (schema) {
-      if (schema.id === request.domain) {
+      if (schema.id === request.domain && schema.fields) {
         schema.fields.forEach(function (field) {
           if (request.properties.hasOwnProperty(field.id)) {
             var value = field.model ? request.properties[field.id][field.model] : request.properties[field.id].value;
