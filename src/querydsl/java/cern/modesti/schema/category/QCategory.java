@@ -30,9 +30,7 @@ public class QCategory extends BeanPath<Category> {
 
     public final StringPath id = createString("id");
 
-    public final StringPath name_en = createString("name_en");
-
-    public final StringPath name_fr = createString("name_fr");
+    public final StringPath name = createString("name");
 
     public QCategory(String variable) {
         super(Category.class, forVariable(variable));

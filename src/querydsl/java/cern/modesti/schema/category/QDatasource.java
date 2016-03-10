@@ -37,10 +37,7 @@ public class QDatasource extends BeanPath<Datasource> {
     public final StringPath id = _super.id;
 
     //inherited
-    public final StringPath name_en = _super.name_en;
-
-    //inherited
-    public final StringPath name_fr = _super.name_fr;
+    public final StringPath name = _super.name;
 
     public QDatasource(String variable) {
         super(Datasource.class, forVariable(variable));

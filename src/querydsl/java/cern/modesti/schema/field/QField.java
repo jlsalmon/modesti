@@ -23,9 +23,7 @@ public class QField extends BeanPath<Field> {
 
     public final SimplePath<Object> editable = createSimple("editable", Object.class);
 
-    public final StringPath help_en = createString("help_en");
-
-    public final StringPath help_fr = createString("help_fr");
+    public final StringPath help = createString("help");
 
     public final StringPath id = createString("id");
 
@@ -35,9 +33,7 @@ public class QField extends BeanPath<Field> {
 
     public final StringPath model = createString("model");
 
-    public final StringPath name_en = createString("name_en");
-
-    public final StringPath name_fr = createString("name_fr");
+    public final StringPath name = createString("name");
 
     public final SimplePath<Object> required = createSimple("required", Object.class);
 

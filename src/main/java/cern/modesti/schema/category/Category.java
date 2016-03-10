@@ -19,9 +19,7 @@ public class Category {
   @Id
   private String id;
 
-  private String name_en;
-
-  private String name_fr;
+  private String name;
 
   private Object editable;
 
@@ -49,8 +47,7 @@ public class Category {
    */
   public Category(Category category) {
     id = category.id;
-    name_en = category.name_en;
-    name_fr = category.name_fr;
+    name = category.name;
     editable = category.editable;
     constraints = category.constraints == null ? null : new ArrayList<>(category.constraints);
     fields = category.fields == null ? null : new ArrayList<>(category.fields);

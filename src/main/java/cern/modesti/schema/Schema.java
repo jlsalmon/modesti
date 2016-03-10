@@ -36,9 +36,7 @@ public class Schema {
   @Id
   private String id;
 
-  private String name;
-
-  private String domain;
+  private String description;
 
   @JsonProperty("abstract")
   @Getter(AccessLevel.NONE)
@@ -60,13 +58,11 @@ public class Schema {
 
   /**
    * @param id
-   * @param name
-   * @param domain
+   * @param description
    */
-  public Schema(String id, String name, String domain) {
+  public Schema(String id, String description) {
     this.id = id;
-    this.name = name;
-    this.domain = domain;
+    this.description = description;
   }
 
   /**

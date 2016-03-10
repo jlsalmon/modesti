@@ -37,9 +37,7 @@ public class Field implements Serializable {
   @Id
   private String id;
 
-  private String name_en;
-
-  private String name_fr;
+  private String name;
 
   private String type;
 
@@ -61,9 +59,7 @@ public class Field implements Serializable {
   @JsonProperty("default")
   private Object defaultValue;
 
-  private String help_en = "";
-
-  private String help_fr = "";
+  private String help = "";
 
   public Field(String id) {
     this.id = id;
