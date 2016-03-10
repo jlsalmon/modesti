@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * TODO
- *
  * @author Justin Lewis Salmon
  */
 @Data

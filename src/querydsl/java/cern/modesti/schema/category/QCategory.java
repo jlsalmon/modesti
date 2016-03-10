@@ -22,6 +22,8 @@ public class QCategory extends BeanPath<Category> {
 
     public final ListPath<Constraint, SimplePath<Constraint>> constraints = this.<Constraint, SimplePath<Constraint>>createList("constraints", Constraint.class, SimplePath.class, PathInits.DIRECT2);
 
+    public final StringPath description = createString("description");
+
     public final SimplePath<Object> editable = createSimple("editable", Object.class);
 
     public final ListPath<String, StringPath> excludes = this.<String, StringPath>createList("excludes", String.class, StringPath.class, PathInits.DIRECT2);
