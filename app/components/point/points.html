@@ -129,13 +129,13 @@
       <div class="btn-group" dropdown>
         <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
           <span class="text-muted">category:</span>
-          {{ctrl.activeCategory.name_en}} <span class="caret"></span>
+          {{ctrl.activeCategory.name}} <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
           <li ng-repeat="category in ctrl.schema.categories"
               ng-click="ctrl.activateCategory(category)">
             <a href="">
-              <span>{{::category.name_en}}
+              <span>{{::category.name}}
               <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
             </a>
           </li>
@@ -145,7 +145,7 @@
           <li ng-repeat="datasource in ctrl.schema.datasources"
               ng-click="ctrl.activateCategory(datasource)">
             <a href="">
-              <span>{{::datasource.name_en}}
+              <span>{{::datasource.name}}
               <i ng-if="datasource.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
             </a>
           </li>
@@ -194,7 +194,7 @@
       <thead>
       <tr>
         <th ng-repeat="field in ctrl.activeCategory.fields">
-          {{field.name_en}}
+          {{field.name}}
         </th>
       </tr>
 

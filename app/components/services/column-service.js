@@ -80,8 +80,8 @@ function ColumnService($translate, SchemaService) {
   function getColumnHeader(field) {
     var html = '<span class="help-text" data-container="body" data-toggle="popover" data-placement="bottom" ';
     /*jshint camelcase: false */
-    html += 'data-content="' + ($translate.use() === 'en' ? field.help_en : field.help_fr) + '">';
-    html += $translate.use() === 'en' ? field.name_en : field.name_fr;
+    html += 'data-content="' + field.help + '">';
+    html += field.name;
     html += field.required ? '*' : '';
     html += '</span>';
     return html;

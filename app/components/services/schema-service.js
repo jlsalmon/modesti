@@ -336,10 +336,8 @@ function SchemaService($q, $http, Utils) {
       type: 'text',
       editable: false,
       unique: true,
-      name_en: 'Tagname',
-      name_fr: 'Tagname',
-      help_en: '',
-      help_fr: ''
+      name: 'Tagname',
+      help: '',
     };
   }
 
@@ -364,10 +362,8 @@ function SchemaService($q, $http, Utils) {
       'id': 'problemDescription',
       'type': 'text',
       'editable': false,
-      'name_en': 'Problem Description',
-      'name_fr': 'Problem Description',
-      'help_en': '',
-      'help_fr': ''
+      'name': 'Problem Description',
+      'help': '',
     };
   }
 
@@ -381,10 +377,8 @@ function SchemaService($q, $http, Utils) {
       'id': 'faultFamily',
       'type': 'text',
       'editable': false,
-      'name_en': 'Fault Family',
-      'name_fr': 'Fault Family',
-      'help_en': '',
-      'help_fr': ''
+      'name': 'Fault Family',
+      'help': '',
     };
   }
 
@@ -399,10 +393,8 @@ function SchemaService($q, $http, Utils) {
       'type': 'text',
       'editable': false,
       'maxLength': 30,
-      'name_en': 'Fault Member',
-      'name_fr': 'Fault Member',
-      'help_en': '',
-      'help_fr': ''
+      'name': 'Fault Member',
+      'help': '',
     };
   }
 

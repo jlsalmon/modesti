@@ -18,7 +18,7 @@ function active() {
       datasources.forEach(function (datasource) {
 
         if (point.properties.pointType &&
-          (point.properties.pointType === angular.uppercase(datasource.id) || point.properties.pointType === angular.uppercase(datasource.name_en))) {
+          (point.properties.pointType === angular.uppercase(datasource.id) || point.properties.pointType === angular.uppercase(datasource.name))) {
           if (result.indexOf(datasource) === -1) {
             result.push(datasource);
           }

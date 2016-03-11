@@ -120,7 +120,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
           // Check for invalid fields
           if (!isValidValue(value, point, field)) {
             point.properties.valid = category.valid = valid = false;
-            setErrorMessage(point, propertyName, 'Value "' + value + '" is not a legal option for field "' + field.name_en + '". Please select a value from the list.');
+            setErrorMessage(point, propertyName, 'Value "' + value + '" is not a legal option for field "' + field.name + '". Please select a value from the list.');
           }
 
           // Validate unique fields
@@ -141,7 +141,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
           if (required === true) {
             if (value === '' || value === undefined || value === null) {
               point.properties.valid = category.valid = valid = false;
-              setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" is mandatory');
+              setErrorMessage(point, propertyName, 'Field "' + field.name + '" is mandatory');
             }
           }
 
@@ -149,7 +149,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
           if (field.minLength) {
             if (value && value.toString().length < field.minLength) {
               point.properties.valid = category.valid = valid = false;
-              setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must be at least ' + field.minLength + ' characters in length');
+              setErrorMessage(point, propertyName, 'Field "' + field.name + '" must be at least ' + field.minLength + ' characters in length');
             }
           }
 
@@ -158,7 +158,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
             if (value && value.toString().length > field.maxLength) {
               //cell.valid = false;
               point.properties.valid = category.valid = valid = false;
-              setErrorMessage(point, propertyName, 'Field "' + field.name_en + '" must not exceed ' + field.maxLength + ' characters in length');
+              setErrorMessage(point, propertyName, 'Field "' + field.name + '" must not exceed ' + field.maxLength + ' characters in length');
             }
           }
 
@@ -166,7 +166,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
           if (field.type === 'numeric') {
             if (value && !isNumeric(value)) {
               point.properties.valid = category.valid = valid = false;
-              setErrorMessage(point, propertyName, 'Value for "' + field.name_en + '" must be numeric');
+              setErrorMessage(point, propertyName, 'Value for "' + field.name + '" must be numeric');
             }
           }
         });
@@ -262,7 +262,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
         var fieldNames = getFieldNames(category, constraint.members);
 
         emptyFields.forEach(function (emptyField) {
-          setErrorMessage(point, getPropertyName(emptyField), 'At least one of "' + fieldNames.join(', ') + '" is required for group "' + category.name_en + '"');
+          setErrorMessage(point, getPropertyName(emptyField), 'At least one of "' + fieldNames.join(', ') + '" is required for group "' + category.name + '"');
         });
       }
     });
@@ -302,7 +302,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
         point.properties.valid = category.valid = valid = false;
 
         emptyFields.forEach(function (emptyField) {
-          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name_en + '"');
+          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name + '" is required for points of type "' + category.name + '"');
         });
       }
     });
@@ -342,7 +342,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
         point.properties.valid = category.valid = valid = false;
 
         emptyFields.forEach(function (emptyField) {
-          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name_en + '" is required for points of type "' + category.name_en + '"');
+          setErrorMessage(point, getPropertyName(emptyField), 'Field "' + emptyField.name + '" is required for points of type "' + category.name + '"');
         });
       }
     });
@@ -449,7 +449,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
 
                 if (emptyFields.length !== excludedCategory.fields.length) {
                   point.properties.valid = category.valid = excludedCategory.valid = valid = false;
-                  setErrorMessage(point, '', 'Fields in the "' + category.name_en + '" group cannot be used if fields in the "' + excludedCategory.name_en +
+                  setErrorMessage(point, '', 'Fields in the "' + category.name + '" group cannot be used if fields in the "' + excludedCategory.name +
                     '" group have been specified.');
                 }
               }
@@ -522,7 +522,7 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
     var fieldNames = [];
 
     getFields(category, fieldIds).forEach(function (field) {
-      fieldNames.push(field.name_en);
+      fieldNames.push(field.name);
     });
 
     return fieldNames;
