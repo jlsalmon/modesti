@@ -21,6 +21,7 @@
           <div class="btn-group pull-right">
 
             <button class="btn btn-primary"
+                    ng-disabled="ctrl.inserting == 'started'"
                     ng-click="ctrl.insert($event)"
                     tooltip-append-to-body="true"
                     tooltip="Insert request">
