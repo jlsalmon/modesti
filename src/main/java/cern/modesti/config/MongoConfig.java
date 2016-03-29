@@ -1,6 +1,7 @@
 package cern.modesti.config;
 
 import cern.modesti.util.DateToTimestampConverter;
+import com.github.fakemongo.Fongo;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -25,7 +26,6 @@ import static java.util.Collections.singletonList;
 
 @Configuration
 @EnableMongoAuditing
-@Profile({"test", "prod"})
 public class MongoConfig extends AbstractMongoConfiguration {
 
   @Autowired
@@ -38,9 +38,16 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
   @Override
   public Mongo mongo() throws Exception {
+    String host = env.getProperty("mongodb.host");
+
+    // If no hostname is supplied, an in-memory mongodb will be used
+    if (host == null) {
+      return new Fongo(getDatabaseName()).getMongo();
+    }
+
     List<ServerAddress> hosts = new ArrayList<>();
-    for (Object host : env.getRequiredProperty("mongodb.host", List.class)) {
-      hosts.add(new ServerAddress((String) host));
+    for (Object hostname : env.getRequiredProperty("mongodb.host", List.class)) {
+      hosts.add(new ServerAddress((String) hostname));
     }
 
     String username = env.getRequiredProperty("mongodb.username");
