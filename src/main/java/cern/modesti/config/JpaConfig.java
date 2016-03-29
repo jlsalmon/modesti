@@ -13,7 +13,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import javax.sql.DataSource;
 
 @Configuration
-@Profile({"dev", "test", "prod"})
 public class JpaConfig {
 
   @Bean

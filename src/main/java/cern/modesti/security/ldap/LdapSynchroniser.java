@@ -51,6 +51,7 @@ public class LdapSynchroniser {
     log.debug("synchronising users and groups with LDAP server");
     Set<String> groupIds = new HashSet<>();
 
+    // TODO: remove this TIM specific code
     groupIds.addAll(env.getRequiredProperty("modesti.role.creators", List.class));
     groupIds.addAll(env.getRequiredProperty("modesti.role.approvers", List.class));
     groupIds.addAll(env.getRequiredProperty("modesti.role.cablers", List.class));

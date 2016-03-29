@@ -17,7 +17,7 @@ import java.net.URLClassLoader;
  * The "dev" profile uses:
  *  - In-memory JDBC datasource (h2)
  *  - In-memory MongoDB datasource (fongo)
- *  - In-memory LDAP authentication
+ *  - No authentication
  *
  * @author Justin Lewis Salmon
  */
