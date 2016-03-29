@@ -4,19 +4,38 @@ Monitoring Data Entry System for Technical Infrastructure (backend server)
 
 ## Development
 
-Requirements for running backend:
-* MongoDB 2.6.10+ running
-* Connection to TN (for C2MON and TIM connections) or appropriate tunnels
+The MODESTI server is designed to be runnable out-of-the-box without any configuration.
+To get the server up and running (with no plugins loaded):
 
-Instructions:
-* Compile and run: `java cern.modesti.Application -Dspring.profiles.active=(dev|test|prod)`
+```
+$ git clone ssh://git@gitlab.cern.ch:7999/modesti/modesti-server.git
+$ cd modesti-server
+$ ./gradlew build
+$ java -jar build/libs/modesti-server-*.jar
+```
 
-Profiles:
-* `dev`: uses in-memory h2 database, in-memory MongoDB and in-memory LDAP authentication
-* `test`: uses timdb-test, modestidb-test and xldap.cern.ch
-* `prod`: uses timdb, modestidb and xldap.cern.ch
+In the default configuration, the server will use an in-memory database and no
+real authentication (a fake test user is created).
 
-## Build and deployment
+### Writing a plugin
+
+For technical documentation about writing a plugin, please refer to the
+[MODESTI wiki](https://gitlab.cern.ch/modesti/modesti/wikis/home).
+
+### Deploying a plugin
+
+To use a plugin in a development environment, you must pass the path to the plugin
+JAR (and any other necessary files, e.g. config files) using the `loader.path` JVM
+argument:
+
+```
+java -Dloader.path=/path/to/modesti-plugin-dir/ -jar build/libs/modesti-server-*.jar
+```
+
+You can pass multiple directories with `loader.path` separated by commas. Be careful
+to pass the argument *before* `-jar` or it will be ignored.
+
+## Publishing
 
 Build, test, package and publish a snapshot to Artifactory with Gradle: `./gradlew publish`
 
