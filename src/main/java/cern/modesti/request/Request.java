@@ -30,15 +30,11 @@ public class Request implements Serializable {
 
   private static final long serialVersionUID = -7075036449830835583L;
 
-  /**
-   * Internal mongodb id
-   */
+  /** Internal mongodb id  */
   @Id
   private String id;
 
-  /**
-   * Human-readable id
-   */
+  /** Human-readable id */
   @Indexed
   private String requestId;
 
@@ -79,9 +75,7 @@ public class Request implements Serializable {
   @Version
   private Long version;
 
-  /**
-   * Custom properties
-   */
+  /** Custom properties */
   private Map<String, Object> properties = new HashMap<>();
 
   /**
@@ -98,7 +92,6 @@ public class Request implements Serializable {
     this.creator = request.creator;
     this.description = request.description;
     this.domain = request.domain;
-//    this.subsystem = request.subsystem;
     this.points = request.points;
   }
 

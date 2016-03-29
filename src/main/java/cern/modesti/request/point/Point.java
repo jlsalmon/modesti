@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -12,7 +13,9 @@ import java.util.*;
  */
 @Data
 @NoArgsConstructor
-public class Point {
+public class Point implements Serializable {
+
+  private static final long serialVersionUID = -7975036449830835583L;
 
   private Long lineNo;
 

@@ -10,9 +10,9 @@ import java.util.List;
  * @author Justin Lewis Salmon
  */
 @Data
-public class RequestHistoryChange {
+public class ChangeEvent {
 
   private final DateTime changeDate;
 
-  private List<RequestHistoryChangeItem> items = new ArrayList<>();
+  private List<Change> changes = new ArrayList<>();
 }

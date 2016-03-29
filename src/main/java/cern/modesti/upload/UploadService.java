@@ -3,6 +3,7 @@ package cern.modesti.upload;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.request.counter.CounterService;
+import cern.modesti.request.history.RequestHistoryService;
 import cern.modesti.upload.parser.RequestParseResult;
 import cern.modesti.upload.parser.RequestParserFactory;
 import cern.modesti.user.User;
@@ -29,6 +30,9 @@ public class UploadService {
 
   @Autowired
   private RequestParserFactory requestParserFactory;
+
+  @Autowired
+  private RequestHistoryService historyService;
 
   @Autowired
   private CounterService counterService;
@@ -60,6 +64,9 @@ public class UploadService {
 
     // Store the request in the database
     requestRepository.save(request);
+
+    // Store an initial, empty change history
+    historyService.initialiseChangeHistory(request);
 
     // Kick off the workflow process
     workflowService.startProcessInstance(request);

@@ -66,6 +66,6 @@ public class RequestIdConverter implements BackendIdConverter {
    */
   @Override
   public boolean supports(Class<?> delimiter) {
-    return true;
+    return Request.class.equals(delimiter);
   }
 }

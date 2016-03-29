@@ -8,6 +8,7 @@ import cern.modesti.request.point.Point;
 import cern.modesti.workflow.CoreWorkflowService;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
+import de.danielbechler.diff.node.PrintingVisitor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
@@ -29,7 +30,7 @@ import java.util.Collection;
 import static java.lang.String.format;
 
 /**
- * TODO
+ * This class listens for create, update and delete events for individual requests.
  *
  * The {@link cern.modesti.request.RequestRepository} is automatically exposed as a REST resource via Spring Data REST, hence why there is no explicit MVC
  * controller for it. This class simply hooks into the Spring Data REST lifecycle and intercepts request create/save events, and lets Spring Data REST do
@@ -46,10 +47,7 @@ public class RequestRepositoryEventHandler {
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
   @Autowired
-  private RequestRepository requestRepository;
-
-  @Autowired
-  private RequestHistoryRepository requestHistoryRepository;
+  private RequestHistoryService historyService;
 
   @Autowired
   private CounterService counterService;
@@ -102,6 +100,9 @@ public class RequestRepositoryEventHandler {
       }
     }
 
+    // Store an initial, empty change history
+    historyService.initialiseChangeHistory(request);
+
     // Kick off the workflow process
     workflowService.startProcessInstance(request);
   }
@@ -124,44 +125,16 @@ public class RequestRepositoryEventHandler {
       requestEventHandler.onBeforeSave(request);
     }
 
-//    Request base = requestRepository.findOneByRequestId(request.getRequestId());
-//    saveChangeHistory(request, base);
-  }
-
-  @HandleBeforeDelete
-  public void handleRequestDelete(Request request) {
-    // TODO: mark the request as deleted in the history collection
+    // Process and store any changes that were made to the request
+    // historyService.saveChangeHistory(request);
   }
 
   /**
    *
-   * @param working
-   * @param base
+   * @param request
    */
-  private void saveChangeHistory(Request working, Request base) {
-    Assert.notNull(working);
-    Assert.notNull(base);
-    Assert.isTrue(working.getId().equals(base.getId()));
-
-    // TODO: fix this. If the type of a point property changes, the differ craps out. See https://github.com/SQiShER/java-object-diff/issues/56
-
-//    RequestHistoryEntry entry = requestHistoryRepository.findByRequestId(base.getId());
-//    if (entry == null) {
-//      log.info(format("creating new base history record for request #%s", base.getRequestId()));
-//      entry = new RequestHistoryEntry(new ObjectId().toString(), base.getId(), base, new ArrayList<>(), false);
-//      requestHistoryRepository.save(entry);
-//      return;
-//    }
-
-//    final RequestHistoryChange change = new RequestHistoryChange(new DateTime(DateTimeZone.UTC));
-//    DiffNode root = ObjectDifferBuilder.startBuilding()
-//        .comparison().ofType(DateTime.class).toUseEqualsMethod().and().build()
-//        .compare(working, base);
-//
-//    root.visit(new PrintingVisitor(working, base));
-//    root.visit(new RequestHistoryChangeVisitor(change, working, base));
-//
-//    entry.getDifferences().add(change);
-//    requestHistoryRepository.save(entry);
+  @HandleBeforeDelete
+  public void handleRequestDelete(Request request) {
+    // TODO: mark the request as deleted in the history collection
   }
 }

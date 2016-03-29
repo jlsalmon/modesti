@@ -2,6 +2,7 @@ package cern.modesti.request;
 
 import cern.modesti.plugin.RequestProvider;
 import cern.modesti.request.counter.CounterServiceImpl;
+import cern.modesti.request.history.RequestHistoryService;
 import cern.modesti.request.point.Point;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaRepository;
@@ -49,6 +50,9 @@ public class RequestRepositoryEventHandlerTest {
 
   @Mock
   ApplicationContext applicationContext;
+
+  @Mock
+  RequestHistoryService historyService;
 
   @Test
   @Ignore

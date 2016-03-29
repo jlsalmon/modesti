@@ -11,20 +11,20 @@ import com.mysema.query.types.path.PathInits;
 
 
 /**
- * QRequestHistoryEntry is a Querydsl query type for RequestHistoryEntry
+ * QRequestHistory is a Querydsl query type for RequestHistory
  */
 @Generated("com.mysema.query.codegen.EntitySerializer")
-public class QRequestHistoryEntry extends EntityPathBase<RequestHistoryEntry> {
+public class QRequestHistory extends EntityPathBase<RequestHistory> {
 
-    private static final long serialVersionUID = 1840256379L;
+    private static final long serialVersionUID = 189705527L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QRequestHistoryEntry requestHistoryEntry = new QRequestHistoryEntry("requestHistoryEntry");
+    public static final QRequestHistory requestHistory = new QRequestHistory("requestHistory");
 
     public final BooleanPath deleted = createBoolean("deleted");
 
-    public final ListPath<RequestHistoryChange, QRequestHistoryChange> differences = this.<RequestHistoryChange, QRequestHistoryChange>createList("differences", RequestHistoryChange.class, QRequestHistoryChange.class, PathInits.DIRECT2);
+    public final ListPath<ChangeEvent, QChangeEvent> events = this.<ChangeEvent, QChangeEvent>createList("events", ChangeEvent.class, QChangeEvent.class, PathInits.DIRECT2);
 
     public final StringPath id = createString("id");
 
@@ -32,23 +32,23 @@ public class QRequestHistoryEntry extends EntityPathBase<RequestHistoryEntry> {
 
     public final StringPath requestId = createString("requestId");
 
-    public QRequestHistoryEntry(String variable) {
-        this(RequestHistoryEntry.class, forVariable(variable), INITS);
+    public QRequestHistory(String variable) {
+        this(RequestHistory.class, forVariable(variable), INITS);
     }
 
-    public QRequestHistoryEntry(Path<? extends RequestHistoryEntry> path) {
+    public QRequestHistory(Path<? extends RequestHistory> path) {
         this(path.getType(), path.getMetadata(), path.getMetadata().isRoot() ? INITS : PathInits.DEFAULT);
     }
 
-    public QRequestHistoryEntry(PathMetadata<?> metadata) {
+    public QRequestHistory(PathMetadata<?> metadata) {
         this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
     }
 
-    public QRequestHistoryEntry(PathMetadata<?> metadata, PathInits inits) {
-        this(RequestHistoryEntry.class, metadata, inits);
+    public QRequestHistory(PathMetadata<?> metadata, PathInits inits) {
+        this(RequestHistory.class, metadata, inits);
     }
 
-    public QRequestHistoryEntry(Class<? extends RequestHistoryEntry> type, PathMetadata<?> metadata, PathInits inits) {
+    public QRequestHistory(Class<? extends RequestHistory> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
         this.originalRequest = inits.isInitialized("originalRequest") ? new cern.modesti.request.QRequest(forProperty("originalRequest"), inits.get("originalRequest")) : null;
     }

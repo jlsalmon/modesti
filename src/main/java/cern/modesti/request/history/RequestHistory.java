@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestHistoryEntry {
+public class RequestHistory {
 
   @Id
   private String id;
@@ -26,7 +26,7 @@ public class RequestHistoryEntry {
 
   private Request originalRequest;
 
-  private List<RequestHistoryChange> differences = new ArrayList<>();
+  private List<ChangeEvent> events = new ArrayList<>();
 
   private boolean deleted;
 }

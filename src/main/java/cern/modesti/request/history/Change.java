@@ -1,13 +1,17 @@
 package cern.modesti.request.history;
 
 import de.danielbechler.diff.node.DiffNode;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Justin Lewis Salmon
  */
 @Data
-public class RequestHistoryChangeItem {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Change {
 
   /**
    * Path to changed property (PropertyPath)
@@ -22,7 +26,7 @@ public class RequestHistoryChangeItem {
   /**
    * Original value (empty for ADDED)
    */
-  private Object base;
+  private Object original;
 
   /**
    * New value (empty for REMOVED)
