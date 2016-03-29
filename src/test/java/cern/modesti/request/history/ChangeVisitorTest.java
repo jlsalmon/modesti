@@ -117,7 +117,7 @@ public class ChangeVisitorTest {
     assertTrue(event.getChanges().size() == 0);
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void stringToInteger() {
     Map<String, Object> original = new HashMap<>(Collections.singletonMap("property", "string"));
     Map<String, Object> modified = new HashMap<>(Collections.singletonMap("property", 0));
