@@ -16,7 +16,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
-import sun.net.www.protocol.file.FileURLConnection;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
