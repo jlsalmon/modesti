@@ -23,21 +23,35 @@
         </div>
       </div>
 
-      <div class="form-group has-feedback"
-           ng-class="{ 'has-error': (form.$submitted && form.system.$invalid) }">
-        <label class="col-sm-3 control-label">
-          {{'SYSTEM_SUBSYSTEM'|translate}}
-          <i class="fa fa-fw fa-sitemap"></i>
-        </label>
-        <div class="col-sm-9">
+      <!-- Domain-specific fields go here -->
+      <div ng-repeat="field in ctrl.schema.fields">
 
-          <input type="text" ng-model="ctrl.request.subsystem" placeholder="System/Subsystem" autocomplete="off"
-                 typeahead="subsystem.value as subsystem.value for subsystem in ctrl.getSubsystems($viewValue)"
-                 typeahead-loading="loadingSubsystems"
-                 typeahead-editable="false" class="form-control" name="system" required>
-          <i ng-show="loadingSubsystems" class="fa fa-fw fa-spin fa-refresh form-control-feedback"></i>
-          <span class="help-block" translate>SELECT_SUBSYSTEM</span>
-        </div>
+        <ng-form name="innerForm">
+          <div class="form-group has-feedback"
+               ng-class="{ 'has-error': (innerForm.$invalid && innerForm.$dirty)
+                                         || (form.$submitted && innerForm.$invalid) }">
+            <label class="col-sm-3 control-label">{{field.name}}</label>
+
+            <div class="col-sm-9">
+
+              <ui-select ng-model="ctrl.request.properties[field.id]"
+                         theme="bootstrap"
+                         ng-required="{{field.required}}">
+                <ui-select-match placeholder="Type to search...">
+                  {{$select.selected[field.model ? field.model : 'value']}}
+                </ui-select-match>
+
+                <ui-select-choices repeat="item in ctrl.fieldValues"
+                                   refresh="ctrl.queryFieldValues(field, $select.search)"
+                                   refresh-delay="0">
+                  <div ng-bind-html="item[field.model ? field.model : 'value'] | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+
+              <span class="help-block">{{field.help_en}}</span>
+            </div>
+          </div>
+        </ng-form>
       </div>
 
     </form>

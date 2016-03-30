@@ -7,7 +7,7 @@
  */
 angular.module('modesti').controller('UpdatePointsModalController', UpdatePointsModalController);
 
-function UpdatePointsModalController($http, $modalInstance, points, schema, AuthService) {
+function UpdatePointsModalController($modalInstance, points, schema, AuthService, SchemaService) {
   var self = this;
 
   self.points = points;
@@ -23,7 +23,7 @@ function UpdatePointsModalController($http, $modalInstance, points, schema, Auth
 
   self.ok = ok;
   self.cancel = cancel;
-  self.getSubsystems = getSubsystems;
+  self.queryFieldValues = queryFieldValues;
 
   function ok() {
     $modalInstance.close(self.request);
@@ -33,20 +33,9 @@ function UpdatePointsModalController($http, $modalInstance, points, schema, Auth
     $modalInstance.dismiss('cancel');
   }
 
-  /**
-   *
-   */
-  function getSubsystems(value) {
-    return $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
-      params : {
-        query : value
-      }
-    }).then(function(response) {
-      if (!response.data.hasOwnProperty('_embedded')) {
-        return [];
-      }
-
-      return response.data._embedded.subsystems;
+  function queryFieldValues(field, query) {
+    return SchemaService.queryFieldValues(field, query).then(function (values) {
+      self.fieldValues = values;
     });
   }
 }
