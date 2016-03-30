@@ -16,6 +16,7 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
   var service = {
     getRequests: getRequests,
     getRequest: getRequest,
+    getRequestHistory: getRequestHistory,
     getChildRequests: getChildRequests,
     saveRequest: saveRequest,
     createRequest: createRequest,
@@ -152,6 +153,24 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
         q.reject(error);
       });
     }
+
+    return q.promise;
+  }
+
+  function getRequestHistory(id) {
+    var q = $q.defer();
+
+    console.log('fetching history for request ' + id);
+
+    Restangular.one('requestHistories', id).get().then(function (response) {
+      var history = response.data;
+      q.resolve(history);
+    },
+
+    function (error) {
+      console.log(error.status + ' ' + error.statusText);
+      q.reject(error);
+    });
 
     return q.promise;
   }
