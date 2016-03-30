@@ -186,7 +186,7 @@
               </a>
             </li>
 
-            <li class="divider"></li>
+            <li class="divider" ng-if="ctrl.schema.datasources.length > 0"></li>
 
             <!-- Only show datasource if it has been selected as point type for at least one point -->
             <li ng-repeat="datasource in ctrl.schema.datasources | active:ctrl.request"
