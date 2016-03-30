@@ -289,11 +289,13 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
     };
 
     // Clone request-level properties that are defined in the schema
-    schema.fields.forEach(function (field) {
-      if (request.properties.hasOwnProperty(field.id)) {
-        clone.properties[field.id] = request.properties[field.id];
-      }
-    });
+    if (schema.fields) {
+      schema.fields.forEach(function (field) {
+        if (request.properties.hasOwnProperty(field.id)) {
+          clone.properties[field.id] = request.properties[field.id];
+        }
+      });
+    }
 
     clone.points.forEach(function (point) {
       point.dirty = true;
