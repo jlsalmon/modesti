@@ -318,7 +318,7 @@
 
         <i class="fa fa-list-ol fa-fw text-muted"></i>
         <span class=""><strong>{{request.description}}</strong></span>
-        <span class="text-muted badge" style="background-color: #F5F5F5; float: none;"> {{ctrl.formatCustomProperties(request)}} </span>
+        <span class="text-muted badge" style="background-color: #F5F5F5; float: none;" ng-if="ctrl.hasCustomProperties(request)"> {{ctrl.formatCustomProperties(request)}} </span>
         <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
         <br/>
         <span class="" style="font-size: 12px;">

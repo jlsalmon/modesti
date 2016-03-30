@@ -31,6 +31,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.onPageChanged = onPageChanged;
   self.resetFilter = resetFilter;
   self.getRequestCount = getRequestCount;
+  self.hasCustomProperties = hasCustomProperties;
   self.formatCustomProperties = formatCustomProperties;
 
   resetFilter();
@@ -182,6 +183,16 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     $http.get(BACKEND_BASE_URL + '/users', { params: {username: username}}).then(function(response) {
       self.users = response.data._embedded.users;
     });
+  }
+
+  function hasCustomProperties(request) {
+    self.schemas.forEach(function (schema) {
+      if (schema.id === request.domain && schema.fields) {
+        return true;
+      }
+    });
+
+    return false;
   }
 
   function formatCustomProperties(request) {
