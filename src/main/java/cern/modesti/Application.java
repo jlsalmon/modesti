@@ -4,6 +4,7 @@ import cern.modesti.plugin.RequestProvider;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.plugin.core.config.EnablePluginRegistries;
@@ -15,13 +16,13 @@ import java.net.URLClassLoader;
  * To activate a profile, pass -Dspring.profiles.active=[dev|test|prod]
  *
  * The "dev" profile uses:
- *  - In-memory JDBC datasource (h2)
- *  - In-memory MongoDB datasource (fongo)
+ *  - Embedded JDBC datasource
+ *  - Embedded MongoDB datasource
  *  - No authentication
  *
  * @author Justin Lewis Salmon
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = {EmbeddedMongoAutoConfiguration.class})
 @EnablePluginRegistries(RequestProvider.class)
 public class Application {
 
