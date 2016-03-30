@@ -7,6 +7,4 @@
  */
 angular.module('modesti').controller('HomeController', HomeController);
 
-function HomeController() {
-
-}
+function HomeController() {}
