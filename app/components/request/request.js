@@ -16,15 +16,12 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   self.schema = schema;
   self.tasks = tasks;
   self.signals = signals;
+  //self.history = history;
 
-  /**
-   * The handsontable instance
-   */
+  /** The handsontable instance */
   self.hot = {};
 
-  /**
-   * Settings object for handsontable
-   */
+  /** Settings object for handsontable */
   self.settings = {
     rowHeaders: getRowHeaders,
     contextMenu: ['row_above', 'row_below', '---------', 'remove_row', '---------', 'undo', 'redo'],
@@ -47,39 +44,13 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     afterRemoveRow: afterRemoveRow
   };
 
-  //self.tableExpanded = true;
-  //self.toggleTableStretch = function() {
-  //  if (self.tableExpanded === true) {
-  //    self.hot.updateSettings({stretchH: 'none'});
-  //    self.tableExpanded = false;
-  //    self.hot.render();
-  //  } else {
-  //    self.hot.updateSettings({stretchH: 'all'});
-  //    self.tableExpanded = true;
-  //    self.hot.render();
-  //  }
-  //};
-
-  /**
-   * The data rows that will be given to the table
-   *
-   * @type {Array}
-   */
+  /** The data rows that will be given to the table */
   self.rows = getRows();
 
-  /**
-   * The columns that will be displayed for the currently active category. See getColumns().
-   * @type {Array}
-   */
+  /** The columns that will be displayed for the currently active category. See getColumns(). */
   self.columns = [];
 
-  /**
-   * Stores the available extra categories that can potentially be added to the request.
-   *
-   * @type {Array}
-   */
-  self.availableExtraCategories = [];
-
+  /** Open state flag for the error log at the bottom of the page */
   self.errorLogOpen = false;
 
   /**
@@ -115,14 +86,12 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   self.getNumApprovalRejections = getNumApprovalRejections;
   self.getSelectedPointIds = getSelectedPointIds;
 
-  //self.resetSorting = resetSorting;
   self.save = save;
   self.undo = undo;
   self.redo = redo;
   self.cut = cut;
   self.copy = copy;
   self.paste = paste;
-  //self.search = search;
   self.showHelp = showHelp;
   self.showComments = showComments;
   self.showHistory = showHistory;
@@ -237,13 +206,6 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
 
     if (self.request.status === 'FOR_APPROVAL') {
 
-      //self.request.points.forEach(function (point) {
-      //  // Display only alarms
-      //  if (point.properties.priorityCode) {
-      //    rows.push(point);
-      //  }
-      //});
-
       // TODO display only points which require approval?
       rows = self.request.points;
     }
@@ -332,9 +294,6 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   function getColumns() {
     self.columns.length = 0;
 
-    // Add a column for displaying icons
-    //self.columns.push({readOnly: true, renderer: iconRenderer});
-
     // Append "select-all" checkbox field.
     if (hasCheckboxColumn()) {
       self.columns.push(getCheckboxColumn());
@@ -352,17 +311,6 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       }
 
       var editable;
-      // A column is editable only if the category is marked as an editable state for the current request status.
-      //if (self.activeCategory.editable !== null && typeof self.activeCategory.editable === 'object') {
-      //  var status = self.activeCategory.editable.status;
-      //
-      //  if (status instanceof Array) {
-      //    editable = status.indexOf(self.request.status) > -1;
-      //  } else if (typeof status === 'string') {
-      //    editable = status === self.request.status;
-      //  }
-      //}
-      //editable = self.activeCategory.editableStates.indexOf(self.request.status) > -1;
 
       // Build the right type of column based on the schema
       var column = ColumnService.getColumn(field, editable, authorised, self.request.status);
@@ -370,17 +318,6 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       self.columns.push(column);
     });
   }
-
-  //function iconRenderer(instance, td, row, col, prop, value, cellProperties) {
-  //  var point = self.rows[row];
-  //  td.innerHTML = '';
-  //
-  //  if (point.properties.priorityCode) {
-  //    td.innerHTML += '<i class="fa fa-fw fa-bell"></i>';
-  //  } else {
-  //    td.innerHTML += '<i class="fa fa-fw fa-bell-o text-muted"></i>';
-  //  }
-  //}
 
   /**
    * The "select-all" checkbox column is shown when the request is in either state FOR_APPROVAL, FOR_ADDRESSING,
@@ -914,6 +851,12 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
           if (self.tasks.submit) {
             self.sendModificationSignal();
           }
+
+          // Reload the history
+          //RequestService.getRequestHistory(self.request.requestId).then(function (history) {
+          //  self.history = history;
+          //  self.hot.render();
+          //});
         });
       }
     });
@@ -1250,6 +1193,39 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
         break;
       }
     }
+
+    //if (self.request.type === 'UPDATE' && point.dirty === true) {
+    //  var changes = [];
+    //  $(td).popover('destroy');
+    //
+    //  self.history.events.forEach(function (event) {
+    //    event.changes.forEach(function (change) {
+    //      if (change.path.indexOf(field.id) !== -1 && change.path.indexOf('[' + point.lineNo + ']') !== -1) {
+    //        changes.push(change);
+    //      }
+    //    });
+    //  });
+    //
+    //  if (changes.length > 0) {
+    //    var latest = changes[changes.length - 1];
+    //    var original, modified;
+    //
+    //    if (field.type === 'autocomplete') {
+    //      original = field.model ? latest.original[field.model] : latest.original.value;
+    //      modified = field.model ? latest.modified[field.model] : latest.modified.value;
+    //    } else {
+    //      original = latest.original;
+    //      modified = latest.modified;
+    //    }
+    //
+    //    var content = '<samp><table>';
+    //    content    += '<tr><td style="background-color: #ffecec">&nbsp;- ' + original + '&nbsp;</td></tr>';
+    //    content    += '<tr><td style="background-color: #dbffdb">&nbsp;+ ' + modified + '&nbsp;</td></tr></table></samp>';
+    //
+    //    td.style.background = '#fcf8e3';
+    //    $(td).popover({ trigger: 'hover', placement: 'top', container: 'body', html: true, content: content/*, delay: { 'show': 0, 'hide': 100000 }*/ });
+    //  }
+    //}
   }
 
   /**

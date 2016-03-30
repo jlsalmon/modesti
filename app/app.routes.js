@@ -79,6 +79,10 @@ function configureRoutes($stateProvider, $urlRouterProvider, $locationProvider) 
         return TaskService.getSignalsForRequest(request);
       },
 
+      //history: function getHistory(request, RequestService) {
+      //  return RequestService.getRequestHistory(request.requestId);
+      //},
+
       $title: function (request, $translate) {
         return $translate('REQUEST', { id: request.requestId });
       }
