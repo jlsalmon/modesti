@@ -22,12 +22,19 @@
     border-top: 1px solid #CCC;
   }
 
-  .table-wrapper .table td {
+  .table-wrapper .table td.cell-container {
     border: 1px solid #CCC;
     height: 24px;
     empty-cells: show;
     line-height: 21px;
     padding: 0 4px 0 4px;
+  }
+
+  .table-wrapper .table td.cell-container > div {
+    /*height: 24px;*/
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
   }
 
   .pagination {
@@ -160,22 +167,22 @@
 
 
 
-      <div class="pull-right">
-        <!-- Actions dropdown -->
-        <div class="btn-group toolbar-item" dropdown dropdown-append-to-body>
-          <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-            <i class="fa fa-fw fa-cog"></i> Actions <span class="caret text-muted"></span>
-          </button>
-          <ul class="dropdown-menu pull-right">
-            <li>
-              <a ng-click="ctrl.cloneRequest()">Clone request</a>
-            </li>
-            <li>
-              <a ng-click="ctrl.deleteRequest()" ng-if="ctrl.isCurrentUserAuthorised()">Delete request</a>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <!--<div class="pull-right">-->
+        <!--&lt;!&ndash; Actions dropdown &ndash;&gt;-->
+        <!--<div class="btn-group toolbar-item" dropdown dropdown-append-to-body>-->
+          <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>-->
+            <!--<i class="fa fa-fw fa-cog"></i> Actions <span class="caret text-muted"></span>-->
+          <!--</button>-->
+          <!--<ul class="dropdown-menu pull-right">-->
+            <!--<li>-->
+              <!--<a ng-click="ctrl.cloneRequest()">Clone request</a>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<a ng-click="ctrl.deleteRequest()" ng-if="ctrl.isCurrentUserAuthorised()">Delete request</a>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
+      <!--</div>-->
 
     </div>
   </div>
@@ -237,26 +244,26 @@
 
       <tbody>
       <tr ng-repeat="point in ctrl.points">
-        <td ng-repeat="field in ctrl.activeCategory.fields">
+        <td ng-repeat="field in ctrl.activeCategory.fields" class="cell-container">
 
-                <span ng-if="field.type === 'autocomplete'">
-                  <span ng-if="field.model">
+                <div ng-if="field.type === 'autocomplete'">
+                  <div ng-if="field.model">
                     {{point.properties[field.id][field.model]}}
-                  </span>
-                  <span ng-if="!field.model">
+                  </div>
+                  <div ng-if="!field.model">
                     {{point.properties[field.id].value}}
-                  </span>
-                </span>
+                  </div>
+                </div>
 
-                <span ng-if="field.type !== 'autocomplete'">
+                <div ng-if="field.type !== 'autocomplete'">
                   {{point.properties[field.id]}}
-                </span>
+                </div>
 
-                <span ng-if="point.properties[field.id] == null ||
+                <div ng-if="point.properties[field.id] == null ||
                              point.properties[field.id] == undefined ||
                              point.properties[field.id] == ''">
                   &nbsp;
-                </span>
+                </div>
         </td>
       </tr>
       </tbody>
