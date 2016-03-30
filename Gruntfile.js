@@ -24,24 +24,6 @@ module.exports = function (grunt) {
     // Project settings
     yeoman: appConfig,
 
-    // Profile-specific settings
-    config: {
-      test: {
-        options: {
-          variables: {
-            backendBaseUrl: 'https://modesti-test.cern.ch:8443'
-          }
-        }
-      },
-      prod: {
-        options: {
-          variables: {
-            backendBaseUrl: 'https://modesti.cern.ch:8443'
-          }
-        }
-      }
-    },
-
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       options: {
@@ -407,25 +389,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Replaces the backend base URL placeholder with the real value based on
-    // the profile in use (test, prod)
-    replace: {
-      dist: {
-        options: {
-          patterns: [
-            {
-              match: 'BACKEND_BASE_URL',
-              replacement: '<%= grunt.config.get("backendBaseUrl") %>'
-            }
-          ]
-        },
-        files: [
-          {expand: true, flatten: true, src: '<%= yeoman.dist %>/scripts/*.js', dest: '<%= yeoman.dist %>/scripts'}
-        ],
-        pedantic: true
-      }
-    },
-
     // Bumps the version number of the application. The version number is made
     // available to other tasks via <%= yeoman.version %>.
     bump: {
@@ -455,7 +418,7 @@ module.exports = function (grunt) {
           url: 'http://artifactory/beco-development-local'
         },
         files: [
-          { src: ['dist/**/*', 'dist/.htaccess', 'deployment.xml'] }
+          { src: ['dist/**/*', 'dist/.htaccess', 'deployment.xml', 'bs-config.json'] }
         ]
       },
       prod: {
@@ -537,25 +500,14 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin',
-    'replace'
-  ]);
-
-  grunt.registerTask('build:test', [
-    'config:test',
-    'build'
-  ]);
-
-  grunt.registerTask('build:prod', [
-    'config:prod',
-    'build'
+    'htmlmin'
   ]);
 
   grunt.registerTask('publish:test', 'Publish a test tarball.', function () {
     checkPublicationOptions();
 
     grunt.task.run([
-      'build:test',
+      'build',
       'artifactory:test:publish'
     ]);
   });
@@ -570,7 +522,7 @@ module.exports = function (grunt) {
     grunt.config.set('bump.options.commitMessage', 'Release v%VERSION%');
 
     grunt.task.run([
-      'build:prod',
+      'build',
       'bump',
       'artifactory:prod:publish',
       'bump-snapshot:' + version,

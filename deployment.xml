@@ -10,6 +10,9 @@
 
     <application name="modesti-pro" extends="default">
       <deployment installLocation="/opt/modesti">
+        <directory name="dist">
+          <file name="modesti-config.json" source="/user/timoper/rep/modesti/modesti-config.json" mask="644"/>
+        </directory>
         <notification>
           <mail address="modesti-administrators@cern.ch"/>
         </notification>
@@ -18,6 +21,9 @@
 
     <application name="modesti-test" extends="default">
       <deployment installLocation="/opt/modesti">
+        <directory name="dist">
+          <file name="modesti-config.json" source="/user/timtest/rep/modesti/modesti-config.json" mask="644"/>
+        </directory>
         <notification>
           <mail address="modesti-administrators@cern.ch"/>
         </notification>

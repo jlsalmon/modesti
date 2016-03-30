@@ -9,10 +9,14 @@
  */
 angular.module('modesti').config(configure);
 
-var BACKEND_BASE_URL = '@@BACKEND_BASE_URL';
-if (BACKEND_BASE_URL.lastIndexOf("@@", 0) === 0) {
-  BACKEND_BASE_URL = 'http://localhost:8080';
-}
+var BACKEND_BASE_URL = 'http://localhost:8080';
+
+$.getJSON("modesti-config.json", function(config) {
+  if (config && config.base) {
+    console.log('using backend ' + config.base);
+    BACKEND_BASE_URL = config.base;
+  }
+});
 
 function configure($httpProvider, $translateProvider, RestangularProvider) {
 
