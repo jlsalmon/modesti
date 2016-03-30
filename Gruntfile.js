@@ -434,7 +434,8 @@ module.exports = function (grunt) {
         commitFiles: ['package.json', 'bower.json', '<%= yeoman.app %>/app.js'],
         pushTo: 'origin',
         updateConfigs: ['yeoman'],
-        createTag: grunt.option('createTag') !== false
+        //createTag: grunt.option('createTag'),
+        //commitMessage: grunt.option('commitMessage') //|| grunt.fail.fatal('commit message was null')
       }
     },
 
@@ -565,6 +566,8 @@ module.exports = function (grunt) {
 
     grunt.log.writeln('Setting release version to ' + version);
     grunt.option('setversion', version);
+    grunt.config.set('bump.options.createTag', true);
+    grunt.config.set('bump.options.commitMessage', 'Release v%VERSION%');
 
     grunt.task.run([
       'build:prod',
@@ -576,13 +579,14 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('bump-snapshot', 'Bump the version to ', function (version) {
+    version || grunt.fail.fatal('You must supply a snapshot version');
     checkPublicationOptions();
 
     var nextSnapshotVersion = semver.inc(version, 'patch') + '-SNAPSHOT';
     grunt.log.writeln('Bumping development version to ' + nextSnapshotVersion);
     grunt.option('setversion', nextSnapshotVersion);
-    grunt.option('createTag', false);
-
+    grunt.config.set('bump.options.createTag', false);
+    grunt.config.set('bump.options.commitMessage', 'Bump development version to v%VERSION%');
     grunt.task.run('bump');
   });
 
