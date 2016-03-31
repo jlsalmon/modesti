@@ -37,8 +37,10 @@ function PointsController($modal, $state, schemas, PointService, SchemaService, 
 
   AlertService.add('warning', '<b><i class="icon fa fa-ban"></i>Warning!</b> This functionality is still in alpha stage. Use at your own risk.');
 
-  self.activeCategory = self.schema.categories[0];
-  search();
+  if (self.schema) {
+    self.activeCategory = self.schema.categories[0];
+    search();
+  }
 
   /**
    *
