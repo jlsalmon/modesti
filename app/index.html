@@ -147,7 +147,6 @@
 <!-- This is where the main content for each view is inserted. -->
 <div class="view-wrapper" ui-view></div>
 
-
 <!-- build:js(app) scripts/vendor.js -->
 <!-- bower:js -->
 <script src="bower_components/modernizr/modernizr.js"></script>
@@ -187,6 +186,17 @@
 <script src="bower_components/slimscroll/jquery.slimscroll.min.js"></script>
 <!-- endbower -->
 <!-- endbuild -->
+
+<script>
+  var BACKEND_BASE_URL = 'http://localhost:8080';
+
+  $.getJSON("modesti-config.json", function(config) {
+    if (config && config.base) {
+      console.log('using backend ' + config.base);
+      BACKEND_BASE_URL = config.base;
+    }
+  });
+</script>
 
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="app.js"></script>

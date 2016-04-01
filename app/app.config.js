@@ -9,15 +9,6 @@
  */
 angular.module('modesti').config(configure);
 
-var BACKEND_BASE_URL = 'http://localhost:8080';
-
-$.getJSON("modesti-config.json", function(config) {
-  if (config && config.base) {
-    console.log('using backend ' + config.base);
-    BACKEND_BASE_URL = config.base;
-  }
-});
-
 function configure($httpProvider, $translateProvider, RestangularProvider) {
 
   // Needed so that Spring Security sends us back a WWW-Authenticate header,
