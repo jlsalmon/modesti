@@ -9,6 +9,19 @@
  */
 angular.module('modesti').config(configure);
 
+var BACKEND_BASE_URL;
+
+if (window.location.href.indexOf('modesti-test') != -1) {
+  BACKEND_BASE_URL = 'https://modesti-test.cern.ch:8443';
+} else if (window.location.href.indexOf('modesti') != -1) {
+  BACKEND_BASE_URL = 'https://modesti.cern.ch:8443';
+} else {
+  BACKEND_BASE_URL = 'http://localhost:8080';
+}
+
+console.log('using backend ' + BACKEND_BASE_URL);
+
+
 function configure($httpProvider, $translateProvider, RestangularProvider) {
 
   // Needed so that Spring Security sends us back a WWW-Authenticate header,

@@ -187,15 +187,6 @@
 <!-- endbower -->
 <!-- endbuild -->
 
-<script>
-  var BACKEND_BASE_URL;
-
-  $.getJSON("modesti-config.json", function(config) {
-    console.log('using backend ' + config.base);
-    BACKEND_BASE_URL = config.base;
-  });
-</script>
-
 <!-- build:js({.tmp,app}) scripts/scripts.js -->
 <script src="app.js"></script>
 <script src="app.config.js"></script>

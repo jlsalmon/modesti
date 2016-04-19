@@ -621,6 +621,8 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
     // Otherwise, if we have an autocomplete field, make a call to the backend to see if this value returns any results
     else if (field.type === 'autocomplete') {
 
+      // FIXME: currently, pasting an invalid value into an autocomplete field won't trigger an error.
+
       // If no results are found in the source function, then this field will have been marked as invalid.
       return !(point.invalidFields && point.invalidFields.indexOf(field.id) > -1);
 
