@@ -410,6 +410,8 @@ function SchemaService($q, $http, Utils) {
   }
 
   /**
+   * TODO: move this domain-specific logic into backend plugins
+   *
    * Tagname format: system_code|subsystem_code|’.’|functionality_code|’.’|equipment_identifier|’:’|point_attribute
    */
   function generateTagnames(request) {
@@ -440,7 +442,7 @@ function SchemaService($q, $http, Utils) {
           }
 
           var site = (point.properties.functionality && point.properties.functionality.value ? point.properties.functionality.value : '?');
-          var equipmentIdentifier = getEquipmentIdentifier(point);
+          var equipmentIdentifier = getEquipmentIdentifier(point, request.domain);
           equipmentIdentifier = equipmentIdentifier || '?';
           var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
 
@@ -459,6 +461,8 @@ function SchemaService($q, $http, Utils) {
   }
 
   /**
+   * TODO: move this domain-specific logic into backend plugins
+   *
    * Fault state format: system_name|’_’|subsystem_name|’_’|general_functionality|’:’|equipment_identifier|’:’|point_description
    */
   function generateFaultStates(request) {
@@ -528,11 +532,13 @@ function SchemaService($q, $http, Utils) {
   }
 
   /**
+   * TODO: move this domain-specific logic into backend plugins
    *
    * @param point
+   * @param domain
    * @returns {*}
    */
-  function getEquipmentIdentifier(point) {
+  function getEquipmentIdentifier(point, domain) {
     var equipmentIdentifier, gmaoCode;
 
     if (point.properties.gmaoCode && point.properties.gmaoCode.value) {
@@ -553,7 +559,11 @@ function SchemaService($q, $http, Utils) {
       if (gmaoCode === otherEquipCode) {
         equipmentIdentifier = gmaoCode;
       } else {
-        equipmentIdentifier = gmaoCode + '_' + otherEquipCode;
+        if (domain === 'CSAM') {
+          equipmentIdentifier = otherEquipCode;
+        } else {
+          equipmentIdentifier = gmaoCode + '_' + otherEquipCode;
+        }
       }
     } else if (gmaoCode && !otherEquipCode) {
       equipmentIdentifier = gmaoCode;
@@ -567,6 +577,8 @@ function SchemaService($q, $http, Utils) {
   }
 
   /**
+   * TODO: move this domain-specific logic into backend plugins
+   * 
    * Alarm category format: 'CERN.SRVS.'|FUNC_GEN|'.'|TES_SYSTEM_NAME
    */
   function generateAlarmCategories(request) {
