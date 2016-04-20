@@ -13,8 +13,8 @@ import com.mysema.query.types.path.PathInits;
 /**
  * QUser is a Querydsl query type for User
  */
-@Generated("com.mysema.query.codegen.EntitySerializer")
-public class QUser extends EntityPathBase<User> {
+@Generated("com.mysema.query.codegen.EmbeddableSerializer")
+public class QUser extends BeanPath<User> {
 
     private static final long serialVersionUID = -600982699L;
 
@@ -24,7 +24,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final BooleanPath accountNonLocked = createBoolean("accountNonLocked");
 
-    public final ListPath<Role, QRole> authorities = this.<Role, QRole>createList("authorities", Role.class, QRole.class, PathInits.DIRECT2);
+    public final ListPath<Role, SimplePath<Role>> authorities = this.<Role, SimplePath<Role>>createList("authorities", Role.class, SimplePath.class, PathInits.DIRECT2);
 
     public final BooleanPath credentialsNonExpired = createBoolean("credentialsNonExpired");
 
@@ -35,8 +35,6 @@ public class QUser extends EntityPathBase<User> {
     public final BooleanPath enabled = createBoolean("enabled");
 
     public final StringPath firstName = createString("firstName");
-
-    public final StringPath id = createString("id");
 
     public final StringPath lastName = createString("lastName");
 

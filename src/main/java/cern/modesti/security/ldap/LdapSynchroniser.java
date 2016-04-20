@@ -2,7 +2,7 @@ package cern.modesti.security.ldap;
 
 import cern.modesti.user.Role;
 import cern.modesti.user.User;
-import cern.modesti.user.UserRepository;
+import cern.modesti.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,7 +37,7 @@ public class LdapSynchroniser {
   Environment env;
 
   @Autowired
-  UserRepository userRepository;
+  UserService userService;
 
   @Autowired
   @Qualifier("anonymousLdapTemplate")
@@ -48,18 +48,21 @@ public class LdapSynchroniser {
    */
   @Scheduled(cron = "0 0 * * * *")
   public void synchroniseUsersAndGroups() throws InvalidNameException {
-    log.debug("synchronising users and groups with LDAP server");
-    Set<String> groupIds = new HashSet<>();
+//    log.debug("synchronising users and groups with LDAP server");
+//    Set<String> groupIds = new HashSet<>();
+//
+//    // TODO: remove this TIM specific code
+//    groupIds.addAll(env.getRequiredProperty("modesti.role.creators", List.class));
+//    groupIds.addAll(env.getRequiredProperty("modesti.role.approvers", List.class));
+//    groupIds.addAll(env.getRequiredProperty("modesti.role.cablers", List.class));
+//    groupIds.addAll(env.getRequiredProperty("modesti.role.administrators", List.class));
+//
+//    for (String groupId : groupIds) {
+//      synchroniseGroup(groupId);
+//    }u
 
-    // TODO: remove this TIM specific code
-    groupIds.addAll(env.getRequiredProperty("modesti.role.creators", List.class));
-    groupIds.addAll(env.getRequiredProperty("modesti.role.approvers", List.class));
-    groupIds.addAll(env.getRequiredProperty("modesti.role.cablers", List.class));
-    groupIds.addAll(env.getRequiredProperty("modesti.role.administrators", List.class));
-
-    for (String groupId : groupIds) {
-      synchroniseGroup(groupId);
-    }
+    List<User> users = userService.findByUsernameStartsWith("mbr*");
+    System.out.println(users);
   }
 
   private void synchroniseGroup(String groupId) throws InvalidNameException {
@@ -86,7 +89,7 @@ public class LdapSynchroniser {
   }
 
   private void synchroniseUser(String username, String groupId, DirContextAdapter adapter) {
-    User user = userRepository.findOneByUsername(username);
+    User user = userService.findOneByUsername(username);
     if (user == null) {
       user = new User();
       user.setEmployeeId(Integer.valueOf(adapter.getStringAttribute("employeeID")));
@@ -106,6 +109,6 @@ public class LdapSynchroniser {
       }
     }
 
-    userRepository.save(user);
+//    userRepository.save(user);
   }
 }

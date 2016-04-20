@@ -1,7 +1,7 @@
 package cern.modesti.config;
 
 import cern.modesti.user.User;
-import cern.modesti.user.UserRepository;
+import cern.modesti.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -40,19 +40,19 @@ public class WebSecurityConfigDev extends WebSecurityConfigurerAdapter {
   @Configuration
   protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
-    static User TEST_USER = new User("1", "test", 1234, "Test", "User", "test.user@example.com", new ArrayList<>());
+    static User TEST_USER = new User(1234, "test",  "Test", "User", "test.user@example.com", new ArrayList<>());
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Override
     public void init(AuthenticationManagerBuilder auth) throws Exception {
       auth.authenticationProvider(new AuthenticationProvider() {
         @Override
         public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-          if (!userRepository.exists(TEST_USER.getId())) {
-            userRepository.save(TEST_USER);
-          }
+//          if (!userRepository.exists(TEST_USER.getId())) {
+//            userRepository.save(TEST_USER);
+//          }
 
           return new UsernamePasswordAuthenticationToken(TEST_USER, null);
         }

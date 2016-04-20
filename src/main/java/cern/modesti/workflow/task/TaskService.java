@@ -2,18 +2,14 @@ package cern.modesti.workflow.task;
 
 import cern.modesti.request.RequestRepository;
 import cern.modesti.user.User;
-import cern.modesti.user.UserRepository;
+import cern.modesti.user.UserService;
 import cern.modesti.workflow.AuthService;
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.task.IdentityLink;
-import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -31,7 +27,7 @@ public class TaskService {
   private RequestRepository requestRepository;
 
   @Autowired
-  private UserRepository userRepository;
+  private UserService userService;
 
   @Autowired
   private AuthService authService;
@@ -105,7 +101,7 @@ public class TaskService {
   private TaskInfo assignTask(String requestId, String taskName, String username) {
     Task task = getTaskForRequest(requestId, taskName);
 
-    User user = userRepository.findOneByUsername(username);
+    User user = userService.findOneByUsername(username);
     if (user == null) {
       throw new IllegalArgumentException("No user with username " + username + " was found");
     }

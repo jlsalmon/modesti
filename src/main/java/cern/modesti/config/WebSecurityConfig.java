@@ -1,5 +1,6 @@
 package cern.modesti.config;
 
+//import cern.modesti.user.UserRepository;
 import org.apache.catalina.Context;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.ldap.repository.config.EnableLdapRepositories;
 import org.springframework.security.access.event.LoggerListener;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,6 +50,7 @@ import cern.modesti.security.ldap.LdapUserDetailsMapper;
  * @author Justin Lewis Salmon
  */
 @Configuration
+//@EnableLdapRepositories(basePackageClasses = UserRepository.class, ldapTemplateRef = "anonymousLdapTemplate")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(1)

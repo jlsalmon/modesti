@@ -42,7 +42,9 @@ public class Field implements Serializable {
   private String type;
 
   /**
-   * If a field is an object, this specifies the property of the object to display
+   * If a field is an object, this specifies the property of the object to display.
+   *
+   * TODO: mode this into {@link AutocompleteField}
    */
   private String model;
 

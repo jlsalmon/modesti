@@ -7,19 +7,16 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.ldap.odm.annotations.Entry;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
- *
- * Note: the username is marked as {@link Id} to support secondary accounts where the CERN ID is the same.
- *
  * @author Justin Lewis Salmon
  */
-@Document
+//@Entry(objectClasses = { "person", "top" }, base = "OU=Users,OU=Organic Units")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,26 +24,17 @@ public class User implements UserDetails {
 
   private static final long serialVersionUID = -8591164895383946725L;
 
-  /** Internal mongodb id  */
-  @Id
-  private String id;
-
-  @Indexed
-  private String username;
-
-  @Indexed
+//  @Id
   private Integer employeeId;
 
-  @Indexed
+  private String username;
+
   private String firstName;
 
-  @Indexed
   private String lastName;
 
-  @Indexed
   private String email;
 
-  @Indexed
   @JsonDeserialize(contentAs = Role.class)
   private List<Role> authorities = new ArrayList<>();
 

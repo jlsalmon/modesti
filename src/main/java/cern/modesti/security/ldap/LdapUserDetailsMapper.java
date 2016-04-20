@@ -2,17 +2,17 @@ package cern.modesti.security.ldap;
 
 import cern.modesti.user.Role;
 import cern.modesti.user.User;
-import cern.modesti.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.stereotype.Component;
 
+import javax.naming.NamingException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,61 +33,37 @@ import static java.lang.String.format;
  */
 @Component
 @Slf4j
-public class LdapUserDetailsMapper implements UserDetailsContextMapper {
-
-  @Autowired
-  private Environment env;
-
-  @Autowired
-  private UserRepository userRepository;
+public class LdapUserDetailsMapper extends AbstractContextMapper<User> implements UserDetailsContextMapper {
 
   @Override
   public UserDetails mapUserFromContext(DirContextOperations context, String username, Collection<? extends GrantedAuthority> grantedAuthorities) {
+    return doMapFromContext(context);
+  }
+
+  @Override
+  protected User doMapFromContext(DirContextOperations context) {
     User user = new User();
     user.setEmployeeId(Integer.valueOf(context.getStringAttribute("employeeID")));
-    user.setUsername(username);
+    user.setUsername(context.getStringAttribute("cn"));
     user.setFirstName(context.getStringAttribute("givenName"));
     user.setLastName(context.getStringAttribute("sn"));
     user.setEmail(context.getStringAttribute("mail"));
 
-    String creators = env.getRequiredProperty("modesti.role.creators", String.class);
-    String approvers = env.getRequiredProperty("modesti.role.approvers", String.class);
-    String cablers = env.getRequiredProperty("modesti.role.cablers", String.class);
-    String administrators = env.getRequiredProperty("modesti.role.administrators", String.class);
+    if (context.attributeExists("memberOf")) {
+      Set<GrantedAuthority> authorities = new HashSet<>();
 
-    Set<GrantedAuthority> authorities = new HashSet<>();
-    authorities.addAll(grantedAuthorities);
-
-    for (Object group : context.getObjectAttributes("memberOf")) {
-
-      if (group.toString().toLowerCase().contains(creators.toLowerCase())) {
-        authorities.add(new Role(creators));
+      for (Object group : context.getObjectAttributes("memberOf")) {
+        authorities.add(new Role(group.toString().toLowerCase()));
       }
-      if (group.toString().toLowerCase().contains(approvers.toLowerCase())) {
-        authorities.add(new Role(approvers));
-      }
-      if (group.toString().toLowerCase().contains(cablers.toLowerCase())) {
-        authorities.add(new Role(cablers));
-      }
-      if (group.toString().toLowerCase().contains(administrators.toLowerCase())) {
-        authorities.add(new Role(administrators));
-      }
-    }
 
-    for (GrantedAuthority authority : authorities) {
-      user.getAuthorities().add((Role) authority);
-    }
-
-    // Add this user to the database if they haven't logged in before.
-    if (userRepository.findOneByUsername(username) == null) {
-      log.info(format("adding previously unknown user %s to database", username));
-      userRepository.save(user);
+      for (GrantedAuthority authority : authorities) {
+        user.getAuthorities().add((Role) authority);
+      }
     }
 
     return user;
   }
 
   @Override
-  public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
-  }
+  public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {}
 }
