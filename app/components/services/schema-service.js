@@ -312,6 +312,8 @@ function SchemaService($q, $http, Utils) {
 
     if (condition.operation === 'equals' && value === condition.value) {
       result = true;
+    } else if (condition.operation === 'notEquals' && value !== condition.value) {
+      result = true;
     } else if (condition.operation === 'contains' && (value && value.toString().indexOf(condition.value) > -1)) {
       result = true;
     } else if (condition.operation === 'notNull' && (value !== null && value !== undefined && value !== '')) {
