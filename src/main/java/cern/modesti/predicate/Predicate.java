@@ -52,6 +52,10 @@ public class Predicate<T> {
         StringPath path = entityPath.getString(criteria.getKey());
         return path.startsWithIgnoreCase(argument);
       }
+      else if (field.getType().isEnum()) {
+        StringPath path = entityPath.getString(criteria.getKey());
+        return path.eq(argument);
+      }
       else {
         throw new RuntimeException(format("Field type %s is not currently supported", field.getType()));
       }

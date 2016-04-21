@@ -25,6 +25,8 @@ import java.util.*;
 import static java.lang.String.format;
 
 /**
+ * @deprecated all user lookups are now done directly against the LDAP server, no user info is stored by the application
+ *
  * @author Justin Lewis Salmon
  */
 @Service

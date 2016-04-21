@@ -84,6 +84,6 @@ public class UserService {
 
     and.and(nameOr);
 
-    return ldapTemplate.search(LdapUtils.emptyLdapName(), and.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+    return ldapTemplate.search(BASE, and.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
   }
 }
