@@ -64,17 +64,14 @@ public class UserService {
     return ldapTemplate.search(LdapQueryBuilder.query().base(BASE).countLimit(10).filter(filter), mapper);
   }
 
-  public List<User> findByUsernameOrNameAndRole(String query, String[] roles) throws InvalidNameException {
+  public List<User> findByNameAndGroup(String query, List<String> groups) {
     AndFilter and = new AndFilter();
 
-    OrFilter roleOr = new OrFilter();
-    for (String role : roles) {
-      LdapName ln = new LdapName(env.getRequiredProperty("ldap.group.filter"));
-      ln.add(new Rdn("cn", role));
-
-      // E.g.: (memberOf=CN=modesti-developers,OU=e-groups,OU=Workgroups,DC=cern,DC=ch)
-      EqualsFilter filter = new EqualsFilter("memberOf", ln.toString());
-      roleOr.or(filter);
+    OrFilter roleOr;
+    try {
+      roleOr = memberOf(groups);
+    } catch (InvalidNameException e) {
+      throw new RuntimeException("Error querying LDAP server", e);
     }
 
     and.and(roleOr);
@@ -85,5 +82,30 @@ public class UserService {
     and.and(nameOr);
 
     return ldapTemplate.search(BASE, and.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+  }
+
+  public List<User> findByGroup(List<String> groups) {
+    OrFilter filter;
+    try {
+      filter = memberOf(groups);
+    } catch (InvalidNameException e) {
+      throw new RuntimeException("Error querying LDAP server", e);
+    }
+
+    return ldapTemplate.search(BASE, filter.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+  }
+
+  private OrFilter memberOf(List<String> groups) throws InvalidNameException {
+    OrFilter or = new OrFilter();
+    for (String group : groups) {
+      LdapName ln = new LdapName(env.getRequiredProperty("ldap.group.filter"));
+      ln.add(new Rdn("cn", group));
+
+      // The magic number will trigger a recursive search of nested groups. It's slow, but it works.
+      // See https://msdn.microsoft.com/en-us/library/aa746475(VS.85).aspx
+      EqualsFilter filter = new EqualsFilter("memberOf:1.2.840.113556.1.4.1941:", ln.toString());
+      or.or(filter);
+    }
+    return or;
   }
 }

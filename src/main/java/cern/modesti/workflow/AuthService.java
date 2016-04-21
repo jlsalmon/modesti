@@ -2,6 +2,7 @@ package cern.modesti.workflow;
 
 import cern.modesti.request.Request;
 import cern.modesti.user.User;
+import cern.modesti.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,9 @@ public class AuthService {
 
   @Autowired
   private org.activiti.engine.TaskService taskService;
+
+  @Autowired
+  private UserService userService;
 
   /**
    * @param request
@@ -66,8 +72,12 @@ public class AuthService {
       return true;
     }
 
-    for (String candidateGroup : candidateGroups) {
-      if (roles.contains(candidateGroup)) {
+    // Find all users that are members of the candidate groups, and stop once we find one
+    // that the given user is a member of
+    List<User> users = userService.findByNameAndGroup(user.getUsername(), new ArrayList<>(candidateGroups));
+
+    for (User candidateUser : users) {
+      if (candidateUser.getUsername().equals(user.getUsername())) {
         log.debug(format("user %s authorised for task %s", user.getUsername(), task));
         return true;
       }

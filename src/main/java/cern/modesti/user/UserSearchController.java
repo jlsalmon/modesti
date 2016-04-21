@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.naming.InvalidNameException;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +47,7 @@ public class UserSearchController {
   }
 
   @RequestMapping(value = "/users/search", method = GET, produces = "application/json")
-  HttpEntity<Resources<User>> search(@RequestParam("query") String query) throws InvalidNameException {
+  HttpEntity<Resources<User>> search(@RequestParam("query") String query) {
     Iterable<User> users = null;
 
     // TODO: use LdapRepository for this once https://github.com/spring-projects/spring-ldap/issues/374 is fixed.
@@ -79,7 +80,7 @@ public class UserSearchController {
       name = query.split(" or ")[1].split(" == ")[1];
     }
 
-    users = userService.findByUsernameOrNameAndRole(name, roles);
+    users = userService.findByNameAndGroup(name, Arrays.asList(roles));
 
     Resources<User> resources = new Resources<>(users);
 
