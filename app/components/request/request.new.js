@@ -22,7 +22,7 @@ function NewRequestController($state, RequestService, SchemaService, AuthService
   self.request = {
     type : 'CREATE',
     description : '',
-    creator : AuthService.getCurrentUser()
+    creator : AuthService.getCurrentUser().username
   };
 
   getSchemas();

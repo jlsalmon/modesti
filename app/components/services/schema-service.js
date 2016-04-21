@@ -578,7 +578,7 @@ function SchemaService($q, $http, Utils) {
 
   /**
    * TODO: move this domain-specific logic into backend plugins
-   * 
+   *
    * Alarm category format: 'CERN.SRVS.'|FUNC_GEN|'.'|TES_SYSTEM_NAME
    */
   function generateAlarmCategories(request) {

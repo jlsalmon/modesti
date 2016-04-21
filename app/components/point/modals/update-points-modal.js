@@ -17,7 +17,7 @@ function UpdatePointsModalController($modalInstance, points, schema, AuthService
     type : 'UPDATE',
     domain : schema.id,
     description : '',
-    creator : AuthService.getCurrentUser(),
+    creator : AuthService.getCurrentUser().username,
     points: points
   };
 

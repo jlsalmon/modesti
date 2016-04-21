@@ -282,7 +282,7 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
       domain: request.domain,
       type : request.type,
       description : request.description,
-      creator : AuthService.getCurrentUser(),
+      creator : AuthService.getCurrentUser().username,
       //subsystem: request.subsystem,
       points: request.points.slice(),
       properties: {}
@@ -346,7 +346,7 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
       return false;
     }
 
-    return user && user.username === request.creator.username;
+    return user && user.username === request.creator;
   }
 
   /**
