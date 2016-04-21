@@ -68,7 +68,7 @@ public class AuthService {
 
     for (String candidateGroup : candidateGroups) {
       if (roles.contains(candidateGroup)) {
-        log.debug(format("user %s authorised for task %s", user, task));
+        log.debug(format("user %s authorised for task %s", user.getUsername(), task));
         return true;
       }
     }
