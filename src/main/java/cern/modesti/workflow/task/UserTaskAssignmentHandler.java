@@ -42,7 +42,7 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
     // Save the new assignee to the request object
     Request request = requestRepository.findOneByRequestId((String) task.getVariable("requestId"));
     User assignee = userService.findOneByUsername(task.getAssignee());
-    request.setAssignee(assignee);
+    request.setAssignee(assignee.getUsername());
     requestRepository.save(request);
   }
 

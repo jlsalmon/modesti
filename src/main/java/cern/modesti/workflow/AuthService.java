@@ -33,7 +33,7 @@ public class AuthService {
    * @return
    */
   public boolean isCreator(Request request, User user) {
-    boolean creator = request.getCreator().getUsername().equals(user.getUsername());
+    boolean creator = request.getCreator().equals(user.getUsername());
     log.debug(format("user %s is creator of request %s: %b", user.getUsername(), request.getRequestId(), creator));
     return creator;
   }

@@ -17,6 +17,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class Comment {
   private String text;
-  private User user;
+  private String user;
   private Date timestamp;
 }

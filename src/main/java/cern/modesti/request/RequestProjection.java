@@ -20,9 +20,9 @@ public interface RequestProjection {
 
   RequestType getType();
 
-  User getCreator();
+  String getCreator();
 
-  User getAssignee();
+  String getAssignee();
 
   String getDescription();
 

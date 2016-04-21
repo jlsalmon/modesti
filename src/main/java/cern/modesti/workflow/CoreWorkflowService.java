@@ -64,7 +64,7 @@ public class CoreWorkflowService {
 
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
-    variables.put("creator", request.getCreator().getUsername());
+    variables.put("creator", request.getCreator());
 
     return runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
   }

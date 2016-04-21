@@ -52,8 +52,13 @@ public class LdapUserDetailsMapper extends AbstractContextMapper<User> implement
     if (context.attributeExists("memberOf")) {
       Set<GrantedAuthority> authorities = new HashSet<>();
 
-      for (Object group : context.getObjectAttributes("memberOf")) {
-        authorities.add(new Role(group.toString().toLowerCase()));
+      for (Object attr : context.getObjectAttributes("memberOf")) {
+        String group = (String) attr;
+
+        if (group.contains("e-groups")) {
+          group = group.split(",")[0].split("=")[1];
+          authorities.add(new Role(group.toLowerCase()));
+        }
       }
 
       for (GrantedAuthority authority : authorities) {

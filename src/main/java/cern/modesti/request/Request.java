@@ -52,7 +52,7 @@ public class Request implements Serializable {
 
   @Indexed
   @NotNull(message = "Request creator is compulsory")
-  private User creator;
+  private String creator;
 
   @Indexed
   @NotNull(message = "Description is compulsory")
@@ -63,7 +63,7 @@ public class Request implements Serializable {
   private String domain;
 
   @Indexed
-  private User assignee;
+  private String assignee;
 
   @Valid
   private List<Point> points = new ArrayList<>();

@@ -18,11 +18,9 @@ public class QRequest extends EntityPathBase<Request> {
 
     private static final long serialVersionUID = -665863177L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QRequest request = new QRequest("request");
 
-    public final cern.modesti.user.QUser assignee;
+    public final StringPath assignee = createString("assignee");
 
     public final ListPath<String, StringPath> childRequestIds = this.<String, StringPath>createList("childRequestIds", String.class, StringPath.class, PathInits.DIRECT2);
 
@@ -30,7 +28,7 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final DateTimePath<org.joda.time.DateTime> createdAt = createDateTime("createdAt", org.joda.time.DateTime.class);
 
-    public final cern.modesti.user.QUser creator;
+    public final StringPath creator = createString("creator");
 
     public final StringPath description = createString("description");
 
@@ -53,25 +51,15 @@ public class QRequest extends EntityPathBase<Request> {
     public final NumberPath<Long> version = createNumber("version", Long.class);
 
     public QRequest(String variable) {
-        this(Request.class, forVariable(variable), INITS);
+        super(Request.class, forVariable(variable));
     }
 
     public QRequest(Path<? extends Request> path) {
-        this(path.getType(), path.getMetadata(), path.getMetadata().isRoot() ? INITS : PathInits.DEFAULT);
+        super(path.getType(), path.getMetadata());
     }
 
     public QRequest(PathMetadata<?> metadata) {
-        this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
-    }
-
-    public QRequest(PathMetadata<?> metadata, PathInits inits) {
-        this(Request.class, metadata, inits);
-    }
-
-    public QRequest(Class<? extends Request> type, PathMetadata<?> metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.assignee = inits.isInitialized("assignee") ? new cern.modesti.user.QUser(forProperty("assignee")) : null;
-        this.creator = inits.isInitialized("creator") ? new cern.modesti.user.QUser(forProperty("creator")) : null;
+        super(Request.class, metadata);
     }
 
 }

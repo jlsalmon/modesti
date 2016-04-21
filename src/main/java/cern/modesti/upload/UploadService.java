@@ -56,7 +56,7 @@ public class UploadService {
     }
 
     request.setCreatedAt(new DateTime());
-    request.setCreator((User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
+    request.setCreator(((User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUsername());
 
     // Generate a request id
     request.setRequestId(counterService.getNextSequence("requests").toString());

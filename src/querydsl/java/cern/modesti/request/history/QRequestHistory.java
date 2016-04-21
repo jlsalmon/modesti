@@ -50,7 +50,7 @@ public class QRequestHistory extends EntityPathBase<RequestHistory> {
 
     public QRequestHistory(Class<? extends RequestHistory> type, PathMetadata<?> metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.originalRequest = inits.isInitialized("originalRequest") ? new cern.modesti.request.QRequest(forProperty("originalRequest"), inits.get("originalRequest")) : null;
+        this.originalRequest = inits.isInitialized("originalRequest") ? new cern.modesti.request.QRequest(forProperty("originalRequest")) : null;
     }
 
 }
