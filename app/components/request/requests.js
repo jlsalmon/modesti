@@ -11,9 +11,8 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   var self = this;
 
   self.statuses = [];
-  //self.subsystems = [];
   self.schemas = [];
-  self.users = [];
+  self.users = [AuthService.getCurrentUser()];
   self.types = ['CREATE', 'UPDATE', 'DELETE'];
 
   self.filter = {};
@@ -22,8 +21,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
 
   self.loading = undefined;
 
-  //self.getSubsystems = getSubsystems;
-  self.getUsers = getUsers;
+  self.queryUsers = queryUsers;
   self.isUserAuthenticated = isUserAuthenticated;
   self.getCurrentUsername = getCurrentUsername;
   self.deleteRequest = deleteRequest;
@@ -38,7 +36,6 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   getRequests(1, 15, self.sort, self.filter);
   getRequestMetrics();
   getSchemas();
-  getUsers();
   //getSubsystems();
 
   /**
@@ -63,16 +60,11 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   function resetFilter() {
     console.log('filter reset');
     self.filter = {
-      status: [],
-      domain: [],
-      subsystem: [],
-      creator: {
-        username: []
-      },
-      assignee: {
-        username: []
-      },
-      type: []
+      status: '',
+      domain: '',
+      creator: '',
+      assignee: '',
+      type: ''
     };
   }
 
@@ -175,14 +167,33 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     });
   }
 
-  /**
-   *
-   */
-  function getUsers(username) {
-    // TODO refactor this into a service
-    $http.get(BACKEND_BASE_URL + '/users', { params: {username: username}}).then(function(response) {
+  // TODO: consolidate this functionality with assignment-modal.js
+  function queryUsers(query) {
+    return $http.get(BACKEND_BASE_URL + '/users/search', {
+      params : {
+        query : parseQuery(query)
+      }
+    }).then(function(response) {
+      if (!response.data.hasOwnProperty('_embedded')) {
+        return [];
+      }
+
       self.users = response.data._embedded.users;
     });
+  }
+
+  // TODO: consolidate this functionality with assignment-modal.js
+  function parseQuery(query) {
+    var q = '';
+
+    if (query.length !== 0) {
+      q += '(username == ' + query;
+      q += ' or firstName == ' + query;
+      q += ' or lastName == ' + query + ')';
+    }
+
+    console.log('parsed query: ' + query);
+    return q;
   }
 
   function hasCustomProperties(request) {

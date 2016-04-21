@@ -103,12 +103,12 @@
         </a>
         <ul class="treeview-menu menu-open" style="display: block;">
           <li>
-            <a href="" ng-click="ctrl.filter.assignee.username = ctrl.getCurrentUsername()">
+            <a href="" ng-click="ctrl.filter.assignee = ctrl.getCurrentUsername()">
               Assigned to me
             </a>
           </li>
           <li>
-            <a href="" ng-click="ctrl.filter.creator.username = ctrl.getCurrentUsername()">
+            <a href="" ng-click="ctrl.filter.creator = ctrl.getCurrentUsername()">
               Created by me
             </a>
           </li>
@@ -182,88 +182,82 @@
           .dropdown-menu > li > a > .glyphicon, .dropdown-menu > li > a > .fa, .dropdown-menu > li > a > .ion {
             margin-right: 0;
           }
+
+          .ui-select-bootstrap > .ui-select-choices {
+            max-height: 500px;
+            width: auto;
+          }
         </style>
 
+
         <div class="filter">
-          <select multiple selectpicker="{}" class="selectpicker"
-                  ng-model="ctrl.filter.status"
-                  data-title="Status"
-                  data-header="Select statuses"
-                  data-selected-text-format="count"
-                  select-model="ctrl.statuses"
-                  data-width="160px">
-            <option ng-repeat="status in ctrl.statuses" value="{{status.status}}" data-content="
+          <ui-select ng-model="ctrl.filter.status" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Status" allow-clear="true">
+              <span class='label request-status {{$select.selected.status}}'>
+                <!--{{::ctrl.filter.status.replace('_', ' ')}}-->
+                {{$select.selected.status}}
+              </span>
+            </ui-select-match>
+
+            <ui-select-choices repeat="status.status as status in ctrl.statuses">
               <span class='label request-status {{::status.status}}' style='margin-right: 20px;'>
                 {{::status.status.replace('_', ' ')}}
               </span>
-            ">
-            </option>
-          </select>
+            </ui-select-choices>
+          </ui-select>
         </div>
 
         <div class="filter">
-          <select multiple selectpicker="{}" class="selectpicker"
-                  ng-model="ctrl.filter.domain"
-                  data-title="{{'DOMAIN'|translate}}"
-                  data-header="Select domains"
-                  select-model="ctrl.schemas"
-                  data-width="150px">
-            <option ng-repeat="schema in ctrl.schemas | unique:id" value="{{schema.id}}">{{schema.id}}</option>
-          </select>
-        </div>
+          <ui-select ng-model="ctrl.filter.domain" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Domain" allow-clear="true">
+                {{$select.selected.id}}
+            </ui-select-match>
 
-        <!--<div class="filter">-->
-          <!--<select multiple selectpicker="{}" class="selectpicker"-->
-                  <!--ng-model="ctrl.filter.subsystem"-->
-                  <!--data-size="20"-->
-                  <!--data-title="{{'SUBSYSTEM'|translate}}"-->
-                  <!--data-header="Select subsystems"-->
-                  <!--data-selected-text-format="count>2"-->
-                  <!--select-model="ctrl.subsystems"-->
-                  <!--data-live-search="true"-->
-                  <!--data-width="150px">-->
-            <!--<option ng-repeat="subsystem in ctrl.subsystems" value="{{subsystem.value}}">{{subsystem.value}}</option>-->
-          <!--</select>-->
-        <!--</div>-->
-
-        <div class="filter">
-          <select multiple selectpicker="{}" class="selectpicker"
-                  ng-model="ctrl.filter.creator.username"
-                  data-title="{{'CREATOR'|translate}}"
-                  data-header="Select users"
-                  data-selected-text-format="count>2"
-                  select-model="ctrl.users"
-                  data-live-search="true"
-                  data-width="150px">
-            <option ng-repeat="user in ctrl.users" value="{{user.username}}" title="{{user.username}}" data-subtext="{{user.username}}">
-              {{user.firstName}} {{user.lastName}}
-            </option>
-          </select>
+            <ui-select-choices repeat="schema.id as schema in ctrl.schemas">
+              <b><div ng-bind-html="schema.id"></div></b>
+              <div ng-bind-html="schema.description"></div>
+            </ui-select-choices>
+          </ui-select>
         </div>
 
         <div class="filter">
-          <select multiple selectpicker="{}" class="selectpicker"
-                  ng-model="ctrl.filter.assignee.username"
-                  data-title="{{'Assignee'|translate}}"
-                  data-header="Select users"
-                  data-selected-text-format="count>2"
-                  select-model="ctrl.users"
-                  data-live-search="true"
-                  data-width="150px">
-            <option ng-repeat="user in ctrl.users" value="{{user.username}}" title="{{user.username}}" data-subtext="{{user.username}}">
-              {{user.firstName}} {{user.lastName}}
-            </option>
-          </select>
+          <ui-select ng-model="ctrl.filter.creator" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Creator" allow-clear="true">{{$select.selected.username}}</ui-select-match>
+            <ui-select-choices repeat="user.username as user in ctrl.users track by $index"
+                               refresh="ctrl.queryUsers($select.search)"
+                               refresh-delay="500">
+              <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
+              <small>
+                <span ng-bind-html="''+user.username | highlight: $select.search"></span>
+              </small>
+            </ui-select-choices>
+          </ui-select>
         </div>
 
         <div class="filter">
-          <select multiple selectpicker="{}" class="selectpicker"
-                  ng-model="ctrl.filter.type"
-                  data-title="{{'Type'|translate}}"
-                  data-header="Select request types"
-                  data-width="140px">
-            <option ng-repeat="type in ctrl.types" value="{{type}}">{{type}}</option>
-          </select>
+          <ui-select ng-model="ctrl.filter.assignee" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Assignee" allow-clear="true">{{$select.selected.username}}</ui-select-match>
+            <ui-select-choices repeat="user.username as user in ctrl.users track by $index"
+                               refresh="ctrl.queryUsers($select.search)"
+                               refresh-delay="500">
+              <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
+              <small>
+                <span ng-bind-html="''+user.username | highlight: $select.search"></span>
+              </small>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+        <div class="filter">
+          <ui-select ng-model="ctrl.filter.type" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Type" allow-clear="true">
+              {{$select.selected}}
+            </ui-select-match>
+
+            <ui-select-choices repeat="type in ctrl.types">
+              <div ng-bind-html="type"></div>
+            </ui-select-choices>
+          </ui-select>
         </div>
 
         <div class="filter">
@@ -281,7 +275,6 @@
             <option value="createdAt,asc" title="sort: Oldest">Oldest</option>
             <option value="status,asc" title="sort: Status">Status</option>
             <option value="domain,asc" title="sort: Domain">Domain</option>
-            <!--<option value="subsystem,asc" title="sort: Subsystem">Subsystem</option>-->
             <option value="creator,asc" title="sort: Creator">Creator</option>
             <option value="assignee,asc" title="sort: Assignee">Assignee</option>
             <option value="type,asc" title="sort: Type">Type</option>
@@ -322,14 +315,14 @@
         <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
         <br/>
         <span class="" style="font-size: 12px;">
-          <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator.username}} </span>
+          <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator}} </span>
           <span class="text-muted badge"> {{request.type}} </span>
           <span class="text-muted badge"> <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
           <!--<span class="text-muted"> &middot; <i class="fa fa-fw fa-sitemap"></i> {{request.subsystem}} </span>-->
           <span class="text-muted badge" ng-if="request.datasources.length > 0">
             <i class="fa fa-fw fa-cogs"></i>{{request.datasources.join(', ')}}
           </span>
-          <span class="text-muted badge" ng-if="request.assignee" tooltip="Assignee"> <i class="fa fa-fw fa-user"></i> {{request.assignee.username}} </span>
+          <span class="text-muted badge" ng-if="request.assignee" tooltip="Assignee"> <i class="fa fa-fw fa-user"></i> {{request.assignee}} </span>
         </span>
         <span class="text-muted pull-right" style="font-size: 11px; margin-top: 5px;"><i class="fa fa-fw fa-clock-o"></i> {{request.createdAt | date:'medium'}}</span>
       </a>
