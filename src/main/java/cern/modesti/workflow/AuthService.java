@@ -64,7 +64,6 @@ public class AuthService {
       return true;
     }
 
-    Set<String> roles = getRoles(user);
     Set<String> candidateGroups = getCandidateGroups(task);
 
     if (candidateGroups.isEmpty()) {
@@ -93,14 +92,6 @@ public class AuthService {
   public Set<String> getCandidateGroups(Task task) {
     return taskService.getIdentityLinksForTask(task.getId()).stream().filter(link -> link.getType().equals(IdentityLinkType.CANDIDATE)).map
         (IdentityLink::getGroupId).collect(Collectors.toSet());
-  }
-
-  /**
-   * @param user
-   * @return
-   */
-  private Set<String> getRoles(User user) {
-    return user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
   }
 
   /**
