@@ -281,7 +281,7 @@ function SchemaService($q, $http, Utils) {
 
     // Conditional based on the value of another property of the point, used in conjunction with the status conditional
     if (conditional.condition) {
-      valueResult = evaluateValueCondition(point, conditional.condition);
+      valueResult = evaluateConditional(point, conditional.condition, status);
     }
 
     // Simple value conditional without status conditional
