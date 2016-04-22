@@ -60,6 +60,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   function resetFilter() {
     console.log('filter reset');
     self.filter = {
+      description: '',
       status: '',
       domain: '',
       creator: '',
