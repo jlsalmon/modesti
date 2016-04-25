@@ -1,6 +1,7 @@
 package cern.modesti.user;
 
 import cern.modesti.security.ldap.LdapUserDetailsMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
@@ -40,9 +41,8 @@ import java.util.Set;
  * @author Justin Lewis Salmon
  */
 @Service
+@Slf4j
 public class UserService {
-
-  private static final String BASE = "OU=Users,OU=Organic Units";
 
   @Autowired
   @Qualifier("anonymousLdapTemplate")
@@ -56,12 +56,13 @@ public class UserService {
 
   public User findOneByUsername(String username) {
     EqualsFilter filter = new EqualsFilter("CN", username);
-    return ldapTemplate.search(LdapQueryBuilder.query().base(BASE).filter(filter), mapper).stream().findFirst().orElse(null);
+    return ldapTemplate.search(LdapQueryBuilder.query().base(env.getRequiredProperty("ldap.user.base")).filter(filter), mapper)
+        .stream().findFirst().orElse(null);
   }
 
   public List<User> findByUsernameStartsWith(String query) {
     LikeFilter filter = new LikeFilter("CN", query + "*");
-    return ldapTemplate.search(LdapQueryBuilder.query().base(BASE).countLimit(10).filter(filter), mapper);
+    return ldapTemplate.search(LdapQueryBuilder.query().base(env.getRequiredProperty("ldap.user.base")).countLimit(10).filter(filter), mapper);
   }
 
   public List<User> findByNameAndGroup(String query, List<String> groups) {
@@ -81,7 +82,19 @@ public class UserService {
 
     and.and(nameOr);
 
-    return ldapTemplate.search(BASE, and.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+    try {
+      return ldapTemplate.search(env.getRequiredProperty("ldap.user.base"), and.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+    } catch (Exception e) {
+
+      // The embedded LDAP server (apacheds-1.5.5) doesn't currently support searching using memberOf. So in this case we just ignore
+      // the group search and do only a name-based search.
+      if (env.acceptsProfiles("dev")) {
+        log.warn("Failed to search users using 'memberOf'. Falling back to name-only search");
+        return ldapTemplate.search(env.getRequiredProperty("ldap.user.base"), nameOr.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+      } else {
+        throw e;
+      }
+    }
   }
 
   public List<User> findByGroup(List<String> groups) {
@@ -92,7 +105,7 @@ public class UserService {
       throw new RuntimeException("Error querying LDAP server", e);
     }
 
-    return ldapTemplate.search(BASE, filter.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+    return ldapTemplate.search(env.getRequiredProperty("ldap.user.base"), filter.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
   }
 
   private OrFilter memberOf(List<String> groups) throws InvalidNameException {

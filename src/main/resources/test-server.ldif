@@ -1,9 +1,57 @@
-dn: ou=groups,dc=springframework,dc=org
+dn: cn=microsoft, ou=schema
+objectclass: metaSchema
+objectclass: top
+cn: microsoft
+
+dn: ou=attributetypes, cn=microsoft, ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: attributetypes
+
+dn: m-oid=1.2.840.113556.1.4.221, ou=attributetypes, cn=microsoft, ou=schema
+objectclass: metaAttributeType
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.4.221
+m-name: employeeID
+m-equality: caseIgnoreMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+m-singleValue: TRUE
+
+dn: m-oid=1.2.840.113556.1.4.222, ou=attributetypes, cn=microsoft, ou=schema
+objectclass: metaAttributeType
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.4.222
+m-name: memberOf
+m-equality: caseIgnoreMatch
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.15
+m-singleValue: FALSE
+
+
+dn: ou=objectclasses, cn=microsoft, ou=schema
+objectclass: organizationalUnit
+objectclass: top
+ou: objectClasses
+
+dn: m-oid=1.2.840.113556.1.5.6, ou=objectclasses, cn=microsoft, ou=schema
+objectclass: metaObjectClass
+objectclass: metaTop
+objectclass: top
+m-oid: 1.2.840.113556.1.5.6
+m-name: securityPrincipal
+m-supObjectClass: top
+m-typeObjectClass: AUXILIARY
+m-must: employeeID
+m-may: memberOf
+
+
+dn: ou=e-groups,dc=springframework,dc=org
 objectclass: top
 objectclass: organizationalUnit
-ou: groups
+ou: e-groups
 
-dn: ou=subgroups,ou=groups,dc=springframework,dc=org
+dn: ou=subgroups,ou=e-groups,dc=springframework,dc=org
 objectclass: top
 objectclass: organizationalUnit
 ou: subgroups
@@ -13,30 +61,20 @@ objectclass: top
 objectclass: organizationalUnit
 ou: people
 
-dn: ou=space cadets,dc=springframework,dc=org
-objectclass: top
-objectclass: organizationalUnit
-ou: space cadets
 
-dn: ou=\"quoted people\",dc=springframework,dc=org
-objectclass: top
-objectclass: organizationalUnit
-ou: "quoted people"
-
-dn: ou=otherpeople,dc=springframework,dc=org
-objectclass: top
-objectclass: organizationalUnit
-ou: otherpeople
-
-dn: uid=ben,ou=people,dc=springframework,dc=org
+dn: cn=ben,ou=people,dc=springframework,dc=org
 objectclass: top
 objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
-cn: Ben Alex
+objectclass: securityPrincipal
+cn: ben
+employeeID: 1234
+givenName: Ben
 sn: Alex
-uid: ben
+mail: ben@example.com
 userPassword: {SHA}nFCebWjxfaLbHHG1Qk5UU4trbvQ=
+memberOf: CN=modesti-creators,OU=e-groups,dc=springframework,dc=org
 
 dn: uid=bob,ou=people,dc=springframework,dc=org
 objectclass: top
@@ -48,77 +86,10 @@ sn: Hamilton
 uid: bob
 userPassword: bobspassword
 
-dn: uid=joe,ou=otherpeople,dc=springframework,dc=org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: Joe Smeth
-sn: Smeth
-uid: joe
-userPassword: joespassword
 
-dn: cn=mouse\, jerry,ou=people,dc=springframework,dc=org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: Mouse, Jerry
-sn: Mouse
-uid: jerry
-userPassword: jerryspassword
+dn: CN=modesti-creators,OU=e-groups,dc=springframework,dc=org
+objectClass: groupOfNames
+objectClass: top
+cn: modesti-creators
+member: cn=ben,ou=people,dc=springframework,dc=org
 
-dn: cn=slash/guy,ou=people,dc=springframework,dc=org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: slash/guy
-sn: Slash
-uid: slashguy
-userPassword: slashguyspassword
-
-dn: cn=quote\"guy,ou=\"quoted people\",dc=springframework,dc=org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: quote\"guy
-sn: Quote
-uid: quoteguy
-userPassword: quoteguyspassword
-
-dn: uid=space cadet,ou=space cadets,dc=springframework,dc=org
-objectclass: top
-objectclass: person
-objectclass: organizationalPerson
-objectclass: inetOrgPerson
-cn: Space Cadet
-sn: Cadet
-uid: space cadet
-userPassword: spacecadetspassword
-
-
-
-dn: cn=developers,ou=groups,dc=springframework,dc=org
-objectclass: top
-objectclass: groupOfNames
-cn: developers
-ou: developer
-uniqueMember: uid=ben,ou=people,dc=springframework,dc=org
-uniqueMember: uid=bob,ou=people,dc=springframework,dc=org
-
-dn: cn=managers,ou=groups,dc=springframework,dc=org
-objectclass: top
-objectclass: groupOfNames
-cn: managers
-ou: manager
-uniqueMember: uid=ben,ou=people,dc=springframework,dc=org
-uniqueMember: cn=mouse\, jerry,ou=people,dc=springframework,dc=org
-
-dn: cn=submanagers,ou=subgroups,ou=groups,dc=springframework,dc=org
-objectclass: top
-objectclass: groupOfNames
-cn: submanagers
-ou: submanager
-uniqueMember: uid=ben,ou=people,dc=springframework,dc=org

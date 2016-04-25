@@ -4,7 +4,17 @@ package cern.modesti.config;
 
 import cern.modesti.security.ldap.LdapUserDetailsMapper;
 import org.apache.catalina.Context;
+import org.apache.directory.server.core.authn.AuthenticationInterceptor;
+import org.apache.directory.server.core.exception.ExceptionInterceptor;
+import org.apache.directory.server.core.interceptor.Interceptor;
+import org.apache.directory.server.core.normalization.NormalizationInterceptor;
+import org.apache.directory.server.core.operational.OperationalAttributeInterceptor;
+import org.apache.directory.server.core.referral.ReferralInterceptor;
+import org.apache.directory.server.core.schema.SchemaInterceptor;
+import org.apache.directory.server.core.subtree.SubentryInterceptor;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
@@ -17,8 +27,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.access.event.LoggerListener;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.ldap.LdapAuthenticationProviderConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
@@ -26,6 +39,10 @@ import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
+import org.springframework.security.ldap.server.ApacheDSContainer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO
@@ -51,7 +68,6 @@ import org.springframework.security.ldap.authentication.LdapAuthenticator;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(1)
-@Profile({"test", "prod"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
@@ -68,6 +84,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .and().authorizeRequests().anyRequest().authenticated()
         // TODO: implement CSRF protection. Here we just turn it off.
         .and().csrf().disable();
+  }
+
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    LdapAuthenticationProviderConfigurer configurer = auth
+        .ldapAuthentication()
+        .userDnPatterns(env.getRequiredProperty("ldap.user.filter"))
+        .groupSearchBase(env.getRequiredProperty("ldap.group.base"));
+
+    if (env.acceptsProfiles("dev")) {
+      configurer.contextSource().ldif("classpath:test-server.ldif");
+    } else {
+      configurer.contextSource(contextSource());
+    }
   }
 
   @Bean
@@ -132,5 +162,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
       });
     }
+  }
+
+  // Post process the embedded LDAP server (apacheds) to allow custom schema attributes in the LDIF file
+  @Bean
+  public static BeanPostProcessor apacheDSContainerConfigurer() { return new BeanPostProcessor() {
+      @Override
+      public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        if (bean instanceof ApacheDSContainer) {
+          List<Interceptor> interceptors = new ArrayList<>();
+          interceptors.add(new NormalizationInterceptor());
+          interceptors.add(new AuthenticationInterceptor());
+          interceptors.add(new ReferralInterceptor());
+          interceptors.add(new ExceptionInterceptor());
+          interceptors.add(new OperationalAttributeInterceptor());
+          interceptors.add(new SchemaInterceptor()); // this has been added
+          interceptors.add(new SubentryInterceptor());
+          ((ApacheDSContainer) bean).getService().setInterceptors(interceptors);
+        }
+        return bean;
+      }
+
+      @Override
+      public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException { return bean; }
+    };
   }
 }
