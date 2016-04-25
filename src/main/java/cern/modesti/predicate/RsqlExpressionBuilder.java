@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Utility class for creating {@link Predicate} instances from RSQL query
+ * strings.
+ *
  * @author Justin Lewis Salmon
  */
 @AllArgsConstructor
@@ -18,9 +21,10 @@ public class RsqlExpressionBuilder<T> implements RSQLVisitor<BooleanExpression, 
   private final Class<T> klass;
 
   /**
+   * Create a {@link Predicate} instance from the given RSQL query string.
    *
-   * @param search
-   * @return
+   * @param search the RSQL query string
+   * @return a {@link Predicate} instance built from the given query
    */
   public Predicate createExpression(String search) {
     final Node rootNode = new RSQLParser().parse(search);
@@ -42,16 +46,11 @@ public class RsqlExpressionBuilder<T> implements RSQLVisitor<BooleanExpression, 
     return createExpression(node);
   }
 
-  public BooleanExpression createExpression(final ComparisonNode comparisonNode) {
+  private BooleanExpression createExpression(final ComparisonNode comparisonNode) {
     return new PredicateBuilder<>(klass).with(comparisonNode.getSelector(), comparisonNode.getOperator(), comparisonNode.getArguments()).build();
   }
 
-  /**
-   *
-   * @param node
-   * @return
-   */
-  public BooleanExpression createExpression(final Node node) {
+  private BooleanExpression createExpression(final Node node) {
     if (node instanceof LogicalNode) {
       return createExpression((LogicalNode) node);
     }
@@ -61,13 +60,7 @@ public class RsqlExpressionBuilder<T> implements RSQLVisitor<BooleanExpression, 
     return null;
   }
 
-  /**
-   *
-   * @param logicalNode
-   * @return
-   */
-  public BooleanExpression createExpression(final LogicalNode logicalNode) {
-
+  private BooleanExpression createExpression(final LogicalNode logicalNode) {
     List<BooleanExpression> expressions = new ArrayList<>();
     BooleanExpression temp;
 

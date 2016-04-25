@@ -22,9 +22,6 @@ public class CounterServiceImpl implements CounterService {
   @Autowired
   private MongoOperations mongo;
 
-  /**
-   *
-   */
   @PostConstruct
   public void init() {
     log.info("Initialising counters");
@@ -36,11 +33,6 @@ public class CounterServiceImpl implements CounterService {
     }
   }
 
-  /**
-   *
-   * @param collectionName
-   * @return
-   */
   @Override
   public Long getNextSequence(String collectionName) {
     Counter counter = mongo.findAndModify(query(where("_id").is(collectionName)), new Update().inc("sequence", 1), options().returnNew(true), Counter.class);

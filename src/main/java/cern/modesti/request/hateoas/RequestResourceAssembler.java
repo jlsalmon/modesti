@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This class is responsible for manually assembling {@link Request} instances
+ * into {@link Resource} representations.
+ *
  * @author Justin Lewis Salmon
  */
 @Component

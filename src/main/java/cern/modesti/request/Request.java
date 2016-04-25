@@ -21,6 +21,8 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
+ * This class represents a single MODESTI request entity.
+ *
  * @author Justin Lewis Salmon
  */
 @Document
@@ -30,11 +32,15 @@ public class Request implements Serializable {
 
   private static final long serialVersionUID = -7075036449830835583L;
 
-  /** Internal mongodb id  */
+  /**
+   * Internal mongodb id
+   */
   @Id
   private String id;
 
-  /** Human-readable id */
+  /**
+   * Human-readable id
+   */
   @Indexed
   private String requestId;
 
@@ -75,13 +81,15 @@ public class Request implements Serializable {
   @Version
   private Long version;
 
-  /** Custom properties */
+  /**
+   * Custom properties
+   */
   private Map<String, Object> properties = new HashMap<>();
 
   /**
-   * Copy constructor
+   * Copy constructor.
    *
-   * @param request
+   * @param request the request to copy
    */
   public Request(Request request) {
     this.requestId = request.requestId;
@@ -96,11 +104,15 @@ public class Request implements Serializable {
   }
 
   /**
+   * Retrieve a request property and convert it to the given type.
+   * <p>
+   * The specific domain plugin is responsible for making sure that non
+   * existent properties or properties of the wrong type are not requested.
    *
-   * @param key
-   * @param klass
-   * @param <T>
-   * @return
+   * @param key   the property key
+   * @param klass the type to which to convert the value
+   * @param <T>   the type of the value
+   * @return the value mapped by the given key, converted to the given type
    */
   public <T> T getObjectProperty(String key, Class<T> klass) {
     ObjectMapper mapper = new ObjectMapper();

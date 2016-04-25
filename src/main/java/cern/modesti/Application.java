@@ -13,12 +13,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
- * To activate a profile, pass -Dspring.profiles.active=[dev|test|prod]
- *
- * The "dev" profile uses:
- *  - Embedded JDBC datasource
- *  - Embedded MongoDB datasource
- *  - No authentication
+ * The main entry point for the MODESTI application server.
  *
  * @author Justin Lewis Salmon
  */

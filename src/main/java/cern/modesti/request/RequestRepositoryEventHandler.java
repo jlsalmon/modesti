@@ -30,11 +30,14 @@ import java.util.Collection;
 import static java.lang.String.format;
 
 /**
- * This class listens for create, update and delete events for individual requests.
- *
- * The {@link cern.modesti.request.RequestRepository} is automatically exposed as a REST resource via Spring Data REST, hence why there is no explicit MVC
- * controller for it. This class simply hooks into the Spring Data REST lifecycle and intercepts request create/save events, and lets Spring Data REST do
- * everything else automatically.
+ * This class listens for create, update and delete events for individual
+ * requests.
+ * <p>
+ * The {@link RequestRepository} is automatically exposed
+ * as a REST resource via Spring Data REST, hence why there is no explicit MVC
+ * controller for it. This class simply hooks into the Spring Data REST
+ * lifecycle and intercepts request create/save events, and lets Spring Data
+ * REST do everything else automatically.
  *
  * @author Justin Lewis Salmon
  */
@@ -60,20 +63,12 @@ public class RequestRepositoryEventHandler {
 
   private Collection<RequestEventHandler> requestEventHandlers = new ArrayList<>();
 
-  /**
-   *
-   */
   @PostConstruct
   public void init() {
     // TODO: associate event handlers of a domain to requests of that domain only
     this.requestEventHandlers = context.getBeansOfType(RequestEventHandler.class).values();
   }
 
-  /**
-   * TODO
-   *
-   * @param request
-   */
   @HandleBeforeCreate
   public void handleRequestCreate(Request request) {
     // Do not create a request if there is no appropriate domain
@@ -107,11 +102,6 @@ public class RequestRepositoryEventHandler {
     workflowService.startProcessInstance(request);
   }
 
-  /**
-   * TODO
-   *
-   * @param request
-   */
   @HandleBeforeSave
   public void handleRequestSave(Request request) {
     for (Point point : request.getPoints()) {
@@ -129,10 +119,6 @@ public class RequestRepositoryEventHandler {
     // historyService.saveChangeHistory(request);
   }
 
-  /**
-   *
-   * @param request
-   */
   @HandleBeforeDelete
   public void handleRequestDelete(Request request) {
     // TODO: mark the request as deleted in the history collection

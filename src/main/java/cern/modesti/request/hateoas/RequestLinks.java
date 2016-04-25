@@ -22,33 +22,26 @@ import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
+/**
+ * This class is responsible for generating HATEOAS links for {@link Request}
+ * instance representations.
+ *
+ * @author Justin Lewis Salmon
+ */
 @Component
 public class RequestLinks {
 
   @Autowired
-  TaskService taskService;
+  private TaskService taskService;
 
   @Autowired
-  RuntimeService runtimeService;
+  private EntityLinks entityLinks;
 
-  @Autowired
-  EntityLinks entityLinks;
-
-  /**
-   *
-   * @param request
-   * @return
-   */
-  Link getSchemaLink(Request request) {
+  public Link getSchemaLink(Request request) {
     return entityLinks.linkToSingleResource(Schema.class, request.getDomain());
   }
 
-  /**
-   *
-   * @param request
-   * @return
-   */
-  List<Link> getTaskLinks(Request request) {
+  public List<Link> getTaskLinks(Request request) {
     List<Link> links = new ArrayList<>();
     List<Task> tasks = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).orderByTaskCreateTime().desc().list();
 
@@ -59,12 +52,7 @@ public class RequestLinks {
     return links;
   }
 
-  /**
-   *
-   * @param request
-   * @return
-   */
-  List<Link> getSignalLinks(Request request) {
+  public List<Link> getSignalLinks(Request request) {
     List<Link> links = new ArrayList<>();
     Task task = taskService.createTaskQuery().processInstanceBusinessKey(request.getRequestId()).active().singleResult();
 

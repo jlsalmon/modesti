@@ -1,7 +1,7 @@
 package cern.modesti.request;
 
 /**
- * TODO
+ * Enumeration of the acceptable types for a {@link Request} instance.
  *
  * @author Justin Lewis Salmon
  */

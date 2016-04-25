@@ -5,7 +5,8 @@ import cern.modesti.request.Request;
 import static java.lang.String.format;
 
 /**
- * TODO
+ * To be thrown when an attempt is made to act upon a {@link Request} for which
+ * no related plugin could be found.
  *
  * @author Justin Lewis Salmon
  */
@@ -21,7 +22,7 @@ public class UnsupportedRequestException extends RuntimeException {
   }
 
   public UnsupportedRequestException(String message) {
-    super(format(message));
+    super(message);
     this.request = null;
   }
 

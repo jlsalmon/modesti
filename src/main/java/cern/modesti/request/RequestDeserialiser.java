@@ -16,7 +16,8 @@ import java.util.Objects;
 import static java.lang.String.format;
 
 /**
- * TODO
+ * This class is responsible for serialising and deserialising {@link Request}
+ * instances.
  *
  * @author Justin Lewis Salmon
  */

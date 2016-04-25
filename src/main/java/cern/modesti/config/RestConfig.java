@@ -20,9 +20,13 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapt
 import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.validation.Validator;
 
+/**
+ * Configuration class for customising the usage of Spring Data REST.
+ *
+ * @author Justin Lewis Salmon
+ */
 @Configuration
 @EnableEntityLinks
-@Profile({"dev", "test", "prod"})
 public class RestConfig extends RepositoryRestConfigurerAdapter {
 
   @Autowired
@@ -39,8 +43,8 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     super.configureRepositoryRestConfiguration(config);
 
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
-    config.exposeIdsFor(Point.class, Field.class, TextField.class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class, User
-        .class, Schema.class, Category.class, Datasource.class, Option.class);
+    config.exposeIdsFor(Point.class, Field.class, TextField.class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class,
+        User.class, Schema.class, Category.class, Datasource.class, Option.class);
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);

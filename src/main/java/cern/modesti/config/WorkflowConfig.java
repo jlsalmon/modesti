@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * Configuration class for customising the Activiti workflow engine.
+ *
  * @author Justin Lewis Salmon
  */
 @Configuration

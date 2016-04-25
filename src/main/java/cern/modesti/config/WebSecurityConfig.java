@@ -1,7 +1,5 @@
 package cern.modesti.config;
 
-//import cern.modesti.user.UserRepository;
-
 import cern.modesti.security.ldap.LdapUserDetailsMapper;
 import org.apache.catalina.Context;
 import org.apache.directory.server.core.authn.AuthenticationInterceptor;
@@ -45,18 +43,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
- *
- * Web security and LDAP configuration beans.
- *
- * The authentication/authorisation mechanism uses two different LDAP servers:
+ * Configuration class for the core web security and LDAP beans.
+ * <p>
+ * When running with the {@literal dev} profile, an in-memory LDAP server is used.
+ * <p>
+ * Otherwise, The authentication/authorisation mechanism uses two different LDAP servers:
  * cerndc.cern.ch and xldap.cern.ch. The former is available in authenticated
  * mode only, from inside CERN only, and is used to authenticate a user. The
  * latter is available anonymously, from inside CERN only, and is used to
  * perform anonymous lookups on the LDAP server in order to do things like
  * lookup all the e-groups a particular user is a member of, or to check if a
  * user is a member of a particular e-group.
- *
+ * <p>
  * See <a href=
  * "https://espace.cern.ch/identitymanagement/Wiki%20Pages/Active%20Directory%20Publication.aspx"
  * >this page</a> for documentation about the CERN LDAP structure.
@@ -80,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http
         // Enable basic HTTP authentication
         .httpBasic()
-        // Authentication is required for all URLs
+            // Authentication is required for all URLs
         .and().authorizeRequests().anyRequest().authenticated()
         // TODO: implement CSRF protection. Here we just turn it off.
         .and().csrf().disable();
@@ -115,7 +113,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapAuthenticator ldapAuthenticator() {
     BindAuthenticator authenticator = new BindAuthenticator(contextSource());
-    String[] userDnPatterns = new String[] { env.getRequiredProperty("ldap.user.filter") };
+    String[] userDnPatterns = new String[]{env.getRequiredProperty("ldap.user.filter")};
     authenticator.setUserDnPatterns(userDnPatterns);
     return authenticator;
   }
@@ -166,7 +164,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   // Post process the embedded LDAP server (apacheds) to allow custom schema attributes in the LDIF file
   @Bean
-  public static BeanPostProcessor apacheDSContainerConfigurer() { return new BeanPostProcessor() {
+  public static BeanPostProcessor apacheDSContainerConfigurer() {
+    return new BeanPostProcessor() {
       @Override
       public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean instanceof ApacheDSContainer) {
@@ -184,7 +183,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       }
 
       @Override
-      public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException { return bean; }
+      public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+      }
     };
   }
 }

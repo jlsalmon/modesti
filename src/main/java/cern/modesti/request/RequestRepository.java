@@ -8,8 +8,14 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- * By setting the excerpt projection on the interface, retrieving a list of requests will in fact return a list of skinny requests. This reduces backend load
- * greatly. Retrieving a single request will still return the full request, unless the skinny projection is explicitly requested.
+ * Repository for creating, reading, updating and deleting {@link Request}
+ * instances.
+ * <p>
+ * By setting the excerpt projection on the interface, retrieving a list of
+ * requests will in fact return a list of {@link RequestProjection} instances.
+ * This reduces backend load greatly. Retrieving a single request will still
+ * return the full request, unless the {@link RequestProjection}is explicitly
+ * requested.
  *
  * @author Justin Lewis Salmon
  */
@@ -17,22 +23,29 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface RequestRepository extends MongoRepository<Request, String>, QueryDslPredicateExecutor<Request> {
 
   /**
-   * @param requestId
-   * @return
+   * Retrieve a single {@link Request} instance.
+   *
+   * @param requestId the id of the request to retrieve
+   * @return the request instance, or null if no request was found with the
+   * given id
    */
   Request findOneByRequestId(@Param("requestId") String requestId);
 
   /**
-   * A user may save a request if:
+   * Save a single {@link Request} instance.
    * <p>
-   * - They are the original creator
-   * - They are the current assignee
-   * - They are an administrator
+   * If a request already exists with the same id as the given request, it will
+   * be overwritten. Otherwise, it wil be created.
    * <p>
-   * TODO cover this with test cases
+   * A user may only save a request if:
+   * <ul>
+   * <li>They are the original creator</li>
+   * <li>They are the current assignee</li>
+   * <li>They are an administrator</li>
+   * </ul>
    *
-   * @param request
-   * @return
+   * @param request the request to save
+   * @return the newly saved request
    */
   @PreAuthorize("@authService.isCreator(#request, principal) or @authService.isAuthorised(#request, principal) or hasRole('modesti-administrators')")
   @Override

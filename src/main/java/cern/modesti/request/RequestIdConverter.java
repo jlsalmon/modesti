@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 /**
  * @author Justin Lewis Salmon
- *
  */
 @Component
 public class RequestIdConverter implements BackendIdConverter {
@@ -16,13 +15,6 @@ public class RequestIdConverter implements BackendIdConverter {
   @Autowired
   private RequestRepository requestRepository;
 
-  /**
-   * TODO
-   *
-   * @param id
-   * @param entityType
-   * @return
-   */
   @Override
   public Serializable fromRequestId(String id, Class<?> entityType) {
 
@@ -37,13 +29,6 @@ public class RequestIdConverter implements BackendIdConverter {
     return id;
   }
 
-  /**
-   * TODO
-   *
-   * @param id
-   * @param entityType
-   * @return
-   */
   @Override
   public String toRequestId(Serializable id, Class<?> entityType) {
 
@@ -58,12 +43,6 @@ public class RequestIdConverter implements BackendIdConverter {
     return id.toString();
   }
 
-  /**
-   * TODO
-   *
-   * @param delimiter
-   * @return
-   */
   @Override
   public boolean supports(Class<?> delimiter) {
     return Request.class.equals(delimiter);

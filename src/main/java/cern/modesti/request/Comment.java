@@ -1,6 +1,5 @@
 package cern.modesti.request;
 
-import cern.modesti.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * TODO
+ * A single comment on a request.
  *
  * @author Justin Lewis Salmon
  */

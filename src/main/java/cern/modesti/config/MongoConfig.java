@@ -31,6 +31,11 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
+/**
+ * Configuration class for the core {@link Mongo} client and related MongoDB beans.
+ *
+ * @author Justin Lewis Salmon
+ */
 @Configuration
 @EnableMongoAuditing
 @Slf4j

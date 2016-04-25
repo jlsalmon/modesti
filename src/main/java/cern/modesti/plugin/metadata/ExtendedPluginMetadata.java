@@ -7,7 +7,8 @@ import org.springframework.util.Assert;
 import static java.lang.String.format;
 
 /**
- * TODO
+ * A {@link PluginMetadata} implementation for plugins that wish to have
+ * separate workflow processes for each {@link RequestType}.
  *
  * @author Justin Lewis Salmon
  */

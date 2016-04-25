@@ -12,6 +12,7 @@ import org.springframework.plugin.core.Plugin;
 import static java.lang.String.format;
 
 /**
+ * An implementation must extend this class to be registered as a plugin.
  *
  * @author Justin Lewis Salmon
  */
@@ -20,8 +21,7 @@ public abstract class RequestProvider implements Plugin<Request>, MetadataProvid
   /**
    * Decides if a plugin should be invoked according to the given request.
    *
-   * @param request
-   *
+   * @param request the request instance
    * @return true if the plugin should be invoked for this request, false otherwise
    */
   @Override
@@ -30,18 +30,21 @@ public abstract class RequestProvider implements Plugin<Request>, MetadataProvid
   }
 
   /**
-   * Find a set of points
+   * A plugin should implement this method to provide search capability on its
+   * domain database.
    *
-   * @param query
-   * @param pageable
-   * @return
+   * @param query    an RSQL query string representing the user search input
+   * @param pageable paging information
+   * @return a list of {@link Point} instances matching the given query
    */
   public abstract Page<Point> findAll(String query, Pageable pageable);
 
   /**
-   * Plugins that wish to provide upload support from Excel sheets must override this method and return a {@link RequestParser} implementation.
+   * Plugins that wish to provide upload support from Excel sheets must
+   * override this method and return a {@link RequestParser} implementation.
    *
-   * @return
+   * @return a {@link RequestParser} capable of parsing a {@link Request}
+   * instance of this domain from an Excel sheet.
    */
   public RequestParser getRequestParser() {
     throw new UnsupportedRequestException(format("Plugin for domain %s does not provide a RequestParser implementation", getMetadata().getName()));

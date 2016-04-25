@@ -12,8 +12,6 @@ import static cz.jirutka.rsql.parser.ast.RSQLOperators.*;
 import static java.lang.String.format;
 
 /**
- * TODO
- *
  * @author Justin Lewis Salmon
  */
 @AllArgsConstructor
@@ -23,10 +21,6 @@ public class Predicate<T> {
 
   private final Class<T> klass;
 
-  /**
-   *
-   * @return
-   */
   public BooleanExpression getPredicate() {
     PathBuilder<T> entityPath = new PathBuilder<>(klass, CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, klass.getSimpleName()));
 
@@ -133,12 +127,6 @@ public class Predicate<T> {
     }
   }
 
-  /**
-   *
-   * @param fieldName
-   * @param klass
-   * @return
-   */
   private Field getField(String fieldName, Class<T> klass) {
     Field field;
     String nestedFieldName = null;

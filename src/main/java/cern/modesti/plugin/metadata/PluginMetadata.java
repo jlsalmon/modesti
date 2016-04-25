@@ -10,17 +10,19 @@ import cern.modesti.request.RequestType;
 public interface PluginMetadata {
 
   /**
-   * Returns a unique plugin name. Plugins returning a metadata implementation have to ensure uniqueness of this name.
+   * Returns a unique plugin name. Plugins returning a metadata implementation
+   * have to ensure uniqueness of this name.
    *
    * @return the name of the plugin
    */
   String getName();
 
   /**
-   * Returns the identifier of the workflow process to be used based on the given request type.
+   * Returns the identifier of the workflow process to be used based on the
+   * given request type.
    *
-   * @param type
-   * @return
+   * @param type the type of the request
+   * @return the workflow process identifier mapping to the given request type
    */
   String getProcessKey(RequestType type);
 }
