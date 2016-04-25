@@ -1,5 +1,6 @@
 package cern.modesti.workflow.notification;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,8 @@ import static java.lang.String.format;
  * @author Justin Lewis Salmon
  */
 @Service
-@Profile({"test", "prod"})
+@Slf4j
 public class NotificationService {
-  private static final Logger LOG = LoggerFactory.getLogger(NotificationService.class);
 
   @Autowired
   private JavaMailSender mailSender;
@@ -115,7 +115,7 @@ public class NotificationService {
       message.setText(htmlContent, true);
 
     } catch (MessagingException e) {
-      LOG.error("Error sending email notification", e);
+      log.error("Error sending email notification", e);
     }
 
     // Send mail
