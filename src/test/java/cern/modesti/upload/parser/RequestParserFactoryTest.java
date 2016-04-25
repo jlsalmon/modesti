@@ -5,7 +5,6 @@ import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.Request;
 import cern.modesti.test.plugin.DummyRequestProvider;
 import cern.modesti.upload.exception.RequestParseException;
-import cern.modesti.upload.exception.VersionNotSupportedException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;

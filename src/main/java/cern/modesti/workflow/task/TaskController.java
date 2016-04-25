@@ -26,31 +26,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * TODO
- *
- * REST endpoints:
- *
- * URL                              Allowed methods           Request body
- * -----------------------------------------------------------------------------------
- * /requests                        GET, POST, PUT, DELETE    {request}
- * /requests/upload                 POST                      {.xls|.xlsx}
- * /requests/123/tasks/validate     POST                      {action: 'complete|delegate'}
- * /requests/123/tasks/submit       POST                      {action: 'complete|delegate'}
- * /requests/123/tasks/approve      POST                      {action: 'claim|complete|delegate'}
- * /requests/123/tasks/address      POST                      {action: 'claim|complete|delegate'}
- * /requests/123/tasks/cable        POST                      {action: 'claim|complete|delegate'}
- * /requests/123/tasks/configure    POST                      {action: 'complete|delegate'}
- * /requests/123/tasks/test         POST                      {action: 'claim|complete|delegate'}
- * /requests/123/signals/split      POST
- * /requests/123/signals/modify     POST
- * /requests/123/history            GET
- * /requests/123/progress           GET
- *
- * /metrics                         GET
- *
- * /schemas                         GET, POST, PUT, DELETE    {schema}
- * /schemas/TIM                     GET                       {schema}
- *
  * @author Justin Lewis Salmon
  */
 @Controller
