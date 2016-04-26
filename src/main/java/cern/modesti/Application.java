@@ -3,6 +3,7 @@ package cern.modesti;
 import cern.modesti.plugin.RequestProvider;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
+import org.activiti.spring.boot.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -17,7 +18,7 @@ import java.net.URLClassLoader;
  *
  * @author Justin Lewis Salmon
  */
-@SpringBootApplication(exclude = {EmbeddedMongoAutoConfiguration.class})
+@SpringBootApplication(exclude = {EmbeddedMongoAutoConfiguration.class, SecurityAutoConfiguration.class})
 @EnablePluginRegistries(RequestProvider.class)
 public class Application {
 
