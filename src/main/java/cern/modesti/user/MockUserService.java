@@ -89,7 +89,19 @@ public class MockUserService implements UserService {
 
         String[] props = line.split(" ");
         List<Role> roles = Arrays.asList(props[4].split(",")).stream().map(Role::new).collect(Collectors.toList());
-        addMockUser(new User(users.size() + 1, props[0], props[1], props[2], props[3], roles));
+
+        User user = new User(users.size() + 1, props[0], props[1], props[2], props[3], roles);
+        boolean store = true;
+
+        for (User existingUser : users) {
+          if (existingUser.getUsername().equals(user.getUsername())) {
+            store = false;
+          }
+        }
+
+        if (store) {
+          addMockUser(user);
+        }
       }
     }
   }
