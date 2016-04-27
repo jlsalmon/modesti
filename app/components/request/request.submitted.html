@@ -85,6 +85,12 @@
           </span>
 
 
+          <span ng-if="ctrl.request.status == 'REMOVE_TEST_FLAG'">
+            All points have now been marked as successfully tested. It is now necessary to reconfigure the WinCC OA LASER
+            driver to remove the "test" flag and put the points in operational mode.
+          </span>
+
+
           <a class="btn btn-primary" href="requests/{{ctrl.request.requestId}}">Back to request &raquo;</a>
           <a class="btn btn-default" href="requests"><i class="fa fa-home"></i> Home</a>
         </alert>

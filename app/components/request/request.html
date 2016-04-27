@@ -384,6 +384,11 @@
                 <ng-include src="'components/request/controls/testing-controls.html'"></ng-include>
               </div>
             </span>
+            <span ng-switch-when="REMOVE_TEST_FLAG">
+              <div ng-controller="RemoveTestFlagController as ctrl">
+                <ng-include src="'components/request/controls/remove-test-flag-controls.html'"></ng-include>
+              </div>
+            </span>
           </span>
 
         </accordion-heading>
