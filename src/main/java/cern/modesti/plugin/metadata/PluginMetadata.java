@@ -18,6 +18,14 @@ public interface PluginMetadata {
   String getName();
 
   /**
+   * Returns the name of the group to which a user must belong in order to be
+   * authorised to use this plugin.
+   *
+   * @return the authorisation group name
+   */
+  String getAuthorisationGroup();
+
+  /**
    * Returns the identifier of the workflow process to be used based on the
    * given request type.
    *

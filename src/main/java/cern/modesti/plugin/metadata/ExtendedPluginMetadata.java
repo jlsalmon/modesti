@@ -16,6 +16,7 @@ import static java.lang.String.format;
 public class ExtendedPluginMetadata implements PluginMetadata {
 
   private String name;
+  private String authorisationGroup;
   private String createProcessKey;
   private String updateProcessKey;
   private String deleteProcessKey;
@@ -24,14 +25,28 @@ public class ExtendedPluginMetadata implements PluginMetadata {
    * Creates a new instance of {@code DefaultPluginMetadata}.
    *
    * @param name must not be {@literal null}.
+   * @param authorisationGroup must not be {@literal null}.
+   * @param createProcessKey must not be {@literal null}.
+   * @param updateProcessKey must not be {@literal null}.
+   * @param deleteProcessKey must not be {@literal null}.
    */
-  public ExtendedPluginMetadata(String name, String createProcessKey, String updateProcessKey, String deleteProcessKey) {
+  public ExtendedPluginMetadata(String name, String authorisationGroup, String createProcessKey, String updateProcessKey, String deleteProcessKey) {
     Assert.hasText(name, "Name must not be null or empty!");
+    Assert.hasText(authorisationGroup, "Authorisation group must not be null or empty!");
+    Assert.hasText(createProcessKey, "Create process key must not be null or empty!");
+    Assert.hasText(updateProcessKey, "Update process key must not be null or empty!");
+    Assert.hasText(deleteProcessKey, "Delete process key must not be null or empty!");
 
     this.name = name;
+    this.authorisationGroup = authorisationGroup;
     this.createProcessKey = createProcessKey;
     this.updateProcessKey = updateProcessKey;
     this.deleteProcessKey = deleteProcessKey;
+  }
+
+  @Override
+  public String getAuthorisationGroup() {
+    return authorisationGroup;
   }
 
   @Override
