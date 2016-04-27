@@ -42,7 +42,7 @@ import java.util.Set;
  */
 @Service
 @Slf4j
-public class UserService {
+public class UserServiceImpl {
 
   @Autowired
   @Qualifier("anonymousLdapTemplate")
@@ -120,5 +120,9 @@ public class UserService {
       or.or(filter);
     }
     return or;
+  }
+
+  public void create(User user) {
+    ldapTemplate.create(user);
   }
 }

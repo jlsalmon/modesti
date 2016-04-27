@@ -92,7 +92,15 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
   private Mongo embeddedMongo() throws IOException {
     int port = 12345;
-    MongodConfig mongodConfig = new MongodConfig(Version.Main.V2_0, port, Network.localhostIsIPv6(), "/tmp/mongodb-embedded");
+
+    MongodConfig mongodConfig;
+
+    if (env.containsProperty("mongodb.persistent") && env.getProperty("mongodb.persistent", Boolean.class).equals(true)) {
+      mongodConfig = new MongodConfig(Version.Main.V2_0, port, Network.localhostIsIPv6(), "/tmp/mongodb-embedded");
+    } else {
+      mongodConfig = new MongodConfig(Version.Main.V2_0, port, Network.localhostIsIPv6());
+    }
+
     RuntimeConfig runtimeConfig = new RuntimeConfig();
     runtimeConfig.setProcessOutput(new ProcessOutput(new NullProcessor(), new NullProcessor(), new NullProcessor()));
     MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);

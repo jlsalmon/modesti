@@ -28,13 +28,13 @@ import static org.mockito.Mockito.when;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-public class RequestRepositoryEventHandlerTest {
+public class RequestServiceTest {
 
   /**
    * The class to be tested
    */
   @InjectMocks
-  RequestRepositoryEventHandler requestRepositoryEventHandler;
+  RequestService requestService;
 
   @Mock
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
