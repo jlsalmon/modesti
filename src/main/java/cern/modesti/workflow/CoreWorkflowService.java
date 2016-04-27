@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,15 @@ public class CoreWorkflowService {
    */
   public void setBusinessKey(String requestId, DelegateExecution execution) {
     runtimeService.updateBusinessKey(execution.getProcessInstanceId(), requestId);
+  }
+
+  /**
+   *
+   * @param requestId
+   * @return
+   */
+  public ProcessInstance getProcessInstance(String requestId) {
+    return runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(requestId).singleResult();
   }
 
   /**

@@ -1,103 +1,65 @@
 package cern.modesti.request;
 
-import cern.modesti.plugin.RequestProvider;
-import cern.modesti.request.counter.CounterServiceImpl;
-import cern.modesti.request.history.RequestHistoryService;
-import cern.modesti.request.point.Point;
-import cern.modesti.schema.Schema;
-import cern.modesti.schema.SchemaRepository;
-import cern.modesti.workflow.CoreWorkflowService;
-import org.apache.catalina.core.ApplicationContext;
-import org.junit.Ignore;
+import cern.modesti.test.BaseIntegrationTest;
+import cern.modesti.user.MockUserService;
+import cern.modesti.workflow.task.NotAuthorisedException;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.plugin.core.PluginRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.TestPropertySource;
 
-import java.util.*;
-
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
+import static cern.modesti.test.TestUtil.getDummyRequest;
+import static org.junit.Assert.*;
 
 /**
  * @author Justin Lewis Salmon
- *
  */
-@RunWith(MockitoJUnitRunner.class)
-public class RequestServiceTest {
+@TestPropertySource(locations = "classpath:modesti-test.properties", properties = "mongodb.persistent=false", inheritLocations = false)
+public class RequestServiceTest extends BaseIntegrationTest {
 
-  /**
-   * The class to be tested
-   */
-  @InjectMocks
-  RequestService requestService;
-
-  @Mock
-  private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
-
-  @Mock
-  CounterServiceImpl counterService;
-
-  @Mock
-  CoreWorkflowService workflowService;
-
-  @Mock
-  SchemaRepository schemaRepository;
-
-  @Mock
-  ApplicationContext applicationContext;
-
-  @Mock
-  RequestHistoryService historyService;
+  @Autowired
+  MockUserService userService;
 
   @Test
-  @Ignore
   public void requestIsCreatedInProgress() throws Exception {
-    when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
-
-    Request request = getTestRequest();
-    requestRepositoryEventHandler.handleRequestCreate(request);
-    assertTrue(Objects.equals(request.getStatus(), "IN_PROGRESS"));
+    userService.login("ben");
+    Request request = getDummyRequest();
+    requestService.insert(request);
+    assertEquals(request.getStatus(), "IN_PROGRESS");
+    requestService.delete(request);
   }
 
   @Test
   public void requestIdIsGenerated() {
-    when(requestProviderRegistry.hasPluginFor(anyObject())).thenReturn(true);
-    when(counterService.getNextSequence(anyString())).thenReturn(1L);
-    when(schemaRepository.findOne(anyString())).thenReturn(new Schema());
-
-    Request request = getTestRequest();
-    requestRepositoryEventHandler.handleRequestCreate(request);
-    assertTrue(request.getRequestId().equals("1"));
+    userService.login("ben");
+    Request request = getDummyRequest();
+    request = requestService.insert(request);
+    assertNotNull(request.getRequestId());
+    requestService.delete(request);
   }
 
   @Test
   public void requestSaveGeneratesPointIds() {
-    when(counterService.getNextSequence(anyString())).thenReturn(1L).thenReturn(2L);
-
-    Request request = getTestRequest();
-    requestRepositoryEventHandler.handleRequestSave(request);
+    userService.login("ben");
+    Request request = getDummyRequest();
+    request = requestService.insert(request);
+    request = requestService.save(request);
     assertTrue(request.getPoints().get(0).getLineNo() == 1L);
     assertTrue(request.getPoints().get(1).getLineNo() == 2L);
+    requestService.delete(request);
   }
 
-  private Request getTestRequest() {
-    Request request = new Request();
-    request.setType(RequestType.CREATE);
-    request.setDescription("description");
-    request.setDomain("TIM");
-    request.setPoints(getTestPoints());
-    return request;
+  @Test
+  public void creatorIsAutomaticallySetOnInsert() {
+    userService.login("ben");
+    Request request = getDummyRequest();
+    request = requestService.insert(request);
+    assertEquals(request.getCreator(), "ben");
+    requestService.delete(request);
   }
 
-  private List<Point> getTestPoints() {
-    List<Point> points = new ArrayList<>();
-    points.add(new Point());
-    points.add(new Point());
-    return points;
+  @Test(expected = NotAuthorisedException.class)
+  public void unauthorisedUserCannotInsert() {
+    userService.login("joe");
+    requestService.insert(getDummyRequest());
   }
 }

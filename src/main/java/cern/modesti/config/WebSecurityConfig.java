@@ -1,6 +1,7 @@
 package cern.modesti.config;
 
 import cern.modesti.security.ldap.LdapUserDetailsMapper;
+import cern.modesti.user.MockAuthenticationProvider;
 import org.apache.catalina.Context;
 import org.apache.directory.server.core.authn.AuthenticationInterceptor;
 import org.apache.directory.server.core.exception.ExceptionInterceptor;
@@ -73,12 +74,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.authenticationProvider(ldapAuthenticationProvider());
+//    http.authenticationProvider(ldapAuthenticationProvider());
 
     http
         // Enable basic HTTP authentication
         .httpBasic()
-            // Authentication is required for all URLs
+        // Authentication is required for all URLs
         .and().authorizeRequests().anyRequest().authenticated()
         // TODO: implement CSRF protection. Here we just turn it off.
         .and().csrf().disable();
@@ -86,15 +87,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    LdapAuthenticationProviderConfigurer configurer = auth
-        .ldapAuthentication()
-        .userDnPatterns(env.getRequiredProperty("ldap.user.filter"))
-        .groupSearchBase(env.getRequiredProperty("ldap.group.base"));
 
     if (env.acceptsProfiles("dev")) {
-      configurer.contextSource().ldif("classpath:test-server.ldif");
-    } else {
-      configurer.contextSource(contextSource());
+      auth.authenticationProvider(mockAuthenticationProvider());
+    }
+
+    else {
+      auth.authenticationProvider(ldapAuthenticationProvider())
+          .ldapAuthentication()
+          .userDnPatterns(env.getRequiredProperty("ldap.user.filter"))
+          .groupSearchBase(env.getRequiredProperty("ldap.group.base"))
+          .contextSource(contextSource());
     }
   }
 
@@ -136,6 +139,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     contextSource.setBase(env.getRequiredProperty("ldap.base"));
     contextSource.setAnonymousReadOnly(true);
     return contextSource;
+  }
+
+  @Bean
+  public MockAuthenticationProvider mockAuthenticationProvider() {
+    return new MockAuthenticationProvider();
   }
 
   @Bean

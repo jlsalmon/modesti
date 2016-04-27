@@ -4,6 +4,7 @@ import cern.modesti.security.ldap.LdapUserDetailsMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -24,6 +25,7 @@ import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.ldap.repository.LdapRepository;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -41,8 +43,9 @@ import java.util.Set;
  * @author Justin Lewis Salmon
  */
 @Service
+@Profile({"test", "prod"})
 @Slf4j
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
 
   @Autowired
   @Qualifier("anonymousLdapTemplate")
@@ -54,17 +57,20 @@ public class UserServiceImpl {
   @Autowired
   Environment env;
 
+  @Override
   public User findOneByUsername(String username) {
     EqualsFilter filter = new EqualsFilter("CN", username);
     return ldapTemplate.search(LdapQueryBuilder.query().base(env.getRequiredProperty("ldap.user.base")).filter(filter), mapper)
         .stream().findFirst().orElse(null);
   }
 
+  @Override
   public List<User> findByUsernameStartsWith(String query) {
     LikeFilter filter = new LikeFilter("CN", query + "*");
     return ldapTemplate.search(LdapQueryBuilder.query().base(env.getRequiredProperty("ldap.user.base")).countLimit(10).filter(filter), mapper);
   }
 
+  @Override
   public List<User> findByNameAndGroup(String query, List<String> groups) {
     AndFilter and = new AndFilter();
 
@@ -97,6 +103,11 @@ public class UserServiceImpl {
     }
   }
 
+  @Override
+  public User getCurrentUser() {
+    return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  }
+
   public List<User> findByGroup(List<String> groups) {
     OrFilter filter;
     try {
@@ -120,9 +131,5 @@ public class UserServiceImpl {
       or.or(filter);
     }
     return or;
-  }
-
-  public void create(User user) {
-    ldapTemplate.create(user);
   }
 }

@@ -57,16 +57,15 @@ public class Request implements Serializable {
   private RequestType type;
 
   @Indexed
-  @NotNull(message = "Request creator is compulsory")
-  private String creator;
-
-  @Indexed
   @NotNull(message = "Description is compulsory")
   private String description;
 
   @Indexed
   @NotNull(message = "Domain is compulsory")
   private String domain;
+
+  @Indexed
+  private String creator;
 
   @Indexed
   private String assignee;

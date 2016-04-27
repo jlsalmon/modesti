@@ -1,14 +1,16 @@
 package cern.modesti.workflow;
 
+import cern.modesti.plugin.RequestProvider;
 import cern.modesti.request.Request;
+import cern.modesti.user.Role;
 import cern.modesti.user.User;
 import cern.modesti.user.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,10 +30,22 @@ import static java.lang.String.format;
 public class AuthService {
 
   @Autowired
-  private org.activiti.engine.TaskService taskService;
+  private TaskService taskService;
 
   @Autowired
   private UserService userService;
+
+  public boolean isAuthorised(RequestProvider plugin, User user) {
+    String authorisationGroup = plugin.getMetadata().getAuthorisationGroup();
+
+    for (Role role : user.getAuthorities()) {
+      if (role.getAuthority().equals(authorisationGroup)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   /**
    * @param request

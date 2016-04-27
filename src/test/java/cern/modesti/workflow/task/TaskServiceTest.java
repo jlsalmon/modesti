@@ -2,18 +2,13 @@ package cern.modesti.workflow.task;
 
 import cern.modesti.request.Request;
 import cern.modesti.test.BaseIntegrationTest;
-import org.activiti.engine.ActivitiException;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.DelegationState;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static cern.modesti.test.TestUtil.*;
-import static cern.modesti.workflow.task.TaskAction.Action.*;
-import static org.junit.Assert.*;
+import static cern.modesti.test.TestUtil.getDummyRequest;
 
 /**
  * TODO
@@ -38,7 +33,7 @@ public class TaskServiceTest extends BaseIntegrationTest {
   @After
   public void tearDown() {
     runtimeService.deleteProcessInstance(process.getProcessInstanceId(), null);
-    requestRepository.delete(request.getRequestId());
+    requestService.delete(request);
   }
 
 //  @Test
