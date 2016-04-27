@@ -117,6 +117,17 @@
               </button>
             </div>
           </div>
+
+          <div class="form-group" ng-if="ctrl.error">
+            <div class="col-sm-offset-3 col-sm-9">
+              <div class="callout callout-danger bg-transparent ng-scope">
+                <h4>Error</h4>
+                <p>
+                  {{ctrl.error}}
+                </p>
+              </div>
+            </div>
+          </div>
         </form>
 
       </div>

@@ -83,8 +83,9 @@ function NewRequestController($state, RequestService, SchemaService, AuthService
         });
       },
 
-      function () {
+      function (error) {
         self.submitting = 'error';
+        self.error = error.data.message;
       });
     }
   }
