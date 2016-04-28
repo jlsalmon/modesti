@@ -48,17 +48,22 @@ function ConfigController($scope, $state, $http, $timeout, RequestService, TaskS
         RequestService.getRequest(self.parent.request.requestId).then(function (request) {
           self.parent.request = request;
 
-          var configurationResult = self.parent.request.properties.configurationResult;
-          var url = '<a href="' + configurationResult.reportUrl + '" target="_blank">' + configurationResult.reportUrl + '</a>';
-
-          // Show an alert if the configuration failed.
-          if (!configurationResult || configurationResult.success === false) {
-            self.configuring = 'error';
-            AlertService.add('danger', 'Configuration failed, please see error log for details. Full configuration report available at: ' + url);
-          }
-          else {
+          if (self.parent.request.domain === 'WinCC OA (CV)') {
             self.configuring = 'success';
-            AlertService.add('success', 'Request has been configured successfully. Full configuration report available at:' + url);
+            AlertService.add('success', 'Configuration complete.');
+          } else {
+            var configurationResult = self.parent.request.properties.configurationResult;
+            var url = '<a href="' + configurationResult.reportUrl + '" target="_blank">' + configurationResult.reportUrl + '</a>';
+
+            // Show an alert if the configuration failed.
+            if (!configurationResult || configurationResult.success === false) {
+              self.configuring = 'error';
+              AlertService.add('danger', 'Configuration failed, please see error log for details. Full configuration report available at: ' + url);
+            }
+            else {
+              self.configuring = 'success';
+              AlertService.add('success', 'Request has been configured successfully. Full configuration report available at:' + url);
+            }
           }
         });
       });
