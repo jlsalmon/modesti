@@ -85,7 +85,11 @@ function NewRequestController($state, RequestService, SchemaService, AuthService
 
       function (error) {
         self.submitting = 'error';
-        self.error = error.data.message;
+        if (error.data && error.data.message) {
+          self.error = error.data.message;
+        } else {
+          self.error = error.statusText;
+        }
       });
     }
   }
