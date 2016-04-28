@@ -24,9 +24,6 @@ import static java.lang.String.format;
 public class TaskService {
 
   @Autowired
-  private RequestRepository requestRepository;
-
-  @Autowired
   private UserService userService;
 
   @Autowired
@@ -54,6 +51,17 @@ public class TaskService {
    */
   public TaskInfo getTask(String requestId, String taskName) {
     Task task = taskService.createTaskQuery().processInstanceBusinessKey(requestId).taskName(taskName).singleResult();
+
+    if (task == null) {
+      return null;
+    }
+
+    return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(),
+        authService.getCandidateGroups(task));
+  }
+
+  public TaskInfo getActiveTask(String requestId) {
+    Task task = taskService.createTaskQuery().processInstanceBusinessKey(requestId).active().singleResult();
 
     if (task == null) {
       return null;
