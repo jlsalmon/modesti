@@ -109,6 +109,7 @@ dependencies {
     compile "ch.qos.logback:logback-classic:1.1.2"
     compile "org.slf4j:slf4j-api:1.7.12"
     compile "javax.interceptor:javax.interceptor-api:1.+"
+    compile "org.subethamail:subethasmtp:3.1.7"
 
     testCompile "cern.modesti:modesti-test:0.1.7"
 }
