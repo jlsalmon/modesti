@@ -2,4 +2,4 @@ image: java:8
 
 gradle:
   script:
-    - ./gradlew clean build --info --stacktrace -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+    - ./gradlew clean build --refresh-dependencies --info --stacktrace -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
