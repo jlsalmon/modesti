@@ -17,13 +17,12 @@
             <!--Shown when the request creator submits for approval-->
             <p ng-if="ctrl.request.status == 'FOR_APPROVAL'">
               Once your request has been approved by a TI operator, you will receive a notification email and your
-              request
-              will proceed to the next stage.
+              request will proceed to the next stage.
             </p>
 
             <!--Shown when the request creator submits for addressing-->
             <p ng-if="ctrl.request.status == 'FOR_ADDRESSING'">
-              Once your request has been addressed and cabled by the cabling team, you will receive a notification email
+              Once your request has been addressed, you will receive a notification email
               and your request will proceed to the next stage.
             </p>
           </div>
@@ -39,8 +38,7 @@
 
             <!--Shown when an operator submits for addressing-->
             <p ng-if="ctrl.request.status == 'FOR_ADDRESSING'">
-              The request is now awaiting action from the cabling team. No further action is required by TI at this
-              time.
+              The request is now awaiting action from the addressing team.
             </p>
 
             <!--Shown when an operator submits for configuration-->
@@ -86,8 +84,8 @@
 
 
           <span ng-if="ctrl.request.status == 'REMOVE_TEST_FLAG'">
-            All points have now been marked as successfully tested. It is now necessary to reconfigure the WinCC OA LASER
-            driver to remove the "test" flag and put the points in operational mode.
+            <p>All points have now been marked as successfully tested. It is now necessary to reconfigure the WinCC OA LASER
+            driver to remove the "test" flag and put the points in operational mode.</p>
           </span>
 
 
