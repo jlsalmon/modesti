@@ -2,6 +2,7 @@ package cern.modesti.config;
 
 import cern.modesti.security.ldap.LdapUserDetailsMapper;
 import cern.modesti.user.MockAuthenticationProvider;
+import cern.modesti.user.MockUserService;
 import org.apache.catalina.Context;
 import org.apache.directory.server.core.authn.AuthenticationInterceptor;
 import org.apache.directory.server.core.exception.ExceptionInterceptor;
@@ -40,6 +41,7 @@ import org.springframework.security.ldap.authentication.LdapAuthenticationProvid
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.server.ApacheDSContainer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +91,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
     if (env.acceptsProfiles("dev")) {
-      auth.authenticationProvider(mockAuthenticationProvider());
+      auth.authenticationProvider(new MockAuthenticationProvider(new MockUserService()));
     }
 
     else {
@@ -139,11 +141,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     contextSource.setBase(env.getRequiredProperty("ldap.base"));
     contextSource.setAnonymousReadOnly(true);
     return contextSource;
-  }
-
-  @Bean
-  public MockAuthenticationProvider mockAuthenticationProvider() {
-    return new MockAuthenticationProvider();
   }
 
   @Bean
