@@ -51,7 +51,7 @@
 
                 <i class="fa fa-list-ol fa-fw text-muted"></i>
                 <span class=""><strong>{{request.description}}</strong></span>
-                <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
+                <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.split("_").join(" ")}}</span>
                 <br/>
                 <span class="" style="font-size: 11px;">
                   <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator}} &middot;</span>

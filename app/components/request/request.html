@@ -147,7 +147,7 @@
 
         <span class="request-detail-item"  tooltip="{{'STATUS'|translate}}" tooltip-append-to-body="true" tooltip-placement="bottom">
           <span class="label request-status" ng-class="'{{::ctrl.request.status}}'">
-            {{::ctrl.request.status.replace('_', ' ')}}
+            {{::ctrl.request.status.split("_").join(" ")}}
           </span>
         </span>
 

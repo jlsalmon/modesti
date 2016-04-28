@@ -123,7 +123,7 @@
 
           <li ng-repeat="status in ctrl.statuses">
             <a href="" ng-click="ctrl.filter.status = status.status">
-              <span class="label request-status {{status.status}}">{{::status.status.replace('_', ' ')}}</span>
+              <span class="label request-status {{status.status}}">{{::status.status.split("_").join(" ")}}</span>
               <span class=" pull-right">{{ctrl.getRequestCount(status.status)}}</span>
             </a>
           </li>
@@ -199,13 +199,13 @@
             <ui-select-match placeholder="Status" allow-clear="true">
               <span class='label request-status {{$select.selected.status}}'>
                 <!--{{::ctrl.filter.status.replace('_', ' ')}}-->
-                {{$select.selected.status}}
+                {{$select.selected.status.split("_").join(" ")}}
               </span>
             </ui-select-match>
 
             <ui-select-choices repeat="status.status as status in ctrl.statuses">
               <span class='label request-status {{::status.status}}' style='margin-right: 20px;'>
-                {{::status.status.replace('_', ' ')}}
+                {{::status.status.split("_").join(" ")}}
               </span>
             </ui-select-choices>
           </ui-select>
@@ -316,7 +316,7 @@
         <i class="fa fa-list-ol fa-fw text-muted"></i>
         <span class=""><strong>{{request.description}}</strong></span>
         <span class="text-muted badge" style="background-color: #F5F5F5; float: none;" ng-if="ctrl.hasCustomProperties(request)"> {{ctrl.formatCustomProperties(request)}} </span>
-        <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.replace('_', ' ')}}</span>
+        <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.split("_").join(" ")}}</span>
         <br/>
         <span class="" style="font-size: 12px;">
           <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator}} </span>
