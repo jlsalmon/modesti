@@ -3,12 +3,14 @@ package cern.modesti.security.mock;
 import cern.modesti.user.Role;
 import cern.modesti.user.User;
 import cern.modesti.security.UserService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +27,8 @@ import java.util.stream.Collectors;
  *
  * @author Justin Lewis Salmon
  */
+@Service
+@Profile("dev")
 public class MockUserService implements UserService {
 
   private List<User> users = new ArrayList<>();

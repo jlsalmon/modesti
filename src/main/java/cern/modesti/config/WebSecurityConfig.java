@@ -21,6 +21,7 @@ import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
@@ -38,6 +39,7 @@ import org.springframework.security.ldap.authentication.LdapAuthenticationProvid
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.server.ApacheDSContainer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
     if (env.acceptsProfiles("dev")) {
-      auth.authenticationProvider(new MockAuthenticationProvider(new MockUserService()));
+      auth.authenticationProvider(mockAuthenticationProvider());
     }
 
     else {
@@ -145,6 +147,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LoggerListener loggerListener() {
     return new LoggerListener();
+  }
+
+  @Bean
+  @Profile("dev")
+  public MockUserService mockUserService() throws IOException {
+    return new MockUserService();
+  }
+
+  @Bean
+  @Profile("dev")
+  public MockAuthenticationProvider mockAuthenticationProvider() throws IOException {
+    return new MockAuthenticationProvider(mockUserService());
   }
 
   /**

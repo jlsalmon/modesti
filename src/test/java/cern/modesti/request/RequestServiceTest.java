@@ -1,10 +1,8 @@
 package cern.modesti.request;
 
 import cern.modesti.test.BaseIntegrationTest;
-import cern.modesti.security.mock.MockUserService;
 import cern.modesti.workflow.task.NotAuthorisedException;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.TestPropertySource;
 
 import static cern.modesti.test.TestUtil.getDummyRequest;
@@ -15,9 +13,6 @@ import static org.junit.Assert.*;
  */
 @TestPropertySource(locations = "classpath:modesti-test.properties", properties = "mongodb.persistent=false", inheritLocations = false)
 public class RequestServiceTest extends BaseIntegrationTest {
-
-  @Autowired
-  MockUserService userService;
 
   @Test
   public void requestIsCreatedInProgress() throws Exception {
