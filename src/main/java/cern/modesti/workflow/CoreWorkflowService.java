@@ -32,7 +32,7 @@ import static java.lang.String.format;
  * For example:
  * <p>
  * <code>
- * <activiti:executionListener event="start" expression="${coreWorkflowService.setRequestStatus(requestId, 'FOR_ADDRESSING')}" />
+ * &lt;activiti:executionListener event="start" expression="${coreWorkflowService.setRequestStatus(requestId, 'FOR_ADDRESSING')}" /&gt;
  * </code>
  *
  * @author Justin Lewis Salmon
@@ -61,6 +61,7 @@ public class CoreWorkflowService {
    *
    * @param request the request to be associated with the newly created
    *                workflow process instance
+   * @return the newly started process instance object
    */
   public ProcessInstance startProcessInstance(final Request request) {
     log.info(format("starting process for %s request %s", request.getDomain(), request.getRequestId()));

@@ -84,6 +84,7 @@ public class RequestService {
    * </ul>
    *
    * @param request the request to create
+   * @return the newly created request with all properties set
    */
   public Request insert(Request request) {
     // Do not create a request if there is no appropriate domain
@@ -132,6 +133,7 @@ public class RequestService {
    * Save an existing request.
    *
    * @param request the request to save
+   * @return the newly saved request
    */
   public Request save(Request request) {
     if (repository.findOneByRequestId(request.getRequestId()) == null) {

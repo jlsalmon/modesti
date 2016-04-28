@@ -37,8 +37,9 @@ public class RequestHistoryService {
   private RequestRepository requestRepository;
 
   /**
+   * Create a new entry in the history repository for the given request.
    *
-   * @param request
+   * @param request the request object
    */
   public void initialiseChangeHistory(Request request) {
     log.info(format("creating new base history record for request #%s", request.getRequestId()));
@@ -47,8 +48,10 @@ public class RequestHistoryService {
   }
 
   /**
+   * Compare the changes from the given, modified request to the original
+   * request and save them to the history record.
    *
-   * @param modified
+   * @param modified the modified request
    */
   public void saveChangeHistory(Request modified) {
     log.info(format("processing change history for request #%s", modified.getRequestId()));

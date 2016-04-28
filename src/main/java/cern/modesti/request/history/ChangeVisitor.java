@@ -39,8 +39,8 @@ public class ChangeVisitor implements DiffNode.Visitor {
    * If an entire object property changed, we make sure to record only a single
    * change as opposed to multiple changes for each field inside the object.
    *
-   * @param node
-   * @param visit
+   * @param node the current node
+   * @param visit the visit object
    */
   public void node(DiffNode node, Visit visit) {
     if ((isPrimitiveLeafProperty(node) || isObjectProperty(node)) && hasActuallyChanged(node)) {
@@ -68,8 +68,8 @@ public class ChangeVisitor implements DiffNode.Visitor {
    * If a property has changed from null to an empty string, we make sure to
    * not record a change.
    *
-   * @param node
-   * @return
+   * @param node the current node
+   * @return true if the property has actually changed, false otherwise
    */
   private boolean hasActuallyChanged(DiffNode node) {
     Object object = node.canonicalGet(modified);

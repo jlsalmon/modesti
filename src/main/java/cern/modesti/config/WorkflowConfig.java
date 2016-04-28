@@ -21,8 +21,8 @@ public class WorkflowConfig {
   /**
    * Customise the Activiti {@link org.activiti.engine.ProcessEngineConfiguration}.
    *
-   * @param engineConfiguration
-   * @return
+   * @param engineConfiguration the autowired configuration to customise
+   * @return an {@link InitializingBean} that will invoke the customisation
    */
   @Bean
   public InitializingBean activitiConfigurer(SpringProcessEngineConfiguration engineConfiguration) {

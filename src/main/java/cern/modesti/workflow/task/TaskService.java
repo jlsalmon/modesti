@@ -4,11 +4,14 @@ import cern.modesti.user.User;
 import cern.modesti.security.UserService;
 import cern.modesti.workflow.AuthService;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.task.IdentityLink;
+import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -43,7 +46,7 @@ public class TaskService {
   public List<TaskInfo> getTasks(String requestId) {
     return taskService.createTaskQuery().processInstanceBusinessKey(requestId).list().stream().map(task ->
         new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(),
-            authService.getCandidateGroups(task))).collect(Collectors.toList());
+            getCandidateGroups(task))).collect(Collectors.toList());
   }
 
   /**
@@ -61,8 +64,7 @@ public class TaskService {
       return null;
     }
 
-    return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(),
-        authService.getCandidateGroups(task));
+    return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(), getCandidateGroups(task));
   }
 
   /**
@@ -79,8 +81,7 @@ public class TaskService {
       return null;
     }
 
-    return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(),
-        authService.getCandidateGroups(task));
+    return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(), getCandidateGroups(task));
   }
 
   /**
@@ -95,7 +96,7 @@ public class TaskService {
    * of a task completion)
    */
   public TaskInfo execute(String requestId, String taskName, TaskAction action, User user) {
-    Task currentTask = getTaskForRequest(requestId, taskName);
+    TaskInfo currentTask = getTask(requestId, taskName);
 
     // Authorise the user to act upon this task
     if (!authService.isAuthorised(currentTask, user)) {
@@ -137,7 +138,7 @@ public class TaskService {
 
     task = getTaskForRequest(requestId, taskName);
     return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(),
-        authService.getCandidateGroups(task));
+        getCandidateGroups(task));
   }
 
   /**
@@ -151,6 +152,17 @@ public class TaskService {
     Task task = getTaskForRequest(requestId, taskName);
     taskService.complete(task.getId());
     // return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(), getCandidateGroups(task));
+  }
+
+  /**
+   * Retrieve the set of candidate groups for a task.
+   *
+   * @param task the task object
+   * @return the set of candidate group names
+   */
+  private Set<String> getCandidateGroups(Task task) {
+    return taskService.getIdentityLinksForTask(task.getId()).stream().filter(link -> link.getType().equals(IdentityLinkType.CANDIDATE)).map
+        (IdentityLink::getGroupId).collect(Collectors.toSet());
   }
 
   /**

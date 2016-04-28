@@ -50,10 +50,15 @@ public class Point implements Serializable {
   }
 
   /**
-   * @param key
-   * @param klass
-   * @param <T>
-   * @return
+   * Retrieve a point property and convert it to the given type.
+   * <p>
+   * The specific domain plugin is responsible for making sure that non
+   * existent properties or properties of the wrong type are not requested.
+   *
+   * @param key   the property key
+   * @param klass the type to which to convert the value
+   * @param <T>   the type of the value
+   * @return the value mapped by the given key, converted to the given type
    */
   public <T> T getObjectProperty(String key, Class<T> klass) {
     Object value = properties.get(key);
@@ -61,16 +66,24 @@ public class Point implements Serializable {
   }
 
   /**
-   * @param key
-   * @param value
+   * Add a property to the point.
+   *
+   * @param key   the property key
+   * @param value the property value
    */
   public void addProperty(String key, Object value) {
     properties.put(key, value);
   }
 
   /**
-   * @param property
-   * @param message
+   * Add an error message associated with a property of the point.
+   * <p>
+   * This method is designed to be used as a means of displaying validation
+   * errors or other types of errors visually. The errors can be associated
+   * directly with individual properties of the point.
+   *
+   * @param property the property (map key) to associate the error with
+   * @param message  the error message
    */
   public void addErrorMessage(String property, String message) {
     boolean errorPropertyExists = false, propertyMessageExists = false;
