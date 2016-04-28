@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
+ * An item in an {@link OptionsField} that carries a description and a value.
+ *
  * @author Justin Lewis Salmon
  */
 @Data

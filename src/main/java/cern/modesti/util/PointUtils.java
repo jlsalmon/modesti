@@ -15,14 +15,19 @@ import java.util.Map;
 import static java.lang.String.format;
 
 /**
+ * Utility class to ease working with {@link Point} objects.
+ *
  * @author Justin Lewis Salmon
  */
 @Slf4j
 public class PointUtils {
 
   /**
-   * @param point
-   * @return
+   * Check to see if the given {@link Point} is empty. A point is considered
+   * empty if all the values of its properties are either null or empty string.
+   *
+   * @param point the point object
+   * @return true if the point was considered empty, false otherwise
    */
   public static boolean isEmptyPoint(Point point) {
     if (point.getProperties().size() == 0) {
@@ -50,10 +55,10 @@ public class PointUtils {
    * into the property map of the MODESTI point, where the key is the field
    * name and the value is the field value.
    *
-   * @param pointsToCovert
-   * @param klass
-   * @param <T>
-   * @return
+   * @param pointsToCovert list of objects to be converted
+   * @param klass          the type to convert from
+   * @param <T>            the type to convert from
+   * @return a list of {@link Point} instances created from the given objects
    */
   public static <T> List<Point> convertPoints(Iterable<T> pointsToCovert, Class<T> klass) {
     List<Point> points = new ArrayList<>();

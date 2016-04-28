@@ -5,7 +5,8 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * TODO
+ * This class represents a single event in the history of a workflow for a
+ * {@link cern.modesti.request.Request}.
  *
  * @author Justin Lewis Salmon
  */

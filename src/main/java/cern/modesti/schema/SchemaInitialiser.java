@@ -11,7 +11,6 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -29,9 +28,15 @@ import java.util.*;
 import static java.lang.String.format;
 
 /**
- * This class will delete all schemas stored in the schema repository and re-add them.
- *
- * Schemas are loaded from plugin JARs on the classpath.
+ * This class is responsible for loading schemas from inside plugins. Schemas
+ * must be placed in a {@literal schemas} directory on the classpath and be
+ * JSON files.
+ * <p>
+ * Categories referred to by ID in the schema must have a corresponding file
+ * in the {@literal schemas/categories} directory.
+ * <p>
+ * <b>Note:</b> at boot time, all schemas will be deleted and reloaded from the
+ * classpath.
  *
  * @author Justin Lewis Salmon
  */
@@ -39,10 +44,10 @@ import static java.lang.String.format;
 @Slf4j
 public class SchemaInitialiser {
 
-  private static final String PLUGIN_RESOURCE_PREFIX      = "classpath*:/";
-  private static final String SCHEMA_RESOURCE_PATTERN     = "schemas/*.json";
+  private static final String PLUGIN_RESOURCE_PREFIX = "classpath*:/";
+  private static final String SCHEMA_RESOURCE_PATTERN = "schemas/*.json";
   private static final String DATASOURCE_RESOURCE_PATTERN = "schemas/datasources/*.json";
-  private static final String CATEGORY_RESOURCE_PATTERN   = "schemas/categories/*.json";
+  private static final String CATEGORY_RESOURCE_PATTERN = "schemas/categories/*.json";
 
   private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
 
@@ -55,11 +60,6 @@ public class SchemaInitialiser {
   @Autowired
   private ObjectMapper mapper;
 
-  /**
-   *
-   * @throws IOException
-   * @throws URISyntaxException
-   */
   @PostConstruct
   public void init() throws IOException, URISyntaxException {
     log.info("Initialising schemas");
@@ -72,7 +72,7 @@ public class SchemaInitialiser {
   /**
    * Load all schemas inside plugins.
    *
-   * @return
+   * @return the list of schemas that were found on the classpath
    * @throws IOException
    * @throws URISyntaxException
    */
@@ -84,8 +84,6 @@ public class SchemaInitialiser {
     Map<String, List<Datasource>> pluginDatasources = loadPluginDatasources();
 
     for (Map.Entry<String, List<Schema>> entry : pluginSchemas.entrySet()) {
-      String pathToJar = entry.getKey();
-
       for (Schema schema : entry.getValue()) {
         List<Category> categories = new ArrayList<>();
         List<Datasource> datasources = new ArrayList<>();
@@ -175,28 +173,12 @@ public class SchemaInitialiser {
   }
 
   /**
+   * Merge two {@link Category} instances, copying the fields defined in the
+   * overriding category to the overridden category.
    *
-   * @param schemas
-   * @param schemaId
-   * @return
-   */
-  private Schema getSchema(Map<String, List<Schema>> schemas, String schemaId) {
-    for (Map.Entry<String, List<Schema>> entry : schemas.entrySet()) {
-      for (Schema schema : entry.getValue()) {
-        if (schema.getId().equals(schemaId)) {
-          return schema;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   *
-   * @param overridden
-   * @param override
-   * @return
+   * @param overridden the base category to merge into
+   * @param override   the overriding category to merge from
+   * @return a new category containing the result of the merge
    */
   private Category mergeCategories(Category overridden, Category override) {
     overridden = new Category(overridden);
@@ -227,10 +209,12 @@ public class SchemaInitialiser {
   }
 
   /**
+   * Merge two {@link Field} instances, copying the fields defined in the
+   * overriding field to the overridden field.
    *
-   * @param overridden
-   * @param override
-   * @return
+   * @param overridden the base field to merge into
+   * @param override   the overriding field to merge from
+   * @return a new field containing the result of the merge
    */
   private Field mergeFields(Field overridden, Field override) {
     // Make a copy to avoid accidentally overriding the core schema
@@ -240,8 +224,9 @@ public class SchemaInitialiser {
   }
 
   /**
+   * Load all schema files from the classpath.
    *
-   * @return
+   * @return a map of loaded schemas, keyed by absolute path to the file
    * @throws IOException
    * @throws URISyntaxException
    */
@@ -251,8 +236,9 @@ public class SchemaInitialiser {
   }
 
   /**
+   * Load all category files from the classpath.
    *
-   * @return
+   * @return a map of loaded categories, keyed by absolute path to the file
    * @throws IOException
    * @throws URISyntaxException
    */
@@ -262,8 +248,9 @@ public class SchemaInitialiser {
   }
 
   /**
+   * Load all datasource files from the classpath.
    *
-   * @return
+   * @return a map of loaded datasources, keyed by absolute path to the file
    * @throws IOException
    * @throws URISyntaxException
    */
@@ -273,11 +260,13 @@ public class SchemaInitialiser {
   }
 
   /**
+   * Load a set of resources from the classpath that match the given resource
+   * pattern,
    *
-   * @param pattern
-   * @param klass
-   * @param <T>
-   * @return
+   * @param pattern an Ant-style path pattern
+   * @param klass   the type of resource to be loaded
+   * @param <T>     the type of resource to be loaded
+   * @return a map of loaded resources, keyed by absolute path to the file
    * @throws IOException
    */
   private <T> Map<String, List<T>> loadPluginResources(String pattern, Class<T> klass) throws IOException, URISyntaxException {
@@ -291,12 +280,12 @@ public class SchemaInitialiser {
 
       T t = loadResource(resource, klass);
 
-      String pathToJar = getPathToJar(resource);
+      String pathToResource = getAbsolutePathToResource(resource);
 
-      if (resources.containsKey(pathToJar)) {
-        resources.get(pathToJar).add(t);
+      if (resources.containsKey(pathToResource)) {
+        resources.get(pathToResource).add(t);
       } else {
-        resources.put(pathToJar, new ArrayList<>(Collections.singleton(t)));
+        resources.put(pathToResource, new ArrayList<>(Collections.singleton(t)));
       }
     }
 
@@ -304,13 +293,15 @@ public class SchemaInitialiser {
   }
 
   /**
+   * Retrieve the absolute path to a resource. The resource may be inside a JAR
+   * or in an expanded classpath directory.
    *
-   * @param resource
-   * @return
+   * @param resource the resource for which to fetch the path
+   * @return the absolute path to the resource
    * @throws IOException
    * @throws URISyntaxException
    */
-  private String getPathToJar(Resource resource) throws IOException, URISyntaxException {
+  private String getAbsolutePathToResource(Resource resource) throws IOException, URISyntaxException {
     URLConnection urlConnection = resource.getURL().openConnection();
 
     if (urlConnection instanceof JarURLConnection) {
@@ -327,14 +318,29 @@ public class SchemaInitialiser {
   }
 
   /**
-   * @param resource
-   * @param klass
-   * @param <T>
-   * @return
+   * Load a resource from a file and deserialise it as a JSON string to the
+   * given type.
+   *
+   * @param resource the resource to load
+   * @param klass    the type to deserialise to
+   * @param <T>      the type to deserialise to
+   * @return the loaded resource, deserialised to the given type
    * @throws IOException
    */
   private <T> T loadResource(Resource resource, Class<T> klass) throws IOException {
     byte[] bytes = ByteStreams.toByteArray(resource.getInputStream());
     return mapper.readValue(new String(bytes, StandardCharsets.UTF_8), klass);
+  }
+
+  private Schema getSchema(Map<String, List<Schema>> schemas, String schemaId) {
+    for (Map.Entry<String, List<Schema>> entry : schemas.entrySet()) {
+      for (Schema schema : entry.getValue()) {
+        if (schema.getId().equals(schemaId)) {
+          return schema;
+        }
+      }
+    }
+
+    return null;
   }
 }

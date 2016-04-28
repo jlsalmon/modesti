@@ -5,9 +5,8 @@ import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.counter.CounterService;
 import cern.modesti.request.history.RequestHistoryService;
 import cern.modesti.request.point.Point;
-import cern.modesti.user.MockUserService;
 import cern.modesti.user.User;
-import cern.modesti.user.UserService;
+import cern.modesti.security.UserService;
 import cern.modesti.workflow.AuthService;
 import cern.modesti.workflow.CoreWorkflowService;
 import cern.modesti.workflow.task.NotAuthorisedException;
@@ -16,7 +15,6 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.plugin.core.PluginRegistry;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +24,9 @@ import java.util.Collection;
 import static java.lang.String.format;
 
 /**
+ * Service class for creating, updating, deleting and searching for
+ * {@link Request} objects.
+ *
  * @author Justin Lewis Salmon
  */
 @Service
@@ -65,8 +66,24 @@ public class RequestService {
   }
 
   /**
+   * Insert (create) a new request.
+   * <p>
+   * Creating a new request performs the following actions:
+   * <ul>
+   * <li>
+   * Asserts that the currently logged-in user is authorised to create a
+   * request for the domain of the request
+   * </li>
+   * <li>
+   * Sets the currently logged-in user as the creator of the request
+   * </li>
+   * <li>Generates a request id</li>
+   * <li>Adds some empty points to the request if none were specified</li>
+   * <li>Starts a new workflow process instance using the workflow key of the
+   * plugin associated with the request domain</li>
+   * </ul>
    *
-   * @param request
+   * @param request the request to create
    */
   public Request insert(Request request) {
     // Do not create a request if there is no appropriate domain
@@ -112,8 +129,9 @@ public class RequestService {
   }
 
   /**
+   * Save an existing request.
    *
-   * @param request
+   * @param request the request to save
    */
   public Request save(Request request) {
     if (repository.findOneByRequestId(request.getRequestId()) == null) {
@@ -137,13 +155,21 @@ public class RequestService {
     return repository.save(request);
   }
 
+  /**
+   * Find a single request.
+   *
+   * @param requestId the id of the request
+   * @return the request instance, or null if no request was found with the
+   * given id
+   */
   public Request findOneByRequestId(String requestId) {
     return repository.findOneByRequestId(requestId);
   }
 
   /**
+   * Delete a request.
    *
-   * @param request
+   * @param request the request to delete
    */
   public void delete(Request request) {
     // TODO: mark the request as deleted in the history collection

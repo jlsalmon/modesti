@@ -10,6 +10,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * This class represents a single MODESTI category. A category exists as part
+ * of a {@link cern.modesti.schema.Schema} and consists of a set of
+ * {@link Field}s which define the properties that a
+ * {@link cern.modesti.request.point.Point} may have.
+ *
  * @author Justin Lewis Salmon
  */
 @Data
@@ -34,18 +39,14 @@ public class Category {
 
   private List<Field> fields;
 
-  /**
-   *
-   * @param id
-   */
   public Category(String id) {
     this.id = id;
   }
 
   /**
-   * Copy constructor
+   * Copy constructor.
    *
-   * @param category
+   * @param category the category to copy
    */
   public Category(Category category) {
     id = category.id;

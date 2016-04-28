@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This class represents a single user entity retrieved from the authentication
+ * context.
+ *
  * @author Justin Lewis Salmon
  */
 //@Entry(objectClasses = { "person", "top" }, base = "OU=Users,OU=Organic Units")

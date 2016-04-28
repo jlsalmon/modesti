@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * TODO
+ * Represents some error state of a {@link Point}. An error can be associated
+ * with an individual point property, and there can be more than one error per
+ * property.
  *
  * @author Justin Lewis Salmon
  */

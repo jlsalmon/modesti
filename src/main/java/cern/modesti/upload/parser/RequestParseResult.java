@@ -7,6 +7,8 @@ import lombok.Data;
 import java.util.List;
 
 /**
+ * Represents the result of a successful request parse operation.
+ *
  * @author Justin Lewis Salmon
  */
 @Data

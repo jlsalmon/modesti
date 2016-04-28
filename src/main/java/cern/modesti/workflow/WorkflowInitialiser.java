@@ -13,7 +13,12 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 
 /**
- * This class is responsible for finding BPMN process definitions on the classpath and creating deployments for them.
+ * This class is responsible for finding BPMN process definitions on the
+ * classpath and creating deployments for them.
+ * <p>
+ * Process definitions are loaded from directories named {@literal processes}
+ * at the root of the classpath, and must have a {@literal .bpmn20.xml}
+ * extension.
  *
  * @author Justin Lewis Salmon
  */

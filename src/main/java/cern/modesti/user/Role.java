@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
- * TODO
+ * Represents a single role granted to a {@link User}.
  *
  * @author Justin Lewis Salmon
  */

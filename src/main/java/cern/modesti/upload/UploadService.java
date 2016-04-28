@@ -2,6 +2,7 @@ package cern.modesti.upload;
 
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
+import cern.modesti.request.RequestService;
 import cern.modesti.request.counter.CounterService;
 import cern.modesti.request.history.RequestHistoryService;
 import cern.modesti.upload.parser.RequestParseResult;
@@ -18,36 +19,29 @@ import java.io.InputStream;
 import java.security.Principal;
 
 /**
- * @author Justin Lewis Salmon
+ * Service class for handling parsing stage of a {@link Request} upload.
  *
+ * @author Justin Lewis Salmon
  */
 @Service
 @Slf4j
 public class UploadService {
 
   @Autowired
-  private RequestRepository requestRepository;
+  private RequestService requestService;
 
   @Autowired
   private RequestParserFactory requestParserFactory;
 
-  @Autowired
-  private RequestHistoryService historyService;
-
-  @Autowired
-  private CounterService counterService;
-
-  @Autowired
-  private CoreWorkflowService workflowService;
-
   /**
+   * Delegate the parsing of the uploaded Excel sheet to a specific plugin
+   * implementation.
    *
-   * @param description
-   * @param stream
-   * @param principal
-   * @return
+   * @param description the description of the uploaded request
+   * @param stream      the Excel sheet to be parsed
+   * @return the result of the request parse
    */
-  public RequestParseResult parseRequestFromExcelSheet(String description, InputStream stream, Principal principal) {
+  public RequestParseResult parseRequestFromExcelSheet(String description, InputStream stream) {
     RequestParseResult result = requestParserFactory.parseRequest(stream);
     Request request = result.getRequest();
 
@@ -55,21 +49,7 @@ public class UploadService {
       request.setDescription(description);
     }
 
-    request.setCreatedAt(new DateTime());
-    request.setCreator(((User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUsername());
-
-    // Generate a request id
-    request.setRequestId(counterService.getNextSequence("requests").toString());
-    log.debug("generated request id: " + request.getRequestId());
-
-    // Store the request in the database
-    requestRepository.save(request);
-
-    // Store an initial, empty change history
-    historyService.initialiseChangeHistory(request);
-
-    // Kick off the workflow process
-    workflowService.startProcessInstance(request);
+    requestService.insert(request);
 
     return result;
   }

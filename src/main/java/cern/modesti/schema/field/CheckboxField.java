@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * TODO
+ * A type of field that is rendered as a checkbox and has a boolean state.
  *
  * @author Justin Lewis Salmon
  */

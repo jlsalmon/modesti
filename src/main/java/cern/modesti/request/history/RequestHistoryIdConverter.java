@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 
 /**
+ * This class is used by the Spring Data infrastructure to convert to/from the
+ * internal MongoDB ObjectId and a human-readable integer id that we generate.
+ *
  * @author Justin Lewis Salmon
  */
 @Component

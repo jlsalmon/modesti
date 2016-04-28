@@ -21,7 +21,8 @@ import java.util.*;
 import static java.lang.String.format;
 
 /**
- * TODO
+ * Service class for sending {@link Notification} instances from within
+ * workflow methods.
  *
  * @author Justin Lewis Salmon
  */
@@ -39,7 +40,9 @@ public class NotificationService {
   private Environment env;
 
   /**
-   * @param notification
+   * Send a notification.
+   *
+   * @param notification the notification to send
    */
   public void sendNotification(Notification notification) {
     List<String> recipients = new ArrayList<>();
@@ -90,14 +93,6 @@ public class NotificationService {
     send(recipients, from, format("[MODESTI] %s", subject), template, context);
   }
 
-  /**
-   *
-   * @param to
-   * @param from
-   * @param subject
-   * @param template
-   * @param context
-   */
   private void send(List<String> to, String from, String subject, String template, Context context) {
     // Prepare message using a Spring helper
     final MimeMessage mimeMessage = mailSender.createMimeMessage();

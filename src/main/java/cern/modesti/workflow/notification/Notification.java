@@ -11,7 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO
+ * This class represents a single email notification that can be sent via the
+ * {@link NotificationService}.
+ * <p>
+ * The body of the email is loaded from a Thymeleaf template pointed to by the
+ * {@link #template} field. Arbitrary parameters can be passed to this template
+ * via {@link #templateParameters}.
+ * <p>
+ * A notification may be sent to one or more recipients.
  *
  * @author Justin Lewis Salmon
  */

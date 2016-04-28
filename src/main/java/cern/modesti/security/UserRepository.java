@@ -1,4 +1,4 @@
-package cern.modesti.user;
+package cern.modesti.security;
 
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

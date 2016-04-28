@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * TODO
+ * This class represents a MODESTI schema constraint definition.
  *
  * @author Justin Lewis Salmon
  */

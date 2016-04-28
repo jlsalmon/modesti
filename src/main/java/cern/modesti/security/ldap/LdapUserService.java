@@ -1,51 +1,37 @@
-package cern.modesti.user;
+package cern.modesti.security.ldap;
 
-import cern.modesti.security.ldap.LdapUserDetailsMapper;
+import cern.modesti.user.User;
+import cern.modesti.security.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
-import org.springframework.data.repository.NoRepositoryBean;
-import org.springframework.data.repository.query.Param;
-import org.springframework.ldap.control.PagedResultsDirContextProcessor;
-import org.springframework.ldap.core.ContextMapper;
-import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.LikeFilter;
 import org.springframework.ldap.filter.OrFilter;
-import org.springframework.ldap.query.LdapQuery;
 import org.springframework.ldap.query.LdapQueryBuilder;
-import org.springframework.ldap.repository.LdapRepository;
-import org.springframework.ldap.support.LdapUtils;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.naming.InvalidNameException;
-import javax.naming.NamingException;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
+ * A {@link UserService} implementation that performs searches against an LDAP
+ * server.
+ *
  * @author Justin Lewis Salmon
  */
 @Service
 @Profile({"test", "prod"})
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class LdapUserService implements UserService {
 
   @Autowired
   @Qualifier("anonymousLdapTemplate")

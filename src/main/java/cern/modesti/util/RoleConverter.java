@@ -1,11 +1,12 @@
-package cern.modesti.user;
+package cern.modesti.util;
 
+import cern.modesti.user.Role;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by jussy on 31/08/15.
+ * @author Justin Lewis Salmon
  */
 @Component
 public class RoleConverter implements Converter<String, GrantedAuthority> {

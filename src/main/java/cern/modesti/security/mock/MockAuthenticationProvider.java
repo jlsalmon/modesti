@@ -1,5 +1,6 @@
-package cern.modesti.user;
+package cern.modesti.security.mock;
 
+import cern.modesti.user.User;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -9,6 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import static java.lang.String.format;
 
 /**
+ * An {@link AuthenticationProvider} that delegates to a {@link MockUserService}
+ * to provide dummy authentication for development.
+ *
  * @author Justin Lewis Salmon
  */
 public class MockAuthenticationProvider implements AuthenticationProvider {

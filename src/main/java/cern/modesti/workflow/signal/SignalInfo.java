@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.hateoas.core.Relation;
 
 /**
- * TODO
+ * Represents a workflow signal definition.
  *
  * @author Justin Lewis Salmon
  */

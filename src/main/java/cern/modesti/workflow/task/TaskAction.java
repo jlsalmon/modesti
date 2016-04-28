@@ -5,7 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * TODO
+ * This class represents an action on a workflow task, such as assignment or
+ * completion.
  *
  * @author Justin Lewis Salmon
  */

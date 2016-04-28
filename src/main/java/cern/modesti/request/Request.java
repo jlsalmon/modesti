@@ -21,7 +21,22 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * This class represents a single MODESTI request entity.
+ * This class represents a single MODESTI request entity. A request is composed
+ * of multiple {@link Point}s.
+ * <p>
+ * A request can hold a map of arbitrary properties. These properties can be
+ * either primitive values or complex objects.
+ * <p>
+ * In the case of complex object properties, the
+ * {@link #getObjectProperty(String, Class)} utility method can be used to
+ * retrieve them as their specific domain class instance.
+ * <p>
+ * For example:
+ * <p>
+ * <code>
+ * request.addProperty("myDomainObject", new MyDomainObject());
+ * MyDomainObject myDomainObject = request.getObjectProperty("myDomainObject", MyDomainObject.class);
+ * </code>
  *
  * @author Justin Lewis Salmon
  */

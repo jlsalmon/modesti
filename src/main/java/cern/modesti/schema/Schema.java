@@ -26,6 +26,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * This class represents a single MODESTI schema.
+ *
  * @author Justin Lewis Salmon
  */
 @Document
@@ -56,25 +58,17 @@ public class Schema {
 
   private List<Datasource> datasourceOverrides = new ArrayList<>();
 
-  /**
-   * @param id
-   * @param description
-   */
   public Schema(String id, String description) {
     this.id = id;
     this.description = description;
   }
 
-  /**
-   *
-   * @return
-   */
   public Boolean isAbstract() {
     return isAbstract == null ? false : isAbstract;
   }
 
   /**
-   *
+   * Support specifying categories by ID as well as inline objects
    */
   public static class CategoryDeserializer extends JsonDeserializer<List<Category>> {
 

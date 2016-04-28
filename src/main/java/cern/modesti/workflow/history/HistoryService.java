@@ -2,6 +2,7 @@ package cern.modesti.workflow.history;
 
 import cern.modesti.request.RequestRepository;
 import cern.modesti.request.Request;
+import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
@@ -17,13 +18,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * TODO
+ * Service class for retrieving historical workflow information.
  *
  * @author Justin Lewis Salmon
  */
 @Service
+@Slf4j
 public class HistoryService {
-  private static final Logger LOG = LoggerFactory.getLogger(HistoryService.class);
 
   @Autowired
   RequestRepository requestRepository;
@@ -37,9 +38,14 @@ public class HistoryService {
   @Autowired
   RepositoryService repositoryService;
 
-
+  /**
+   * Retrieve the workflow history for a particular request.
+   *
+   * @param requestId the id of the request
+   * @return the list of historic events
+   */
   public List<HistoricEvent> getHistoryForRequest(String requestId) {
-    LOG.info("querying history for request id " + requestId + "...");
+    log.info("querying history for request id " + requestId + "...");
 
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {

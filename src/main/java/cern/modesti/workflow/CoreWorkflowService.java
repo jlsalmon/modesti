@@ -26,6 +26,15 @@ import java.util.Map;
 import static java.lang.String.format;
 
 /**
+ * Service class providing core functionality for use within workflows.
+ * <p>
+ * The public methods in this service can be invoked directly from expressions.
+ * For example:
+ * <p>
+ * <code>
+ * <activiti:executionListener event="start" expression="${coreWorkflowService.setRequestStatus(requestId, 'FOR_ADDRESSING')}" />
+ * </code>
+ *
  * @author Justin Lewis Salmon
  */
 @Service
@@ -47,11 +56,11 @@ public class CoreWorkflowService {
   @Autowired
   private RuntimeService runtimeService;
 
-  @Autowired
-  private TaskService taskService;
-
   /**
-   * @param request
+   * Start a new workflow process instance for the given request.
+   *
+   * @param request the request to be associated with the newly created
+   *                workflow process instance
    */
   public ProcessInstance startProcessInstance(final Request request) {
     log.info(format("starting process for %s request %s", request.getDomain(), request.getRequestId()));
@@ -72,31 +81,43 @@ public class CoreWorkflowService {
 
   /**
    * Set the business key for a process instance.
+   * <p>
+   * This method is invoked by an execution listener when the process starts in
+   * order to set the business key (request id) that will be used throughout
+   * the rest of the workflow. Although we can set the business key via
+   * {@link RuntimeService#startProcessInstanceById(String, String)} when
+   * starting a new* parent process, we are not responsible for starting
+   * process instances of subprocess call activities, and Activiti currently
+   * does not support passing a business key directly to a call activity. So
+   * we use this method to ensure that child activities have their business
+   * keys set correctly.
    *
-   * This method is invoked by an execution listener when the process starts in order to set the business key (request id) that will be used throughout the
-   * rest of the workflow. Although we can set the business key via {@link RuntimeService#startProcessInstanceById(String, String)} when starting a new
-   * parent process, we are not responsible for starting process instances of subprocess call activities, and Activiti currently does not support passing a
-   * business key directly to a call activity. So we use this method to ensure that child activities have their business keys set correctly.
-   *
-   * @param requestId
-   * @param execution
+   * @param requestId the id of the request
+   * @param execution the Activiti execution object
    */
   public void setBusinessKey(String requestId, DelegateExecution execution) {
     runtimeService.updateBusinessKey(execution.getProcessInstanceId(), requestId);
   }
 
   /**
+   * Retrieve the workflow process instance object associated with a particular
+   * request.
    *
-   * @param requestId
-   * @return
+   * @param requestId the id of the request
+   * @return the {@link ProcessInstance} object associated with the request
    */
   public ProcessInstance getProcessInstance(String requestId) {
     return runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(requestId).singleResult();
   }
 
   /**
-   * @param requestId
-   * @param status
+   * Update the status of a particular request.
+   * <p>
+   * A status is simply a string. Conventionally, it should be in
+   * {@literal UPPER_UNDERSCORE} format, e.g. {@literal IN_PROGRESS}.
+   *
+   * @param requestId the id of the request to update
+   * @param status    the new workflow status string
    */
   public void setRequestStatus(String requestId, String status) {
     log.info(format("setting status %s on request id %s", status, requestId));
@@ -107,8 +128,14 @@ public class CoreWorkflowService {
   }
 
   /**
-   * @param requestId
-   * @param execution
+   * Split a set of points from a request into a child request.
+   * <p>
+   * The points to split must be specified in an execution variable named
+   * {@literal points} which is a list of line numbers corresponding to the
+   * lines to be split.
+   *
+   * @param requestId the id of the request to split
+   * @param execution the Activiti execution object
    */
   public void splitRequest(String requestId, DelegateExecution execution) {
     log.info(format("splitting request id %s...", requestId));
@@ -163,11 +190,6 @@ public class CoreWorkflowService {
     execution.setVariable("childCreator", child.getCreator());
   }
 
-  /**
-   *
-   * @param requestId
-   * @return
-   */
   private Request getRequest(String requestId) {
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
@@ -176,13 +198,6 @@ public class CoreWorkflowService {
     return request;
   }
 
-  /**
-   * @param requestId
-   * @param parent
-   * @param points
-   *
-   * @return
-   */
   private Request createChildRequest(String requestId, Request parent, List<Point> points) {
     Request request = new Request(parent);
     request.setRequestId(requestId);

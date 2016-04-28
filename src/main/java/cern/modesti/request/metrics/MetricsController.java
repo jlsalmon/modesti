@@ -14,14 +14,8 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
- * TODO
- *
- * Methods for:
- *
- * - Number of requests of a particular status
- * -
- *
- * - Distinct request creators
+ * REST controller for retrieving metrics about the current requests in the
+ * database.
  *
  * @author Justin Lewis Salmon
  */
@@ -38,7 +32,6 @@ public class MetricsController {
     GroupByResults<Request> results = mongoTemplate.group("request", GroupBy.key("status").initialDocument("{ count: 0 }").reduceFunction("function" + "" +
         "(doc, prev) { prev.count += 1 }"), Request.class);
 
-    List l = (List) results.getRawResults().get("retval");
-    return l;
+    return (List) results.getRawResults().get("retval");
   }
 }

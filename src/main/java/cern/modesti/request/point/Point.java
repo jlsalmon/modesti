@@ -9,6 +9,24 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
+ * This class represents a single data point. A
+ * {@link cern.modesti.request.Request}. is composed of multiple points.
+ * <p>
+ * A point holds a map of arbitrary properties. These properties can be either
+ * primitive values or complex objects.
+ * <p>
+ * In the case of complex object properties, the
+ * {@link #getObjectProperty(String, Class)} utility method can be used to
+ * retrieve them as their specific domain class instance.
+ * <p>
+ * For example:
+ * <p>
+ * <code>
+ * Point point = new Point();
+ * point.addProperty("myDomainObject", new MyDomainObject());
+ * MyDomainObject myDomainObject = point.getObjectProperty("myDomainObject", MyDomainObject.class);
+ * </code>
+ *
  * @author Justin Lewis Salmon
  */
 @Data
@@ -43,7 +61,6 @@ public class Point implements Serializable {
   }
 
   /**
-   *
    * @param key
    * @param value
    */

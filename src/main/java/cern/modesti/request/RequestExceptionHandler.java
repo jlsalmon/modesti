@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
+ * Handles exceptions thrown from inside {@link RequestRepositoryEventHandler}.
+ *
  * @author Justin Lewis Salmon
  */
 @ControllerAdvice(basePackageClasses = RepositoryRestExceptionHandler.class)

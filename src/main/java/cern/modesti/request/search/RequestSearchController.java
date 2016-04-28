@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
+ * REST controller for searching {@link Request} instances via RSQL queries.
+ *
  * @author Justin Lewis Salmon
  */
 @Controller

@@ -4,7 +4,7 @@ import cern.modesti.plugin.RequestProvider;
 import cern.modesti.request.Request;
 import cern.modesti.user.Role;
 import cern.modesti.user.User;
-import cern.modesti.user.UserService;
+import cern.modesti.security.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.IdentityLink;

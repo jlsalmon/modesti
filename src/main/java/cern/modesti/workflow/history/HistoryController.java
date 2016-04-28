@@ -1,7 +1,5 @@
 package cern.modesti.workflow.history;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
@@ -14,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
- * TODO
+ * REST controller for retrieving workflow history for
+ * {@link cern.modesti.request.Request} instances.
  *
  * @author Justin Lewis Salmon
  */
@@ -24,12 +23,6 @@ public class HistoryController {
   @Autowired
   HistoryService historyService;
 
-  /**
-   * TODO
-   *
-   * @param id
-   * @return
-   */
   @RequestMapping(value = "/requests/{id}/history", method = GET)
   public HttpEntity<Resources<HistoricEvent>> getHistory(@PathVariable("id") String id) {
     Resources<HistoricEvent> history = new Resources<>(historyService.getHistoryForRequest(id));

@@ -3,7 +3,7 @@ package cern.modesti.schema.category;
 import lombok.Data;
 
 /**
- * TODO
+ * This class represents a MODESTI schema conditional definition.
  *
  * @author Justin Lewis Salmon
  */

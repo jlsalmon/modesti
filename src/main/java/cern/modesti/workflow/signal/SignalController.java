@@ -34,7 +34,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * TODO
+ * REST controller for retrieving and triggering signals into workflow process
+ * instances.
  *
  * @author Justin Lewis Salmon
  */
@@ -51,11 +52,6 @@ public class SignalController {
   @Autowired
   private RequestRepository requestRepository;
 
-  /**
-   * @param id
-   *
-   * @return
-   */
   @RequestMapping(method = GET)
   public ResponseEntity<Resources<Resource<SignalInfo>>> getSignals(@PathVariable("id") String id) {
     Request request = getRequest(id);
@@ -87,12 +83,6 @@ public class SignalController {
     return new ResponseEntity<>(resources, HttpStatus.OK);
   }
 
-  /**
-   * @param id
-   * @param name
-   *
-   * @return
-   */
   @RequestMapping(value = "/{name}", method = GET)
   public ResponseEntity<Resource<SignalInfo>> getSignal(@PathVariable("id") String id, @PathVariable("name") String name) {
     Request request = getRequest(id);
@@ -116,11 +106,6 @@ public class SignalController {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
-  /**
-   * @param id
-   *
-   * @return
-   */
   @RequestMapping(value = "/requestModified", method = POST)
   public ResponseEntity requestModified(@PathVariable("id") String id, Principal principal) {
     Request request = getRequest(id);
@@ -145,11 +130,6 @@ public class SignalController {
     return new ResponseEntity(HttpStatus.OK);
   }
 
-  /**
-   * @param id
-   *
-   * @return
-   */
   @RequestMapping(value = "/splitRequest", method = POST)
   public ResponseEntity splitRequest(@PathVariable("id") String id, @RequestBody List<Long> pointIdsToSplit) {
     Request request = getRequest(id);
@@ -169,11 +149,6 @@ public class SignalController {
     return new ResponseEntity(HttpStatus.OK);
   }
 
-  /**
-   * @param id
-   *
-   * @return
-   */
   private Request getRequest(String id) {
     return requestRepository.findOneByRequestId(id);
   }

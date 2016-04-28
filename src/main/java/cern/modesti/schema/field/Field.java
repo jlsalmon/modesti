@@ -12,8 +12,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-
 /**
+ * This class represents a single field of a
+ * {@link cern.modesti.schema.category.Category}. A field defines the structure
+ * of a property that a {@link cern.modesti.request.point.Point} may have.
+ *
  * @author Justin Lewis Salmon
  */
 @Data
@@ -44,7 +47,7 @@ public class Field implements Serializable {
   /**
    * If a field is an object, this specifies the property of the object to display.
    *
-   * TODO: mode this into {@link AutocompleteField}
+   * TODO: move this into {@link AutocompleteField}
    */
   private String model;
 

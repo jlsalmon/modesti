@@ -1,7 +1,7 @@
 package cern.modesti.request;
 
 import cern.modesti.test.BaseIntegrationTest;
-import cern.modesti.user.MockUserService;
+import cern.modesti.security.mock.MockUserService;
 import cern.modesti.workflow.task.NotAuthorisedException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

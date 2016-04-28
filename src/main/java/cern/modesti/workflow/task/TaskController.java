@@ -26,6 +26,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
+ * REST controller for retrieving and executing actions on workflow tasks for
+ * specific requests.
+ *
  * @author Justin Lewis Salmon
  */
 @Controller
@@ -37,11 +40,6 @@ public class TaskController {
   @Autowired
   private TaskService taskService;
 
-  /**
-   * @param id
-   *
-   * @return
-   */
   @RequestMapping(method = GET, produces = "application/hal+json")
   public ResponseEntity<Resources<Resource<TaskInfo>>> getTasks(@PathVariable("id") String id) {
     List<TaskInfo> tasks = taskService.getTasks(id);
@@ -54,12 +52,6 @@ public class TaskController {
     return new ResponseEntity<>(resources, HttpStatus.OK);
   }
 
-  /**
-   * @param id
-   * @param name
-   *
-   * @return
-   */
   @RequestMapping(value = "/{name}", method = GET, produces = "application/hal+json")
   public ResponseEntity<Resource<TaskInfo>> getTask(@PathVariable("id") String id, @PathVariable("name") String name) {
     TaskInfo task = taskService.getTask(id, name);
@@ -73,12 +65,6 @@ public class TaskController {
     return new ResponseEntity<>(resource, HttpStatus.OK);
   }
 
-  /**
-   * @param id
-   * @param taskName
-   *
-   * @return
-   */
   @RequestMapping(value = "/{name}", method = POST, produces = "application/hal+json")
   public HttpEntity<Resource<TaskInfo>> action(@PathVariable("id") String id, @PathVariable("name") String taskName, @RequestBody TaskAction action,
                                                Principal principal) {

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * A type of field that holds a simple textual value.
+ *
  * @author Justin Lewis Salmon
  */
 public class TextField extends Field {

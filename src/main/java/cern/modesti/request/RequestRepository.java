@@ -16,6 +16,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * This reduces backend load greatly. Retrieving a single request will still
  * return the full request, unless the {@link RequestProjection}is explicitly
  * requested.
+ * <p>
+ * <b>Note:</b> plugins should not use this repository directly, but rather
+ * use {@link RequestService} instead.
  *
  * @author Justin Lewis Salmon
  */

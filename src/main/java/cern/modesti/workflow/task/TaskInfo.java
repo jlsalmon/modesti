@@ -7,7 +7,8 @@ import org.springframework.hateoas.core.Relation;
 import java.util.Set;
 
 /**
- * TODO
+ * This class represents a single task inside a workflow process instance
+ * associtated with a {@link cern.modesti.request.Request}.
  *
  * @author Justin Lewis Salmon
  */

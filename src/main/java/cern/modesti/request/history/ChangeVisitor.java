@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import static java.lang.String.format;
 
 /**
+ * A {@link de.danielbechler.diff.node.DiffNode.Visitor} implementation that
+ * decides whether or not to record a particular change as a
+ * {@link ChangeEvent}.
+ *
  * @author Justin Lewis Salmon
  */
 public class ChangeVisitor implements DiffNode.Visitor {

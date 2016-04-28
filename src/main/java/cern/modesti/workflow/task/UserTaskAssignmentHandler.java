@@ -3,7 +3,7 @@ package cern.modesti.workflow.task;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.user.User;
-import cern.modesti.user.UserService;
+import cern.modesti.security.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.bpmn.model.BaseElement;
 import org.activiti.bpmn.model.UserTask;
@@ -19,9 +19,10 @@ import org.springframework.stereotype.Component;
 import static java.lang.String.format;
 
 /**
- * Custom {@link TaskListener} registered globally via custom {@link org.activiti.engine.parse.BpmnParseHandler}
- * that listens for all "assignment" events on user tasks and synchronises the new assignee to the corresponding
- * {@link Request} object.
+ * Custom {@link TaskListener} registered globally via custom
+ * {@link org.activiti.engine.parse.BpmnParseHandler} that listens for all
+ * {@literal assignment} events on user tasks and synchronises the new assignee
+ * to the corresponding {@link Request} object.
  *
  * @author Justin Lewis Salmon
  */

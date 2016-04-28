@@ -1,8 +1,8 @@
 package cern.modesti.config;
 
 import cern.modesti.security.ldap.LdapUserDetailsMapper;
-import cern.modesti.user.MockAuthenticationProvider;
-import cern.modesti.user.MockUserService;
+import cern.modesti.security.mock.MockAuthenticationProvider;
+import cern.modesti.security.mock.MockUserService;
 import org.apache.catalina.Context;
 import org.apache.directory.server.core.authn.AuthenticationInterceptor;
 import org.apache.directory.server.core.exception.ExceptionInterceptor;
@@ -21,17 +21,14 @@ import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.access.event.LoggerListener;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.ldap.LdapAuthenticationProviderConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
@@ -41,22 +38,24 @@ import org.springframework.security.ldap.authentication.LdapAuthenticationProvid
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.server.ApacheDSContainer;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Configuration class for the core web security and LDAP beans.
  * <p>
- * When running with the {@literal dev} profile, an in-memory LDAP server is used.
+ * When running with the {@literal dev} profile, a mock authentication
+ * implementation is used.
  * <p>
- * Otherwise, The authentication/authorisation mechanism uses two different LDAP servers:
- * cerndc.cern.ch and xldap.cern.ch. The former is available in authenticated
- * mode only, from inside CERN only, and is used to authenticate a user. The
- * latter is available anonymously, from inside CERN only, and is used to
- * perform anonymous lookups on the LDAP server in order to do things like
- * lookup all the e-groups a particular user is a member of, or to check if a
- * user is a member of a particular e-group.
+ * Otherwise, The authentication/authorisation mechanism uses two different
+ * LDAP servers:
+ * <ul>
+ *   <li>cerndc.cern.ch: used for authentication.</li>
+ *   <li>xldap.cern.ch: used to perform anonymous lookups on the LDAP server
+ *   in order to do things like lookup all the e-groups a particular user is
+ *   a member of, or to check if a user is a member of a particular e-group.
+ *   </li>
+ * </ul>
  * <p>
  * See <a href=
  * "https://espace.cern.ch/identitymanagement/Wiki%20Pages/Active%20Directory%20Publication.aspx"

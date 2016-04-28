@@ -19,6 +19,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+/**
+ * A {@link Filter} that adds the necessary headers to allow authenticated
+ * CORS requests to the REST API.
+ */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CORSFilter implements Filter {
@@ -42,10 +46,8 @@ public class CORSFilter implements Filter {
   }
 
   @Override
-  public void init(FilterConfig filterConfig) {
-  }
+  public void init(FilterConfig filterConfig) {}
 
   @Override
-  public void destroy() {
-  }
+  public void destroy() {}
 }

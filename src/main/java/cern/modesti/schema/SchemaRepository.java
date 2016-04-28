@@ -8,6 +8,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 /**
+ * Repository for creating/updating/deleting/searching {@link Schema}
+ * instances.
+ *
  * @author Justin Lewis Salmon
  */
 public interface SchemaRepository extends MongoRepository<Schema, String> {

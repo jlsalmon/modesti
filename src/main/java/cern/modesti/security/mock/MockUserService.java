@@ -1,5 +1,8 @@
-package cern.modesti.user;
+package cern.modesti.security.mock;
 
+import cern.modesti.user.Role;
+import cern.modesti.user.User;
+import cern.modesti.security.UserService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -16,6 +19,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * A {@link UserService} implementation for development purposes that loads a
+ * list of mock users and groups from {@literal mock-users.txt} files on the
+ * classpath.
+ *
  * @author Justin Lewis Salmon
  */
 public class MockUserService implements UserService {

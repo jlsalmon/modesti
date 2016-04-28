@@ -27,6 +27,8 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
+ * REST controller for searching {@link Point} instances cia RSQL queries.
+ *
  * @author Justin Lewis Salmon
  */
 @Controller
@@ -40,15 +42,18 @@ public class PointSearchController {
   private PointResourceAssembler resourceAssembler;
 
   /**
-   * From a given query string, parse a RSQL predicate expression and delegate to an appropriate plugin to search for a list of points based on the predicate.
+   * From a given query string, parse an RSQL predicate expression and delegate
+   * to an appropriate plugin to search for a list of points based on the
+   * predicate.
    *
-   * @param query
-   * @param pageable
-   * @param assembler
-   * @return
+   * @param query the RSQL query string
+   * @param pageable paging information
+   * @param assembler helper for assembling pages of results
+   * @return a page of {@link Point} instances and a HTTP status
    */
   @RequestMapping(value = "/points/search", method = GET, produces = "application/json")
-  HttpEntity<PagedResources<Point>> search(@RequestParam("domain") String domain, @RequestParam("query") String query, Pageable pageable, PagedResourcesAssembler assembler) {
+  HttpEntity<PagedResources<Point>> search(@RequestParam("domain") String domain, @RequestParam("query") String query, Pageable pageable,
+                                           PagedResourcesAssembler assembler) {
     RequestProvider plugin = null;
 
     for (RequestProvider provider : requestProviderRegistry.getPlugins()) {

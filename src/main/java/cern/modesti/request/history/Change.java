@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
+ * Represents a single change (add, modify, remove) of a single property.
+ *
  * @author Justin Lewis Salmon
  */
 @Data

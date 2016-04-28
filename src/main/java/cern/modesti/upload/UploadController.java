@@ -21,8 +21,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import cern.modesti.request.Request;
 
 /**
- * @author Justin Lewis Salmon
+ * REST controller for handling the upload of {@link Request}s from legacy
+ * Excel files.
  *
+ * @author Justin Lewis Salmon
  */
 @Controller
 @Slf4j
@@ -32,12 +34,12 @@ public class UploadController {
   private UploadService service;
 
   @RequestMapping(value = "/requests/upload", method = POST)
-  public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("description") String description, UriComponentsBuilder b, Principal user) {
+  public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("description") String description, UriComponentsBuilder b) {
     RequestParseResult result;
 
     if (!file.isEmpty()) {
       try {
-        result = service.parseRequestFromExcelSheet(description, file.getInputStream(), user);
+        result = service.parseRequestFromExcelSheet(description, file.getInputStream());
 
         log.info("successfully uploaded " + file.getOriginalFilename());
       } catch (Exception e) {

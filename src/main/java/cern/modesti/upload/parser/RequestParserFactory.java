@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 import java.io.InputStream;
 
 /**
+ * This class is responsible for delegating the parsing of a request to a
+ * specific {@link RequestProvider} implementation.
+ *
  * @author Justin Lewis Salmon
  */
 @Component
@@ -27,9 +30,10 @@ public class RequestParserFactory {
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
   /**
-   * @param stream
+   * Parse the given Excel sheet as a {@link Request} instance.
    *
-   * @return
+   * @param stream the Excel sheet input stream
+   * @return the result of the parse operation
    */
   public RequestParseResult parseRequest(InputStream stream) {
     Sheet sheet = getSheet(stream);
@@ -66,9 +70,8 @@ public class RequestParserFactory {
   /**
    * Parse a {@link Sheet} from the given {@link InputStream}.
    *
-   * @param stream
-   *
-   * @return
+   * @param stream the Excel sheet input stream
+   * @return a {@link Sheet} instance created from the input stream
    */
   private Sheet getSheet(InputStream stream) {
     Workbook workbook;

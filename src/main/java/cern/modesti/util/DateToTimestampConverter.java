@@ -6,8 +6,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * TODO
- *
  * @author Justin Lewis Salmon
  */
 public class DateToTimestampConverter implements Converter<Date, Timestamp> {
