@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 /**
  * @author Justin Lewis Salmon
  */
-@TestPropertySource(locations = "classpath:modesti-test.properties", properties = "mongodb.persistent=false", inheritLocations = false)
 public class RequestServiceTest extends BaseIntegrationTest {
 
   @Test
