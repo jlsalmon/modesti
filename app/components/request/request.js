@@ -582,7 +582,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       event.stopPropagation();
     }
 
-    var task = self.tasks.submit || self.tasks.cable || self.tasks.test || self.tasks["remove test flag"];
+    var task = self.tasks.submit || self.tasks.cable || self.tasks.test || self.tasks['remove test flag'];
 
     if (!task) {
       console.log('warning: no submit task found');
