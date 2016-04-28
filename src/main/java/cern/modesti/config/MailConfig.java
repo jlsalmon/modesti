@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Profile;
 import org.subethamail.wiser.Wiser;
 
 /**
+ * Configuration class to create an embedded SMTP server for development.
+ *
  * @author Justin Lewis Salmon
  */
 @Configuration
