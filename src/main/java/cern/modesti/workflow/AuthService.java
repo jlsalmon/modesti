@@ -55,13 +55,7 @@ public class AuthService {
   public boolean isAuthorised(RequestProvider plugin, User user) {
     String authorisationGroup = plugin.getMetadata().getAuthorisationGroup();
 
-    for (Role role : user.getAuthorities()) {
-      if (role.getAuthority().equals(authorisationGroup)) {
-        return true;
-      }
-    }
-
-    return false;
+    return user.isAdmin() || user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals(authorisationGroup));
   }
 
   /**
@@ -86,6 +80,11 @@ public class AuthService {
    */
   public boolean isAuthorised(TaskInfo task, User user) {
     if (task == null) {
+      return true;
+    }
+
+    if (user.isAdmin()) {
+      log.info(format("authorising admin user %s", user.getUsername()));
       return true;
     }
 

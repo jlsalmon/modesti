@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
+
 /**
  * This class represents a single user entity retrieved from the authentication
  * context.
@@ -64,5 +66,9 @@ public class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return false;
+  }
+
+  public boolean isAdmin() {
+    return authorities.stream().anyMatch(role -> role.getAuthority().equals("modesti-administrators"));
   }
 }
