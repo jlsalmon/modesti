@@ -173,11 +173,24 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    *
    */
   function activateDefaultCategory() {
-    console.log('activating default category');
-    var category = $localStorage.lastActiveCategory[self.request.requestId];
+    var categoryId = $localStorage.lastActiveCategory[self.request.requestId];
+    var category;
 
-    if (!category) {
+    if (!categoryId) {
+      console.log('activating default category');
       category = self.schema.categories[0];
+    } else {
+      console.log('activating last active category: ' + categoryId);
+
+      self.schema.categories.forEach(function (cat) {
+        if (cat.id === categoryId) {
+          category = cat;
+        }
+      });
+
+      if (!category) {
+        category = self.schema.categories[0];
+      }
     }
 
     activateCategory(category);
@@ -190,7 +203,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   function activateCategory(category) {
     console.log('activating category "' + category.id + '"');
     self.activeCategory = category;
-    $localStorage.lastActiveCategory[self.request.requestId] = category;
+    $localStorage.lastActiveCategory[self.request.requestId] = category.id;
     getColumns();
   }
 
