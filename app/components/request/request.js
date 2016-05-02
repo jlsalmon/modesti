@@ -252,7 +252,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     var point = self.rows[row];
     var text = '';
 
-    if (point.properties.valid === false) {
+    if (point && point.properties.valid === false) {
       point.errors.forEach(function (e) {
         e.errors.forEach(function (error) {
           text += '<i class="fa fa-fw fa-exclamation-circle text-danger"></i> ' + error + '<br />';
