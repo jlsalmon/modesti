@@ -147,7 +147,7 @@ function ColumnService($translate, SchemaService) {
     var options;
 
     if (field.options) {
-      var options = field.options.map(function (option) {
+      options = field.options.map(function (option) {
         if (typeof option === 'object') {
           if (option.description !== null && option.description !== undefined && option.description !== '') {
             return {id: option.value, text: option.value + ': ' + option.description};
