@@ -57,6 +57,9 @@ public class MockUserService implements UserService {
 
     return users.stream().filter(user -> {
       if (user.getUsername().startsWith(query)) {
+        if (groups.isEmpty()) {
+          return true;
+        }
         for (String group : groups) {
           if (user.getAuthorities().contains(new Role(group))) {
             return true;
