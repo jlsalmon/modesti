@@ -20,9 +20,10 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
    *
    */
   function init() {
+    generateValues();
     // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
     // state and the user makes a modification
-    self.parent.hot.addHook('afterChange', afterChange);
+    self.parent.hot.addHook('afterChange', generateValues);
   }
 
   function submit(event) {
@@ -103,7 +104,7 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
   /**
    * Called after a change is made to the table (edit, paste, etc.)
    */
-  function afterChange() {
+  function generateValues() {
     SchemaService.generateTagnames(self.parent.request);
     SchemaService.generateFaultStates(self.parent.request);
     //SchemaService.generateAlarmCategories(self.request);
