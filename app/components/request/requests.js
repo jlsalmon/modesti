@@ -198,14 +198,14 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   }
 
   function hasCustomProperties(request) {
-    var hasCustomProperties = false;
+    var has = false;
     self.schemas.forEach(function (schema) {
       if (schema.id === request.domain && schema.fields) {
-        hasCustomProperties = true;
+        has = true;
       }
     });
 
-    return hasCustomProperties;
+    return has;
   }
 
   function formatCustomProperties(request) {
