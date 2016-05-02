@@ -144,19 +144,25 @@ function ColumnService($translate, SchemaService) {
   function getDropdownColumn(column, field) {
     column.editor = 'select2';
 
-    var options = field.options.map(function (option) {
-      if (typeof option === 'object') {
-        if (option.description !== null && option.description !== undefined && option.description !== '') {
-          return {id: option.value, text: option.value + ': ' + option.description};
-        } else {
-          return {id: option.value, text: option.value};
-        }
-      }
+    var options;
 
-      else if (typeof (option === 'string')) {
-        return {id: option, text: option};
-      }
-    });
+    if (field.options) {
+      var options = field.options.map(function (option) {
+        if (typeof option === 'object') {
+          if (option.description !== null && option.description !== undefined && option.description !== '') {
+            return {id: option.value, text: option.value + ': ' + option.description};
+          } else {
+            return {id: option.value, text: option.value};
+          }
+        }
+
+        else if (typeof (option === 'string')) {
+          return {id: option, text: option};
+        }
+      });
+    } else {
+      options = {};
+    }
 
     column.select2Options = {
       data: {results: options},
