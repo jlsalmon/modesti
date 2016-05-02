@@ -1,5 +1,6 @@
 package cern.modesti.config;
 
+import cern.modesti.workflow.WorkflowInitialiser;
 import cern.modesti.workflow.task.UserTaskAssignmentHandler;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.springframework.beans.factory.InitializingBean;
@@ -16,6 +17,9 @@ import org.springframework.context.annotation.Configuration;
 public class WorkflowConfig {
 
   @Autowired
+  private WorkflowInitialiser workflowInitialiser;
+
+  @Autowired
   private UserTaskAssignmentHandler userTaskAssignmentHandler;
 
   /**
@@ -26,7 +30,10 @@ public class WorkflowConfig {
    */
   @Bean
   public InitializingBean activitiConfigurer(SpringProcessEngineConfiguration engineConfiguration) {
-    return () -> engineConfiguration.getBpmnParser().getBpmnParserHandlers().addHandler(userTaskAssignmentHandler);
+    return () -> {
+      engineConfiguration.getBpmnParser().getBpmnParserHandlers().addHandler(userTaskAssignmentHandler);
+      workflowInitialiser.init();
+    };
   }
 }
 

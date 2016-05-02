@@ -2,6 +2,7 @@ package cern.modesti.workflow.task;
 
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
+import cern.modesti.request.RequestService;
 import cern.modesti.user.User;
 import cern.modesti.security.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ import static java.lang.String.format;
 public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask> implements TaskListener {
 
   @Autowired
-  private RequestRepository requestRepository;
+  private RequestService requestService;
 
   @Autowired
   private UserService userService;
@@ -41,10 +42,10 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
     log.debug(format("handling assignment of task %s", task.getName()));
 
     // Save the new assignee to the request object
-    Request request = requestRepository.findOneByRequestId((String) task.getVariable("requestId"));
+    Request request = requestService.findOneByRequestId((String) task.getVariable("requestId"));
     User assignee = userService.findOneByUsername(task.getAssignee());
     request.setAssignee(assignee.getUsername());
-    requestRepository.save(request);
+    requestService.save(request);
   }
 
   @Override

@@ -31,7 +31,6 @@ public class WorkflowInitialiser {
   @Autowired
   private RepositoryService repositoryService;
 
-  @PostConstruct
   public void init() throws IOException {
     log.info("Initialising workflow processes");
 
