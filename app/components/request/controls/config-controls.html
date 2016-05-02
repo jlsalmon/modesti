@@ -55,6 +55,7 @@
           <div class="btn-group pull-right">
 
             <button class="btn btn-primary"
+                    ng-disabled="ctrl.configuring == 'started'"
                     ng-click="ctrl.configure($event)"
                     tooltip-append-to-body="true"
                     tooltip="Configure request"> <!--tooltip="{{'CONFIGURE_REQUEST'|translate}}">-->
