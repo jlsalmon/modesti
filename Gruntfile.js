@@ -426,7 +426,7 @@ module.exports = function (grunt) {
           url: 'http://artifactory/beco-release-local'
         },
         files: [
-          { src: ['dist/**/*', 'dist/.htaccess', 'deployment.xml'] }
+          { src: ['dist/**/*', 'dist/.htaccess', 'deployment.xml', 'bs-config.json'] }
         ]
       }
     },
