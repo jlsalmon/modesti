@@ -1,5 +1,6 @@
 package cern.modesti.plugin.metadata;
 
+import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
 import lombok.Data;
 import org.springframework.util.Assert;
@@ -35,7 +36,7 @@ public class SimplePluginMetadata implements PluginMetadata {
   }
 
   @Override
-  public String getAuthorisationGroup() {
+  public String getAuthorisationGroup(Request ignored) {
     return authorisationGroup;
   }
 

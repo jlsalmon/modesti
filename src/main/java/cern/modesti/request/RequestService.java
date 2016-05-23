@@ -92,7 +92,7 @@ public class RequestService {
     User user = userService.getCurrentUser();
 
     // Assert that the current user is allowed to create a request for this domain
-    if (!authService.isAuthorised(plugin, user)) {
+    if (!authService.isAuthorised(plugin, request, user)) {
       throw new NotAuthorisedException(format("User %s is not authorised to create requests for domain %s", user.getUsername(), request.getDomain()));
     }
 

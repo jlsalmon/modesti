@@ -49,11 +49,12 @@ public class AuthService {
    * particular plugin.
    *
    * @param plugin the plugin to authorise
+   * @param request the request to be created
    * @param user   the user to authorise
    * @return true if the user is authorised to create a request, false otherwise
    */
-  public boolean isAuthorised(RequestProvider plugin, User user) {
-    String authorisationGroup = plugin.getMetadata().getAuthorisationGroup();
+  public boolean isAuthorised(RequestProvider plugin, Request request, User user) {
+    String authorisationGroup = plugin.getMetadata().getAuthorisationGroup(request);
 
     return user.isAdmin() || user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals(authorisationGroup));
   }

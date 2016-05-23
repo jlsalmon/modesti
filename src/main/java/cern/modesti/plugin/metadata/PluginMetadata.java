@@ -1,5 +1,6 @@
 package cern.modesti.plugin.metadata;
 
+import cern.modesti.request.Request;
 import cern.modesti.request.RequestType;
 
 /**
@@ -21,9 +22,12 @@ public interface PluginMetadata {
    * Returns the name of the group to which a user must belong in order to be
    * authorised to use this plugin.
    *
+   * @param request the request to authorise, which may be used to determine
+   *                the authorisation group
+   *
    * @return the authorisation group name
    */
-  String getAuthorisationGroup();
+  String getAuthorisationGroup(Request request);
 
   /**
    * Returns the identifier of the workflow process to be used based on the
