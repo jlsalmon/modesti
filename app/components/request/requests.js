@@ -30,7 +30,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   self.resetFilter = resetFilter;
   self.getRequestCount = getRequestCount;
   self.hasCustomProperties = hasCustomProperties;
-  self.formatCustomProperties = formatCustomProperties;
+  self.formatCustomProperty = formatCustomProperty;
 
   resetFilter();
   getRequests(1, 15, self.sort, self.filter);
@@ -208,21 +208,28 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
     return has;
   }
 
-  function formatCustomProperties(request) {
-    var customProperties = '';
+  function formatCustomProperty(request, key) {
+    var value = '';
+    var field = {};
 
     self.schemas.forEach(function (schema) {
       if (schema.id === request.domain && schema.fields) {
-        schema.fields.forEach(function (field) {
-          if (request.properties.hasOwnProperty(field.id)) {
-            var value = field.model ? request.properties[field.id][field.model] : request.properties[field.id].value;
-            customProperties += value;
+
+        schema.fields.forEach(function (f) {
+          if (request.properties.hasOwnProperty(f.id) && key === f.id) {
+            field = f;
+
+            if (field.type === 'autocomplete') {
+              value = field.model ? request.properties[field.id][field.model] : request.properties[field.id].value;
+            } else {
+              value = request.properties[field.id]
+            }
           }
         });
       }
     });
 
-    return customProperties;
+    return {value: value, field: field};
   }
 
   /**

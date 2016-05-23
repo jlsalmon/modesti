@@ -315,18 +315,29 @@
 
         <i class="fa fa-list-ol fa-fw text-muted"></i>
         <span class=""><strong>{{request.description}}</strong></span>
-        <span class="text-muted badge" style="background-color: #F5F5F5; float: none;" ng-if="ctrl.hasCustomProperties(request)"> {{ctrl.formatCustomProperties(request)}} </span>
+
         <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.split("_").join(" ")}}</span>
         <br/>
         <span class="" style="font-size: 12px;">
           <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator}} </span>
           <span class="text-muted badge"> {{request.type}} </span>
           <span class="text-muted badge"> <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
-          <!--<span class="text-muted"> &middot; <i class="fa fa-fw fa-sitemap"></i> {{request.subsystem}} </span>-->
-          <span class="text-muted badge" ng-if="request.datasources.length > 0">
-            <i class="fa fa-fw fa-cogs"></i>{{request.datasources.join(', ')}}
-          </span>
           <span class="text-muted badge" ng-if="request.assignee" tooltip="Assignee"> <i class="fa fa-fw fa-user"></i> {{request.assignee}} </span>
+
+          <span ng-if="ctrl.hasCustomProperties(request)"
+                style="margin-left: 5px;">
+            <span ng-repeat="(key, value) in request.properties">
+              <span ng-init="property = ctrl.formatCustomProperty(request, key)">
+                <span ng-if="property.value"
+                      class="text-muted badge"
+                      style="background-color: #F5F5F5; float: none;"
+                      tooltip="{{property.field.name}}">
+                  {{property.value}}
+                </span>
+              </span>
+            </span>
+          </span>
+
         </span>
         <span class="text-muted pull-right" style="font-size: 11px; margin-top: 5px;"><i class="fa fa-fw fa-clock-o"></i> {{request.createdAt | date:'medium'}}</span>
       </a>
