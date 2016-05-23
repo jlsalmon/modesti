@@ -7,7 +7,112 @@
  */
 angular.module('modesti').controller('RequestController', RequestController);
 
-function RequestController($scope, $q, $state, $timeout, $modal, $filter, $localStorage, request, children, schema, tasks, signals,
+angular.module('modesti').directive('customRequestControls', function($compile, $http, $ocLazyLoad) {
+  return {
+    scope: {
+      request: '=',
+      tasks: '=',
+      schema: '=',
+      table: '='
+    },
+
+    link: function(scope, element) {
+      var schemaId = scope.request.domain;
+      var status = scope.request.status.split('_').join('-').toLowerCase();
+
+      $http.get(BACKEND_BASE_URL + '/plugins/' + schemaId + '/assets').then(function (response) {
+        var assets = response.data;
+        console.log(assets);
+
+        $ocLazyLoad.load(assets, {serie: true}).then(function() {
+
+          var template = '<div ' + status + '-controls request="request" tasks="tasks" schema="schema" table="table"></div>';
+          element.append($compile(template)(scope));
+        });
+      });
+    }
+  };
+});
+
+angular.module('modesti').directive('showIf', function(TaskService, ngIfDirective) {
+  return {
+    transclude: 'element',
+    priority: 600,
+    link: function(scope, element, attrs) {
+      attrs.ngIf = function() {
+        var expression = attrs.showIf;
+        var conditions = expression.split(" && ");
+        var task = TaskService.getCurrentTask();
+        var results = [];
+
+        conditions.forEach(function (condition) {
+          var result = false;
+
+          if (condition.indexOf('user-authorised-for-task') != -1) {
+            result = TaskService.isCurrentUserAuthorised(task);
+            result = condition.indexOf('!') != -1 ? !result : result;
+          }
+          else if (condition.indexOf('task-assigned-to-current-user') != -1) {
+            result = TaskService.isCurrentUserAssigned(task);
+            result = condition.indexOf('!') != -1 ? !result : result;
+          }
+          else if (condition.indexOf('task-assigned') != -1) {
+            result = TaskService.isTaskClaimed(task);
+            result = condition.indexOf('!') != -1 ? !result : result;
+          }
+
+          results.push(result);
+        });
+
+        return results.reduce(function (a, b) {
+          return (a === b) ? a : false;
+        }) === true;
+      };
+
+      ngIfDirective[0].link.apply(ngIfDirective[0], arguments);
+    }
+  }
+});
+
+angular.module('modesti').directive('enableIf', function(TaskService, ngDisabledDirective) {
+  return {
+    link: function(scope, element, attrs) {
+      attrs.ngDisabled = function() {
+        var expression = attrs.enableIf;
+        var conditions = expression.split(" && ");
+        var task = TaskService.getCurrentTask();
+        var results = [];
+
+        conditions.forEach(function (condition) {
+          var result = false;
+
+          if (condition.indexOf('user-authorised-for-task') != -1) {
+            result = TaskService.isCurrentUserAuthorised(task);
+            result = condition.indexOf('!') != -1 ? !result : result;
+          }
+          else if (condition.indexOf('task-assigned-to-current-user') != -1) {
+            result = TaskService.isCurrentUserAssigned(task);
+            result = condition.indexOf('!') != -1 ? !result : result;
+          }
+          else if (condition.indexOf('task-assigned') != -1) {
+            result = TaskService.isTaskClaimed(task);
+            result = condition.indexOf('!') != -1 ? !result : result;
+          }
+
+          results.push(result);
+        });
+
+        return !results.reduce(function(a, b){ return (a === b) ? a : false; }) === true;
+      };
+
+      ngDisabledDirective[0].link.apply(ngDisabledDirective[0], arguments);
+    }
+  }
+});
+
+
+function RequestController($scope, $q, $state, $timeout, $modal, $filter, $localStorage,
+                           request, children, schema, tasks, signals,
                            RequestService, ColumnService, SchemaService, HistoryService, TaskService, AuthService, AlertService, ValidationService, Utils) {
   var self = this;
 
@@ -44,10 +149,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     afterRemoveRow: afterRemoveRow
   };
 
-  /** The data rows that will be given to the table */
-  self.rows = getRows();
-
-  /** The columns that will be displayed for the currently active category. See getColumns(). */
+  /** The columns that will be displayed for the currently active category. */
   self.columns = [];
 
   /** Open state flag for the error log at the bottom of the page */
@@ -57,33 +159,16 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    * Public function definitions.
    */
   self.afterInit = afterInit;
-  self.getRows = getRows;
   self.getRowHeaders = getRowHeaders;
   self.getColumns = getColumns;
   self.activateCategory = activateCategory;
   self.activateDefaultCategory = activateDefaultCategory;
 
-  self.canAssignTask = canAssignTask;
   self.assignTask = assignTask;
   self.assignTaskToCurrentUser = assignTaskToCurrentUser;
   self.claim = claim;
   self.getAssignee = getAssignee;
-  self.isCurrentUserAuthorised = isCurrentUserAuthorised;
-  self.isCurrentUserAssigned = isCurrentUserAssigned;
-  self.isCurrentTaskClaimed = isCurrentTaskClaimed;
   self.isCurrentTaskRestricted = isCurrentTaskRestricted;
-
-  self.canEdit = canEdit;
-  self.canValidate = canValidate;
-  self.canSubmit = canSubmit;
-  self.canSplit = canSplit;
-  self.validate = validate;
-  self.submit = submit;
-  self.sendModificationSignal = sendModificationSignal;
-  self.hasErrors = hasErrors;
-  self.getTotalErrors = getTotalErrors;
-  self.getNumValidationErrors = getNumValidationErrors;
-  self.getNumApprovalRejections = getNumApprovalRejections;
   self.getSelectedPointIds = getSelectedPointIds;
   self.isInvalidCategory = isInvalidCategory;
   self.navigateToField = navigateToField;
@@ -124,14 +209,16 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
           return;
         }
 
+        var task = TaskService.getCurrentTask();
+
         var authorised = false;
-        if (isCurrentUserAuthorised() && isCurrentUserAssigned()) {
+        if (TaskService.isCurrentUserAuthorised(task) && TaskService.isCurrentUserAssigned(task)) {
           authorised = true;
         }
 
         var editable = false;
         if (authorised) {
-          var point = self.rows[row];
+          var point = self.request.points[row];
 
           // Evaluate "editable" condition of the category
           if (self.activeCategory.editable !== null && typeof self.activeCategory.editable === 'object') {
@@ -209,39 +296,39 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     getColumns();
   }
 
-  /**
-   * Requests with certain statuses require that only some types points be displayed, i.e. requests in state
-   * 'FOR_APPROVAL' should only display alarms. So we disconnect the data given to the table from the request and
-   * include in it only those points which must be displayed.
-   *
-   * @returns {Array}
-   */
-  function getRows() {
-    var rows = [];
-
-    if (self.request.status === 'FOR_APPROVAL') {
-
-      // TODO display only points which require approval?
-      rows = self.request.points;
-    }
-
-    else if (self.request.status === 'FOR_ADDRESSING' || self.request.status === 'FOR_CABLING') {
-
-      // TODO display only points which require cabling?
-      rows = self.request.points;
-    }
-
-    else {
-      rows = self.request.points;
-    }
-
-    if (self.request.status !== 'IN_PROGRESS' && self.request.status !== 'FOR_CORRECTION') {
-      // If the request is not in preparation, set maxRows to prevent new rows being added
-      self.settings.maxRows = rows.length;
-    }
-
-    return rows;
-  }
+  ///**
+  // * Requests with certain statuses require that only some types points be displayed, i.e. requests in state
+  // * 'FOR_APPROVAL' should only display alarms. So we disconnect the data given to the table from the request and
+  // * include in it only those points which must be displayed.
+  // *
+  // * @returns {Array}
+  // */
+  //function getRows() {
+  //  var rows = [];
+  //
+  //  if (self.request.status === 'FOR_APPROVAL') {
+  //
+  //    // TODO display only points which require approval?
+  //    rows = self.request.points;
+  //  }
+  //
+  //  else if (self.request.status === 'FOR_ADDRESSING' || self.request.status === 'FOR_CABLING') {
+  //
+  //    // TODO display only points which require cabling?
+  //    rows = self.request.points;
+  //  }
+  //
+  //  else {
+  //    rows = self.request.points;
+  //  }
+  //
+  //  if (self.request.status !== 'IN_PROGRESS' && self.request.status !== 'FOR_CORRECTION') {
+  //    // If the request is not in preparation, set maxRows to prevent new rows being added
+  //    self.settings.maxRows = rows.length;
+  //  }
+  //
+  //  return rows;
+  //}
 
   /**
    * Row headers can optionally contain a success/failure icon and a popover message shown when the user hovers over
@@ -251,7 +338,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    * @returns {*}
    */
   function getRowHeaders(row) {
-    var point = self.rows[row];
+    var point = self.request.points[row];
     var text = '';
 
     if (point && point.valid === false) {
@@ -321,7 +408,10 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     self.activeCategory.fields.forEach(function (field) {
 
       var authorised = false;
-      if (isCurrentUserAuthorised() && isCurrentUserAssigned()) {
+      var task = TaskService.getCurrentTask();
+
+      var authorised = false;
+      if (TaskService.isCurrentUserAuthorised(task) && TaskService.isCurrentUserAssigned(task)) {
         authorised = true;
       }
 
@@ -399,15 +489,6 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
 
   /**
    *
-   * @returns {boolean}
-   */
-  function canAssignTask() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-    return TaskService.isCurrentUserAuthorised(task) && TaskService.isCurrentUserAssigned(task);
-  }
-
-  /**
-   *
    */
   function assignTask() {
     var task = self.tasks[Object.keys(self.tasks)[0]];
@@ -429,6 +510,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       TaskService.assignTask(task.name, self.request.requestId, assignee.username).then(function (task) {
         console.log('assigned request');
         self.tasks[task.name] = task;
+        self.request.assignee = assignee.username;
         activateDefaultCategory();
       });
     });
@@ -438,12 +520,13 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    *
    */
   function assignTaskToCurrentUser() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
+    var task = TaskService.getCurrentTask();
     var username = AuthService.getCurrentUser().username;
 
     TaskService.assignTask(task.name, self.request.requestId, username).then(function (task) {
       console.log('assigned request');
       self.tasks[task.name] = task;
+      self.request.assignee = username;
       activateDefaultCategory();
     });
   }
@@ -477,39 +560,13 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    *
    * @returns {boolean}
    */
-  function isCurrentUserAuthorised() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-    return TaskService.isCurrentUserAuthorised(task);
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentUserAssigned() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-    return TaskService.isCurrentUserAssigned(task);
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
-  function isCurrentTaskClaimed() {
-    var task = self.tasks[Object.keys(self.tasks)[0]];
-    return TaskService.isTaskClaimed(task);
-  }
-
-  /**
-   *
-   * @returns {boolean}
-   */
   function isCurrentTaskRestricted() {
     var task = self.tasks[Object.keys(self.tasks)[0]];
     return task && task.candidateGroups.length === 1 && task.candidateGroups[0] === 'modesti-administrators';
   }
 
   /**
+<<<<<<< HEAD
    *
    * @returns {boolean}
    */
@@ -870,7 +927,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     console.log('afterChange()');
 
     // Make sure the line numbers are consecutive
-    self.rows.forEach(function (row, i) {
+    self.request.points.forEach(function (row, i) {
       row.lineNo = i + 1;
     });
 
@@ -887,15 +944,15 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
 
       // Mark the point as dirty.
       if (newValue !== oldValue) {
-        console.log('dirty point: ' + self.rows[row].lineNo);
+        console.log('dirty point: ' + self.request.points[row].lineNo);
         dirty = true;
-        self.rows[row].dirty = true;
+        self.request.points[row].dirty = true;
       }
 
       // If the value was cleared, make sure any other properties of the object are also cleared.
       if (newValue === undefined || newValue === null || newValue === '') {
         //var point = self.parent.hot.getSourceDataAtRow(row);
-        var point = self.rows[row];
+        var point = self.request.points[row];
         var propName = property.split('.')[1];
 
         var prop = point.properties[propName];
@@ -954,7 +1011,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    */
   function saveNewValue(row, property, newValue) {
     var q = $q.defer();
-    var point = self.rows[row];
+    var point = self.request.points[row];
 
     // get the outer object i.e. properties.location.value -> location
     var outerProp = property.split('.')[1];
@@ -999,8 +1056,8 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    */
   function afterCreateRow() {
     // Fix the point IDs
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      self.rows[i].lineNo = i + 1;
+    for (var i = 0, len = self.request.points.length; i < len; i++) {
+      self.request.points[i].lineNo = i + 1;
     }
   }
 
@@ -1009,8 +1066,8 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    */
   function afterRemoveRow() {
     // Fix the point IDs
-    for (var i = 0, len = self.rows.length; i < len; i++) {
-      self.rows[i].lineNo = i + 1;
+    for (var i = 0, len = self.request.points.length; i < len; i++) {
+      self.request.points[i].lineNo = i + 1;
     }
   }
 
@@ -1028,7 +1085,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     for (var i = 0, len = checkboxes.length; i < len; i++) {
       if (checkboxes[i]) {
         // Point IDs are 1-based
-        pointIds.push(self.rows[i].lineNo);
+        pointIds.push(self.request.points[i].lineNo);
       }
     }
 
@@ -1247,7 +1304,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       return;
     }
 
-    var point = self.rows[row];
+    var point = self.request.points[row];
     if (Utils.isEmptyPoint(point)) {
       return;
     }
@@ -1420,8 +1477,8 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
 
       // Listen for the change event on the 'select-all' checkbox and act accordingly
       checkboxHeader.change(function () {
-        for (var i = 0, len = self.rows.length; i < len; i++) {
-          self.rows[i].selected = this.checked;
+        for (var i = 0, len = self.request.points.length; i < len; i++) {
+          self.request.points[i].selected = this.checked;
         }
 
         // Need to explicitly trigger a digest loop here because we are out of the angularjs world and in the happy land
@@ -1441,7 +1498,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    * @returns {*}
    */
   function getCheckboxHeaderState() {
-    if (self.getSelectedPointIds().length === self.rows.length) {
+    if (self.getSelectedPointIds().length === self.request.points.length) {
       return 'checked';
     } else if (self.getSelectedPointIds().length > 0) {
       return 'indeterminate';
@@ -1449,15 +1506,4 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       return 'unchecked';
     }
   }
-
-  /**
-   * When the global language is changed, this event will be fired. We catch it here and
-   * update the columns to make sure the help text etc. is in the right language.
-   */
-  $scope.$on('event:languageChanged', function () {
-    $timeout(function () {
-      console.log('language changed: refreshing columns');
-      getColumns();
-    }, 50);
-  });
 }

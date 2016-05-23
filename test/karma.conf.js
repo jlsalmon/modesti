@@ -54,6 +54,7 @@ module.exports = function(config) {
       'app/bower_components/restangular/dist/restangular.js',
       'app/bower_components/select2/select2.js',
       'app/bower_components/slimscroll/jquery.slimscroll.min.js',
+      'app/bower_components/oclazyload/dist/ocLazyLoad.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       'app/bower_components/chai/chai.js',
       'app/bower_components/mocha/mocha.js',

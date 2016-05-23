@@ -48,7 +48,7 @@ function ConfigController($scope, $state, $http, $timeout, RequestService, TaskS
         RequestService.getRequest(self.parent.request.requestId).then(function (request) {
           self.parent.request = request;
 
-          if (self.parent.request.domain === 'WinCC OA (CV)') {
+          if (self.parent.request.domain === 'WinCC OA') {
             self.configuring = 'success';
             AlertService.add('success', 'Configuration complete.');
           } else {

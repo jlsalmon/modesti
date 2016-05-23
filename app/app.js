@@ -25,7 +25,8 @@ angular.module('modesti',
   'pascalprecht.translate',
   'angularSpinner',
   'angular.filter',
-  'angular-bootstrap-select'
+  'angular-bootstrap-select',
+  'oc.lazyLoad'
 ])
 
 .value('properties', {'version': '0.1.10-SNAPSHOT'});

@@ -15,9 +15,9 @@ function SchemaService($q, $http, Utils) {
     getSchemas: getSchemas,
     queryFieldValues: queryFieldValues,
     evaluateConditional: evaluateConditional,
-    generateTagnames: generateTagnames,
-    generateFaultStates: generateFaultStates,
-    generateAlarmCategories: generateAlarmCategories
+    //generateTagnames: generateTagnames,
+    //generateFaultStates: generateFaultStates,
+    //generateAlarmCategories: generateAlarmCategories
   };
 
   /**
@@ -36,7 +36,7 @@ function SchemaService($q, $http, Utils) {
       console.log('fetched schema: ' + schema.id);
 
       // TODO: remove this domain-specific code into a SchemaPostProcessor inside a plugin
-      var domains = ['TIM', 'CSAM', 'WinCC OA (CV)'];
+      var domains = ['TIM', 'CSAM', 'WinCC OA'];
       if (domains.indexOf(schema.id) !== -1) {
 
         // Prepend tagname and fault state fields
@@ -411,241 +411,238 @@ function SchemaService($q, $http, Utils) {
     };
   }
 
-  /**
-   * TODO: move this domain-specific logic into backend plugins
-   *
-   * Tagname format: system_code|subsystem_code|’.’|functionality_code|’.’|equipment_identifier|’:’|point_attribute
-   */
-  function generateTagnames(request) {
-
-    request.points.forEach(function (point) {
-      if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
-        point.properties.tagname = null;
-        return;
-      }
-
-      (function (point) {
-        $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
-          params: {query: point.properties.subsystem.value},
-          cache: true
-        }).then(function (response) {
-
-          if (!response.data.hasOwnProperty('_embedded')) {
-            return;
-          }
-
-          var subsystemCode;
-          var subsystems = response.data._embedded.subsystems;
-
-          if (subsystems.length === 1 || subsystems.length > 1) {
-            var subsystem = subsystems[0];
-            subsystemCode = subsystem.systemCode + subsystem.subsystemCode;
-          } else {
-            subsystemCode = '?';
-          }
-
-          var site = (point.properties.functionality && point.properties.functionality.value ? point.properties.functionality.value : '?');
-          var equipmentIdentifier = getEquipmentIdentifier(point, request.domain);
-          equipmentIdentifier = equipmentIdentifier || '?';
-          var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
-
-          if (subsystemCode === '?' && site === '?' && equipmentIdentifier === '?' && attribute === '?') {
-            point.properties.tagname = null;
-          } else {
-            point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
-          }
-        },
-
-        function(error) {
-          console.log('error generating generating tagnames: ' + error.statusText);
-        });
-      })(point);
-    });
-  }
-
-  /**
-   * TODO: move this domain-specific logic into backend plugins
-   *
-   * Fault state format: system_name|’_’|subsystem_name|’_’|general_functionality|’:’|equipment_identifier|’:’|point_description
-   */
-  function generateFaultStates(request) {
-
-    request.points.forEach(function (point) {
-      if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
-        return;
-      }
-
-      if (point.properties.priorityCode === undefined || point.properties.priorityCode === null || point.properties.priorityCode === '') {
-        point.properties.faultFamily = null;
-        point.properties.faultMember = null;
-        point.properties.problemDescription = null;
-        return;
-      }
-
-      point.properties.faultMember = getEquipmentIdentifier(point);
-      point.properties.problemDescription = point.properties.pointDescription;
-
-      (function (point) {
-        $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
-          params: {query: point.properties.subsystem.value},
-          cache: true
-        }).then(function (response) {
-
-          if (!response.data.hasOwnProperty('_embedded')) {
-            return;
-          }
-
-          var subsystems = response.data._embedded.subsystems;
-          var systemName = '?', subsystemName = '?';
-
-          if (subsystems.length === 1 || subsystems.length > 1) {
-            var subsystem = subsystems[0];
-            systemName = subsystem.systemName;
-            subsystemName = subsystem.subsystemName;
-          }
-
-          if (point.properties.functionality && point.properties.functionality.value) {
-            $http.get(BACKEND_BASE_URL + '/functionalities/search/find', {
-              params: {query: point.properties.functionality.value},
-              cache: true
-            }).then(function (response) {
-              if (!response.data.hasOwnProperty('_embedded')) {
-                return;
-              }
-
-              var func = '?';
-              if (response.data._embedded.functionalities.length === 1) {
-                var functionality = response.data._embedded.functionalities[0];
-                func = functionality.generalFunctionality;
-              }
-
-              if (systemName === '?' && subsystemName === '?' && func === '?') {
-                point.properties.faultFamily = null;
-              } else {
-                point.properties.faultFamily = systemName + '_' + subsystemName + '_' + func;
-              }
-            });
-          }
-        },
-
-        function(error) {
-          console.log('error generating fault states: ' + error.statusText);
-        });
-      })(point);
-    });
-  }
-
-  /**
-   * TODO: move this domain-specific logic into backend plugins
-   *
-   * @param point
-   * @param domain
-   * @returns {*}
-   */
-  function getEquipmentIdentifier(point, domain) {
-    var equipmentIdentifier, gmaoCode;
-
-    if (point.properties.gmaoCode && point.properties.gmaoCode.value) {
-      gmaoCode = point.properties.gmaoCode.value;
-    } else if (point.properties.csamCsename && point.properties.csamCsename.value) {
-      gmaoCode = point.properties.csamCsename.value;
-    }
-
-    var otherEquipCode;
-
-    if (point.properties.otherEquipCode) {
-      otherEquipCode = point.properties.otherEquipCode;
-    } else if(point.properties.csamDetector && point.properties.csamDetector.value) {
-      otherEquipCode = point.properties.csamDetector.value;
-    }
-
-    if (gmaoCode && otherEquipCode) {
-      if (gmaoCode === otherEquipCode) {
-        equipmentIdentifier = gmaoCode;
-      } else {
-        if (domain === 'CSAM') {
-          equipmentIdentifier = otherEquipCode;
-        } else {
-          equipmentIdentifier = gmaoCode + '_' + otherEquipCode;
-        }
-      }
-    } else if (gmaoCode && !otherEquipCode) {
-      equipmentIdentifier = gmaoCode;
-    } else if (!gmaoCode && otherEquipCode) {
-      equipmentIdentifier = otherEquipCode;
-    } else {
-      equipmentIdentifier = null;
-    }
-
-    return equipmentIdentifier;
-  }
-
-  /**
-   * TODO: move this domain-specific logic into backend plugins
-   *
-   * Alarm category format: 'CERN.SRVS.'|FUNC_GEN|'.'|TES_SYSTEM_NAME
-   */
-  function generateAlarmCategories(request) {
-
-    request.points.forEach(function (point) {
-      if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
-        return;
-      }
-
-      if (point.properties.priorityCode || point.properties.alarmValue) {
-
-        (function (point) {
-          $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
-            params: {query: point.properties.subsystem.value},
-            cache: true
-          }).then(function (response) {
-
-            if (!response.data.hasOwnProperty('_embedded')) {
-              return;
-            }
-
-            var subsystems = response.data._embedded.subsystems;
-            var systemName;
-
-            if (subsystems.length === 1 || subsystems.length > 1) {
-              var subsystem = subsystems[0];
-              systemName = subsystem.systemName;
-            }
-
-            if (point.properties.functionality && point.properties.functionality.value) {
-              $http.get(BACKEND_BASE_URL + '/functionalities/search/find', {
-                params: {query: point.properties.functionality.value},
-                cache: true
-              }).then(function (response) {
-                if (!response.data.hasOwnProperty('_embedded')) {
-                  return;
-                }
-
-                var generalFunctionality;
-                if (response.data._embedded.functionalities.length === 1) {
-                  var functionality = response.data._embedded.functionalities[0];
-                  generalFunctionality = functionality.generalFunctionality;
-                }
-
-                if (systemName && generalFunctionality) {
-                  point.properties.alarmCategory = {value: 'CERN.SRVS.' + generalFunctionality + '.' + systemName};
-                }
-
-                // TODO remove this domain-specific code...
-                if (request.domain === 'CSAM' && point.properties.priorityCode && point.properties.priorityCode === 3) {
-                  point.properties.alarmCategory = 'POMPIER';
-                }
-              });
-            }
-          },
-
-          function(error) {
-            console.log('error generating alarm categories: ' + error.statusText);
-          });
-        })(point);
-      }
-    });
-  }
+  ///**
+  // * TODO: move this domain-specific logic into backend plugins
+  // *
+  // * Tagname format: system_code|subsystem_code|’.’|functionality_code|’.’|equipment_identifier|’:’|point_attribute
+  // */
+  //function generateTagnames(request) {
+  //
+  //  request.points.forEach(function (point) {
+  //    if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
+  //      point.properties.tagname = null;
+  //      return;
+  //    }
+  //
+  //    (function (point) {
+  //      $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
+  //        params: {query: point.properties.subsystem.value},
+  //        cache: true
+  //      }).then(function (response) {
+  //
+  //        if (!response.data.hasOwnProperty('_embedded')) {
+  //          return;
+  //        }
+  //
+  //        var subsystemCode;
+  //
+  //        if (response.data._embedded.subsystems.length === 1) {
+  //          var subsystem = response.data._embedded.subsystems[0];
+  //          subsystemCode = subsystem.systemCode + subsystem.subsystemCode;
+  //        } else {
+  //          subsystemCode = '?';
+  //        }
+  //
+  //        var site = (point.properties.functionality && point.properties.functionality.value ? point.properties.functionality.value : '?');
+  //        var equipmentIdentifier = getEquipmentIdentifier(point, request.domain);
+  //        equipmentIdentifier = equipmentIdentifier || '?';
+  //        var attribute = (point.properties.pointAttribute ? point.properties.pointAttribute : '?');
+  //
+  //        if (subsystemCode === '?' && site === '?' && equipmentIdentifier === '?' && attribute === '?') {
+  //          point.properties.tagname = null;
+  //        } else {
+  //          point.properties.tagname = subsystemCode + '.' + site + '.' + equipmentIdentifier + ':' + attribute;
+  //        }
+  //      },
+  //
+  //      function(error) {
+  //        console.log('error generating generating tagnames: ' + error.statusText);
+  //      });
+  //    })(point);
+  //  });
+  //}
+  //
+  ///**
+  // * TODO: move this domain-specific logic into backend plugins
+  // *
+  // * Fault state format: system_name|’_’|subsystem_name|’_’|general_functionality|’:’|equipment_identifier|’:’|point_description
+  // */
+  //function generateFaultStates(request) {
+  //
+  //  request.points.forEach(function (point) {
+  //    if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
+  //      return;
+  //    }
+  //
+  //    if (point.properties.priorityCode === undefined || point.properties.priorityCode === null || point.properties.priorityCode === '') {
+  //      point.properties.faultFamily = null;
+  //      point.properties.faultMember = null;
+  //      point.properties.problemDescription = null;
+  //      return;
+  //    }
+  //
+  //    point.properties.faultMember = getEquipmentIdentifier(point);
+  //    point.properties.problemDescription = point.properties.pointDescription;
+  //
+  //    (function (point) {
+  //      $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
+  //        params: {query: point.properties.subsystem.value},
+  //        cache: true
+  //      }).then(function (response) {
+  //
+  //        if (!response.data.hasOwnProperty('_embedded')) {
+  //          return;
+  //        }
+  //
+  //        var systemName = '?', subsystemName = '?';
+  //
+  //        if (response.data._embedded.subsystems.length === 1) {
+  //          var subsystem = response.data._embedded.subsystems[0];
+  //          systemName = subsystem.systemName;
+  //          subsystemName = subsystem.subsystemName;
+  //        }
+  //
+  //        if (point.properties.functionality && point.properties.functionality.value) {
+  //          $http.get(BACKEND_BASE_URL + '/functionalities/search/find', {
+  //            params: {query: point.properties.functionality.value},
+  //            cache: true
+  //          }).then(function (response) {
+  //            if (!response.data.hasOwnProperty('_embedded')) {
+  //              return;
+  //            }
+  //
+  //            var func = '?';
+  //            if (response.data._embedded.functionalities.length === 1) {
+  //              var functionality = response.data._embedded.functionalities[0];
+  //              func = functionality.generalFunctionality;
+  //            }
+  //
+  //            if (systemName === '?' && subsystemName === '?' && func === '?') {
+  //              point.properties.faultFamily = null;
+  //            } else {
+  //              point.properties.faultFamily = systemName + '_' + subsystemName + '_' + func;
+  //            }
+  //          });
+  //        }
+  //      },
+  //
+  //      function(error) {
+  //        console.log('error generating fault states: ' + error.statusText);
+  //      });
+  //    })(point);
+  //  });
+  //}
+  //
+  ///**
+  // * TODO: move this domain-specific logic into backend plugins
+  // *
+  // * @param point
+  // * @param domain
+  // * @returns {*}
+  // */
+  //function getEquipmentIdentifier(point, domain) {
+  //  var equipmentIdentifier, gmaoCode;
+  //
+  //  if (point.properties.gmaoCode && point.properties.gmaoCode.value) {
+  //    gmaoCode = point.properties.gmaoCode.value;
+  //  } else if (point.properties.csamCsename && point.properties.csamCsename.value) {
+  //    gmaoCode = point.properties.csamCsename.value;
+  //  }
+  //
+  //  var otherEquipCode;
+  //
+  //  if (point.properties.otherEquipCode) {
+  //    otherEquipCode = point.properties.otherEquipCode;
+  //  } else if(point.properties.csamDetector && point.properties.csamDetector.value) {
+  //    otherEquipCode = point.properties.csamDetector.value;
+  //  }
+  //
+  //  if (gmaoCode && otherEquipCode) {
+  //    if (gmaoCode === otherEquipCode) {
+  //      equipmentIdentifier = gmaoCode;
+  //    } else {
+  //      if (domain === 'CSAM') {
+  //        equipmentIdentifier = otherEquipCode;
+  //      } else {
+  //        equipmentIdentifier = gmaoCode + '_' + otherEquipCode;
+  //      }
+  //    }
+  //  } else if (gmaoCode && !otherEquipCode) {
+  //    equipmentIdentifier = gmaoCode;
+  //  } else if (!gmaoCode && otherEquipCode) {
+  //    equipmentIdentifier = otherEquipCode;
+  //  } else {
+  //    equipmentIdentifier = null;
+  //  }
+  //
+  //  return equipmentIdentifier;
+  //}
+  //
+  ///**
+  // * TODO: move this domain-specific logic into backend plugins
+  // *
+  // * Alarm category format: 'CERN.SRVS.'|FUNC_GEN|'.'|TES_SYSTEM_NAME
+  // */
+  //function generateAlarmCategories(request) {
+  //
+  //  request.points.forEach(function (point) {
+  //    if (Utils.isEmptyPoint(point) || !point.properties.subsystem || !point.properties.subsystem.value) {
+  //      return;
+  //    }
+  //
+  //    if (point.properties.priorityCode || point.properties.alarmValue) {
+  //
+  //      (function (point) {
+  //        $http.get(BACKEND_BASE_URL + '/subsystems/search/find', {
+  //          params: {query: point.properties.subsystem.value},
+  //          cache: true
+  //        }).then(function (response) {
+  //
+  //          if (!response.data.hasOwnProperty('_embedded')) {
+  //            return;
+  //          }
+  //
+  //          var systemName;
+  //
+  //          if (response.data._embedded.subsystems.length === 1) {
+  //            var subsystem = response.data._embedded.subsystems[0];
+  //            systemName = subsystem.systemName;
+  //          }
+  //
+  //          if (point.properties.functionality && point.properties.functionality.value) {
+  //            $http.get(BACKEND_BASE_URL + '/functionalities/search/find', {
+  //              params: {query: point.properties.functionality.value},
+  //              cache: true
+  //            }).then(function (response) {
+  //              if (!response.data.hasOwnProperty('_embedded')) {
+  //                return;
+  //              }
+  //
+  //              var generalFunctionality;
+  //              if (response.data._embedded.functionalities.length === 1) {
+  //                var functionality = response.data._embedded.functionalities[0];
+  //                generalFunctionality = functionality.generalFunctionality;
+  //              }
+  //
+  //              if (systemName && generalFunctionality) {
+  //                point.properties.alarmCategory = {value: 'CERN.SRVS.' + generalFunctionality + '.' + systemName};
+  //              }
+  //
+  //              // TODO remove this domain-specific code...
+  //              if (request.domain === 'CSAM' && point.properties.priorityCode && point.properties.priorityCode === 3) {
+  //                point.properties.alarmCategory = 'POMPIER';
+  //              }
+  //            });
+  //          }
+  //        },
+  //
+  //        function(error) {
+  //          console.log('error generating alarm categories: ' + error.statusText);
+  //        });
+  //      })(point);
+  //    }
+  //  });
+  //}
 
   return service;
 }

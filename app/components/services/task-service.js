@@ -7,14 +7,18 @@
  */
 angular.module('modesti').service('TaskService', TaskService);
 
-function TaskService($q, $http, AuthService) {
+function TaskService($q, $http, $state, AuthService, RequestService) {
+  var self = this;
+
+  self.tasks = {};
 
   /**
    * Public API for the task service.
    */
-  var service = {
+  return {
     getTasksForRequest: getTasksForRequest,
     getSignalsForRequest: getSignalsForRequest,
+    getCurrentTask: getCurrentTask,
     assignTask: assignTask,
     completeTask: completeTask,
     isTaskClaimed: isTaskClaimed,
@@ -22,7 +26,11 @@ function TaskService($q, $http, AuthService) {
     isCurrentUserAssigned: isCurrentUserAssigned,
     isCurrentUserAuthorised: isCurrentUserAuthorised,
     sendSignal: sendSignal
-};
+  };
+
+  function getCurrentTask() {
+    return self.tasks[Object.keys(self.tasks)[0]];
+  }
 
   /**
    *
@@ -44,6 +52,7 @@ function TaskService($q, $http, AuthService) {
       }
 
       console.log('fetched ' + Object.keys(tasks).length + ' task(s)');
+      self.tasks = tasks;
       q.resolve(tasks);
     },
 
@@ -117,21 +126,38 @@ function TaskService($q, $http, AuthService) {
   /**
    *
    * @param taskName
-   * @param requestId
+   * @param request
    * @returns {*}
    */
-  function completeTask(taskName, requestId) {
+  function completeTask(taskName, request) {
     var q = $q.defer();
     var params = {action: 'COMPLETE'};
 
-    $http.post(BACKEND_BASE_URL + '/requests/' + requestId + '/tasks/' + taskName, params).then(function () {
-      console.log('completed task ' + taskName);
-      q.resolve();
+    RequestService.saveRequest(request).then(function () {
+      console.log('saved request before completing task');
+
+      $http.post(BACKEND_BASE_URL + '/requests/' + request.requestId + '/tasks/' + taskName, params).then(function () {
+        console.log('completed task ' + taskName);
+
+        // Clear the cache so that the state reload also pulls a fresh request
+        RequestService.clearCache();
+
+        $state.reload().then(function () {
+          // Get the request once again from the cache
+          RequestService.getRequest(request.requestId).then(function (request) {
+            q.resolve(request);
+          });
+        });
+      },
+
+      function (error) {
+        console.log('error completing task ' + taskName);
+        q.reject(error);
+      });
     },
 
     function (error) {
-      console.log('error completing task ' + taskName);
-      q.reject(error);
+      console.log('error saving before completing task: ' + error.statusText);
     });
 
     return q.promise;
@@ -224,6 +250,4 @@ function TaskService($q, $http, AuthService) {
 
     return q.promise;
   }
-
-  return service;
 }
