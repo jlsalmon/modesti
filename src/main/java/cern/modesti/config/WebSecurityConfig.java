@@ -1,6 +1,7 @@
 package cern.modesti.config;
 
 import cern.modesti.security.ldap.LdapUserDetailsMapper;
+import cern.modesti.security.ldap.RecursiveLdapAuthoritiesPopulator;
 import cern.modesti.security.mock.MockAuthenticationProvider;
 import cern.modesti.security.mock.MockUserService;
 import org.apache.catalina.Context;
@@ -38,6 +39,7 @@ import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.server.ApacheDSContainer;
+import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -100,15 +102,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
           .ldapAuthentication()
           .userDnPatterns(env.getRequiredProperty("ldap.user.filter"))
           .groupSearchBase(env.getRequiredProperty("ldap.group.base"))
+          .groupSearchFilter(env.getRequiredProperty("ldap.group.filter"))
           .contextSource(contextSource());
     }
   }
 
   @Bean
   public LdapAuthenticationProvider ldapAuthenticationProvider() {
-    LdapAuthenticationProvider provider = new LdapAuthenticationProvider(ldapAuthenticator());
+    LdapAuthenticationProvider provider = new LdapAuthenticationProvider(ldapAuthenticator(), ldapAuthoritiesPopulator());
     provider.setUserDetailsContextMapper(ldapUserDetailsMapper());
     return provider;
+  }
+
+  @Bean
+  public LdapAuthoritiesPopulator ldapAuthoritiesPopulator() {
+    return new RecursiveLdapAuthoritiesPopulator(anonymousContextSource(),
+        env.getRequiredProperty("ldap.base"), env.getRequiredProperty("ldap.user.base"),
+        env.getRequiredProperty("ldap.group.base"), env.getRequiredProperty("ldap.group.filter"));
   }
 
   @Bean
