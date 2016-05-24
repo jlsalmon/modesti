@@ -54,7 +54,7 @@
 
             <button class="btn btn-primary"
                     ng-click="ctrl.submit($event)"
-                    ng-disabled="!ctrl.parent.canSubmit() ctrl.parent.submitting == 'started'"
+                    ng-disabled="!ctrl.parent.canSubmit() || ctrl.parent.submitting == 'started'"
                     tooltip-append-to-body="true"
                     tooltip="{{ 'SUBMIT_ADDRESSING' | translate}}">
 
