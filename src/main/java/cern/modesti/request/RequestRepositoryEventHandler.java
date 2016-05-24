@@ -2,8 +2,8 @@ package cern.modesti.request;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.core.annotation.HandleAfterDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Component;
@@ -38,8 +38,8 @@ public class RequestRepositoryEventHandler {
     requestService.save(request);
   }
 
-  @HandleBeforeDelete
-  public void handleRequestDelete(Request request) {
+  @HandleAfterDelete
+  public void handleAfterDelete(Request request) {
     requestService.delete(request);
   }
 }
