@@ -101,58 +101,22 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
    */
   function getRequest(id) {
     var q = $q.defer();
+    console.log('fetching request ' + id);
 
-    if (self.cache[id]) {
-      var request = self.cache[id];
-      console.log('using cached request');
-
-      //// Merge the given potentially unsaved request with the cached
-      //// request. This is because we don't want to lose any unsaved
-      //// changes.
-      //if (unsavedRequest) {
-      //  for (var i in unsavedRequest.points) {
-      //    // If the point has been modified, update it
-      //    update(request.points, unsavedRequest.points[i]);
-      //  }
-      //}
+    Restangular.one('requests', id).get().then(function (response) {
+      var request = response.data;
 
       // Make a copy for sorting/filtering
       request = Restangular.copy(request);
 
-      //if (params) {
-      //  // Sort/filter the points
-      //  request.points = transformData(request.points, params.filter(), params);
-      //}
-
       q.resolve(request);
-    }
+    },
 
-    else {
-      console.log('fetching request ' + id);
+    function (error) {
+      console.log(error.status + ' ' + error.statusText);
+      q.reject(error);
+    });
 
-      Restangular.one('requests', id).get().then(function (response) {
-        var request = response.data;
-
-        // Cache the request
-        self.cache[request.requestId] = request;
-        //console.log('cached request (with ' + request.points.length + ' points)');
-
-        // Make a copy for sorting/filtering
-        request = Restangular.copy(request);
-
-        //if (params) {
-        //  // Perform initial sorting/filtering/slicing
-        //  request.points = transformData(request.points, params.filter(), params);
-        //}
-
-        q.resolve(request);
-      },
-
-      function (error) {
-        console.log(error.status + ' ' + error.statusText);
-        q.reject(error);
-      });
-    }
 
     return q.promise;
   }

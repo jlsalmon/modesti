@@ -222,7 +222,7 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
             if (field.type === 'autocomplete') {
               value = field.model ? request.properties[field.id][field.model] : request.properties[field.id].value;
             } else {
-              value = request.properties[field.id]
+              value = request.properties[field.id];
             }
           }
         });
