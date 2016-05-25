@@ -1202,7 +1202,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       // If the property name isn't specified, then the error applies to the whole point.
       // TODO: highlight an entire category if the property matches a category name.
       if (error.property === prop.replace('properties.', '') || error.property === props[0] || error.property === '') {
-        td.style.background = '#F2DEDE';
+        td.className += ' alert-danger';
         break;
       }
     }
