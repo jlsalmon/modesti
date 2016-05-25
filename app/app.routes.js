@@ -165,7 +165,7 @@ function configureRoutes($stateProvider, $urlRouterProvider, $locationProvider) 
     url: '/404',
     templateUrl: 'components/error/404.html',
     resolve: {
-      $title: function () { return 'PAGE_NOT_FOUND'; }
+      $title: function () { return 'Page not found'; }
     }
   });
 }
