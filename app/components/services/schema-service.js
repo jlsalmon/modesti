@@ -339,7 +339,7 @@ function SchemaService($q, $http, Utils) {
       editable: false,
       unique: true,
       name: 'Tagname',
-      help: 'Automatically generated TIM tagname. "?" values indicate that a column which makes up the tagname has not yet been filled.',
+      help: 'Automatically generated TIM tagname. Interrogation marks (?) indicate that a column which makes up the tagname has not yet been filled.'
     };
   }
 
@@ -380,7 +380,7 @@ function SchemaService($q, $http, Utils) {
       'type': 'text',
       'editable': false,
       'name': 'Fault Family',
-      'help': 'The LASER fault family (automatically generated).',
+      'help': 'The LASER fault family (automatically generated). Interrogation marks (?) indicate that a column which makes up the tagname has not yet been filled.',
     };
   }
 
