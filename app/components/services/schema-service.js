@@ -339,7 +339,7 @@ function SchemaService($q, $http, Utils) {
       editable: false,
       unique: true,
       name: 'Tagname',
-      help: '',
+      help: 'Automatically generated TIM tagname. "?" values indicate that a column which makes up the tagname has not yet been filled.',
     };
   }
 
@@ -365,7 +365,7 @@ function SchemaService($q, $http, Utils) {
       'type': 'text',
       'editable': false,
       'name': 'Problem Description',
-      'help': '',
+      'help': 'The alarm description that will be displayed in LASER  (automatically generated).',
     };
   }
 
@@ -380,7 +380,7 @@ function SchemaService($q, $http, Utils) {
       'type': 'text',
       'editable': false,
       'name': 'Fault Family',
-      'help': '',
+      'help': 'The LASER fault family (automatically generated).',
     };
   }
 
@@ -396,7 +396,7 @@ function SchemaService($q, $http, Utils) {
       'editable': false,
       'maxLength': 30,
       'name': 'Fault Member',
-      'help': '',
+      'help': 'The LASER fault member (automatically generated).',
     };
   }
 
