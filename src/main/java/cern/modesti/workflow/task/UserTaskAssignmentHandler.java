@@ -43,8 +43,16 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
 
     // Save the new assignee to the request object
     Request request = requestService.findOneByRequestId((String) task.getVariable("requestId"));
-    User assignee = userService.findOneByUsername(task.getAssignee());
-    request.setAssignee(assignee.getUsername());
+
+    if (task.getEventName().equals(TaskListener.EVENTNAME_ASSIGNMENT)) {
+      User assignee = userService.findOneByUsername(task.getAssignee());
+      request.setAssignee(assignee.getUsername());
+    }
+
+    else if (task.getEventName().equals(TaskListener.EVENTNAME_DELETE)) {
+      request.setAssignee(null);
+    }
+
     requestService.save(request);
   }
 
@@ -57,5 +65,6 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
   protected void executeParse(BpmnParse bpmnParse, UserTask element) {
     TaskDefinition taskDefinition = (TaskDefinition) bpmnParse.getCurrentActivity().getProperty(UserTaskParseHandler.PROPERTY_TASK_DEFINITION);
     taskDefinition.addTaskListener(TaskListener.EVENTNAME_ASSIGNMENT, this);
+    taskDefinition.addTaskListener(TaskListener.EVENTNAME_DELETE, this);
   }
 }
