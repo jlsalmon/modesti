@@ -38,6 +38,9 @@ function configureRoutes($stateProvider, $urlRouterProvider, $locationProvider) 
     templateUrl: 'components/request/request.new.html',
     controller: 'NewRequestController as ctrl',
     resolve: {
+      schemas: function getSchemas(SchemaService) {
+        return SchemaService.getSchemas();
+      },
       $title: function ($translate) {
         return $translate('NEW_REQUEST');
       }

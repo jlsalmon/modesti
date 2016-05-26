@@ -7,14 +7,13 @@
  */
 angular.module('modesti').controller('NewRequestController', NewRequestController);
 
-function NewRequestController($state, RequestService, SchemaService, AuthService) {
+function NewRequestController($state, schemas, RequestService, SchemaService, AuthService) {
   var self = this;
 
-  self.schemas = [];
+  self.schemas = schemas;
   self.domainSpecificFields = [];
   self.submitting = undefined;
 
-  self.getSchemas = getSchemas;
   self.onDomainChanged = onDomainChanged;
   self.queryFieldValues = queryFieldValues;
   self.submit = submit;
@@ -24,17 +23,6 @@ function NewRequestController($state, RequestService, SchemaService, AuthService
     description : '',
     creator : AuthService.getCurrentUser().username
   };
-
-  getSchemas();
-
-  /**
-   *
-   */
-  function getSchemas() {
-    SchemaService.getSchemas().then(function (schemas) {
-      self.schemas = schemas;
-    });
-  }
 
   /**
    *
