@@ -43,7 +43,7 @@ function SchemaService($q, $http, Utils) {
         schema.categories.concat(schema.datasources).forEach(function (category) {
 
           // Tagname is shown on each category except General and Alarms
-          if (category.id !== 'general' && category.id !== 'alarms' && category.id !== 'alarmHelp') {
+          if (category.id !== 'alarms' && category.id !== 'alarmHelp') {
             category.fields.push(getTagnameField());
           }
 
