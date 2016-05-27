@@ -7,12 +7,14 @@
  */
 angular.module('modesti').controller('CreationController', CreationController);
 
-function CreationController($scope, $http, $q, $state, $modal, RequestService, AlertService, SchemaService, Utils) {
+function CreationController($scope, $http, $q, $state, $modal, RequestService, AlertService, SchemaService, TaskService, Utils) {
   var self = this;
   self.parent = $scope.$parent.ctrl;
 
   self.submit = submit;
   self.split = split;
+  self.canValidate = canValidate;
+  self.canSubmit = canSubmit;
 
   init();
 
@@ -24,6 +26,26 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
     // Register the afterChange() hook so that we can use it to send a signal to the backend if we are in 'submit'
     // state and the user makes a modification
     self.parent.hot.addHook('afterChange', generateValues);
+  }
+
+  function canValidate() {
+    return true;
+  }
+
+  function canSubmit() {
+    var numEmptyPoints = 0;
+    self.parent.request.points.forEach(function (point) {
+      if (Utils.isEmptyPoint(point)) {
+        numEmptyPoints++;
+      }
+    });
+
+    // Don't allow submit if all points are empty
+    if (numEmptyPoints === self.parent.request.points.length) {
+      return false;
+    }
+
+    return self.parent.request.valid === true;
   }
 
   function submit(event) {
@@ -107,6 +129,6 @@ function CreationController($scope, $http, $q, $state, $modal, RequestService, A
   function generateValues() {
     SchemaService.generateTagnames(self.parent.request);
     SchemaService.generateFaultStates(self.parent.request);
-    //SchemaService.generateAlarmCategories(self.request);
+    //SchemaService.generateAlarmCategories(self.parent.request);
   }
 }

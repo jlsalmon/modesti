@@ -57,7 +57,7 @@
             <!--Button to validate the request-->
             <button class="btn btn-success"
                     ng-click="ctrl.validate($event)"
-                    ng-disabled="!ctrl.parent.canValidate() || ctrl.parent.validating == 'started'"
+                    ng-disabled="!ctrl.canValidate() || ctrl.parent.validating == 'started'"
                     tooltip-append-to-body="true"
                     tooltip="{{'VALIDATE_REQUEST'|translate}}">
 
@@ -74,7 +74,7 @@
             <!-- Button to submit the request -->
             <button class="btn btn-primary"
                     ng-click="ctrl.submit($event)"
-                    ng-disabled="!ctrl.parent.canSubmit() || ctrl.parent.submitting == 'started'"
+                    ng-disabled="!ctrl.canSubmit() || ctrl.parent.submitting == 'started'"
                     tooltip-append-to-body="true"
                     tooltip="{{'SUBMIT_APPROVAL'|translate}}">
 

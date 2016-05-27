@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('ValidationService', ValidationService);
 
-function ValidationService($q, SchemaService, RequestService, TaskService, Utils) {
+function ValidationService($q, $http, SchemaService, RequestService, TaskService, Utils) {
   /*jshint camelcase: false */
 
   // Public API
@@ -26,70 +26,79 @@ function ValidationService($q, SchemaService, RequestService, TaskService, Utils
   function validateRequest(request, task, schema) {
     var q = $q.defer();
 
-    // Reset all categories and datasources to valid
-    schema.categories.concat(schema.datasources).forEach(function (category) {
-      category.valid = true;
-    });
-
-    // Reset all points and clear any error messages.
-    request.points.forEach(function (point) {
-      point.properties.valid = undefined;
-      point.errors = [];
-    });
-
-    var valid = true;
-
-    // Validate the mutually exclusive column group specifications.
-    if (!validateMutualExclusions(request, schema)) {
-      valid = false;
-    }
-
-    // Validate the constraints of the schema. This checks things like unique column groups and mutually inclusive fields.
-    if (!validateConstraints(request, schema)) {
-      valid = false;
-    }
-
-    // Validate each point separately. This checks things like required values, min/max length, valid values etc.
-    if (!validatePoints(request.points, schema, request.status)) {
-      valid = false;
-    }
-
-    // If we found errors already, don't bother to call the backend validations.
-    if (valid === false) {
-      request.properties.valid = false;
+    $http.post(BACKEND_BASE_URL + '/requests/' + request.requestId + '/validate').then(function (response) {
+      request = response.data;
       q.resolve(request);
-      return q.promise;
-    }
-
-    // All good so far! Call the backend validations
-
-    // First save the request
-    RequestService.saveRequest(request).then(function () {
-      console.log('saved request before validation');
-
-      // Complete the task associated with the request
-      TaskService.completeTask(task.name, request.requestId).then(function () {
-        console.log('completed task ' + task.name);
-
-        // Clear the cache
-        RequestService.clearCache();
-
-        // Get the request once again
-        RequestService.getRequest(request.requestId).then(function (request) {
-          q.resolve(request);
-        });
-      },
-
-      function (error) {
-        console.log('error completing task: ' + error.statusText);
-        q.reject(error);
-      });
     },
-
     function (error) {
-      console.log('error saving before validation: ' + error.statusText);
+      console.log('error validating request: ' + error.statusText);
       q.reject(error);
     });
+
+    //// Reset all categories and datasources to valid
+    //schema.categories.concat(schema.datasources).forEach(function (category) {
+    //  category.valid = true;
+    //});
+    //
+    //// Reset all points and clear any error messages.
+    //request.points.forEach(function (point) {
+    //  point.properties.valid = undefined;
+    //  point.errors = [];
+    //});
+    //
+    //var valid = true;
+    //
+    //// Validate the mutually exclusive column group specifications.
+    //if (!validateMutualExclusions(request, schema)) {
+    //  valid = false;
+    //}
+    //
+    //// Validate the constraints of the schema. This checks things like unique column groups and mutually inclusive fields.
+    //if (!validateConstraints(request, schema)) {
+    //  valid = false;
+    //}
+    //
+    //// Validate each point separately. This checks things like required values, min/max length, valid values etc.
+    //if (!validatePoints(request.points, schema, request.status)) {
+    //  valid = false;
+    //}
+    //
+    //// If we found errors already, don't bother to call the backend validations.
+    //if (valid === false) {
+    //  request.properties.valid = false;
+    //  q.resolve(request);
+    //  return q.promise;
+    //}
+    //
+    //// All good so far! Call the backend validations
+    //
+    //// First save the request
+    //RequestService.saveRequest(request).then(function () {
+    //  console.log('saved request before validation');
+    //
+    //  // Complete the task associated with the request
+    //  TaskService.completeTask(task.name, request.requestId).then(function () {
+    //    console.log('completed task ' + task.name);
+    //
+    //    // Clear the cache
+    //    RequestService.clearCache();
+    //
+    //    // Get the request once again
+    //    RequestService.getRequest(request.requestId).then(function (request) {
+    //      q.resolve(request);
+    //    });
+    //  },
+    //
+    //  function (error) {
+    //    console.log('error completing task: ' + error.statusText);
+    //    q.reject(error);
+    //  });
+    //},
+    //
+    //function (error) {
+    //  console.log('error saving before validation: ' + error.statusText);
+    //  q.reject(error);
+    //});
 
     return q.promise;
   }

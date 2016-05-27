@@ -17,6 +17,8 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
   self.rejectAll = rejectAll;
   self.validate = validate;
   self.submit = submit;
+  self.canValidate = canValidate;
+  self.canSubmit = canSubmit;
 
   init();
 
@@ -40,6 +42,14 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
     //self.parent.hot.addHook('afterChange', afterChange);
 
     //self.parent.hot.updateSettings({ minSpareRows: 50 });
+  }
+
+  function canValidate() {
+    return true;
+  }
+
+  function canSubmit() {
+    return self.parent.request.valid === true;
   }
 
   /**

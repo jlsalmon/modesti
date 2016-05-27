@@ -15,6 +15,8 @@ function AddressingController($scope) {
 
   self.rejectRequest = rejectRequest;
   self.submit = submit;
+  self.canValidate = canValidate;
+  self.canSubmit = canSubmit;
 
   init();
 
@@ -27,6 +29,14 @@ function AddressingController($scope) {
 
     // TODO fill the table with empty, read-only rows
     //self.parent.hot.updateSettings( { minSpareRows: 50 } );
+  }
+
+  function canValidate() {
+    return true;
+  }
+
+  function canSubmit() {
+    return self.parent.request.valid === true;
   }
 
   /**

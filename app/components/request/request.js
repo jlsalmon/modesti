@@ -568,9 +568,10 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
         // Render the table to show the error highlights
         self.hot.render();
 
-        if (!request.properties.valid) {
+        if (!request.valid) {
           self.validating = 'error';
-          AlertService.add('danger', 'Request failed validation with ' + getNumValidationErrors() + ' errors');
+          var numErrors = getNumValidationErrors();
+          AlertService.add('danger', 'Request failed validation with ' + numErrors + (numErrors === 1 ? ' error' : ' errors'));
           return;
         }
 
@@ -893,6 +894,8 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
           if (self.tasks.submit) {
             self.sendModificationSignal();
           }
+
+          self.request.valid = false;
 
           // Reload the history
           //RequestService.getRequestHistory(self.request.requestId).then(function (history) {
