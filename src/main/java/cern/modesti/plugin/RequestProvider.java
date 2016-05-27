@@ -4,6 +4,7 @@ import cern.modesti.plugin.metadata.MetadataProvider;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Point;
 import cern.modesti.upload.parser.RequestParser;
+import cern.modesti.workflow.validation.RequestValidator;
 import com.mysema.query.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,5 +49,9 @@ public abstract class RequestProvider implements Plugin<Request>, MetadataProvid
    */
   public RequestParser getRequestParser() {
     throw new UnsupportedRequestException(format("Plugin for domain %s does not provide a RequestParser implementation", getMetadata().getName()));
+  }
+
+  public RequestValidator getRequestValidator() {
+    return null;
   }
 }

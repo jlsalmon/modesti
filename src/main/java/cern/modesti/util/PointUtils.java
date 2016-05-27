@@ -1,6 +1,7 @@
 package cern.modesti.util;
 
 import cern.modesti.request.point.Point;
+import cern.modesti.schema.field.Field;
 import lombok.extern.slf4j.Slf4j;
 
 import java.beans.BeanInfo;
@@ -47,6 +48,33 @@ public class PointUtils {
     }
 
     return true;
+  }
+
+  /**
+   * Get the value of the property of a point
+   *
+   * @param point
+   * @param propertyName
+   */
+  public static Object getValueByPropertyName(Point point, String propertyName) {
+    Object value = null;
+    Map<String, Object> properties = point.getProperties();
+
+    if (propertyName.contains(".")) {
+      String[] props = propertyName.split("\\.");
+
+      if (properties.containsKey(props[0])) {
+        Map property = (Map) properties.get(props[0]);
+        value = property.get(props[1]);
+      }
+
+    } else {
+      if (properties.containsKey(propertyName)) {
+        value = properties.get(propertyName);
+      }
+    }
+
+    return value;
   }
 
   /**

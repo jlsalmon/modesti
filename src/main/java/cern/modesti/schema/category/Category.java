@@ -1,11 +1,18 @@
 package cern.modesti.schema.category;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Id;
 
 import cern.modesti.schema.field.Field;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -37,6 +44,7 @@ public class Category {
 
   private List<Constraint> constraints;
 
+  @JsonDeserialize(using = FieldDeserializer.class)
   private List<Field> fields;
 
   public Category(String id) {
@@ -54,6 +62,33 @@ public class Category {
     editable = category.editable;
     constraints = category.constraints == null ? null : new ArrayList<>(category.constraints);
     fields = category.fields == null ? null : new ArrayList<>(category.fields);
+  }
+
+  /**
+   * Support specifying categories by ID as well as inline objects
+   */
+  public static class FieldDeserializer extends JsonDeserializer<List<Field>> {
+
+    @Override
+    public List<Field> deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+      List<Field> fields = new ArrayList<>();
+
+      JsonNode list = parser.getCodec().readTree(parser);
+
+      for (JsonNode node : list) {
+        if (node.isObject()) {
+          ObjectMapper mapper = new ObjectMapper();
+          Field field = mapper.treeToValue(node, Field.class);
+          fields.add(field);
+        }
+
+        else if (node.isTextual()) {
+          fields.add(new Field(node.asText()));
+        }
+      }
+
+      return fields;
+    }
   }
 
   @Override

@@ -41,6 +41,8 @@ public class Point implements Serializable {
 
   private Boolean selected = false;
 
+  private Boolean valid;
+
   private List<Error> errors = new ArrayList<>();
 
   private Map<String, Object> properties = new HashMap<>();

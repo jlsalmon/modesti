@@ -11,5 +11,5 @@ import lombok.Data;
 public class Condition {
   private String operation;
   private String field;
-  private String value;
+  private Object value;
 }

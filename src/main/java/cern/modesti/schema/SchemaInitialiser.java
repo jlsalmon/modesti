@@ -120,6 +120,8 @@ public class SchemaInitialiser {
           if (!categoryFound) {
             throw new IllegalArgumentException(format("Category %s was not found for schema %s", category.getId(), schema.getId()));
           }
+
+          // TODO: support referencing another field by name to avoid duplicate field definitions
         }
 
         // Attach datasources that are specified in the schema

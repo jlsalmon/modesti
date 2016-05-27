@@ -30,6 +30,8 @@ public class QPoint extends BeanPath<Point> {
 
     public final BooleanPath selected = createBoolean("selected");
 
+    public final BooleanPath valid = createBoolean("valid");
+
     public QPoint(String variable) {
         super(Point.class, forVariable(variable));
     }

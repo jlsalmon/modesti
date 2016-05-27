@@ -85,6 +85,8 @@ public class Request implements Serializable {
   @Indexed
   private String assignee;
 
+  private Boolean valid;
+
   @Valid
   private List<Point> points = new ArrayList<>();
 
