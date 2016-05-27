@@ -85,6 +85,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   self.getNumValidationErrors = getNumValidationErrors;
   self.getNumApprovalRejections = getNumApprovalRejections;
   self.getSelectedPointIds = getSelectedPointIds;
+  self.navigateToField = navigateToField;
 
   self.save = save;
   self.undo = undo;
@@ -740,6 +741,34 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       return self.request.properties.insertionResult.errors.length;
     } else {
       return 0;
+    }
+  }
+
+  /**
+   * Navigate somewhere to focus on a particular field.
+   *
+   * @param point
+   * @param fieldId
+   */
+  function navigateToField(point, fieldId) {
+
+    // Find the category which contains the field.
+    var category;
+
+    if (fieldId.indexOf('.') != -1) {
+      fieldId = fieldId.split('.')[0];
+    }
+
+    self.schema.categories.concat(self.schema.datasources).forEach(function (cat) {
+      cat.fields.forEach(function (field) {
+        if (field.id === fieldId) {
+          category = cat;
+        }
+      });
+    });
+
+    if (category) {
+      activateCategory(category);
     }
   }
 

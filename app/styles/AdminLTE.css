@@ -2184,11 +2184,11 @@ a:focus {
   border-radius: 3px;
 }
 .callout a {
-  color: #fff;
-  text-decoration: underline;
+  /* color: #fff; */
+  /* text-decoration: underline; */
 }
 .callout a:hover {
-  color: #eee;
+  /* color: #eee; */
 }
 .callout h4 {
   margin-top: 0;
