@@ -561,7 +561,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     AlertService.clear();
 
     $timeout(function () {
-      ValidationService.validateRequest(self.request, self.tasks.edit, self.schema).then(function (request) {
+      ValidationService.validateRequest(self.request).then(function (request) {
         // Save the reference to the validated request
         self.request = request;
         self.rows = getRows();
@@ -1269,7 +1269,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       if (error.property === prop.replace('properties.', '') || error.property === props[0] || error.property === '') {
         td.className += ' alert-danger';
         break;
-      } 
+      }
       // Highlight an entire category if the property matches a category name.
       else {
         var category = Utils.getCategory(self.schema, error.category);
