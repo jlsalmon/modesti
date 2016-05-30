@@ -49,7 +49,7 @@ function ApprovalController($scope, $modal, RequestService, ValidationService, A
   }
 
   function canSubmit() {
-    return self.parent.request.valid === true;
+    return self.parent.request.valid === true && self.parent.request.properties.approvalResult !== null;
   }
 
   /**
