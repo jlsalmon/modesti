@@ -55,7 +55,6 @@
             <!--Button to validate the request-->
             <button class="btn btn-success"
                     ng-click="ctrl.validate($event)"
-                    tooltip-append-to-body="true"
                     tooltip="{{'VALIDATE_REQUEST'|translate}}">
 
               <!--Show icon based on the loading state-->
@@ -71,7 +70,6 @@
             <button class="btn btn-primary"
                     ng-click="ctrl.submit($event)"
                     ng-disabled="ctrl.parent.validating != 'success'"
-                    tooltip-append-to-body="true"
                     tooltip="{{ 'SUBMIT_CABLING' | translate}}">
 
               <!--Show icon based on the loading state-->
