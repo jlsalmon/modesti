@@ -755,7 +755,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     // Find the category which contains the field.
     var category;
 
-    if (fieldId.indexOf('.') != -1) {
+    if (fieldId.indexOf('.') !== -1) {
       fieldId = fieldId.split('.')[0];
     }
 
