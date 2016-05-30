@@ -1275,12 +1275,14 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
         var category = Utils.getCategory(self.schema, error.category);
 
         if (category) {
-          category.fields.forEach(function (f) {
+          for (var j in category.fields) {
+            var f = category.fields[j];
+
             if (f.id === field.id) {
               td.className += ' alert-danger';
               return;
             }
-          });
+          }
         }
       }
     }

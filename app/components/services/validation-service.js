@@ -11,8 +11,7 @@ function ValidationService($q, $http) {
 
   // Public API
   var service = {
-    validateRequest: validateRequest,
-    setErrorMessage: setErrorMessage
+    validateRequest: validateRequest
   };
 
   /**
