@@ -28,4 +28,4 @@ angular.module('modesti',
   'angular-bootstrap-select'
 ])
 
-.value('properties', {'version': '0.1.8'});
+.value('properties', {'version': '0.1.9-SNAPSHOT'});
