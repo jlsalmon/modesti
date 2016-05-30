@@ -11,6 +11,7 @@ function Utils() {
 
   return {
     isEmptyPoint: isEmptyPoint,
+    getCategory: getCategory,
     getField: getField
   };
 
@@ -46,6 +47,18 @@ function Utils() {
     }
 
     return true;
+  }
+
+  function getCategory(schema, id) {
+    var result;
+
+    schema.categories.concat(schema.datasources).forEach(function (category) {
+      if (category.id === id || category.name === id) {
+        result = category;
+      }
+    });
+
+    return result;
   }
 
   /**

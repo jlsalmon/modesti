@@ -184,7 +184,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     } else {
       console.log('activating last active category: ' + categoryId);
 
-      self.schema.categories.forEach(function (cat) {
+      self.schema.categories.concat(self.schema.datasources).forEach(function (cat) {
         if (cat.id === categoryId) {
           category = cat;
         }
@@ -254,7 +254,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     var point = self.rows[row];
     var text = '';
 
-    if (point && point.properties.valid === false) {
+    if (point && point.valid === false) {
       point.errors.forEach(function (e) {
         e.errors.forEach(function (error) {
           text += '<i class="fa fa-fw fa-exclamation-circle text-danger"></i> ' + error + '<br />';
@@ -754,15 +754,20 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
    */
   function isInvalidCategory(category) {
     var fieldIds = category.fields.map(function (field) {return field.id;});
-
     var invalid = false;
 
     self.request.points.forEach(function (point) {
       if (point.errors && point.errors.length > 0) {
         point.errors.forEach(function (error) {
-          var property = error.property.split('.')[0];
+          if (!error.category) {
+            var property = error.property.split('.')[0];
 
-          if (fieldIds.indexOf(property) !== -1) {
+            if (fieldIds.indexOf(property) !== -1) {
+              invalid = true;
+            }
+          }
+
+          else if (error.category === category.name || error.category === category.id) {
             invalid = true;
           }
         });
@@ -775,10 +780,10 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   /**
    * Navigate somewhere to focus on a particular field.
    *
-   * @param point
+   * @param categoryName
    * @param fieldId
    */
-  function navigateToField(point, fieldId) {
+  function navigateToField(categoryName, fieldId) {
 
     // Find the category which contains the field.
     var category;
@@ -788,11 +793,13 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     }
 
     self.schema.categories.concat(self.schema.datasources).forEach(function (cat) {
-      cat.fields.forEach(function (field) {
-        if (field.id === fieldId) {
-          category = cat;
-        }
-      });
+      if (cat.name === categoryName || cat.id === categoryName) {
+        cat.fields.forEach(function (field) {
+          if (field.id === fieldId || cat.name === fieldId || cat.id === fieldId) {
+            category = cat;
+          }
+        });
+      }
     });
 
     if (category) {
@@ -1259,12 +1266,25 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
       var error = point.errors[i];
 
       // If the property name isn't specified, then the error applies to the whole point.
-      // TODO: highlight an entire category if the property matches a category name.
       if (error.property === prop.replace('properties.', '') || error.property === props[0] || error.property === '') {
         td.className += ' alert-danger';
         break;
+      } 
+      // Highlight an entire category if the property matches a category name.
+      else {
+        var category = Utils.getCategory(self.schema, error.category);
+
+        if (category) {
+          category.fields.forEach(function (f) {
+            if (f.id === field.id) {
+              td.className += ' alert-danger';
+              return;
+            }
+          });
+        }
       }
     }
+
 
     //if (self.request.type === 'UPDATE' && point.dirty === true) {
     //  var changes = [];

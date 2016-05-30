@@ -240,7 +240,7 @@ function RequestService($http, $rootScope, $q, Restangular, AuthService) {
       point.errors = [];
 
       // TODO: delete properties that are not in the schema
-      delete point.properties.valid;
+      delete point.valid;
       delete point.properties.approvalResult;
       delete point.properties.addressingResult;
       delete point.properties.cablingResult;
