@@ -181,8 +181,10 @@
             <li ng-repeat="category in ctrl.schema.categories"
                 ng-click="ctrl.activateCategory(category)">
               <a href="">
-                <span>{{::category.name}}
-                <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
+                <span>
+                  {{::category.name}}
+                  <i ng-if="ctrl.isInvalidCategory(category)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i>
+                </span>
               </a>
             </li>
 
@@ -193,7 +195,7 @@
                 ng-click="ctrl.activateCategory(datasource)">
               <a href="">
                 <span>{{::datasource.name}}
-                <i ng-if="datasource.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
+                <i ng-if="ctrl.isInvalidCategory(datasource)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
               </a>
             </li>
           </ul>

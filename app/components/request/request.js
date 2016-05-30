@@ -85,6 +85,7 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
   self.getNumValidationErrors = getNumValidationErrors;
   self.getNumApprovalRejections = getNumApprovalRejections;
   self.getSelectedPointIds = getSelectedPointIds;
+  self.isInvalidCategory = isInvalidCategory;
   self.navigateToField = navigateToField;
 
   self.save = save;
@@ -743,6 +744,32 @@ function RequestController($scope, $q, $state, $timeout, $modal, $filter, $local
     } else {
       return 0;
     }
+  }
+
+  /**
+   * Return true if the given category is "invalid", i.e. there are points in
+   * the current request that have errors that relate to the category.
+   *
+   * @param category
+   */
+  function isInvalidCategory(category) {
+    var fieldIds = category.fields.map(function (field) {return field.id;});
+
+    var invalid = false;
+
+    self.request.points.forEach(function (point) {
+      if (point.errors && point.errors.length > 0) {
+        point.errors.forEach(function (error) {
+          var property = error.property.split('.')[0];
+
+          if (fieldIds.indexOf(property) !== -1) {
+            invalid = true;
+          }
+        });
+      }
+    });
+
+    return invalid;
   }
 
   /**
