@@ -58,7 +58,7 @@ public class SchemaUtils {
     List<Field> emptyFields = new ArrayList<>();
 
     for (Field field : fields) {
-      Object value = PointUtils.getValueByPropertyName(point, field.getId());
+      Object value = PointUtils.getValueByPropertyName(point, getPropertyName(field));
       if (value == null || (value instanceof String && ((String) value).isEmpty())) {
         emptyFields.add(field);
       }
