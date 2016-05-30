@@ -106,48 +106,7 @@ public class SignalController {
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
 
-  @RequestMapping(value = "/requestModified", method = POST)
-  public ResponseEntity requestModified(@PathVariable("id") String id, Principal principal) {
-    Request request = getRequest(id);
-    if (request == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    Task task = taskService.createTaskQuery().processInstanceBusinessKey(id).taskName("submit").singleResult();
-    if (task == null) {
-      throw new InvalidOperationException(format("Signal 'requestModified' is not valid for request %s at this stage in the workflow.", id));
-    }
-
-    // Send the signal to the workflow engine, which will sent the request back to the "edit" task
-    runtimeService.signalEventReceived("requestModified", task.getExecutionId());
-
-    // Claim the "edit" task as the user who just modified the request.
-    task = taskService.createTaskQuery().processInstanceBusinessKey(id).taskName("edit").singleResult();
-    User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-    taskService.claim(task.getId(), user.getUsername());
-    task.setAssignee(user.getUsername());
-
-    return new ResponseEntity(HttpStatus.OK);
-  }
-
-  @RequestMapping(value = "/splitRequest", method = POST)
-  public ResponseEntity splitRequest(@PathVariable("id") String id, @RequestBody List<Long> pointIdsToSplit) {
-    Request request = getRequest(id);
-    if (request == null) {
-      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    Task task = taskService.createTaskQuery().processInstanceBusinessKey(id).active().singleResult();
-    if (task == null) {
-      throw new InvalidOperationException(format("Signal 'splitRequest' is not valid for request %s at this stage in the workflow.", id));
-    }
-
-    Map<String, Object> variables = new HashMap<>();
-    variables.put("points", pointIdsToSplit);
-
-    runtimeService.signalEventReceived("splitRequest", task.getExecutionId(), variables);
-    return new ResponseEntity(HttpStatus.OK);
-  }
+  // TODO: add signal trigger endpoint
 
   private Request getRequest(String id) {
     return requestRepository.findOneByRequestId(id);
