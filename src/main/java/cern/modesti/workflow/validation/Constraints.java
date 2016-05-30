@@ -76,7 +76,7 @@ public class Constraints {
         List<String> fieldNames = SchemaUtils.getFieldNames(category, constraint.getMembers());
         
         for (Field emptyField : emptyFields) {
-          point.addErrorMessage(SchemaUtils.getPropertyName(emptyField), "At least one of '" + String.join(", ", fieldNames)
+          point.addErrorMessage(category.getName(), SchemaUtils.getPropertyName(emptyField), "At least one of '" + String.join(", ", fieldNames)
               + "' is required for group '" + category.getName() + "'");
         }
       }
@@ -113,7 +113,7 @@ public class Constraints {
         // point.properties.valid = category.valid = valid = false;
 
         for (Field emptyField : emptyFields) {
-          point.addErrorMessage(SchemaUtils.getPropertyName(emptyField),
+          point.addErrorMessage(category.getName(), SchemaUtils.getPropertyName(emptyField),
               "Field '" + emptyField.getName() + "' is required for group '" + category.getName() + "'");
         }
       }
@@ -150,7 +150,7 @@ public class Constraints {
         // point.properties.valid = category.valid = valid = false;
 
         for (Field emptyField : emptyFields) {
-          point.addErrorMessage(SchemaUtils.getPropertyName(emptyField),
+          point.addErrorMessage(category.getName(), SchemaUtils.getPropertyName(emptyField),
               "Field '" + emptyField.getName() + "' is required for group '" + category.getName() + "'");
         }
       }
@@ -208,9 +208,11 @@ public class Constraints {
         List<String> fieldNames = SchemaUtils.getFieldNames(category, constraint.getMembers());
 
         if (constraint.getMembers().size() == 1) {
-          point.addErrorMessage(constraint.getMembers().get(0), "Field '" + fieldNames.get(0) + "' must be unique for all points. Check for duplications.");
+          point.addErrorMessage(category.getName(), constraint.getMembers().get(0),
+              "Field '" + fieldNames.get(0) + "' must be unique for all points. Check for duplications.");
         } else {
-          point.addErrorMessage("", "Field(s) '" + String.join(", ", fieldNames) + "' must be unique for all points. Check for duplications.");
+          point.addErrorMessage(category.getName(), "",
+              "Field(s) '" + String.join(", ", fieldNames) + "' must be unique for all points. Check for duplications.");
         }
       }
     }

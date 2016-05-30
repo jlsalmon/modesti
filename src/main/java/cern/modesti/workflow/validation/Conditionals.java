@@ -53,7 +53,7 @@ public class Conditionals {
       if (conditionalStatus instanceof List) {
         statusResult = ((List) conditionalStatus).contains(requestStatus);
       } else if (conditionalStatus instanceof String) {
-        statusResult = conditionalStatus == requestStatus;
+        statusResult = conditionalStatus.equals(requestStatus);
       }
     }
 

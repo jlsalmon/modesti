@@ -87,7 +87,7 @@ public class Point implements Serializable {
    * @param property the property (map key) to associate the error with
    * @param message  the error message
    */
-  public void addErrorMessage(String property, String message) {
+  public void addErrorMessage(String category, String property, String message) {
     boolean errorPropertyExists = false, propertyMessageExists = false;
 
     for (Error error : errors) {
@@ -107,7 +107,7 @@ public class Point implements Serializable {
     }
 
     if (!errorPropertyExists) {
-      Error error = new Error(property, new ArrayList<>(Collections.singletonList(message)));
+      Error error = new Error(category, property, new ArrayList<>(Collections.singletonList(message)));
       errors.add(error);
     }
   }

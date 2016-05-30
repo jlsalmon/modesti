@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Error {
+  private String category;
   private String property;
   private List<String> errors;
 }

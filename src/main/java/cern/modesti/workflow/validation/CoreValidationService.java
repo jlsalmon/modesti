@@ -57,7 +57,7 @@ public class CoreValidationService {
     }
 
     // Concatenate all categories and datasources
-    List<Category> categories = schema.getCategories();
+    List<Category> categories = new ArrayList<>(schema.getCategories());
     categories.addAll(schema.getDatasources());
 
     // Validate the mutually exclusive column group specifications.
@@ -122,7 +122,7 @@ public class CoreValidationService {
             valid = false;
             // TODO: set category to invalid
             // point.properties.valid = category.valid = valid = false;
-            point.addErrorMessage(propertyName, "Value '" + value + "' is not a legal option for field '" + field.getName()
+            point.addErrorMessage(category.getName(), propertyName, "Value '" + value + "' is not a legal option for field '" + field.getName()
                 + "'. Please select a value from the list.");
           }
 
@@ -149,7 +149,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(propertyName, "Field '" + field.getName() + "' is mandatory");
+              point.addErrorMessage(category.getName(), propertyName, "Field '" + field.getName() + "' is mandatory");
             }
           }
 
@@ -160,7 +160,8 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(propertyName, "Field '" + field.getName() + "' must be at least " + field.getMinLength() + " characters in length");
+              point.addErrorMessage(category.getName(), propertyName,
+                  "Field '" + field.getName() + "' must be at least " + field.getMinLength() + " characters in length");
             }
           }
 
@@ -171,7 +172,8 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(propertyName, "Field '" + field.getName() + "' must not exceed " + field.getMinLength() + " characters in length");
+              point.addErrorMessage(category.getName(), propertyName,
+                  "Field '" + field.getName() + "' must not exceed " + field.getMinLength() + " characters in length");
             }
           }
 
@@ -182,7 +184,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(propertyName, "Value for '" + field.getName() + "' must be numeric");
+              point.addErrorMessage(category.getName(), propertyName, "Value for '" + field.getName() + "' must be numeric");
             }
           }
         }
@@ -221,7 +223,7 @@ public class CoreValidationService {
                   valid = false;
                   // TODO: set category to invalid
                   // point.properties.valid = category.valid = valid = false;
-                  point.addErrorMessage("", "Fields in the '" + category.getName() + "' group cannot be used if fields in the '"
+                  point.addErrorMessage(category.getName(), "", "Fields in the '" + category.getName() + "' group cannot be used if fields in the '"
                       + excludedCategory.getName() + "' group have been specified.");
                 }
               }
