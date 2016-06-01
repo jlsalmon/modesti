@@ -24,7 +24,7 @@ if (window.location.href.indexOf('modesti-dev') != -1) {
 console.log('using backend ' + BACKEND_BASE_URL);
 
 
-function configure($httpProvider, $translateProvider, RestangularProvider) {
+function configure($httpProvider, $translateProvider, $ocLazyLoadProvider, RestangularProvider) {
 
   // Needed so that Spring Security sends us back a WWW-Authenticate header,
   // which will prevent the browser from showing a basic auth popup
@@ -36,6 +36,10 @@ function configure($httpProvider, $translateProvider, RestangularProvider) {
   configureRestangular(RestangularProvider);
   configureTranslations($translateProvider);
   configureErrorInterceptors($httpProvider);
+
+  $ocLazyLoadProvider.config({
+    debug: true
+  });
 }
 
 /**
