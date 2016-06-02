@@ -22,7 +22,7 @@ function RequestController(request, children, schema, tasks, signals) {
 
 
   self.isInvalidCategory = isInvalidCategory;
-  self.navigateToField = navigateToField;
+
 
 
   /**
@@ -54,35 +54,5 @@ function RequestController(request, children, schema, tasks, signals) {
     });
 
     return invalid;
-  }
-
-  /**
-   * Navigate somewhere to focus on a particular field.
-   *
-   * @param categoryName
-   * @param fieldId
-   */
-  function navigateToField(categoryName, fieldId) {
-
-    // Find the category which contains the field.
-    var category;
-
-    if (fieldId.indexOf('.') !== -1) {
-      fieldId = fieldId.split('.')[0];
-    }
-
-    self.schema.categories.concat(self.schema.datasources).forEach(function (cat) {
-      if (cat.name === categoryName || cat.id === categoryName) {
-        cat.fields.forEach(function (field) {
-          if (field.id === fieldId || cat.name === fieldId || cat.id === fieldId) {
-            category = cat;
-          }
-        });
-      }
-    });
-
-    if (category) {
-      activateCategory(category);
-    }
   }
 }

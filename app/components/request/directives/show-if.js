@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('modesti').directive('showIf', function(TaskService, ngIfDirective) {
   return {
     transclude: 'element',
@@ -5,24 +7,24 @@ angular.module('modesti').directive('showIf', function(TaskService, ngIfDirectiv
     link: function(scope, element, attrs) {
       attrs.ngIf = function() {
         var expression = attrs.showIf;
-        var conditions = expression.split(" && ");
+        var conditions = expression.split(' && ');
         var task = TaskService.getCurrentTask();
         var results = [];
 
         conditions.forEach(function (condition) {
           var result = false;
 
-          if (condition.indexOf('user-authorised-for-task') != -1) {
+          if (condition.indexOf('user-authorised-for-task') !== -1) {
             result = TaskService.isCurrentUserAuthorised(task);
-            result = condition.indexOf('!') != -1 ? !result : result;
+            result = condition.indexOf('!') !== -1 ? !result : result;
           }
-          else if (condition.indexOf('task-assigned-to-current-user') != -1) {
+          else if (condition.indexOf('task-assigned-to-current-user') !== -1) {
             result = TaskService.isCurrentUserAssigned(task);
-            result = condition.indexOf('!') != -1 ? !result : result;
+            result = condition.indexOf('!') !== -1 ? !result : result;
           }
-          else if (condition.indexOf('task-assigned') != -1) {
+          else if (condition.indexOf('task-assigned') !== -1) {
             result = TaskService.isTaskClaimed(task);
-            result = condition.indexOf('!') != -1 ? !result : result;
+            result = condition.indexOf('!') !== -1 ? !result : result;
           }
 
           results.push(result);
@@ -35,5 +37,5 @@ angular.module('modesti').directive('showIf', function(TaskService, ngIfDirectiv
 
       ngIfDirective[0].link.apply(ngIfDirective[0], arguments);
     }
-  }
+  };
 });

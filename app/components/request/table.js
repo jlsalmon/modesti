@@ -13,7 +13,7 @@ angular.module('modesti').directive('requestTable', function RequestTableDirecti
       table: '=',
       activeCategory: '='
     },
-    link: function ($scope, element, attrs) {
+    link: function () {
       /**
        * Calculate the required height for the table so that it fills the screen.
        */
@@ -35,7 +35,7 @@ angular.module('modesti').directive('requestTable', function RequestTableDirecti
   };
 });
 
-function RequestTableController($scope, $q, $filter, TableService, RequestService, TaskService, SchemaService, Utils) {
+function RequestTableController($scope, $q, $filter, $localStorage, TableService, RequestService, TaskService, SchemaService, Utils) {
   var self = this;
 
   /** The handsontable instance */
@@ -71,12 +71,18 @@ function RequestTableController($scope, $q, $filter, TableService, RequestServic
    * Called when the handsontable table has finished initialising.
    */
   function afterInit() {
-    console.log('afterInit()');
     /*jshint validthis:true */
+    console.log('afterInit()');
+
+    // Save a reference to the handsontable instance and enhance it with some
+    // extra utility methods.
     self.table = this;
+    self.table.activateCategory = activateCategory;
+    self.table.activateDefaultCategory = activateDefaultCategory;
+    self.table.navigateToField = navigateToField;
     self.table.getSelectedLineNumbers = getSelectedLineNumbers;
 
-    refreshColumns(self.activeCategory);
+    self.table.activateDefaultCategory();
 
     // Evaluate "editable" conditions for the active category. This is because
     // we need to evaluate the editability of individual cells based on the
@@ -133,12 +139,12 @@ function RequestTableController($scope, $q, $filter, TableService, RequestServic
     });
   }
 
-  /**
-   * Watch the active category for changes and refresh the columns of the table
-   */
-  $scope.$watch('ctrl.activeCategory', function handleActiveCategoryChange(newValue, oldValue) {
-    refreshColumns(newValue);
-  }, true);
+  ///**
+  // * Watch the active category for changes and refresh the columns of the table
+  // */
+  //$scope.$watch('ctrl.activeCategory', function handleActiveCategoryChange(newValue) {
+  //  refreshColumns(newValue);
+  //}, true);
 
   /**
    * Note: currently ngHandsontable requires that columns be pushed into the
@@ -148,7 +154,10 @@ function RequestTableController($scope, $q, $filter, TableService, RequestServic
    * this will be fixed in a later release.
    */
   function refreshColumns(category) {
-    if (!category) return;
+    if (!category) {
+      return;
+    }
+
     self.columns.length = 0;
 
     var columns = TableService.getColumns(self.request, self.schema, category.fields);
@@ -156,6 +165,44 @@ function RequestTableController($scope, $q, $filter, TableService, RequestServic
     columns.forEach(function (column) {
       self.columns.push(column);
     });
+  }
+
+  /**
+   *
+   */
+  function activateDefaultCategory() {
+    var categoryId = $localStorage.lastActiveCategory[self.request.requestId];
+    var category;
+
+    if (!categoryId) {
+      console.log('activating default category');
+      category = self.schema.categories[0];
+    } else {
+      console.log('activating last active category: ' + categoryId);
+
+      self.schema.categories.concat(self.schema.datasources).forEach(function (cat) {
+        if (cat.id === categoryId) {
+          category = cat;
+        }
+      });
+
+      if (!category) {
+        category = self.schema.categories[0];
+      }
+    }
+
+    activateCategory(category);
+  }
+
+  /**
+   *
+   * @param category
+   */
+  function activateCategory(category) {
+    console.log('activating category "' + category.id + '"');
+    self.activeCategory = category;
+    $localStorage.lastActiveCategory[self.request.requestId] = category.id;
+    refreshColumns(category);
   }
 
   /**
@@ -282,7 +329,7 @@ function RequestTableController($scope, $q, $filter, TableService, RequestServic
           $('.select-all:checkbox').prop(getCheckboxHeaderState(), true);
         });
       }
-    }
+    };
   }
 
   /**
@@ -290,7 +337,9 @@ function RequestTableController($scope, $q, $filter, TableService, RequestServic
    * @returns {*}
    */
   function getCheckboxHeaderState() {
-    if (!self.table.hasOwnProperty('getSelectedLineNumbers')) return 'unchecked';
+    if (!self.table.hasOwnProperty('getSelectedLineNumbers')) {
+      return 'unchecked';
+    }
 
     if (self.table.getSelectedLineNumbers().length === self.request.points.length) {
       return 'checked';
@@ -516,5 +565,35 @@ function RequestTableController($scope, $q, $filter, TableService, RequestServic
     }
 
     return lineNumbers;
+  }
+
+  /**
+   * Navigate somewhere to focus on a particular field.
+   *
+   * @param categoryName
+   * @param fieldId
+   */
+  function navigateToField(categoryName, fieldId) {
+
+    // Find the category which contains the field.
+    var category;
+
+    if (fieldId.indexOf('.') !== -1) {
+      fieldId = fieldId.split('.')[0];
+    }
+
+    self.schema.categories.concat(self.schema.datasources).forEach(function (cat) {
+      if (cat.name === categoryName || cat.id === categoryName) {
+        cat.fields.forEach(function (field) {
+          if (field.id === fieldId || cat.name === fieldId || cat.id === fieldId) {
+            category = cat;
+          }
+        });
+      }
+    });
+
+    if (category) {
+      self.table.activateCategory(category);
+    }
   }
 }

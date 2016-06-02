@@ -13,7 +13,7 @@
 
         <ul class="dropdown-menu">
           <li ng-repeat="category in ctrl.schema.categories"
-              ng-click="ctrl.activateCategory(category)">
+              ng-click="ctrl.table.activateCategory(category)">
             <a href="">
               <span>
                 {{::category.name}}
@@ -26,7 +26,7 @@
 
           <!-- Only show datasource if it has been selected as point type for at least one point -->
           <li ng-repeat="datasource in ctrl.schema.datasources | active:ctrl.request"
-              ng-click="ctrl.activateCategory(datasource)">
+              ng-click="ctrl.table.activateCategory(datasource)">
             <a href="">
               <span>{{::datasource.name}}
               <i ng-if="ctrl.isInvalidCategory(datasource)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>

@@ -16,11 +16,9 @@ angular.module('modesti').directive('requestToolbar', function RequestToolbarDir
   };
 });
 
-function RequestToolbarController($modal, $state, $localStorage, RequestService, TaskService, AuthService, HistoryService) {
+function RequestToolbarController($modal, $state, RequestService, TaskService, AlertService, HistoryService) {
   var self = this;
 
-  self.activateCategory = activateCategory;
-  self.activateDefaultCategory = activateDefaultCategory;
   self.save = save;
   self.undo = undo;
   self.redo = redo;
@@ -37,50 +35,6 @@ function RequestToolbarController($modal, $state, $localStorage, RequestService,
   self.getAssignee = getAssignee;
   self.isCurrentTaskRestricted = isCurrentTaskRestricted;
 
-
-  $localStorage.$default({
-    lastActiveCategory: {}
-  });
-
-  activateDefaultCategory();
-
-  /**
-   *
-   */
-  function activateDefaultCategory() {
-    var categoryId = $localStorage.lastActiveCategory[self.request.requestId];
-    var category;
-
-    if (!categoryId) {
-      console.log('activating default category');
-      category = self.schema.categories[0];
-    } else {
-      console.log('activating last active category: ' + categoryId);
-
-      self.schema.categories.concat(self.schema.datasources).forEach(function (cat) {
-        if (cat.id === categoryId) {
-          category = cat;
-        }
-      });
-
-      if (!category) {
-        category = self.schema.categories[0];
-      }
-    }
-
-    activateCategory(category);
-  }
-
-  /**
-   *
-   * @param category
-   */
-  function activateCategory(category) {
-    console.log('activating category "' + category.id + '"');
-    self.activeCategory = category;
-    $localStorage.lastActiveCategory[self.request.requestId] = category.id;
-    //getColumns();
-  }
 
   /**
    *
@@ -139,7 +93,6 @@ function RequestToolbarController($modal, $state, $localStorage, RequestService,
   function assignTask() {
     TaskService.assignTask(self.request).then(function (newTask) {
       self.tasks[newTask.name] = newTask;
-//       activateDefaultCategory();
     });
   }
 
@@ -149,7 +102,6 @@ function RequestToolbarController($modal, $state, $localStorage, RequestService,
   function assignTaskToCurrentUser() {
     TaskService.assignTaskToCurrentUser(self.request).then(function (newTask) {
        self.tasks[newTask.name] = newTask;
-//       activateDefaultCategory();
     });
   }
 
@@ -216,7 +168,7 @@ function RequestToolbarController($modal, $state, $localStorage, RequestService,
     });
 
     modalInstance.result.then(function () {
-      RequestService.deleteRequest(request.requestId).then(function () {
+      RequestService.deleteRequest(self.request.requestId).then(function () {
         console.log('deleted request');
         AlertService.add('success', 'Request was deleted successfully.');
         $state.go('requests');

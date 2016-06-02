@@ -423,7 +423,7 @@ function TableService($rootScope, SchemaService, TaskService, Utils) {
       //    $(td).popover({ trigger: 'hover', placement: 'top', container: 'body', html: true, content: content/*, delay: { 'show': 0, 'hide': 100000 }*/ });
       //  }
       //}
-    }
+    };
   }
 
   /**
