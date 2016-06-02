@@ -64,7 +64,14 @@ public class PluginAssetController {
 
     // The AngularJS module descriptor must be in the root directory and be
     // named "<lowercase domain id>.js"
-    Resource moduleDescriptor = resolver.getResource("classpath*:/static/" + plugin.getMetadata().getName().toLowerCase().replaceAll(" ", "-") + ".js");
+    String filename = plugin.getMetadata().getName().toLowerCase().replaceAll(" ", "-") + ".js";
+
+    // FIXME: HACK ALERT
+    if (plugin.getMetadata().getName().contains("WinCC OA")) {
+      filename = "winccoa-cv.js";
+    }
+
+    Resource moduleDescriptor = resolver.getResource("classpath*:/static/" + filename);
 
     for (Resource resource : resolver.getResources("classpath*:/static/**")) {
       if (resourceBelongsToPlugin(resource, plugin) && !resource.getFilename().equals(moduleDescriptor.getFilename())) {
@@ -79,7 +86,7 @@ public class PluginAssetController {
       }
     }
 
-    assets.addFirst(host + '/' + moduleDescriptor.getFilename());
+    assets.add(host + '/' + moduleDescriptor.getFilename());
     return assets;
   }
 
