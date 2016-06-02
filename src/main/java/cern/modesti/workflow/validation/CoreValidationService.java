@@ -179,7 +179,7 @@ public class CoreValidationService {
 
           // Numeric fields
           if (field.getType().equals("numeric")) {
-            if (value != null && !NumberUtils.isNumber(value.toString())) {
+            if (value != null && !value.toString().isEmpty() && !NumberUtils.isNumber(value.toString())) {
               point.setValid(false);
               valid = false;
               // TODO: set category to invalid
