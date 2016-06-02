@@ -99,80 +99,6 @@
   }
 </style>
 
-<section class="request-header container-fluid">
-  <div class="row">
-    <div class="col-lg-12">
-
-      <div class="pull-left">
-        <h4 class="request-id">
-          <i class="fa fa-list-ol fa-fw text-muted"></i>
-          {{ 'REQUESTS' | translate | lowercase }} <span class="text-muted">/</span> {{::ctrl.request.requestId}}
-          <small class="request-description">{{::ctrl.request.description}}</small>
-        </h4>
-      </div>
-
-      <div class="pull-right">
-
-
-        <!-- Request creator -->
-        <span class="request-detail-item text-muted"
-              tooltip="{{'CREATOR'|translate}}"
-              tooltip-append-to-body="true"
-              tooltip-placement="bottom">
-          <i class="fa fa-fw fa-user-md"></i>
-          <a ui-sref="users({ id: ctrl.request.creator })">{{::ctrl.request.creator}}</a>
-        </span>
-
-
-        <!-- Request type -->
-        <span class="request-detail-item text-muted">
-          {{ctrl.request.type | uppercase}}
-        </span>
-
-
-        <!-- Request domain -->
-        <span class="request-detail-item text-muted"
-              tooltip="{{'DOMAIN'|translate}}"
-              tooltip-append-to-body="true"
-              tooltip-placement="bottom">
-          <i class="fa fa-fw fa-crosshairs"></i>
-          {{::ctrl.request.domain}}
-        </span>
-
-
-        <!-- If this is a child request, reference its parent -->
-        <span class="request-detail-item"
-              ng-if="ctrl.request.parentRequestId">
-           {{'PARENT'|translate}}: <a href="requests/{{ctrl.request.parentRequestId}}">{{::ctrl.request.parentRequestId}}</a>
-        </span>
-
-
-        <!-- If this is a parent request, list its children -->
-        <span class="request-detail-item"
-              ng-if="ctrl.children.length > 0">
-           {{'CHILDREN'|translate}}:
-          <span ng-repeat="child in ctrl.children">
-            <a href="requests/{{child.requestId}}">{{::child.requestId}}</a>
-          </span>
-        </span>
-
-
-        <!-- Request status -->
-        <span class="request-detail-item"
-              tooltip="{{'STATUS'|translate}}"
-              tooltip-append-to-body="true"
-              tooltip-placement="bottom">
-          <span class="label request-status" ng-class="'{{::ctrl.request.status}}'">
-            {{::ctrl.request.status.split("_").join(" ")}}
-          </span>
-        </span>
-
-      </div>
-
-    </div>
-  </div>
-</section>
-
 
 <!-- Alerts are shown here -->
 <div class="alert-messages">
@@ -182,303 +108,44 @@
 </div>
 
 
+<!-- The header shows the request ID, the description, the owner etc. -->
+<section class="request-header container-fluid">
+  <request-header
+    request="ctrl.request">
+  </request-header>
+</section>
+
+
+<!-- The toolbar controls the category switcher, cut/copy/paste controls etc. -->
 <section class="toolbar container-fluid">
-
-  <div class="row">
-    <div class="col-lg-12">
-
-
-      <!-- Dropdown button to select category -->
-      <div class="pull-left request-category-selector">
-        <div class="btn-group toolbar-item" dropdown>
-
-          <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-            <span class="text-muted">{{'CATEGORY'|translate}}:</span>
-            {{ctrl.activeCategory.name}} <span class="caret"></span>
-          </button>
-
-          <ul class="dropdown-menu">
-            <li ng-repeat="category in ctrl.schema.categories"
-                ng-click="ctrl.activateCategory(category)">
-              <a href="">
-                <span>
-                  {{::category.name}}
-                  <i ng-if="ctrl.isInvalidCategory(category)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i>
-                </span>
-              </a>
-            </li>
-
-            <li class="divider" ng-if="ctrl.schema.datasources.length > 0"></li>
-
-            <!-- Only show datasource if it has been selected as point type for at least one point -->
-            <li ng-repeat="datasource in ctrl.schema.datasources | active:ctrl.request"
-                ng-click="ctrl.activateCategory(datasource)">
-              <a href="">
-                <span>{{::datasource.name}}
-                <i ng-if="ctrl.isInvalidCategory(datasource)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-
-      <!-- Button to save the request -->
-      <button class="btn btn-sm btn-default toolbar-item"
-              enable-if="task-assigned-to-current-user"
-              ng-click="ctrl.save()"
-              tooltip-append-to-body="true"
-              tooltip="{{'SAVE'|translate}}">
-        <i class="fa fa-fw fa-save saving-state"></i>
-
-        <!-- Saving state indicators -->
-        <span ng-show="$root.saving == 'started'">
-          <i class="fa fa-fw fa-spin fa-cog saving-state"></i>
-        </span>
-        <span ng-show="$root.saving == 'success'">
-          <i class="fa fa-fw fa-check saving-state text-success"></i>
-        </span>
-        <span ng-show="$root.saving == 'error'">
-          <i class="fa fa-fw fa-exclamation-triangle saving-state text-danger"></i>
-        </span>
-      </button>
-
-
-
-      <!-- Undo/redo buttons -->
-      <div class="btn-group">
-        <a class="btn btn-sm btn-default" ng-click="ctrl.undo()" ng-disabled="!ctrl.hot.isUndoAvailable()" tooltip-append-to-body="true" tooltip="{{'UNDO'|translate}}">
-          <i class="fa fa-fw fa-undo"></i>
-        </a>
-        <a class="btn btn-sm btn-default" ng-click="ctrl.redo()" ng-disabled="!ctrl.hot.isRedoAvailable()" tooltip-append-to-body="true" tooltip="{{'REDO'|translate}}">
-          <i class="fa fa-fw fa-repeat"></i>
-        </a>
-      </div>
-
-
-      <!-- Cut/copy/paste buttons -->
-      <div class="btn-group toolbar-item">
-        <button class="btn btn-sm btn-default"
-                enable-if="task-assigned-to-current-user"
-                ng-click="ctrl.cut()"
-                tooltip-append-to-body="true"
-                tooltip="{{'CUT'|translate}}">
-          <i class="fa fa-fw fa-scissors"></i>
-        </button>
-        <button class="btn btn-sm btn-default"
-                ng-click="ctrl.copy()"
-                tooltip-append-to-body="true"
-                tooltip="{{'COPY'|translate}}">
-          <i class="fa fa-fw fa-copy"></i>
-        </button>
-        <button class="btn btn-sm btn-default"
-                enable-if="task-assigned-to-current-user"
-                ng-click="ctrl.paste()"
-                tooltip-append-to-body="true"
-                tooltip="{{'PASTE'|translate}}">
-          <i class="fa fa-fw fa-paste"></i>
-        </button>
-      </div>
-
-
-      <!-- Assignment button -->
-      <button class="btn btn-sm btn-default toolbar-item"
-              enable-if="user-authorised-for-task"
-              ng-click="ctrl.assignTask()"
-              tooltip-append-to-body="true"
-              tooltip="Set Assignee"
-              style="margin-left: 20px;">
-        <i class="fa fa-fw fa-user"></i>
-        Assignee:
-        <span ng-if="!ctrl.getAssignee()">none</span>
-        <span ng-if="ctrl.getAssignee()"><a href="">{{ctrl.getAssignee()}}</a></span>
-      </button>
-
-      <!-- "Assign to me" button -->
-      <button show-if="user-authorised-for-task && !task-assigned-to-current-user"
-              ng-click="ctrl.assignTaskToCurrentUser()"
-              class="btn btn-sm btn-default toolbar-item">
-        Assign to me
-      </button>
-
-
-      <!-- Show a red warning if the request is restricted to administrators only -->
-      <span class="toolbar-item"
-            ng-if="ctrl.isCurrentTaskRestricted() && !ctrl.isCurrentUserAuthorised()"
-            ng-disabled="true"
-            style="vertical-align: middle">
-        <span class="text-danger"><i class="fa fa-fw fa-exclamation-triangle"></i> Restricted to administrators</span>
-      </span>
-
-
-      <div class="pull-right">
-
-
-        <!-- Comments button -->
-        <button ng-click="ctrl.showComments()"
-                tooltip-append-to-body="true"
-                tooltip="{{'COMMENTS'|translate}}"
-                ng-class="ctrl.request.comments.length > 0 ? 'btn-danger' : 'btn-default'"
-                class="btn btn-sm toolbar-item">
-          <i class="fa fa-fw fa-comments"></i>
-          {{ctrl.request.comments.length}}
-        </button>
-
-
-        <!-- History button -->
-        <button ng-click="ctrl.showHistory()"
-                tooltip-append-to-body="true"
-                tooltip="{{'HISTORY'|translate}}"
-                class="btn btn-sm btn-default toolbar-item">
-          <i class="fa fa-fw fa-history"></i>
-        </button>
-
-
-        <!-- Actions dropdown -->
-        <div class="btn-group toolbar-item" dropdown dropdown-append-to-body>
-          <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
-            <i class="fa fa-fw fa-cog"></i> Actions <span class="caret text-muted"></span>
-          </button>
-          <ul class="dropdown-menu pull-right">
-            <li>
-              <a ng-click="ctrl.cloneRequest()">Clone request</a>
-            </li>
-            <li>
-              <a ng-click="ctrl.deleteRequest()" show-if="user-authorised-for-task">Delete request</a>
-            </li>
-          </ul>
-        </div>
-
-      </div>
-
-
-    </div>
-  </div>
+  <request-toolbar
+    request="ctrl.request"
+    tasks="ctrl.tasks"
+    schema="ctrl.schema"
+    active-category="ctrl.activeCategory"
+    table="ctrl.table">
+  </request-toolbar>
 </section>
 
 
+<!-- The actual table itself -->
+<request-table
+  request="ctrl.request"
+  tasks="ctrl.tasks"
+  schema="ctrl.schema"
+  active-category="ctrl.activeCategory"
+  table="ctrl.table">
+</request-table>
 
-<section class="table" style="overflow: hidden; height: 600px;" ng-cloak>
-  <hot-table id="table" settings="ctrl.settings"
-             datarows="ctrl.request.points"
-             columns="ctrl.columns">
-  </hot-table>
-</section>
 
-
-
+<!-- Task-specific controls go in the footer -->
 <footer class="footer">
   <div class="container-fluid">
-
-    <!--<accordion class="accordion">-->
-      <!--<accordion-group is-open="ctrl.errorLogOpen" is-disabled="ctrl.hasErrors() == 0">-->
-        <!--<accordion-heading>-->
-
-
-          <custom-request-controls request="ctrl.request" tasks="ctrl.tasks" schema="ctrl.schema" table="ctrl.hot"></custom-request-controls>
-
-
-          <!-- Show appropriate extra controls based on the request status -->
-          <!--<span ng-switch="ctrl.request.status">-->
-            <!--&lt;!&ndash;<span ng-switch-when="IN_PROGRESS">&ndash;&gt;-->
-              <!--&lt;!&ndash;<div ng-controller="CreationController as ctrl">&ndash;&gt;-->
-                <!--&lt;!&ndash;<ng-include src="'components/request/controls/creation-controls.html'"></ng-include>&ndash;&gt;-->
-              <!--&lt;!&ndash;</div>&ndash;&gt;-->
-            <!--&lt;!&ndash;</span>&ndash;&gt;-->
-            <!--<span ng-switch-when="FOR_CORRECTION">-->
-              <!--<div ng-controller="CreationController as ctrl">-->
-                <!--<ng-include src="'components/request/controls/creation-controls.html'"></ng-include>-->
-              <!--</div>-->
-            <!--</span>-->
-            <!--<span ng-switch-when="FOR_APPROVAL">-->
-              <!--<div ng-controller="ApprovalController as ctrl">-->
-                <!--<ng-include src="'components/request/controls/approval-controls.html'"></ng-include>-->
-              <!--</div>-->
-            <!--</span>-->
-            <!--<span ng-switch-when="FOR_ADDRESSING">-->
-              <!--<div ng-controller="AddressingController as ctrl">-->
-                <!--<ng-include src="'components/request/controls/addressing-controls.html'"></ng-include>-->
-              <!--</div>-->
-            <!--</span>-->
-            <!--<span ng-switch-when="FOR_CABLING">-->
-              <!--<div ng-controller="CablingController as ctrl">-->
-                <!--<ng-include src="'components/request/controls/cabling-controls.html'"></ng-include>-->
-              <!--</div>-->
-            <!--</span>-->
-            <!--<span ng-switch-when="FOR_INSERTION">-->
-              <!--<div ng-controller="InsertionController as ctrl">-->
-                <!--<ng-include src="'components/request/controls/insertion-controls.html'"></ng-include>-->
-              <!--</div>-->
-            <!--</span>-->
-            <!--<span ng-switch-when="FOR_CONFIGURATION">-->
-              <!--<div ng-controller="ConfigController as ctrl">-->
-                <!--<ng-include src="'components/request/controls/config-controls.html'"></ng-include>-->
-              <!--</div>-->
-            <!--</span>-->
-            <!--<span ng-switch-when="FOR_TESTING">-->
-              <!--<div ng-controller="TestingController as ctrl">-->
-                <!--<ng-include src="'components/request/controls/testing-controls.html'"></ng-include>-->
-              <!--</div>-->
-            <!--</span>-->
-            <!--<span ng-switch-when="REMOVE_TEST_FLAG">-->
-              <!--<div ng-controller="RemoveTestFlagController as ctrl">-->
-                <!--<ng-include src="'components/request/controls/remove-test-flag-controls.html'"></ng-include>-->
-              <!--</div>-->
-            <!--</span>-->
-          <!--</span>-->
-
-        <!--</accordion-heading>-->
-
-
-        <!--<div ng-if="ctrl.getNumValidationErrors() > 0" class="callout callout-danger bg-transparent">-->
-          <!--<h4>Validation errors</h4>-->
-          <!--<p>-->
-            <!--The request has failed validation. Please review the following lines which explain the validation failures. The-->
-            <!--request should be modified before revalidation.-->
-          <!--</p>-->
-
-
-          <!--<div ng-repeat="point in ctrl.rows track by point.lineNo">-->
-            <!--<div ng-repeat="error in point.errors track by $index">-->
-              <!--<div ng-repeat="message in error.errors track by $index">-->
-                <!--<i class="fa fa-fw fa-exclamation-circle text-danger"></i> <a href="#" ng-click="ctrl.navigateToField(error.category, error.property)">-->
-                <!--Line {{point.lineNo}}: {{message}}</a>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-
-        <!--</div>-->
-
-        <!--<div ng-if="ctrl.request.properties.approvalResult.approved === false && ctrl.request.status === 'FOR_CORRECTION'"-->
-             <!--class="callout callout-warning bg-transparent">-->
-          <!--<h4>Operator comments</h4>-->
-          <!--<p>-->
-            <!--The request has been rejected by an operator. Please review the following lines which show the reason for the-->
-            <!--rejection. The request should be modified according to the operator comments before resubmission.-->
-          <!--</p>-->
-
-          <!--<div ng-repeat="point in ctrl.rows track by point.lineNo">-->
-            <!--<span ng-if="point.properties.approvalResult.approved === false">-->
-              <!--<i class="fa fa-fw fa-comments text-yellow"></i>-->
-              <!--Line {{point.lineNo}}: <strong>{{point.properties.approvalResult.message}}</strong>-->
-            <!--</span>-->
-          <!--</div>-->
-        <!--</div>-->
-
-        <!--<div ng-if="ctrl.request.properties.insertionResult">-->
-          <!--<div ng-repeat="error in ctrl.request.properties.insertionResult.errors track by $index">-->
-            <!--<i class="fa fa-fw fa-exclamation-circle text-danger"></i> <span ng-bind-html="error" ></span>-->
-          <!--</div>-->
-        <!--</div>-->
-
-        <div ng-if="ctrl.request.properties.configurationResult">
-          <div ng-repeat="error in ctrl.request.properties.configurationResult.errors track by $index">
-            <i class="fa fa-fw fa-exclamation-circle text-danger"></i> <span ng-bind-html="error" ></span>
-          </div>
-        </div>
-
-      <!--</accordion-group>-->
-    <!--</accordion>-->
-
+    <request-controls
+      request="ctrl.request"
+      tasks="ctrl.tasks"
+      schema="ctrl.schema"
+      table="ctrl.table">
+    </request-controls>
   </div>
 </footer>

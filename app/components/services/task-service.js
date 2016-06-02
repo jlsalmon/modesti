@@ -7,7 +7,7 @@
  */
 angular.module('modesti').service('TaskService', TaskService);
 
-function TaskService($q, $http, $state, AuthService, RequestService) {
+function TaskService($q, $http, $state, $modal, AuthService, RequestService) {
   var self = this;
 
   self.tasks = {};
@@ -20,6 +20,7 @@ function TaskService($q, $http, $state, AuthService, RequestService) {
     getSignalsForRequest: getSignalsForRequest,
     getCurrentTask: getCurrentTask,
     assignTask: assignTask,
+    assignTaskToCurrentUser: assignTaskToCurrentUser,
     completeTask: completeTask,
     isTaskClaimed: isTaskClaimed,
     isAnyTaskClaimed: isAnyTaskClaimed,
@@ -97,12 +98,62 @@ function TaskService($q, $http, $state, AuthService, RequestService) {
 
   /**
    *
+   */
+  function assignTask(request) {
+    var q = $q.defer();
+    var task = getCurrentTask();
+
+    var modalInstance = $modal.open({
+      animation: false,
+      templateUrl: 'components/request/modals/assignment-modal.html',
+      controller: 'AssignmentModalController as ctrl',
+      resolve: {
+        task: function () {
+          return task;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (assignee) {
+      console.log('assigning request to user ' + assignee.username);
+
+      doAssignTask(task.name, request.requestId, assignee.username).then(function (newTask) {
+        console.log('assigned request');
+        task = newTask;
+        request.assignee = assignee.username;
+        q.resolve(newTask);
+      });
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
+   */
+  function assignTaskToCurrentUser(request) {
+    var q = $q.defer();
+    var task = getCurrentTask();
+    var username = AuthService.getCurrentUser().username;
+
+    doAssignTask(task.name, request.requestId, username).then(function (newTask) {
+      console.log('assigned request');
+      task = newTask;
+      request.assignee = username;
+      q.resolve(newTask);
+    });
+
+    return q.promise;
+  }
+
+  /**
+   *
    * @param taskName
    * @param requestId
    * @param assignee
    * @returns {*}
    */
-  function assignTask(taskName, requestId, assignee) {
+  function doAssignTask(taskName, requestId, assignee) {
     var q = $q.defer();
 
     var params = {
@@ -193,7 +244,7 @@ function TaskService($q, $http, $state, AuthService, RequestService) {
    */
   function isCurrentUserAssigned(task) {
     var user = AuthService.getCurrentUser();
-    if (!user) {
+    if (!user || !task) {
       return false;
     }
 

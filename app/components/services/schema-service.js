@@ -36,7 +36,7 @@ function SchemaService($q, $http, Utils) {
       console.log('fetched schema: ' + schema.id);
 
       // TODO: remove this domain-specific code into a SchemaPostProcessor inside a plugin
-      var domains = ['TIM', 'CSAM', 'WinCC OA'];
+      var domains = ['TIM', 'CSAM', 'WinCC OA (CV)'];
       if (domains.indexOf(schema.id) !== -1) {
 
         // Prepend tagname and fault state fields
