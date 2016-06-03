@@ -356,7 +356,6 @@ function TableService($rootScope, SchemaService, TaskService, Utils) {
       }
 
       var props = prop.split('.').slice(1, 3);
-      //prop = prop.replace('properties.', '');
 
       // Check if we need to fill in a default value for this point.
       var field = Utils.getField(schema, props[0]);

@@ -44,6 +44,7 @@ function RequestTableController($scope, $q, $filter, $localStorage, TableService
   /** Settings object for handsontable */
   self.settings = {
     rowHeaders: getRowHeaders,
+    //colHeaders: true,
     contextMenu: ['row_above', 'row_below', '---------', 'remove_row', '---------', 'undo', 'redo'],
     stretchH: 'all',
     // To enable sorting, a mapping needs to be done from the source array to the displayed array
@@ -66,6 +67,10 @@ function RequestTableController($scope, $q, $filter, $localStorage, TableService
 
   /** The columns that will be displayed for the currently active category. */
   self.columns = [];
+
+  $localStorage.$default({
+    lastActiveCategory: {}
+  });
 
   /**
    * Called when the handsontable table has finished initialising.
