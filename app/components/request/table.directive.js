@@ -4,7 +4,7 @@ angular.module('modesti').directive('requestTable', function RequestTableDirecti
   return {
     controller: RequestTableController,
     controllerAs: 'ctrl',
-    templateUrl: 'components/request/table.html',
+    templateUrl: 'components/request/table.directive.html',
     scope: {},
     bindToController: {
       request: '=',
