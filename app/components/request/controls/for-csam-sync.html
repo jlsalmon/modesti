@@ -21,17 +21,17 @@
           <div class="btn-group pull-right">
 
             <button class="btn btn-primary"
-                    ng-disabled="ctrl.inserting == 'started'"
-                    ng-click="ctrl.insert($event)"
+                    ng-disabled="ctrl.parent.submitting == 'started'"
+                    ng-click="ctrl.submit($event)"
                     tooltip-append-to-body="true"
-                    tooltip="Insert request">
+                    tooltip="Trigger synchronisation">
 
               <!--Show icon based on the loading state-->
-              <i class="fa fa-fw fa-download" ng-show="ctrl.inserting == undefined"></i>
-              <i class="fa fa-fw fa-spin fa-cog" ng-show="ctrl.inserting == 'started'"></i>
-              <i class="fa fa-fw fa-cog" ng-show="ctrl.inserting == 'success'"></i>
-              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.inserting == 'error'"></i>
-              Insert
+              <i class="fa fa-fw fa-refresh" ng-show="ctrl.parent.submitting == undefined"></i>
+              <i class="fa fa-fw fa-spin fa-cog" ng-show="ctrl.parent.submitting == 'started'"></i>
+              <i class="fa fa-fw fa-cog" ng-show="ctrl.parent.submitting == 'success'"></i>
+              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.parent.submitting == 'error'"></i>
+              Synchronise
             </button>
           </div>
 
@@ -53,7 +53,7 @@
         <div class="btn-group">
           <button class="btn btn-primary"
                   ng-click="ctrl.parent.claim($event)">
-            Claim insertion responsibility
+            Claim synchronisation responsibility
           </button>
         </div>
       </div>
