@@ -23,7 +23,7 @@ function CommentsModalController($modalInstance, request, RequestService, AuthSe
     if (self.text.length) {
       var comment = {
         text: self.text,
-        user: AuthService.getCurrentUser(),
+        user: AuthService.getCurrentUser().username,
         timestamp: Date.now()
       };
 
