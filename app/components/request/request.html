@@ -374,6 +374,16 @@
                 <ng-include src="'components/request/controls/insertion-controls.html'"></ng-include>
               </div>
             </span>
+            <span ng-switch-when="FOR_WINCCOA_CONFIG">
+              <div ng-controller="WinCCOAConfigController as ctrl">
+                <ng-include src="'components/request/controls/for-winccoa-config.html'"></ng-include>
+              </div>
+            </span>
+            <span ng-switch-when="FOR_CSAM_CONFIG">
+              <div ng-controller="CsamConfigController as ctrl">
+                <ng-include src="'components/request/controls/for-csam-config.html'"></ng-include>
+              </div>
+            </span>
             <span ng-switch-when="FOR_CONFIGURATION">
               <div ng-controller="ConfigController as ctrl">
                 <ng-include src="'components/request/controls/config-controls.html'"></ng-include>
