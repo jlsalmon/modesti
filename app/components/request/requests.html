@@ -103,12 +103,12 @@
         </a>
         <ul class="treeview-menu menu-open" style="display: block;">
           <li>
-            <a href="" ng-click="ctrl.filter.assignee = ctrl.getCurrentUsername()">
+            <a href="" ng-click="ctrl.resetFilter(); ctrl.filter.assignee = ctrl.getCurrentUsername()">
               Assigned to me
             </a>
           </li>
           <li>
-            <a href="" ng-click="ctrl.filter.creator = ctrl.getCurrentUsername()">
+            <a href="" ng-click="ctrl.resetFilter(); ctrl.filter.creator = ctrl.getCurrentUsername()">
               Created by me
             </a>
           </li>
@@ -122,7 +122,7 @@
         <ul class="treeview-menu menu-open" style="display: block;">
 
           <li ng-repeat="status in ctrl.statuses">
-            <a href="" ng-click="ctrl.filter.status = status.status">
+            <a href="" ng-click="ctrl.resetFilter(); ctrl.filter.status = status.status">
               <span class="label request-status {{status.status}}">{{::status.status.split("_").join(" ")}}</span>
               <span class=" pull-right">{{ctrl.getRequestCount(status.status)}}</span>
             </a>

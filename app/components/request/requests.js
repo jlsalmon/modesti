@@ -36,7 +36,6 @@ function RequestsController($http, $location, $scope, RequestService, AuthServic
   getRequests(1, 15, self.sort, self.filter);
   getRequestMetrics();
   getSchemas();
-  //getSubsystems();
 
   /**
    *
