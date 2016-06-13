@@ -27,10 +27,10 @@
                     tooltip="Trigger synchronisation">
 
               <!--Show icon based on the loading state-->
-              <i class="fa fa-fw fa-refresh" ng-show="ctrl.parent.submitting == undefined"></i>
-              <i class="fa fa-fw fa-spin fa-cog" ng-show="ctrl.parent.submitting == 'started'"></i>
-              <i class="fa fa-fw fa-cog" ng-show="ctrl.parent.submitting == 'success'"></i>
-              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.parent.submitting == 'error'"></i>
+              <i class="fa fa-fw fa-refresh" ng-show="ctrl.submitting == undefined"></i>
+              <i class="fa fa-fw fa-spin fa-cog" ng-show="ctrl.submitting == 'started'"></i>
+              <i class="fa fa-fw fa-cog" ng-show="ctrl.submitting == 'success'"></i>
+              <i class="fa fa-fw fa-exclamation-triangle" ng-show="ctrl.submitting == 'error'"></i>
               Synchronise
             </button>
           </div>
