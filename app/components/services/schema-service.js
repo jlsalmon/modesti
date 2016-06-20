@@ -435,9 +435,10 @@ function SchemaService($q, $http, Utils) {
           }
 
           var subsystemCode;
+          var subsystems = response.data._embedded.subsystems;
 
-          if (response.data._embedded.subsystems.length === 1) {
-            var subsystem = response.data._embedded.subsystems[0];
+          if (subsystems.length === 1 || subsystems.length > 1) {
+            var subsystem = subsystems[0];
             subsystemCode = subsystem.systemCode + subsystem.subsystemCode;
           } else {
             subsystemCode = '?';
@@ -494,10 +495,11 @@ function SchemaService($q, $http, Utils) {
             return;
           }
 
+          var subsystems = response.data._embedded.subsystems;
           var systemName = '?', subsystemName = '?';
 
-          if (response.data._embedded.subsystems.length === 1) {
-            var subsystem = response.data._embedded.subsystems[0];
+          if (subsystems.length === 1 || subsystems.length > 1) {
+            var subsystem = subsystems[0];
             systemName = subsystem.systemName;
             subsystemName = subsystem.subsystemName;
           }
@@ -602,10 +604,11 @@ function SchemaService($q, $http, Utils) {
               return;
             }
 
+            var subsystems = response.data._embedded.subsystems;
             var systemName;
 
-            if (response.data._embedded.subsystems.length === 1) {
-              var subsystem = response.data._embedded.subsystems[0];
+            if (subsystems.length === 1 || subsystems.length > 1) {
+              var subsystem = subsystems[0];
               systemName = subsystem.systemName;
             }
 
