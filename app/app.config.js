@@ -11,8 +11,10 @@ angular.module('modesti').config(configure);
 
 var BACKEND_BASE_URL;
 
-if (window.location.href.indexOf('modesti-test') != -1) {
-  BACKEND_BASE_URL = 'https://modesti-test.cern.ch:8443';
+if (window.location.href.indexOf('modesti-dev') != -1) {
+  BACKEND_BASE_URL = 'https://modesti-dev.cern.ch:8443';
+} else if (window.location.href.indexOf('modesti') != -1) {
+  BACKEND_BASE_URL = 'https://modesti.cern.ch:8443';
 } else if (window.location.href.indexOf('modesti') != -1) {
   BACKEND_BASE_URL = 'https://modesti.cern.ch:8443';
 } else {
