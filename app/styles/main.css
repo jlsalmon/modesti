@@ -486,11 +486,6 @@ ul.category-headings {
   background-color: #815B3A;
 }
 
-.label.request-status.FOR_CABLING {
-  color: #fff;
-  background-color: #654982;
-}
-
 .label.request-status.FOR_CONFIGURATION {
   color: #fff;
   background-color: #ac707a;
@@ -504,6 +499,26 @@ ul.category-headings {
 .label.request-status.CLOSED {
   color: #fff;
   background-color: #707070;
+}
+
+.label.request-status.FOR_INSERTION {
+  color: #fff;
+  background-color: #3572b0;
+}
+
+.label.request-status.REMOVE_TEST_FLAG {
+  color: #fff;
+  background-color: #654982;
+}
+
+.label.request-status.FOR_WINCCOA_CONFIG {
+  color: #fff;
+  background-color: #59afe1;
+}
+
+.label.request-status.FOR_CSAM_SYNC {
+  color: #fff;
+  background-color: #67ab49;
 }
 
 .vcenter {
