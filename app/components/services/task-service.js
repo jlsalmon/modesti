@@ -138,7 +138,7 @@ function TaskService($q, $http, $state, $modal, AuthService, RequestService) {
 
     doAssignTask(task.name, request.requestId, username).then(function (newTask) {
       console.log('assigned request');
-      task = newTask;
+      self.tasks[task.name] = newTask;
       request.assignee = username;
       q.resolve(newTask);
     });
