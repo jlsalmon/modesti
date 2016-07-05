@@ -24,6 +24,10 @@
       </deployment>
     </application>
 
+    <application name="modesti-dev" extends="default">
+      <deployment installLocation="/opt/modesti"/>
+    </application>
+
   </product>
 </products>
 
