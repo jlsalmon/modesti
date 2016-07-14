@@ -22,7 +22,6 @@ import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +40,8 @@ public class PluginAssetController {
 
   private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
 
+  private ObjectMapper mapper = new ObjectMapper();
+
   @RequestMapping("/plugins/{id}/assets")
   public List<String> getAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws IOException, URISyntaxException {
     LinkedList<String> assets = new LinkedList<>();
@@ -53,10 +54,8 @@ public class PluginAssetController {
 
     for (Resource resource : resolver.getResources("classpath*:/static/assets.json")) {
       if (resourceBelongsToPlugin(resource, plugin)) {
-        ObjectMapper mapper = new ObjectMapper();
-        TypeFactory typeFactory = mapper.getTypeFactory();
-
-        javascriptAssets = new ObjectMapper().readValue(resource.getInputStream(), typeFactory.constructCollectionType(List.class, String.class));
+        log.trace("found asset descriptor for plugin {}: {}", plugin.getMetadata().getName(), resource.getURI());
+        javascriptAssets = mapper.readValue(resource.getInputStream(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
       }
     }
 
@@ -75,6 +74,7 @@ public class PluginAssetController {
 
     for (Resource resource : resolver.getResources("classpath*:/static/**")) {
       if (resourceBelongsToPlugin(resource, plugin) && !resource.getFilename().equals(moduleDescriptor.getFilename())) {
+        log.trace("found resource for plugin {}: {}", plugin.getMetadata().getName(), resource.getURI());
 
         if (FilenameUtils.isExtension(resource.getFilename(), new String[]{"js", "html", "css"})) {
           String path = host + '/' + resource.getFile().getPath().split("static/")[1];
@@ -103,8 +103,10 @@ public class PluginAssetController {
   private boolean resourceBelongsToPlugin(Resource resource, RequestProvider plugin) throws IOException, URISyntaxException {
     String pluginRootPath =  plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 
-    if (!pluginRootPath.endsWith(".jar")) {
+    if (!pluginRootPath.contains(".jar")) {
       pluginRootPath = new File(pluginRootPath).getParentFile().getParentFile().getAbsolutePath();
+    } else {
+      pluginRootPath = pluginRootPath.replace("file:", "").replace("!/", "");
     }
 
     URLConnection urlConnection = resource.getURL().openConnection();
@@ -115,6 +117,9 @@ public class PluginAssetController {
     } else {
       resourceRootPath = resource.getFile().getParentFile().getParentFile().getAbsolutePath();
     }
+
+    log.debug("pluginRootPath: {}", pluginRootPath);
+    log.debug("resourceRootPath: {}", resourceRootPath);
 
     return resourceRootPath.contains(pluginRootPath);
   }
