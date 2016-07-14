@@ -23,7 +23,6 @@
       <deployment installLocation="/opt/modesti-server">
         <directory name="conf">
           <file name="modesti.properties" source="/user/timoper/rep/modesti/modesti-pro.properties" mask="400"/>
-          <file name="keystore.pkcs12" source="/user/timoper/rep/modesti/keystore.pkcs12" mask="400"/>
         </directory>
         <notification>
           <mail address="modesti-administrators@cern.ch"/>
@@ -37,7 +36,6 @@
       <deployment installLocation="/opt/modesti-server-test">
         <directory name="conf">
           <file name="modesti.properties" source="/user/timtest/rep/modesti/modesti-test.properties" mask="400"/>
-          <file name="keystore.pkcs12" source="/user/timtest/rep/modesti/keystore.pkcs12" mask="400"/>
         </directory>
         <notification>
           <mail address="modesti-administrators@cern.ch"/>
@@ -47,25 +45,13 @@
 
 
     <application name="modesti-server-dev" extends="default">
-      <startscript name="MODESTI-SERVER-DEV"/>
-      <deployment installLocation="/opt/modesti-server">
+      <startscript name="MODESTI-SERVER-DEV">
+        <java-vm-args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</java-vm-args>
+      </startscript>
+      <deployment installLocation="/opt/modesti-server-dev">
         <directory name="conf">
           <file name="modesti.properties" source="/opt/conf/modesti-dev.properties" mask="400"/>
         </directory>
-      </deployment>
-    </application>
-
-
-    <application name="modesti-server-dev" extends="default">
-      <startscript name="MODESTI-SERVER-DEV"/>
-      <deployment installLocation="/opt/modesti-server-dev">
-        <directory name="conf">
-          <file name="modesti.properties" source="/user/timtest/rep/modesti/modesti-dev.properties" mask="400"/>
-          <file name="keystore.pkcs12" source="/user/timtest/rep/modesti/keystore.pkcs12" mask="400"/>
-        </directory>
-        <notification>
-          <mail address="modesti-administrators@cern.ch"/>
-        </notification>
       </deployment>
     </application>
 
