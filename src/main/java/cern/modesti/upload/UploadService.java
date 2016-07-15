@@ -1,22 +1,14 @@
 package cern.modesti.upload;
 
 import cern.modesti.request.Request;
-import cern.modesti.request.RequestRepository;
 import cern.modesti.request.RequestService;
-import cern.modesti.request.counter.CounterService;
-import cern.modesti.request.history.RequestHistoryService;
 import cern.modesti.upload.parser.RequestParseResult;
 import cern.modesti.upload.parser.RequestParserFactory;
-import cern.modesti.user.User;
-import cern.modesti.workflow.CoreWorkflowService;
 import lombok.extern.slf4j.Slf4j;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.security.Principal;
 
 /**
  * Service class for handling parsing stage of a {@link Request} upload.

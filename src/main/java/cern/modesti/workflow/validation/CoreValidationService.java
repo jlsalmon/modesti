@@ -15,7 +15,7 @@ import cern.modesti.util.PointUtils;
 import cern.modesti.util.SchemaUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Service;
