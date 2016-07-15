@@ -5,17 +5,7 @@ import cern.modesti.security.ldap.RecursiveLdapAuthoritiesPopulator;
 import cern.modesti.security.mock.MockAuthenticationProvider;
 import cern.modesti.security.mock.MockUserService;
 import org.apache.catalina.Context;
-import org.apache.directory.server.core.authn.AuthenticationInterceptor;
-import org.apache.directory.server.core.exception.ExceptionInterceptor;
-import org.apache.directory.server.core.interceptor.Interceptor;
-import org.apache.directory.server.core.normalization.NormalizationInterceptor;
-import org.apache.directory.server.core.operational.OperationalAttributeInterceptor;
-import org.apache.directory.server.core.referral.ReferralInterceptor;
-import org.apache.directory.server.core.schema.SchemaInterceptor;
-import org.apache.directory.server.core.subtree.SubentryInterceptor;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
@@ -38,12 +28,9 @@ import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
-import org.springframework.security.ldap.server.ApacheDSContainer;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Configuration class for the core web security and LDAP beans.
@@ -188,32 +175,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
       });
     }
-  }
-
-  // Post process the embedded LDAP server (apacheds) to allow custom schema attributes in the LDIF file
-  @Bean
-  public static BeanPostProcessor apacheDSContainerConfigurer() {
-    return new BeanPostProcessor() {
-      @Override
-      public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof ApacheDSContainer) {
-          List<Interceptor> interceptors = new ArrayList<>();
-          interceptors.add(new NormalizationInterceptor());
-          interceptors.add(new AuthenticationInterceptor());
-          interceptors.add(new ReferralInterceptor());
-          interceptors.add(new ExceptionInterceptor());
-          interceptors.add(new OperationalAttributeInterceptor());
-          interceptors.add(new SchemaInterceptor()); // this has been added
-          interceptors.add(new SubentryInterceptor());
-          ((ApacheDSContainer) bean).getService().setInterceptors(interceptors);
-        }
-        return bean;
-      }
-
-      @Override
-      public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-      }
-    };
   }
 }

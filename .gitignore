@@ -18,3 +18,4 @@ make_tunnels.sh
 /modesti*.properties
 common.properties
 .~lock*
+node_modules
