@@ -102,11 +102,15 @@ public class ChangeVisitorTest {
     assertChangeEquals(change, DiffNode.State.CHANGED, "/points[1]/properties{object}", thing1, thing2);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void convertStringToInteger() {
     original.getPoints().get(0).addProperty("integer", "0");
     modified.getPoints().get(0).addProperty("integer", 0);
-    diff(modified, original);
+    ChangeEvent event = diff(modified, original);
+    assertTrue(event.getChanges().size() == 1);
+
+    Change change = event.getChanges().get(0);
+    assertChangeEquals(change, DiffNode.State.CHANGED, "/points[1]/properties{integer}", "0", 0);
   }
 
   @Test
@@ -115,13 +119,6 @@ public class ChangeVisitorTest {
     modified.getPoints().get(0).addProperty("string", "");
     ChangeEvent event = diff(modified, original);
     assertTrue(event.getChanges().size() == 0);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void stringToInteger() {
-    Map<String, Object> original = new HashMap<>(Collections.singletonMap("property", "string"));
-    Map<String, Object> modified = new HashMap<>(Collections.singletonMap("property", 0));
-    ObjectDifferBuilder.buildDefault().compare(modified, original);
   }
 
   private ChangeEvent diff(Request modified, Request original) {
