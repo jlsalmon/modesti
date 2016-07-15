@@ -77,7 +77,7 @@ public class PluginAssetController {
         log.trace("found resource for plugin {}: {}", plugin.getMetadata().getName(), resource.getURI());
 
         if (FilenameUtils.isExtension(resource.getFilename(), new String[]{"js", "html", "css"})) {
-          String path = host + '/' + resource.getFile().getPath().split("static/")[1];
+          String path = host + '/' + resource.getURI().getPath().split("static/")[1];
 
           if (!assets.contains(path)) {
             assets.add(path);
