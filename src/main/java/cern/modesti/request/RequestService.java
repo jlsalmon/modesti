@@ -153,7 +153,7 @@ public class RequestService {
     }
 
     // Process and store any changes that were made to the request
-    // historyService.saveChangeHistory(request);
+    historyService.saveChangeHistory(request);
 
     return repository.save(request);
   }

@@ -70,9 +70,7 @@ public class RequestHistoryService {
     }
 
     ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
-    DiffNode root = ObjectDifferBuilder.startBuilding().comparison().ofType(String.class).toUse((node, type, working, base) -> {
-      log.trace("comparing");
-    }).and().build().compare(modified, original);
+    DiffNode root = ObjectDifferBuilder.buildDefault().compare(modified, original);
 
     root.visit(new PrintingVisitor(modified, original));
     root.visit(new ChangeVisitor(event, modified, original));

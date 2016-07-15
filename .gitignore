@@ -19,3 +19,4 @@ make_tunnels.sh
 common.properties
 .~lock*
 node_modules
+src/main/resources/static
