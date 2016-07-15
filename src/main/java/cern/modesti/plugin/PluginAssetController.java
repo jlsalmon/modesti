@@ -66,7 +66,7 @@ public class PluginAssetController {
     String filename = plugin.getMetadata().getName().toLowerCase().replaceAll(" ", "-") + ".js";
 
     // FIXME: HACK ALERT
-    if (plugin.getMetadata().getName().contains("WinCC OA")) {
+    if (plugin.getMetadata().getName().contains("WinCC OA") || plugin.getMetadata().getName().contains("WINCCOA")) {
       filename = "winccoa-cv.js";
     }
 

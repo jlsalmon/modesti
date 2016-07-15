@@ -44,12 +44,14 @@ public class RequestParserFactory {
     // Search for a plugin which is capable of parsing this request.
     RequestParser parser = null;
     for (RequestProvider provider : requestProviderRegistry.getPlugins()) {
-      if (provider.getMetadata().getName().equals(domain)) {
+      String name = provider.getMetadata().getName();
+
+      if (name.equals(domain)) {
         parser = provider.getRequestParser();
       }
 
-      // HACK: WINCC excel sheets use the old PVSS name...
-      else if (provider.getMetadata().getName().equals("WinCC OA (CV)") && domain.equals("PVSS")) {
+      // FIXME: HACK ALERT: WINCCOA excel sheets use the old PVSS name...
+      else if ((name.contains("WinCC OA") || name.contains("WINCCOA")) && domain.equals("PVSS")) {
         parser = provider.getRequestParser();
       }
     }
