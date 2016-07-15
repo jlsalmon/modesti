@@ -54,7 +54,7 @@ public class PluginAssetController {
 
     for (Resource resource : resolver.getResources("classpath*:/static/assets.json")) {
       if (resourceBelongsToPlugin(resource, plugin)) {
-        log.trace("found asset descriptor for plugin {}: {}", plugin.getMetadata().getName(), resource.getURI());
+        log.trace("found asset descriptor for plugin {}: {}", plugin.getMetadata().getName(), resource.getURL());
         javascriptAssets = mapper.readValue(resource.getInputStream(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
       }
     }
@@ -74,10 +74,10 @@ public class PluginAssetController {
 
     for (Resource resource : resolver.getResources("classpath*:/static/**")) {
       if (resourceBelongsToPlugin(resource, plugin) && !resource.getFilename().equals(moduleDescriptor.getFilename())) {
-        log.trace("found resource for plugin {}: {}", plugin.getMetadata().getName(), resource.getURI());
+        log.trace("found resource for plugin {}: {}", plugin.getMetadata().getName(), resource.getURL());
 
         if (FilenameUtils.isExtension(resource.getFilename(), new String[]{"js", "html", "css"})) {
-          String path = host + '/' + resource.getURI().getPath().split("static/")[1];
+          String path = host + '/' + resource.getURL().getPath().split("static/")[1];
 
           if (!assets.contains(path)) {
             assets.add(path);
