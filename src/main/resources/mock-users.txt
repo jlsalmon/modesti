@@ -1,4 +1,5 @@
 admin Admin User admin@example.com modesti-administrators
 ben Ben Alex ben@example.com modesti-dummy-users,space-cadets
 joe Joe Bell joe@example.com space-cadets
+jusalmon Justin Salmon justin@cern.ch modesti-administrators
 
