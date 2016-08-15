@@ -1,13 +1,13 @@
 package cern.modesti.util;
 
 import cern.modesti.request.point.Point;
-import cern.modesti.schema.field.Field;
 import lombok.extern.slf4j.Slf4j;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +53,9 @@ public class PointUtils {
   /**
    * Get the value of the property of a point
    *
-   * @param point
+   * @param point the
    * @param propertyName
+   * @return
    */
   public static Object getValueByPropertyName(Point point, String propertyName) {
     Object value = null;
@@ -64,8 +65,23 @@ public class PointUtils {
       String[] props = propertyName.split("\\.");
 
       if (properties.containsKey(props[0])) {
-        Map property = (Map) properties.get(props[0]);
-        value = property.get(props[1]);
+        Object property = properties.get(props[0]);
+
+        if (property == null) {
+          return null;
+        }
+
+        if (property instanceof Map) {
+          value = ((Map) property).get(props[1]);
+        } else {
+          try {
+            Field field = property.getClass().getDeclaredField(props[1]);
+            field.setAccessible(true);
+            value = field.get(property);
+          } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(format("Error introspecting point property of type %s", property.getClass()), e);
+          }
+        }
       }
 
     } else {
