@@ -46,7 +46,7 @@ public class CoreValidationService {
   private ObjectMapper mapper = new ObjectMapper();
 
 
-  public void validateRequest(Request request) {
+  public boolean validateRequest(Request request) {
     boolean valid = true;
     Schema schema = schemaRepository.findOne(request.getDomain());
 
@@ -82,7 +82,7 @@ public class CoreValidationService {
 
     if (!valid) {
       log.info(format("request #%s failed validation, not invoking custom validator", request.getRequestId()));
-      return;
+      return false;
     }
 
     log.info(format("request #%s is valid, invoking custom validator", request.getRequestId()));
@@ -90,13 +90,15 @@ public class CoreValidationService {
     RequestValidator validator = requestProviderRegistry.getPluginFor(request).getRequestValidator();
     if (validator == null) {
       log.info(format("custom validator not provided for request #%s", request.getRequestId()));
-      return;
+      return true;
     }
 
     valid = validator.validateRequest(request, schema);
 
     request.setValid(valid);
     requestService.save(request);
+
+    return valid;
   }
 
 
@@ -116,13 +118,17 @@ public class CoreValidationService {
           String propertyName = SchemaUtils.getPropertyName(field);
           Object value = PointUtils.getValueByPropertyName(point, propertyName);
 
+          if (propertyName.contains(".")) {
+            propertyName = propertyName.split("\\.")[0];
+          }
+
           // Check for invalid fields
           if (!isValidValue(value, point, field)) {
             point.setValid(false);
             valid = false;
             // TODO: set category to invalid
             // point.properties.valid = category.valid = valid = false;
-            point.addErrorMessage(category.getName(), propertyName, "Value '" + value + "' is not a legal option for field '" + field.getName()
+            point.addErrorMessage(category.getId(), propertyName, "Value '" + value + "' is not a legal option for field '" + field.getName()
                 + "'. Please select a value from the list.");
           }
 
@@ -149,7 +155,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(category.getName(), propertyName, "Field '" + field.getName() + "' is mandatory");
+              point.addErrorMessage(category.getId(), propertyName, "Field '" + field.getName() + "' is mandatory");
             }
           }
 
@@ -160,7 +166,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(category.getName(), propertyName,
+              point.addErrorMessage(category.getId(), propertyName,
                   "Field '" + field.getName() + "' must be at least " + field.getMinLength() + " characters in length");
             }
           }
@@ -172,7 +178,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(category.getName(), propertyName,
+              point.addErrorMessage(category.getId(), propertyName,
                   "Field '" + field.getName() + "' must not exceed " + field.getMinLength() + " characters in length");
             }
           }
@@ -184,7 +190,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(category.getName(), propertyName, "Value for '" + field.getName() + "' must be numeric");
+              point.addErrorMessage(category.getId(), propertyName, "Value for '" + field.getName() + "' must be numeric");
             }
           }
         }
@@ -223,7 +229,7 @@ public class CoreValidationService {
                   valid = false;
                   // TODO: set category to invalid
                   // point.properties.valid = category.valid = valid = false;
-                  point.addErrorMessage(category.getName(), "", "Fields in the '" + category.getName() + "' group cannot be used if fields in the '"
+                  point.addErrorMessage(category.getId(), "", "Fields in the '" + category.getName() + "' group cannot be used if fields in the '"
                       + excludedCategory.getName() + "' group have been specified.");
                 }
               }
@@ -269,8 +275,10 @@ public class CoreValidationService {
         for (Object option : options) {
           option = option instanceof Map ? mapper.convertValue(option, Option.class).getValue() : option;
 
-          if ((option instanceof Number) && (NumberUtils.isNumber(value.toString())) && option.toString().equals(value)) {
-            return true;
+          if ((option instanceof Number) && (NumberUtils.isNumber(value.toString()))) {
+            if (((Integer) option).doubleValue() == ((Integer) value).doubleValue()) {
+              return true;
+            }
           } else if (option.equals(value)) {
             return true;
           }
