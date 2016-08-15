@@ -24,8 +24,6 @@ import java.util.*;
 import static org.mockito.Mockito.when;
 
 /**
- * TODO
- *
  * @author Justin Lewis Salmon
  */
 @RunWith(MockitoJUnitRunner.class)

@@ -13,12 +13,7 @@ import static cern.modesti.workflow.task.TaskAction.Action.COMPLETE;
 import static org.junit.Assert.assertEquals;
 
 /**
- * TODO:
- *
- *  - Test request modification signal
- *  - Test split signal
- *  - Test CSAM workflow
- *  - Test WINCC workflow
+ * @author Justin Lewis Salmon
  */
 public class CoreWorkflowServiceTest  {
 

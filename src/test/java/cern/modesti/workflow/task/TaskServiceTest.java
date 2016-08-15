@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static cern.modesti.test.TestUtil.getDummyRequest;
 
 /**
- * TODO
- *
  * @author Justin Lewis Salmon
  */
 @Ignore

@@ -22,7 +22,7 @@ public class QPoint extends BeanPath<Point> {
 
     public final BooleanPath dirty = createBoolean("dirty");
 
-    public final ListPath<Error, SimplePath<Error>> errors = this.<Error, SimplePath<Error>>createList("errors", Error.class, SimplePath.class, PathInits.DIRECT2);
+    public final ListPath<Error, QError> errors = this.<Error, QError>createList("errors", Error.class, QError.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> lineNo = createNumber("lineNo", Long.class);
 

@@ -27,10 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-
 /**
- * TODO
- *
  * @author Justin Lewis Salmon
  */
 public class TaskControllerTest extends BaseIntegrationTest {

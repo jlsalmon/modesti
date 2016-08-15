@@ -34,6 +34,8 @@ public class QRequest extends EntityPathBase<Request> {
 
     public final StringPath domain = createString("domain");
 
+    public final MapPath<Long, java.util.List<cern.modesti.request.point.Error>, SimplePath<java.util.List<cern.modesti.request.point.Error>>> errors = this.<Long, java.util.List<cern.modesti.request.point.Error>, SimplePath<java.util.List<cern.modesti.request.point.Error>>>createMap("errors", Long.class, java.util.List.class, SimplePath.class);
+
     public final StringPath id = createString("id");
 
     public final StringPath parentRequestId = createString("parentRequestId");
