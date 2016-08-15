@@ -9,7 +9,7 @@ spring-shell.log
 .classpath
 .project
 .gradle
-make_tunnels.sh
+make_tunnels*
 .DS_Store
 .idea/
 .xml/
