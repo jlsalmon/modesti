@@ -1,6 +1,8 @@
 package cern.modesti.request;
 
 import cern.modesti.request.point.Point;
+import cern.modesti.request.point.Error;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -19,6 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cern.modesti.util.PointUtils.isEmptyPoint;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+
 /**
  * This class represents a single MODESTI request entity. A request is composed
  * of multiple {@link Point}s.
@@ -27,14 +33,14 @@ import java.util.Map;
  * either primitive values or complex objects.
  * <p>
  * In the case of complex object properties, the
- * {@link #getObjectProperty(String, Class)} utility method can be used to
+ * {@link #getProperty(String, Class)} utility method can be used to
  * retrieve them as their specific domain class instance.
  * <p>
  * For example:
  * <p>
  * <code>
  * request.addProperty("myDomainObject", new MyDomainObject());
- * MyDomainObject myDomainObject = request.getObjectProperty("myDomainObject", MyDomainObject.class);
+ * MyDomainObject myDomainObject = request.getProperty("myDomainObject", MyDomainObject.class);
  * </code>
  *
  * @author Justin Lewis Salmon
@@ -129,10 +135,19 @@ public class Request implements Serializable {
    * @param <T>   the type of the value
    * @return the value mapped by the given key, converted to the given type
    */
-  public <T> T getObjectProperty(String key, Class<T> klass) {
+  public <T> T getProperty(String key, Class<T> klass) {
     ObjectMapper mapper = new ObjectMapper();
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     Object value = properties.get(key);
     return mapper.convertValue(value, klass);
+  }
+
+  public List<Point> getPoints() {
+    return this.points.stream().filter(point -> !isEmptyPoint(point)).collect(toList());
+  }
+
+  @JsonIgnore
+  public Map<Long, List<Error>> getErrors() {
+    return this.points.stream().collect(toMap(Point::getLineNo, Point::getErrors));
   }
 }
