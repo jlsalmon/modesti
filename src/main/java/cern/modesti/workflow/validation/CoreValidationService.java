@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,9 @@ public class CoreValidationService {
   @Autowired
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
+  @Autowired
+  private Environment environment;
+
   private ObjectMapper mapper = new ObjectMapper();
 
 
@@ -56,25 +60,30 @@ public class CoreValidationService {
       point.setErrors(new ArrayList<>());
     }
 
-    // Concatenate all categories and datasources
-    List<Category> categories = new ArrayList<>(schema.getCategories());
-    categories.addAll(schema.getDatasources());
+    if (environment.getProperty("modesti.disableValidator", Boolean.class, false)) {
+      log.info("core validations disabled");
+    } else {
 
-    // Validate the mutually exclusive column group specifications.
-    if (!validateMutualExclusions(request, categories)) {
-      valid = false;
-    }
+      // Concatenate all categories and datasources
+      List<Category> categories = new ArrayList<>(schema.getCategories());
+      categories.addAll(schema.getDatasources());
 
-    // Validate the constraints of the schema. This checks things like unique
-    // column groups and mutually inclusive fields.
-    if (!validateConstraints(request, categories)) {
-      valid = false;
-    }
+      // Validate the mutually exclusive column group specifications.
+      if (!validateMutualExclusions(request, categories)) {
+        valid = false;
+      }
 
-    // Validate each point separately. This checks things like required
-    // values, min/max length, valid values etc.
-    if (!validatePoints(request, categories)) {
-      valid = false;
+      // Validate the constraints of the schema. This checks things like unique
+      // column groups and mutually inclusive fields.
+      if (!validateConstraints(request, categories)) {
+        valid = false;
+      }
+
+      // Validate each point separately. This checks things like required
+      // values, min/max length, valid values etc.
+      if (!validatePoints(request, categories)) {
+        valid = false;
+      }
     }
 
     request.setValid(valid);
@@ -276,7 +285,7 @@ public class CoreValidationService {
           option = option instanceof Map ? mapper.convertValue(option, Option.class).getValue() : option;
 
           if ((option instanceof Number) && (NumberUtils.isNumber(value.toString()))) {
-            if (((Integer) option).doubleValue() == ((Integer) value).doubleValue()) {
+            if (new Double(option.toString()).equals(new Double(value.toString()))) {
               return true;
             }
           } else if (option.equals(value)) {
