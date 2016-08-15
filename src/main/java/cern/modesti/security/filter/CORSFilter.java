@@ -1,6 +1,5 @@
 package cern.modesti.security.filter;
 
-import org.apache.catalina.connector.RequestFacade;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,7 @@ public class CORSFilter implements Filter {
   @Override
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
     HttpServletResponse response = (HttpServletResponse) res;
-    response.setHeader("Access-Control-Allow-Origin", ((RequestFacade) req).getHeader("origin"));
+    response.setHeader("Access-Control-Allow-Origin", ((HttpServletRequest) req).getHeader("origin"));
     response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
     response.setHeader("Access-Control-Max-Age", "3600");
     response.setHeader("Access-Control-Allow-Headers", "x-requested-with, content-type, accept, authorization");
