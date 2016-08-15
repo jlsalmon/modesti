@@ -1,6 +1,6 @@
 {
   "name": "modesti",
-  "version": "0.1.10-SNAPSHOT",
+  "version": "0.2.0-SNAPSHOT",
   "description": "Monitoring Data Entry System for Technical Infrastructure",
   "author": "Justin Lewis Salmon <justin.lewis.salmon@cern.ch>",
   "repository": {
