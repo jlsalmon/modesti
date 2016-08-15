@@ -1,0 +1,117 @@
+<style>
+  .table .handsontable .ht_clone_left table.htCore {
+    /*-webkit-box-shadow: 0 0 3px -2px rgba(0, 0, 0, 0.4);*/
+    /*box-shadow: 0 0 3px -2px rgba(0, 0, 0, 0.4);*/
+    -webkit-box-shadow: 3px 0 3px -2px rgba(0, 0, 0, 0.4);
+    box-shadow: 3px 0 3px -2px rgba(0, 0, 0, 0.4);
+  }
+
+  .select2-container {
+    /* padding-left: 1px; */
+    padding-right: 4px;
+  }
+
+  .select2-container .select2-choice {
+    height: 23px;
+    line-height:19px;
+    padding: 0 0 0 3px;
+    margin-right: -3px;
+    box-shadow: none;
+    background-color: #fff;
+    background-image: none;
+    background: #fff;
+  }
+
+  .select2-container .select2-choice .select2-chosen {
+    /*margin-top: 4px */
+  }
+  .select2-container .select2-choice abbr {
+    top: 13px
+  }
+  .select2-container .select2-choice,
+  .select2-container .select2-choice .select2-arrow {
+    border-radius: 0;
+    /*border-color: #ccc;*/
+  }
+
+  .select2-container .select2-choice .select2-arrow {
+    /*background-color: #fafafa;*/
+    /*background-image: none;*/
+    /*background: #fafafa;*/
+    /*width: 22px;*/
+  }
+
+  .select2-dropdown-open .select2-choice .select2-arrow b {
+    background-position: -19px -2px;
+  }
+
+  .select2-container .select2-choice .select2-arrow b>span {
+    margin: 4px 0 0 6px
+  }
+  .select2-container.select2-container-active .select2-choice {
+    border-color: #91acce
+  }
+  .select2-container.select2-dropdown-open .select2-choice {
+    border-bottom-color: #ccc
+  }
+  .select2-drop {
+    /* -webkit-border-radius: 0 !important; */
+    /* border-radius: 0 !important; */
+  }
+
+  .select2-drop:not(.select2-drop-above) {
+    margin-top: -26px;
+  }
+  .select2-drop .select2-results {
+    max-height: 300px
+  }
+  .select2-drop .select2-results li {
+    line-height: inherit;
+    /*margin: 0;*/
+    /*padding: 0;*/
+  }
+
+  .select2-search {
+    padding: 0px 4px 0px 4px;
+    margin: 0;
+    height: 22px;
+  }
+  .select2-search input,
+  .select2-search input:focus {
+    /*background-color: #fff;*/
+    /*background-image: none;*/
+    /*background: #fff;*/
+    box-shadow: none;
+    border: none;
+    font-size: 14px;
+    max-height: 22px;
+    padding: 0;
+    font-family: inherit;
+    min-height: 22px;
+  }
+
+  .select2-drop-auto-width .select2-search {
+    padding-top: 0;
+    border-bottom: none;
+  }
+
+  .select2-container.form-control {
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .select2-results .select2-no-results, .select2-results .select2-searching, .select2-results .select2-selection-limit {
+    background: none;
+  }
+</style>
+
+
+<section class="table" style="overflow: hidden; height: 600px; width: 100%;" ng-cloak>
+  <hot-table id="table" settings="$ctrl.settings"
+             datarows="$ctrl.request.points"
+             columns="$ctrl.columns">
+  </hot-table>
+</section>
+
+

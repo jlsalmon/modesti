@@ -1,0 +1,117 @@
+
+<!--[if lt IE 10]>
+<div class="col-lg-12">
+  <div class="alert alert-warning" style="margin-top: 20px; z-index: 1000;">
+    <p>
+      You are using an unsupported browser. Some parts of this site will not work properly. Supported browsers are
+      Google Chrome, Firefox, Safari and Internet Explorer (versions 10 and above). Please upgrade your browser to
+      improve your experience.
+    </p>
+  </div>
+  <div class="clearfix"></div>
+</div>
+<![endif]-->
+
+
+<header class="main-header">
+
+  <div class="container-fluid">
+    <div class="row">
+      <a ui-sref="home" class="logo"> modesti
+        <small style="font-size: 50%">v<app-version></app-version></small>
+      </a>
+
+      <nav class="navbar navbar-static-top" role="navigation">
+
+        <div class="pull-left">
+          <ul class="nav navbar-nav">
+
+            <li>
+              <a ui-sref="requestList" tooltip="View All Requests" tooltip-placement="bottom">
+                <i class="fa fa-list-ol"></i>
+              </a>
+            </li>
+
+            <li>
+              <a ui-sref="newRequest" tooltip="Create Points" tooltip-placement="bottom">
+                <i class="fa fa-plus"></i>
+              </a>
+            </li>
+
+            <li>
+              <a ui-sref="search" tooltip="Search for Points" tooltip-placement="bottom">
+                <i class="fa fa-search"></i>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+
+        <div class="navbar-custom-menu" ng-cloak>
+          <ul class="nav navbar-nav">
+
+            <li uib-dropdown class="user user-menu" >
+              <a href="" uib-dropdown-toggle ng-cloak>
+                <span class="hidden-xs">
+                  <i class="fa fa-question-circle"></i>
+                </span>
+              </a>
+              <ul uib-dropdown-menu  ng-cloak>
+                <li>
+                  <a ui-sref="about" class="header">
+                    About MODESTI
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:modesti-support@cern.ch" class="header">
+                    Help and support
+                  </a>
+                </li>
+                <li>
+                  <a href="https://gitlab.cern.ch/modesti/modesti/issues/new" class="header">
+                    Report an issue
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li uib-dropdown class="user user-menu">
+              <a href="" ng-click="$ctrl.login()" ng-if="!$ctrl.isAuthenticated()" ng-cloak>
+                <span class="hidden-xs">
+                  <i class="fa fa-fw fa-sign-in"></i>
+                    Sign In
+                </span>
+              </a>
+
+              <a href="" uib-dropdown-toggle ng-if="$ctrl.isAuthenticated()" ng-cloak>
+                <span class="hidden-xs">
+                    {{$ctrl.user.firstName}} {{$ctrl.user.lastName}}
+                  <span class="caret"></span>
+                </span>
+              </a>
+              <ul uib-dropdown-menu ng-show="$ctrl.isAuthenticated()" ng-cloak>
+                <li>
+                  <a ui-sref="user({ id: $ctrl.user.username })" class="header">
+                    <i class="fa fa-fw fa-user"></i>
+                    Profile ({{$ctrl.user.username}})
+                  </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="" class="header" ng-click="$ctrl.logout()">
+                    <i class="fa fa-fw fa-sign-out"></i>
+                    Sign out
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<!-- This is where the main content for each view is inserted. -->
+<div class="view-wrapper" ui-view></div>

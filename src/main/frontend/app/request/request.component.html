@@ -1,0 +1,51 @@
+
+<!-- Alerts are shown here -->
+<div class="alert-messages">
+  <div uib-alert ng-repeat="alert in $root.alerts"  ng-class="'alert-' + (alert.type || 'warning')" close="alert.close()">
+    <span ng-bind-html="alert.message"></span>
+  </div>
+</div>
+
+
+<!-- The header shows the request ID, the description, the owner etc. -->
+<section class="request-header container-fluid">
+  <request-header
+      request="$ctrl.request">
+  </request-header>
+</section>
+
+
+<!-- The toolbar controls the category switcher, cut/copy/paste controls etc. -->
+<section class="toolbar container-fluid">
+  <request-toolbar
+      request="$ctrl.request"
+      tasks="$ctrl.tasks"
+      schema="$ctrl.schema"
+      active-category="$ctrl.activeCategory"
+      table="$ctrl.table">
+  </request-toolbar>
+</section>
+
+
+<!-- The actual table itself -->
+<request-table
+    request="$ctrl.request"
+    tasks="$ctrl.tasks"
+    schema="$ctrl.schema"
+    active-category="$ctrl.activeCategory"
+    table="$ctrl.table"
+    history="$ctrl.history">
+</request-table>
+
+
+<!-- Task-specific controls go in the footer -->
+<footer class="footer">
+  <div class="container-fluid">
+    <request-footer
+        request="$ctrl.request"
+        tasks="$ctrl.tasks"
+        schema="$ctrl.schema"
+        table="$ctrl.table">
+    </request-footer>
+  </div>
+</footer>

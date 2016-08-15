@@ -1,0 +1,78 @@
+<div class="row">
+  <div class="col-lg-12">
+
+    <div class="pull-left">
+      <h4 class="request-id">
+        <i class="fa fa-list-ol fa-fw text-muted"></i>
+        requests <span class="text-muted">/</span> {{::$ctrl.request.requestId}}
+        <small class="request-description">{{::$ctrl.request.description}}</small>
+      </h4>
+    </div>
+
+    <div class="pull-right">
+
+
+      <!-- Request creator -->
+      <span class="request-detail-item text-muted"
+            tooltip="Creator"
+            tooltip-append-to-body="true"
+            tooltip-placement="bottom">
+        <i class="fa fa-fw fa-user-md"></i>
+        <a ui-sref="user({ id: $ctrl.request.creator })">{{::$ctrl.request.creator}}</a>
+      </span>
+
+
+      <!-- Request domain -->
+      <span class="request-detail-item text-muted"
+            tooltip="Domain"
+            tooltip-append-to-body="true"
+            tooltip-placement="bottom">
+        <i class="fa fa-fw fa-crosshairs"></i>
+        {{::$ctrl.request.domain}}
+      </span>
+
+
+      <!-- If this is a child request, reference its parent -->
+      <span class="request-detail-item"
+            ng-if="$ctrl.request.parentRequestId">
+         parent: <a href="requests/{{$ctrl.request.parentRequestId}}">{{::$ctrl.request.parentRequestId}}</a>
+      </span>
+
+
+      <!-- If this is a parent request, list its children -->
+      <span class="request-detail-item"
+            ng-if="$ctrl.children.length > 0">
+         children:
+        <span ng-repeat="child in $ctrl.children">
+          <a href="requests/{{child.requestId}}">{{::child.requestId}}</a>
+        </span>
+      </span>
+
+
+      <!-- Request type -->
+      <span class="request-detail-item text-muted"
+            tooltip="Request Type"
+            tooltip-append-to-body="true"
+            tooltip-placement="bottom">
+
+        <span class="badge request-type" ng-class="'{{::$ctrl.request.type}}'">
+          {{$ctrl.request.type | uppercase}}
+        </span>
+      </span>
+
+
+      <!-- Request status -->
+      <span class="request-detail-item"
+            tooltip="Status"
+            tooltip-append-to-body="true"
+            tooltip-placement="bottom">
+        <span class="label request-status" ng-class="'{{::$ctrl.request.status}}'">
+          {{::$ctrl.request.status.split("_").join(" ")}}
+        </span>
+      </span>
+
+    </div>
+
+  </div>
+</div>
+

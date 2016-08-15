@@ -1,0 +1,13 @@
+{
+  "globalDependencies": {
+    "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#3cccf144977f93efb9484f5e7f62dd988acb3ebd",
+    "angular-cookies": "registry:dt/angular-cookies#1.4.0+20160317120654",
+    "angular-ui-router": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-router/angular-ui-router.d.ts#41f31600a1bff1adef3c76642183b20ec97aa81e",
+    "bootstrap": "github:DefinitelyTyped/DefinitelyTyped/bootstrap/bootstrap.d.ts#5ea7d92bb39c7a26f49dc3de2c566d5ae325e19e",
+    "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#5d0f2126c8dac8fce0ff020218aea06607213b0d",
+    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#661fc869669af796c6048483e999dce5732eed72",
+    "lodash": "github:DefinitelyTyped/DefinitelyTyped/lodash/lodash.d.ts#d456e7ccb07a53c47bdd63957e8785402c19c579",
+    "moment": "github:DefinitelyTyped/DefinitelyTyped/moment/moment.d.ts#56295f5058cac7ae458540423c50ac2dcf9fc711",
+    "moment-node": "github:DefinitelyTyped/DefinitelyTyped/moment/moment-node.d.ts#8886ae591751e8a8237fa855617745768f0b1bdf"
+  }
+}

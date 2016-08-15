@@ -1,0 +1,155 @@
+<style>
+  .control-label {
+    text-align: left !important;
+  }
+
+  i.fa-crosshairs {
+    margin-right: -25px;
+    margin-top: 2px;
+  }
+
+  .ui-select-container {
+    width: 100%;
+  }
+
+  .select2 > .select2-choice.ui-select-match {
+    height: 30px;
+  }
+</style>
+
+<section class="content">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-12">
+        <h3>Create new points</h3>
+
+        <span class="help-block">
+          Register a MODESTI request to create new points, or alternatively
+          <i class="fa fa-upload"></i> <a href="" ui-sref="uploadRequest">upload an Excel sheet</a>
+          containing points to be created.</span>
+
+        <br />
+
+        <form name="form" class="form-horizontal" novalidate>
+
+          <div class="form-group" ng-class="{ 'has-error': (form.domain.$invalid && form.domain.$dirty)
+                                                        || (form.$submitted && form.domain.$invalid) }">
+            <label class="col-sm-3 control-label">
+              Domain
+              <i class="fa fa-fw fa-crosshairs pull-right"></i>
+            </label>
+            <div class="col-sm-9">
+
+              <ui-select ng-model="$ctrl.request.domain"
+                         on-select="$ctrl.onDomainChanged()"
+                         theme="bootstrap"
+                         required>
+                <ui-select-match placeholder="Select a domain...">
+                  {{$select.selected.id}}
+                </ui-select-match>
+
+                <ui-select-choices repeat="schema.id as schema in $ctrl.schemas">
+                  <b><div ng-bind-html="schema.id"></div></b>
+                  <div ng-bind-html="schema.description"></div>
+                </ui-select-choices>
+              </ui-select>
+
+              <!--<select class="form-control" name="domain" required-->
+              <!--ng-model="$ctrl.request.domain"-->
+              <!--ng-options="schema.id as schema.id for schema in $ctrl.schemas"-->
+              <!--ng-change="$ctrl.onDomainChanged()"></select>-->
+              <span class="help-block">Select the target domain of the request.</span>
+            </div>
+          </div>
+
+
+          <div class="form-group has-feedback"
+               ng-class="{ 'has-error': (form.description.$invalid && form.description.$dirty)
+                                     || (form.$submitted && form.description.$invalid) }">
+            <label class="col-sm-3 control-label">Description</label>
+
+            <div class="col-sm-9">
+              <input type="text" class="form-control" ng-model="$ctrl.request.description" name="description"
+                     placeholder="Description" required>
+              <span class="help-block">Enter a general description of your request.</span>
+            </div>
+          </div>
+
+          <!-- Domain-specific fields go here -->
+          <div ng-repeat="field in $ctrl.domainSpecificFields">
+
+            <ng-form name="innerForm">
+              <div class="form-group has-feedback"
+                   ng-class="{ 'has-error': (innerForm.$invalid && innerForm.$dirty)
+                                         || (form.$submitted && innerForm.$invalid) }">
+                <label class="col-sm-3 control-label">{{field.name}}</label>
+
+                <div class="col-sm-9">
+
+
+                  <ui-select ng-if="field.type === 'autocomplete'"
+                             ng-model="$ctrl.request.properties[field.id]"
+                             theme="bootstrap"
+                             ng-required="{{field.required}}">
+                    <ui-select-match placeholder="Type to search...">
+                      {{$select.selected[field.model ? field.model : 'value']}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in $ctrl.fieldValues"
+                                       refresh="$ctrl.queryFieldValues(field, $select.search)"
+                                       refresh-delay="0">
+                      <div ng-bind-html="item[field.model ? field.model : 'value'] | highlight: $select.search"></div>
+                    </ui-select-choices>
+                  </ui-select>
+
+
+                  <ui-select ng-if="field.type === 'options'"
+                             ng-model="$ctrl.request.properties[field.id]"
+                             theme="bootstrap"
+                             ng-required="{{field.required}}">
+                    <ui-select-match placeholder="Select an item...">
+                      {{$select.selected}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="item in field.options">
+                      <div ng-bind-html="item | highlight: $select.search"></div>
+                    </ui-select-choices>
+                  </ui-select>
+
+
+                  <span class="help-block">{{field.help}}</span>
+                </div>
+              </div>
+            </ng-form>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+              <button type="submit" class="btn btn-primary" ng-click="$ctrl.submit(form, request)" ng-disabled="$ctrl.submitting == 'started'">
+
+                <i class="fa fa-fw fa-spin fa-cog"          ng-show="$ctrl.submitting == 'started'"></i>
+                <i class="fa fa-fw fa-exclamation-triangle" ng-show="$ctrl.submitting == 'error'"></i>
+                Next
+
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group" ng-if="$ctrl.error">
+            <div class="col-sm-offset-3 col-sm-9">
+              <div class="callout callout-danger bg-transparent ng-scope">
+                <h4>Error</h4>
+                <p>
+                  {{$ctrl.error}}
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+
+</section>

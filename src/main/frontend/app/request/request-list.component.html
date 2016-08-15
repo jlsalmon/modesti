@@ -1,0 +1,370 @@
+<style>
+  .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    background-color: #e6e6e6;
+    color: #444;
+  }
+
+  .tasklist-controls {
+    /*margin-bottom: 10px;*/
+  }
+
+  .tasklist-controls .search-form input[type="text"] {
+    box-shadow: none;
+    border-right: none;
+  }
+
+  .tasklist-controls .search-form input[type="text"]:focus {
+    border-color: #D2D6DE !important;
+    /*/border-left: none;*/
+  }
+
+  .tasklist-controls .search-form .btn {
+    box-shadow: none;
+    background-color: #fff;
+    border-color: #D2D6DE;
+    border-left: none;
+  }
+
+  .todo-list > li .tools {
+    display: inline-block;
+  }
+
+  .todo-list > li .label {
+    font-size: 12px;
+  }
+
+  .todo-list .request-icon {
+    display: table-cell;
+  }
+
+  .todo-list .request-title {
+    display: table-cell;
+    width: 100%;
+  }
+
+  .todo-list .request-title .label {
+    margin-left: 2px !important;
+  }
+
+  .pagination {
+    margin: 0
+  }
+
+  .list-group-item {
+    cursor: pointer;
+  }
+
+  .list-group-item:first-child {
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+  }
+
+  .list-group-item:last-child {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+
+  .sidebar-menu {;
+  }
+
+  .ui-select-bootstrap > .ui-select-match > .btn {
+    padding-right: 25px;
+  }
+
+  .ui-select-bootstrap .ui-select-choices-row > a {
+    padding: 3px 10px;
+  }
+
+  .ui-select-bootstrap .ui-select-choices-row.active > a {
+    background-color: #e1e3e9;
+    color: #333;
+  }
+
+  a.btn.btn-xs.btn-link {
+    margin-right: 0 !important;
+  }
+
+  .tasklist-controls .filter {
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: top;
+  }
+
+</style>
+
+
+<aside class="main-sidebar">
+  <section class="sidebar" style="height: auto;">
+
+    <ul class="sidebar-menu">
+      <li class="treeview active">
+        <a href="#">
+          <i class="fa fa-filter"></i> <span>My Requests</span> <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu menu-open" style="display: block;">
+          <li>
+            <a href="" ng-click="$ctrl.resetFilter(); $ctrl.filter.assignee = $ctrl.getCurrentUsername()">
+              Assigned to me
+            </a>
+          </li>
+          <li>
+            <a href="" ng-click="$ctrl.resetFilter(); $ctrl.filter.creator = $ctrl.getCurrentUsername()">
+              Created by me
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="treeview active">
+        <a href="#">
+          <i class="fa fa-filter"></i> <span>By Status</span> <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu menu-open" style="display: block;">
+
+          <li ng-repeat="status in $ctrl.statuses">
+            <a href="" ng-click="$ctrl.resetFilter(); $ctrl.filter.status = status.status">
+              <span class="label request-status {{status.status}}">{{::status.status.split("_").join(" ")}}</span>
+              <span class=" pull-right">{{$ctrl.getRequestCount(status.status)}}</span>
+            </a>
+          </li>
+
+        </ul>
+      </li>
+
+      <!--<li class="treeview active">-->
+        <!--<a href="#">-->
+          <!--<i class="fa fa-filter"></i> <span>My Filters</span> <i class="fa fa-angle-left pull-right"></i>-->
+        <!--</a>-->
+        <!--<ul class="treeview-menu menu-open" style="display: block;">-->
+
+          <!--<li>-->
+            <!--<a href="" ng-click="$ctrl.filter.assignee.username = $ctrl.getCurrentUsername()">-->
+              <!--Assigned to me-->
+            <!--</a>-->
+          <!--</li>-->
+
+        <!--</ul>-->
+      <!--</li>-->
+
+
+    </ul>
+  </section>
+</aside>
+
+
+<!-- Alerts are shown here -->
+<div class="alert-messages">
+  <div uib-alert ng-repeat="alert in $root.alerts"  ng-class="'alert-' + (alert.type || 'warning')" close="alert.close()">
+    <span ng-bind-html="alert.message"></span>
+  </div>
+</div>
+
+
+<div class="content-wrapper">
+<section class="content" ng-if="$ctrl.isUserAuthenticated()">
+
+  <!--<h3>Search for requests</h3>-->
+  <!--<span class="help-block">Use the controls below to search, filter and sort the list of MODESTI requests.</span>-->
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="tasklist-controls">
+
+        <style>
+          .bootstrap-select.btn-group .dropdown-menu li small {
+            padding-left: 0;
+          }
+
+          span.filter-option {
+            color: #737373;
+          }
+
+          .dropdown-menu > li > a > .glyphicon, .dropdown-menu > li > a > .fa, .dropdown-menu > li > a > .ion {
+            margin-right: 0;
+          }
+
+          .ui-select-bootstrap > .ui-select-choices {
+            max-height: 500px;
+            width: auto;
+          }
+        </style>
+
+        <div class="filter">
+          <input class="form-control" ng-model="$ctrl.filter.description" placeholder="Description">
+        </div>
+
+
+        <div class="filter">
+          <ui-select ng-model="$ctrl.filter.status" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Status" allow-clear="true">
+              <span class='label request-status {{$select.selected.status}}'>
+                <!--{{::$ctrl.filter.status.replace('_', ' ')}}-->
+                {{$select.selected.status.split("_").join(" ")}}
+              </span>
+            </ui-select-match>
+
+            <ui-select-choices repeat="status.status as status in $ctrl.statuses">
+              <span class='label request-status {{::status.status}}' style='margin-right: 20px;'>
+                {{::status.status.split("_").join(" ")}}
+              </span>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+        <div class="filter">
+          <ui-select ng-model="$ctrl.filter.domain" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Domain" allow-clear="true">
+                {{$select.selected.id}}
+            </ui-select-match>
+
+            <ui-select-choices repeat="schema.id as schema in $ctrl.schemas">
+              <b><div ng-bind-html="schema.id"></div></b>
+              <div ng-bind-html="schema.description"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+        <div class="filter">
+          <ui-select ng-model="$ctrl.filter.creator" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Creator" allow-clear="true">{{$select.selected.username}}</ui-select-match>
+            <ui-select-choices repeat="user.username as user in $ctrl.users track by $index"
+                               refresh="$ctrl.queryUsers($select.search)"
+                               refresh-delay="500">
+              <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
+              <small>
+                <span ng-bind-html="''+user.username | highlight: $select.search"></span>
+              </small>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+        <div class="filter">
+          <ui-select ng-model="$ctrl.filter.assignee" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Assignee" allow-clear="true">{{$select.selected.username}}</ui-select-match>
+            <ui-select-choices repeat="user.username as user in $ctrl.users track by $index"
+                               refresh="$ctrl.queryUsers($select.search)"
+                               refresh-delay="500">
+              <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
+              <small>
+                <span ng-bind-html="''+user.username | highlight: $select.search"></span>
+              </small>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+        <div class="filter">
+          <ui-select ng-model="$ctrl.filter.type" theme="bootstrap" style="min-width: 80px;">
+            <ui-select-match placeholder="Type" allow-clear="true">
+              {{$select.selected}}
+            </ui-select-match>
+
+            <ui-select-choices repeat="type in $ctrl.types">
+              <div ng-bind-html="type"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+
+        <div class="filter">
+          <button class="btn btn-default" ng-click="$ctrl.resetFilter()" tooltip="Clear filter" tooltip-append-to-body="true">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+
+        <div class="pull-right">
+          <select selectpicker="{}" class="selectpicker"
+                  ng-model="$ctrl.sort"
+                  data-title="Sort by"
+                  data-width="auto">
+            <option value="createdAt,desc" title="sort: Newest">Newest</option>
+            <option value="createdAt,asc" title="sort: Oldest">Oldest</option>
+            <option value="status,asc" title="sort: Status">Status</option>
+            <option value="domain,asc" title="sort: Domain">Domain</option>
+            <option value="creator,asc" title="sort: Creator">Creator</option>
+            <option value="assignee,asc" title="sort: Assignee">Assignee</option>
+            <option value="type,asc" title="sort: Type">Type</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="loading-container" style="height: 400px; width: 100%"
+         ng-if="$ctrl.loading == 'started' || $ctrl.loading == 'error'">
+      <span us-spinner="{position: 'relative', top: '50px', zIndex: '200'}" ng-if="$ctrl.loading == 'started'"></span>
+      <i class="fa fa-3x fa-exclamation-triangle" ng-if="$ctrl.loading == 'error'"
+         style="position: relative; top: 31px; left: 48.2%;"></i>
+    </div>
+
+    <style>
+      .badge {
+        font-weight: normal;
+        background-color: transparent;
+        color: #555;
+      }
+      .text-muted.badge .fa {
+        color: #bfbfbf;
+      }
+    </style>
+
+    <div class="list-group" ng-if="$ctrl.loading == 'success'">
+      <a ng-repeat="request in $ctrl.requests"
+         ng-if="$ctrl.requests.length > 0"
+         ng-click="$ctrl.editRequest(request)"
+         class="list-group-item">
+
+        <i class="fa fa-list-ol fa-fw text-muted"></i>
+        <span class=""><strong>{{request.description}}</strong></span>
+
+        <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.split("_").join(" ")}}</span>
+        <br/>
+        <span class="" style="font-size: 12px;">
+          <span class="text-muted">#{{request.requestId}} by {{request.creator}} </span>
+          <span class="text-muted badge"> {{request.type}} </span>
+          <span class="text-muted badge"> <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
+          <span class="text-muted badge" ng-if="request.assignee" tooltip="Assignee"> <i class="fa fa-fw fa-user"></i> {{request.assignee}} </span>
+
+          <span ng-if="$ctrl.hasCustomProperties(request)"
+                style="margin-left: 5px;">
+            <span ng-repeat="(key, value) in request.properties">
+              <span ng-init="property = $ctrl.formatCustomProperty(request, key)">
+                <span ng-if="property.value"
+                      class="text-muted badge"
+                      style="background-color: #F5F5F5; float: none;"
+                      tooltip="{{property.field.name}}">
+                  {{property.value}}
+                </span>
+              </span>
+            </span>
+          </span>
+
+        </span>
+        <span class="text-muted pull-right" style="font-size: 11px; margin-top: 5px;"><i class="fa fa-fw fa-clock-o"></i> {{request.createdAt | date:'medium'}}</span>
+      </a>
+      <div class="list-group-item" ng-if="$ctrl.requests.length == 0">
+        No requests to show
+      </div>
+    </div>
+  </div>
+
+  <div class="pull-left" ng-if="$ctrl.loading == 'success' && $ctrl.requests.length > 0">
+    <div uib-pagination boundary-links="true"
+                max-size="5"
+                total-items="$ctrl.page.totalElements"
+                items-per-page="$ctrl.page.size"
+                rotate="false"
+                ng-model="$ctrl.page.number"
+                ng-change="$ctrl.onPageChanged()"
+                class="pagination-sm"
+                previous-text="&lsaquo;"
+                next-text="&rsaquo;"
+                first-text="&laquo;"
+                last-text="&raquo;"></div>
+  </div>
+
+  <div class="pull-right" ng-if="$ctrl.page.totalElements">
+    {{$ctrl.page.totalElements}} requests for this filter
+  </div>
+
+</section>
+</div>
