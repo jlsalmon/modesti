@@ -16,7 +16,7 @@ import java.util.*;
  * primitive values or complex objects.
  * <p>
  * In the case of complex object properties, the
- * {@link #getObjectProperty(String, Class)} utility method can be used to
+ * {@link #getProperty(String, Class)} utility method can be used to
  * retrieve them as their specific domain class instance.
  * <p>
  * For example:
@@ -24,7 +24,7 @@ import java.util.*;
  * <code>
  * Point point = new Point();
  * point.addProperty("myDomainObject", new MyDomainObject());
- * MyDomainObject myDomainObject = point.getObjectProperty("myDomainObject", MyDomainObject.class);
+ * MyDomainObject myDomainObject = point.getProperty("myDomainObject", MyDomainObject.class);
  * </code>
  *
  * @author Justin Lewis Salmon
@@ -62,7 +62,7 @@ public class Point implements Serializable {
    * @param <T>   the type of the value
    * @return the value mapped by the given key, converted to the given type
    */
-  public <T> T getObjectProperty(String key, Class<T> klass) {
+  public <T> T getProperty(String key, Class<T> klass) {
     Object value = properties.get(key);
     return new ObjectMapper().convertValue(value, klass);
   }
