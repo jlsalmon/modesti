@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.String.format;
 
@@ -61,8 +62,6 @@ public class RequestHistoryService {
     Assert.notNull(original);
     Assert.isTrue(modified.getRequestId().equals(original.getRequestId()));
 
-    // TODO: fix this. If the type of a point property changes, the differ craps out. See https://github.com/SQiShER/java-object-diff/issues/56
-
     RequestHistory entry = requestHistoryRepository.findOneByRequestId(original.getRequestId());
     if (entry == null) {
       initialiseChangeHistory(original);
@@ -77,5 +76,16 @@ public class RequestHistoryService {
 
     entry.getEvents().add(event);
     requestHistoryRepository.save(entry);
+  }
+
+  public List<Change> getChanges(Request modified) {
+    RequestHistory entry = requestHistoryRepository.findOneByRequestId(modified.getRequestId());
+    Request original = entry.getOriginalRequest();
+
+    ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
+    DiffNode root = ObjectDifferBuilder.buildDefault().compare(modified, original);
+
+    root.visit(new ChangeVisitor(event, modified, original));
+    return event.getChanges();
   }
 }
