@@ -21,6 +21,16 @@ public class Change {
   private String path;
 
   /**
+   * The line number
+   */
+  private Long lineNo;
+
+  /**
+   * The name of the property (map key)
+   */
+  private String property;
+
+  /**
    * Change state (ADDED, CHANGED, REMOVED etc.)
    */
   private DiffNode.State state;

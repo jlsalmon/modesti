@@ -44,7 +44,8 @@ public class ChangeVisitor implements DiffNode.Visitor {
    */
   public void node(DiffNode node, Visit visit) {
     if ((isPrimitiveLeafProperty(node) || isObjectProperty(node)) && hasActuallyChanged(node)) {
-      Change change = new Change(getPath(node), node.getState(), node.canonicalGet(original), node.canonicalGet(modified));
+      Change change = new Change(getPath(node), getLineNo(node), getProperty(node), node.getState(),
+          node.canonicalGet(original), node.canonicalGet(modified));
       event.getChanges().add(change);
     }
   }
@@ -77,9 +78,16 @@ public class ChangeVisitor implements DiffNode.Visitor {
   }
 
   private String getPath(DiffNode node) {
-    Point workingPoint = (Point) node.getParentNode().getParentNode().canonicalGet(modified);
-    Long lineNo = workingPoint.getLineNo();
+    return format("/points[%d]/properties{%s}", getLineNo(node), getProperty(node));
+  }
+
+  private String getProperty(DiffNode node) {
     String property = node.getPath().getLastElementSelector().toString();
-    return format("/points[%d]/properties%s", lineNo, property);
+    return property.substring(1, property.indexOf("}"));
+  }
+
+  private Long getLineNo(DiffNode node) {
+    Point workingPoint = (Point) node.getParentNode().getParentNode().canonicalGet(modified);
+    return workingPoint.getLineNo();
   }
 }
