@@ -16,7 +16,7 @@ import java.security.Principal;
 @RestController
 public class LoginController {
 
-  @RequestMapping(value = "/login")
+  @RequestMapping(value = "/api/login")
   public UserDetails login(Principal principal) {
     UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) principal;
     return (User) token.getPrincipal();

@@ -36,7 +36,7 @@ public class UserSearchController {
 //  @Autowired
 //  private UserRepository userRepository;
 
-  @RequestMapping(value = "/users/search/findOneByUsername", method = GET, produces = "application/json")
+  @RequestMapping(value = "/api/users/search/findOneByUsername", method = GET, produces = "application/json")
   HttpEntity<Resource<User>> findOneByUsername(@RequestParam("username") String username) {
     User user = userService.findOneByUsername(username);
     if (user == null) {
@@ -49,7 +49,7 @@ public class UserSearchController {
     return new ResponseEntity<>(resource, HttpStatus.OK);
   }
 
-  @RequestMapping(value = "/users/search", method = GET, produces = "application/json")
+  @RequestMapping(value = "/api/users/search", method = GET, produces = "application/json")
   HttpEntity<Resources<User>> search(@RequestParam("query") String query) {
     Iterable<User> users = null;
 

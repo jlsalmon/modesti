@@ -51,7 +51,7 @@ public class PointSearchController {
    * @param assembler helper for assembling pages of results
    * @return a page of {@link Point} instances and a HTTP status
    */
-  @RequestMapping(value = "/points/search", method = GET, produces = "application/json")
+  @RequestMapping(value = "/api/points/search", method = GET, produces = "application/json")
   HttpEntity<PagedResources<Point>> search(@RequestParam("domain") String domain, @RequestParam("query") String query, Pageable pageable,
                                            PagedResourcesAssembler assembler) {
     RequestProvider plugin = null;

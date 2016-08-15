@@ -26,7 +26,7 @@ public class CoreValidationController {
   private RequestService requestService;
 
 
-  @RequestMapping(value = "/requests/{id}/validate", method = POST)
+  @RequestMapping(value = "/api/requests/{id}/validate", method = POST)
   public HttpEntity<Resource<Request>> validate(@PathVariable("id") String id) {
     Request request = requestService.findOneByRequestId(id);
     if (request == null) {

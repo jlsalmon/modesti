@@ -35,7 +35,7 @@ public class RequestSearchController {
   @Autowired
   private RequestResourceAssembler resourceAssembler;
 
-  @RequestMapping(value = "/requests/search", method = GET, produces = "application/json")
+  @RequestMapping(value = "/api/requests/search", method = GET, produces = "application/json")
   HttpEntity<PagedResources<Request>> search(@RequestParam("query") String query, Pageable pageable, PagedResourcesAssembler assembler) {
     Page<Request> requests;
 

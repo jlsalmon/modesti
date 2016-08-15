@@ -33,7 +33,7 @@ public class UploadController {
   @Autowired
   private UploadService service;
 
-  @RequestMapping(value = "/requests/upload", method = POST)
+  @RequestMapping(value = "/api/requests/upload", method = POST)
   public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("description") String description, UriComponentsBuilder b) {
     RequestParseResult result;
 

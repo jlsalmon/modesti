@@ -26,7 +26,7 @@ public class MetricsController {
   @Autowired
   private MongoTemplate mongoTemplate;
 
-  @RequestMapping(value = "/metrics", method = GET)
+  @RequestMapping(value = "/api/metrics", method = GET)
   public List getRequestMetrics() {
 
     GroupByResults<Request> results = mongoTemplate.group("request", GroupBy.key("status").initialDocument("{ count: 0 }").reduceFunction("function" + "" +

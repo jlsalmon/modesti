@@ -42,7 +42,7 @@ public class PluginAssetController {
 
   private ObjectMapper mapper = new ObjectMapper();
 
-  @RequestMapping("/plugins/{id}/assets")
+  @RequestMapping("/api/plugins/{id}/assets")
   public List<String> getAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws IOException, URISyntaxException {
     LinkedList<String> assets = new LinkedList<>();
 
@@ -117,9 +117,6 @@ public class PluginAssetController {
     } else {
       resourceRootPath = resource.getFile().getParentFile().getParentFile().getAbsolutePath();
     }
-
-    log.debug("pluginRootPath: {}", pluginRootPath);
-    log.debug("resourceRootPath: {}", resourceRootPath);
 
     return resourceRootPath.contains(pluginRootPath);
   }

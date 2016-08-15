@@ -23,7 +23,7 @@ public class HistoryController {
   @Autowired
   HistoryService historyService;
 
-  @RequestMapping(value = "/requests/{id}/history", method = GET)
+  @RequestMapping(value = "/api/requests/{id}/history", method = GET)
   public HttpEntity<Resources<HistoricEvent>> getHistory(@PathVariable("id") String id) {
     Resources<HistoricEvent> history = new Resources<>(historyService.getHistoryForRequest(id));
     return new ResponseEntity<>(history, HttpStatus.OK);

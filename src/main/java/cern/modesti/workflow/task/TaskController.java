@@ -32,7 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * @author Justin Lewis Salmon
  */
 @Controller
-@RequestMapping("/requests/{id}/tasks")
+@RequestMapping("/api/requests/{id}/tasks")
 @PreAuthorize("permitAll")
 @Slf4j
 public class TaskController {

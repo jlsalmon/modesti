@@ -48,6 +48,8 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);
+
+    config.setBasePath("/api");
   }
 
   @Override
