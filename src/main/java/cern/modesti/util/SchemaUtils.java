@@ -36,9 +36,10 @@ public class SchemaUtils {
   }
 
   /**
-   * Get the name of a property from its field schema
+   * Get the full property name of the given field. For object-type properties,
+   * this will generally be the field id + the model value (e.g. gmaCode.value)
    *
-   * @param field
+   * @param field the field to access
    */
   public static String getPropertyName(Field field) {
     if (field.getType().equals("autocomplete")) {

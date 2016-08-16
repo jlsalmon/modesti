@@ -8,18 +8,21 @@ import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaRepository;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Constraint;
+import cern.modesti.schema.field.AutocompleteField;
 import cern.modesti.schema.field.Field;
 import cern.modesti.schema.field.Option;
 import cern.modesti.schema.field.OptionsField;
 import cern.modesti.util.PointUtils;
 import cern.modesti.util.SchemaUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -124,12 +127,7 @@ public class CoreValidationService {
       for (Category category : categories) {
         for (Field field : category.getFields()) {
 
-          String propertyName = SchemaUtils.getPropertyName(field);
-          Object value = PointUtils.getValueByPropertyName(point, propertyName);
-
-          if (propertyName.contains(".")) {
-            propertyName = propertyName.split("\\.")[0];
-          }
+          Object value = PointUtils.getValueByPropertyName(point, SchemaUtils.getPropertyName(field));
 
           // Check for invalid fields
           if (!isValidValue(value, point, field)) {
@@ -137,7 +135,7 @@ public class CoreValidationService {
             valid = false;
             // TODO: set category to invalid
             // point.properties.valid = category.valid = valid = false;
-            point.addErrorMessage(category.getId(), propertyName, "Value '" + value + "' is not a legal option for field '" + field.getName()
+            point.addErrorMessage(category.getId(), field.getId(), "Value '" + value + "' is not a legal option for field '" + field.getName()
                 + "'. Please select a value from the list.");
           }
 
@@ -164,7 +162,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(category.getId(), propertyName, "Field '" + field.getName() + "' is mandatory");
+              point.addErrorMessage(category.getId(), field.getId(), "Field '" + field.getName() + "' is mandatory");
             }
           }
 
@@ -175,7 +173,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(category.getId(), propertyName,
+              point.addErrorMessage(category.getId(), field.getId(),
                   "Field '" + field.getName() + "' must be at least " + field.getMinLength() + " characters in length");
             }
           }
@@ -187,7 +185,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(category.getId(), propertyName,
+              point.addErrorMessage(category.getId(), field.getId(),
                   "Field '" + field.getName() + "' must not exceed " + field.getMinLength() + " characters in length");
             }
           }
@@ -199,7 +197,7 @@ public class CoreValidationService {
               valid = false;
               // TODO: set category to invalid
               // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(category.getId(), propertyName, "Value for '" + field.getName() + "' must be numeric");
+              point.addErrorMessage(category.getId(), field.getId(), "Value for '" + field.getName() + "' must be numeric");
             }
           }
         }
@@ -299,17 +297,14 @@ public class CoreValidationService {
 
     // Otherwise, if we have an autocomplete field, make a call to the backend to see if this value returns any results
     else if (field.getType().equals("autocomplete")) {
+      String url = ((AutocompleteField) field).getUrl();
 
       // FIXME: currently, pasting an invalid value into an autocomplete field won't trigger an error.
 
-      // If no results are found in the source function, then this field will have been marked as invalid.
-//      return !(point.invalidFields && point.invalidFields.indexOf(field.id) > -1);
       return true;
     }
 
-    else {
-      return true;
-    }
+    return true;
   }
 
 }
