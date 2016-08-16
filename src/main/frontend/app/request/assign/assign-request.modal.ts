@@ -14,12 +14,12 @@ export class AssignRequestModalController {
     this.$modalInstance.dismiss('cancel');
   }
 
-  public refreshUsers(query) {
+  public refreshUsers(query:any) {
     return this.$http.get('/api//users/search', {
       params : {
         query : this.parseQuery(query)
       }
-    }).then((response) => {
+    }).then((response:any):any[] => {
       if (!response.data.hasOwnProperty('_embedded')) {
         return [];
       }
@@ -28,7 +28,7 @@ export class AssignRequestModalController {
     });
   }
 
-  public parseQuery(query) {
+  public parseQuery(query:any) {
     var q = '';
 
     if (this.task.candidateGroups.length > 1) {

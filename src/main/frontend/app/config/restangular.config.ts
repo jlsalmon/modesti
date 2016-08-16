@@ -8,9 +8,9 @@ export class RestangularConfig {
     RestangularProvider.setFullResponse(true);
 
     // Add a response interceptor
-    RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
+    RestangularProvider.addResponseInterceptor(function(data:any, operation:any) {
 
-      var extractedData;
+      var extractedData:any[];
 
       if (operation === "getList") {
         if (data.hasOwnProperty('_embedded')) {

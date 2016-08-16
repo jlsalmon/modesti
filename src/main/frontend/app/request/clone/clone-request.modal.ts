@@ -12,7 +12,7 @@ export class CloneRequestModalController {
   public clone() {
     this.cloning = 'started';
 
-    this.requestService.cloneRequest(this.request, this.schema).then((location) => {
+    this.requestService.cloneRequest(this.request, this.schema).then((location:any) => {
       // Strip request ID from location
       var id = location.substring(location.lastIndexOf('/') + 1);
       console.log('cloned request ' + this.request.requestId + ' to new request ' + id);
@@ -24,7 +24,7 @@ export class CloneRequestModalController {
       });
     },
 
-    (error) => {
+    (error:any) => {
       console.log('clone failed: ' + error.statusText);
       this.cloning = 'error';
     });

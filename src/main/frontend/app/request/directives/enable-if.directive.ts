@@ -5,17 +5,17 @@ export class EnableIfDirective implements ng.IDirective {
   public constructor(private taskService:TaskService, private ngDisabledDirective:any) {}
 
   static factory(): ng.IDirectiveFactory {
-    const directive = (taskService:TaskService, private ngDisabledDirective:any) => new EnableIfDirective(taskService, ngDisabledDirective);
+    const directive = (taskService:TaskService, ngDisabledDirective:any) => new EnableIfDirective(taskService, ngDisabledDirective);
     directive.$inject = ['TaskService', 'ngDisabledDirective'];
     return directive;
   }
 
-  public link:Function = (scope, element, attrs) => {
+  public link:Function = (scope:any, element:any, attrs:any) => {
     attrs.ngDisabled = () => {
-      var expression = attrs.enableIf;
-      var conditions = expression.split(' && ');
-      var task = this.taskService.getCurrentTask();
-      var results = [];
+      var expression:any = attrs.enableIf;
+      var conditions:any = expression.split(' && ');
+      var task:any = this.taskService.getCurrentTask();
+      var results:any[] = [];
 
       conditions.forEach((condition) => {
         var result = false;

@@ -19,16 +19,16 @@ class MainController {
     $scope.$on('event:auth-loginRequired', () => this.login());
   }
 
-  public isActivePage(page) {
-    return this.$location.path().lastIndexOf(page, 0) === 0;
-  }
+  //public isActivePage(page:) {
+  //  return this.$location.path().lastIndexOf(page, 0) === 0;
+  //}
 
   public isAuthenticated() {
     return this.authService.isCurrentUserAuthenticated();
   }
 
   public login() {
-    this.authService.login().then(user => this.user = user);
+    this.authService.login().then((user:any) => this.user = user);
   }
 
   public logout() {

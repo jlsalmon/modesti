@@ -32,7 +32,7 @@ export class AuthService {
     return q.promise;
   }
 
-  public doLogin(credentials) {
+  public doLogin(credentials:any) {
     var q = this.$q.defer();
 
     // Build a basic auth header
@@ -42,7 +42,7 @@ export class AuthService {
 
     // Set ignoreAuthModule so that angular-http-auth doesn't show another modal
     // if the authentication fails
-    this.$http.get('/api/login', {headers: headers, ignoreAuthModule: true}).then((response) => {
+    this.$http.get('/api/login', {headers: headers, ignoreAuthModule: true}).then((response:any) => {
       console.log('authenticated');
 
       // Set data in local storage for other parts of the app to use
@@ -55,7 +55,7 @@ export class AuthService {
       q.resolve();
     },
 
-    (error) => {
+    (error:any) => {
       console.log('failed to authenticate');
       this.$localStorage.user = undefined;
       q.reject(error);
@@ -95,14 +95,14 @@ export class AuthService {
     return false;
   }
 
-  public getUser(username) {
+  public getUser(username:any) {
     var q = this.$q.defer();
 
-    this.$http.get('/api/users/search/findOneByUsername', {params: {username: username}}).then((response) => {
+    this.$http.get('/api/users/search/findOneByUsername', {params: {username: username}}).then((response:any) => {
         q.resolve(response.data);
       },
 
-      (error) => {
+      (error:any) => {
         console.log('failed to get user ' + username);
         q.reject(error);
       });

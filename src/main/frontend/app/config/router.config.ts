@@ -11,22 +11,22 @@ export class RouterConfig {
         .state('uploadRequest', { url: '/requests/upload', component: 'uploadRequest' })
         .state('request',       { url: '/requests/:id',    component: 'request',
           resolve: {
-            request: ['$stateParams', 'RequestService', ($stateParams, RequestService) => {
+            request: ['$stateParams', 'RequestService', ($stateParams:any, RequestService:any) => {
               return RequestService.getRequest($stateParams.id);
             }],
-            children: ['request', 'RequestService', (request, RequestService) => {
+            children: ['request', 'RequestService', (request:any, RequestService:any) => {
               return RequestService.getChildRequests(request);
             }],
-            schema: ['request', 'SchemaService', (request, SchemaService) => {
+            schema: ['request', 'SchemaService', (request:any, SchemaService:any) => {
               return SchemaService.getSchema(request);
             }],
-            tasks: ['request', 'TaskService', (request, TaskService) => {
+            tasks: ['request', 'TaskService', (request:any, TaskService:any) => {
               return TaskService.getTasksForRequest(request);
             }],
-            signals: ['request', 'TaskService', (request, TaskService) => {
+            signals: ['request', 'TaskService', (request:any, TaskService:any) => {
               return TaskService.getSignalsForRequest(request);
             }],
-            history: ['request', 'RequestService', (request, RequestService) => {
+            history: ['request', 'RequestService', (request:any, RequestService:any) => {
               return RequestService.getRequestHistory(request.requestId);
             }]
           }})
@@ -43,7 +43,7 @@ export class RouterConfig {
             pageTitle: 'Request submitted'
           },
           resolve: {
-            request: ['$stateParams', 'RequestService', ($stateParams, RequestService) => {
+            request: ['$stateParams', 'RequestService', ($stateParams:any, RequestService:any) => {
               return RequestService.getRequest($stateParams.id);
             }],
           }})

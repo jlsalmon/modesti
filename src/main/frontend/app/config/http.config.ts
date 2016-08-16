@@ -9,18 +9,18 @@ export class HttpConfig {
     // Needed to make sure that the JSESSIONCOOKIE is sent with every request
     $httpProvider.defaults.withCredentials = true;
 
-    $httpProvider.interceptors.push(['$q', '$injector', ($q, $injector) => {
+    $httpProvider.interceptors.push(['$q', '$injector', ($q:any, $injector:any) => {
       return {
-        request : function(config) {
+        request : function(config:any) {
           return config || $q.when(config);
         },
-        requestError : function(request) {
+        requestError : function(request:any) {
           return $q.reject(request);
         },
-        response : function(response) {
+        response : function(response:any) {
           return response || $q.when(response);
         },
-        responseError : function(response) {
+        responseError : function(response:any) {
           if (response && (response.status === 0 || response.status === -1)) {
             // Backend not connected
             console.log('error: backend not connected');
