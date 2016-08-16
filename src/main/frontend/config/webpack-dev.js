@@ -4,7 +4,7 @@ var webpack = require('webpack');
 module.exports = {
     entry: './src/main/frontend/app/app.ts',
     output: {
-        path: '../resources/static/bin',
+        path: './build/resources/main/static/bin',
         filename: 'app.js'
     },
     devtool: 'source-map',

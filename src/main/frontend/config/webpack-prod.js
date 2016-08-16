@@ -4,11 +4,11 @@ var webpack = require('webpack');
 module.exports = {
     entry: './src/main/frontend/app/app.ts',
     output: {
-        path: '../../../build/resources/main/static/bin',
+        path: './build/resources/main/static/bin',
         filename: 'app.js'
     },
     resolve: {
-        modulesDirectories: ['../node_modules'],
+        modulesDirectories: ['./node_modules'],
         alias: {
             'ui-router': 'angular-ui-router/release/angular-ui-router.js'
         }
