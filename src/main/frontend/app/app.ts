@@ -7,7 +7,7 @@ import 'angular-ui-router';
 import 'angular-ui-router-title';
 import 'angular-file-upload';
 import 'angular-http-auth';
-//import 'angular-spinner';
+import 'angular-spinner';
 import 'angular-filter';
 import 'spin.js';
 //import 'angular-bootstrap-select';

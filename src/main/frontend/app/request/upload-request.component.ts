@@ -53,7 +53,7 @@ class UploadRequestController {
   public onAfterAddingFile(fileItem) {
     console.log('onAfterAddingFile', fileItem);
     var input = $('.btn-file :file');
-    var numFiles = input.get(0).files ? input.get(0).files.length : 1;
+    var numFiles = input.get(0)['files'] ? input.get(0)['files'].length : 1;
     var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
     input.trigger('fileselect', [numFiles, label]);
   }

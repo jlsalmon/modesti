@@ -1,4 +1,4 @@
-import {Alert} from './alert';
+import {Alert} from './alert.ts';
 
 export class AlertService {
   public static $inject:string[] = ['$rootScope', '$timeout'];
@@ -9,13 +9,7 @@ export class AlertService {
   }
 
   public add(type:string, message:string, timeout:number = 10000) {
-    //timeout = typeof timeout !== 'undefined' ? timeout : 10000;
-
-    var alert = {
-      'type': type,
-      'message': message,
-      close: () => this.closeAlert(this)
-    };
+    var alert:Alert = new Alert(type, message, this);
 
     this.$rootScope.alerts.push(alert);
     this.$timeout(() => alert.close(), timeout);

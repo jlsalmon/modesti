@@ -10,7 +10,7 @@ export class EnableIfDirective implements ng.IDirective {
     return directive;
   }
 
-  public link:Function = (scope:any, element:any, attrs:any) => {
+  public link (scope:any, element:any, attrs:any) {
     attrs.ngDisabled = () => {
       var expression:any = attrs.enableIf;
       var conditions:any = expression.split(' && ');

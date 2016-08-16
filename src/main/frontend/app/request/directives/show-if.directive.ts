@@ -8,12 +8,12 @@ export class ShowIfDirective implements ng.IDirective {
   public constructor(private taskService:TaskService, private ngIfDirective:any) {}
 
   static factory(): ng.IDirectiveFactory {
-    const directive = (taskService:TaskService, private ngIfDirective:any) => new ShowIfDirective(taskService, ngIfDirective);
+    const directive = (taskService:TaskService, ngIfDirective:any) => new ShowIfDirective(taskService, ngIfDirective);
     directive.$inject = ['TaskService', 'ngIfDirective'];
     return directive;
   }
 
-  public link:Function = (scope, element, attrs) => {
+  public link(scope, element, attrs) {
     attrs.ngIf = () => {
       var expression = attrs.showIf;
       var conditions = expression.split(' && ');

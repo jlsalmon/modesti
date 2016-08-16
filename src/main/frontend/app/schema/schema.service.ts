@@ -105,7 +105,7 @@ export class SchemaService {
     }
 
     // Figure out the query parameters we need to put in the URI.
-    var params = {};
+    var params:any = {};
 
     // If no params are specified, then by default the query string will be mapped to a parameter
     // called 'query'.

@@ -19,6 +19,7 @@ class SearchController {
   public filters:any[]; //{ 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
   public query:string;
   public page:any = {number: 0, size: 50};
+  public sort:string;
   public activeCategory:any;
   public loading:string;
   public error:string;
@@ -182,7 +183,7 @@ class SearchController {
       },
 
       () => {
-        self.submitting = 'error';
+        this.submitting = 'error';
       });
     });
   }

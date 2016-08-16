@@ -275,7 +275,7 @@ export class TableService {
   public getRenderer(request, schema, history) {
     var self = this;
 
-    return (instance, td, row, col, prop, value, cellProperties) => {
+    return function (instance, td, row, col, prop, value, cellProperties) {
       /*jshint validthis:true */
 
       switch (cellProperties.type) {

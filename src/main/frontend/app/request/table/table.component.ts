@@ -38,13 +38,13 @@ class RequestTableController {
     minSpareRows: 0,
     outsideClickDeselects: false,
     manualColumnResize: true,
-    rowHeaders: function(row) { return _this.getRowHeader(row) },
-    onAfterInit: function() { _this.afterInit(this) },
-    afterRender: function() { _this.getAfterRenderFunction(this.request) },
-    onBeforeChange: function(changes, source) { _this.beforeChange(changes, source) },
-    onAfterChange: function(changes, source) { _this.afterChange(changes, source) },
-    onAfterCreateRow: function() { _this.normaliseLineNumbers(this) },
-    onAfterRemoveRow: function() { _this.normaliseLineNumbers(this) }
+    rowHeaders: (row) => { return this.getRowHeader(row) },
+    onAfterInit: () => { this.afterInit(this) },
+    afterRender: () => { this.getAfterRenderFunction(this.request) },
+    onBeforeChange: (changes, source) => { this.beforeChange(changes, source) },
+    onAfterChange: (changes, source) => { this.afterChange(changes, source) },
+    onAfterCreateRow: () => { this.normaliseLineNumbers() },
+    onAfterRemoveRow: () => { this.normaliseLineNumbers() }
   };
 
   /** The columns that will be displayed for the currently active category. */
@@ -263,7 +263,8 @@ class RequestTableController {
         var lastColumnHeader = $('.htCore colgroup col:last-child');
         var checkboxColumn = $('.htCore colgroup col:nth-child(2)');
 
-        // Fix the width of the 'select-all' checkbox column (second column) and add the surplus to the last column
+        // Fix the width of the 'select-all' checkbox column (second column)
+        // and add the surplus to the last column
         var lastColumnHeaderWidth = lastColumnHeader.width() + (checkboxColumn.width() - 30);
         lastColumnHeader.width(lastColumnHeaderWidth);
         checkboxColumn.width('30px');
@@ -293,13 +294,13 @@ class RequestTableController {
         cells.css('border-right', '5px double #ccc');
 
         // Listen for the change event on the 'select-all' checkbox and act accordingly
-        checkboxHeader.change(() => {
-          for (var i = 0, len = this.request.points.length; i < len; i++) {
-            this.request.points[i].selected = this.checked;
+        checkboxHeader.change(function() {
+          for (var i = 0, len = request.points.length; i < len; i++) {
+            request.points[i].selected = this.checked;
           }
 
-          // Need to explicitly trigger a digest loop here because we are out of the angularjs world and in the happy land
-          // of jquery hacking
+          // Need to explicitly trigger a digest loop here because we are out
+          // of the angularjs world and in the happy land of jquery hacking
           this.$scope.$apply();
         });
 
