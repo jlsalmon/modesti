@@ -2,12 +2,12 @@ var loaders = require('./webpack-loaders');
 var webpack = require('webpack');
 
 module.exports = {
-    entry: './app/app.ts',
+    entry: './src/main/frontend/app/app.ts',
     output: {
         path: '../resources/static/bin',
         filename: 'app.js'
     },
-    devtool: 'eval',
+    devtool: 'source-map',
     resolve: {
         modulesDirectories: ['../node_modules'],
         alias: {

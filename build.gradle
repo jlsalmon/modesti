@@ -15,6 +15,7 @@ plugins {
     id "eclipse"
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.3"
     id 'net.researchgate.release' version '2.3.4'
+    id "com.moowork.node" version "0.13"
 }
 
 /** Until the spring-boot plugin is included at plugins.gradle.org, we have to use the old mechanism to include it */
@@ -119,6 +120,14 @@ querydsl {
     querydslSourcesDir = "src/querydsl/java"
     springDataMongo = true
     jpa = true
+}
+
+node {
+    // Set the work directory for unpacking node
+    workDir = file("${project.buildDir}/nodejs")
+
+    // Set the work directory where node_modules should be located
+    nodeModulesDir = file("${project.projectDir}/src/main/frontend")
 }
 
 /** Configure publishing to Artifactory */
