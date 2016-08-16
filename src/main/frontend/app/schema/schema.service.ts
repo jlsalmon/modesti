@@ -15,49 +15,49 @@ export class SchemaService {
         console.log('fetched schema: ' + schema.id);
 
         // TODO: remove this domain-specific code into a SchemaPostProcessor inside a plugin
-        var domains = ['TIM', 'CSAM', 'WinCC OA (CV)'];
-        if (domains.indexOf(schema.id) !== -1) {
-
-          // Prepend tagname and fault state fields
-          schema.categories.concat(schema.datasources).forEach((category) => {
-
-            // Tagname is shown on each category except General and Alarms
-            if (category.id !== 'alarms' && category.id !== 'alarmHelp') {
-              category.fields.push(this.getTagnameField());
-            }
-
-            var constraint;
-
-            // Tagnames must be unique.
-            if (category.id === 'location') {
-              constraint = this.getUniqueTagnameConstraint();
-
-              if (category.constraints) {
-                category.constraints.push(constraint);
-              } else {
-                category.constraints = [constraint];
-              }
-            }
-
-            // Fault member, fault code and problem description are shown on 'alarms' and 'alarmHelp' categories
-            if (category.id === 'alarms' || category.id === 'alarmHelp') {
-              category.fields.push(this.getFaultFamilyField());
-              category.fields.push(this.getFaultMemberField());
-              category.fields.push(this.getProblemDescriptionField());
-            }
-
-            // Fault member, fault code and problem description must make a unique triplet.
-            if (category.id === 'alarms') {
-              constraint = this.getAlarmTripletConstraint();
-
-              if (category.constraints) {
-                category.constraints.push(constraint);
-              } else {
-                category.constraints = [constraint];
-              }
-            }
-          });
-        }
+        //var domains = ['TIM', 'CSAM', 'WinCC OA (CV)'];
+        //if (domains.indexOf(schema.id) !== -1) {
+        //
+        //  // Prepend tagname and fault state fields
+        //  schema.categories.concat(schema.datasources).forEach((category) => {
+        //
+        //    // Tagname is shown on each category except General and Alarms
+        //    if (category.id !== 'alarms' && category.id !== 'alarmHelp') {
+        //      category.fields.push(this.getTagnameField());
+        //    }
+        //
+        //    var constraint;
+        //
+        //    // Tagnames must be unique.
+        //    if (category.id === 'location') {
+        //      constraint = this.getUniqueTagnameConstraint();
+        //
+        //      if (category.constraints) {
+        //        category.constraints.push(constraint);
+        //      } else {
+        //        category.constraints = [constraint];
+        //      }
+        //    }
+        //
+        //    // Fault member, fault code and problem description are shown on 'alarms' and 'alarmHelp' categories
+        //    if (category.id === 'alarms' || category.id === 'alarmHelp') {
+        //      category.fields.push(this.getFaultFamilyField());
+        //      category.fields.push(this.getFaultMemberField());
+        //      category.fields.push(this.getProblemDescriptionField());
+        //    }
+        //
+        //    // Fault member, fault code and problem description must make a unique triplet.
+        //    if (category.id === 'alarms') {
+        //      constraint = this.getAlarmTripletConstraint();
+        //
+        //      if (category.constraints) {
+        //        category.constraints.push(constraint);
+        //      } else {
+        //        category.constraints = [constraint];
+        //      }
+        //    }
+        //  });
+        //}
 
         q.resolve(schema);
       },
@@ -282,63 +282,63 @@ export class SchemaService {
     return result;
   }
 
-  public getTagnameField() {
-    /*jshint camelcase: false */
-    return {
-      id: 'tagname',
-      type: 'text',
-      editable: false,
-      unique: true,
-      name: 'Tagname',
-      help: 'Automatically generated TIM tagname. Interrogation marks (?) indicate that a column which makes up the tagname has not yet been filled.'
-    };
-  }
-
-  public getUniqueTagnameConstraint() {
-    return {
-      'type': 'unique',
-      'members': [ 'tagname' ]
-    };
-  }
-
-  public getProblemDescriptionField() {
-    /*jshint camelcase: false */
-    return {
-      'id': 'problemDescription',
-      'type': 'text',
-      'editable': false,
-      'name': 'Problem Description',
-      'help': 'The alarm description that will be displayed in LASER  (automatically generated).',
-    };
-  }
-
-  public getFaultFamilyField() {
-    /*jshint camelcase: false */
-    return {
-      'id': 'faultFamily',
-      'type': 'text',
-      'editable': false,
-      'name': 'Fault Family',
-      'help': 'The LASER fault family (automatically generated). Interrogation marks (?) indicate that a column which makes up the tagname has not yet been filled.',
-    };
-  }
-
-  public getFaultMemberField() {
-    /*jshint camelcase: false */
-    return {
-      'id': 'faultMember',
-      'type': 'text',
-      'editable': false,
-      'maxLength': 30,
-      'name': 'Fault Member',
-      'help': 'The LASER fault member (automatically generated).',
-    };
-  }
-
-  public getAlarmTripletConstraint() {
-    return {
-      'type': 'unique',
-      'members': [ 'faultFamily', 'faultMember', 'pointDescription' ]
-    };
-  }
+  //public getTagnameField() {
+  //  /*jshint camelcase: false */
+  //  return {
+  //    id: 'tagname',
+  //    type: 'text',
+  //    editable: false,
+  //    unique: true,
+  //    name: 'Tagname',
+  //    help: 'Automatically generated TIM tagname. Interrogation marks (?) indicate that a column which makes up the tagname has not yet been filled.'
+  //  };
+  //}
+  //
+  //public getUniqueTagnameConstraint() {
+  //  return {
+  //    'type': 'unique',
+  //    'members': [ 'tagname' ]
+  //  };
+  //}
+  //
+  //public getProblemDescriptionField() {
+  //  /*jshint camelcase: false */
+  //  return {
+  //    'id': 'problemDescription',
+  //    'type': 'text',
+  //    'editable': false,
+  //    'name': 'Problem Description',
+  //    'help': 'The alarm description that will be displayed in LASER  (automatically generated).',
+  //  };
+  //}
+  //
+  //public getFaultFamilyField() {
+  //  /*jshint camelcase: false */
+  //  return {
+  //    'id': 'faultFamily',
+  //    'type': 'text',
+  //    'editable': false,
+  //    'name': 'Fault Family',
+  //    'help': 'The LASER fault family (automatically generated). Interrogation marks (?) indicate that a column which makes up the tagname has not yet been filled.',
+  //  };
+  //}
+  //
+  //public getFaultMemberField() {
+  //  /*jshint camelcase: false */
+  //  return {
+  //    'id': 'faultMember',
+  //    'type': 'text',
+  //    'editable': false,
+  //    'maxLength': 30,
+  //    'name': 'Fault Member',
+  //    'help': 'The LASER fault member (automatically generated).',
+  //  };
+  //}
+  //
+  //public getAlarmTripletConstraint() {
+  //  return {
+  //    'type': 'unique',
+  //    'members': [ 'faultFamily', 'faultMember', 'pointDescription' ]
+  //  };
+  //}
 }
