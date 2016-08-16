@@ -177,7 +177,7 @@ public class Constraints {
 
       for (String member : constraint.getMembers()) {
         Object value = PointUtils.getValueByPropertyName(point, member);
-        if (value != null && (value instanceof String && ((String) value).isEmpty())) {
+        if (value != null && (value instanceof String && !((String) value).isEmpty())) {
           concatenatedValue += value.toString();
         } else {
           atLeastOneNullMember = true;
