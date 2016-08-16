@@ -85,6 +85,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-mail"
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
+    compile "org.springframework.boot:spring-boot-devtools"
     compile "org.springframework.security:spring-security-ldap:4.0.4.RELEASE"
     compile "org.activiti:activiti-spring-boot-starter-basic:5.19.0"
     compile "org.activiti:activiti-spring-boot-starter-jpa:5.19.0"
@@ -122,12 +123,17 @@ querydsl {
     jpa = true
 }
 
-node {
-    // Set the work directory for unpacking node
-    workDir = file("${project.buildDir}/nodejs")
+/**
+ * Make sure that the frontend gets built before we package the jar
+ */
+jar.dependsOn npm_run_build
 
-    // Set the work directory where node_modules should be located
-    nodeModulesDir = file("${project.projectDir}/src/main/frontend")
+node {
+//    // Set the work directory for unpacking node
+//    workDir = file("${project.buildDir}/nodejs")
+//
+//    // Set the work directory where node_modules should be located
+//    nodeModulesDir = file("${project.projectDir}/src/main/frontend")
 }
 
 /** Configure publishing to Artifactory */
