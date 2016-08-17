@@ -109,7 +109,7 @@ public class RequestService {
     if (request.getPoints().isEmpty()) {
       for (int i = 0; i < 50; i++) {
         Point point = new Point((long) (i + 1));
-        request.getPoints().add(point);
+        request.addPoint(point);
       }
     }
 

@@ -142,8 +142,14 @@ public class Request implements Serializable {
     return mapper.convertValue(value, klass);
   }
 
-  public List<Point> getPoints() {
-    return this.points.stream().filter(point -> !isEmptyPoint(point)).collect(toList());
+  public void addPoint(Point point) {
+    this.points.add(point);
+  }
+
+  @JsonIgnore
+  public List<Point> getPoints(boolean ignoreEmpty) {
+    return ignoreEmpty ? this.points.stream().filter(point -> !isEmptyPoint(point)).collect(toList())
+        : this.getPoints();
   }
 
   @JsonIgnore
