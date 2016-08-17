@@ -265,7 +265,7 @@
         </div>
 
         <div class="filter">
-          <button class="btn btn-default" ng-click="$ctrl.resetFilter()" tooltip="Clear filter" tooltip-append-to-body="true">
+          <button class="btn btn-default" ng-click="$ctrl.resetFilter()" uib-tooltip="Clear filter" tooltip-append-to-body="true">
             <i class="fa fa-times"></i>
           </button>
         </div>
@@ -322,7 +322,7 @@
           <span class="text-muted">#{{request.requestId}} by {{request.creator}} </span>
           <span class="text-muted badge"> {{request.type}} </span>
           <span class="text-muted badge"> <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
-          <span class="text-muted badge" ng-if="request.assignee" tooltip="Assignee"> <i class="fa fa-fw fa-user"></i> {{request.assignee}} </span>
+          <span class="text-muted badge" ng-if="request.assignee" uib-tooltip="Assignee"> <i class="fa fa-fw fa-user"></i> {{request.assignee}} </span>
 
           <span ng-if="$ctrl.hasCustomProperties(request)"
                 style="margin-left: 5px;">
@@ -331,7 +331,7 @@
                 <span ng-if="property.value"
                       class="text-muted badge"
                       style="background-color: #F5F5F5; float: none;"
-                      tooltip="{{property.field.name}}">
+                      uib-tooltip="{{property.field.name}}">
                   {{property.value}}
                 </span>
               </span>

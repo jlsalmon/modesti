@@ -23,7 +23,7 @@ export class RequestTableComponent implements ng.IComponentOptions {
 }
 
 class RequestTableController {
-  public static $inject: string[] = ['$scope', '$q', '$filter', '$localStorage', 'hotRegisterer',
+  public static $inject: string[] = ['$scope', '$q', '$filter', '$localStorage',
                                      'TableService', 'RequestService', 'TaskService', 'SchemaService', 'Utils'];
 
   /** The handsontable instance */
