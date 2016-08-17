@@ -2,7 +2,6 @@ import {SchemaService} from '../../schema/schema.service';
 import {TaskService} from '../../task/task.service';
 import {Utils} from '../../utils/utils';
 
-declare var Handsontable:any;
 declare var $:any;
 
 export class TableService {
@@ -10,7 +9,7 @@ export class TableService {
 
   public constructor(private $rootScope:any, private schemaService:SchemaService, private taskService:TaskService, private utils:Utils) {}
 
-  public getColumns(request, schema, fields, history) {
+  public getColumns(request, schema, fields) {
     console.log('getting column definitions');
     var columns = [];
 
@@ -36,7 +35,6 @@ export class TableService {
 
       // Build the right type of column based on the schema
       var column = this.getColumn(field, editable, authorised, request.status);
-      column.renderer = this.getRenderer(request, schema, history);
       columns.push(column);
     });
 
@@ -252,7 +250,7 @@ export class TableService {
    * TODO: remove this domain-specific code
    */
   public getCheckboxColumn(request, schema) {
-    return {data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />', renderer: this.getRenderer(request, schema, null)};
+    return {data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />'};
   }
 
   /**
@@ -268,157 +266,6 @@ export class TableService {
       property = 'properties.testResult.message';
     }
 
-    return {data: property, type: 'text', title: 'Comment', renderer: this.getRenderer(request, schema, null)};
-  }
-
-
-  public getRenderer(request, schema, history) {
-    var self = this;
-
-    return function (instance, td, row, col, prop, value, cellProperties) {
-      /*jshint validthis:true */
-
-      switch (cellProperties.type) {
-        case 'text':
-          Handsontable.renderers.TextRenderer.apply(this, arguments);
-          break;
-        case 'numeric':
-          Handsontable.renderers.NumericRenderer.apply(this, arguments);
-          break;
-        case 'checkbox':
-          Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
-          break;
-      }
-
-      if (cellProperties.editor === 'select2') {
-        Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
-      }
-
-      if (typeof prop !== 'string') {
-        return;
-      }
-
-      var point = request.points[row];
-      if (!point || this.utils.isEmptyPoint(point)) {
-        return;
-      }
-
-      var props = prop.split('.').slice(1, 3);
-
-      // Check if we need to fill in a default value for this point.
-      var field = this.utils.getField(schema, props[0]);
-      if (field) {
-        self.setDefaultValue(point, field);
-      }
-
-      // Highlight errors in a cell by making the background red.
-      for (var i in point.errors) {
-        var error = point.errors[i];
-
-        // If the property name isn't specified, then the error applies to the whole point.
-        if (error.property === prop.replace('properties.', '') || error.property === props[0] || error.property === '') {
-          td.className += ' alert-danger';
-          break;
-        }
-        // Highlight an entire category if the property matches a category name.
-        else if (!error.property || error.property === error.category) {
-          var category = this.utils.getCategory(schema, error.category);
-
-          if (category) {
-            for (var j in category.fields) {
-              var f = category.fields[j];
-
-              if (f.id === field.id) {
-                td.className += ' alert-danger';
-                return;
-              }
-            }
-          }
-        }
-      }
-
-
-      if (request.type === 'UPDATE' && point.dirty === true) {
-        var changes = [];
-        $(td).popover('destroy');
-
-        history.events.forEach((event) => {
-          event.changes.forEach((change) => {
-            if (change.path.indexOf(field.id) !== -1 && change.path.indexOf('[' + point.lineNo + ']') !== -1) {
-              changes.push(change);
-            }
-          });
-        });
-
-        if (changes.length > 0) {
-          var latest = changes[changes.length - 1];
-          var original, modified;
-
-          if (field.type === 'autocomplete') {
-            original = field.model ? latest.original[field.model] : latest.original.value;
-            modified = field.model ? latest.modified[field.model] : latest.modified.value;
-          } else {
-            original = latest.original;
-            modified = latest.modified;
-          }
-
-          var content = '<samp><table>';
-          content    += '<tr><td style="background-color: #ffecec">&nbsp;- ' + original + '&nbsp;</td></tr>';
-          content    += '<tr><td style="background-color: #dbffdb">&nbsp;+ ' + modified + '&nbsp;</td></tr></table></samp>';
-
-          td.style.background = '#fcf8e3';
-          $(td).popover({ trigger: 'hover', placement: 'top', container: 'body', html: true, content: content/*, delay: { 'show': 0, 'hide': 100000 }*/ });
-        }
-      }
-    };
-  }
-
-  /**
-   * Inspect the given field and set the default value in the point if supplied. The default value can refer
-   * to another property of the point via mustache-syntax, so interpolate that as well.
-   *
-   * @param point
-   * @param field
-   */
-  public setDefaultValue(point, field) {
-    var currentValue;
-
-    if (field.type === 'autocomplete') {
-      if (point.properties.hasOwnProperty(field.id) && point.properties[field.id]) {
-        currentValue = field.model ? point.properties[field.id][field.model] : point.properties[field.id].value;
-      }
-    } else {
-      currentValue = point.properties[field.id];
-    }
-
-    if (currentValue === undefined || currentValue === null || currentValue === '') {
-      var regex = /^\{\{\s*[\w\.]+\s*}}/g;
-
-      if (field.default && typeof field.default === 'string' && regex.test(field.default)) {
-        var matches = field.default.match(regex).map((x) => {
-          return x.match(/[\w\.]+/)[0];
-        });
-
-        var props = matches[0].split('.');
-
-        if (point.properties.hasOwnProperty(props[0])) {
-          var outerProp = point.properties[props[0]];
-
-          if (outerProp.hasOwnProperty(props[1])) {
-            var value = outerProp[props[1]];
-            var model = field.model ? field.model : 'value';
-
-            console.log('setting default value ' + value + ' for ' + field.id + '.' + model + ' on point ' + point.lineNo);
-
-            if (point.properties.hasOwnProperty(field.id)) {
-              point.properties[field.id][model] = value;
-            } else {
-              point.properties[field.id] = {};
-              point.properties[field.id][model] = value;
-            }
-          }
-        }
-      }
-    }
+    return {data: property, type: 'text', title: 'Comment'};
   }
 }

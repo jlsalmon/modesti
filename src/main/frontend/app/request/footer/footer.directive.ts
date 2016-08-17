@@ -63,25 +63,25 @@ class RequestFooterController {
     this.validating = 'started';
 
     this.validationService.validateRequest(this.request).then((request) => {
-        // Save the reference to the validated request
-        this.request = request;
+      // Save the reference to the validated request
+      this.request = request;
 
-        // Render the table to show the error highlights
-        this.table.render();
-
-        if (this.request.valid === false) {
-          this.validating = 'error';
-          this.alertService.add('danger', 'Request failed validation with ' + this.getNumValidationErrors() + ' errors');
-        } else {
-          this.validating = 'success';
-          this.alertService.add('success', 'Request has been validated successfully');
-        }
-      },
-
-      (error) => {
-        console.log('error validating request: ' + error.statusText);
+      if (this.request.valid === false) {
         this.validating = 'error';
-      });
+        this.alertService.add('danger', 'Request failed validation with ' + this.getNumValidationErrors() + ' errors');
+      } else {
+        this.validating = 'success';
+        this.alertService.add('success', 'Request has been validated successfully');
+      }
+
+      // Render the table to show the error highlights
+      this.table.render();
+    },
+
+    (error) => {
+      console.log('error validating request: ' + error.statusText);
+      this.validating = 'error';
+    });
   }
 
   public submit(event) {
