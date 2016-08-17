@@ -271,11 +271,8 @@
         </div>
 
         <div class="pull-right">
-          <select selectpicker="{}" class="selectpicker"
-                  ng-model="$ctrl.sort"
-                  data-title="Sort by"
-                  data-width="auto">
-            <option value="createdAt,desc" title="sort: Newest">Newest</option>
+          <select class="form-control" ng-model="$ctrl.sort">
+            <option value="createdAt,desc" title="sort: Newest" selected>Newest</option>
             <option value="createdAt,asc" title="sort: Oldest">Oldest</option>
             <option value="status,asc" title="sort: Status">Status</option>
             <option value="domain,asc" title="sort: Domain">Domain</option>
@@ -283,6 +280,7 @@
             <option value="assignee,asc" title="sort: Assignee">Assignee</option>
             <option value="type,asc" title="sort: Type">Type</option>
           </select>
+
         </div>
 
       </div>
