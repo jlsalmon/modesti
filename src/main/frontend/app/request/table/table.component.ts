@@ -596,7 +596,8 @@ class RequestTableController {
       if (dirty) {
         this.request.valid = false;
 
-        this.requestService.saveRequest(this.request).then(() => {
+        this.requestService.saveRequest(this.request).then((request) => {
+          this.request = request;
 
           // Reload the history
           this.requestService.getRequestHistory(this.request.requestId).then((history) => {
