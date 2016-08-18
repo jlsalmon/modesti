@@ -133,8 +133,6 @@ public class CoreValidationService {
           if (!isValidValue(value, point, field)) {
             point.setValid(false);
             valid = false;
-            // TODO: set category to invalid
-            // point.properties.valid = category.valid = valid = false;
             point.addErrorMessage(category.getId(), field.getId(), "Value '" + value + "' is not a legal option for field '" + field.getName()
                 + "'. Please select a value from the list.");
           }
@@ -160,9 +158,7 @@ public class CoreValidationService {
             if (value == "" || value == null) {
               point.setValid(false);
               valid = false;
-              // TODO: set category to invalid
-              // point.properties.valid = category.valid = valid = false;
-              point.addErrorMessage(category.getId(), field.getId(), "Field '" + field.getName() + "' is mandatory");
+              point.addErrorMessage(category.getId(), field.getId(), "'" + field.getName() + "' is mandatory");
             }
           }
 
@@ -171,10 +167,8 @@ public class CoreValidationService {
             if (value != null && value.toString().length() < field.getMinLength()) {
               point.setValid(false);
               valid = false;
-              // TODO: set category to invalid
-              // point.properties.valid = category.valid = valid = false;
               point.addErrorMessage(category.getId(), field.getId(),
-                  "Field '" + field.getName() + "' must be at least " + field.getMinLength() + " characters in length");
+                  "'" + field.getName() + "' must be at least " + field.getMinLength() + " characters in length");
             }
           }
 
@@ -183,10 +177,8 @@ public class CoreValidationService {
             if (value != null && value.toString().length() > field.getMaxLength()) {
               point.setValid(false);
               valid = false;
-              // TODO: set category to invalid
-              // point.properties.valid = category.valid = valid = false;
               point.addErrorMessage(category.getId(), field.getId(),
-                  "Field '" + field.getName() + "' must not exceed " + field.getMinLength() + " characters in length");
+                  "'" + field.getName() + "' must not exceed " + field.getMinLength() + " characters in length");
             }
           }
 
@@ -195,8 +187,6 @@ public class CoreValidationService {
             if (value != null && !value.toString().isEmpty() && !NumberUtils.isNumber(value.toString())) {
               point.setValid(false);
               valid = false;
-              // TODO: set category to invalid
-              // point.properties.valid = category.valid = valid = false;
               point.addErrorMessage(category.getId(), field.getId(), "Value for '" + field.getName() + "' must be numeric");
             }
           }
@@ -234,8 +224,6 @@ public class CoreValidationService {
                 if (emptyFields.size() != excludedCategory.getFields().size()) {
                   point.setValid(false);
                   valid = false;
-                  // TODO: set category to invalid
-                  // point.properties.valid = category.valid = valid = false;
                   point.addErrorMessage(category.getId(), "", "Fields in the '" + category.getName() + "' group cannot be used if fields in the '"
                       + excludedCategory.getName() + "' group have been specified.");
                 }

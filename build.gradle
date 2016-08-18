@@ -116,7 +116,7 @@ dependencies {
     compile "javax.interceptor:javax.interceptor-api:1.+"
     compile "org.subethamail:subethasmtp:3.1.7"
 
-    testCompile "cern.modesti:modesti-test:0.1.8"
+    testCompile "cern.modesti:modesti-test:0.2.0-SNAPSHOT"
 }
 
 task wrapper(type: Wrapper) {

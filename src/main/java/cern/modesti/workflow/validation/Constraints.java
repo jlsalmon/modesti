@@ -114,7 +114,7 @@ public class Constraints {
 
         for (Field emptyField : emptyFields) {
           point.addErrorMessage(category.getId(), emptyField.getId(),
-              "Field '" + emptyField.getName() + "' is required for group '" + category.getName() + "'");
+              "'" + emptyField.getName() + "' is required for group '" + category.getName() + "'");
         }
       }
     }
@@ -151,7 +151,7 @@ public class Constraints {
 
         for (Field emptyField : emptyFields) {
           point.addErrorMessage(category.getId(), emptyField.getId(),
-              "Field '" + emptyField.getName() + "' is required for group '" + category.getName() + "'");
+              "'" + emptyField.getName() + "' is required for group '" + category.getName() + "'");
         }
       }
     }
@@ -209,10 +209,10 @@ public class Constraints {
 
         if (constraint.getMembers().size() == 1) {
           point.addErrorMessage(category.getId(), constraint.getMembers().get(0),
-              "Field '" + fieldNames.get(0) + "' must be unique for all points. Check for duplications.");
+              "'" + fieldNames.get(0) + "' must be unique for all points. Check for duplications.");
         } else {
           point.addErrorMessage(category.getId(), "",
-              "Field(s) '" + String.join(", ", fieldNames) + "' must be unique for all points. Check for duplications.");
+              "" + String.join(", ", fieldNames) + "' must be unique for all points. Check for duplications.");
         }
       }
     }

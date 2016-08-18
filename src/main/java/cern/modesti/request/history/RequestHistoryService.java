@@ -68,6 +68,9 @@ public class RequestHistoryService {
       return;
     }
 
+    // TODO: FIXME: handle added/removed/shuffled rows for updates (can diff
+    // based on point ids?
+
     ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
     DiffNode root = ObjectDifferBuilder.buildDefault().compare(modified, original);
 
