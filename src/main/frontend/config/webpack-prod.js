@@ -22,7 +22,7 @@ module.exports = {
             moment: 'moment'
         }),
         new webpack.optimize.UglifyJsPlugin({
-            compress: { warnings: true }
+            compress: { warnings: false }
         })
     ]
 };
