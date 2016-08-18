@@ -17,17 +17,19 @@ class NewRequestController {
   public submitting:string = undefined;
   public error;
 
-  public constructor(private $state:any,
-                     private requestService:RequestService, private schemaService:SchemaService, private authService:AuthService) {
-    this.request = {
-      type : 'CREATE',
-      description : '',
-      creator : authService.getCurrentUser().username
-    };
-  }
+  public constructor(private $state: any,
+                     private requestService: RequestService, private schemaService: SchemaService, private authService: AuthService) {}
 
   public $onInit() {
-    this.schemaService.getSchemas().then((schemas) => this.schemas = schemas);
+    this.schemaService.getSchemas().then((schemas) => {
+      this.schemas = schemas;
+
+      this.request = {
+        type : 'CREATE',
+        description : '',
+        creator : this.authService.getCurrentUser().username
+      };
+    });
   }
 
   public onDomainChanged() {
