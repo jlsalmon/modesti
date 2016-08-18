@@ -1,26 +1,26 @@
 export class HttpConfig {
 
-  public static configure($httpProvider:any) {
+  public static configure($httpProvider: any): void {
 
-    // Needed so that Spring Security sends us back a WWW-Authenticate header,
+    // Needed so that Spring Security does not send a WWW-Authenticate header,
     // which will prevent the browser from showing a basic auth popup
-    $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
     // Needed to make sure that the JSESSIONCOOKIE is sent with every request
     $httpProvider.defaults.withCredentials = true;
 
-    $httpProvider.interceptors.push(['$q', '$injector', ($q:any, $injector:any) => {
+    $httpProvider.interceptors.push(['$q', '$injector', ($q: any, $injector: any) => {
       return {
-        request : function(config:any) {
+        request : function(config: any) {
           return config || $q.when(config);
         },
-        requestError : function(request:any) {
+        requestError : function(request: any) {
           return $q.reject(request);
         },
-        response : function(response:any) {
+        response : function(response: any) {
           return response || $q.when(response);
         },
-        responseError : function(response:any) {
+        responseError : function(response: any) {
           if (response && (response.status === 0 || response.status === -1)) {
             // Backend not connected
             console.log('error: backend not connected');

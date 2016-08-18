@@ -23,13 +23,18 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
+import org.springframework.security.web.AuthenticationEntryPoint;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -66,13 +71,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-//    http.authenticationProvider(ldapAuthenticationProvider());
-
     http
+        // Authentication is required for all API endpoints
+        .authorizeRequests().antMatchers("/api/**").authenticated()
+
         // Enable basic HTTP authentication
-        .httpBasic()
-        // Authentication is required for all URLs
-        .and().authorizeRequests().anyRequest().authenticated()
+        .and().httpBasic().authenticationEntryPoint((request, response, authException) -> {
+          String requestedWith = request.getHeader("X-Requested-With");
+          if (requestedWith == null || requestedWith.isEmpty()) {
+            response.addHeader("WWW-Authenticate", "Basic realm=NICE");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+          } else {
+            response.addHeader("WWW-Authenticate", "Application driven");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+          }
+        })
+
+        // Enable /logout endpoint
+        .and().logout()
+
         // TODO: implement CSRF protection. Here we just turn it off.
         .and().csrf().disable();
   }

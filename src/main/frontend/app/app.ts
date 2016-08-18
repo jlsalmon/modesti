@@ -120,7 +120,7 @@ app.controller('UpdatePointsModalController', UpdatePointsModalController);
 
 
 app.config(['RestangularProvider', (restangularProvider: any) => RestangularConfig.configure(restangularProvider)]);
-app.config(['$httpProvider', ($httpProvider:any) => HttpConfig.configure($httpProvider)]);
+app.config(['$httpProvider', ($httpProvider: any) => HttpConfig.configure($httpProvider)]);
 app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
   ($stateProvider: any, $urlRouterProvider: any, $locationProvider: any) => {
   RouterConfig.configure($stateProvider, $urlRouterProvider, $locationProvider);

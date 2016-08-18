@@ -26,6 +26,8 @@ export class AuthService {
       q.resolve(this.$localStorage.user);
     }, () => {
       this.loginModalOpened = false;
+      q.reject();
+      this.authService.loginCancelled();
       this.$state.go('home');
     });
 
@@ -64,11 +66,26 @@ export class AuthService {
     return q.promise;
   }
 
-  public logout() {
-    this.$localStorage.user = undefined;
-    this.$cookies.remove('JSESSIONID');
-    delete this.$cookies.JSESSIONID;
-    return this.$q.when();
+  public logout(): void {
+    let q: any = this.$q.defer();
+
+    this.$http.get('/logout').then(() => {
+      console.log('logged out');
+
+      this.$localStorage.user = undefined;
+      this.$cookies.remove('JSESSIONID');
+      delete this.$cookies.JSESSIONID;
+
+      q.resolve();
+    },
+
+    (error: any) => {
+      console.log('failed to log out');
+      this.$localStorage.user = undefined;
+      q.reject(error);
+    });
+
+    return q.promise;
   }
 
   public getCurrentUser() {
