@@ -1,4 +1,4 @@
-package cern.modesti.upload.parser;
+package cern.modesti.request.upload.parser;
 
 import cern.modesti.request.Request;
 import lombok.AllArgsConstructor;

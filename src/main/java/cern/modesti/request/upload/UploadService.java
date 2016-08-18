@@ -1,9 +1,9 @@
-package cern.modesti.upload;
+package cern.modesti.request.upload;
 
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestService;
-import cern.modesti.upload.parser.RequestParseResult;
-import cern.modesti.upload.parser.RequestParserFactory;
+import cern.modesti.request.upload.parser.RequestParseResult;
+import cern.modesti.request.upload.parser.RequestParserFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

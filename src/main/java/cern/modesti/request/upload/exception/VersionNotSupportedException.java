@@ -1,4 +1,4 @@
-package cern.modesti.upload.exception;
+package cern.modesti.request.upload.exception;
 
 /**
  * To be thrown when an attempt is made to upload a request of an unsupported

@@ -1,4 +1,4 @@
-package cern.modesti.upload.exception;
+package cern.modesti.request.upload.exception;
 
 /**
  * To be thrown when the parsing of an uploaded request fails.

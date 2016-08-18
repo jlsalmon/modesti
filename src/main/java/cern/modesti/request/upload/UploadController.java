@@ -1,11 +1,8 @@
-package cern.modesti.upload;
+package cern.modesti.request.upload;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.security.Principal;
-import java.util.List;
-
-import cern.modesti.upload.parser.RequestParseResult;
+import cern.modesti.request.upload.parser.RequestParseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

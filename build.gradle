@@ -18,7 +18,10 @@ plugins {
     id "com.moowork.node" version "0.13"
 }
 
-/** Until the spring-boot plugin is included at plugins.gradle.org, we have to use the old mechanism to include it */
+/**
+ * Until the spring-boot plugin is included at plugins.gradle.org, we have to
+ * use the old mechanism to include it. See https://github.com/spring-projects/spring-boot/issues/1567
+ */
 apply plugin: "spring-boot"
 
 group "cern.modesti"
@@ -57,6 +60,7 @@ jar {
     }
 }
 
+/** Expand placeholders in properties files */
 processResources {
     filesMatching('**/*.properties') { expand(project.properties) }
 }

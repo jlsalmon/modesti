@@ -1,10 +1,10 @@
-package cern.modesti.upload.parser;
+package cern.modesti.request.upload.parser;
 
 import cern.modesti.plugin.RequestProvider;
 import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.Request;
+import cern.modesti.request.upload.exception.RequestParseException;
 import cern.modesti.test.plugin.DummyRequestProvider;
-import cern.modesti.upload.exception.RequestParseException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ public class RequestParserFactoryTest {
 
   @Test(expected = RequestParseException.class)
   public void invalidRequestTypeIsRejected() throws IOException {
-    when(requestProviderRegistry.getPlugins()).thenReturn(requestProviders);
+    Mockito.when(requestProviderRegistry.getPlugins()).thenReturn(requestProviders);
 
     Resource sheet = sheets.get("invalid-request-type.xlsx");
     requestParserFactory.parseRequest(sheet.getInputStream());
@@ -71,7 +71,7 @@ public class RequestParserFactoryTest {
 
   @Test(expected = RequestParseException.class)
   public void emptyExcelSheetIsRejected() throws IOException {
-    when(requestProviderRegistry.getPlugins()).thenReturn(requestProviders);
+    Mockito.when(requestProviderRegistry.getPlugins()).thenReturn(requestProviders);
 
     Resource sheet = sheets.get("empty.xlsx");
     requestParserFactory.parseRequest(sheet.getInputStream());
