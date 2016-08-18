@@ -1,51 +1,49 @@
 export class RouterConfig {
 
-  public static configure($stateProvider:any, $urlRouterProvider:any, $locationProvider:any) {
+  public static configure($stateProvider: any, $urlRouterProvider: any, $locationProvider: any) {
     $locationProvider.html5Mode(true);
 
     $urlRouterProvider.otherwise('/');
     $stateProvider
-        .state('home',          { url: '/',                component: 'home'})
-        .state('requestList',   { url: '/requests',        component: 'requestList'})
-        .state('newRequest',    { url: '/requests/new',    component: 'newRequest'})
-        .state('uploadRequest', { url: '/requests/upload', component: 'uploadRequest' })
-        .state('request',       { url: '/requests/:id',    component: 'request',
+        .state('home',          { url: '/',                component: 'home',          title: 'Home' })
+        .state('requestList',   { url: '/requests',        component: 'requestList',   title: 'Requests' })
+        .state('newRequest',    { url: '/requests/new',    component: 'newRequest',    title: 'New Request' })
+        .state('uploadRequest', { url: '/requests/upload', component: 'uploadRequest', title: 'Upload Request' })
+        .state('request',       { url: '/requests/:id',    component: 'request',       title: 'Request #{{id}}',
           resolve: {
-            request: ['$stateParams', 'RequestService', ($stateParams:any, RequestService:any) => {
-              return RequestService.getRequest($stateParams.id);
+            request: ['$stateParams', 'RequestService', ($stateParams: any, requestService: any) => {
+              return requestService.getRequest($stateParams.id);
             }],
-            children: ['request', 'RequestService', (request:any, RequestService:any) => {
-              return RequestService.getChildRequests(request);
+            children: ['request', 'RequestService', (request: any, requestService: any) => {
+              return requestService.getChildRequests(request);
             }],
-            schema: ['request', 'SchemaService', (request:any, SchemaService:any) => {
-              return SchemaService.getSchema(request);
+            schema: ['request', 'SchemaService', (request: any, schemaService: any) => {
+              return schemaService.getSchema(request);
             }],
-            tasks: ['request', 'TaskService', (request:any, TaskService:any) => {
-              return TaskService.getTasksForRequest(request);
+            tasks: ['request', 'TaskService', (request: any, taskService: any) => {
+              return taskService.getTasksForRequest(request);
             }],
-            signals: ['request', 'TaskService', (request:any, TaskService:any) => {
-              return TaskService.getSignalsForRequest(request);
+            signals: ['request', 'TaskService', (request: any, taskService: any) => {
+              return taskService.getSignalsForRequest(request);
             }],
-            history: ['request', 'RequestService', (request:any, RequestService:any) => {
-              return RequestService.getRequestHistory(request.requestId);
+            history: ['request', 'RequestService', (request: any, requestService: any) => {
+              return requestService.getRequestHistory(request.requestId);
             }]
           }})
-        .state('search', { url: '/search',    component: 'search'})
-        .state('user',   { url: '/users/:id', component: 'user'})
-        .state('about',  { url: '/about',     component: 'about' })
-        .state('error',  { url: '/error',     component: 'error' })
-        .state('404',    { url: '/404',       templateUrl: '/error/404.html'   })
+        .state('search', { url: '/search',    component: 'search',            title: 'Search' })
+        .state('user',   { url: '/users/:id', component: 'user',              title: '{{id}}' })
+        .state('about',  { url: '/about',     component: 'about',             title: 'About' })
+        .state('error',  { url: '/error',     component: 'error',             title: 'Error' })
+        .state('404',    { url: '/404',       templateUrl: '/error/404.html', title: 'Not Found' })
 
         // TODO: remove this state, an alert should be enough
         .state('submitted',   { url: '/requests/:id/submitted', component: 'request',
-          params: { previousStatus: null },
-          data: {
-            pageTitle: 'Request submitted'
-          },
+          params: { previousStatus: undefined },
+          title: 'Request submitted',
           resolve: {
-            request: ['$stateParams', 'RequestService', ($stateParams:any, RequestService:any) => {
-              return RequestService.getRequest($stateParams.id);
-            }],
-          }})
+            request: ['$stateParams', 'RequestService', ($stateParams: any, requestService: any) => {
+              return requestService.getRequest($stateParams.id);
+            }]
+          }});
   }
 }

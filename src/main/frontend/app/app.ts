@@ -10,7 +10,7 @@ import 'angular-http-auth';
 import 'angular-spinner';
 import 'angular-filter';
 import 'spin.js';
-//import 'angular-bootstrap-select';
+// import 'angular-bootstrap-select';
 import 'bootstrap-sass';
 import 'ui-select';
 import 'select2';
@@ -19,12 +19,12 @@ import 'restangular';
 import 'oclazyload';
 
 // TODO: import these properly, remove <script> tags from index.html
-//import 'numbro';
-//import 'moment';
-//import 'pikaday';
-//import 'zeroclipboard';
-//import 'handsontable';
-//declare var Handsontable: any;
+// import 'numbro';
+// import 'moment';
+// import 'pikaday';
+// import 'zeroclipboard';
+// import 'handsontable';
+// declare var Handsontable: any;
 import 'ngHandsontable/dist/ngHandsontable';
 import 'handsontable-select2-editor';
 
@@ -63,7 +63,7 @@ import {RestangularConfig} from './config/restangular.config.ts';
 import {RouterConfig} from './config/router.config.ts';
 import {HttpConfig} from './config/http.config.ts';
 
-var app = angular.module('modesti', [
+let app: any = angular.module('modesti', [
   'ng',
   'ngCookies',
   'ngAnimate',
@@ -79,7 +79,7 @@ var app = angular.module('modesti', [
   'http-auth-interceptor',
   'angularSpinner',
   'angular.filter',
-  //'angular-bootstrap-select',
+  // 'angular-bootstrap-select',
   'oc.lazyLoad'
 ]);
 
@@ -119,14 +119,35 @@ app.controller('RequestCommentsModalController', RequestCommentsModalController)
 app.controller('UpdatePointsModalController', UpdatePointsModalController);
 
 
-app.config(['RestangularProvider', (RestangularProvider:any) => RestangularConfig.configure(RestangularProvider)]);
+app.config(['RestangularProvider', (restangularProvider: any) => RestangularConfig.configure(restangularProvider)]);
 app.config(['$httpProvider', ($httpProvider:any) => HttpConfig.configure($httpProvider)]);
-app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', ($stateProvider: any, $urlRouterProvider: any, $locationProvider: any) => {
+app.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
+  ($stateProvider: any, $urlRouterProvider: any, $locationProvider: any) => {
   RouterConfig.configure($stateProvider, $urlRouterProvider, $locationProvider);
 }]);
+
+// Disable animation for fa-spin
 app.config(['$animateProvider', ($animateProvider: any) => {
-  // Disable animation for fa-spin
   $animateProvider.classNameFilter(/^((?!(fa-spin)).)*$/);
+}]);
+
+// Enable dynamic page titles
+app.run(['$rootScope', '$timeout', '$transitions', '$interpolate',
+  ($rootScope: any, $timeout: any, $transitions: any, $interpolate: any) => {
+
+  $transitions.onSuccess({to: '*'}, ($state: any) => {
+    let title: string = getTitleValue($state.router.globals);
+    $timeout(() => $rootScope.$title = title);
+  });
+
+  function getTitleValue(globals: any): string {
+    if (globals.$current.title) {
+      return $interpolate(globals.$current.title)(globals.params);
+    }
+
+    // TODO: allow "resolving" a title (or use angular-ui-router-title when
+    // TODO: it supports ui-router 1.0)
+  }
 }]);
 
 angular.bootstrap(document, ['modesti'], {
