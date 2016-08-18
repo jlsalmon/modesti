@@ -27,7 +27,7 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
- * REST controller for searching {@link Point} instances cia RSQL queries.
+ * REST controller for searching {@link Point} instances via RSQL queries.
  *
  * @author Justin Lewis Salmon
  */
