@@ -1,13 +1,17 @@
+import IDeferred = angular.IDeferred;
+import IPromise = angular.IPromise;
+import {User} from '../user/user';
+
 export class AuthService {
-  public static $inject:string[] = ['$http', '$q', '$localStorage', '$cookies', '$uibModal', '$state', 'authService'];
+  public static $inject: string[] = ['$http', '$q', '$localStorage', '$cookies', '$uibModal', '$state', 'authService'];
 
-  public loginModalOpened:boolean = false;
+  public loginModalOpened: boolean = false;
 
-  public constructor(private $http:any, private $q:any, private $localStorage:any, private $cookies:any, private $modal:any,
-                     private $state:any, private authService:any) {}
+  public constructor(private $http: any, private $q: any, private $localStorage: any, private $cookies: any, private $modal: any,
+                     private $state: any, private authService: any) {}
 
-  public login() {
-    var q = this.$q.defer();
+  public login(): IPromise<User> {
+    let q: IDeferred<User> = this.$q.defer();
 
     if (this.loginModalOpened) {
       return this.$q.when();
@@ -66,7 +70,7 @@ export class AuthService {
     return q.promise;
   }
 
-  public logout(): void {
+  public logout(): IPromise {
     let q: any = this.$q.defer();
 
     this.$http.get('/logout').then(() => {
