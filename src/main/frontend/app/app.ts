@@ -62,6 +62,7 @@ import {UpdatePointsModalController} from './search/update/update-points.modal.t
 import {RestangularConfig} from './config/restangular.config.ts';
 import {RouterConfig} from './config/router.config.ts';
 import {HttpConfig} from './config/http.config.ts';
+import {VersionComponent} from "./version/version.component.ts";
 
 let app: any = angular.module('modesti', [
   'ng',
@@ -98,6 +99,7 @@ app.directive('showIf', ShowIfDirective.factory());
 app.directive('enableIf', EnableIfDirective.factory());
 app.component('user', new UserComponent());
 app.component('search', new SearchComponent());
+app.component('version', new VersionComponent());
 
 app.service('AuthService', AuthService);
 app.service('RequestService', RequestService);
