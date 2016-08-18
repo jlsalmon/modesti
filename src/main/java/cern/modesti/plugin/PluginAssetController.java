@@ -2,11 +2,11 @@ package cern.modesti.plugin;
 
 import cern.modesti.request.Request;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -22,6 +22,7 @@ import java.net.JarURLConnection;
 import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,9 +39,22 @@ public class PluginAssetController {
   @Autowired
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
+  @Autowired
+  private Environment environment;
+
   private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
 
   private ObjectMapper mapper = new ObjectMapper();
+
+  @RequestMapping("/api/plugins")
+  public VersionDescriptor getPluginInfo() throws IOException {
+    String version = environment.getRequiredProperty("modesti.version");
+    if (version.equals("<%=version%>")) version = "DEV";
+
+    // TODO: read plugin versions and insert them here
+
+    return new VersionDescriptor(version, Collections.EMPTY_LIST);
+  }
 
   @RequestMapping("/api/plugins/{id}/assets")
   public List<String> getAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws IOException, URISyntaxException {

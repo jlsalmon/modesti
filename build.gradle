@@ -57,6 +57,10 @@ jar {
     }
 }
 
+processResources {
+    filesMatching('**/*.properties') { expand(project.properties) }
+}
+
 /** Repositories used when searching for dependencies */
 repositories {
     mavenCentral()
