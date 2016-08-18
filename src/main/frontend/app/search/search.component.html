@@ -113,11 +113,11 @@
 </section>
 
 
-<section class="toolbar container-fluid" style="height: 85px;">
+<section class="toolbar container-fluid">
   <div class="row">
     <div class="col-lg-12">
 
-      <form class="form-inline">
+      <form class="form-inline pull-right">
 
         <div class="btn-group" uib-dropdown>
           <button type="button" class="btn btn-sm btn-default" uib-dropdown-toggle>
@@ -137,7 +137,7 @@
             <span class="text-muted">category:</span>
             {{$ctrl.activeCategory.name}} <span class="caret"></span>
           </button>
-          <ul uib-dropdown-menu>
+          <ul uib-dropdown-menu class="dropdown-menu-right">
             <li ng-repeat="category in $ctrl.schema.categories"
                 ng-click="$ctrl.activateCategory(category)">
               <a href="">
@@ -159,30 +159,10 @@
         </div>
 
 
-        <div class="pull-right">
-
-          <!-- "Update points" button -->
-          <div class="btn-group">
-            <button class="btn btn-sm btn-warning pull-right" ng-click="$ctrl.updatePoints()">
-              <i class="fa fa-pencil"></i>
-              Update selected points
-            </button>
-          </div>
-
-          <!-- "Delete points" button -->
-          <div class="btn-group">
-            <button class="btn btn-sm btn-danger pull-right" ng-disabled="true">
-              <i class="fa fa-trash"></i>
-              Delete selected points
-            </button>
-          </div>
-
-        </div>
-
       </form>
 
 
-      <form class="form-inline" style="margin-top:5px;">
+      <form class="form-inline pull-left">
 
         <!-- Custom styles for angular-ui-select -->
         <style>
@@ -417,25 +397,51 @@
 <footer class="footer">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-4" ng-if="$ctrl.points.length > 0">
-        <div uib-pagination boundary-links="true"
-                    max-size="5"
-                    total-items="$ctrl.page.totalElements"
-                    items-per-page="$ctrl.page.size"
-                    rotate="false"
-                    ng-model="$ctrl.page.number"
-                    ng-change="$ctrl.onPageChanged()"
-                    class="pagination-sm"
-                    previous-text="&lsaquo;"
-                    next-text="&rsaquo;"
-                    first-text="&laquo;"
-                    last-text="&raquo;"></div>
-      </div>
+      <div class="col-md-12">
+        <form class="form-inline">
 
-      <div class="col-md-4 pull-right" ng-if="$ctrl.page.totalElements">
-        <span class="pull-right" style="padding-top: 14px;">
-          page {{$ctrl.page.number}} of {{$ctrl.page.totalPages}} &middot; {{$ctrl.page.totalElements}} points in total for this filter
-        </span>
+          <div class="form-group" ng-if="$ctrl.points.length > 0">
+            <div uib-pagination boundary-links="true"
+                 max-size="5"
+                 total-items="$ctrl.page.totalElements"
+                 items-per-page="$ctrl.page.size"
+                 rotate="false"
+                 ng-model="$ctrl.page.number"
+                 ng-change="$ctrl.onPageChanged()"
+                 class="pagination-sm"
+                 previous-text="&lsaquo;"
+                 next-text="&rsaquo;"
+                 first-text="&laquo;"
+                 last-text="&raquo;"></div>
+          </div>
+
+          <div class="form-group">
+            <span ng-if="$ctrl.page.totalElements">
+              page {{$ctrl.page.number}} of {{$ctrl.page.totalPages}} &middot; {{$ctrl.page.totalElements}} points in total for this filter
+            </span>
+          </div>
+
+
+          <div class="pull-right">
+
+            <!-- "Update points" button -->
+            <div class="form-group">
+              <button class="btn btn-sm btn-warning pull-right" ng-click="$ctrl.updatePoints()">
+                <i class="fa fa-pencil"></i>
+                Update selected points
+              </button>
+            </div>
+
+            <!-- "Delete points" button -->
+            <div class="form-group">
+              <button class="btn btn-sm btn-danger pull-right" ng-disabled="true">
+                <i class="fa fa-trash"></i>
+                Delete selected points
+              </button>
+            </div>
+
+          </div>
+        </form>
       </div>
     </div>
   </div>

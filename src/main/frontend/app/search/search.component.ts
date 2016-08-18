@@ -5,28 +5,28 @@ import {AlertService} from '../alert/alert.service';
 import {Utils} from '../utils/utils';
 
 export class SearchComponent implements ng.IComponentOptions {
-  public templateUrl:string = '/search/search.component.html';
-  public controller:Function = SearchController;
+  public templateUrl: string = '/search/search.component.html';
+  public controller: Function = SearchController;
 }
 
 class SearchController {
-  public static $inject:string[] = ['$uibModal', '$state', 'SearchService', 'SchemaService', 'RequestService', 'AlertService', 'Utils'];
+  public static $inject: string[] = ['$uibModal', '$state', 'SearchService', 'SchemaService', 'RequestService', 'AlertService', 'Utils'];
 
-  public schema:any;
-  public schemas:any[];
-  public domains:any[];
-  public points:any[];
-  public filters:any[]; //{ 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
-  public query:string;
-  public page:any = {number: 0, size: 50};
-  public sort:string;
-  public activeCategory:any;
-  public loading:string;
-  public error:string;
-  public submitting:string;
+  public schema: any;
+  public schemas: any[];
+  public domains: any[];
+  public points: any[];
+  public filters: any[]; // { 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
+  public query: string;
+  public page: any = {number: 0, size: 50};
+  public sort: string;
+  public activeCategory: any;
+  public loading: string;
+  public error: string;
+  public submitting: string;
 
-  constructor(private $modal:any, private $state:any, private searchService:SearchService, private schemaService:SchemaService,
-              private requestService:RequestService, private alertService:AlertService, private utils:Utils) {}
+  constructor(private $modal: any, private $state: any, private searchService: SearchService, private schemaService: SchemaService,
+              private requestService: RequestService, private alertService: AlertService, private utils: Utils) {}
 
   public $onInit() {
     this.schemaService.getSchemas().then((schemas) => {
