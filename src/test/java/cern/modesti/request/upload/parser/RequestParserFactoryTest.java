@@ -57,7 +57,7 @@ public class RequestParserFactoryTest {
 
   @Test(expected = RequestParseException.class)
   public void invalidRequestTypeIsRejected() throws IOException {
-    Mockito.when(requestProviderRegistry.getPlugins()).thenReturn(requestProviders);
+    when(requestProviderRegistry.getPlugins()).thenReturn(requestProviders);
 
     Resource sheet = sheets.get("invalid-request-type.xlsx");
     requestParserFactory.parseRequest(sheet.getInputStream());
@@ -71,7 +71,7 @@ public class RequestParserFactoryTest {
 
   @Test(expected = RequestParseException.class)
   public void emptyExcelSheetIsRejected() throws IOException {
-    Mockito.when(requestProviderRegistry.getPlugins()).thenReturn(requestProviders);
+    when(requestProviderRegistry.getPlugins()).thenReturn(requestProviders);
 
     Resource sheet = sheets.get("empty.xlsx");
     requestParserFactory.parseRequest(sheet.getInputStream());
