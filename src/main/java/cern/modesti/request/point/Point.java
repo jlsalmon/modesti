@@ -95,7 +95,7 @@ public class Point implements Serializable {
         errorPropertyExists = true;
 
         for (String e : error.getErrors()) {
-          if (e.equals(message)) {
+          if (e != null && e.equals(message)) {
             propertyMessageExists = true;
           }
         }
