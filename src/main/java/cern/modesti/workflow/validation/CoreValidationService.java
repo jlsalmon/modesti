@@ -178,7 +178,7 @@ public class CoreValidationService {
               point.setValid(false);
               valid = false;
               point.addErrorMessage(category.getId(), field.getId(),
-                  "'" + field.getName() + "' must not exceed " + field.getMinLength() + " characters in length");
+                  "'" + field.getName() + "' must not exceed " + field.getMaxLength() + " characters in length");
             }
           }
 
