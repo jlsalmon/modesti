@@ -210,7 +210,7 @@ class RequestTableController {
       Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
     }
 
-    if (typeof prop !== 'string') {
+    if (typeof prop !== 'string' || prop.indexOf('properties') == -1) {
       return;
     }
 
@@ -221,11 +221,13 @@ class RequestTableController {
 
     var props = prop.split('.').slice(1, 3);
 
-    // Check if we need to fill in a default value for this point.
     var field = this.utils.getField(this.schema, props[0]);
-    if (field) {
-      this.setDefaultValue(point, field);
+    if (!field) {
+      return
     }
+
+    // Check if we need to fill in a default value for this point.
+    this.setDefaultValue(point, field);
 
     // Highlight errors in a cell by making the background red.
     for (var i in point.errors) {
