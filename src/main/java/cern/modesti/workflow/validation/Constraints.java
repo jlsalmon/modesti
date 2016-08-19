@@ -49,11 +49,7 @@ public class Constraints {
   private static boolean validateOrConstraint(Constraint constraint, Request request, Category category) {
     boolean valid = true;
 
-    for (Point point : request.getPoints()) {
-      // Ignore empty points
-      if (PointUtils.isEmptyPoint(point)) {
-        continue;
-      }
+    for (Point point : request.getPoints(true)) {
 
       // Constraints are only applied if the category is editable.
       boolean editable = Conditionals.evaluate(category.getEditable(), point, request.getStatus());
@@ -88,11 +84,7 @@ public class Constraints {
   private static boolean validateAndConstraint(Constraint constraint, Request request, Category category) {
     boolean valid = true;
 
-    for (Point point : request.getPoints()) {
-      // Ignore empty points
-      if (PointUtils.isEmptyPoint(point)) {
-        continue;
-      }
+    for (Point point : request.getPoints(true)) {
 
       // Constraints are only applied if the category is editable.
       boolean editable = Conditionals.evaluate(category.getEditable(), point, request.getStatus());
@@ -125,11 +117,7 @@ public class Constraints {
   private static boolean validateXnorConstraint(Constraint constraint, Request request, Category category) {
     boolean valid = true;
 
-    for (Point point : request.getPoints()) {
-      // Ignore empty points
-      if (PointUtils.isEmptyPoint(point)) {
-        continue;
-      }
+    for (Point point : request.getPoints(true)) {
 
       // Constraints are only applied if the category is editable.
       boolean editable = Conditionals.evaluate(category.getEditable(), point, request.getStatus());
@@ -171,7 +159,7 @@ public class Constraints {
     List<String> concatenatedValues = new ArrayList<>();
 
     // Build a new array containing the concatenation of the values of all constraint members
-    for (Point point : request.getPoints()) {
+    for (Point point : request.getPoints(true)) {
       String concatenatedValue = "";
       boolean atLeastOneNullMember = false;
 
@@ -191,12 +179,7 @@ public class Constraints {
       concatenatedValues.add(concatenatedValue);
     }
 
-    for (Point point : request.getPoints()) {
-      // Ignore empty points
-      if (PointUtils.isEmptyPoint(point)) {
-        continue;
-      }
-
+    for (Point point : request.getPoints(true)) {
       String value = concatenatedValues.get(request.getPoints().indexOf(point));
 
       if (value != null && !value.isEmpty() && concatenatedValues.indexOf(value) != concatenatedValues.lastIndexOf(value)) {
