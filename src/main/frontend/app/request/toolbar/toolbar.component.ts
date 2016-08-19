@@ -63,12 +63,14 @@ class RequestToolbarController {
   public assignTask() {
     this.taskService.assignTask(this.request).then((newTask) => {
       this.tasks[newTask.name] = newTask;
+      this.table.activateDefaultCategory();
     });
   }
 
   public assignTaskToCurrentUser() {
     this.taskService.assignTaskToCurrentUser(this.request).then((newTask) => {
       this.tasks[newTask.name] = newTask;
+      this.table.activateDefaultCategory();
     });
   }
 

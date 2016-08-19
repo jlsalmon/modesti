@@ -53,7 +53,9 @@ class RequestFooterController {
 
   public claim(event) {
     this.stopEvent(event);
-    this.taskService.assignTaskToCurrentUser(this.request);
+    this.taskService.assignTaskToCurrentUser(this.request).then(() => {
+      this.table.activateDefaultCategory();
+    })
   }
 
   public validate(event) {
