@@ -129,7 +129,7 @@ export class RequestService {
       this.$rootScope.saving = 'success';
 
     }, (error) => {
-      console.log('error saving request: ' + error.data.message);
+      console.log('error saving request: ' + error.statusText);
       q.reject(error);
       this.$rootScope.saving = 'error';
     });
