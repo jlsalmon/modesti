@@ -152,8 +152,8 @@ export class TableService {
           }
         }
 
-        else if (typeof (option === 'string')) {
-          return {id: option, text: option};
+        else if (typeof option === 'string' || typeof option === 'number') {
+          return {id: option, text: option.toString()};
         }
       });
     } else {
