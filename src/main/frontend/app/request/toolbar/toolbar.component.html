@@ -61,10 +61,10 @@
 
     <!-- Undo/redo buttons -->
     <div class="btn-group">
-      <a class="btn btn-sm btn-default" ng-click="$ctrl.undo()" ng-disabled="!$ctrl.hot.isUndoAvailable()" tooltip-append-to-body="true" uib-tooltip="Undo">
+      <a class="btn btn-sm btn-default" ng-click="$ctrl.undo()" ng-disabled="!$ctrl.table.isUndoAvailable()" tooltip-append-to-body="true" uib-tooltip="Undo">
         <i class="fa fa-fw fa-undo"></i>
       </a>
-      <a class="btn btn-sm btn-default" ng-click="$ctrl.redo()" ng-disabled="!$ctrl.hot.isRedoAvailable()" tooltip-append-to-body="true" uib-tooltip="Redo">
+      <a class="btn btn-sm btn-default" ng-click="$ctrl.redo()" ng-disabled="!$ctrl.table.isRedoAvailable()" tooltip-append-to-body="true" uib-tooltip="Redo">
         <i class="fa fa-fw fa-repeat"></i>
       </a>
     </div>
