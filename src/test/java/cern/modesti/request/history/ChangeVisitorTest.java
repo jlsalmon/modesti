@@ -33,6 +33,7 @@ public class ChangeVisitorTest {
   public void setUp() {
     original = TestUtil.getDummyRequest();
     original.getPoints().get(0).setLineNo(1L);
+    original.getPoints().get(1).setLineNo(2L);
     modified = SerializationUtils.clone(original);
   }
 
