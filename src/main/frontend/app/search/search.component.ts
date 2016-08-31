@@ -10,7 +10,8 @@ export class SearchComponent implements ng.IComponentOptions {
 }
 
 class SearchController {
-  public static $inject: string[] = ['$uibModal', '$state', 'SearchService', 'SchemaService', 'RequestService', 'AlertService', 'Utils'];
+  public static $inject: string[] = ['$uibModal', '$state', 'SearchService', 'SchemaService',
+                                     'RequestService', 'AlertService', 'Utils'];
 
   public schema: any;
   public schemas: any[];
@@ -25,13 +26,14 @@ class SearchController {
   public error: string;
   public submitting: string;
 
-  constructor(private $modal: any, private $state: any, private searchService: SearchService, private schemaService: SchemaService,
-              private requestService: RequestService, private alertService: AlertService, private utils: Utils) {}
+  constructor(private $modal: any, private $state: any, private searchService: SearchService,
+              private schemaService: SchemaService, private requestService: RequestService,
+              private alertService: AlertService, private utils: Utils) {}
 
-  public $onInit() {
-    this.schemaService.getSchemas().then((schemas) => {
+  public $onInit(): void {
+    this.schemaService.getSchemas().then((schemas: any[]) => {
       this.schemas = schemas;
-      this.domains = schemas.map((schema) => { return schema.id; });
+      this.domains = schemas.map((schema: any) => { return schema.id; });
 
       this.calculateTableHeight();
 
@@ -46,8 +48,8 @@ class SearchController {
     });
   }
 
-  public useDomain(domain) {
-    this.schemas.forEach((schema) => {
+  public useDomain(domain: string): void {
+    this.schemas.forEach((schema: any) => {
       if (schema.id === domain) {
         this.schema = schema;
         this.activeCategory = this.schema.categories[0];
@@ -57,10 +59,10 @@ class SearchController {
     });
   }
 
-  public getAllFields() {
-    var fields = [];
-    this.schema.categories.concat(this.schema.datasources).forEach((category) => {
-      category.fields.forEach((field) => {
+  public getAllFields(): any[] {
+    let fields: any[] = [];
+    this.schema.categories.concat(this.schema.datasources).forEach((category: any) => {
+      category.fields.forEach((field: any) => {
         field.category = category.name;
         fields.push(field);
       });
@@ -68,17 +70,18 @@ class SearchController {
     return fields;
   }
 
-  public onFilterRemoved() {
+  public onFilterRemoved(): void {
     this.search();
   }
 
-  public search() {
+  public search(): void {
     this.loading = 'started';
     console.log('searching');
 
     this.parseQuery();
 
-    this.searchService.getPoints(this.schema.id, this.query, this.page.number, this.page.size, this.sort).then((response) => {
+    this.searchService.getPoints(this.schema.id, this.query, this.page.number, this.page.size, this.sort)
+      .then((response: any) => {
       if (response.hasOwnProperty('_embedded')) {
         this.points = response._embedded.points;
       } else {
@@ -91,7 +94,7 @@ class SearchController {
       // Backend pages 0-based, Bootstrap pagination 1-based
       this.page.number += 1;
 
-      angular.forEach(response._links, (item) => {
+      angular.forEach(response._links, (item: any) => {
         if (item.rel === 'next') {
           this.page.next = item.href;
         }
@@ -105,35 +108,35 @@ class SearchController {
       this.error = undefined;
     },
 
-    (error) => {
+    (error: any) => {
       this.points = [];
       this.loading = 'error';
       this.error = error;
     });
   }
 
-  public parseQuery() {
-    var expressions = [];
+  public parseQuery(): void {
+    let expressions: string[] = [];
 
-    this.filters.forEach((filter) => {
-      var field = this.utils.getField(this.schema, filter.id);
+    this.filters.forEach((filter: any) => {
+      let field: any = this.utils.getField(this.schema, filter.id);
 
-      //if (typeof filter.field === 'string') {
+      // if (typeof filter.field === 'string') {
       //  filter.field = JSON.parse(filter.field);
-      //}
+      // }
 
       if (filter.value !== null && filter.value !== undefined && filter.value !== '') {
 
-        var property;
+        let property: string;
         if (field.type === 'autocomplete') {
-          var modelAttribute = field.model ? field.model : 'value';
+          let modelAttribute: string = field.model ? field.model : 'value';
           property = filter.id + '.' + modelAttribute;
         } else {
           property = filter.id;
         }
 
-        var operation = this.parseOperation(filter.operation);
-        var expression = property + ' ' + operation + ' "' + filter.value + '"';
+        let operation: string = this.parseOperation(filter.operation);
+        let expression: string = property + ' ' + operation + ' "' + filter.value + '"';
 
         if (expressions.indexOf(expression) === -1) {
           expressions.push(expression);
@@ -145,7 +148,7 @@ class SearchController {
     console.log('parsed query: ' + this.query);
   }
 
-  public parseOperation(operation) {
+  public parseOperation(operation: string): string {
     if (operation === 'equals') {
       return ' == ';
     } else {
@@ -153,8 +156,8 @@ class SearchController {
     }
   }
 
-  public updatePoints() {
-    var modalInstance = this.$modal.open({
+  public updatePoints(): void {
+    let modalInstance: any = this.$modal.open({
       animation: false,
       templateUrl: '/search/update/update-points.modal.html',
       controller: 'UpdatePointsModalController as ctrl',
@@ -165,15 +168,15 @@ class SearchController {
       }
     });
 
-    modalInstance.result.then((request) => {
+    modalInstance.result.then((request: any) => {
       console.log('creating update request');
 
       this.submitting = 'started';
 
       // Post form to server to create new request.
-      this.requestService.createRequest(request).then((location) => {
+      this.requestService.createRequest(request).then((location: string) => {
         // Strip request ID from location.
-        var id = location.substring(location.lastIndexOf('/') + 1);
+        let id: string = location.substring(location.lastIndexOf('/') + 1);
         // Redirect to point entry page.
         this.$state.go('request', { id: id }).then(() => {
           this.submitting = 'success';
@@ -188,41 +191,42 @@ class SearchController {
     });
   }
 
-  public onPageChanged() {
+  public onPageChanged(): void {
     this.search();
   }
 
-  public activateCategory(category) {
+  public activateCategory(category: any): void {
     console.log('activating category "' + category.id + '"');
     this.activeCategory = category;
-    //$localStorage.lastActiveCategory[self.request.requestId] = category;
-    //getColumns();
+    // $localStorage.lastActiveCategory[self.request.requestId] = category;
+    // getColumns();
   }
 
-  public queryFieldValues(field, value) {
-    return this.schemaService.queryFieldValues(field, value, null);
+  public queryFieldValues(field: any, value: string): any[] {
+    return this.schemaService.queryFieldValues(field, value, undefined);
   }
 
-  public getOptionValue(option) {
+  public getOptionValue(option: any): string {
     return typeof option === 'object' ? option.value : option;
   }
 
-  public getOptionDisplayValue(option) {
+  public getOptionDisplayValue(option: any): string {
     return typeof option === 'object' ? option.value + (option.description ? ': ' + option.description : '') : option;
   }
 
   /**
    * Calculate the required height for the table so that it fills the screen.
    */
-  public calculateTableHeight() {
-    var mainHeader = $('.main-header');
-    var requestHeader = $('.request-header');
-    var toolbar = $('.toolbar');
-    var table = $('.table-wrapper');
-    //var log = $('.log');
-    var footer = $('.footer');
+  public calculateTableHeight(): void {
+    let mainHeader: any = $('.main-header');
+    let requestHeader: any = $('.request-header');
+    let toolbar: any = $('.toolbar');
+    let table: any = $('.table-wrapper');
+    // var log = $('.log');
+    let footer: any = $('.footer');
 
-    var height = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight() - toolbar.outerHeight() - footer.outerHeight();
+    let height: any = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight()
+                 - toolbar.outerHeight() - footer.outerHeight();
 
     console.log($(window).height());
     console.log(mainHeader.height());
