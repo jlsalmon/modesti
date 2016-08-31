@@ -1,39 +1,44 @@
 import {TaskService} from '../../task/task.service';
 import {ValidationService} from '../validation/validation.service';
 import {AlertService} from '../../alert/alert.service';
+import {Point} from '../point/point';
+import {Task} from '../../task/task';
+import {Request} from '../request';
 
 export class RequestFooterDirective implements ng.IDirective {
 
-  public controller:Function = RequestFooterController;
-  public controllerAs:string = '$ctrl';
+  public controller: Function = RequestFooterController;
+  public controllerAs: string = '$ctrl';
 
-  public scope:any = {};
-  public bindToController:any = {
+  public scope: any = {};
+  public bindToController: any = {
     request: '=',
     tasks: '=',
     schema: '=',
     table: '='
   };
 
-  public constructor(private $compile:ng.ICompileService, private $http:ng.IHttpService, private $ocLazyLoad:any) {}
+  public constructor(private $compile: ng.ICompileService, private $http: ng.IHttpService, private $ocLazyLoad: any) {}
 
-  static factory(): ng.IDirectiveFactory {
-    const directive = ($compile:ng.ICompileService, $http:ng.IHttpService, $ocLazyLoad:any) => new RequestFooterDirective($compile, $http, $ocLazyLoad);
+  public static factory(): ng.IDirectiveFactory {
+    const directive: ng.IDirectiveFactory = ($compile: ng.ICompileService, $http:  ng.IHttpService, $ocLazyLoad: any) =>
+      new RequestFooterDirective($compile, $http, $ocLazyLoad);
     directive.$inject = ['$compile', '$http', '$ocLazyLoad'];
     return directive;
   }
 
-  public link:Function = (scope, element) => {
-    var schemaId = scope.$ctrl.request.domain;
-    var status = scope.$ctrl.request.status.split('_').join('-').toLowerCase();
+  public link: Function = (scope, element) => {
+    let schemaId: string = scope.$ctrl.request.domain;
+    let status: string = scope.$ctrl.request.status.split('_').join('-').toLowerCase();
 
-    this.$http.get('/api/plugins/' + schemaId + '/assets').then((response) => {
-      var assets = response.data;
+    this.$http.get('/api/plugins/' + schemaId + '/assets').then((response: any) => {
+      let assets: string[] = response.data;
       console.log(assets);
 
       this.$ocLazyLoad.load(assets, {serie: true}).then(() => {
 
-        var template = '<div ' + status + '-controls request="$ctrl.request" tasks="$ctrl.tasks" schema="$ctrl.schema" table="$ctrl.table"></div>';
+        let template: string = '<div ' + status + '-controls request="$ctrl.request" ' +
+          'tasks="$ctrl.tasks" schema="$ctrl.schema" table="$ctrl.table"></div>';
         element.append(this.$compile(template)(scope));
       });
     });
@@ -41,30 +46,30 @@ export class RequestFooterDirective implements ng.IDirective {
 }
 
 class RequestFooterController {
-  public static $inject:string[] = ['$scope', '$state', 'TaskService', 'ValidationService', 'AlertService'];
+  public static $inject: string[] = ['$scope', '$state', 'TaskService', 'ValidationService', 'AlertService'];
 
-  public request:any;
-  public table:any
-  public validating:string;
-  public submitting:string;
-  
-  public constructor(private $scope:any, private $state:any,
-                     private taskService:TaskService, private validationService:ValidationService, private alertService:AlertService) {}
+  public request: Request;
+  public table: any;
+  public validating: string;
+  public submitting: string;
 
-  public claim(event) {
+  public constructor(private $scope: any, private $state: any, private taskService: TaskService,
+                     private validationService: ValidationService, private alertService: AlertService) {}
+
+  public claim(event: JQueryEventObject): void {
     this.stopEvent(event);
     this.taskService.assignTaskToCurrentUser(this.request).then(() => {
       this.table.activateDefaultCategory();
-    })
+    });
   }
 
-  public validate(event) {
+  public validate(event: JQueryEventObject): void {
     this.stopEvent(event);
 
     this.alertService.clear();
     this.validating = 'started';
 
-    this.validationService.validateRequest(this.request).then((request) => {
+    this.validationService.validateRequest(this.request).then((request: Request) => {
       // Save the reference to the validated request
       this.request = request;
 
@@ -80,23 +85,23 @@ class RequestFooterController {
       this.table.render();
     },
 
-    (error) => {
+    (error: any) => {
       console.log('error validating request: ' + error.statusText);
       this.validating = 'error';
     });
   }
 
-  public submit(event) {
+  public submit(event: JQueryEventObject): void {
     this.stopEvent(event);
 
-    var task = this.taskService.getCurrentTask();
+    let task: Task = this.taskService.getCurrentTask();
+    let previousStatus: string = this.request.status;
 
     this.alertService.clear();
     this.submitting = 'started';
-    var previousStatus = this.request.status;
 
     // Complete the task associated with the request
-    this.taskService.completeTask(task.name, this.request).then((request) => {
+    this.taskService.completeTask(task.name, this.request).then((request: Request) => {
       console.log('completed task ' + task.name);
 
       this.request = request;
@@ -109,10 +114,7 @@ class RequestFooterController {
 
       if (this.request.status === 'CLOSED') {
         this.alertService.add('info', 'Request has been submitted successfully and is now closed.');
-      }
-
-      // If the request is in any other state, show a page with information about what happens next
-      else {
+      } else {
         this.$state.reload().then(() => {
           this.alertService.add('info', 'Request has been submitted successfully.');
         });
@@ -120,13 +122,13 @@ class RequestFooterController {
     });
   }
 
-  public getNumValidationErrors() {
-    var n = 0;
+  public getNumValidationErrors(): number {
+    let n: number = 0;
 
     if (this.request.hasOwnProperty('points')) {
-      this.request.points.forEach((point) => {
+      this.request.points.forEach((point: Point) => {
         if (point.hasOwnProperty('errors')) {
-          point.errors.forEach((error) => {
+          point.errors.forEach((error: any) => {
             n += error.errors.length;
           });
         }
@@ -136,7 +138,7 @@ class RequestFooterController {
     return n;
   }
 
-  public stopEvent(event) {
+  public stopEvent(event: JQueryEventObject): void {
     if (event) {
       event.preventDefault();
       event.stopPropagation();

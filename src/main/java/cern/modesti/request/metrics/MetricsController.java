@@ -29,8 +29,9 @@ public class MetricsController {
   @RequestMapping(value = "/api/metrics", method = GET)
   public List getRequestMetrics() {
 
-    GroupByResults<Request> results = mongoTemplate.group("request", GroupBy.key("status").initialDocument("{ count: 0 }").reduceFunction("function" + "" +
-        "(doc, prev) { prev.count += 1 }"), Request.class);
+    GroupByResults<Request> results = mongoTemplate.group("request", GroupBy.key("status")
+        .initialDocument("{ count: 0 }")
+        .reduceFunction("function(doc, prev) { prev.count += 1 }"), Request.class);
 
     return (List) results.getRawResults().get("retval");
   }

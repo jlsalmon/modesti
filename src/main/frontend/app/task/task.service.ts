@@ -1,28 +1,35 @@
 import {AuthService} from '../auth/auth.service';
 import {RequestService} from '../request/request.service';
+import {Task} from './task';
+import {Request} from '../request/request';
+import {Signal} from './signal';
+import {User} from '../user/user';
+import {Authority} from '../user/authority';
+import IPromise = angular.IPromise;
+import IDeferred = angular.IDeferred;
 
 export class TaskService {
-  public static $inject:string[] = ['$q', '$http', '$state', '$uibModal', 'AuthService', 'RequestService'];
+  public static $inject: string[] = ['$q', '$http', '$state', '$uibModal', 'AuthService', 'RequestService'];
 
-  public tasks:any = {};
-  
-  public constructor(private $q:any, private $http:any, private $state:any, private $modal:any, 
-                     private authService:AuthService, private requestService:RequestService) {}
+  public tasks: any = {};
 
-  public getCurrentTask() {
+  public constructor(private $q: any, private $http: any, private $state: any, private $modal: any,
+                     private authService: AuthService, private requestService: RequestService) {}
+
+  public getCurrentTask(): Task {
     return this.tasks[Object.keys(this.tasks)[0]];
   }
 
-  public getTasksForRequest(request) {
+  public getTasksForRequest(request: Request): IPromise<Task[]> {
     console.log('fetching tasks for request ' + request.requestId);
 
-    var q = this.$q.defer();
+    let q: IDeferred<Task[]> = this.$q.defer();
 
-    this.$http.get('/api/requests/' + request.requestId + '/tasks').then((response) => {
-      var tasks = {};
+    this.$http.get('/api/requests/' + request.requestId + '/tasks').then((response: any) => {
+      let tasks: any = {};
 
       if (response.data.hasOwnProperty('_embedded')) {
-        angular.forEach(response.data._embedded.tasks, function (task) {
+        angular.forEach(response.data._embedded.tasks, (task: Task) => {
           tasks[task.name] = task;
         });
       }
@@ -32,7 +39,7 @@ export class TaskService {
       q.resolve(tasks);
     },
 
-    (error) => {
+    (error: any) => {
       console.log('error fetching tasks: ' + error);
       q.reject(error);
     });
@@ -40,16 +47,16 @@ export class TaskService {
     return q.promise;
   }
 
-  public getSignalsForRequest(request) {
+  public getSignalsForRequest(request: Request): IPromise<Signal[]> {
     console.log('fetching signals for request ' + request.requestId);
 
-    var q = this.$q.defer();
+    let q: IDeferred<Signal[]> = this.$q.defer();
 
-    this.$http.get('/api/requests/' + request.requestId + '/signals').then((response) => {
-      var signals = {};
+    this.$http.get('/api/requests/' + request.requestId + '/signals').then((response: any) => {
+      let signals: any = {};
 
       if (response.data.hasOwnProperty('_embedded')) {
-        angular.forEach(response.data._embedded.signals, function (signal) {
+        angular.forEach(response.data._embedded.signals, (signal: Signal) => {
           signals[signal.name] = signal;
         });
       }
@@ -58,7 +65,7 @@ export class TaskService {
       q.resolve(signals);
     },
 
-    (error) => {
+    (error: any) => {
       console.log('error fetching signals: ' + error.statusText);
       q.reject(error);
     });
@@ -66,25 +73,23 @@ export class TaskService {
     return q.promise;
   }
 
-  public assignTask(request) {
-    var q = this.$q.defer();
-    var task = this.getCurrentTask();
+  public assignTask(request: Request): IPromise<Task> {
+    let q: IDeferred<Task> = this.$q.defer();
+    let task: Task = this.getCurrentTask();
 
-    var modalInstance = this.$modal.open({
+    let modalInstance: any = this.$modal.open({
       animation: false,
       templateUrl: '/request/assign/assign-request.modal.html',
       controller: 'AssignRequestModalController as ctrl',
       resolve: {
-        task: function () {
-          return task;
-        }
+        task: () => task
       }
     });
 
-    modalInstance.result.then((assignee) => {
+    modalInstance.result.then((assignee: User) => {
       console.log('assigning request to user ' + assignee.username);
 
-      this.doAssignTask(task.name, request.requestId, assignee.username).then((newTask) => {
+      this.doAssignTask(task.name, request.requestId, assignee.username).then((newTask: Task) => {
         console.log('assigned request');
         task = newTask;
         request.assignee = assignee.username;
@@ -95,12 +100,12 @@ export class TaskService {
     return q.promise;
   }
 
-  public assignTaskToCurrentUser(request) {
-    var q = this.$q.defer();
-    var task = this.getCurrentTask();
-    var username = this.authService.getCurrentUser().username;
+  public assignTaskToCurrentUser(request: Request): IPromise<Task> {
+    let q: IDeferred<Task> = this.$q.defer();
+    let task: Task = this.getCurrentTask();
+    let username: string = this.authService.getCurrentUser().username;
 
-    this.doAssignTask(task.name, request.requestId, username).then((newTask) => {
+    this.doAssignTask(task.name, request.requestId, username).then((newTask: Task) => {
       console.log('assigned request');
       this.tasks[task.name] = newTask;
       request.assignee = username;
@@ -110,20 +115,20 @@ export class TaskService {
     return q.promise;
   }
 
-  public doAssignTask(taskName, requestId, assignee) {
-    var q = this.$q.defer();
+  public doAssignTask(taskName: string, requestId: string, assignee: string): IPromise<Task> {
+    let q: IDeferred<Task> = this.$q.defer();
 
-    var params = {
+    let params: any = {
       action: 'ASSIGN',
       assignee: assignee
     };
 
-    this.$http.post('/api/requests/' + requestId + '/tasks/' + taskName, params).then((response) => {
+    this.$http.post('/api/requests/' + requestId + '/tasks/' + taskName, params).then((response: any) => {
       console.log('assigned task ' + taskName + ' to user ' + params.assignee);
       q.resolve(response.data);
     },
 
-    (error) => {
+    (error: any) => {
       console.log('error assigning task ' + taskName + ': ' + error.data.message);
       q.reject(error);
     });
@@ -131,9 +136,9 @@ export class TaskService {
     return q.promise;
   }
 
-  public completeTask(taskName, request) {
-    var q = this.$q.defer();
-    var params = {action: 'COMPLETE'};
+  public completeTask(taskName: string, request: Request): IPromise<Request> {
+    let q: IDeferred<Request> = this.$q.defer();
+    let params: any = {action: 'COMPLETE'};
 
     this.requestService.saveRequest(request).then(() => {
       console.log('saved request before completing task');
@@ -146,31 +151,31 @@ export class TaskService {
 
         this.$state.reload().then(() => {
           // Get the request once again from the cache
-          this.requestService.getRequest(request.requestId).then((request) => {
-            q.resolve(request);
+          this.requestService.getRequest(request.requestId).then((r: Request) => {
+            q.resolve(r);
           });
         });
       },
 
-      (error) => {
+      (error: any) => {
         console.log('error completing task ' + taskName);
         q.reject(error);
       });
     },
 
-    (error) => {
+    (error: any) => {
       console.log('error saving before completing task: ' + error.statusText);
     });
 
     return q.promise;
   }
 
-  public isTaskClaimed(task) {
+  public isTaskClaimed(task: Task): boolean {
     return task.assignee !== undefined && task.assignee !== null;
   }
 
-  public isAnyTaskClaimed(tasks) {
-    for (var key in tasks) {
+  public isAnyTaskClaimed(tasks: Task[]): boolean {
+    for (let key in tasks) {
       if (this.isTaskClaimed(tasks[key])) {
         return true;
       }
@@ -178,8 +183,8 @@ export class TaskService {
     return false;
   }
 
-  public isCurrentUserAssigned(task) {
-    var user = this.authService.getCurrentUser();
+  public isCurrentUserAssigned(task: Task): boolean {
+    let user: User = this.authService.getCurrentUser();
     if (!user || !task) {
       return false;
     }
@@ -193,12 +198,12 @@ export class TaskService {
    * @param task
    * @returns {boolean} true if the current user is authorised to act the given task
    */
-  public isCurrentUserAuthorised(task) {
+  public isCurrentUserAuthorised(task: Task): boolean {
     if (!task) {
       return false;
     }
 
-    var user = this.authService.getCurrentUser();
+    let user: User = this.authService.getCurrentUser();
     if (!user) {
       return false;
     }
@@ -207,27 +212,27 @@ export class TaskService {
       return true;
     }
 
-    var role;
-    for (var i = 0, len = user.authorities.length; i < len; i++) {
-      role = user.authorities[i].authority;
+    let authorised: boolean = false;
+    user.authorities.forEach((authority: Authority) => {
+      let role: string = authority.authority;
 
       if (task.candidateGroups.indexOf(role) > -1) {
-        return true;
+        authorised = true;
       }
-    }
+    });
 
-    return false;
+    return authorised;
   }
 
-  public sendSignal(signal) {
-    var q = this.$q.defer();
+  public sendSignal(signal: Signal): IPromise<Signal> {
+    let q: IDeferred<Signal> = this.$q.defer();
 
-    this.$http.post(signal._links.this.href, {}).then(function () {
+    this.$http.post(signal._links.this.href, {}).then(() => {
       console.log('sent signal ' + signal.name);
       q.resolve();
     },
 
-    function (error) {
+    (error: any) => {
       console.log('error sending signal ' + signal.name + ': ' + error);
       q.reject(error);
     });

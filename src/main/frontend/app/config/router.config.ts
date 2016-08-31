@@ -1,3 +1,6 @@
+/**
+ * Define the routes (pages) that make up the application.
+ */
 export class RouterConfig {
 
   public static configure($stateProvider: any, $urlRouterProvider: any, $locationProvider: any) {

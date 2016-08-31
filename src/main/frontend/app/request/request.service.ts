@@ -1,15 +1,22 @@
 import {AuthService} from '../auth/auth.service';
+import {Request} from './request';
+import {Schema} from '../schema/schema';
+import {Field} from '../schema/field';
+import {Point} from './point/point';
+import {User} from '../user/user';
+import IPromise = angular.IPromise;
+import IDeferred = angular.IDeferred;
 
 export class RequestService {
-  public static $inject:string[] = ['$http', '$rootScope', '$q', 'Restangular', 'AuthService'];
-  
-  public cache:any = {};
-  
-  public constructor(private $http:any, private $rootScope:any, private $q:any, private Restangular:any, 
-                     private authService:AuthService) {}
+  public static $inject: string[] = ['$http', '$rootScope', '$q', 'Restangular', 'AuthService'];
 
-  public getRequests(page, size, sort, filter) {
-    var q = this.$q.defer();
+  public cache: any = {};
+
+  public constructor(private $http: any, private $rootScope: any, private $q: any, private restangular: any,
+                     private authService: AuthService) {}
+
+  public getRequests(page: number, size: number, sort: string, filter: string): IPromise<Request> {
+    let q: IDeferred<Request[]> = this.$q.defer();
     page = page || 0;
     size = size || 15;
     sort = sort || 'createdAt,desc';
@@ -21,11 +28,11 @@ export class RequestService {
         size: size,
         sort: sort
       }
-    }).then((response) => {
+    }).then((response: any) => {
       q.resolve(response.data);
     },
 
-    (error) => {
+    (error: any) => {
       console.log('error: ' + error.statusText);
       q.reject(error);
     });
@@ -33,10 +40,10 @@ export class RequestService {
     return q.promise;
   }
 
-  public parseQuery(filter) {
-    var expressions = [];
+  public parseQuery(filter): string {
+    let expressions: string[] = [];
 
-    for (var property in filter) {
+    for (let property in filter) {
       if (typeof filter[property] === 'string' && filter[property] !== '') {
         expressions.push(property.toString() + '=="' + filter[property] + '"');
       }
@@ -46,39 +53,41 @@ export class RequestService {
       }
 
       else if (typeof filter[property] === 'object') {
-        for (var subProperty in filter[property]) {
+        for (let subProperty in filter[property]) {
 
           if (typeof filter[property][subProperty] === 'string' && filter[property][subProperty] !== '') {
-            expressions.push(property.toString() + '.' + subProperty.toString() + '=="' + filter[property][subProperty] + '"');
+            expressions.push(property.toString() + '.' + subProperty.toString()
+              + '=="' + filter[property][subProperty] + '"');
           }
 
           else if (filter[property][subProperty] instanceof Array && filter[property][subProperty].length > 0) {
-            expressions.push(property.toString() + '.' + subProperty.toString() + '=in=' + '("' + filter[property][subProperty].join('","') + '")');
+            expressions.push(property.toString() + '.' + subProperty.toString()
+              + '=in=' + '("' + filter[property][subProperty].join('","') + '")');
           }
         }
       }
     }
 
-    var query = expressions.join('; ');
+    let query: string = expressions.join('; ');
 
     console.log('parsed query: ' + query);
     return query;
   }
 
-  public getRequest(id) {
-    var q = this.$q.defer();
+  public getRequest(id: string): IPromise<Request> {
+    let q: IDeferred<Request> = this.$q.defer();
     console.log('fetching request ' + id);
 
-    this.Restangular.one('requests', id).get().then((response) => {
-      var request = response.data;
+    this.restangular.one('requests', id).get().then((response: any) => {
+      let request: Request = response.data;
 
       // Make a copy for sorting/filtering
-      request = this.Restangular.copy(request);
+      request = this.restangular.copy(request);
 
       q.resolve(request);
     },
 
-    (error) => {
+    (error: any) => {
       console.log(error.status + ' ' + error.statusText);
       q.reject(error);
     });
@@ -86,17 +95,17 @@ export class RequestService {
     return q.promise;
   }
 
-  public getRequestHistory(id) {
-    var q = this.$q.defer();
+  public getRequestHistory(id: string): IPromise<any> {
+    let q: IDeferred<any> = this.$q.defer();
 
     console.log('fetching history for request ' + id);
 
-    this.Restangular.one('requestHistories', id).get().then((response) => {
-      var history = response.data;
+    this.restangular.one('requestHistories', id).get().then((response: any) => {
+      let history: any[] = response.data;
       q.resolve(history);
     },
 
-    (error) => {
+    (error: any) => {
       console.log(error.status + ' ' + error.statusText);
       q.reject(error);
     });
@@ -104,22 +113,22 @@ export class RequestService {
     return q.promise;
   }
 
-  public getChildRequests(request) {
-    var childRequestIds = request.childRequestIds;
-    var promises = [];
+  public getChildRequests(request: Request): IPromise<Request[]> {
+    let childRequestIds: string[] = request.childRequestIds;
+    let promises: IPromise<Request>[] = [];
 
-    angular.forEach(childRequestIds, (childRequestId) => {
+    angular.forEach(childRequestIds, (childRequestId: string) => {
       promises.push(this.getRequest(childRequestId));
     });
 
     return this.$q.all(promises);
   }
 
-  public saveRequest(request) {
+  public saveRequest(request: Request): IPromise<Request> {
     this.$rootScope.saving = 'started';
-    var q = this.$q.defer();
+    let q: IDeferred<Request> = this.$q.defer();
 
-    this.$http.put('/api/requests/' + request.requestId, request).then((response) =>{
+    this.$http.put('/api/requests/' + request.requestId, request).then((response: any) => {
       console.log('saved request');
 
       // Cache the newly saved request
@@ -128,7 +137,7 @@ export class RequestService {
       q.resolve(this.cache[request.requestId]);
       this.$rootScope.saving = 'success';
 
-    }, (error) => {
+    }, (error: any) => {
       console.log('error saving request: ' + error.statusText);
       q.reject(error);
       this.$rootScope.saving = 'error';
@@ -137,17 +146,17 @@ export class RequestService {
     return q.promise;
   }
 
-  public createRequest(request) {
-    var q = this.$q.defer();
-    var requests = this.Restangular.all('requests');
+  public createRequest(request: Request): IPromise<String> {
+    let q: IDeferred<String> = this.$q.defer();
+    let requests: any = this.restangular.all('requests');
 
-    requests.post(request).then((response) => {
-      var location = response.headers('Location');
+    requests.post(request).then((response: any) => {
+      let location: string = response.headers('Location');
       console.log('created request: ' + location);
       q.resolve(location);
     },
 
-    (error) => {
+    (error: any) => {
       console.log(error.statusText);
       q.reject(error);
     });
@@ -155,27 +164,26 @@ export class RequestService {
     return q.promise;
   }
 
-  public cloneRequest(request, schema) {
-    var clone = {
+  public cloneRequest(request: Request, schema: Schema): IPromise<String> {
+    let clone: Request = {
       domain: request.domain,
       type : request.type,
       description : request.description,
       creator : this.authService.getCurrentUser().username,
-      //subsystem: request.subsystem,
       points: request.points.slice(),
       properties: {}
     };
 
     // Clone request-level properties that are defined in the schema
     if (schema.fields) {
-      schema.fields.forEach((field) => {
+      schema.fields.forEach((field: Field) => {
         if (request.properties.hasOwnProperty(field.id)) {
           clone.properties[field.id] = request.properties[field.id];
         }
       });
     }
 
-    clone.points.forEach((point) => {
+    clone.points.forEach((point: Point) => {
       point.dirty = true;
       point.selected = false;
       point.errors = [];
@@ -195,15 +203,15 @@ export class RequestService {
     return this.createRequest(clone);
   }
 
-  public deleteRequest(id) {
-    var q = this.$q.defer();
+  public deleteRequest(id: string): IPromise<void> {
+    let q: IDeferred<void> = this.$q.defer();
 
-    this.Restangular.one('requests', id).remove().then((response) => {
+    this.restangular.one('requests', id).remove().then((response: any) => {
       console.log('deleted request: ' + response);
       q.resolve(response);
     },
 
-    (error) => {
+    (error: any) => {
       console.log(error.status + ' ' + error.statusText);
       q.reject(error);
     });
@@ -211,8 +219,8 @@ export class RequestService {
     return q.promise;
   }
 
-  public isCurrentUserOwner(request) {
-    var user = this.authService.getCurrentUser();
+  public isCurrentUserOwner(request: Request): boolean {
+    let user: User = this.authService.getCurrentUser();
     if (!user) {
       return false;
     }
@@ -220,14 +228,14 @@ export class RequestService {
     return user && user.username === request.creator;
   }
 
-  public getRequestMetrics() {
-    var q = this.$q.defer();
+  public getRequestMetrics(): IPromise<any[]> {
+    let q: IDeferred<any[]> = this.$q.defer();
 
-    this.$http.get('/api/metrics').then((response) => {
+    this.$http.get('/api/metrics').then((response: any) => {
       q.resolve(response.data);
     },
 
-    (error) => {
+    (error: any) => {
       console.log(error.status + ' ' + error.statusText);
       q.reject(error);
     });
@@ -235,7 +243,7 @@ export class RequestService {
     return q.promise;
   }
 
-  public clearCache() {
+  public clearCache(): void {
     this.cache = {};
   }
 }
