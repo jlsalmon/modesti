@@ -68,6 +68,24 @@ public class Point implements Serializable {
   }
 
   /**
+   * Retrieve a point property in the same way as
+   * {@link #getProperty(String, Class)}, except that the provided default
+   * value will be returned in case that the property value does not exist or
+   * is null.
+   *
+   * @param key          the property key
+   * @param klass        the type to which to convert the value
+   * @param defaultValue the default value to return
+   * @param <T>          he type of the value
+   * @return the value mapped by the given key, converted to the given type or
+   *         the provided default value
+   */
+  public <T> T getProperty(String key, Class<T> klass, T defaultValue) {
+    T value = getProperty(key, klass);
+    return value == null ? defaultValue : value;
+  }
+
+  /**
    * Add a property to the point.
    *
    * @param key   the property key
