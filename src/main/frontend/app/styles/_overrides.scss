@@ -1,3 +1,8 @@
+body {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
+
 .skin-blue-light .main-header .logo {
   font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
   background-color: #205081;
@@ -654,14 +659,12 @@ body {/* Margin bottom by footer height */
   border-bottom-left-radius: 2px !important;
 }
 
-.toolbar .search-form input[type="text"]:focus, .toolbar .search-form input[type="text"]:focus+.input-group-btn .btn
-{
+.toolbar .search-form input[type="text"]:focus, .toolbar .search-form input[type="text"]:focus+.input-group-btn .btn {
   background-color: #fff;
   color: #666;
 }
 
-.toolbar .search-form input[type="text"]:focus+.input-group-btn .btn
-{
+.toolbar .search-form input[type="text"]:focus+.input-group-btn .btn {
   border-left-color: #fff !important;
 }
 
@@ -684,7 +687,17 @@ body {/* Margin bottom by footer height */
 /** Table styles */
 .table {
   margin-bottom: 0;
-  /*background-color: #F5F5F5;*/
+  //background-color: #fff;
+  //background: -moz-linear-gradient(left, #eee 49px, #ccc 49px, #ccc 51px, #fff 51px, #fff 100%);
+  //background: -webkit-linear-gradient(left, #eee 49px, #ccc 49px, #ccc 51px, #fff 51px, #fff 100%);
+  //background: -o-linear-gradient(left, #eee 49px, #ccc 49px, #ccc 51px, #fff 51px, #fff 100%);
+  //background: -ms-linear-gradient(left, #eee 49px, #ccc 49px, #ccc 51px, #fff 51px, #fff 100%);
+  //background: linear-gradient(left, #eee 49px, #ccc 49px, #ccc 51px, #fff 51px, #fff 100%);
+}
+
+.handsontable table.htCore {
+  //position: fixed;
+  //width: 100%;
 }
 
 .table .ht_clone_left {
