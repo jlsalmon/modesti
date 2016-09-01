@@ -8,7 +8,7 @@ export class AlertService {
     $rootScope.alerts = [];
   }
 
-  public add(type: string, message: string, timeout: number = 10000): void {
+  public add(type: string, message: string, timeout: number = 20000): void {
     let alert: Alert = new Alert(type, message, this);
 
     this.$rootScope.alerts.push(alert);
