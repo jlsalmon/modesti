@@ -49,7 +49,7 @@ public class PluginAssetController {
   @RequestMapping("/api/plugins")
   public VersionDescriptor getPluginInfo() throws IOException {
     String version = environment.getRequiredProperty("modesti.version");
-    if (version.equals("<%=version%>")) version = "DEV";
+    if (version.equals("<%=version%>")) version = "dev";
 
     // TODO: read plugin versions and insert them here
 

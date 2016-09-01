@@ -1,5 +1,5 @@
 export class VersionComponent implements ng.IComponentOptions {
-  public template: string = 'v{{$ctrl.version}}';
+  public template: string = '{{$ctrl.version}}';
   public controller: Function = VersionController;
 }
 
@@ -10,8 +10,9 @@ class VersionController {
 
   constructor(private $http: any) {
     $http.get('/api/plugins').then((response: any) => {
-      this.version = response.data.version;
-      console.log('modesti v' + this.version);
+      let version: string = response.data.version;
+      this.version = version === 'dev' ? version : 'v' + version;
+      console.log('modesti ' + this.version);
     });
   }
 }
