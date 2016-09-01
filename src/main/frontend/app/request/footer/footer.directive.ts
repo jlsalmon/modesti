@@ -4,8 +4,17 @@ import {AlertService} from '../../alert/alert.service';
 import {Point} from '../point/point';
 import {Task} from '../../task/task';
 import {Request} from '../request';
+import IPromise = angular.IPromise;
+import IDeferred = angular.IDeferred;
+import IQService = angular.IQService;
+import ICompileService = angular.ICompileService;
+import IHttpService = angular.IHttpService;
+import IDirective = angular.IDirective;
+import IDirectiveFactory = angular.IDirectiveFactory;
+import IScope = angular.IScope;
+import IStateService = angular.ui.IStateService;
 
-export class RequestFooterDirective implements ng.IDirective {
+export class RequestFooterDirective implements IDirective {
 
   public controller: Function = RequestFooterController;
   public controllerAs: string = '$ctrl';
@@ -18,10 +27,10 @@ export class RequestFooterDirective implements ng.IDirective {
     table: '='
   };
 
-  public constructor(private $compile: ng.ICompileService, private $http: ng.IHttpService, private $ocLazyLoad: any) {}
+  public constructor(private $compile: ICompileService, private $http: IHttpService, private $ocLazyLoad: any) {}
 
-  public static factory(): ng.IDirectiveFactory {
-    const directive: ng.IDirectiveFactory = ($compile: ng.ICompileService, $http:  ng.IHttpService, $ocLazyLoad: any) =>
+  public static factory(): IDirectiveFactory {
+    const directive: IDirectiveFactory = ($compile: ICompileService, $http:  IHttpService, $ocLazyLoad: any) =>
       new RequestFooterDirective($compile, $http, $ocLazyLoad);
     directive.$inject = ['$compile', '$http', '$ocLazyLoad'];
     return directive;
@@ -46,15 +55,16 @@ export class RequestFooterDirective implements ng.IDirective {
 }
 
 class RequestFooterController {
-  public static $inject: string[] = ['$scope', '$state', 'TaskService', 'ValidationService', 'AlertService'];
+  public static $inject: string[] = ['$scope', '$state', '$q', 'TaskService', 'ValidationService', 'AlertService'];
 
   public request: Request;
   public table: any;
   public validating: string;
   public submitting: string;
 
-  public constructor(private $scope: any, private $state: any, private taskService: TaskService,
-                     private validationService: ValidationService, private alertService: AlertService) {}
+  public constructor(private $scope: IScope, private $state: IStateService, private $q: IQService,
+                     private taskService: TaskService, private validationService: ValidationService,
+                     private alertService: AlertService) {}
 
   public claim(event: JQueryEventObject): void {
     this.stopEvent(event);
@@ -91,8 +101,9 @@ class RequestFooterController {
     });
   }
 
-  public submit(event: JQueryEventObject): void {
+  public submit(event: JQueryEventObject): IPromise<Request> {
     this.stopEvent(event);
+    let q: IDeferred<Request> = this.$q.defer();
 
     let task: Task = this.taskService.getCurrentTask();
     let previousStatus: string = this.request.status;
@@ -107,19 +118,13 @@ class RequestFooterController {
       this.request = request;
       this.submitting = 'success';
 
-      // If the request is now FOR_CONFIGURATION, no need to go away from the request page
-      if (this.request.status === 'FOR_CONFIGURATION') {
-        this.alertService.add('info', 'Request has been submitted successfully and is ready to be configured.');
-      }
-
-      if (this.request.status === 'CLOSED') {
-        this.alertService.add('info', 'Request has been submitted successfully and is now closed.');
-      } else {
-        this.$state.reload().then(() => {
-          this.alertService.add('info', 'Request has been submitted successfully.');
-        });
-      }
+      q.resolve(request);
+    },
+    (error: any) => {
+      q.reject(error);
     });
+
+    return q.promise;
   }
 
   public getNumValidationErrors(): number {
