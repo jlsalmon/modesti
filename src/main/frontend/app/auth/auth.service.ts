@@ -1,25 +1,30 @@
+import {User} from '../user/user';
+import {Authority} from '../user/authority';
 import IDeferred = angular.IDeferred;
 import IPromise = angular.IPromise;
-import {User} from '../user/user';
+import IHttpService = angular.IHttpService;
+import IQService = angular.IQService;
+import IStateService = angular.ui.IStateService;
 
 export class AuthService {
   public static $inject: string[] = ['$http', '$q', '$localStorage', '$cookies', '$uibModal', '$state', 'authService'];
 
   public loginModalOpened: boolean = false;
 
-  public constructor(private $http: any, private $q: any, private $localStorage: any, private $cookies: any, private $modal: any,
-                     private $state: any, private authService: any) {}
+  public constructor(private $http: IHttpService, private $q: IQService, private $localStorage: any,
+                     private $cookies: any, private $modal: any, private $state: IStateService,
+                     private authService: any) {}
 
   public login(): IPromise<User> {
     let q: IDeferred<User> = this.$q.defer();
 
     if (this.loginModalOpened) {
-      return this.$q.when();
+      return this.$q.when(undefined);
     }
 
     this.loginModalOpened = true;
 
-    var modalInstance = this.$modal.open({
+    let modalInstance: any = this.$modal.open({
       animation: false,
       templateUrl: '/auth/login.modal.html',
       controller: 'LoginModalController as ctrl'
@@ -38,17 +43,17 @@ export class AuthService {
     return q.promise;
   }
 
-  public doLogin(credentials:any) {
-    var q = this.$q.defer();
+  public doLogin(credentials: any): IPromise<{}> {
+    let q: IDeferred<{}> = this.$q.defer();
 
     // Build a basic auth header
-    var headers = credentials ? {
+    let headers: any = credentials ? {
       authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)
     } : {};
 
     // Set ignoreAuthModule so that angular-http-auth doesn't show another modal
     // if the authentication fails
-    this.$http.get('/api/login', {headers: headers, ignoreAuthModule: true}).then((response:any) => {
+    this.$http.get('/api/login', {headers: headers, ignoreAuthModule: true}).then((response: any) => {
       console.log('authenticated');
 
       // Set data in local storage for other parts of the app to use
@@ -61,7 +66,7 @@ export class AuthService {
       q.resolve();
     },
 
-    (error:any) => {
+    (error: any) => {
       console.log('failed to authenticate');
       this.$localStorage.user = undefined;
       q.reject(error);
@@ -70,8 +75,8 @@ export class AuthService {
     return q.promise;
   }
 
-  public logout(): IPromise {
-    let q: any = this.$q.defer();
+  public logout(): IPromise<{}> {
+    let q: IDeferred<{}> = this.$q.defer();
 
     this.$http.get('/logout').then(() => {
       console.log('logged out');
@@ -92,21 +97,21 @@ export class AuthService {
     return q.promise;
   }
 
-  public getCurrentUser() {
+  public getCurrentUser(): User {
     return this.$localStorage.user;
   }
 
-  public isCurrentUserAuthenticated() {
+  public isCurrentUserAuthenticated(): boolean {
     return this.$localStorage.user !== undefined;
   }
 
-  public isCurrentUserAdministrator() {
+  public isCurrentUserAdministrator(): boolean {
     if (!this.isCurrentUserAuthenticated()) {
       return false;
     }
 
-    for (var i = 0, len = this.$localStorage.user.authorities.length; i < len; i++) {
-      var authority = this.$localStorage.user.authorities[i];
+    for (let i: number = 0, len: number = this.$localStorage.user.authorities.length; i < len; i++) {
+      let authority: Authority = this.$localStorage.user.authorities[i];
 
       if (authority.authority === 'modesti-administrators') {
         return true;
@@ -116,17 +121,17 @@ export class AuthService {
     return false;
   }
 
-  public getUser(username:any) {
-    var q = this.$q.defer();
+  public getUser(username: string): IPromise<User> {
+    let q: IDeferred<User> = this.$q.defer();
 
-    this.$http.get('/api/users/search/findOneByUsername', {params: {username: username}}).then((response:any) => {
-        q.resolve(response.data);
-      },
+    this.$http.get('/api/users/search/findOneByUsername', {params: {username: username}}).then((response: any) => {
+      q.resolve(response.data);
+    },
 
-      (error:any) => {
-        console.log('failed to get user ' + username);
-        q.reject(error);
-      });
+    (error: any) => {
+      console.log('failed to get user ' + username);
+      q.reject(error);
+    });
 
     return q.promise;
   }
