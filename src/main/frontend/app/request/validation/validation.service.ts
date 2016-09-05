@@ -1,20 +1,27 @@
+import {Request} from '../request';
+import {Point} from '../point/point';
+import IQService = angular.IQService;
+import IHttpService = angular.IHttpService;
+import IPromise = angular.IPromise;
+import IDeferred = angular.IDeferred;
+
 export class ValidationService {
-  public static $inject:string[] = ['$q', '$http'];
+  public static $inject: string[] = ['$q', '$http'];
 
-  public constructor(private $q:any, private $http:any) {}
+  public constructor(private $q: IQService, private $http: IHttpService) {}
 
-  public validateRequest(request) {
-    var q = this.$q.defer();
+  public validateRequest(request: Request): IPromise<Request> {
+    let q: IDeferred<Request> = this.$q.defer();
 
-    this.$http.post('/api/requests/' + request.requestId + '/validate').then((response) => {
-        request = response.data;
-        q.resolve(request);
-      },
+    this.$http.post('/api/requests/' + request.requestId + '/validate', {}).then((response: any) => {
+      request = response.data;
+      q.resolve(request);
+    },
 
-      (error) => {
-        console.log('error validating request: ' + error.statusText);
-        q.reject(error);
-      });
+    (error: any) => {
+      console.log('error validating request: ' + error.statusText);
+      q.reject(error);
+    });
 
     return q.promise;
   }
@@ -26,13 +33,13 @@ export class ValidationService {
    * @param propertyName
    * @param message
    */
-  public setErrorMessage(point, propertyName, message) {
-    var exists = false;
+  public setErrorMessage(point: Point, propertyName: string, message: string): void {
+    let exists: boolean = false;
 
-    point.errors.forEach((error) => {
+    point.errors.forEach((error: any) => {
       if (error.property === propertyName) {
         exists = true;
-        if (!error.errors.indexOf(message > -1)) {
+        if (error.errors.indexOf(message) > -1) {
           error.errors.push(message);
         }
       }

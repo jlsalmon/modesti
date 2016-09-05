@@ -1,20 +1,24 @@
 import {RequestService} from '../request.service';
 import {AlertService} from '../../alert/alert.service';
+import {Request} from '../request';
+import {Schema} from '../../schema/schema';
+import {IStateService} from 'angular-ui-router';
 
 export class CloneRequestModalController {
-  public static $inject:string[] = ['$uibModalInstance', '$state', 'request', 'schema', 'RequestService', 'AlertService'];
+  public static $inject: string[] = ['$uibModalInstance', '$state', 'request', 'schema',
+    'RequestService', 'AlertService'];
 
-  public cloning:string = undefined;
+  public cloning: string = undefined;
 
-  constructor(private $modalInstance:any, private $state:any, private request:any, private schema:any,
-      private requestService:RequestService, private alertService:AlertService) {}
+  constructor(private $modalInstance: any, private $state: IStateService, private request: Request,
+              private schema: Schema, private requestService: RequestService, private alertService: AlertService) {}
 
-  public clone() {
+  public clone(): void {
     this.cloning = 'started';
 
-    this.requestService.cloneRequest(this.request, this.schema).then((location:any) => {
+    this.requestService.cloneRequest(this.request, this.schema).then((location: any) => {
       // Strip request ID from location
-      var id = location.substring(location.lastIndexOf('/') + 1);
+      let id: string = location.substring(location.lastIndexOf('/') + 1);
       console.log('cloned request ' + this.request.requestId + ' to new request ' + id);
 
       this.$state.go('request', {id: id}).then(() => {
@@ -24,13 +28,13 @@ export class CloneRequestModalController {
       });
     },
 
-    (error:any) => {
+    (error: any) => {
       console.log('clone failed: ' + error.statusText);
       this.cloning = 'error';
     });
   }
 
-  public cancel() {
+  public cancel(): void {
     this.$modalInstance.dismiss();
   }
 }

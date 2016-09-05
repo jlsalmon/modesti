@@ -2,11 +2,20 @@ import {RequestService} from '../request.service';
 import {TaskService} from '../../task/task.service';
 import {AlertService} from '../../alert/alert.service';
 import {HistoryService} from '../history/history.service';
+import {Request} from '../request';
+import {Task} from '../../task/task';
+import {Schema} from '../../schema/schema';
+import {Table} from '../table/table';
+import {Category} from '../../schema/category';
+import {Point} from '../point/point';
+import {Field} from '../../schema/field';
+import IComponentOptions = angular.IComponentOptions;
+import IStateService = angular.ui.IStateService;
 
-export class RequestToolbarComponent implements ng.IComponentOptions {
-  public templateUrl:string = '/request/toolbar/toolbar.component.html';
-  public controller:Function = RequestToolbarController;
-  public bindings:any = {
+export class RequestToolbarComponent implements IComponentOptions {
+  public templateUrl: string = '/request/toolbar/toolbar.component.html';
+  public controller: Function = RequestToolbarController;
+  public bindings: any = {
     request: '=',
     tasks: '=',
     schema: '=',
@@ -16,65 +25,61 @@ export class RequestToolbarComponent implements ng.IComponentOptions {
 }
 
 class RequestToolbarController {
-  public static $inject:string[] = ['$uibModal', '$state', 'RequestService', 'TaskService', 'AlertService', 'HistoryService'];
+  public static $inject: string[] = ['$uibModal', '$state', 'RequestService', 'TaskService',
+                                     'AlertService', 'HistoryService'];
 
-  public request:any;
-  public tasks:any;
-  public schema:any;
-  public table:any;
-  public activeCategory:any;
+  public request: Request;
+  public tasks: Task[];
+  public schema: Schema;
+  public table: Table;
+  public activeCategory: Category;
 
-  public constructor(private $modal:any, private $state:any, private requestService:RequestService, 
-                     private taskService:TaskService, private alertService:AlertService, private historyService:HistoryService) {}
+  public constructor(private $modal: any, private $state: IStateService, private requestService: RequestService,
+                     private taskService: TaskService, private alertService: AlertService,
+                     private historyService: HistoryService) {}
 
-  public save() {
-    var request = this.request;
-
-    this.requestService.saveRequest(request).then(() => {
-      console.log('saved request');
-    }, () => {
-      console.log('error saving request');
-    });
+  public save(): void {
+    this.requestService.saveRequest(this.request);
   }
 
-  public undo() {
-    this.table.undo();
+  public undo(): void {
+    this.table.hot.undo();
   }
 
-  public redo() {
-    this.table.redo();
+  public redo(): void {
+    this.table.hot.redo();
   }
 
-  public cut() {
-    this.table.copyPaste.triggerCut();
+  public cut(): void {
+    this.table.hot.copyPaste.triggerCut();
   }
 
-  public copy() {
-    this.table.copyPaste.setCopyableText();
+  public copy(): void {
+    this.table.hot.copyPaste.setCopyableText();
   }
 
-  public paste() {
-    this.table.copyPaste.triggerPaste();
-    this.table.copyPaste.copyPasteInstance.onPaste((value) => {
+  public paste(): void {
+    this.table.hot.copyPaste.triggerPaste();
+    this.table.hot.copyPaste.copyPasteInstance.onPaste((value: any) => {
       console.log('onPaste(): ' + value);
     });
   }
 
-  public assignTask() {
-    this.taskService.assignTask(this.request).then((newTask) => {
+  public assignTask(): void {
+    this.taskService.assignTask(this.request).then((newTask: Task) => {
       this.tasks[newTask.name] = newTask;
       this.table.activateDefaultCategory();
     });
   }
 
-  public assignTaskToCurrentUser() {
-    this.taskService.assignTaskToCurrentUser(this.request).then((newTask) => {
+  public assignTaskToCurrentUser(): void {
+    this.taskService.assignTaskToCurrentUser(this.request).then((newTask: Task) => {
       this.tasks[newTask.name] = newTask;
       this.table.activateDefaultCategory();
     });
   }
 
-  public showHelp() {
+  public showHelp(): void {
     this.$modal.open({
       animation: false,
       templateUrl: '/request/help/request-help.modal.html',
@@ -82,7 +87,7 @@ class RequestToolbarController {
     });
   }
 
-  public showComments() {
+  public showComments(): void {
     this.$modal.open({
       animation: false,
       templateUrl: '/request/comments/request-comments.modal.html',
@@ -93,7 +98,7 @@ class RequestToolbarController {
     });
   }
 
-  public showHistory() {
+  public showHistory(): void {
     this.$modal.open({
       animation: false,
       size: 'lg',
@@ -106,8 +111,8 @@ class RequestToolbarController {
     });
   }
 
-  public deleteRequest() {
-    var modalInstance = this.$modal.open({
+  public deleteRequest(): void {
+    let modalInstance: any = this.$modal.open({
       animation: false,
       templateUrl: '/request/delete/delete-request.modal.html',
       controller: 'DeleteRequestModalController as ctrl',
@@ -121,20 +126,16 @@ class RequestToolbarController {
         console.log('deleted request');
         this.alertService.add('success', 'Request was deleted successfully.');
         this.$state.go('requests');
-      },
-
-      (error) => {
+      }, (error: any) => {
         console.log('delete failed: ' + error.statusText);
       });
-    },
-
-    () => {
+    }, () => {
       console.log('delete aborted');
     });
   }
 
-  public cloneRequest() {
-    var modalInstance = this.$modal.open({
+  public cloneRequest(): void {
+    let modalInstance: any = this.$modal.open({
       animation: false,
       templateUrl: '/request/clone/clone-request.modal.html',
       controller: 'CloneRequestModalController as ctrl',
@@ -144,35 +145,32 @@ class RequestToolbarController {
       }
     });
 
-    modalInstance.result.then(() => {},
-    () => {
+    modalInstance.result.then(() => {
+      console.log('request cloned');
+    }, () => {
       console.log('clone aborted');
     });
   }
 
-  public getAssignee() {
-    var task = this.tasks[Object.keys(this.tasks)[0]];
-
-    if (!task) {
-      return null;
-    }
-
-    return task.assignee;
+  public getAssignee(): string {
+    let task: Task = this.taskService.getCurrentTask();
+    return task ? task.assignee : undefined;
   }
 
-  public isCurrentTaskRestricted() {
-    var task = this.tasks[Object.keys(this.tasks)[0]];
+  public isCurrentTaskRestricted(): boolean {
+    let task: Task = this.taskService.getCurrentTask();
     return task && task.candidateGroups.length === 1 && task.candidateGroups[0] === 'modesti-administrators';
   }
 
-  public getActiveDatasources() {
-    var result = [];
+  public getActiveDatasources(): Category[] {
+    let result: Category[] = [];
 
-    this.request.points.forEach((point) => {
-      this.schema.datasources.forEach((datasource) => {
+    this.request.points.forEach((point: Point) => {
+      this.schema.datasources.forEach((datasource: Category) => {
 
         if (point.properties.pointType &&
-          (point.properties.pointType === angular.uppercase(datasource.id) || point.properties.pointType === angular.uppercase(datasource.name))) {
+             (point.properties.pointType === angular.uppercase(datasource.id)
+              || point.properties.pointType === angular.uppercase(datasource.name))) {
           if (result.indexOf(datasource) === -1) {
             result.push(datasource);
           }
@@ -189,22 +187,20 @@ class RequestToolbarController {
    *
    * @param category
    */
-  public isInvalidCategory(category) {
-    var fieldIds = category.fields.map((field) => field.id);
-    var invalid = false;
+  public isInvalidCategory(category: Category): boolean {
+    let fieldIds: string[] = category.fields.map((field: Field) => field.id);
+    let invalid: boolean = false;
 
-    this.request.points.forEach((point) => {
+    this.request.points.forEach((point: Point) => {
       if (point.errors && point.errors.length > 0) {
-        point.errors.forEach((error) => {
+        point.errors.forEach((error: any) => {
           if (!error.category) {
-            var property = error.property.split('.')[0];
+            let property: string = error.property.split('.')[0];
 
             if (fieldIds.indexOf(property) !== -1) {
               invalid = true;
             }
-          }
-
-          else if (error.category === category.name || error.category === category.id) {
+          } else if (error.category === category.name || error.category === category.id) {
             invalid = true;
           }
         });

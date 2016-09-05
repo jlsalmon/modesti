@@ -7,7 +7,7 @@ export class LoginModalController {
   public loggingIn: string = undefined;
   public loginError: boolean = undefined;
 
-  constructor(private $modalInstance: any, private authService:AuthService) {}
+  constructor(private $modalInstance: any, private authService: AuthService) {}
 
   public login(): void {
     this.loggingIn = 'started';

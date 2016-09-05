@@ -1,24 +1,27 @@
-export class UploadRequestComponent implements ng.IComponentOptions {
-  public templateUrl:string = '/request/upload-request.component.html';
-  public controller:Function = UploadRequestController;
+import IComponentOptions = angular.IComponentOptions;
+import ILocationService = angular.ILocationService;
+
+export class UploadRequestComponent implements IComponentOptions {
+  public templateUrl: string = '/request/upload-request.component.html';
+  public controller: Function = UploadRequestController;
 }
 
 class UploadRequestController {
-  public static $inject:string[] = ['$location', 'FileUploader'];
+  public static $inject: string[] = ['$location', 'FileUploader'];
 
-  public uploader:any;
+  public uploader: any;
 
-  public constructor(private $location:any, private FileUploader:any) {
-    this.uploader = new FileUploader({
+  public constructor(private $location: ILocationService, private fileUploader: any) {
+    this.uploader = new fileUploader({
       url : '/api/requests/upload',
       withCredentials: true
     });
 
     this.uploader.filters.push({
       name : 'excelFilter',
-      fn : function(item) {
-        var re = /(?:\.([^.]+))?$/;
-        var extension = re.exec(item.name)[1];
+      fn : (item: any) => {
+        let re: RegExp = /(?:\.([^.]+))?$/;
+        let extension: string = re.exec(item.name)[1];
         return extension === 'xls' || extension === 'xlsx';
       }
     });
@@ -27,9 +30,9 @@ class UploadRequestController {
     this.uploader.onSuccessItem = this.onSuccessItem;
     this.uploader.onErrorItem = this.onErrorItem;
 
-    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-      var input = $(this).parents('.input-group').find(':text');
-      var log = numFiles > 1 ? numFiles + ' files selected' : label;
+    $('.btn-file :file').on('fileselect', (event: Event, numFiles: number, label: string) => {
+      let input: JQuery = $(this).parents('.input-group').find(':text');
+      let log: string = numFiles > 1 ? numFiles + ' files selected' : label;
 
       if (input.length) {
         input.val(log);
@@ -37,7 +40,7 @@ class UploadRequestController {
     });
   }
 
-  public upload(item) {
+  public upload(item: any): void {
     if (!item.description) {
       return;
     }
@@ -46,28 +49,28 @@ class UploadRequestController {
     item.upload();
   }
 
-  public edit(item) {
+  public edit(item: any): void {
     this.$location.path(item.location);
   }
 
-  public onAfterAddingFile(fileItem) {
+  public onAfterAddingFile(fileItem: any): void {
     console.log('onAfterAddingFile', fileItem);
-    var input = $('.btn-file :file');
-    var numFiles = input.get(0)['files'] ? input.get(0)['files'].length : 1;
-    var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    let input: JQuery = $('.btn-file :file');
+    let numFiles: number = input.get(0).files ? input.get(0).files.length : 1;
+    let label: string = input.val().replace(/\\/g, '/').replace(/.*\//, '');
     input.trigger('fileselect', [numFiles, label]);
   }
 
-  public onSuccessItem (fileItem, response, status, headers) {
+  public onSuccessItem(fileItem: any, response: any, status: any, headers: any): void {
     console.log('onSuccessItem', fileItem, response, status, headers);
     // Strip request ID from location.
-    var id = headers.location.substring(headers.location.lastIndexOf('/') + 1);
+    let id: string = headers.location.substring(headers.location.lastIndexOf('/') + 1);
     // Redirect to point entry page.
     fileItem.location = '/requests/' + id;
     fileItem.warnings = response;
   }
 
-  public onErrorItem(fileItem, response, status, headers) {
+  public onErrorItem(fileItem: any, response: any, status: any, headers: any): void {
     console.log('onErrorItem', fileItem, response, status, headers);
     fileItem.errorMessage = response;
   }

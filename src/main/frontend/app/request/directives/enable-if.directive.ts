@@ -1,34 +1,37 @@
 import {TaskService} from '../../task/task.service';
+import {Task} from '../../task/task';
+import IDirectiveFactory = angular.IDirectiveFactory;
+import IDirective = angular.IDirective;
+import IScope = angular.IScope;
 
-export class EnableIfDirective implements ng.IDirective {
+export class EnableIfDirective implements IDirective {
 
-  public constructor(private taskService:TaskService, private ngDisabledDirective:any) {}
+  public constructor(private taskService: TaskService, private ngDisabledDirective: any) {}
 
-  static factory(): ng.IDirectiveFactory {
-    const directive = (taskService:TaskService, ngDisabledDirective:any) => new EnableIfDirective(taskService, ngDisabledDirective);
+  public static factory(): IDirectiveFactory {
+    const directive: IDirectiveFactory = (taskService: TaskService, ngDisabledDirective: any) =>
+      new EnableIfDirective(taskService, ngDisabledDirective);
     directive.$inject = ['TaskService', 'ngDisabledDirective'];
     return directive;
   }
 
-  public link (scope:any, element:any, attrs:any) {
+  public link(scope: IScope, element: any, attrs: any): void {
     attrs.ngDisabled = () => {
-      var expression:any = attrs.enableIf;
-      var conditions:any = expression.split(' && ');
-      var task:any = this.taskService.getCurrentTask();
-      var results:any[] = [];
+      let expression: string = attrs.enableIf;
+      let conditions: string[] = expression.split(' && ');
+      let task: Task = this.taskService.getCurrentTask();
+      let results: boolean[] = [];
 
-      conditions.forEach((condition) => {
-        var result = false;
+      conditions.forEach((condition: string) => {
+        let result: boolean = false;
 
         if (condition.indexOf('user-authorised-for-task') !== -1) {
           result = this.taskService.isCurrentUserAuthorised(task);
           result = condition.indexOf('!') !== -1 ? !result : result;
-        }
-        else if (condition.indexOf('task-assigned-to-current-user') !== -1) {
+        } else if (condition.indexOf('task-assigned-to-current-user') !== -1) {
           result = this.taskService.isCurrentUserAssigned(task);
           result = condition.indexOf('!') !== -1 ? !result : result;
-        }
-        else if (condition.indexOf('task-assigned') !== -1) {
+        } else if (condition.indexOf('task-assigned') !== -1) {
           result = this.taskService.isTaskClaimed(task);
           result = condition.indexOf('!') !== -1 ? !result : result;
         }
@@ -36,7 +39,7 @@ export class EnableIfDirective implements ng.IDirective {
         results.push(result);
       });
 
-      return results.reduce(function(a, b){ return (a === b) ? a : false; }) !== true;
+      return results.reduce((a: boolean, b: boolean) => (a === b) ? a : false) !== true;
     };
 
     this.ngDisabledDirective[0].link.apply(this.ngDisabledDirective[0], arguments);

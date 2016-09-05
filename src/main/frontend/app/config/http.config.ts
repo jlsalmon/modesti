@@ -11,16 +11,16 @@ export class HttpConfig {
 
     $httpProvider.interceptors.push(['$q', '$injector', ($q: any, $injector: any) => {
       return {
-        request : function(config: any) {
+        request : (config: any) => {
           return config || $q.when(config);
         },
-        requestError : function(request: any) {
+        requestError : (request: any) => {
           return $q.reject(request);
         },
-        response : function(response: any) {
+        response : (response: any) => {
           return response || $q.when(response);
         },
-        responseError : function(response: any) {
+        responseError : (response: any) => {
           if (response && (response.status === 0 || response.status === -1)) {
             // Backend not connected
             console.log('error: backend not connected');

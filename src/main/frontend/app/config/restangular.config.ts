@@ -1,6 +1,6 @@
 export class RestangularConfig {
 
-  public static configure(RestangularProvider:any) {
+  public static configure(RestangularProvider: any): void {
     // Set the base URL
     RestangularProvider.setBaseUrl('/api');
 
@@ -8,13 +8,13 @@ export class RestangularConfig {
     RestangularProvider.setFullResponse(true);
 
     // Add a response interceptor
-    RestangularProvider.addResponseInterceptor(function(data:any, operation:any) {
+    RestangularProvider.addResponseInterceptor(function(data: any, operation: any) {
 
-      var extractedData:any[];
+      let extractedData: any[];
 
-      if (operation === "getList") {
+      if (operation === 'getList') {
         if (data.hasOwnProperty('_embedded')) {
-          extractedData = data; //._embedded.requests;
+          extractedData = data; // ._embedded.requests;
         } else {
           extractedData = data.data;
         }
@@ -26,7 +26,7 @@ export class RestangularConfig {
 
     // Set the self link
     RestangularProvider.setRestangularFields({
-      selfLink : "_links.self.href"
+      selfLink : '_links.self.href'
     });
   }
 }

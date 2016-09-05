@@ -1,14 +1,19 @@
+import {Point} from '../request/point/point';
+import IHttpService = angular.IHttpService;
+import IQService = angular.IQService;
+import IPromise = angular.IPromise;
+import IDeferred = angular.IDeferred;
 
 export class SearchService {
-  public static $inject:string[] = ['$http', '$q'];
+  public static $inject: string[] = ['$http', '$q'];
 
-  constructor(private $http:any, private $q:any) {}
+  constructor(private $http: IHttpService, private $q: IQService) {}
 
-  public getPoints(domain, query, page, size, sort) {
-    var q = this.$q.defer();
+  public getPoints(domain: string, query: string, page: any, size: number, sort: string): IPromise<Point[]> {
+    let q: IDeferred<Point[]> = this.$q.defer();
     page = page || 0;
     size = size || 15;
-    //sort = sort || 'pointId,desc';
+    // sort = sort || 'pointId,desc';
 
     this.$http.get('/api/points/search',
     {
@@ -19,11 +24,11 @@ export class SearchService {
         size: size,
         sort: sort
       }
-    }).then((response) => {
+    }).then((response: any) => {
       q.resolve(response.data);
     },
 
-    (error) => {
+    (error: any) => {
       console.log('error: ' + error.statusText);
       q.reject(error);
     });

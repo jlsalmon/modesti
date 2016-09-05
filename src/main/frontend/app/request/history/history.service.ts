@@ -1,19 +1,24 @@
+import {Change} from './change';
+import IQService = angular.IQService;
+import IPromise = angular.IPromise;
+import IDeferred = angular.IDeferred;
+
 export class HistoryService {
-  public static $inject:string[] = ['$q', 'Restangular'];
+  public static $inject: string[] = ['$q', 'Restangular'];
 
-  public constructor(private $q:any, private Restangular:any) {}
+  public constructor(private $q: IQService, private restangular: any) {}
 
-  public getHistory(requestId) {
-    var q = this.$q.defer();
+  public getHistory(requestId: string): IPromise<Change[]> {
+    let q: IDeferred<Change[]> = this.$q.defer();
 
-    this.Restangular.one('requests/' + requestId + '/history').get().then((response) => {
+    this.restangular.one('requests/' + requestId + '/history').get().then((response: any) => {
       console.log('fetched history for request ' + requestId);
 
-      var history = response.data._embedded.historicEvents;
+      let history: Change[] = response.data._embedded.historicEvents;
       q.resolve(history);
     },
 
-    (error) => {
+    (error: any) => {
       console.log('error querying history for request ' + requestId + ': ' + error.data.message);
       q.reject(error);
     });

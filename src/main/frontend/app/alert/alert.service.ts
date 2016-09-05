@@ -1,4 +1,4 @@
-import {Alert} from './alert.ts';
+import {Alert} from './alert';
 
 export class AlertService {
   public static $inject: string[] = ['$rootScope', '$timeout'];

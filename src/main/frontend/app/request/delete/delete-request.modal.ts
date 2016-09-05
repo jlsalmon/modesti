@@ -1,13 +1,15 @@
+import {Request} from '../request';
+
 export class DeleteRequestModalController {
-  public static $inject:string[] = ['$uibModalInstance', 'request'];
+  public static $inject: string[] = ['$uibModalInstance', 'request'];
 
-  constructor(private $modalInstance:any, private request:any) {}
+  constructor(private $modalInstance: any, private request: Request) {}
 
-  public ok() {
+  public ok(): void {
     this.$modalInstance.close();
   }
 
-  public cancel() {
+  public cancel(): void {
     this.$modalInstance.dismiss();
   }
 }

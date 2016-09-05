@@ -1,27 +1,38 @@
 import {RequestService} from './request.service';
 import {AuthService} from '../auth/auth.service';
 import {SchemaService} from '../schema/schema.service';
+import {Request} from './request';
+import {Schema} from '../schema/schema';
+import {User} from '../user/user';
+import {Field} from '../schema/field';
+import IComponentOptions = angular.IComponentOptions;
+import IHttpService = angular.IHttpService;
+import ILocationService = angular.ILocationService;
+import IScope = angular.IScope;
+import IPromise = angular.IPromise;
 
-export class RequestListComponent implements ng.IComponentOptions {
-  public templateUrl:string = '/request/request-list.component.html';
-  public controller:Function = RequestListController;
+
+export class RequestListComponent implements IComponentOptions {
+  public templateUrl: string = '/request/request-list.component.html';
+  public controller: Function = RequestListController;
 }
 
 class RequestListController {
-  public static $inject:string[] = ['$http', '$location', '$scope', 'RequestService', 'AuthService', 'SchemaService'];
+  public static $inject: string[] = ['$http', '$location', '$scope', 'RequestService', 'AuthService', 'SchemaService'];
 
-  public requests = [];
-  public statuses = [];
-  public schemas = [];
-  public users = [];
-  public types = ['CREATE', 'UPDATE', 'DELETE'];
-  public filter = {};
-  public sort = 'createdAt,desc';
-  public loading = undefined;
-  public page:any = {};
-  
-  public constructor(private $http:any, private $location:any, private $scope:any,
-                     private requestService:any, private authService:any, private schemaService:any) {
+  public requests: Request[] = [];
+  public statuses: string[] = [];
+  public schemas: Schema[] = [];
+  public users: User[] = [];
+  public types: string[] = ['CREATE', 'UPDATE', 'DELETE'];
+  public filter: any = {};
+  public sort: string = 'createdAt,desc';
+  public loading: string = undefined;
+  public page: any = {};
+
+  public constructor(private $http: IHttpService, private $location: ILocationService,
+                     private $scope: IScope, private requestService: RequestService, private authService: AuthService,
+                     private schemaService: SchemaService) {
     this.users.push(authService.getCurrentUser());
 
     this.resetFilter();
@@ -33,15 +44,15 @@ class RequestListController {
     $scope.$watch(() => { return this.sort; }, this.onCriteriaChanged, true);
   }
 
-  public isUserAuthenticated() {
+  public isUserAuthenticated(): boolean {
     return this.authService.isCurrentUserAuthenticated();
   }
 
-  public getCurrentUsername() {
+  public getCurrentUsername(): string {
     return this.authService.getCurrentUser().username;
   }
 
-  public resetFilter() {
+  public resetFilter(): void {
     console.log('filter reset');
     this.filter = {
       description: '',
@@ -53,10 +64,10 @@ class RequestListController {
     };
   }
 
-  public getRequests(page, size, sort, filter) {
+  public getRequests(page: any, size: number, sort: string, filter: string): void {
     this.loading = 'started';
 
-    this.requestService.getRequests(page, size, sort, filter).then((response) => {
+    this.requestService.getRequests(page, size, sort, filter).then((response: any) => {
       if (response.hasOwnProperty('_embedded')) {
         this.requests = response._embedded.requests;
       } else {
@@ -83,9 +94,9 @@ class RequestListController {
     });
   }
 
-  public deleteRequest(request) {
-    var href = request._links.self.href;
-    var id = href.substring(href.lastIndexOf('/') + 1);
+  public deleteRequest(request: Request): void {
+    let href: string = request._links.self.href;
+    let id: string = href.substring(href.lastIndexOf('/') + 1);
 
     this.requestService.deleteRequest(id).then(() => {
       console.log('deleted request ' + id);
@@ -97,9 +108,9 @@ class RequestListController {
     });
   }
 
-  public editRequest(request) {
-    var href = request._links.self.href;
-    var id = href.substring(href.lastIndexOf('/') + 1).replace('{?projection}', '');
+  public editRequest(request: Request): void {
+    let href: string = request._links.self.href;
+    let id: string = href.substring(href.lastIndexOf('/') + 1).replace('{?projection}', '');
 
     this.$location.path('/requests/' + id);
   }
@@ -107,8 +118,8 @@ class RequestListController {
   /**
    * Retrieve some metrics about requests. Currently contains only the number of requests of each status.
    */
-  public getRequestMetrics() {
-    this.requestService.getRequestMetrics().then((statuses) => {
+  public getRequestMetrics(): void {
+    this.requestService.getRequestMetrics().then((statuses: string[]) => {
       this.statuses = statuses;
     });
   }
@@ -118,10 +129,10 @@ class RequestListController {
    *
    * @param status
    */
-  public getRequestCount(status) {
-    for (var key in this.statuses) {
+  public getRequestCount(status): number {
+    for (let key in this.statuses) {
       if (this.statuses.hasOwnProperty(key)) {
-        var s = this.statuses[key];
+        let s: any = this.statuses[key];
 
         if (s.hasOwnProperty('status') && s.status === status) {
           return s.count;
@@ -132,14 +143,14 @@ class RequestListController {
     return 0;
   }
 
-  public getSchemas() {
-    this.schemaService.getSchemas().then((schemas) => {
+  public getSchemas(): void {
+    this.schemaService.getSchemas().then((schemas: Schema[]) => {
       this.schemas = schemas;
     });
   }
 
   // TODO: consolidate this functionality with assign-request.modal.ts
-  public queryUsers(query) {
+  public queryUsers(query: string): IPromise<void> {
     return this.$http.get('/api/users/search', {
       params : {
         query : this.parseQuery(query)
@@ -154,8 +165,8 @@ class RequestListController {
   }
 
   // TODO: consolidate this functionality with assign-request.modal.ts
-  public parseQuery(query) {
-    var q = '';
+  public parseQuery(query: string): string {
+    let q: string = '';
 
     if (query.length !== 0) {
       q += '(username == ' + query;
@@ -167,9 +178,9 @@ class RequestListController {
     return q;
   }
 
-  public hasCustomProperties(request) {
-    var has = false;
-    this.schemas.forEach((schema) => {
+  public hasCustomProperties(request: Request): boolean {
+    let has: boolean = false;
+    this.schemas.forEach((schema: Schema) => {
       if (schema.id === request.domain && schema.fields) {
         has = true;
       }
@@ -178,14 +189,14 @@ class RequestListController {
     return has;
   }
 
-  public formatCustomProperty(request, key) {
-    var value = '';
-    var field:any = {};
+  public formatCustomProperty(request: Request, key: string): any {
+    let value: string = '';
+    let field: Field;
 
-    this.schemas.forEach((schema) => {
+    this.schemas.forEach((schema: Schema) => {
       if (schema.id === request.domain && schema.fields) {
 
-        schema.fields.forEach((f) => {
+        schema.fields.forEach((f: Field) => {
           if (request.properties.hasOwnProperty(f.id) && key === f.id) {
             field = f;
 
@@ -202,7 +213,7 @@ class RequestListController {
     return {value: value, field: field};
   }
 
-  public onPageChanged() {
+  public onPageChanged(): void {
     this.getRequests(this.page.number, this.page.size, this.sort, this.filter);
   }
 

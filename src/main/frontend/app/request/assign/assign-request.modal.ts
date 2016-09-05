@@ -1,25 +1,30 @@
+import {Task} from '../../task/task';
+import {User} from '../../user/user';
+import IHttpService = angular.IHttpService;
+import IPromise = angular.IPromise;
+
 export class AssignRequestModalController {
-  public static $inject:string[] = ['$uibModalInstance', '$http', 'task'];
+  public static $inject: string[] = ['$uibModalInstance', '$http', 'task'];
 
-  public assignee:any;
-  public users:any = [];
+  public assignee: any;
+  public users: any = [];
 
-  constructor(private $modalInstance:any, private $http:any, private task:any) {}
+  constructor(private $modalInstance: any, private $http: IHttpService, private task: Task) {}
 
-  public ok() {
+  public ok(): void {
     this.$modalInstance.close(this.assignee);
   }
 
-  public cancel() {
+  public cancel(): void {
     this.$modalInstance.dismiss('cancel');
   }
 
-  public refreshUsers(query:any) {
-    return this.$http.get('/api//users/search', {
+  public refreshUsers(query: string): IPromise<User[]> {
+    return this.$http.get('/api/users/search', {
       params : {
         query : this.parseQuery(query)
       }
-    }).then((response:any):any[] => {
+    }).then((response: any) => {
       if (!response.data.hasOwnProperty('_embedded')) {
         return [];
       }
@@ -28,8 +33,8 @@ export class AssignRequestModalController {
     });
   }
 
-  public parseQuery(query:any) {
-    var q = '';
+  public parseQuery(query: string): string {
+    let q: string = '';
 
     if (this.task.candidateGroups.length > 1) {
       q += 'authorities.authority =in= (' + this.task.candidateGroups.join() + ')';

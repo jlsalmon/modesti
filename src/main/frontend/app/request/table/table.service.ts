@@ -1,19 +1,27 @@
 import {SchemaService} from '../../schema/schema.service';
 import {TaskService} from '../../task/task.service';
-import {Utils} from '../../utils/utils';
+import {Request} from '../request';
+import {Schema} from '../../schema/schema';
+import {Field} from '../../schema/field';
+import {Task} from '../../task/task';
+import {OptionsField} from '../../schema/options-field';
+import {TextField} from '../../schema/text-field';
+import {AutocompleteField} from '../../schema/autocomplete-field';
+import {Point} from '../point/point';
 
-declare var $:any;
+declare var $: JQuery;
 
 export class TableService {
-  public static $inject:string[] = ['$rootScope', 'SchemaService', 'TaskService', 'Utils'];
+  public static $inject: string[] = ['$rootScope', 'SchemaService', 'TaskService'];
 
-  public constructor(private $rootScope:any, private schemaService:SchemaService, private taskService:TaskService, private utils:Utils) {}
+  public constructor(private $rootScope: any, private schemaService: SchemaService,
+                     private taskService: TaskService) {}
 
-  public getColumns(request, schema, fields) {
+  public getColumns(request: Request, schema: Schema, fields: Field[]): any[] {
     console.log('getting column definitions');
-    var columns = [];
+    let columns: any[] = [];
 
-    var task = this.taskService.getCurrentTask();
+    let task: Task = this.taskService.getCurrentTask();
 
     // Append "select-all" checkbox field.
     if (this.hasCheckboxColumn(request)) {
@@ -24,25 +32,25 @@ export class TableService {
       columns.push(this.getCommentColumn(request, schema));
     }
 
-    fields.forEach((field) => {
+    fields.forEach((field: Field) => {
 
-      var authorised = false;
+      let authorised: boolean = false;
       if (this.taskService.isCurrentUserAuthorised(task) && this.taskService.isCurrentUserAssigned(task)) {
         authorised = true;
       }
 
-      var editable;
+      let editable: any;
 
       // Build the right type of column based on the schema
-      var column = this.getColumn(field, editable, authorised, request.status);
+      let column: any = this.getColumn(field, editable, authorised, request.status);
       columns.push(column);
     });
 
     return columns;
   }
 
-  public getColumn(field, editable, authorised, status) {
-    var column:any = {
+  public getColumn(field: Field, editable: any, authorised: boolean, status: string): any[] {
+    let column: any = {
       data: 'properties.' + field.id,
       title: this.getColumnHeader(field)
     };
@@ -50,13 +58,11 @@ export class TableService {
     if (authorised) {
       editable = true;
 
-      // Editable given as simple boolean
       if (field.editable === true || field.editable === false) {
+        // Editable given as simple boolean
         editable = field.editable;
-      }
-
-      // Editable given as condition object
-      else if (field.editable !== null && typeof field.editable === 'object') {
+      } else if (field.editable !== undefined && typeof field.editable === 'object') {
+        // Editable given as condition object
         editable = !!(field.editable.status && status === field.editable.status);
       }
 
@@ -66,15 +72,15 @@ export class TableService {
     }
 
     if (field.type === 'text') {
-      column = this.getTextColumn(column, field);
+      column = this.getTextColumn(column, field as TextField);
     }
 
     if (field.type === 'autocomplete') {
-      column = this.getAutocompleteColumn(column, field);
+      column = this.getAutocompleteColumn(column, field as AutocompleteField);
     }
 
     if (field.type === 'options') {
-      column = this.getDropdownColumn(column, field);
+      column = this.getOptionsColumn(column, field as OptionsField);
     }
 
     if (field.type === 'numeric') {
@@ -84,15 +90,15 @@ export class TableService {
     if (field.type === 'checkbox') {
       // Just use true/false dropdown until copy/paste issues are fixed.
       // See https://github.com/handsontable/handsontable/issues/2497
-      field.options = ['true', 'false'];
-      column = this.getDropdownColumn(column, field);
+      (<OptionsField> field).options = ['true', 'false'];
+      column = this.getOptionsColumn(column, field as OptionsField);
     }
 
     return column;
   }
 
-  public getColumnHeader(field) {
-    var html = '<span class="help-text" data-container="body" data-toggle="popover" data-placement="bottom" ';
+  public getColumnHeader(field: Field): string {
+    let html: string = '<span class="help-text" data-container="body" data-toggle="popover" data-placement="bottom" ';
     /*jshint camelcase: false */
     html += 'data-content="' + field.help + '">';
     html += field.name;
@@ -101,7 +107,7 @@ export class TableService {
     return html;
   }
 
-  public getTextColumn(column, field) {
+  public getTextColumn(column: any, field: TextField): any {
     if (field.url) {
       column.editor = 'select2';
 
@@ -110,11 +116,11 @@ export class TableService {
       // By default, text fields with URLs are not strict, as the queried
       // values are just suggestions
       if (field.strict !== true) {
-        column.select2Options.createSearchChoice = function(term, data) {
-          if ($(data).filter( function() {
+        column.select2Options.createSearchChoice = function(term: any, data: any): any {
+          if ($(data).filter(() => {
                 return this.text.localeCompare(term) === 0;
               }).length === 0) {
-            return {id:term, text:term};
+            return {id: term, text: term};
           }
         };
       }
@@ -123,7 +129,7 @@ export class TableService {
     return column;
   }
 
-  public getAutocompleteColumn(column, field) {
+  public getAutocompleteColumn(column: any, field: AutocompleteField): any {
     column.editor = 'select2';
 
     if (field.model) {
@@ -133,26 +139,23 @@ export class TableService {
     }
 
     column.select2Options = this.getDefaultSelect2Options(column, field);
-
     return column;
   }
 
-  public getDropdownColumn(column, field) {
+  public getOptionsColumn(column: any, field: OptionsField): any {
     column.editor = 'select2';
 
-    var options;
+    let options: any;
 
     if (field.options) {
-      options = field.options.map((option) => {
+      options = field.options.map((option: any) => {
         if (typeof option === 'object') {
-          if (option.description !== null && option.description !== undefined && option.description !== '') {
+          if (option.description !== undefined && option.description !== '') {
             return {id: option.value, text: option.value + ': ' + option.description};
           } else {
             return {id: option.value, text: option.value};
           }
-        }
-
-        else if (typeof option === 'string' || typeof option === 'number') {
+        } else if (typeof option === 'string' || typeof option === 'number') {
           return {id: option, text: option.toString()};
         }
       });
@@ -168,22 +171,22 @@ export class TableService {
     return column;
   }
 
-  public getDefaultSelect2Options(column, field) {
+  public getDefaultSelect2Options(column: any, field: Field): any {
     return {
       minimumInputLength: field.minLength || 0,
       maximumInputLength: 200,
 
       query: this.getQueryFunction(column, field),
 
-      formatSelection: function (option) {
+      formatSelection: (option: any) => {
         return option;
       },
 
-      initSelection: function(element, callback) {
+      initSelection: (element: any, callback: any) => {
         callback(element.context.value);
       },
 
-      nextSearchTerm: function(selectedObject) {
+      nextSearchTerm: (selectedObject: any) => {
         return selectedObject;
       },
 
@@ -192,16 +195,16 @@ export class TableService {
     };
   }
 
-  public getQueryFunction(column, field) {
-    return (query) => {
-      var hot = query.element.context.instance;
-      var row = query.element.context.row;
-      var point = hot.getSourceDataAtRow(row);
+  public getQueryFunction(column: any, field: Field): any {
+    return (query: any) => {
+      let hot: any = query.element.context.instance;
+      let row: number = query.element.context.row;
+      let point: Point = hot.getSourceDataAtRow(row);
 
-      this.schemaService.queryFieldValues(field, query.term, point).then((values) => {
+      this.schemaService.queryFieldValues(field, query.term, point).then((values: any[]) => {
 
         // Re-map the values in a format that the select2 editor likes
-        var results = values.map((value) => {
+        let results: any[] = values.map((value: any) => {
           if (typeof value === 'string') {
             return {id: value, text: value};
           } else {
@@ -215,7 +218,7 @@ export class TableService {
     };
   }
 
-  public getModelAttribute(field) {
+  public getModelAttribute(field: Field): string {
     // For fields that are objects but have no 'model' attribute defined, assume that
     // the object has only a single property called 'value'.
     return field.model ? field.model : 'value';
@@ -229,35 +232,35 @@ export class TableService {
    *
    * @returns {boolean}
    */
-  public hasCheckboxColumn(request) {
-    var checkboxStates = [/*'FOR_CORRECTION', */'FOR_APPROVAL', 'FOR_CABLING', 'FOR_TESTING'];
-    var task = this.taskService.getCurrentTask();
-    var assigned = this.taskService.isCurrentUserAssigned(task);
+  public hasCheckboxColumn(request: Request): boolean {
+    let checkboxStates: string[] = [/*'FOR_CORRECTION', */'FOR_APPROVAL', 'FOR_CABLING', 'FOR_TESTING'];
+    let task: Task = this.taskService.getCurrentTask();
+    let assigned: boolean = this.taskService.isCurrentUserAssigned(task);
     return checkboxStates.indexOf(request.status) > -1 && (request.status === 'FOR_CORRECTION' || assigned);
   }
 
   /**
    * TODO: remove this domain-specific code
    */
-  public hasCommentColumn(request) {
-    var commentStates =  ['FOR_APPROVAL', 'FOR_CABLING', 'FOR_TESTING'];
-    var task = this.taskService.getCurrentTask();
-    var assigned = this.taskService.isCurrentUserAssigned(task);
+  public hasCommentColumn(request: Request): boolean {
+    let commentStates: string[] =  ['FOR_APPROVAL', 'FOR_CABLING', 'FOR_TESTING'];
+    let task: Task = this.taskService.getCurrentTask();
+    let assigned: boolean = this.taskService.isCurrentUserAssigned(task);
     return commentStates.indexOf(request.status) > -1 && assigned;
   }
 
   /**
    * TODO: remove this domain-specific code
    */
-  public getCheckboxColumn(request, schema) {
+  public getCheckboxColumn(request: Request, schema: Schema): any {
     return {data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />'};
   }
 
   /**
    * TODO: remove this domain-specific code
    */
-  public getCommentColumn(request, schema) {
-    var property;
+  public getCommentColumn(request: Request, schema: Schema): any {
+    let property: string;
     if (request.status === 'FOR_APPROVAL') {
       property = 'properties.approvalResult.message';
     } else if (request.status === 'FOR_CABLING') {

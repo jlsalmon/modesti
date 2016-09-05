@@ -1,3 +1,8 @@
+import {Point} from "../request/point/point";
+import {Schema} from "../schema/schema";
+import {Category} from "../schema/category";
+import {Field} from "../schema/field";
+
 export class Utils {
 
   /**
@@ -7,25 +12,25 @@ export class Utils {
    * @param point the point to check
    * @returns {boolean} true if the point is empty, false otherwise
    */
-  public isEmptyPoint(point) {
+  public isEmptyPoint(point: Point): boolean {
     if (Object.keys(point.properties).length === 0) {
       return true;
     }
 
-    var property;
-    for (var key in point.properties) {
+    let property: any;
+    for (let key in point.properties) {
       if (point.properties.hasOwnProperty(key)) {
         property = point.properties[key];
 
         if (typeof property === 'object') {
-          for (var subproperty in property) {
+          for (let subproperty in property) {
             if (property.hasOwnProperty(subproperty)) {
-              if (property[subproperty] !== null && property[subproperty] !== undefined && property[subproperty] !== '') {
+              if (property[subproperty] !== undefined && property[subproperty] !== '') {
                 return false;
               }
             }
           }
-        } else if (property !== null && property !== undefined && property !== '') {
+        } else if (property !== undefined && property !== '') {
           return false;
         }
       }
@@ -34,10 +39,10 @@ export class Utils {
     return true;
   }
 
-  public getCategory(schema, id) {
-    var result;
+  public getCategory(schema: Schema, id: string): Category {
+    let result: Category;
 
-    schema.categories.concat(schema.datasources).forEach(function (category) {
+    schema.categories.concat(schema.datasources).forEach((category: Category) => {
       if (category.id === id || category.name === id) {
         result = category;
       }
@@ -53,19 +58,19 @@ export class Utils {
    * @param id
    * @returns {*}
    */
-  public getField(schema, id) {
-    var result;
+  public getField(schema: Schema, id: string): Field {
+    let result: Field;
 
-    schema.categories.forEach(function (category) {
-      category.fields.forEach(function (field) {
+    schema.categories.forEach((category: Category) => {
+      category.fields.forEach((field: Field) => {
         if (field.id === id) {
           result = field;
         }
       });
     });
 
-    schema.datasources.forEach(function (datasource) {
-      datasource.fields.forEach(function (field) {
+    schema.datasources.forEach((datasource: Category) => {
+      datasource.fields.forEach((field: Field) => {
         if (field.id === id) {
           result = field;
         }

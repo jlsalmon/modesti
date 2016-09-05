@@ -7,14 +7,17 @@ import {User} from '../user/user';
 import {Authority} from '../user/authority';
 import IPromise = angular.IPromise;
 import IDeferred = angular.IDeferred;
+import IQService = angular.IQService;
+import IHttpService = angular.IHttpService;
+import IStateService = angular.ui.IStateService;
 
 export class TaskService {
   public static $inject: string[] = ['$q', '$http', '$state', '$uibModal', 'AuthService', 'RequestService'];
 
   public tasks: any = {};
 
-  public constructor(private $q: any, private $http: any, private $state: any, private $modal: any,
-                     private authService: AuthService, private requestService: RequestService) {}
+  public constructor(private $q: IQService, private $http: IHttpService, private $state: IStateService,
+                     private $modal: any, private authService: AuthService, private requestService: RequestService) {}
 
   public getCurrentTask(): Task {
     return this.tasks[Object.keys(this.tasks)[0]];
@@ -171,7 +174,7 @@ export class TaskService {
   }
 
   public isTaskClaimed(task: Task): boolean {
-    return task.assignee !== undefined && task.assignee !== null;
+    return task.assignee !== undefined;
   }
 
   public isAnyTaskClaimed(tasks: Task[]): boolean {

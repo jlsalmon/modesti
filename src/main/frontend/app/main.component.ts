@@ -1,7 +1,11 @@
 import {AuthService} from './auth/auth.service';
 import {User} from './user/user';
+import IComponentOptions = angular.IComponentOptions;
+import IScope = angular.IScope;
+import IRootScopeService = angular.IRootScopeService;
+import ILocationService = angular.ILocationService;
 
-export class MainComponent implements ng.IComponentOptions {
+export class MainComponent implements IComponentOptions {
   public templateUrl: string = '/main.component.html';
   public controller: Function = MainController;
 }
@@ -11,7 +15,8 @@ class MainController {
 
   private user: User;
 
-  constructor(private $scope: any, private $rootScope: any, private $location: any, private authService: AuthService) {
+  constructor(private $scope: IScope, private $rootScope: IRootScopeService, private $location: ILocationService,
+              private authService: AuthService) {
     this.user = authService.getCurrentUser();
 
     // When an API request returns 401 Unauthorized, angular-http-auth broadcasts
@@ -19,9 +24,9 @@ class MainController {
     $scope.$on('event:auth-loginRequired', () => this.login());
   }
 
-  //public isActivePage(page:) {
+  // public isActivePage(page:) {
   //  return this.$location.path().lastIndexOf(page, 0) === 0;
-  //}
+  // }
 
   public isAuthenticated(): boolean {
     return this.authService.isCurrentUserAuthenticated();

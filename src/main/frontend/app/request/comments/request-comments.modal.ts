@@ -1,16 +1,18 @@
 import {RequestService} from '../request.service';
 import {AuthService} from '../../auth/auth.service';
+import {Request} from '../request';
 
 export class RequestCommentsModalController {
-  public static $inject:string[] = ['$uibModalInstance', 'request', 'RequestService', 'AuthService'];
+  public static $inject: string[] = ['$uibModalInstance', 'request', 'RequestService', 'AuthService'];
 
-  public text:string = '';
+  public text: string = '';
 
-  constructor(private $modalInstance:any, private request:any, private requestService:RequestService, private authService:AuthService) {}
+  constructor(private $modalInstance: any, private request: Request, private requestService: RequestService,
+              private authService: AuthService) {}
 
-  public addComment() {
+  public addComment(): void {
     if (this.text.length) {
-      var comment = {
+      let comment: any = {
         text: this.text,
         user: this.authService.getCurrentUser().username,
         timestamp: Date.now()
@@ -25,7 +27,7 @@ export class RequestCommentsModalController {
     }
   }
 
-  public ok() {
+  public ok(): void {
     this.$modalInstance.close();
   }
 }

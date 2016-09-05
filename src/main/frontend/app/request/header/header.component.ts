@@ -1,9 +1,11 @@
-export class RequestHeaderComponent implements ng.IComponentOptions {
-  public templateUrl:string = '/request/header/header.component.html';
-  public controller:Function = RequestHeaderController;
-  public bindings:any = {
+import IComponentOptions = angular.IComponentOptions;
+
+export class RequestHeaderComponent implements IComponentOptions {
+  public templateUrl: string = '/request/header/header.component.html';
+  public controller: Function = RequestHeaderController;
+  public bindings: any = {
     request: '='
   };
 }
 
-function RequestHeaderController() {}
+class RequestHeaderController {}
