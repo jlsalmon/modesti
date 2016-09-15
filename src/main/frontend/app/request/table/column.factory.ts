@@ -1,21 +1,20 @@
 import {SchemaService} from '../../schema/schema.service';
-import {TaskService} from '../../task/task.service';
-import {Request} from '../request';
 import {Schema} from '../../schema/schema';
 import {Field} from '../../schema/field';
-import {Task} from '../../task/task';
 import {OptionsField} from '../../schema/options-field';
 import {TextField} from '../../schema/text-field';
 import {AutocompleteField} from '../../schema/autocomplete-field';
+import {TaskService} from '../../task/task.service';
+import {Task} from '../../task/task';
+import {Request} from '../request';
 import {Point} from '../point/point';
 
 declare var $: JQuery;
 
-export class TableService {
-  public static $inject: string[] = ['$rootScope', 'SchemaService', 'TaskService'];
+export class ColumnFactory {
+  public static $inject: string[] = ['SchemaService', 'TaskService'];
 
-  public constructor(private $rootScope: any, private schemaService: SchemaService,
-                     private taskService: TaskService) {}
+  public constructor(private schemaService: SchemaService, private taskService: TaskService) {}
 
   public getColumns(request: Request, schema: Schema, fields: Field[]): any[] {
     console.log('getting column definitions');
@@ -153,7 +152,7 @@ export class TableService {
           if (option.description !== undefined && option.description !== '') {
             return {id: option.value, text: option.value + ': ' + option.description};
           } else {
-            return {id: option.value, text: option.value};
+            return {id: option.value, text: option.value.toString()};
           }
         } else if (typeof option === 'string' || typeof option === 'number') {
           return {id: option, text: option.toString()};
