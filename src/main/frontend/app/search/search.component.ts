@@ -2,7 +2,6 @@ import {SearchService} from './search.service';
 import {SchemaService} from '../schema/schema.service';
 import {RequestService} from '../request/request.service';
 import {AlertService} from '../alert/alert.service';
-import {Utils} from '../utils/utils';
 
 export class SearchComponent implements ng.IComponentOptions {
   public templateUrl: string = '/search/search.component.html';
@@ -11,7 +10,7 @@ export class SearchComponent implements ng.IComponentOptions {
 
 class SearchController {
   public static $inject: string[] = ['$uibModal', '$state', 'SearchService', 'SchemaService',
-                                     'RequestService', 'AlertService', 'Utils'];
+                                     'RequestService', 'AlertService'];
 
   public schema: any;
   public schemas: any[];
@@ -28,7 +27,7 @@ class SearchController {
 
   constructor(private $modal: any, private $state: any, private searchService: SearchService,
               private schemaService: SchemaService, private requestService: RequestService,
-              private alertService: AlertService, private utils: Utils) {}
+              private alertService: AlertService) {}
 
   public $onInit(): void {
     this.schemaService.getSchemas().then((schemas: any[]) => {
@@ -119,7 +118,7 @@ class SearchController {
     let expressions: string[] = [];
 
     this.filters.forEach((filter: any) => {
-      let field: any = this.utils.getField(this.schema, filter.id);
+      let field: any = this.schema.getField(filter.id);
 
       // if (typeof filter.field === 'string') {
       //  filter.field = JSON.parse(filter.field);

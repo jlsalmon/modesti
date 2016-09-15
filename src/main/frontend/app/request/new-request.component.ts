@@ -3,7 +3,7 @@ import {SchemaService} from '../schema/schema.service';
 import {AuthService} from '../auth/auth.service';
 import {Request} from './request';
 import {Schema} from '../schema/schema';
-import {Field} from '../schema/field';
+import {Field} from '../schema/field/field';
 import IComponentOptions = angular.IComponentOptions;
 import IFormController = angular.IFormController;
 

@@ -14,7 +14,7 @@ export class ValidationService {
     let q: IDeferred<Request> = this.$q.defer();
 
     this.$http.post('/api/requests/' + request.requestId + '/validate', {}).then((response: any) => {
-      request = response.data;
+      request = new Request().deserialize(response.data);
       q.resolve(request);
     },
 
@@ -24,29 +24,5 @@ export class ValidationService {
     });
 
     return q.promise;
-  }
-
-  /**
-   * Set an error message on a single field of a point.
-   *
-   * @param point
-   * @param propertyName
-   * @param message
-   */
-  public setErrorMessage(point: Point, propertyName: string, message: string): void {
-    let exists: boolean = false;
-
-    point.errors.forEach((error: any) => {
-      if (error.property === propertyName) {
-        exists = true;
-        if (error.errors.indexOf(message) > -1) {
-          error.errors.push(message);
-        }
-      }
-    });
-
-    if (!exists) {
-      point.errors.push({property: propertyName, errors: [message]});
-    }
   }
 }

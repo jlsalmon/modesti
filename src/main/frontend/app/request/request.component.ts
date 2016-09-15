@@ -1,6 +1,7 @@
-import {RequestService} from './request.service';
-import {SchemaService} from '../schema/schema.service';
-import {TaskService} from '../task/task.service';
+import {Request} from './request';
+import {Schema} from '../schema/schema';
+import {Category} from '../schema/category/category';
+import IScope = angular.IScope;
 
 export class RequestComponent implements ng.IComponentOptions {
   public templateUrl: string = '/request/request.component.html';
@@ -16,17 +17,57 @@ export class RequestComponent implements ng.IComponentOptions {
 }
 
 class RequestController {
-  public static $inject: string[] = ['$stateParams'];
+  public static $inject: string[] = ['$scope', '$localStorage'];
 
-  /** The handsontable instance */
-  public table: any = {};
+  public request: Request;
+  public schema: Schema;
+  public activeCategory: Category;
 
-  public request:  any;
-  public children: any;
-  public schema: any;
-  public tasks: any;
-  public signals: any;
-  public history: any;
+  public constructor(private $scope: IScope, private $localStorage: any) {
+    this.activeCategory = this.getLastActiveCategory();
 
-  public constructor(private $stateParams: any) {}
+    $scope.$watch(() => this.activeCategory, () => {
+      this.setLastActiveCategory(this.activeCategory);
+    });
+  }
+
+  /**
+   * @returns {Category} the last active category for the current request
+   * from local storage, or the first category in the schema if local storage
+   * is empty
+   */
+  public getLastActiveCategory(): Category {
+    this.$localStorage.$default({lastActiveCategory: {}});
+
+    let categoryId: string = this.$localStorage.lastActiveCategory[this.request.requestId];
+    let category: Category;
+
+    if (!categoryId) {
+      console.log('using default category');
+      category = this.schema.categories[0];
+    } else {
+      console.log('using last active category: ' + categoryId);
+
+      this.schema.categories.concat(this.schema.datasources).forEach((cat: Category) => {
+        if (cat.id === categoryId) {
+          category = cat;
+        }
+      });
+
+      if (!category) {
+        category = this.schema.categories[0];
+      }
+    }
+
+    return category;
+  };
+
+  /**
+   * Persist the last active category for the current request
+   *
+   * @param category the category to set
+   */
+  public setLastActiveCategory(category: Category): void {
+    this.$localStorage.lastActiveCategory[this.request.requestId] = category.id;
+  }
 }

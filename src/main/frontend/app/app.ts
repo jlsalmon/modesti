@@ -25,8 +25,8 @@ import 'oclazyload';
 // import 'zeroclipboard';
 // import 'handsontable';
 // declare var Handsontable: any;
-import 'ngHandsontable/dist/ngHandsontable';
-import 'handsontable-select2-editor';
+// import 'ngHandsontable/dist/ngHandsontable';
+// import 'handsontable-select2-editor';
 
 import {MainComponent} from './main.component.ts';
 import {HomeComponent} from './home/home.component.ts';
@@ -54,15 +54,14 @@ import {TaskService} from './task/task.service.ts';
 import {HistoryService} from './request/history/history.service.ts';
 import {AlertService} from './alert/alert.service.ts';
 import {SearchService} from './search/search.service.ts';
-import {TableService} from './request/table/table.service.ts';
+import {ColumnFactory} from './request/table/column.factory.ts';
 import {ValidationService} from './request/validation/validation.service.ts';
-import {Utils} from './utils/utils.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
 import {RestangularConfig} from './config/restangular.config.ts';
 import {RouterConfig} from './config/router.config.ts';
 import {HttpConfig} from './config/http.config.ts';
-import {VersionComponent} from "./version/version.component.ts";
+import {VersionComponent} from './version/version.component.ts';
 
 let app: any = angular.module('modesti', [
   'ng',
@@ -70,7 +69,7 @@ let app: any = angular.module('modesti', [
   'ngAnimate',
   'ngSanitize',
   'ngStorage',
-  'ngHandsontable',
+  // 'ngHandsontable',
   'ui.bootstrap',
   'ui.router',
   'ui.router.title',
@@ -108,9 +107,8 @@ app.service('TaskService', TaskService);
 app.service('HistoryService', HistoryService);
 app.service('AlertService', AlertService);
 app.service('SearchService', SearchService);
-app.service('TableService', TableService);
+app.service('ColumnFactory', ColumnFactory);
 app.service('ValidationService', ValidationService);
-app.service('Utils', Utils);
 
 app.controller('LoginModalController', LoginModalController);
 app.controller('CloneRequestModalController', CloneRequestModalController);

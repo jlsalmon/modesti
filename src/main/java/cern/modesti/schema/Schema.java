@@ -2,9 +2,7 @@ package cern.modesti.schema;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Id;
 
@@ -57,6 +55,10 @@ public class Schema {
   private List<Category> overrides = new ArrayList<>();
 
   private List<Datasource> datasourceOverrides = new ArrayList<>();
+
+  private List<String> selectableStates;
+
+  private List<RowCommentStateDescriptor> rowCommentStates;
 
   public Schema(String id, String description) {
     this.id = id;

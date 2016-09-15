@@ -1,7 +1,7 @@
 import {AuthService} from '../auth/auth.service';
 import {Request} from './request';
 import {Schema} from '../schema/schema';
-import {Field} from '../schema/field';
+import {Field} from '../schema/field/field';
 import {Point} from './point/point';
 import {User} from '../user/user';
 import IPromise = angular.IPromise;
@@ -15,7 +15,7 @@ export class RequestService {
   public constructor(private $http: any, private $rootScope: any, private $q: any, private restangular: any,
                      private authService: AuthService) {}
 
-  public getRequests(page: number, size: number, sort: string, filter: string): IPromise<Request> {
+  public getRequests(page: number, size: number, sort: string, filter: string): IPromise<Request[]> {
     let q: IDeferred<Request[]> = this.$q.defer();
     page = page || 0;
     size = size || 15;
@@ -40,27 +40,21 @@ export class RequestService {
     return q.promise;
   }
 
-  public parseQuery(filter): string {
+  public parseQuery(filter: any): string {
     let expressions: string[] = [];
 
     for (let property in filter) {
       if (typeof filter[property] === 'string' && filter[property] !== '') {
         expressions.push(property.toString() + '=="' + filter[property] + '"');
-      }
-
-      else if (filter[property] instanceof Array && filter[property].length > 0) {
+      } else if (filter[property] instanceof Array && filter[property].length > 0) {
         expressions.push(property.toString() + '=in=' + '("' + filter[property].join('","') + '")');
-      }
-
-      else if (typeof filter[property] === 'object') {
+      } else if (typeof filter[property] === 'object') {
         for (let subProperty in filter[property]) {
 
           if (typeof filter[property][subProperty] === 'string' && filter[property][subProperty] !== '') {
             expressions.push(property.toString() + '.' + subProperty.toString()
               + '=="' + filter[property][subProperty] + '"');
-          }
-
-          else if (filter[property][subProperty] instanceof Array && filter[property][subProperty].length > 0) {
+          } else if (filter[property][subProperty] instanceof Array && filter[property][subProperty].length > 0) {
             expressions.push(property.toString() + '.' + subProperty.toString()
               + '=in=' + '("' + filter[property][subProperty].join('","') + '")');
           }
@@ -79,10 +73,10 @@ export class RequestService {
     console.log('fetching request ' + id);
 
     this.restangular.one('requests', id).get().then((response: any) => {
-      let request: Request = response.data;
+      let request: Request = new Request().deserialize(response.data);
 
       // Make a copy for sorting/filtering
-      request = this.restangular.copy(request);
+      // request = this.restangular.copy(request);
 
       q.resolve(request);
     },
@@ -132,7 +126,7 @@ export class RequestService {
       console.log('saved request');
 
       // Cache the newly saved request
-      this.cache[request.requestId] = response.data;
+      this.cache[request.requestId] = new Request().deserialize(response.data);
 
       q.resolve(this.cache[request.requestId]);
       this.$rootScope.saving = 'success';

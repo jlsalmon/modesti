@@ -3,7 +3,7 @@ import {SchemaService} from '../../schema/schema.service';
 import {Request} from '../../request/request';
 import {Point} from '../../request/point/point';
 import {Schema} from '../../schema/schema';
-import {Field} from '../../schema/field';
+import {Field} from '../../schema/field/field';
 import IPromise = angular.IPromise;
 
 export class UpdatePointsModalController {

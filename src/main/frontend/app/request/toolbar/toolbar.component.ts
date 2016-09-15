@@ -6,9 +6,9 @@ import {Request} from '../request';
 import {Task} from '../../task/task';
 import {Schema} from '../../schema/schema';
 import {Table} from '../table/table';
-import {Category} from '../../schema/category';
+import {Category} from '../../schema/category/category';
 import {Point} from '../point/point';
-import {Field} from '../../schema/field';
+import {Field} from '../../schema/field/field';
 import IComponentOptions = angular.IComponentOptions;
 import IStateService = angular.ui.IStateService;
 
@@ -68,14 +68,14 @@ class RequestToolbarController {
   public assignTask(): void {
     this.taskService.assignTask(this.request).then((newTask: Task) => {
       this.tasks[newTask.name] = newTask;
-      this.table.activateDefaultCategory();
+      this.table.reload();
     });
   }
 
   public assignTaskToCurrentUser(): void {
     this.taskService.assignTaskToCurrentUser(this.request).then((newTask: Task) => {
       this.tasks[newTask.name] = newTask;
-      this.table.activateDefaultCategory();
+      this.table.reload();
     });
   }
 

@@ -1,8 +1,8 @@
 import {Request} from '../request/request';
-import {Schema} from './schema';
-import {Field} from './field';
 import {Point} from '../request/point/point';
-import {AutocompleteField} from './autocomplete-field';
+import {Schema} from './schema';
+import {Field} from './field/field';
+import {AutocompleteField} from './field/autocomplete-field';
 import IQService = angular.IQService;
 import IHttpService = angular.IHttpService;
 import IPromise = angular.IPromise;
@@ -20,7 +20,7 @@ export class SchemaService {
     let url: string = request._links.schema.href;
 
     this.$http.get(url).then((response: any) => {
-      let schema: Schema = response.data;
+      let schema: Schema = new Schema().deserialize(response.data);
       console.log('fetched schema: ' + schema.id);
       q.resolve(schema);
     },

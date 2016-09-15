@@ -1,5 +1,5 @@
-import {Conditional} from './conditional';
-import {Field} from './field';
+import {Conditional} from '../conditional';
+import {Field} from '../field/field';
 
 export class Category {
   public id: string;

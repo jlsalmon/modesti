@@ -104,6 +104,9 @@ public class SchemaInitialiser {
 
           categories.addAll(parentSchema.getCategories());
           datasources.addAll(parentSchema.getDatasources());
+
+          schema.setSelectableStates(parentSchema.getSelectableStates());
+          schema.setRowCommentStates(parentSchema.getRowCommentStates());
         }
 
         // Attach categories that are specified in the schema

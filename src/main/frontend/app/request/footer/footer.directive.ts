@@ -18,7 +18,6 @@ export class RequestFooterDirective implements IDirective {
 
   public controller: Function = RequestFooterController;
   public controllerAs: string = '$ctrl';
-
   public scope: any = {};
   public bindToController: any = {
     request: '=',
@@ -44,6 +43,8 @@ export class RequestFooterDirective implements IDirective {
       let assets: string[] = response.data;
       console.log(assets);
 
+      // Lazily load JavaScript/HTML/CSS resources from the plugin and inject
+      // them into the page
       this.$ocLazyLoad.load(assets, {serie: true}).then(() => {
 
         let template: string = '<div ' + status + '-controls request="$ctrl.request" ' +

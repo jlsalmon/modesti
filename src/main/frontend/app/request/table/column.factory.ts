@@ -1,13 +1,15 @@
 import {SchemaService} from '../../schema/schema.service';
 import {Schema} from '../../schema/schema';
-import {Field} from '../../schema/field';
-import {OptionsField} from '../../schema/options-field';
-import {TextField} from '../../schema/text-field';
-import {AutocompleteField} from '../../schema/autocomplete-field';
+import {Field} from '../../schema/field/field';
+import {OptionsField} from '../../schema/field/options-field';
+import {TextField} from '../../schema/field/text-field';
+import {AutocompleteField} from '../../schema/field/autocomplete-field';
 import {TaskService} from '../../task/task.service';
 import {Task} from '../../task/task';
 import {Request} from '../request';
 import {Point} from '../point/point';
+import {RowCommentStateDescriptor} from '../../schema/row-comment-state-descriptor';
+import './select2-editor';
 
 declare var $: JQuery;
 
@@ -16,46 +18,58 @@ export class ColumnFactory {
 
   public constructor(private schemaService: SchemaService, private taskService: TaskService) {}
 
-  public getColumns(request: Request, schema: Schema, fields: Field[]): any[] {
+  /**
+   * Create an array of handsontable column definitions.
+   *
+   * @param request the current request
+   * @param schema the schema associated with the current request
+   * @param fields a list of fields for which to create column definitions
+   *
+   * @returns a list of handsontable column definitions
+   */
+  public createColumnDefinitions(request: Request, schema: Schema, fields: Field[]): any[] {
     console.log('getting column definitions');
-    let columns: any[] = [];
 
+    let columns: any[] = [];
+    let authorised: boolean = false;
     let task: Task = this.taskService.getCurrentTask();
 
-    // Append "select-all" checkbox field.
-    if (this.hasCheckboxColumn(request)) {
-      columns.push(this.getCheckboxColumn(request, schema));
+    if (this.taskService.isCurrentUserAuthorised(task) && this.taskService.isCurrentUserAssigned(task)) {
+      authorised = true;
     }
 
-    if (this.hasCommentColumn(request)) {
-      columns.push(this.getCommentColumn(request, schema));
+    if (authorised) {
+
+      // The schema can allow rows to be "selectable" for specified request statuses
+      if (this.hasRowSelectColumn(request, schema)) {
+        columns.push(this.getRowSelectColumn());
+      }
+
+      // The schema can allow row comments for specified request statuses
+      if (this.hasRowCommentColumn(request, schema)) {
+        columns.push(this.getRowCommentColumn(request, schema));
+      }
     }
 
     fields.forEach((field: Field) => {
 
-      let authorised: boolean = false;
-      if (this.taskService.isCurrentUserAuthorised(task) && this.taskService.isCurrentUserAssigned(task)) {
-        authorised = true;
-      }
-
-      let editable: any;
-
       // Build the right type of column based on the schema
-      let column: any = this.getColumn(field, editable, authorised, request.status);
+      let column: any = this.createColumnDefinition(field, authorised, request.status);
       columns.push(column);
     });
 
     return columns;
   }
 
-  public getColumn(field: Field, editable: any, authorised: boolean, status: string): any[] {
+  public createColumnDefinition(field: Field, authorised: boolean, status: string): any[] {
     let column: any = {
       data: 'properties.' + field.id,
-      title: this.getColumnHeader(field)
+      title: this.getColumnHeader(field),
+      field: field
     };
 
     if (authorised) {
-      editable = true;
+      let editable: boolean = true;
 
       if (field.editable === true || field.editable === false) {
         // Editable given as simple boolean
@@ -223,50 +237,39 @@ export class ColumnFactory {
     return field.model ? field.model : 'value';
   }
 
-  /**
-   * The "select-all" checkbox column is shown when the request is in either state FOR_APPROVAL, FOR_ADDRESSING,
-   * FOR_CABLING or FOR_TESTING, except when the task is not yet claimed or the user is not authorised.
-   *
-   * TODO: remove this domain-specific code
-   *
-   * @returns {boolean}
-   */
-  public hasCheckboxColumn(request: Request): boolean {
-    let checkboxStates: string[] = [/*'FOR_CORRECTION', */'FOR_APPROVAL', 'FOR_CABLING', 'FOR_TESTING'];
-    let task: Task = this.taskService.getCurrentTask();
-    let assigned: boolean = this.taskService.isCurrentUserAssigned(task);
-    return checkboxStates.indexOf(request.status) > -1 && (request.status === 'FOR_CORRECTION' || assigned);
+  public hasRowSelectColumn(request: Request, schema: Schema): boolean {
+    let selectableStates: string[] = schema.selectableStates;
+    return selectableStates && selectableStates.indexOf(request.status) > -1;
   }
 
-  /**
-   * TODO: remove this domain-specific code
-   */
-  public hasCommentColumn(request: Request): boolean {
-    let commentStates: string[] =  ['FOR_APPROVAL', 'FOR_CABLING', 'FOR_TESTING'];
-    let task: Task = this.taskService.getCurrentTask();
-    let assigned: boolean = this.taskService.isCurrentUserAssigned(task);
-    return commentStates.indexOf(request.status) > -1 && assigned;
+  public hasRowCommentColumn(request: Request, schema: Schema): boolean {
+    let rowCommentStates: RowCommentStateDescriptor[] = schema.rowCommentStates;
+    if (!rowCommentStates) {
+      return false;
+    }
+
+    let has: boolean = false;
+    rowCommentStates.forEach((rowCommentState: any) => {
+      if (rowCommentState.status === request.status) {
+        has = true;
+      }
+    });
+
+    return has;
   }
 
-  /**
-   * TODO: remove this domain-specific code
-   */
-  public getCheckboxColumn(request: Request, schema: Schema): any {
+  public getRowSelectColumn(): any {
     return {data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />'};
   }
 
-  /**
-   * TODO: remove this domain-specific code
-   */
-  public getCommentColumn(request: Request, schema: Schema): any {
+  public getRowCommentColumn(request: Request, schema: Schema): any {
     let property: string;
-    if (request.status === 'FOR_APPROVAL') {
-      property = 'properties.approvalResult.message';
-    } else if (request.status === 'FOR_CABLING') {
-      property = 'properties.cablingResult.message';
-    }else if (request.status === 'FOR_TESTING') {
-      property = 'properties.testResult.message';
-    }
+
+    schema.rowCommentStates.forEach((rowCommentState: any) => {
+      if (rowCommentState.state === request.status) {
+        property = rowCommentState.property;
+      }
+    });
 
     return {data: property, type: 'text', title: 'Comment'};
   }

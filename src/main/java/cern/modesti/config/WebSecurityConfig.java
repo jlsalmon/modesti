@@ -158,10 +158,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return contextSource;
   }
 
-  @Bean
-  public LoggerListener loggerListener() {
-    return new LoggerListener();
-  }
+//  @Bean
+//  public LoggerListener loggerListener() {
+//    return new LoggerListener();
+//  }
 
   @Bean
   @Profile("dev")

@@ -13,7 +13,7 @@
 
         <ul uib-dropdown-menu>
           <li ng-repeat="category in $ctrl.schema.categories"
-              ng-click="$ctrl.table.activateCategory(category)">
+              ng-click="$ctrl.activeCategory = category">
             <a href="">
               <span>
                 {{::category.name}}
@@ -26,7 +26,7 @@
 
           <!-- Only show datasource if it has been selected as point type for at least one point -->
           <li ng-repeat="datasource in $ctrl.getActiveDatasources()"
-              ng-click="$ctrl.table.activateCategory(datasource)">
+              ng-click="$ctrl.activeCategory = datasource">
             <a href="">
               <span>{{::datasource.name}}
               <i ng-if="$ctrl.isInvalidCategory(datasource)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
@@ -61,10 +61,18 @@
 
     <!-- Undo/redo buttons -->
     <div class="btn-group">
-      <a class="btn btn-sm btn-default" ng-click="$ctrl.undo()" ng-disabled="!$ctrl.table.isUndoAvailable()" tooltip-append-to-body="true" uib-tooltip="Undo">
+      <a class="btn btn-sm btn-default"
+         ng-click="$ctrl.undo()"
+         ng-disabled="!$ctrl.table.hot.isUndoAvailable()"
+         tooltip-append-to-body="true"
+         uib-tooltip="Undo">
         <i class="fa fa-fw fa-undo"></i>
       </a>
-      <a class="btn btn-sm btn-default" ng-click="$ctrl.redo()" ng-disabled="!$ctrl.table.isRedoAvailable()" tooltip-append-to-body="true" uib-tooltip="Redo">
+      <a class="btn btn-sm btn-default"
+         ng-click="$ctrl.redo()"
+         ng-disabled="!$ctrl.table.hot.isRedoAvailable()"
+         tooltip-append-to-body="true"
+         uib-tooltip="Redo">
         <i class="fa fa-fw fa-repeat"></i>
       </a>
     </div>

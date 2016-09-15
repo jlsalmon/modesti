@@ -1,4 +1,4 @@
-import {Conditional} from './conditional';
+import {Conditional} from '../conditional';
 
 export class Field {
   public id: string;
@@ -12,4 +12,5 @@ export class Field {
   public model: string;
   public minLength: number;
   public maxLength: number;
+  public uppercase: boolean;
 }
