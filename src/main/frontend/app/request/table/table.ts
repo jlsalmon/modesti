@@ -11,10 +11,7 @@ import IQService = angular.IQService;
 
 declare var Handsontable: any;
 
-/**
- * The table knows nothing about schemas. It simply gets a list of column
- * definitions and a data array.
- */
+
 export class Table {
 
   /** The handsontable instance */
@@ -34,17 +31,21 @@ export class Table {
     onAfterRemoveRow: () => this.normaliseLineNumbers()
   };
 
-  public constructor(data: any[], columns: any[], private cellRenderer: Function) {
+  public constructor(data: any[], columns: any[], private cellRenderer: Function = undefined) {
     this.settings.data = data;
     this.settings.columns = columns;
     this.settings.columns.forEach((column: any) => column.renderer = cellRenderer);
     this.hot = new Handsontable(document.getElementById('table'), this.settings);
 
     this.adjustTableHeight();
+    this.hot.updateSettings({
+      height: document.documentElement.clientHeight - 1,
+      width: document.documentElement.clientWidth - 1
+    })
   }
 
   public reload(columns: any[] = []): void {
-    if (columns) {
+    if (columns && columns.length) {
       this.settings.columns = columns;
       this.settings.columns.forEach((column: any) => column.renderer = this.cellRenderer);
       this.hot.updateSettings({

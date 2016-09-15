@@ -21,14 +21,14 @@ export class ColumnFactory {
   /**
    * Create an array of handsontable column definitions.
    *
-   * @param request the current request
-   * @param schema the schema associated with the current request
    * @param fields a list of fields for which to create column definitions
+   * @param schema the schema in which the fields are defined
+   * @param requestStatus the status of the current request
    *
    * @returns a list of handsontable column definitions
    */
-  public createColumnDefinitions(request: Request, schema: Schema, fields: Field[]): any[] {
-    console.log('getting column definitions');
+  public createColumnDefinitions(fields: Field[], schema: Schema, requestStatus: string = undefined): any[] {
+    console.log('creating column definitions');
 
     let columns: any[] = [];
     let authorised: boolean = false;
@@ -41,20 +41,20 @@ export class ColumnFactory {
     if (authorised) {
 
       // The schema can allow rows to be "selectable" for specified request statuses
-      if (this.hasRowSelectColumn(request, schema)) {
+      if (this.hasRowSelectColumn(schema, requestStatus)) {
         columns.push(this.getRowSelectColumn());
       }
 
       // The schema can allow row comments for specified request statuses
-      if (this.hasRowCommentColumn(request, schema)) {
-        columns.push(this.getRowCommentColumn(request, schema));
+      if (this.hasRowCommentColumn(schema, requestStatus)) {
+        columns.push(this.getRowCommentColumn(schema, requestStatus));
       }
     }
 
     fields.forEach((field: Field) => {
 
       // Build the right type of column based on the schema
-      let column: any = this.createColumnDefinition(field, authorised, request.status);
+      let column: any = this.createColumnDefinition(field, authorised, requestStatus);
       columns.push(column);
     });
 
@@ -237,12 +237,12 @@ export class ColumnFactory {
     return field.model ? field.model : 'value';
   }
 
-  public hasRowSelectColumn(request: Request, schema: Schema): boolean {
+  public hasRowSelectColumn(schema: Schema, requestStatus: string): boolean {
     let selectableStates: string[] = schema.selectableStates;
-    return selectableStates && selectableStates.indexOf(request.status) > -1;
+    return selectableStates && selectableStates.indexOf(requestStatus) > -1;
   }
 
-  public hasRowCommentColumn(request: Request, schema: Schema): boolean {
+  public hasRowCommentColumn(schema: Schema, requestStatus: string): boolean {
     let rowCommentStates: RowCommentStateDescriptor[] = schema.rowCommentStates;
     if (!rowCommentStates) {
       return false;
@@ -250,7 +250,7 @@ export class ColumnFactory {
 
     let has: boolean = false;
     rowCommentStates.forEach((rowCommentState: any) => {
-      if (rowCommentState.status === request.status) {
+      if (rowCommentState.status === requestStatus) {
         has = true;
       }
     });
@@ -262,11 +262,11 @@ export class ColumnFactory {
     return {data: 'selected', type: 'checkbox', title: '<input type="checkbox" class="select-all" />'};
   }
 
-  public getRowCommentColumn(request: Request, schema: Schema): any {
+  public getRowCommentColumn(schema: Schema, requestStatus: string): any {
     let property: string;
 
     schema.rowCommentStates.forEach((rowCommentState: any) => {
-      if (rowCommentState.state === request.status) {
+      if (rowCommentState.state === requestStatus) {
         property = rowCommentState.property;
       }
     });

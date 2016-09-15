@@ -50,7 +50,7 @@ class RequestTableController {
                      private requestService: RequestService, private taskService: TaskService,
                      private schemaService: SchemaService) {
 
-    let columns: any[] = columnFactory.createColumnDefinitions(this.request, this.schema, this.activeCategory.fields);
+    let columns: any[] = columnFactory.createColumnDefinitions(this.activeCategory.fields, this.schema, this.request.status);
     this.table = new Table(this.request.points, columns, this.renderCell);
 
     // Add additional hooks
@@ -117,7 +117,7 @@ class RequestTableController {
         return;
       }
 
-      let cols: any[] = columnFactory.createColumnDefinitions(this.request, this.schema, this.activeCategory.fields);
+      let cols: any[] = columnFactory.createColumnDefinitions(this.activeCategory.fields, this.schema, this.request.status);
       this.table.reload(cols);
     });
 
