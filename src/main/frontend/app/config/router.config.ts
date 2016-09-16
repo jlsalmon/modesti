@@ -33,7 +33,12 @@ export class RouterConfig {
               return requestService.getRequestHistory(request.requestId);
             }]
           }})
-        .state('search', { url: '/search',    component: 'search',            title: 'Search' })
+        .state('search', { url: '/search',    component: 'search',            title: 'Search',
+          resolve: {
+            schemas: ['SchemaService', (schemaService: any) => {
+              return schemaService.getSchemas();
+            }]
+          }})
         .state('user',   { url: '/users/:id', component: 'user',              title: '{{id}}' })
         .state('about',  { url: '/about',     component: 'about',             title: 'About' })
         .state('error',  { url: '/error',     component: 'error',             title: 'Error' })
