@@ -2,96 +2,127 @@ import {SearchService} from './search.service';
 import {SchemaService} from '../schema/schema.service';
 import {RequestService} from '../request/request.service';
 import {AlertService} from '../alert/alert.service';
+import {Table} from '../table/table';
+import {TableFactory} from '../table/table-factory';
+import {Schema} from '../schema/schema';
+import {Point} from '../request/point/point';
+import {Category} from '../schema/category/category';
+import {IComponentOptions, IPromise} from 'angular';
+import {IStateService} from 'angular-ui-router';
+import {Field} from '../schema/field/field';
+import {ColumnFactory} from '../table/column-factory';
 
-export class SearchComponent implements ng.IComponentOptions {
+export class SearchComponent implements IComponentOptions {
   public templateUrl: string = '/search/search.component.html';
   public controller: Function = SearchController;
+  public bindings: any = {
+    schemas: '='
+  };
 }
 
 class SearchController {
   public static $inject: string[] = ['$uibModal', '$state', 'SearchService', 'SchemaService',
-                                     'RequestService', 'AlertService'];
+    'RequestService', 'AlertService'];
 
-  public schema: any;
-  public schemas: any[];
-  public domains: any[];
-  public points: any[];
-  public filters: any[]; // { 'pointDatatype': { /*operation: 'equals',*/ value: 'Boolean' } };
+  public schema: Schema;
+  public schemas: Schema[];
+  public table: Table;
+  // public points: Point[] = [];
+  public filters: any[];
   public query: string;
-  public page: any = {number: 0, size: 50};
+  public page: any = {number: 0, size: 100};
   public sort: string;
-  public activeCategory: any;
   public loading: string;
   public error: string;
   public submitting: string;
 
-  constructor(private $modal: any, private $state: any, private searchService: SearchService,
+  constructor(private $modal: any, private $state: IStateService, private searchService: SearchService,
               private schemaService: SchemaService, private requestService: RequestService,
-              private alertService: AlertService) {}
+              private alertService: AlertService) {
 
-  public $onInit(): void {
-    this.schemaService.getSchemas().then((schemas: any[]) => {
-      this.schemas = schemas;
-      this.domains = schemas.map((schema: any) => { return schema.id; });
+    this.useDomain(this.schemas[0].id);
 
-      this.calculateTableHeight();
+    let settings: any = {
+      getRows: this.search
+    };
 
-      if (this.domains.length > 0) {
-        this.useDomain(this.domains[0]);
-      }
-
-      if (this.schema) {
-        this.activeCategory = this.schema.categories[0];
-        this.search();
-      }
-    });
+    this.table = TableFactory.createTable('ag-grid', this.schema, undefined, settings);
   }
 
   public useDomain(domain: string): void {
     this.schemas.forEach((schema: any) => {
       if (schema.id === domain) {
         this.schema = schema;
-        this.activeCategory = this.schema.categories[0];
-        this.filters = [this.activeCategory.fields[0]];
-        this.search();
+
+        // Initially expand the first category
+        // FIXME: schema should be immutable. Put state on the column defs instead
+        this.schema.categories.concat(this.schema.datasources).forEach((category: Category) => {
+          if (this.schema.categories.indexOf(category) === 0) {
+            category.isActive = true;
+            category.isCollapsed = false;
+          } else {
+            category.isActive = false;
+            category.isCollapsed = true;
+          }
+        });
+
+        if (this.table) {
+          this.table.refreshColumnDefs();
+        }
+        this.onFiltersChanged();
       }
     });
   }
 
-  public getAllFields(): any[] {
-    let fields: any[] = [];
-    this.schema.categories.concat(this.schema.datasources).forEach((category: any) => {
-      category.fields.forEach((field: any) => {
-        field.category = category.name;
-        fields.push(field);
-      });
-    });
-    return fields;
+  public onFiltersChanged(): void {
+    if (this.table) {
+      this.table.refreshData();
+    }
   }
 
-  public onFilterRemoved(): void {
-    this.search();
+  public toggleFilter(field: Field): void {
+    // FIXME: maintain filter state on the column defs, not the schema
+    field.filter = {value: undefined, operation: 'equals'};
   }
 
-  public search(): void {
+  public search = (params: any): void => {
     this.loading = 'started';
     console.log('searching');
 
     this.parseQuery();
 
-    this.searchService.getPoints(this.schema.id, this.query, this.page.number, this.page.size, this.sort)
-      .then((response: any) => {
+    let page: any = {number: params.startRow / 100, size: this.page.size};
+    console.log('asking for ' + params.startRow + ' to ' + params.endRow + ' (page #' + page + ')');
+
+    let sort: string = '';
+    if (params.sortModel.length) {
+      let sortProp: string = params.sortModel[0].colId.split('.')[1];
+      let sortDir: string = params.sortModel[0].sort;
+      sort = sortProp + ',' + sortDir;
+    }
+
+    this.searchService.getPoints(this.schema.id, this.query, page, sort).then((response: any) => {
+      let points: Point[] = [];
+
       if (response.hasOwnProperty('_embedded')) {
-        this.points = response._embedded.points;
-      } else {
-        this.points = [];
+        points = response._embedded.points;
       }
 
-      console.log('fetched ' + this.points.length + ' points');
+      console.log('fetched ' + points.length + ' points');
+
 
       this.page = response.page;
       // Backend pages 0-based, Bootstrap pagination 1-based
       this.page.number += 1;
+
+
+      // if on or after the last page, work out the last row.
+      let lastRow: number = -1;
+      if (this.page.totalElements <= params.endRow) {
+        lastRow = this.page.totalElements;
+      }
+
+      params.successCallback(points, lastRow);
 
       angular.forEach(response._links, (item: any) => {
         if (item.rel === 'next') {
@@ -108,34 +139,53 @@ class SearchController {
     },
 
     (error: any) => {
-      this.points = [];
       this.loading = 'error';
       this.error = error;
     });
-  }
+  };
 
-  public parseQuery(): void {
+  public parseQuery(params?: any): void {
     let expressions: string[] = [];
 
-    this.filters.forEach((filter: any) => {
-      let field: any = this.schema.getField(filter.id);
+    //for (let key in params.filterModel) {
+    //  if (params.filterModel.hasOwnProperty(key)) {
+    //    let filter: any = params.filterModel[key];
+    //    let field: any = this.schema.getField(key.split('.')[1]);
+    //
+    //    if (filter.filter !== undefined && filter.filter !== '') {
+    //
+    //      let property: string;
+    //      if (field.type === 'autocomplete') {
+    //        let modelAttribute: string = field.model ? field.model : 'value';
+    //        property = field.id + '.' + modelAttribute;
+    //      } else {
+    //        property = field.id;
+    //      }
+    //
+    //      let operation: string = this.parseOperation(filter.type);
+    //      let expression: string = property + ' ' + operation + ' "' + filter.filter + '"';
+    //
+    //      if (expressions.indexOf(expression) === -1) {
+    //        expressions.push(expression);
+    //      }
+    //    }
+    //  }
+    //}
 
-      // if (typeof filter.field === 'string') {
-      //  filter.field = JSON.parse(filter.field);
-      // }
+    this.schema.getAllFields().forEach((field: Field) => {
 
-      if (filter.value !== null && filter.value !== undefined && filter.value !== '') {
+      if (field.filter && field.filter.value !== undefined && field.filter.value !== '') {
 
         let property: string;
         if (field.type === 'autocomplete') {
           let modelAttribute: string = field.model ? field.model : 'value';
-          property = filter.id + '.' + modelAttribute;
+          property = field.id + '.' + modelAttribute;
         } else {
-          property = filter.id;
+          property = field.id;
         }
 
-        let operation: string = this.parseOperation(filter.operation);
-        let expression: string = property + ' ' + operation + ' "' + filter.value + '"';
+        let operation: string = this.parseOperation(field.filter.operation);
+        let expression: string = property + ' ' + operation + ' "' + field.filter.value + '"';
 
         if (expressions.indexOf(expression) === -1) {
           expressions.push(expression);
@@ -151,6 +201,7 @@ class SearchController {
     if (operation === 'equals') {
       return ' == ';
     } else {
+      console.warn('not supported!');
       return ' == ';
     }
   }
@@ -162,7 +213,7 @@ class SearchController {
       controller: 'UpdatePointsModalController as ctrl',
       size: 'lg',
       resolve: {
-        points: () => this.points,
+        points: () => this.table.hot.getData(),
         schema: () => this.schema
       }
     });
@@ -177,7 +228,7 @@ class SearchController {
         // Strip request ID from location.
         let id: string = location.substring(location.lastIndexOf('/') + 1);
         // Redirect to point entry page.
-        this.$state.go('request', { id: id }).then(() => {
+        this.$state.go('request', {id: id}).then(() => {
           this.submitting = 'success';
 
           this.alertService.add('success', 'Update request #' + id + ' has been created.');
@@ -190,18 +241,20 @@ class SearchController {
     });
   }
 
-  public onPageChanged(): void {
-    this.search();
-  }
+  //public onPageChanged(): void {
+  //  //this.search();
+  //}
 
-  public activateCategory(category: any): void {
-    console.log('activating category "' + category.id + '"');
-    this.activeCategory = category;
-    // $localStorage.lastActiveCategory[self.request.requestId] = category;
-    // getColumns();
-  }
+  //public activateCategory(category: any): void {
+  //  console.log('activating category "' + category.id + '"');
+  //  this.activeCategory = category;
+  //  let columns: any[] = this.columnFactory.createColumnDefinitions(this.activeCategory.fields, this.schema, undefined);
+  //  this.table.reload(columns);
+  //  // $localStorage.lastActiveCategory[self.request.requestId] = category;
+  //  // getColumns();
+  //}
 
-  public queryFieldValues(field: any, value: string): any[] {
+  public queryFieldValues(field: any, value: string): IPromise<any[]> {
     return this.schemaService.queryFieldValues(field, value, undefined);
   }
 
@@ -211,28 +264,5 @@ class SearchController {
 
   public getOptionDisplayValue(option: any): string {
     return typeof option === 'object' ? option.value + (option.description ? ': ' + option.description : '') : option;
-  }
-
-  /**
-   * Calculate the required height for the table so that it fills the screen.
-   */
-  public calculateTableHeight(): void {
-    let mainHeader: any = $('.main-header');
-    let requestHeader: any = $('.request-header');
-    let toolbar: any = $('.toolbar');
-    let table: any = $('.table-wrapper');
-    // var log = $('.log');
-    let footer: any = $('.footer');
-
-    let height: any = $(window).height() - mainHeader.outerHeight() - requestHeader.outerHeight()
-                 - toolbar.outerHeight() - footer.outerHeight();
-
-    console.log($(window).height());
-    console.log(mainHeader.height());
-    console.log(requestHeader.height());
-    console.log(toolbar.height());
-    console.log(footer.height());
-
-    table.height(height + 'px');
   }
 }

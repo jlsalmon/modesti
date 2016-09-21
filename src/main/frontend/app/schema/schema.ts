@@ -4,6 +4,7 @@ import {RowCommentStateDescriptor} from './row-comment-state-descriptor';
 
 export class Schema implements ISerializable<Schema> {
   public id: string;
+  public description: string;
   public categories: Category[];
   public datasources: Category[];
   public fields: Field[];
@@ -22,22 +23,61 @@ export class Schema implements ISerializable<Schema> {
     return result;
   }
 
+  public getAllCategories(): Category[] {
+    return this.categories.concat(this.datasources);
+  }
+
   public getField(id: string): Field {
-    let result: Field;
+    let field: Field;
 
     this.categories.concat(this.datasources).forEach((category: Category) => {
-      category.fields.forEach((field: Field) => {
-        if (field.id === id) {
-          result = field;
+      category.fields.forEach((f: Field) => {
+        if (f.id === id) {
+          field = f;
         }
       });
     });
 
-    return result;
+    return field;
+  }
+
+  public getAllFields(): Field[] {
+    let fields: Field[] = [];
+
+    this.categories.concat(this.datasources).forEach((category: any) => {
+      category.fields.forEach((field: any) => {
+        field.category = category.name;
+        fields.push(field);
+      });
+    });
+
+    return fields;
+  }
+
+  public hasRowSelectColumn(requestStatus: string): boolean {
+    let selectableStates: string[] = this.selectableStates;
+    return selectableStates && selectableStates.indexOf(requestStatus) > -1;
+  }
+
+  public hasRowCommentColumn(requestStatus: string): boolean {
+    let rowCommentStates: RowCommentStateDescriptor[] = this.rowCommentStates;
+    if (!rowCommentStates) {
+      return false;
+    }
+
+    let has: boolean = false;
+    rowCommentStates.forEach((rowCommentState: any) => {
+      if (rowCommentState.status === requestStatus) {
+        has = true;
+      }
+    });
+
+    return has;
   }
 
   public deserialize(json: any): Schema {
     this.id = json.id;
+    this.description = json.description;
     this.categories = json.categories;
     this.datasources = json.datasources;
     this.fields = json.fields;

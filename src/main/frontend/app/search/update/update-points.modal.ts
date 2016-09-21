@@ -14,7 +14,10 @@ export class UpdatePointsModalController {
 
   constructor(private $modalInstance: any, private points: Point[], private schema: Schema,
               private authService: AuthService, private schemaService: SchemaService) {
-    this.request = new Request('UPDATE', '', authService.getCurrentUser().username);
+    this.request = new Request();
+    this.request.type = 'UPDATE';
+    this.request.description = '';
+    this.request.creator = authService.getCurrentUser().username;
     this.request.domain = schema.id;
     this.request.points = points;
   }

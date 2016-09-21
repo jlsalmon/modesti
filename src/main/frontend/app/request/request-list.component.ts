@@ -150,12 +150,12 @@ class RequestListController {
   }
 
   // TODO: consolidate this functionality with assign-request.modal.ts
-  public queryUsers(query: string): IPromise<void> {
+  public queryUsers(query: string): IPromise<User[]> {
     return this.$http.get('/api/users/search', {
       params : {
         query : this.parseQuery(query)
       }
-    }).then((response) => {
+    }).then((response: any) => {
       if (!response.data.hasOwnProperty('_embedded')) {
         return [];
       }

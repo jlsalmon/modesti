@@ -1,3 +1,37 @@
+<style>
+  .request-header {
+
+  }
+
+  .column-panel {
+    position: absolute;
+    width: 250px;
+    top: 90px;
+    left: 0;
+    bottom: 50px;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .toolbar {
+    position: absolute;
+    height: 50px;
+    top: 90px;
+    left: 250px;
+    right: 0;
+  }
+
+  .request-table {
+    position: absolute;
+    top: 140px;
+    left: 250px;
+    right: 0;
+    bottom: 50px;
+  }
+</style>
+
 
 <!-- Alerts are shown here -->
 <div class="alert-messages">
@@ -15,6 +49,13 @@
 </section>
 
 
+
+<!-- The column panel allows showing/hiding/filtering columns -->
+<section class="column-panel">
+  <column-panel schema="$ctrl.schema" table="$ctrl.table" enable-filters="false"></column-panel>
+</section>
+
+
 <!-- The toolbar controls the category switcher, cut/copy/paste controls etc. -->
 <section class="toolbar container-fluid">
   <request-toolbar
@@ -28,14 +69,16 @@
 
 
 <!-- The actual table itself -->
-<request-table
-    request="$ctrl.request"
-    tasks="$ctrl.tasks"
-    schema="$ctrl.schema"
-    active-category="$ctrl.activeCategory"
-    table="$ctrl.table"
-    history="$ctrl.history">
-</request-table>
+<section class="request-table">
+  <request-table
+      request="$ctrl.request"
+      tasks="$ctrl.tasks"
+      schema="$ctrl.schema"
+      active-category="$ctrl.activeCategory"
+      table="$ctrl.table"
+      history="$ctrl.history">
+  </request-table>
+</section>
 
 
 <!-- Task-specific controls go in the footer -->

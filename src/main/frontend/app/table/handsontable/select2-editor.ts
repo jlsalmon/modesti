@@ -1,4 +1,9 @@
-//declare var Handsontable: any;
+import 'jquery';
+import 'select2';
+
+// TODO: import this properly without require()
+let Handsontable: any = require('handsontable-pro');
+// import Handsontable from 'handsontable-pro';
 
 (function (Handsontable) {
   "use strict";
@@ -146,8 +151,9 @@
     .on('select2-close', onSelect2Closed.bind(this));
 
     // Set reference to the instance and row, so we can access them in the query function
-    self.$textarea.context.instance = self.instance;
-    self.$textarea.context.row = self.row;
+    self.$textarea[0].instance = self.instance;
+    self.$textarea[0].row = self.row;
+    self.$textarea[0].prop = self.prop;
 
     self.$textarea.select2('open');
 

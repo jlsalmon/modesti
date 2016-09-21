@@ -24,24 +24,31 @@ export class Request implements ISerializable<Request> {
     this.creator = creator;
   }
 
-  public deserialize(json: any): Request {
-    this.requestId = json.requestId;
-    this.status = json.status;
-    this.type = json.type;
-    this.description = json.description;
-    this.domain = json.domain;
-    this.creator = json.creator;
-    this.assignee = json.assignee;
-    this.valid = json.valid;
-    this.comments = json.comments;
-    this.properties = json.properties;
-    this.childRequestIds = json.childRequestIds;
-    this._links = json._links;
+  public deserialize(request: Request): Request {
+    this.requestId = request.requestId;
+    this.status = request.status;
+    this.type = request.type;
+    this.description = request.description;
+    this.domain = request.domain;
+    this.creator = request.creator;
+    this.assignee = request.assignee;
+    this.valid = request.valid;
+    this.comments = request.comments;
+    this.properties = request.properties;
+    this.childRequestIds = request.childRequestIds;
+    this._links = request._links;
 
-    this.points = [];
-    json.points.forEach((point: Point) => {
-      this.points.push(new Point().deserialize(point));
-    });
+    if (!this.points) {
+      this.points = [];
+      request.points.forEach((point: Point) => {
+        this.points.push(new Point().deserialize(point));
+      });
+    } else {
+      // FIXME: this is dodgy, and probably won't work when adding rows...
+      this.points.forEach((point: Point, index: number) => {
+        point = point.deserialize(request.points[index]);
+      });
+    }
 
     return this;
   }

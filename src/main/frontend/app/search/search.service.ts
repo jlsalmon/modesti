@@ -9,10 +9,10 @@ export class SearchService {
 
   constructor(private $http: IHttpService, private $q: IQService) {}
 
-  public getPoints(domain: string, query: string, page: any, size: number, sort: string): IPromise<Point[]> {
+  public getPoints(domain: string, query: string, page: any, sort: string): IPromise<Point[]> {
     let q: IDeferred<Point[]> = this.$q.defer();
-    page = page || 0;
-    size = size || 15;
+    page.number = page.number || 0;
+    page.size = page.size || 15;
     // sort = sort || 'pointId,desc';
 
     this.$http.get('/api/points/search',
@@ -20,8 +20,8 @@ export class SearchService {
       params: {
         domain: domain,
         query: query,
-        page: page - 1,
-        size: size,
+        page: page.number - 1,
+        size: page.size,
         sort: sort
       }
     }).then((response: any) => {

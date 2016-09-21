@@ -38,11 +38,10 @@ export class SchemaService {
     let q: IDeferred<Schema[]> = this.$q.defer();
 
     this.$http.get('/api/schemas').then((response: any) => {
-      let schemas: Schema[] = response.data._embedded.schemas;
+      let schemas: Schema[] = [];
 
-      // Don't include the core schema
-      schemas = schemas.filter((schema: Schema) => {
-        return schema.id !== 'core';
+      response.data._embedded.schemas.forEach((schema: Schema) => {
+        schemas.push(new Schema().deserialize(schema));
       });
 
       console.log('fetched ' + schemas.length + ' schemas');
@@ -57,12 +56,12 @@ export class SchemaService {
     return q.promise;
   }
 
-  public queryFieldValues(field: AutocompleteField, query: string, point: Point): IPromise<any> {
+  public queryFieldValues(field: Field, query: string, point: Point): IPromise<any[]> {
     console.log('querying values for field ' + field.id + ' with query string "' + query + '"');
-    let q: IDeferred<any> = this.$q.defer();
+    let q: IDeferred<any[]> = this.$q.defer();
 
-    // Don't make a call if the query is less than the minimum length
-    if (field.minLength && query.length < field.minLength) {
+    // Don't make a call if the query is less than the minimum length (or is undefined)
+    if (!query || (field.minLength && query.length < field.minLength)) {
       q.resolve([]);
       return q.promise;
     }

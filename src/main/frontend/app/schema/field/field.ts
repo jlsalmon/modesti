@@ -8,9 +8,12 @@ export class Field {
   public required: boolean;
   public unique: boolean;
   public editable: any;
+  public fixed: boolean;
   public default: any;
   public model: string;
   public minLength: number;
   public maxLength: number;
   public uppercase: boolean;
+  public url: string;
+  public params: string[];
 }

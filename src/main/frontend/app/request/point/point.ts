@@ -6,6 +6,22 @@ export class Point implements ISerializable<Point> {
   public errors: any[];
   public properties: any;
 
+  public getProperty(property: string): any {
+    if (property.indexOf('properties') !== -1) {
+      property = property.split('.')[1];
+    }
+
+    return this.properties[property];
+  }
+
+  public setProperty(property: string, value: any): void {
+    if (property.indexOf('properties') !== -1) {
+      property = property.split('.')[1];
+    }
+
+    this.properties[property] = value;
+  }
+
   /**
    * Check if a point is empty. A point is considered to be empty if it
    * contains no properties, or if the values of all its properties are either

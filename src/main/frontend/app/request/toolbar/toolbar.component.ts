@@ -39,7 +39,9 @@ class RequestToolbarController {
                      private historyService: HistoryService) {}
 
   public save(): void {
-    this.requestService.saveRequest(this.request);
+    this.requestService.saveRequest(this.request).then((request: Request) => {
+      this.request = request;
+    });
   }
 
   public undo(): void {

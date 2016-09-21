@@ -1,5 +1,5 @@
-import {Table} from './table';
-import {ColumnFactory} from './column.factory';
+import {Table} from '../../table/table';
+import {TableFactory} from '../../table/table-factory';
 import {RequestService} from '../request.service';
 import {Request} from '../request';
 import {Point} from '../point/point';
@@ -12,17 +12,15 @@ import {Field} from '../../schema/field/field';
 import {AutocompleteField} from '../../schema/field/autocomplete-field';
 import {Conditional} from '../../schema/conditional';
 import {Change} from '../history/change';
-import IComponentOptions = angular.IComponentOptions;
-import IPromise = angular.IPromise;
-import IDeferred = angular.IDeferred;
-import IScope = angular.IScope;
-import IQService = angular.IQService;
-import IFilterService = angular.IFilterService;
 
-declare var $: JQuery;
+import {IComponentOptions, IPromise, IDeferred, IScope, IQService, IFilterService} from 'angular';
+import 'jquery';
+
+// TODO: import this properly without require()
+let Handsontable: any = require('handsontable-pro');
 
 export class RequestTableComponent implements IComponentOptions {
-  public templateUrl: string = '/request/table/table.component.html';
+  public templateUrl: string = '/request/table/request-table.component.html';
   public controller: Function = RequestTableController;
   public bindings: any = {
     request: '=',
@@ -35,7 +33,7 @@ export class RequestTableComponent implements IComponentOptions {
 }
 
 class RequestTableController {
-  public static $inject: string[] = ['$scope', '$q', '$filter', '$localStorage', 'ColumnFactory',
+  public static $inject: string[] = ['$scope', '$q', '$filter', '$localStorage',
                                      'RequestService', 'TaskService', 'SchemaService'];
 
   public request: Request;
@@ -46,87 +44,86 @@ class RequestTableController {
   public history: Change[];
 
   public constructor(private $scope: IScope, private $q: IQService, private $filter: IFilterService,
-                     private $localStorage: any, private columnFactory: ColumnFactory,
-                     private requestService: RequestService, private taskService: TaskService,
-                     private schemaService: SchemaService) {
+                     private $localStorage: any, private requestService: RequestService,
+                     private taskService: TaskService, private schemaService: SchemaService) {
 
-    let columns: any[] = columnFactory.createColumnDefinitions(this.activeCategory.fields, this.schema, this.request.status);
-    this.table = new Table(this.request.points, columns, this.renderCell);
+    let task: Task = this.taskService.getCurrentTask();
+    let authorised: boolean = false;
 
-    // Add additional hooks
-    this.table.hot.addHook('afterChange', this.onAfterChange);
-    this.table.hot.addHook('afterRender', this.onAfterRender);
+    if (this.taskService.isCurrentUserAuthorised(task) && this.taskService.isCurrentUserAssigned(task)) {
+      authorised = true;
+    }
+
+    let settings: any = {
+      authorised: authorised,
+      requestStatus: this.request.status,
+      // TODO: is there a better way than passing the service?
+      schemaService: this.schemaService,
+      cellRenderer: this.renderCell,
+      cells: this.evaluateCellSettings,
+      afterChange: this.onAfterChange,
+      afterRender: this.onAfterRender
+    };
+
+    this.table = TableFactory.createTable('handsontable', this.schema, this.request.points, settings);
 
     // Add additional helper methods
     this.table.navigateToField = this.navigateToField;
+  }
 
-    // Evaluate "editable" conditions for the active category. This is because
-    // we need to evaluate the editability of individual cells based on the
-    // value of other cells in the row, and we cannot do this in the table
-    // service.
-    this.table.hot.updateSettings( { cells: (row: number, col: number, prop: any) => {
-      if (typeof prop !== 'string') {
-        return;
+  /**
+   * Evaluate "editable" state of each cell
+   *
+   * TODO: this could happen on init
+   */
+  public evaluateCellSettings = (row: number, col: number, prop: any) => {
+    if (typeof prop !== 'string') {
+      return;
+    }
+
+    let task: Task = this.taskService.getCurrentTask();
+
+    let authorised: boolean = false;
+    if (this.taskService.isCurrentUserAuthorised(task) && this.taskService.isCurrentUserAssigned(task)) {
+      authorised = true;
+    }
+
+    let editable: boolean = false;
+    if (authorised) {
+      let point: Point = this.request.points[row];
+
+      // Evaluate "editable" condition of the category
+      if (this.activeCategory.editable !== undefined && typeof this.activeCategory.editable === 'object') {
+        let conditional: any = this.activeCategory.editable;
+
+        if (conditional !== undefined) {
+          editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
+        }
       }
 
-      let task: Task = this.taskService.getCurrentTask();
-
-      let authorised: boolean = false;
-      if (this.taskService.isCurrentUserAuthorised(task) && this.taskService.isCurrentUserAssigned(task)) {
-        authorised = true;
-      }
-
-      let editable: boolean = false;
-      if (authorised) {
-        let point: Point = this.request.points[row];
-
-        // Evaluate "editable" condition of the category
-        if (this.activeCategory.editable !== undefined && typeof this.activeCategory.editable === 'object') {
-          let conditional: any = this.activeCategory.editable;
+      // Evaluate "editable" condition of the field as it may override the category
+      this.activeCategory.fields.forEach((field: Field) => {
+        if (field.id === prop.split('.')[1]) {
+          let conditional: Conditional = field.editable;
 
           if (conditional !== undefined) {
             editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
           }
         }
+      });
 
-        // Evaluate "editable" condition of the field as it may override the category
-        this.activeCategory.fields.forEach((field: Field) => {
-          if (field.id === prop.split('.')[1]) {
-            let conditional: Conditional = field.editable;
-
-            if (conditional !== undefined) {
-              editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
-            }
-          }
-        });
-
-        if (this.columnFactory.hasRowSelectColumn(this.request, this.schema) && prop === 'selected') {
-          editable = true;
-        } else if (this.columnFactory.hasRowCommentColumn(this.request, this.schema) && prop.contains('message')) {
-          editable = true;
-        }
+      if (this.schema.hasRowSelectColumn(this.request.status) && prop === 'selected') {
+        editable = true;
+      } else if (this.schema.hasRowCommentColumn(this.request.status) && prop.contains('message')) {
+        editable = true;
       }
+    }
 
-      return { readOnly: !editable };
-    }});
-
-    // Set up a watch on the active category and reload the columns when
-    // it changes
-    $scope.$watch(() => this.activeCategory, (oldValue: Category, newValue: Category) => {
-      if (newValue === oldValue) {
-        return;
-      }
-
-      let cols: any[] = columnFactory.createColumnDefinitions(this.activeCategory.fields, this.schema, this.request.status);
-      this.table.reload(cols);
-    });
-
-    // Trigger an initial render
-    this.table.hot.render();
-  }
+    return { readOnly: !editable };
+  };
 
   public renderCell = (instance: any, td: HTMLElement, row: number, col: number, prop: string,
-                       value: any, cellProperties: any) => {
+                                          value: any, cellProperties: any): void => {
     switch (cellProperties.type) {
       case 'text':
         Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -159,6 +156,14 @@ class RequestTableController {
     if (!field) {
       return;
     }
+
+
+    // FIXME: looks like in this version of handsontable we can save objects
+    // directly...
+    //if (value && typeof value === 'object') {
+    //  td.innerHTML = (field.model ? value[field.model] : value.value);
+    //}
+
 
     // Check if we need to fill in a default value for this point.
     this.setDefaultValue(point, field);
@@ -285,7 +290,7 @@ class RequestTableController {
     // Initialise the help text popovers on the column headers
     $('.help-text').popover({trigger: 'hover', delay: {'show': 500, 'hide': 100}});
 
-    if (this.columnFactory.hasRowSelectColumn(this.request, this.schema)) {
+    if (this.schema.hasRowSelectColumn(this.schema, this.request.status)) {
 
       let firstColumnHeader: JQuery = $('.htCore colgroup col.rowHeader');
       let lastColumnHeader: JQuery = $('.htCore colgroup col:last-child');
@@ -309,7 +314,7 @@ class RequestTableController {
       checkboxHeader.prop(this.getCheckboxHeaderState(), true);
 
       let header: JQuery, cells: JQuery;
-      if (this.columnFactory.hasRowCommentColumn(this.request, this.schema)) {
+      if (this.schema.hasRowCommentColumn(this.schema, this.request.status)) {
         header = $('.htCore thead th:nth-child(3)');
         cells = $('.htCore tbody td:nth-child(3)');
       } else {
@@ -429,6 +434,7 @@ class RequestTableController {
           // Reload the history
           this.requestService.getRequestHistory(this.request.requestId).then((history: any) => {
             this.history = history;
+
             this.table.hot.render();
           });
         });

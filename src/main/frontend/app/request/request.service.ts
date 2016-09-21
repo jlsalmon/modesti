@@ -124,14 +124,16 @@ export class RequestService {
 
     this.$http.put('/api/requests/' + request.requestId, request).then((response: any) => {
       console.log('saved request');
+      request = request.deserialize(response.data);
 
       // Cache the newly saved request
-      this.cache[request.requestId] = new Request().deserialize(response.data);
+      this.cache[request.requestId] = request;
 
-      q.resolve(this.cache[request.requestId]);
+      q.resolve(request);
       this.$rootScope.saving = 'success';
+    },
 
-    }, (error: any) => {
+    (error: any) => {
       console.log('error saving request: ' + error.statusText);
       q.reject(error);
       this.$rootScope.saving = 'error';
@@ -159,14 +161,13 @@ export class RequestService {
   }
 
   public cloneRequest(request: Request, schema: Schema): IPromise<String> {
-    let clone: Request = {
-      domain: request.domain,
-      type : request.type,
-      description : request.description,
-      creator : this.authService.getCurrentUser().username,
-      points: request.points.slice(),
-      properties: {}
-    };
+    let clone: Request = new Request();
+    clone.domain = request.domain;
+    clone.type = request.type;
+    clone.description = request.description;
+    clone.creator = this.authService.getCurrentUser().username;
+    clone.points = request.points.slice();
+    clone.properties = {};
 
     // Clone request-level properties that are defined in the schema
     if (schema.fields) {

@@ -1,0 +1,133 @@
+<style>
+  .column-detail-panel i {
+    /*padding-left: 6px;*/
+    color: #999;
+    cursor: pointer;
+    vertical-align: bottom;
+  }
+
+  .column-detail-panel input[type=checkbox] {
+    margin: 0;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .column-detail-panel .form-inline .form-group {
+    width: 100%;
+  }
+
+  .column-detail-panel .form-inline .input-group {
+    width: 100%;
+  }
+
+  .column-detail-panel .form-inline .input-group-addon {
+    padding: 0;
+  }
+
+  .column-detail-panel .form-inline .input-group-addon select {
+    padding: 0;
+    height: 30px;
+    margin: 0;
+    border: none;
+    /*margin-right: -15px;*/
+  }
+
+  .column-detail-panel .form-inline input {
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 32px;
+  }
+
+  .column-detail {
+    margin-bottom: 5px;
+  }
+
+  .column-detail-panel .category-header {
+    /*margin-left: -6px;*/
+    cursor: pointer;
+  }
+
+  .column-detail-panel .category-header i {
+    margin-right: 2px;
+  }
+
+  .column-detail-panel .column-detail-header {
+    cursor: pointer;
+  }
+</style>
+
+<ul class="column-detail-panel list-unstyled">
+
+  <li ng-repeat="category in $ctrl.schema.getAllCategories()">
+
+    <h5 class="category-header" ng-click="category.isCollapsed = !category.isCollapsed">
+      <i class="fa fa-plus" ng-if="category.isCollapsed  === true || category.isCollapsed === undefined"></i>
+      <i class="fa fa-minus" ng-if="category.isCollapsed === false"></i>
+
+      <b>{{::category.name}}</b>
+
+      <input type="checkbox"
+             class="pull-right"
+             ng-checked="$ctrl.table.isVisibleColumnGroup(category.fields)"
+             uib-tooltip="Click to show/hide the entire group of columns"
+             tooltip-append-to-body="true"
+             tooltip-placement="right"
+             ng-click="$event.stopPropagation(); $ctrl.table.toggleColumnGroup(category.fields)"
+             style="margin-top: 1px;">
+    </h5>
+
+    <ul class="list-unstyled" uib-collapse="category.isCollapsed === undefined || category.isCollapsed === true">
+      <li ng-repeat="field in category.fields" ng-mouseover="hover = true" ng-mouseleave="hover = false">
+
+        <div class="column-detail">
+
+          <div class="column-detail-header" ng-click="$ctrl.enableFilters === true && $ctrl.toggleFilter(field)">
+
+            {{::field.name}}
+
+            <input type="checkbox"
+                   class="pull-right"
+                   ng-checked="$ctrl.table.isVisibleColumn(field)"
+                   ng-disabled="field.fixed === true"
+                   ng-click="$event.stopPropagation(); $ctrl.table.toggleColumn(field)"
+                   uib-tooltip="Click to show/hide column"
+                   tooltip-append-to-body="true"
+                   tooltip-placement="right"
+                   style="margin-top: 1px;">
+
+            <i class="fa fa-search pull-right" ng-if="$ctrl.enableFilters === true"
+               ng-click="$ctrl.toggleFilter(field)"
+               uib-tooltip="Click to filter"
+               tooltip-append-to-body="true"
+               tooltip-placement="right"></i>
+
+          </div>
+
+          <!-- Filter entry form -->
+          <form class="form-inline" ng-if="field.filter !== undefined">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <select class="form-control input-xs"
+                          ng-model="field.filter.operation"
+                          ng-change="$ctrl.onFiltersChanged()">
+                    <option value="equals">equals</option>
+                    <option value="not-equals">not equals</option>
+                    <option value="starts-with">starts with</option>
+                    <option value="ends-with">ends with</option>
+                    <option value="contains">contains</option>
+                  </select>
+                </div>
+                <input type="text"
+                       class="form-control input-sm"
+                       ng-model="field.filter.value"
+                       ng-model-options='{ debounce: 600 }'
+                       ng-change="$ctrl.onFiltersChanged()">
+              </div>
+            </div>
+          </form>
+        </div>
+      </li>
+    </ul>
+  </li>
+</ul>

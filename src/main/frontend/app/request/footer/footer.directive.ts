@@ -93,7 +93,7 @@ class RequestFooterController {
       }
 
       // Render the table to show the error highlights
-      this.table.render();
+      this.table.hot.render();
     },
 
     (error: any) => {

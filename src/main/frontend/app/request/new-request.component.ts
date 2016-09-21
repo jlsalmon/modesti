@@ -6,6 +6,7 @@ import {Schema} from '../schema/schema';
 import {Field} from '../schema/field/field';
 import IComponentOptions = angular.IComponentOptions;
 import IFormController = angular.IFormController;
+import IPromise = angular.IPromise;
 
 export class NewRequestComponent implements IComponentOptions {
   public templateUrl: string = '/request/new-request.component.html';
@@ -29,7 +30,10 @@ class NewRequestController {
     this.schemaService.getSchemas().then((schemas: Schema[]) => {
       this.schemas = schemas;
 
-      this.request = new Request('CREATE', '', this.authService.getCurrentUser().username);
+      this.request = new Request();
+      this.request.type = 'CREATE';
+      this.request.description = '';
+      this.request.creator = this.authService.getCurrentUser().username;
     });
   }
 
@@ -43,7 +47,7 @@ class NewRequestController {
     });
   }
 
-  public queryFieldValues(field: Field, query: string): void {
+  public queryFieldValues(field: Field, query: string): IPromise<void> {
     return this.schemaService.queryFieldValues(field, query, undefined).then((values: any[]) => {
       this.fieldValues = values;
     });
