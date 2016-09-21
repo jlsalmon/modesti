@@ -24,6 +24,7 @@
     "test": "karma start --NODE_ENV=test"
   },
   "dependencies": {
+    "ag-grid": "^6.0.1",
     "angular": "1.5.*",
     "angular-animate": "^1.5.8",
     "angular-bootstrap-select-updated": "github:jlsalmon/angular-bootstrap-select",
