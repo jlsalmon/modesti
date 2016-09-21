@@ -1,3 +1,5 @@
+//declare var Handsontable: any;
+
 (function (Handsontable) {
   "use strict";
 
