@@ -1,3 +1,6 @@
+import {Category} from '../../schema/category/category';
+import {Field} from '../../schema/field/field';
+import {Point} from '../../request/point/point';
 import {IComponentOptions} from 'angular';
 
 export class ColumnPanelComponent implements IComponentOptions {

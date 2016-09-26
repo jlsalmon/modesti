@@ -8,7 +8,7 @@ import './select2-editor.ts';
 
 // TODO: import this properly without require()
 let Handsontable: any = require('handsontable-pro');
-// import Handsontable from 'handsontable-pro';
+
 
 export class HandsonTable extends Table {
 
@@ -172,6 +172,54 @@ export class HandsonTable extends Table {
     });
 
     return column;
+  }
+
+  public getActiveDatasources(): Category[] {
+    let result: Category[] = [];
+
+    this.data.forEach((point: Point) => {
+      this.schema.datasources.forEach((datasource: Category) => {
+
+        if (point.properties.pointType &&
+        (point.properties.pointType === angular.uppercase(datasource.id)
+        || point.properties.pointType === angular.uppercase(datasource.name))) {
+          if (result.indexOf(datasource) === -1) {
+            result.push(datasource);
+          }
+        }
+      });
+    });
+
+    return result;
+  }
+
+  /**
+   * Return true if the given category is "invalid", i.e. there are points in
+   * the current request that have errors that relate to the category.
+   *
+   * @param category
+   */
+  public isInvalidCategory(category: Category): boolean {
+    let fieldIds: string[] = category.fields.map((field: Field) => field.id);
+    let invalid: boolean = false;
+
+    this.data.forEach((point: Point) => {
+      if (point.errors && point.errors.length > 0) {
+        point.errors.forEach((error: any) => {
+          if (!error.category) {
+            let property: string = error.property.split('.')[0];
+
+            if (fieldIds.indexOf(property) !== -1) {
+              invalid = true;
+            }
+          } else if (error.category === category.name || error.category === category.id) {
+            invalid = true;
+          }
+        });
+      }
+    });
+
+    return invalid;
   }
 
   /**

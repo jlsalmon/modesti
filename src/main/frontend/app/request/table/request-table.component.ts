@@ -157,14 +157,6 @@ class RequestTableController {
       return;
     }
 
-
-    // FIXME: looks like in this version of handsontable we can save objects
-    // directly...
-    //if (value && typeof value === 'object') {
-    //  td.innerHTML = (field.model ? value[field.model] : value.value);
-    //}
-
-
     // Check if we need to fill in a default value for this point.
     this.setDefaultValue(point, field);
 
@@ -528,5 +520,5 @@ class RequestTableController {
     if (category) {
       this.activeCategory = category;
     }
-   };
+  };
 }

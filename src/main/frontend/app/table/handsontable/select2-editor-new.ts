@@ -180,7 +180,17 @@ export class Select2EditorNew extends Handsontable.editors.TextEditor {
     var self = this;
     this.$textarea.select2(this.select2Options)
     .on('change', this.onSelect2Changed)
-    .on('select2-close', this.onSelect2Closed);
+    .on('select2-close', this.onSelect2Closed)
+    .on('select2-selected', (eventData: any) => {
+      if ( eventData.choice ) {
+        // item selected
+        var dataObj = eventData.choice.data;
+        var selectedId = eventData.choice.id;
+      } else {
+        // item cleared
+
+      }
+    });
 
     // Set reference to the instance and row, so we can access them in the query function
     self.$textarea[0].instance = self.instance;

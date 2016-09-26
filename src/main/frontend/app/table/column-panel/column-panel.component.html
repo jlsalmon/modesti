@@ -1,11 +1,4 @@
 <style>
-  .column-detail-panel i {
-    /*padding-left: 6px;*/
-    color: #999;
-    cursor: pointer;
-    vertical-align: bottom;
-  }
-
   .column-detail-panel input[type=checkbox] {
     margin: 0;
     margin-left: 10px;
@@ -47,9 +40,14 @@
     cursor: pointer;
   }
 
-  .column-detail-panel .category-header i {
+  .column-detail-panel .category-header i.fa-plus, .column-detail-panel .category-header i.fa-minus {
     margin-right: 2px;
+    color: #999;
+    cursor: pointer;
+    vertical-align: bottom;
   }
+
+
 
   .column-detail-panel .column-detail-header {
     cursor: pointer;
@@ -74,6 +72,9 @@
              tooltip-placement="right"
              ng-click="$event.stopPropagation(); $ctrl.table.toggleColumnGroup(category.fields)"
              style="margin-top: 1px;">
+
+      <i class="fa fa-exclamation-circle text-danger pull-right"
+         ng-if="$ctrl.table.settings.requestStatus && $ctrl.table.isInvalidCategory(category)"></i>
     </h5>
 
     <ul class="list-unstyled" uib-collapse="category.isCollapsed === undefined || category.isCollapsed === true">

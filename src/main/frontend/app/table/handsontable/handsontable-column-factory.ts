@@ -195,9 +195,9 @@ export class HandsontableColumnFactory {
         // Re-map the values in a format that the select2 editor likes
         let results: any[] = values.map((value: any) => {
           if (typeof value === 'string') {
-            return {id: value, text: value.toString()};
+            return {id: value, text: value.toString(), data: value};
           } else {
-            return {id: value[this.getModelAttribute(field)], text: value[this.getModelAttribute(field)].toString()};
+            return {id: value[this.getModelAttribute(field)], text: value[this.getModelAttribute(field)].toString(), data: value};
           }
         });
 
