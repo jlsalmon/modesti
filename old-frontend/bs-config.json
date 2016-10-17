@@ -1,7 +1,0 @@
-{
-  "port": 9000,
-  "server": {
-    "baseDir": "./dist"
-  },
-  "notify": false
-}
