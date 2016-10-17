@@ -1,0 +1,303 @@
+<style>
+  .table-wrapper {
+    overflow-y: scroll;
+  }
+
+  .table-wrapper .table {
+    border-bottom: none;
+  }
+
+  .table-wrapper .table th {
+    background-color: #EEE;
+    border: 1px solid #CCC;
+    font-weight: normal;
+    text-align: center;
+    padding: 0;
+    height: 25px;
+    vertical-align: middle;
+    color: #222;
+  }
+
+  .table-wrapper .table > thead:first-child > tr:first-child > th {
+    border-top: 1px solid #CCC;
+  }
+
+  .table-wrapper .table td.cell-container {
+    border: 1px solid #CCC;
+    height: 24px;
+    empty-cells: show;
+    line-height: 21px;
+    padding: 0 4px 0 4px;
+  }
+
+  .table-wrapper .table td.cell-container > div {
+    /*height: 24px;*/
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+  }
+
+  .pagination {
+    margin: 0;
+  }
+
+  .loading-overlay {
+    position: absolute;
+    top: 90px;
+    width: 100%;
+    height: 90%;
+    background-color: rgba(255,255,255,0.7);
+  }
+
+  .loading-overlay i  {
+    position: absolute;
+    width: 100%;
+    top: 46.5%;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  footer {
+    padding: 10px 10px;
+  }
+</style>
+
+<!--<aside class="main-sidebar">-->
+  <!--<section class="sidebar" style="height: auto;">-->
+
+    <!--<ul class="sidebar-menu">-->
+      <!--<li class="treeview active">-->
+        <!--<a href="#">-->
+          <!--<i class="fa fa-filter"></i> <span>My Filters</span> <i class="fa fa-angle-left pull-right"></i>-->
+        <!--</a>-->
+        <!--<ul class="treeview-menu menu-open" style="display: block;">-->
+
+          <!--<li>-->
+            <!--<a href="">-->
+              <!--No filters-->
+            <!--</a>-->
+          <!--</li>-->
+
+        <!--</ul>-->
+      <!--</li>-->
+    <!--</ul>-->
+
+  <!--</section>-->
+<!--</aside>-->
+
+
+<!-- Alerts are shown here -->
+<div class="alert-messages">
+  <alert ng-repeat="alert in alerts"  type="{{alert.type}}" close="alert.close()">
+    <span ng-bind-html="alert.message"></span>
+  </alert>
+</div>
+
+
+<section class="request-header container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="pull-left">
+        <h4 class="request-id">
+          <i class="fa fa-search fa-fw text-muted"></i>
+          Search for points
+        </h4>
+      </div>
+
+      <div class="pull-right">
+
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<section class="toolbar container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="btn-group" dropdown>
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+          <i class="fa fa-fw fa-crosshairs"></i>
+          Domain: {{ctrl.schema.id}} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li ng-repeat="domain in ctrl.domains">
+            <a href="" ng-click="ctrl.useDomain(domain)">{{domain}}</a>
+          </li>
+        </ul>
+      </div>
+
+
+      <!-- Dropdown button to select category -->
+      <div class="btn-group" dropdown>
+        <button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>
+          <span class="text-muted">category:</span>
+          {{ctrl.activeCategory.name}} <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li ng-repeat="category in ctrl.schema.categories"
+              ng-click="ctrl.activateCategory(category)">
+            <a href="">
+              <span>{{::category.name}}
+              <i ng-if="category.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
+            </a>
+          </li>
+
+          <li class="divider"></li>
+
+          <li ng-repeat="datasource in ctrl.schema.datasources"
+              ng-click="ctrl.activateCategory(datasource)">
+            <a href="">
+              <span>{{::datasource.name}}
+              <i ng-if="datasource.valid === false" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Search button -->
+      <button class="btn btn-sm btn-primary" ng-click="ctrl.search()">Search</button>
+
+      <!-- "Modify points" button -->
+      <button class="btn btn-sm btn-warning pull-right" ng-click="ctrl.updatePoints()">Update selected points</button>
+
+
+
+      <!--<div class="pull-right">-->
+        <!--&lt;!&ndash; Actions dropdown &ndash;&gt;-->
+        <!--<div class="btn-group toolbar-item" dropdown dropdown-append-to-body>-->
+          <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" dropdown-toggle>-->
+            <!--<i class="fa fa-fw fa-cog"></i> Actions <span class="caret text-muted"></span>-->
+          <!--</button>-->
+          <!--<ul class="dropdown-menu pull-right">-->
+            <!--<li>-->
+              <!--<a ng-click="ctrl.cloneRequest()">Clone request</a>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<a ng-click="ctrl.deleteRequest()" ng-if="ctrl.isCurrentUserAuthorised()">Delete request</a>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
+      <!--</div>-->
+
+    </div>
+  </div>
+</section>
+
+<!---->
+<div class="loading-overlay" ng-if="ctrl.loading == 'started' || ctrl.loading == 'error'">
+  <span us-spinner ng-if="ctrl.loading === 'started'"></span>
+  <i class="fa fa-3x fa-exclamation-triangle" ng-if="ctrl.loading === 'error'"></i>
+</div>
+
+
+<section class="table">
+  <div class="table-wrapper">
+    <table class="table table-bordered table-hover table-condensed" when-scrolled="ctrl.loadMore()">
+      <thead>
+      <tr>
+        <th ng-repeat="field in ctrl.activeCategory.fields">
+          {{field.name}}
+        </th>
+      </tr>
+
+      <tr>
+        <th ng-repeat="field in ctrl.activeCategory.fields">
+          <div ng-if="field.type === 'text'">
+            <input type="text" class="form-control input-sm" ng-model="ctrl.filters[field.id].value" ng-change="ctrl.search()">
+          </div>
+
+          <div ng-if="field.type === 'numeric'">
+            <input type="number" class="form-control input-sm" ng-model="ctrl.filters[field.id].value" ng-change="ctrl.search()">
+          </div>
+
+          <div ng-if="field.type === 'options'">
+
+            <select class="form-control input-sm"
+                    ng-options="ctrl.getOptionValue(option) as
+                                      ctrl.getOptionDisplayValue(option)
+                                      for option in field.options"
+                    ng-model="ctrl.filters[field.id].value"
+                    ng-change="ctrl.search()">
+              <option value=""></option>
+            </select>
+
+          </div>
+
+          <div ng-if="field.type === 'autocomplete'">
+
+            <input type="text" class="form-control input-sm" autocomplete="off" placeholder="Type to search..."
+                   ng-model="ctrl.filters[field.id].value"
+                   typeahead="(field.model ? item[field.model] : item.value) for item in ctrl.queryFieldValues(field, $viewValue)"
+                   typeahead-on-select="ctrl.search()"
+                   typeahead-min-length="field.minLength"
+                   typeahead-append-to-body="true">
+
+          </div>
+        </th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr ng-repeat="point in ctrl.points">
+        <td ng-repeat="field in ctrl.activeCategory.fields" class="cell-container">
+
+                <div ng-if="field.type === 'autocomplete'">
+                  <div ng-if="field.model">
+                    {{point.properties[field.id][field.model]}}
+                  </div>
+                  <div ng-if="!field.model">
+                    {{point.properties[field.id].value}}
+                  </div>
+                </div>
+
+                <div ng-if="field.type !== 'autocomplete'">
+                  {{point.properties[field.id]}}
+                </div>
+
+                <div ng-if="point.properties[field.id] == null ||
+                             point.properties[field.id] == undefined ||
+                             point.properties[field.id] == ''">
+                  &nbsp;
+                </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+
+
+<footer class="footer">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4" ng-if="ctrl.points.length > 0">
+        <pagination boundary-links="true"
+                    max-size="5"
+                    total-items="ctrl.page.totalElements"
+                    items-per-page="ctrl.page.size"
+                    rotate="false"
+                    ng-model="ctrl.page.number"
+                    ng-change="ctrl.onPageChanged()"
+                    class="pagination-sm"
+                    previous-text="&lsaquo;"
+                    next-text="&rsaquo;"
+                    first-text="&laquo;"
+                    last-text="&raquo;"></pagination>
+      </div>
+
+      <div class="col-md-4 pull-right" ng-if="ctrl.page.totalElements">
+        <span class="pull-right">
+          page {{ctrl.page.number}} of {{ctrl.page.totalPages}} &middot; {{ctrl.page.totalElements}} points in total for this filter
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+

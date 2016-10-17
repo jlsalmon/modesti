@@ -1,0 +1,26 @@
+<div class="modal-header">
+  <h3 class="modal-title"><i class="fa fa-fw fa-clone"></i> Clone request {{::ctrl.request.requestId}}</h3>
+</div>
+
+<div class="modal-body">
+
+  <p>
+    Cloning a request makes a copy of the current request, including all points. The cloned request will <b>not</b> be in the same workflow stage as the
+    current request; a new workflow will be started.
+  </p>
+
+  <p>
+    <b>Note:</b> Entity properties attached to either the request itself or attached to points in the request will <b>not</b> be copied to the cloned request.
+  </p>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ctrl.clone()">
+    <i class="fa fa-cog fa-spin"          ng-if="ctrl.cloning === 'started'"></i>
+    <i class="fa fa-exclamation-triangle" ng-if="ctrl.cloning === 'error'"></i>
+    Clone
+  </button>
+
+  <button class="btn btn-default" ng-click="ctrl.cancel()">Cancel</button>
+</div>

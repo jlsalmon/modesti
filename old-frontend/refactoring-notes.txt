@@ -1,0 +1,9 @@
+Make sure rows cannot be added in statuses such as FOR_APPROVAL etc.
+
+Fix "Request assigned to:" message
+
+How to declare checkbox/comment columns?
+
+How to add things to row headers?
+
+How to use the schema validations in a headless environment?

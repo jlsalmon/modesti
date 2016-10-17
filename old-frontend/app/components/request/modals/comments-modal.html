@@ -1,0 +1,71 @@
+<style>
+  .comments-box {
+    background: #fbfbfb;
+  }
+
+  .comments-box .box-footer {
+    background: #fbfbfb;
+  }
+
+  .chat .item > .message {
+    margin: inherit;
+  }
+</style>
+
+<div class="modal-header">
+  <h3 class="modal-title"><i class="fa fa-fw fa-comments"></i> {{'COMMENTS_ON_REQUEST'|translate}} {{::ctrl.request.requestId}}</h3>
+</div>
+
+<div class="modal-body">
+
+  <div class="box box-solid comments-box">
+    <!--<div class="box-header">-->
+      <!--<i class="fa fa-comments"></i>-->
+
+      <!--<h3 class="box-title">Comments on request {{::ctrl.request.requestId}}</h3>-->
+    <!--</div>-->
+
+    <div class="box-body chat" id="chat-box">
+
+      <div class="item" ng-if="ctrl.request.comments.length == 0">
+        {{'NO_COMMENTS'|translate}}
+      </div>
+
+      <!-- chat item -->
+      <div class="item" ng-repeat="comment in ctrl.request.comments" ng-if="ctrl.request.comments.length > 0">
+        <p class="message">
+          <a href="#" class="name">
+            <small class="text-muted pull-right">
+              {{::comment.timestamp | date:'medium'}}
+              <i class="fa fa-fw fa-clock-o"></i>
+            </small>
+
+            {{::comment.user}}
+          </a>
+
+          {{::comment.text}}
+        </p>
+      </div>
+      <!-- /.item -->
+    </div>
+    <!-- /.chat -->
+
+    <div class="box-footer">
+      <div class="input-group">
+        <input class="form-control" ng-model="ctrl.text" placeholder="{{'WRITE_COMMENT'|translate}}">
+
+        <div class="input-group-btn">
+          <button class="btn btn-default" ng-click="ctrl.addComment()">
+            <i class="fa fa-fw fa-plus"></i>
+            {{'ADD_COMMENT'|translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ctrl.ok()">OK</button>
+</div>

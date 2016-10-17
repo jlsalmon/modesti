@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--[if gte IE 10]><!-->
+<html ng-app="modesti" class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+
+<title ng-bind-template="{{$title | translate}} · modesti">modesti</title>
+<base href="/">
+
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<!-- build:css(app) styles/vendor.css -->
+<!-- bower:css -->
+<link rel="stylesheet" href="bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
+<link rel="stylesheet" href="bower_components/angular-ui-select/dist/select.css" />
+<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="bower_components/famfamfam-flags-sprite/src/flags-sprite.min.css" />
+<link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+<link rel="stylesheet" href="bower_components/pikaday/css/pikaday.css" />
+<link rel="stylesheet" href="bower_components/handsontable/dist/handsontable.css" />
+<link rel="stylesheet" href="bower_components/select2/select2.css" />
+<!-- endbower -->
+<!-- endbuild -->
+<!-- build:css(.tmp) styles/main.css -->
+<link rel="stylesheet" href="styles/AdminLTE.css">
+<link rel="stylesheet" href="styles/skins/skin-blue-light.css">
+<link rel="stylesheet" href="styles/fonts/source-sans-pro.css">
+<link rel="stylesheet" href="styles/main.css">
+<!-- endbuild -->
+</head>
+
+<body class="skin-blue-light sidebar-mini">
+
+<!--[if lt IE 10]>
+<div class="col-lg-12">
+  <div class="alert alert-warning" style="margin-top: 20px; z-index: 1000;">
+    <p translate>UNSUPPORTED_BROWSER_WARNING</p>
+  </div>
+  <div class="clearfix"></div>
+</div>
+<![endif]-->
+
+
+<header class="main-header" ng-controller="LayoutController as ctrl">
+
+  <div class="container-fluid">
+    <div class="row">
+      <a ui-sref="home" class="logo"> modesti
+        <small style="font-size: 50%">v<app-version></app-version></small>
+      </a>
+
+      <nav class="navbar navbar-static-top" role="navigation">
+
+        <div class="pull-left">
+          <ul class="nav navbar-nav">
+
+            <li>
+              <a ui-sref="requests" tooltip="View All Requests" tooltip-placement="bottom">
+                <i class="fa fa-list-ol"></i>
+              </a>
+            </li>
+
+            <li>
+              <a ui-sref="new" tooltip="Create Points" tooltip-placement="bottom">
+                <i class="fa fa-plus"></i>
+              </a>
+            </li>
+
+            <li>
+              <a ui-sref="points" tooltip="Search for Points" tooltip-placement="bottom">
+                <i class="fa fa-search"></i>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+
+        <div class="navbar-custom-menu" ng-cloak>
+          <ul class="nav navbar-nav">
+
+            <li class="dropdown user user-menu">
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-cloak>
+                <span class="hidden-xs">
+                  <i class="fa fa-question-circle"></i>
+                </span>
+              </a>
+              <ul class="dropdown-menu" ng-cloak>
+                <li>
+                  <a href="about" class="header">
+                    About MODESTI
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:modesti-support@cern.ch" class="header">
+                    Help and support
+                  </a>
+                </li>
+                <li>
+                  <a href="https://gitlab.cern.ch/modesti/modesti/issues/new" class="header">
+                    Report an issue
+                  </a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="dropdown user user-menu">
+              <a href="" ng-click="ctrl.login()" ng-if="!ctrl.isAuthenticated()" ng-cloak>
+                <span class="hidden-xs">
+                  <i class="fa fa-fw fa-sign-in"></i>
+                    {{'SIGN_IN'|translate}}
+                </span>
+              </a>
+
+              <a href="" class="dropdown-toggle" data-toggle="dropdown" ng-if="ctrl.isAuthenticated()" ng-cloak>
+                <span class="hidden-xs">
+
+                    {{ctrl.user.firstName}} {{ctrl.user.lastName}}
+                  <span class="caret"></span>
+                </span>
+              </a>
+              <ul class="dropdown-menu" ng-show="ctrl.isAuthenticated()" ng-cloak>
+                <li>
+                  <a href="users/{{ctrl.user.username}}" class="header">
+                    <i class="fa fa-fw fa-user"></i>
+                    Profile ({{ctrl.user.username}})
+                  </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="" class="header" ng-click="ctrl.logout()">
+                    <i class="fa fa-fw fa-sign-out"></i>
+                    {{'SIGN_OUT'|translate}}
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<!-- This is where the main content for each view is inserted. -->
+<div class="view-wrapper" ui-view></div>
+
+<!-- build:js(app) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/modernizr/modernizr.js"></script>
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="bower_components/angular-bootstrap-select/build/angular-bootstrap-select.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-file-upload/angular-file-upload.min.js"></script>
+<script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
+<script src="bower_components/angular-http-auth/src/http-auth-interceptor.js"></script>
+<script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/spin.js/spin.js"></script>
+<script src="bower_components/angular-spinner/angular-spinner.js"></script>
+<script src="bower_components/angular-translate/angular-translate.js"></script>
+<script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+<script src="bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
+<script src="bower_components/angular-translate-storage-local/angular-translate-storage-local.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/angular-ui-router-title/angular-ui-router-title.js"></script>
+<script src="bower_components/angular-ui-select/dist/select.js"></script>
+<script src="bower_components/angular-ui-utils/ui-utils.js"></script>
+<script src="bower_components/autofill-event/src/autofill-event.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/zeroclipboard/dist/ZeroClipboard.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/pikaday/pikaday.js"></script>
+<script src="bower_components/handsontable/dist/handsontable.js"></script>
+<script src="bower_components/handsontable-select2-editor/select2-editor.js"></script>
+<script src="bower_components/ngHandsontable/dist/ngHandsontable.js"></script>
+<script src="bower_components/ngstorage/ngStorage.js"></script>
+<script src="bower_components/lodash/dist/lodash.compat.js"></script>
+<script src="bower_components/restangular/dist/restangular.js"></script>
+<script src="bower_components/select2/select2.js"></script>
+<script src="bower_components/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="bower_components/oclazyload/dist/ocLazyLoad.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="app.js"></script>
+<script src="app.config.js"></script>
+<script src="app.routes.js"></script>
+<script src="components/layout/layout.js"></script>
+<script src="components/home/home.js"></script>
+<script src="components/login/login-modal.js"></script>
+<script src="components/error/error.js"></script>
+<script src="components/error/interceptor.js"></script>
+<script src="components/request/request.new.js"></script>
+<script src="components/request/request.upload.js"></script>
+<script src="components/request/request.js"></script>
+<script src="components/request/header.js"></script>
+<script src="components/request/toolbar.js"></script>
+<script src="components/request/table.directive.js"></script>
+<script src="components/request/request-controls.js"></script>
+<script src="components/request/requests.js"></script>
+<script src="components/request/modals/comments-modal.js"></script>
+<script src="components/request/modals/history-modal.js"></script>
+<script src="components/request/modals/assignment-modal.js"></script>
+<script src="components/request/modals/clone-modal.js"></script>
+<script src="components/request/modals/delete-modal.js"></script>
+<script src="components/request/directives/show-if.js"></script>
+<script src="components/request/directives/enable-if.js"></script>
+<script src="components/request/controls/creation-controls.js"></script>
+<script src="components/request/controls/approval-controls.js"></script>
+<script src="components/request/controls/addressing-controls.js"></script>
+<script src="components/request/controls/cabling-controls.js"></script>
+<script src="components/request/controls/insertion-controls.js"></script>
+<script src="components/request/controls/config-controls.js"></script>
+<script src="components/request/controls/for-winccoa-config.js"></script>
+<script src="components/request/controls/for-csam-sync.js"></script>
+<script src="components/request/controls/testing-controls.js"></script>
+<script src="components/request/controls/remove-test-flag-controls.js"></script>
+<script src="components/request/controls/modals/rejection-modal.js"></script>
+<script src="components/request/controls/modals/splitting-modal.js"></script>
+<script src="components/request/request.submitted.js"></script>
+<script src="components/point/points.js"></script>
+<script src="components/point/modals/update-points-modal.js"></script>
+<script src="components/filters/active.js"></script>
+<script src="components/about/about.js"></script>
+<script src="components/users/user.js"></script>
+<script src="components/search/search.js"></script>
+<script src="components/services/auth-service.js"></script>
+<script src="components/services/request-service.js"></script>
+<script src="components/services/point-service.js"></script>
+<script src="components/services/schema-service.js"></script>
+<script src="components/services/task-service.js"></script>
+<script src="components/services/alert-service.js"></script>
+<script src="components/services/table-service.js"></script>
+<script src="components/services/validation-service.js"></script>
+<script src="components/services/history-service.js"></script>
+<script src="components/services/utils.js"></script>
+<script src="components/version/version.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<section class="content">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-12">
+        <h3 translate>Request submitted</h3>
+
+        <alert type="info">
+          <p>
+            Request <strong>{{ctrl.request.requestId}}</strong> has been submitted and is now in state <strong>{{ctrl.request.status}}</strong>.
+          </p>
+
+          <!-- Messages to show if the current user is the request owner -->
+          <div ng-if="ctrl.isCurrentUserOwner()">
+
+            <!--Shown when the request creator submits for approval-->
+            <p ng-if="ctrl.request.status == 'FOR_APPROVAL'">
+              Once your request has been approved by a TI operator, you will receive a notification email and your
+              request will proceed to the next stage.
+            </p>
+
+            <!--Shown when the request creator submits for addressing-->
+            <p ng-if="ctrl.request.status == 'FOR_ADDRESSING'">
+              Once your request has been addressed, you will receive a notification email
+              and your request will proceed to the next stage.
+            </p>
+          </div>
+
+          <!--Messages to show if the current user is not the request owner (or an admin)-->
+          <div ng-if="!ctrl.isCurrentUserOwner() || ctrl.isCurrentUserAdministrator()">
+
+            <!--Shown when an operator rejects a request during approval-->
+            <p ng-if="ctrl.request.status == 'FOR_CORRECTION' && ctrl.previousStatus == 'FOR_APPROVAL'">
+              The request is now awaiting action from the original requestor. Once he/she has modified the request as
+              per the given rejection reasons, the rejected points will need to be re-approved.
+            </p>
+
+            <!--Shown when an operator submits for addressing-->
+            <p ng-if="ctrl.request.status == 'FOR_ADDRESSING'">
+              The request is now awaiting action from the addressing team.
+            </p>
+
+            <!--Shown when an operator submits for configuration-->
+            <p ng-if="ctrl.request.status == 'FOR_CONFIGURATION' && ctrl.previousStatus == 'FOR_APPROVAL'">
+              The request is now ready for configuration by the original creator. No further action is required by TI at
+              this time.
+            </p>
+
+            <!--Shown when a cabler rejects a request during addressing-->
+            <!--TODO: what to put here?-->
+            <p ng-if="ctrl.request.status == 'FOR_CORRECTION' && ctrl.previousStatus == 'FOR_ADDRESSING'">
+              The request is now awaiting action from the original requestor.
+            </p>
+
+            <!--Shown when a cabler rejects a request during cabling-->
+            <!--TODO: what to put here?-->
+            <p ng-if="ctrl.request.status == 'FOR_CORRECTION' && ctrl.previousStatus == 'FOR_CABLING'">
+              The request is now awaiting action from the original requestor.
+            </p>
+
+            <!--Shown when a cabler submits for cabling-->
+            <p ng-if="ctrl.request.status == 'FOR_CABLING'">
+              The request now requires a member of the cabling team to physically cable the points to the submitted
+              addresses.
+            </p>
+
+            <!--Shown when a cabler submits for configuration-->
+            <p ng-if="ctrl.request.status == 'FOR_CONFIGURATION' && ctrl.previousStatus == 'FOR_CABLING'">
+              The request is now ready for configuration by the original creator. No further action is required by the
+              cabling team at this time.
+            </p>
+
+          </div>
+
+          <!--Shown when the test results are submitted-->
+          <span ng-if="ctrl.request.status == 'FOR_TESTING' && ctrl.request.properties.testResult.passed === false">
+
+            <p>Test result: <b>{{ctrl.request.properties.testResult.message}}</b></p>
+
+            Since some points either failed or were postponed, the request remains in state {{ctrl.request.status}}.
+            <b>Those points which have passed tests have been configured in operational mode.</b>
+          </span>
+
+
+          <span ng-if="ctrl.request.status == 'REMOVE_TEST_FLAG'">
+            <p>All points have now been marked as successfully tested. It is now necessary to reconfigure the WinCC OA LASER
+            driver to remove the "test" flag and put the points in operational mode.</p>
+          </span>
+
+
+          <a class="btn btn-primary" href="requests/{{ctrl.request.requestId}}">Back to request &raquo;</a>
+          <a class="btn btn-default" href="requests"><i class="fa fa-home"></i> Home</a>
+        </alert>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,64 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Modify points
+  </h3>
+</div>
+
+<div class="modal-body">
+
+  <p>You are about to create a new MODESTI request to update <b>{{ctrl.points.length}}</b> points.</p>
+
+
+    <form class="form-horizontal" name="form">
+
+      <div class="form-group has-feedback"
+           ng-class="{ 'has-error': (form.description.$invalid && form.description.$dirty)
+                                    || (form.$submitted && form.description.$invalid) }">
+        <label class="col-sm-3 control-label" translate>DESCRIPTION</label>
+
+        <div class="col-sm-9">
+          <input type="text" class="form-control" ng-model="ctrl.request.description" name="description"
+                 placeholder="Description" required>
+          <span class="help-block" translate>ENTER_DESCRIPTION</span>
+        </div>
+      </div>
+
+      <!-- Domain-specific fields go here -->
+      <div ng-repeat="field in ctrl.schema.fields">
+
+        <ng-form name="innerForm">
+          <div class="form-group has-feedback"
+               ng-class="{ 'has-error': (innerForm.$invalid && innerForm.$dirty)
+                                         || (form.$submitted && innerForm.$invalid) }">
+            <label class="col-sm-3 control-label">{{field.name}}</label>
+
+            <div class="col-sm-9">
+
+              <ui-select ng-model="ctrl.request.properties[field.id]"
+                         theme="bootstrap"
+                         ng-required="{{field.required}}">
+                <ui-select-match placeholder="Type to search...">
+                  {{$select.selected[field.model ? field.model : 'value']}}
+                </ui-select-match>
+
+                <ui-select-choices repeat="item in ctrl.fieldValues"
+                                   refresh="ctrl.queryFieldValues(field, $select.search)"
+                                   refresh-delay="0">
+                  <div ng-bind-html="item[field.model ? field.model : 'value'] | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+
+              <span class="help-block">{{field.help_en}}</span>
+            </div>
+          </div>
+        </ng-form>
+      </div>
+
+    </form>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="ctrl.cancel()" translate>CANCEL</button>
+  <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="form.$invalid">OK</button>
+</div>

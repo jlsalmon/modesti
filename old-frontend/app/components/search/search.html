@@ -1,0 +1,76 @@
+
+<style>
+  .list-group-item {
+    cursor: pointer;
+  }
+
+  .list-group-item:first-child {
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+  }
+
+  .list-group-item:last-child {
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+</style>
+
+<!-- Main content -->
+<section class="content">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div ng-if="ctrl.searching == 'started'">
+          <!-- <h3 translate>SEARCH</h3> -->
+          <h3>
+            <i class="fa fa-fw fa-cog fa-spin"></i>
+            Searching for <strong>{{ctrl.q}}</strong> &hellip;
+          </h3>
+        </div>
+
+        <div ng-if="ctrl.searching == 'success'">
+
+          <div class="alert" ng-if="ctrl.requests.length == 0">
+            <h4>
+              <i class="icon fa fa-info"></i> {{'NO_RESULTS'|translate}}
+            </h4>
+            {{'NO_MATCHING_RESULTS'|translate}} <strong>{{ctrl.q}}</strong>.
+          </div>
+
+          <div ng-if="ctrl.requests.length != 0">
+
+            <h3>{{ctrl.requests.length}} {{'RESULTS'|translate}} matching <strong>{{ctrl.q}}</strong>:</h3>
+
+            <div class="list-group">
+              <a ng-repeat="request in ctrl.requests"
+                 ng-if="ctrl.requests.length > 0"
+                 ng-click="ctrl.editRequest(request)"
+                 class="list-group-item">
+
+                <i class="fa fa-list-ol fa-fw text-muted"></i>
+                <span class=""><strong>{{request.description}}</strong></span>
+                <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.split("_").join(" ")}}</span>
+                <br/>
+                <span class="" style="font-size: 11px;">
+                  <span class="text-muted">#{{request.requestId}} {{'BY'|translate}} {{request.creator}} &middot;</span>
+                  <span class="text-muted"> <i class="fa fa-fw fa-crosshairs"></i> {{request.domain}} &middot; </span>
+                  <!--<span class="text-muted"> <i class="fa fa-fw fa-sitemap"></i>    {{request.subsystem}} &middot; </span>-->
+                  <span class="text-muted"> <i class="fa fa-fw fa-cogs"></i>       {{request.categories.join(', ')}}</span>
+                </span>
+              </a>
+              <div class="list-group-item" ng-if="ctrl.requests.length == 0">
+                No requests to show
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>

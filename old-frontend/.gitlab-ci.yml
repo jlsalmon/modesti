@@ -1,0 +1,9 @@
+image: digitallyseamless/nodejs-bower-grunt
+
+before_script:
+  - npm install --silent
+  - bower install
+
+grunt:
+  script:
+    - grunt build:test --verbose --artifactoryUser=${ARTIFACTORY_USERNAME} --artifactoryPassword=${ARTIFACTORY_PASSWORD}
