@@ -4,7 +4,7 @@
   "author": "Justin Lewis Salmon <justin.lewis.salmon@cern.ch>",
   "repository": {
     "type": "git",
-    "url": "ssh://git@gitlab.cern.ch:7999/modesti/modesti-server.git"
+    "url": "ssh://git@gitlab.cern.ch:7999/modesti/modesti.git"
   },
   "private": true,
   "scripts": {

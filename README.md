@@ -1,11 +1,11 @@
-# modesti-server
+# modesti
 
-Monitoring Data Entry System for Technical Infrastructure (backend server)
+Monitoring Data Entry System for Technical Infrastructure
 
 ## Development
 
-For technical documentation about how to build the MODESTI server from source and how to write MODESTI plugins, please refer to the
-[MODESTI wiki](https://gitlab.cern.ch/modesti/modesti/wikis/home).
+For technical documentation about how to build MODESTI from source and how to write MODESTI plugins, please refer to the
+[wiki](https://gitlab.cern.ch/modesti/modesti/wikis/home).
 
 ## Publishing
 
