@@ -54,6 +54,7 @@ import {HistoryService} from './request/history/history.service.ts';
 import {AlertService} from './alert/alert.service.ts';
 import {SearchService} from './search/search.service.ts';
 import {ValidationService} from './request/validation/validation.service.ts';
+import {TableStateService} from './table/table-state.service.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
 import {RestangularConfig} from './config/restangular.config.ts';
@@ -107,6 +108,7 @@ app.service('HistoryService', HistoryService);
 app.service('AlertService', AlertService);
 app.service('SearchService', SearchService);
 app.service('ValidationService', ValidationService);
+app.service('TableStateService', TableStateService);
 
 app.controller('LoginModalController', LoginModalController);
 app.controller('CloneRequestModalController', CloneRequestModalController);

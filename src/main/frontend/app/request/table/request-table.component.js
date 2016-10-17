@@ -2,7 +2,6 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
     "use strict";
     // TODO: import this properly without require()
     var Handsontable = require('handsontable-pro');
-    // import Handsontable from 'handsontable-pro';
     var RequestTableComponent = (function () {
         function RequestTableComponent() {
             this.templateUrl = '/request/table/request-table.component.html';
@@ -72,36 +71,35 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
                 return { readOnly: !editable };
             };
             this.renderCell = function (instance, td, row, col, prop, value, cellProperties) {
-                var _this = this;
                 switch (cellProperties.type) {
                     case 'text':
-                        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                        Handsontable.renderers.TextRenderer.apply(_this, arguments);
                         break;
                     case 'numeric':
-                        Handsontable.renderers.NumericRenderer.apply(this, arguments);
+                        Handsontable.renderers.NumericRenderer.apply(_this, arguments);
                         break;
                     case 'checkbox':
-                        Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
+                        Handsontable.renderers.CheckboxRenderer.apply(_this, arguments);
                         break;
                     default: break;
                 }
                 if (cellProperties.editor === 'select2') {
-                    Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+                    Handsontable.renderers.AutocompleteRenderer.apply(_this, arguments);
                 }
                 if (typeof prop !== 'string' || prop.indexOf('properties') === -1) {
                     return;
                 }
-                var point = this.request.points[row];
+                var point = _this.request.points[row];
                 if (!point || point.isEmpty()) {
                     return;
                 }
                 var props = prop.split('.').slice(1, 3);
-                var field = this.schema.getField(props[0]);
+                var field = _this.schema.getField(props[0]);
                 if (!field) {
                     return;
                 }
                 // Check if we need to fill in a default value for this point.
-                this.setDefaultValue(point, field);
+                _this.setDefaultValue(point, field);
                 // Highlight errors in a cell by making the background red.
                 angular.forEach(point.errors, function (error) {
                     if (error.property === prop.replace('properties.', '') || error.property === props[0] || error.property === '') {
@@ -123,10 +121,10 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
                         }
                     }
                 });
-                if (this.request.type === 'UPDATE' && point.dirty === true) {
+                if (_this.request.type === 'UPDATE' && point.dirty === true) {
                     var changes_1 = [];
                     $(td).popover('destroy');
-                    this.history.events.forEach(function (event) {
+                    _this.history.events.forEach(function (event) {
                         event.changes.forEach(function (change) {
                             if (change.path.indexOf(field.id) !== -1 && change.path.indexOf('[' + point.lineNo + ']') !== -1) {
                                 changes_1.push(change);
@@ -269,10 +267,7 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
                             // Reload the history
                             _this.requestService.getRequestHistory(_this.request.requestId).then(function (history) {
                                 _this.history = history;
-                                //this.table.hot.render();
-                                _this.table.hot.updateSettings({
-                                    data: _this.request.points
-                                });
+                                _this.table.hot.render();
                             });
                         });
                     }
@@ -313,7 +308,7 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
                 requestStatus: this.request.status,
                 // TODO: is there a better way than passing the service?
                 schemaService: this.schemaService,
-                renderer: this.renderCell,
+                cellRenderer: this.renderCell,
                 cells: this.evaluateCellSettings,
                 afterChange: this.onAfterChange,
                 afterRender: this.onAfterRender
@@ -321,19 +316,6 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
             this.table = table_factory_1.TableFactory.createTable('handsontable', this.schema, this.request.points, settings);
             // Add additional helper methods
             this.table.navigateToField = this.navigateToField;
-            //// Set up a watch on the active category and reload the columns when
-            //// it changes
-            //$scope.$watch(() => this.activeCategory, (oldValue: Category, newValue: Category) => {
-            //  if (newValue === oldValue) {
-            //    return;
-            //  }
-            //
-            //  let cols: any[] = this.getColumnDefs();
-            //  this.table.reload(cols);
-            //});
-            //
-            //// Trigger an initial render
-            //this.table.hot.render();
         }
         /**
          * Inspect the given field and set the default value in the point if supplied. The default value can refer

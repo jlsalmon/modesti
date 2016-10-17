@@ -4,16 +4,15 @@ import {Schema} from '../schema/schema';
 import {Field} from '../schema/field/field';
 import {Point} from './point/point';
 import {User} from '../user/user';
-import IPromise = angular.IPromise;
-import IDeferred = angular.IDeferred;
+import {IPromise, IDeferred, IHttpService, IRootScopeService, IQService} from 'angular';
 
 export class RequestService {
   public static $inject: string[] = ['$http', '$rootScope', '$q', 'Restangular', 'AuthService'];
 
   public cache: any = {};
 
-  public constructor(private $http: any, private $rootScope: any, private $q: any, private restangular: any,
-                     private authService: AuthService) {}
+  public constructor(private $http: IHttpService, private $rootScope: IRootScopeService, private $q: IQService,
+                     private restangular: any, private authService: AuthService) {}
 
   public getRequests(page: number, size: number, sort: string, filter: string): IPromise<Request[]> {
     let q: IDeferred<Request[]> = this.$q.defer();

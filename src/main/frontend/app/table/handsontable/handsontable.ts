@@ -1,4 +1,5 @@
 import {Table} from '../table';
+import {TableState} from '../table-state';
 import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
@@ -16,8 +17,8 @@ export class HandsonTable extends Table {
   public hotOptions: any;
   public hiddenColumnsPlugin: any;
 
-  public constructor(schema: Schema, data: any[], settings: any) {
-    super(schema, data, settings);
+  public constructor(schema: Schema, data: any[], state: TableState, settings: any) {
+    super(schema, data, state, settings);
 
     let columnDefs: any[] = this.getColumnDefs();
     columnDefs.forEach((column: any) => column.renderer = settings.cellRenderer);
@@ -58,14 +59,23 @@ export class HandsonTable extends Table {
   public determineInitialHiddenColumns(columnDefs: any[]): number[] {
     let hiddenColumns: number[] = [];
 
-    // Initially show only the first category, or locally stored
-    let firstCategory: Category = this.schema.categories[0];
+    if (this.state.getHiddenColumns().length > 0) {
+      // If the table state holds a list of hidden columns, use that
+      columnDefs.forEach((columnDef: any, index: number) => {
+        if (this.state.getHiddenColumns().indexOf(columnDef.field.id) === -1) {
+          hiddenColumns.push(index);
+        }
+      });
 
-    columnDefs.forEach((columnDef: any, index: number) => {
-      if (firstCategory.fields.indexOf(columnDef.field) === -1) {
-        hiddenColumns.push(index);
-      }
-    });
+    } else {
+      // Otherwise, initially show only the first category
+      let firstCategory: Category = this.schema.categories[0];
+      columnDefs.forEach((columnDef: any, index: number) => {
+        if (firstCategory.fields.indexOf(columnDef.field) === -1) {
+          hiddenColumns.push(index);
+        }
+      });
+    }
 
     return hiddenColumns;
   }

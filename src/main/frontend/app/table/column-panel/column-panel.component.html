@@ -58,9 +58,8 @@
 
   <li ng-repeat="category in $ctrl.schema.getAllCategories()">
 
-    <h5 class="category-header" ng-click="category.isCollapsed = !category.isCollapsed">
-      <i class="fa fa-plus" ng-if="category.isCollapsed  === true || category.isCollapsed === undefined"></i>
-      <i class="fa fa-minus" ng-if="category.isCollapsed === false"></i>
+    <h5 class="category-header" ng-click="$ctrl.toggleExpandCategory(category)">
+      <i class="fa" ng-class="$ctrl.isExpandedCategory(category) ? 'fa-minus' : 'fa-plus'"></i>
 
       <b>{{::category.name}}</b>
 
@@ -70,14 +69,14 @@
              uib-tooltip="Click to show/hide the entire group of columns"
              tooltip-append-to-body="true"
              tooltip-placement="right"
-             ng-click="$event.stopPropagation(); $ctrl.table.toggleColumnGroup(category.fields)"
+             ng-click="$event.stopPropagation(); $ctrl.toggleCategory(category)"
              style="margin-top: 1px;">
 
       <i class="fa fa-exclamation-circle text-danger pull-right"
          ng-if="$ctrl.table.settings.requestStatus && $ctrl.table.isInvalidCategory(category)"></i>
     </h5>
 
-    <ul class="list-unstyled" uib-collapse="category.isCollapsed === undefined || category.isCollapsed === true">
+    <ul class="list-unstyled" uib-collapse="!$ctrl.isExpandedCategory(category)">
       <li ng-repeat="field in category.fields" ng-mouseover="hover = true" ng-mouseleave="hover = false">
 
         <div class="column-detail">
@@ -90,7 +89,7 @@
                    class="pull-right"
                    ng-checked="$ctrl.table.isVisibleColumn(field)"
                    ng-disabled="field.fixed === true"
-                   ng-click="$event.stopPropagation(); $ctrl.table.toggleColumn(field)"
+                   ng-click="$event.stopPropagation(); $ctrl.toggleColumn(field)"
                    uib-tooltip="Click to show/hide column"
                    tooltip-append-to-body="true"
                    tooltip-placement="right"

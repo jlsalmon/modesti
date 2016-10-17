@@ -6,7 +6,7 @@ import {HandsonTable} from './handsontable';
 // FIXME: make the inheritance work...
 export class HandsontableFactory /*extends TableFactory*/ {
 
-  public createTable(schema: Schema, data: any[], settings: any): Table {
-    return new HandsonTable(schema, data, settings);
+  public createTable(schema: Schema, data: any[], state: TableState, settings: any): Table {
+    return new HandsonTable(schema, data, state, settings);
   }
 }

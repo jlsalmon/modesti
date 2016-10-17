@@ -4,13 +4,15 @@ import {RequestService} from '../request/request.service';
 import {AlertService} from '../alert/alert.service';
 import {Table} from '../table/table';
 import {TableFactory} from '../table/table-factory';
+import {TableStateService} from '../table/table-state.service';
+import {TableState} from '../table/table-state';
 import {Schema} from '../schema/schema';
 import {Point} from '../request/point/point';
 import {Category} from '../schema/category/category';
-import {IComponentOptions, IPromise} from 'angular';
-import {IStateService} from 'angular-ui-router';
 import {Field} from '../schema/field/field';
 import {ColumnFactory} from '../table/column-factory';
+import {IComponentOptions, IPromise} from 'angular';
+import {IStateService} from 'angular-ui-router';
 
 export class SearchComponent implements IComponentOptions {
   public templateUrl: string = '/search/search.component.html';
@@ -22,12 +24,11 @@ export class SearchComponent implements IComponentOptions {
 
 class SearchController {
   public static $inject: string[] = ['$uibModal', '$state', 'SearchService', 'SchemaService',
-    'RequestService', 'AlertService'];
+                                     'RequestService', 'AlertService', 'TableStateService'];
 
   public schema: Schema;
   public schemas: Schema[];
   public table: Table;
-  // public points: Point[] = [];
   public filters: any[];
   public query: string;
   public page: any = {number: 0, size: 100};
@@ -38,51 +39,25 @@ class SearchController {
 
   constructor(private $modal: any, private $state: IStateService, private searchService: SearchService,
               private schemaService: SchemaService, private requestService: RequestService,
-              private alertService: AlertService) {
+              private alertService: AlertService, private tableStateService: TableStateService) {
 
-    this.useDomain(this.schemas[0].id);
+    this.activateSchema(this.schemas[0]);
+    let tableState: TableState = tableStateService.getTableState(this.schema);
 
     let settings: any = {
       getRows: this.search
     };
 
-    this.table = TableFactory.createTable('ag-grid', this.schema, undefined, settings);
+    this.table = TableFactory.createTable('ag-grid', this.schema, [], tableState, settings);
   }
 
-  public useDomain(domain: string): void {
-    this.schemas.forEach((schema: any) => {
-      if (schema.id === domain) {
-        this.schema = schema;
+  public activateSchema(schema: Schema): void {
+    this.schema = schema;
 
-        // Initially expand the first category
-        // FIXME: schema should be immutable. Put state on the column defs instead
-        this.schema.categories.concat(this.schema.datasources).forEach((category: Category) => {
-          if (this.schema.categories.indexOf(category) === 0) {
-            category.isActive = true;
-            category.isCollapsed = false;
-          } else {
-            category.isActive = false;
-            category.isCollapsed = true;
-          }
-        });
-
-        if (this.table) {
-          this.table.refreshColumnDefs();
-        }
-        this.onFiltersChanged();
-      }
-    });
-  }
-
-  public onFiltersChanged(): void {
     if (this.table) {
+      this.table.refreshColumnDefs();
       this.table.refreshData();
     }
-  }
-
-  public toggleFilter(field: Field): void {
-    // FIXME: maintain filter state on the column defs, not the schema
-    field.filter = {value: undefined, operation: 'equals'};
   }
 
   public search = (params: any): void => {

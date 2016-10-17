@@ -93,7 +93,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-mail"
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-    compile "org.springframework.boot:spring-boot-devtools"
+//    compile "org.springframework.boot:spring-boot-devtools"
     compile "org.springframework.security:spring-security-ldap:4.0.4.RELEASE"
     compile "org.activiti:activiti-spring-boot-starter-basic:5.19.0"
     compile "org.activiti:activiti-spring-boot-starter-jpa:5.19.0"

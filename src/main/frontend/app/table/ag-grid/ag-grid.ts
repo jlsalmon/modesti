@@ -1,4 +1,5 @@
 import {Table} from '../table';
+import {TableState} from '../table-state';
 import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
@@ -10,9 +11,8 @@ export class AgGrid extends Table {
   public grid: Grid;
   public gridOptions: GridOptions;
 
-  public constructor(schema: Schema, data: any[], settings: any) {
-    super(schema, data, settings);
-
+  public constructor(schema: Schema, data: any[], state: TableState, settings: any) {
+    super(schema, data, state, settings);
     let columnDefs: ColDef[] = this.getColumnDefs();
 
     this.gridOptions = {
@@ -86,18 +86,13 @@ export class AgGrid extends Table {
   }
 
   public toggleColumnGroup(fields: Field[]): void {
+    let fieldIds: string[] = fields.map((field: Field) => field.id);
 
-    fields.forEach((field: Field) => {
-      let column: Column = this.getColumn(field);
-
-      // TODO: where to keep the state of an active column group (given that
-      // the schema should be immutable)
-      //if (category.isActive) {
-      //  this.showColumn(column);
-      //} else {
-      //  this.hideColumn(column);
-      //}
-    });
+    if (this.isVisibleColumnGroup(fields)) {
+      this.gridOptions.columnApi.setColumnsVisible(fieldIds, false);
+    } else {
+      this.gridOptions.columnApi.setColumnsVisible(fieldIds, true);
+    }
   }
 
   public isVisibleColumnGroup(fields: Field[]): boolean {
@@ -115,7 +110,7 @@ export class AgGrid extends Table {
   }
 
   private getColumn(field: Field): Column {
-    return this.gridOptions.columnApi.getColumn(this.getModel(field));
+    return this.gridOptions.columnApi.getColumn(field.id);
   }
 
   private getColumnDefs(): ColDef[] {
@@ -126,9 +121,10 @@ export class AgGrid extends Table {
         } else {
           return '...';
         }
-      }
+      },
+      state: this.state
     };
 
-    return ColumnFactory.getColumnDefinitions('ag-grid', this.schema, meta);
+    return ColumnFactory.getColumnDefinitions('ag-grid', this, meta);
   }
 }
