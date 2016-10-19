@@ -23,6 +23,8 @@ public class QField extends BeanPath<Field> {
 
     public final SimplePath<Object> editable = createSimple("editable", Object.class);
 
+    public final SimplePath<Object> fixed = createSimple("fixed", Object.class);
+
     public final StringPath help = createString("help");
 
     public final StringPath id = createString("id");

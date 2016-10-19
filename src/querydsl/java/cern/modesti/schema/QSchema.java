@@ -40,6 +40,10 @@ public class QSchema extends EntityPathBase<Schema> {
 
     public final StringPath parent = createString("parent");
 
+    public final ListPath<RowCommentStateDescriptor, QRowCommentStateDescriptor> rowCommentStates = this.<RowCommentStateDescriptor, QRowCommentStateDescriptor>createList("rowCommentStates", RowCommentStateDescriptor.class, QRowCommentStateDescriptor.class, PathInits.DIRECT2);
+
+    public final ListPath<String, StringPath> selectableStates = this.<String, StringPath>createList("selectableStates", String.class, StringPath.class, PathInits.DIRECT2);
+
     public QSchema(String variable) {
         super(Schema.class, forVariable(variable));
     }
