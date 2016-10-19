@@ -4,7 +4,7 @@ import 'angular-animate';
 import 'angular-sanitize';
 import 'angular-ui-bootstrap';
 import 'angular-ui-router';
-import 'angular-ui-router-title';
+// import 'angular-ui-router-title';
 import 'angular-file-upload';
 import 'angular-http-auth';
 import 'angular-spinner';
@@ -71,7 +71,7 @@ let app: any = angular.module('modesti', [
   // 'ngHandsontable',
   'ui.bootstrap',
   'ui.router',
-  'ui.router.title',
+  // 'ui.router.title',
   'ui.select',
   'restangular',
   'angularFileUpload',
