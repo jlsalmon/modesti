@@ -14,7 +14,7 @@ export class ValidationService {
     let q: IDeferred<Request> = this.$q.defer();
 
     this.$http.post('/api/requests/' + request.requestId + '/validate', {}).then((response: any) => {
-      request = new Request().deserialize(response.data);
+      request = request.deserialize(response.data);
       q.resolve(request);
     },
 
