@@ -1,5 +1,4 @@
 import {Table} from '../table';
-import {TableState} from '../table-state';
 import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
@@ -11,8 +10,8 @@ export class AgGrid extends Table {
   public grid: Grid;
   public gridOptions: GridOptions;
 
-  public constructor(schema: Schema, data: any[], state: TableState, settings: any) {
-    super(schema, data, state, settings);
+  public constructor(schema: Schema, data: any[], settings: any) {
+    super(schema, data, settings);
     let columnDefs: ColDef[] = this.getColumnDefs();
 
     this.gridOptions = {

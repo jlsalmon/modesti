@@ -18,20 +18,20 @@ export class AgGridColumnFactory {
           field: ColumnFactory.getModel(field)
         };
 
-        let visibleColumns: string[] = meta.state.visibleColumns;
-
-        if (visibleColumns.length > 0) {
-          // If we have list of visible columns, use that
-          if (visibleColumns.indexOf(field.id) === -1) {
-            columnDef.hide = true;
-          }
-
-        } else {
+        //let visibleColumns: string[] = meta.state.visibleColumns;
+        //
+        //if (visibleColumns.length > 0) {
+        //  // If we have list of visible columns, use that
+        //  if (visibleColumns.indexOf(field.id) === -1) {
+        //    columnDef.hide = true;
+        //  }
+        //
+        //} else {
           // Otherwise, initially show only the first category
           if (table.schema.categories.indexOf(category) !== 0) {
             columnDef.hide = true;
           }
-        }
+        //}
 
         if (meta.cellRenderer) {
           columnDef.cellRenderer = meta.cellRenderer;

@@ -1,18 +1,15 @@
 import {Schema} from '../schema/schema';
 import {Field} from '../schema/field/field';
-import {TableState} from './table-state';
 
 export abstract class Table {
 
   public schema: Schema;
   public data: any[];
-  public state: TableState;
   public settings: any;
 
-  public constructor(schema: Schema, data: any[], state: TableState, settings: any) {
+  public constructor(schema: Schema, data: any[], settings: any) {
     this.schema = schema;
     this.data = data;
-    this.state = state;
     this.settings = settings;
   }
 

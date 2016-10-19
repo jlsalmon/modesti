@@ -4,8 +4,6 @@ import {RequestService} from '../request/request.service';
 import {AlertService} from '../alert/alert.service';
 import {Table} from '../table/table';
 import {TableFactory} from '../table/table-factory';
-import {TableStateService} from '../table/table-state.service';
-import {TableState} from '../table/table-state';
 import {Schema} from '../schema/schema';
 import {Point} from '../request/point/point';
 import {Category} from '../schema/category/category';
@@ -13,6 +11,7 @@ import {Field} from '../schema/field/field';
 import {ColumnFactory} from '../table/column-factory';
 import {IComponentOptions, IPromise} from 'angular';
 import {IStateService} from 'angular-ui-router';
+import IRootScopeService = angular.IRootScopeService;
 
 export class SearchComponent implements IComponentOptions {
   public templateUrl: string = '/search/search.component.html';
@@ -24,7 +23,7 @@ export class SearchComponent implements IComponentOptions {
 
 class SearchController {
   public static $inject: string[] = ['$uibModal', '$state', 'SearchService', 'SchemaService',
-                                     'RequestService', 'AlertService', 'TableStateService'];
+                                     'RequestService', 'AlertService'];
 
   public schema: Schema;
   public schemas: Schema[];
@@ -37,18 +36,21 @@ class SearchController {
   public error: string;
   public submitting: string;
 
-  constructor(private $modal: any, private $state: IStateService, private searchService: SearchService,
-              private schemaService: SchemaService, private requestService: RequestService,
-              private alertService: AlertService, private tableStateService: TableStateService) {
+  constructor(private $rootScope: IRootScopeService, private $modal: any, private $state: IStateService,
+              private searchService: SearchService, private schemaService: SchemaService,
+              private requestService: RequestService, private alertService: AlertService) {
 
     this.activateSchema(this.schemas[0]);
-    let tableState: TableState = tableStateService.getTableState(this.schema);
 
     let settings: any = {
       getRows: this.search
     };
 
-    this.table = TableFactory.createTable('ag-grid', this.schema, [], tableState, settings);
+    this.table = TableFactory.createTable('ag-grid', this.schema, [], settings);
+
+    $rootScope.$on('modesti:searchFiltersChanged', () => {
+      this.search();
+    });
   }
 
   public activateSchema(schema: Schema): void {
@@ -220,19 +222,6 @@ class SearchController {
       });
     });
   }
-
-  //public onPageChanged(): void {
-  //  //this.search();
-  //}
-
-  //public activateCategory(category: any): void {
-  //  console.log('activating category "' + category.id + '"');
-  //  this.activeCategory = category;
-  //  let columns: any[] = this.columnFactory.createColumnDefinitions(this.activeCategory.fields, this.schema, undefined);
-  //  this.table.reload(columns);
-  //  // $localStorage.lastActiveCategory[self.request.requestId] = category;
-  //  // getColumns();
-  //}
 
   public queryFieldValues(field: any, value: string): IPromise<any[]> {
     return this.schemaService.queryFieldValues(field, value, undefined);

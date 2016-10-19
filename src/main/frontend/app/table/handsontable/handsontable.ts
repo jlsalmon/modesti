@@ -1,5 +1,4 @@
 import {Table} from '../table';
-import {TableState} from '../table-state';
 import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
@@ -8,6 +7,7 @@ import {Point} from '../../request/point/point';
 import './select2-editor.ts';
 
 import 'latinize';
+declare var latinize: any;
 
 // TODO: import this properly without require()
 let Handsontable: any = require('handsontable-pro');
@@ -19,8 +19,8 @@ export class HandsonTable extends Table {
   public hotOptions: any;
   public hiddenColumnsPlugin: any;
 
-  public constructor(schema: Schema, data: any[], state: TableState, settings: any) {
-    super(schema, data, state, settings);
+  public constructor(schema: Schema, data: any[], settings: any) {
+    super(schema, data, settings);
 
     let columnDefs: any[] = this.getColumnDefs();
     columnDefs.forEach((column: any) => column.renderer = settings.cellRenderer);
@@ -330,7 +330,7 @@ export class HandsonTable extends Table {
       oldValue = change[2];
       newValue = change[3];
 
-      if (typeof property !== 'string') {
+      if (typeof property !== 'string' || newValue === undefined || newValue === null) {
         continue;
       }
 

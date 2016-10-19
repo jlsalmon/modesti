@@ -9,7 +9,7 @@ import {AgGrid} from './ag-grid';
 // TypeError: Cannot read property 'prototype' of undefined
 export class AgGridFactory /*extends TableFactory*/ {
 
-  public createTable(schema: Schema, data: any[], state: TableState, settings: any): Table {
+  public createTable(schema: Schema, data: any[], settings: any): Table {
     return new AgGrid(schema, data, state, settings);
   }
 }
