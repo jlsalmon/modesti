@@ -70,14 +70,14 @@ class RequestToolbarController {
   public assignTask(): void {
     this.taskService.assignTask(this.request).then((newTask: Task) => {
       this.tasks[newTask.name] = newTask;
-      this.table.reload();
+      this.table.render();
     });
   }
 
   public assignTaskToCurrentUser(): void {
     this.taskService.assignTaskToCurrentUser(this.request).then((newTask: Task) => {
       this.tasks[newTask.name] = newTask;
-      this.table.reload();
+      this.table.render();
     });
   }
 

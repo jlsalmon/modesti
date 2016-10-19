@@ -20,6 +20,8 @@ export abstract class Table {
 
   public abstract refreshColumnDefs(): void;
 
+  public abstract render(): void;
+
   public abstract showColumn(field: Field): void;
 
   public abstract hideColumn(field: Field): void;
