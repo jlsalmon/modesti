@@ -42,6 +42,7 @@
     "handsontable-pro": "git+ssh://git@git.handsontable.com:handsontable/handsontable-pro.git",
     "hot-formula-parser": "^1.0.18",
     "jquery": "^3.1.0",
+    "latinize": "^0.3.0",
     "lodash": "4.13.*",
     "moment": "^2.14.1",
     "ngstorage": "^0.3.10",
