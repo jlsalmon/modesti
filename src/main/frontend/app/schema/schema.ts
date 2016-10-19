@@ -30,6 +30,14 @@ export class Schema implements ISerializable<Schema> {
   public getField(id: string): Field {
     let field: Field;
 
+    if (id.indexOf('properties.') !== -1) {
+      id = id.substring(11);
+    }
+
+    if (id.indexOf('.') !== -1) {
+      id = id.split('.')[0];
+    }
+
     this.categories.concat(this.datasources).forEach((category: Category) => {
       category.fields.forEach((f: Field) => {
         if (f.id === id) {
