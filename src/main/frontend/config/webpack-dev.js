@@ -23,7 +23,8 @@ module.exports = {
             _: 'lodash',
             moment: 'moment',
             $: 'jquery',
-            jQuery: 'jquery'
+            jQuery: 'jquery',
+            latinize: 'latinize'
         })
     ]
 };

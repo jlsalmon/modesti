@@ -19,7 +19,10 @@ module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
             _: 'lodash',
-            moment: 'moment'
+            moment: 'moment',
+            $: 'jquery',
+            jQuery: 'jquery',
+            latinize: 'latinize'
         }),
         new webpack.optimize.UglifyJsPlugin({
             compress: { warnings: false }

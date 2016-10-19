@@ -7,6 +7,8 @@ import {ColumnFactory} from '../column-factory';
 import {Point} from '../../request/point/point';
 import './select2-editor.ts';
 
+import 'latinize';
+
 // TODO: import this properly without require()
 let Handsontable: any = require('handsontable-pro');
 
@@ -37,7 +39,7 @@ export class HandsonTable extends Table {
       outsideClickDeselects: false,
       manualColumnResize: true,
       rowHeaders: (row: any) => this.getRowHeader(row),
-      onBeforeChange: (changes: any, source: any) => this.beforeChange(changes, source),
+      beforeChange: (changes: any, source: any) => this.beforeChange(changes, source),
       onAfterCreateRow: () => this.normaliseLineNumbers(),
       onAfterRemoveRow: () => this.normaliseLineNumbers()
     };
@@ -59,15 +61,15 @@ export class HandsonTable extends Table {
   public determineInitialHiddenColumns(columnDefs: any[]): number[] {
     let hiddenColumns: number[] = [];
 
-    if (this.state.getHiddenColumns().length > 0) {
+    //if (this.state.getHiddenColumns().length > 0) {
       // If the table state holds a list of hidden columns, use that
-      columnDefs.forEach((columnDef: any, index: number) => {
-        if (this.state.getHiddenColumns().indexOf(columnDef.field.id) === -1) {
-          hiddenColumns.push(index);
-        }
-      });
+      //columnDefs.forEach((columnDef: any, index: number) => {
+      //  if (this.state.getHiddenColumns().indexOf(columnDef.field.id) === -1) {
+      //    hiddenColumns.push(index);
+      //  }
+      //});
 
-    } else {
+    //} else {
       // Otherwise, initially show only the first category
       let firstCategory: Category = this.schema.categories[0];
       columnDefs.forEach((columnDef: any, index: number) => {
@@ -75,7 +77,7 @@ export class HandsonTable extends Table {
           hiddenColumns.push(index);
         }
       });
-    }
+    //}
 
     return hiddenColumns;
   }
@@ -103,6 +105,10 @@ export class HandsonTable extends Table {
   public refreshData(): void {}
 
   public refreshColumnDefs(): void {}
+
+  public render(): void {
+    this.hot.render();
+  }
 
   public showColumn(field: Field): void {
     this.hiddenColumnsPlugin.showColumn(this.getColumnIndex(field));
@@ -287,16 +293,16 @@ export class HandsonTable extends Table {
         + 'data-html="true" data-content="' + text.replace(/"/g, '&quot;') + '">' + point.lineNo
         + ' <i class="fa fa-comments text-yellow"></i></div>';
     } else if (point.properties.approvalResult && point.properties.approvalResult.approved === true
-      && this.request.status === 'FOR_APPROVAL') {
+      && this.settings.requestStatus === 'FOR_APPROVAL') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     } else if (point.properties.testResult && point.properties.testResult.passed === false
-      && this.request.status === 'FOR_TESTING') {
+      && this.settings.requestStatus === 'FOR_TESTING') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-times-circle text-danger"></i></div>';
     } else if (point.properties.testResult && point.properties.testResult.passed === true
-      && this.request.status === 'FOR_TESTING') {
+      && this.settings.requestStatus === 'FOR_TESTING') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-check-circle text-success"></i></div>';
     } else if (point.properties.testResult && point.properties.testResult.postponed === true
-      && this.request.status === 'FOR_TESTING') {
+      && this.settings.requestStatus === 'FOR_TESTING') {
       return '<div class="row-header">' + point.lineNo + ' <i class="fa fa-minus-circle text-muted"></i></div>';
     }
 
@@ -328,25 +334,17 @@ export class HandsonTable extends Table {
         continue;
       }
 
-      // get the outer object i.e. properties.location.value -> location
-      let prop: string = property.split('.')[1];
+      let field: Field = this.schema.getField(property);
+      if (field) {
+        // Remove accented characters
+        newValue = latinize(newValue);
 
-      for (let j: number = 0, jlen: number = this.settings.columns.length; j < jlen; j++) {
-        let field: Field = this.settings.columns[j].field;
-
-        if (field.id === prop) {
-
-          // Remove accented characters
-          newValue = this.$filter('latinize')(newValue);
-
-          // Force uppercase if necessary
-          if (field.uppercase === true) {
-            newValue = this.$filter('uppercase')(newValue);
-          }
-
-          changes[i][3] = newValue;
-          break;
+        // Force uppercase if necessary
+        if (field.uppercase === true) {
+          newValue = newValue.toUpperCase();
         }
+
+        changes[i][3] = newValue;
       }
     }
   }
