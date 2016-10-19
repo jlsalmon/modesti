@@ -71,7 +71,12 @@ class SearchController {
 
     let sort: string = '';
     if (params.sortModel.length) {
-      let sortProp: string = params.sortModel[0].colId.split('.')[1];
+      let sortProp: string;
+      if (params.sortModel[0].colId.indexOf('.') !== -1) {
+        sortProp = params.sortModel[0].colId.split('.')[1];
+      } else {
+        sortProp = params.sortModel[0].colId;
+      }
       let sortDir: string = params.sortModel[0].sort;
       sort = sortProp + ',' + sortDir;
     }
