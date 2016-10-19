@@ -330,7 +330,11 @@ export class HandsonTable extends Table {
       oldValue = change[2];
       newValue = change[3];
 
-      if (typeof property !== 'string' || newValue === undefined || newValue === null) {
+      if (typeof property !== 'string') {
+        continue;
+      }
+
+      if (typeof newValue !== 'string' || newValue === undefined || newValue === null) {
         continue;
       }
 
