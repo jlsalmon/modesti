@@ -30,8 +30,8 @@ class RequestListController {
   public loading: string = undefined;
   public page: any = {};
 
-  public constructor(private $http: IHttpService, private $location: ILocationService,
-                     private $scope: IScope, private requestService: RequestService, private authService: AuthService,
+  public constructor(private $http: IHttpService, private $location: ILocationService, private $scope: IScope,
+                     private requestService: RequestService, private authService: AuthService,
                      private schemaService: SchemaService) {
     this.users.push(authService.getCurrentUser());
 
@@ -53,7 +53,6 @@ class RequestListController {
   }
 
   public resetFilter(): void {
-    console.log('filter reset');
     this.filter = {
       description: '',
       status: '',
@@ -101,10 +100,6 @@ class RequestListController {
     this.requestService.deleteRequest(id).then(() => {
       console.log('deleted request ' + id);
       this.requests.splice(this.requests.indexOf(request), 1);
-    },
-
-    () => {
-      // something went wrong deleting the request
     });
   }
 
@@ -116,7 +111,8 @@ class RequestListController {
   }
 
   /**
-   * Retrieve some metrics about requests. Currently contains only the number of requests of each status.
+   * Retrieve some metrics about requests. Currently contains only the number
+   * of requests of each status.
    */
   public getRequestMetrics(): void {
     this.requestService.getRequestMetrics().then((statuses: string[]) => {
@@ -129,7 +125,7 @@ class RequestListController {
    *
    * @param status
    */
-  public getRequestCount(status): number {
+  public getRequestCount(status: string): number {
     for (let key in this.statuses) {
       if (this.statuses.hasOwnProperty(key)) {
         let s: any = this.statuses[key];
