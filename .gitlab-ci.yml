@@ -8,7 +8,7 @@ build_and_publish:
 # Just run tests on feature branches
 build:
   script:
-    - ./gradlew clean test
+    - ./gradlew clean test -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
   except:
     - master
 
