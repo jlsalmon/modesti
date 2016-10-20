@@ -1,5 +1,14 @@
-image: java:8
-
-gradle:
+# Fully build and publish master branch
+build_and_publish:
   script:
-    - ./gradlew clean build --refresh-dependencies --info --stacktrace -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+    - ./gradlew clean publish --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+  only:
+    - master
+
+# Just run tests on feature branches
+build:
+  script:
+    - ./gradlew clean test -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+  except:
+    - master
+

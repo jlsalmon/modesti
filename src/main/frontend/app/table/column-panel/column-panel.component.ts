@@ -3,7 +3,7 @@ import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
 import {Point} from '../../request/point/point';
 import {Table} from '../table';
-import {IComponentOptions} from 'angular';
+import {IComponentOptions, IRootScopeService} from 'angular';
 
 export class ColumnPanelComponent implements IComponentOptions {
   public templateUrl: string = '/table/column-panel/column-panel.component.html';
@@ -16,12 +16,12 @@ export class ColumnPanelComponent implements IComponentOptions {
 }
 
 class ColumnPanelController {
-  public static $inject: string[] = [];
+  public static $inject: string[] = ['$rootScope'];
 
   public schema: Schema;
   public table: Table;
 
-  public constructor() {
+  public constructor(private $rootScope: IRootScopeService) {
     this.schema.categories.forEach(function (category: Category, index: number) {
       category.isCollapsed = index === 0 ? false : true;
     });
@@ -49,6 +49,6 @@ class ColumnPanelController {
   }
 
   public onFiltersChanged(): void {
-    // TODO: send an event
+    this.$rootScope.$emit('modesti:searchFiltersChanged');
   }
 }

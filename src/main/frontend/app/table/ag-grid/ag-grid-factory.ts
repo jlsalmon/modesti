@@ -10,6 +10,6 @@ import {AgGrid} from './ag-grid';
 export class AgGridFactory /*extends TableFactory*/ {
 
   public createTable(schema: Schema, data: any[], settings: any): Table {
-    return new AgGrid(schema, data, state, settings);
+    return new AgGrid(schema, data, settings);
   }
 }
