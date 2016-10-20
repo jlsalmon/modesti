@@ -111,16 +111,6 @@ class SearchController {
         this.table.refreshData();
       }
 
-      angular.forEach(response._links, (item: any) => {
-        if (item.rel === 'next') {
-          this.page.next = item.href;
-        }
-
-        if (item.rel === 'prev') {
-          this.page.prev = item.href;
-        }
-      });
-
       this.loading = 'success';
       this.error = undefined;
     },
@@ -131,33 +121,8 @@ class SearchController {
     });
   };
 
-  public parseQuery(params?: any): string {
+  public parseQuery(): string {
     let expressions: string[] = [];
-
-    //for (let key in params.filterModel) {
-    //  if (params.filterModel.hasOwnProperty(key)) {
-    //    let filter: any = params.filterModel[key];
-    //    let field: any = this.schema.getField(key.split('.')[1]);
-    //
-    //    if (filter.filter != null && filter.filter !== '') {
-    //
-    //      let property: string;
-    //      if (field.type === 'autocomplete') {
-    //        let modelAttribute: string = field.model ? field.model : 'value';
-    //        property = field.id + '.' + modelAttribute;
-    //      } else {
-    //        property = field.id;
-    //      }
-    //
-    //      let operation: string = this.parseOperation(filter.type);
-    //      let expression: string = property + ' ' + operation + ' "' + filter.filter + '"';
-    //
-    //      if (expressions.indexOf(expression) === -1) {
-    //        expressions.push(expression);
-    //      }
-    //    }
-    //  }
-    //}
 
     this.schema.getAllFields().forEach((field: Field) => {
 
@@ -201,7 +166,20 @@ class SearchController {
       controller: 'UpdatePointsModalController as ctrl',
       size: 'lg',
       resolve: {
-        points: () => this.table.hot.getData(),
+        points: () => {
+          let query: string = this.parseQuery();
+          let page: any = { number: 0, size: this.page.totalElements };
+
+          return this.searchService.getPoints(this.schema.id, query, page, this.sort).then((response: any) => {
+            let points: Point[] = [];
+
+            if (response.hasOwnProperty('_embedded')) {
+              points = response._embedded.points;
+            }
+
+            return points;
+          });
+        },
         schema: () => this.schema
       }
     });
