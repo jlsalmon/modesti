@@ -9,6 +9,7 @@ module.exports = {
     },
     resolve: {
         modulesDirectories: ['./node_modules'],
+        extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
         alias: {
             'ui-router': 'angular-ui-router/release/angular-ui-router.js'
         }
