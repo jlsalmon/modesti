@@ -5,13 +5,13 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import de.flapdoodle.embed.mongo.Command;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.MongodConfig;
-import de.flapdoodle.embed.mongo.config.RuntimeConfig;
+import de.flapdoodle.embed.mongo.config.*;
 import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.config.IRuntimeConfig;
 import de.flapdoodle.embed.process.config.io.ProcessOutput;
-import de.flapdoodle.embed.process.io.NullProcessor;
 import de.flapdoodle.embed.process.runtime.Network;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,19 +92,21 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
   private Mongo embeddedMongo() throws IOException {
     int port = 12345;
-
-    MongodConfig mongodConfig;
+    MongodConfigBuilder builder = new MongodConfigBuilder()
+        .version(Version.Main.PRODUCTION)
+        .net(new Net(port, Network.localhostIsIPv6()));
 
     if (env.containsProperty("mongodb.persistent") && env.getProperty("mongodb.persistent", Boolean.class).equals(true)) {
-      mongodConfig = new MongodConfig(Version.Main.V2_0, port, Network.localhostIsIPv6(), "/tmp/mongodb-embedded");
-    } else {
-      mongodConfig = new MongodConfig(Version.Main.V2_0, port, Network.localhostIsIPv6());
+      builder.replication(new Storage("/tmp/mongodb-embedded", null, 0));
     }
 
-    RuntimeConfig runtimeConfig = new RuntimeConfig();
-    runtimeConfig.setProcessOutput(new ProcessOutput(new NullProcessor(), new NullProcessor(), new NullProcessor()));
+    IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+        .defaultsWithLogger(Command.MongoD, log)
+        .processOutput(ProcessOutput.getDefaultInstanceSilent())
+        .build();
+
     MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
-    MongodExecutable mongodExecutable = runtime.prepare(mongodConfig);
+    MongodExecutable mongodExecutable = runtime.prepare(builder.build());
     mongodExecutable.start();
     return new MongoClient("localhost", port);
   }
