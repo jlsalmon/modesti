@@ -57,6 +57,7 @@ class SearchController {
     this.schema = schema;
 
     if (this.table) {
+      this.table.schema = schema;
       this.table.refreshColumnDefs();
       this.table.refreshData();
     }
