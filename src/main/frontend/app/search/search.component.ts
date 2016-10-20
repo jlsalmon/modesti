@@ -63,7 +63,7 @@ class SearchController {
     }
   }
 
-  public search = (params: any): void => {
+  public search = (params?: any): void => {
     this.loading = 'started';
     console.log('searching');
 
