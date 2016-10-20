@@ -22,8 +22,8 @@ export class SearchComponent implements IComponentOptions {
 }
 
 class SearchController {
-  public static $inject: string[] = ['$uibModal', '$state', 'SearchService', 'SchemaService',
-                                     'RequestService', 'AlertService'];
+  public static $inject: string[] = ['$rootScope', '$uibModal', '$state', 'SearchService',
+                                     'SchemaService', 'RequestService', 'AlertService'];
 
   public schema: Schema;
   public schemas: Schema[];
@@ -66,24 +66,25 @@ class SearchController {
     this.loading = 'started';
     console.log('searching');
 
-    this.parseQuery();
+    let query: string = this.parseQuery();
 
-    let page: any = {number: params.startRow / 100, size: this.page.size};
-    console.log('asking for ' + params.startRow + ' to ' + params.endRow + ' (page #' + page + ')');
+    if (params) {
+      this.page.number = params.startRow / 100;
+      console.log('asking for ' + params.startRow + ' to ' + params.endRow + ' (page #' + this.page.number + ')');
 
-    let sort: string = '';
-    if (params.sortModel.length) {
-      let sortProp: string;
-      if (params.sortModel[0].colId.indexOf('.') !== -1) {
-        sortProp = params.sortModel[0].colId.split('.')[1];
-      } else {
-        sortProp = params.sortModel[0].colId;
+      if (params.sortModel.length) {
+        let sortProp: string;
+        if (params.sortModel[0].colId.indexOf('.') !== -1) {
+          sortProp = params.sortModel[0].colId.split('.')[1];
+        } else {
+          sortProp = params.sortModel[0].colId;
+        }
+        let sortDir: string = params.sortModel[0].sort;
+        this.sort = sortProp + ',' + sortDir;
       }
-      let sortDir: string = params.sortModel[0].sort;
-      sort = sortProp + ',' + sortDir;
     }
 
-    this.searchService.getPoints(this.schema.id, this.query, page, sort).then((response: any) => {
+    this.searchService.getPoints(this.schema.id, query, this.page, this.sort).then((response: any) => {
       let points: Point[] = [];
 
       if (response.hasOwnProperty('_embedded')) {
@@ -97,14 +98,17 @@ class SearchController {
       // Backend pages 0-based, Bootstrap pagination 1-based
       this.page.number += 1;
 
+      if (params) {
+        // if on or after the last page, work out the last row.
+        let lastRow: number = -1;
+        if (this.page.totalElements <= params.endRow) {
+          lastRow = this.page.totalElements;
+        }
 
-      // if on or after the last page, work out the last row.
-      let lastRow: number = -1;
-      if (this.page.totalElements <= params.endRow) {
-        lastRow = this.page.totalElements;
+        params.successCallback(points, lastRow);
+      } else {
+        this.table.refreshData();
       }
-
-      params.successCallback(points, lastRow);
 
       angular.forEach(response._links, (item: any) => {
         if (item.rel === 'next') {
@@ -126,7 +130,7 @@ class SearchController {
     });
   };
 
-  public parseQuery(params?: any): void {
+  public parseQuery(params?: any): string {
     let expressions: string[] = [];
 
     //for (let key in params.filterModel) {
@@ -175,8 +179,9 @@ class SearchController {
       }
     });
 
-    this.query = expressions.join(' and ');
-    console.log('parsed query: ' + this.query);
+    let query: string = expressions.join(' and ');
+    console.log('parsed query: ' + query);
+    return query;
   }
 
   public parseOperation(operation: string): string {
