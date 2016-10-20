@@ -238,6 +238,27 @@ export class HandsonTable extends Table {
     return invalid;
   }
 
+  public isInvalidField(field: Field): boolean {
+    let invalid: boolean = false;
+
+    this.data.forEach((point: Point) => {
+      if (point.errors && point.errors.length > 0) {
+        point.errors.forEach((error: any) => {
+
+          if (error.property) {
+            let property: string = error.property.split('.')[0];
+
+            if (field.id === property) {
+              invalid = true;
+            }
+          }
+        });
+      }
+    });
+
+    return invalid;
+  }
+
   /**
    * Make sure all the line numbers are consecutive
    */
@@ -334,7 +355,7 @@ export class HandsonTable extends Table {
         continue;
       }
 
-      if (typeof newValue !== 'string' || newValue === undefined || newValue === null) {
+      if (typeof newValue !== 'string' || newValue == null) {
         continue;
       }
 

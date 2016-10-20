@@ -56,7 +56,7 @@ export class HandsontableColumnFactory {
       if (field.editable === true || field.editable === false) {
         // Editable given as simple boolean
         editable = field.editable;
-      } else if (field.editable !== undefined && typeof field.editable === 'object') {
+      } else if (field.editable != null && typeof field.editable === 'object') {
         // Editable given as condition object
         editable = !!(field.editable.status && meta.requestStatus === field.editable.status);
       }
@@ -149,7 +149,7 @@ export class HandsontableColumnFactory {
     if (field.options) {
       options = field.options.map((option: any) => {
         if (typeof option === 'object') {
-          if (option.description !== undefined && option.description !== '') {
+          if (option.description != null && option.description !== '') {
             return {id: option.value, text: option.value + ': ' + option.description};
           } else {
             return {id: option.value, text: option.value.toString()};

@@ -417,7 +417,7 @@ export class Select2EditorNew extends Handsontable.editors.TextEditor {
   //  console.log('select2-editor: setValue');
   //
   //  if (this.select) {
-  //    if (value !== undefined && value !== '') {
+  //    if (value != null && value !== '') {
   //      this.select.val(JSON.stringify(value));
   //    }
   //  }

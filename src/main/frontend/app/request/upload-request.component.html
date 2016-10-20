@@ -138,7 +138,7 @@
                 <div class="col-sm-offset-2 col-sm-10" ng-if="item.location">
                   <button type="button" class="btn btn-success btn-sm"
                           ng-click="$ctrl.edit(item); $ctrl.loading = true;">
-                    <i class="fa fa-fw fa-hand-o-right" ng-if="$ctrl.loading == undefined"></i>
+                    <i class="fa fa-fw fa-hand-o-right" ng-if="$ctrl.loading == null"></i>
                     <i class="fa fa-fw fa-hand-o-right" ng-if="$ctrl.loading == true"></i>
                     Edit
                   </button>

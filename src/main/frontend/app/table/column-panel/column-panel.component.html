@@ -79,7 +79,9 @@
 
         <div class="column-detail">
 
-          <div class="column-detail-header" ng-click="$ctrl.enableFilters === true && $ctrl.toggleFilter(field)">
+          <div class="column-detail-header"
+               ng-click="$ctrl.enableFilters === true && $ctrl.toggleFilter(field)"
+               ng-class="$ctrl.table.isInvalidField(field) ? 'bg-danger' : ''">
 
             {{::field.name}}
 
@@ -102,7 +104,7 @@
           </div>
 
           <!-- Filter entry form -->
-          <form class="form-inline" ng-if="field.filter !== undefined">
+          <form class="form-inline" ng-if="field.filter != null">
             <div class="form-group">
               <div class="input-group">
                 <div class="input-group-addon">

@@ -46,9 +46,9 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
                 if (authorised) {
                     var point_1 = _this.request.points[row];
                     // Evaluate "editable" condition of the category
-                    if (_this.activeCategory.editable !== undefined && typeof _this.activeCategory.editable === 'object') {
+                    if (_this.activeCategory.editable != null && typeof _this.activeCategory.editable === 'object') {
                         var conditional = _this.activeCategory.editable;
-                        if (conditional !== undefined) {
+                        if (conditional != null) {
                             editable = _this.schemaService.evaluateConditional(point_1, conditional, _this.request.status);
                         }
                     }
@@ -56,7 +56,7 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
                     _this.activeCategory.fields.forEach(function (field) {
                         if (field.id === prop.split('.')[1]) {
                             var conditional = field.editable;
-                            if (conditional !== undefined) {
+                            if (conditional != null) {
                                 editable = _this.schemaService.evaluateConditional(point_1, conditional, _this.request.status);
                             }
                         }
@@ -237,7 +237,7 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
                         _this.request.points[row].dirty = true;
                     }
                     // If the value was cleared, make sure any other properties of the object are also cleared.
-                    if (newValue === undefined || newValue === '') {
+                    if (newValue == null || newValue === '') {
                         // let point = this.parent.hot.getSourceDataAtRow(row);
                         var point = _this.request.points[row];
                         var propName = property.split('.')[1];
@@ -335,7 +335,7 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
             else {
                 currentValue = point.properties[field.id];
             }
-            if (currentValue === undefined || currentValue === '') {
+            if (currentValue == null || currentValue === '') {
                 var regex = /^\{\{\s*[\w\.]+\s*}}/g;
                 if (field.default && typeof field.default === 'string' && regex.test(field.default)) {
                     var matches = field.default.match(regex).map(function (x) {
@@ -402,7 +402,7 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
             var field = this.schema.getField(outerProp);
             // If there is no corresponding field in the schema, then it must be a "virtual"
             // column (such as "comment" or "checkbox")
-            if (field === undefined) {
+            if (field == null) {
                 q.resolve();
                 return q.promise;
             }
@@ -410,7 +410,7 @@ define(["require", "exports", '../../table/table-factory', 'jquery'], function (
                 // For autocomplete fields, re-query the values and manually save it back to the point.
                 this.schemaService.queryFieldValues(field, newValue, point).then(function (values) {
                     values.forEach(function (item) {
-                        var value = (field.model === undefined && typeof item === 'object') ? item.value : item[field.model];
+                        var value = (field.model == null && typeof item === 'object') ? item.value : item[field.model];
                         if (value === newValue) {
                             console.log('saving new value');
                             delete item._links;

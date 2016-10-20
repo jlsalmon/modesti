@@ -69,7 +69,7 @@ export class SchemaService {
     // Figure out the query parameters we need to put in the URI.
     let params: any = {};
 
-    if (field.params === undefined) {
+    if (field.params == null) {
       // If no params are specified, then by default the query string will be
       // mapped to a parameter called 'query'.
       params.query = query;
@@ -204,11 +204,11 @@ export class SchemaService {
       valueResult = this.evaluateValueCondition(point, conditional);
     }
 
-    if (valueResult !== undefined && statusResult !== undefined) {
+    if (valueResult != null && statusResult != null) {
       return statusResult && valueResult;
-    } else if (valueResult === undefined && statusResult !== undefined) {
+    } else if (valueResult == null && statusResult != null) {
       return statusResult;
-    } else if (valueResult !== undefined && statusResult === undefined) {
+    } else if (valueResult != null && statusResult == null) {
       return valueResult;
     } else {
       return false;
@@ -225,9 +225,9 @@ export class SchemaService {
       result = true;
     } else if (condition.operation === 'contains' && (value && value.toString().indexOf(condition.value) > -1)) {
       result = true;
-    } else if (condition.operation === 'notNull' && (value !== undefined && value !== '')) {
+    } else if (condition.operation === 'notNull' && (value != null && value !== '')) {
       result = true;
-    } else if (condition.operation === 'isNull' && (value === undefined || value === '')) {
+    } else if (condition.operation === 'isNull' && (value == null || value === '')) {
       result = true;
     } else if (condition.operation === 'in' && (condition.value.indexOf(value) > -1)) {
       result = true;

@@ -42,12 +42,12 @@ export class Point implements ISerializable<Point> {
         if (typeof property === 'object') {
           for (let subproperty in property) {
             if (property.hasOwnProperty(subproperty)) {
-              if (property[subproperty] !== undefined && property[subproperty] !== '') {
+              if (property[subproperty] != null && property[subproperty] !== '') {
                 return false;
               }
             }
           }
-        } else if (property !== undefined && property !== '') {
+        } else if (property != null && property !== '') {
           return false;
         }
       }

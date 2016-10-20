@@ -93,10 +93,10 @@ class RequestTableController {
       let point: Point = this.request.points[row];
 
       // Evaluate "editable" condition of the category
-      if (this.activeCategory.editable !== undefined && typeof this.activeCategory.editable === 'object') {
+      if (this.activeCategory.editable != null && typeof this.activeCategory.editable === 'object') {
         let conditional: any = this.activeCategory.editable;
 
-        if (conditional !== undefined) {
+        if (conditional != null) {
           editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
         }
       }
@@ -106,7 +106,7 @@ class RequestTableController {
         if (field.id === prop.split('.')[1]) {
           let conditional: Conditional = field.editable;
 
-          if (conditional !== undefined) {
+          if (conditional != null) {
             editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
           }
         }
@@ -237,7 +237,7 @@ class RequestTableController {
       currentValue = point.properties[field.id];
     }
 
-    if (currentValue === undefined || currentValue === '') {
+    if (currentValue == null || currentValue === '') {
       let regex: RegExp = /^\{\{\s*[\w\.]+\s*}}/g;
 
       if (field.default && typeof field.default === 'string' && regex.test(field.default)) {
@@ -389,7 +389,7 @@ class RequestTableController {
       }
 
       // If the value was cleared, make sure any other properties of the object are also cleared.
-      if (newValue === undefined || newValue === '') {
+      if (newValue == null || newValue === '') {
         // let point = this.parent.hot.getSourceDataAtRow(row);
         let point: Point = this.request.points[row];
         let propName: string = property.split('.')[1];
@@ -463,7 +463,7 @@ class RequestTableController {
 
     // If there is no corresponding field in the schema, then it must be a "virtual"
     // column (such as "comment" or "checkbox")
-    if (field === undefined) {
+    if (field == null) {
       q.resolve();
       return q.promise;
     }
@@ -473,7 +473,7 @@ class RequestTableController {
       this.schemaService.queryFieldValues(field, newValue, point).then((values: any[]) => {
 
         values.forEach((item: any) => {
-          let value: any = (field.model === undefined && typeof item === 'object') ? item.value : item[field.model];
+          let value: any = (field.model == null && typeof item === 'object') ? item.value : item[field.model];
 
           if (value === newValue) {
             console.log('saving new value');

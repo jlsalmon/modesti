@@ -139,7 +139,7 @@ class SearchController {
     //    let filter: any = params.filterModel[key];
     //    let field: any = this.schema.getField(key.split('.')[1]);
     //
-    //    if (filter.filter !== undefined && filter.filter !== '') {
+    //    if (filter.filter != null && filter.filter !== '') {
     //
     //      let property: string;
     //      if (field.type === 'autocomplete') {
@@ -161,7 +161,7 @@ class SearchController {
 
     this.schema.getAllFields().forEach((field: Field) => {
 
-      if (field.filter && field.filter.value !== undefined && field.filter.value !== '') {
+      if (field.filter && field.filter.value != null && field.filter.value !== '') {
 
         let property: string;
         if (field.type === 'autocomplete') {
