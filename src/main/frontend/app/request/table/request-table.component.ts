@@ -284,42 +284,42 @@ class RequestTableController {
 
     if (this.schema.hasRowSelectColumn(this.request.status)) {
 
-      //let firstColumnHeader: JQuery = $('.htCore colgroup col.rowHeader');
-      //let lastColumnHeader: JQuery = $('.htCore colgroup col:last-child');
-      //let checkboxColumn: JQuery = $('.htCore colgroup col:nth-child(2)');
-      //
-      //// Fix the width of the 'select-all' checkbox column (second column)
-      //// and add the surplus to the last column
-      //let lastColumnHeaderWidth: number = lastColumnHeader.width() + (checkboxColumn.width() - 30);
-      //lastColumnHeader.width(lastColumnHeaderWidth);
-      //// checkboxColumn.width('30px');
-      //
-      //// Fix the width of the first column (point id column)
-      ////firstColumnHeader.width('45px');
-      //
-      //// Centre checkboxes
-      //let checkboxCells: JQuery = $('.htCore input.htCheckboxRendererInput').parent();
-      ////checkboxCells.css('text-align', 'center');
-      //
-      //// Initialise checkbox header state
-      //let checkboxHeader: JQuery = $('.select-all:checkbox');
-      //checkboxHeader.prop(this.getCheckboxHeaderState(), true);
-      //
-      //let header: JQuery, cells: JQuery;
-      //if (this.schema.hasRowCommentColumn(this.request.status)) {
-      //  header = $('.htCore thead th:nth-child(3)');
-      //  cells = $('.htCore tbody td:nth-child(3)');
-      //} else {
-      //  header = $('.htCore thead th:nth-child(2)');
-      //  cells = $('.htCore tbody td:nth-child(2)');
-      //}
-      //
-      //// Add a thicker border between the control column(s) and the first data column
-      ////header.css('border-right', '5px double #ccc');
-      ////cells.css('border-right', '5px double #ccc');
-      //
-      //// Listen for the change event on the 'select-all' checkbox and act accordingly
-      //checkboxHeader.change(() => {
+      // let firstColumnHeader: JQuery = $('.htCore colgroup col.rowHeader');
+      // let lastColumnHeader: JQuery = $('.htCore colgroup col:last-child');
+      // let checkboxColumn: JQuery = $('.htCore colgroup col:nth-child(2)');
+
+      // Fix the width of the 'select-all' checkbox column (second column)
+      // and add the surplus to the last column
+      // let lastColumnHeaderWidth: number = lastColumnHeader.width() + (checkboxColumn.width() - 30);
+      // lastColumnHeader.width(lastColumnHeaderWidth);
+      // checkboxColumn.width('30px');
+
+      // Fix the width of the first column (point id column)
+      // firstColumnHeader.width('45px');
+
+      // Centre checkboxes
+      let checkboxCells: JQuery = $('.htCore input.htCheckboxRendererInput').parent();
+      checkboxCells.css('text-align', 'center');
+
+      // Initialise checkbox header state
+      let checkboxHeader: JQuery = $('.select-all:checkbox');
+      checkboxHeader.prop(this.getCheckboxHeaderState(), true);
+
+      let header: JQuery, cells: JQuery;
+      if (this.schema.hasRowCommentColumn(this.request.status)) {
+        header = $('.htCore thead th:nth-child(3)');
+        cells = $('.htCore tbody td:nth-child(3)');
+      } else {
+        header = $('.htCore thead th:nth-child(2)');
+        cells = $('.htCore tbody td:nth-child(2)');
+      }
+
+      // Add a thicker border between the control column(s) and the first data column
+      header.css('border-right', '5px double #ccc');
+      cells.css('border-right', '5px double #ccc');
+
+      // Listen for the change event on the 'select-all' checkbox and act accordingly
+      // checkboxHeader.change(() => {
       //  for (let i: number = 0, len: number = this.request.points.length; i < len; i++) {
       //    this.request.points[i].selected = this.checked;
       //  }
@@ -327,12 +327,12 @@ class RequestTableController {
       //  // Need to explicitly trigger a digest loop here because we are out
       //  // of the angularjs world and in the happy land of jquery hacking
       //  this.$scope.$apply();
-      //});
+      // });
       //
-      //// Listen for change events on all checkboxes
-      //$('.htCheckboxRendererInput:checkbox').change(() => {
+      // Listen for change events on all checkboxes
+      // $('.htCheckboxRendererInput:checkbox').change(() => {
       //  $('.select-all:checkbox').prop(this.getCheckboxHeaderState(), true);
-      //});
+      // });
     }
   };
 
