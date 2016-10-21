@@ -70,7 +70,7 @@ class RequestFooterController {
   public claim(event: JQueryEventObject): void {
     this.stopEvent(event);
     this.taskService.assignTaskToCurrentUser(this.request).then(() => {
-      this.table.activateDefaultCategory();
+      this.table.render();
     });
   }
 

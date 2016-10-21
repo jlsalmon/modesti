@@ -20,7 +20,6 @@ export class RequestToolbarComponent implements IComponentOptions {
     tasks: '=',
     schema: '=',
     table: '=',
-    activeCategory: '='
   };
 }
 
@@ -32,7 +31,6 @@ class RequestToolbarController {
   public tasks: Task[];
   public schema: Schema;
   public table: Table;
-  public activeCategory: Category;
 
   public constructor(private $modal: any, private $state: IStateService, private requestService: RequestService,
                      private taskService: TaskService, private alertService: AlertService,
