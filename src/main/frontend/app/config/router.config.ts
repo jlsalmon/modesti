@@ -41,8 +41,8 @@ export class RouterConfig {
           }})
         .state('user',   { url: '/users/:id', component: 'user',              title: '{{id}}' })
         .state('about',  { url: '/about',     component: 'about',             title: 'About' })
-        .state('error',  { url: '/error',     component: 'error',             title: 'Error' })
         .state('404',    { url: '/404',       templateUrl: '/error/404.html', title: 'Not Found' })
+        .state('500',    { url: '/500',       templateUrl: '/error/500.html', title: 'Error' })
 
         // TODO: remove this state, an alert should be enough
         .state('submitted',   { url: '/requests/:id/submitted', component: 'request',

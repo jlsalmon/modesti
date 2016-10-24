@@ -21,17 +21,12 @@ export class HttpConfig {
           return response || $q.when(response);
         },
         responseError : (response: any) => {
-          if (response && (response.status === 0 || response.status === -1)) {
-            // Backend not connected
-            console.log('error: backend not connected');
-            $injector.get('$state').transitionTo('error', {}, {location: false});
+          if (response && (response.status >= 500 || response.status === 0 || response.status === -1)) {
+            $injector.get('$state').transitionTo('500', {}, {location: false});
           }
           if (response && response.status === 404) {
             console.log('error: page not found');
             $injector.get('$state').transitionTo('404', {}, {location: false});
-          }
-          if (response && response.status >= 500) {
-            console.log('error: ' + response.statusText);
           }
           return $q.reject(response);
         }
