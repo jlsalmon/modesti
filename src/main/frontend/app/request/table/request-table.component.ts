@@ -49,6 +49,7 @@ class RequestTableController {
 
     let settings: any = {
       requestStatus: this.request.status,
+      requestType: this.request.type,
       // TODO: is there a better way than passing the services?
       schemaService: this.schemaService,
       taskService: this.taskService,

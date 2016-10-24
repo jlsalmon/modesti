@@ -61,7 +61,10 @@ export class HandsonTable extends Table {
     // Make sure the table fills the container height
     this.adjustTableHeight();
 
-    this.hot.updateSettings({cells: this.evaluateCellSettings});
+    this.hot.updateSettings({
+      cells: this.evaluateCellSettings,
+      maxRows: settings.requestStatus === 'IN_PROGRESS' ? undefined : data.length
+    });
 
     // Trigger an initial render
     this.render();
@@ -108,6 +111,10 @@ export class HandsonTable extends Table {
 
     return { readOnly: !editable };
   };
+
+  public canAddRows(): boolean {
+    return this.settings.requestStatus === 'IN_PROGRESS' && this.settings.requestType === 'CREATE';
+  }
 
   public determineInitialHiddenColumns(columnDefs: any[]): number[] {
     let hiddenColumns: number[] = [];
