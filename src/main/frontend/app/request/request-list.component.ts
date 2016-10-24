@@ -55,6 +55,7 @@ class RequestListController {
   public resetFilter(): void {
     this.filter = {
       description: '',
+      id: '',
       status: '',
       domain: '',
       creator: '',
