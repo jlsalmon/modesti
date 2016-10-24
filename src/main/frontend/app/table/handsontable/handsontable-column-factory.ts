@@ -17,7 +17,7 @@ export class HandsontableColumnFactory {
   protected getColumnDefs(table: Table, meta: any): any[] {
     let columns: any[] = [];
 
-    if (meta.authorised) {
+    if (meta.authorised && meta.assigned) {
 
       // The schema can allow rows to be "selectable" for specified request statuses
       if (table.schema.hasRowSelectColumn(meta.requestStatus)) {
@@ -50,7 +50,7 @@ export class HandsontableColumnFactory {
       field: field
     };
 
-    if (meta.authorised) {
+    if (meta.authorised && meta.assigned) {
       let editable: boolean = true;
 
       if (field.editable === true || field.editable === false) {
@@ -221,7 +221,7 @@ export class HandsontableColumnFactory {
     let property: string;
 
     schema.rowCommentStates.forEach((rowCommentState: any) => {
-      if (rowCommentState.state === requestStatus) {
+      if (rowCommentState.status === requestStatus) {
         property = rowCommentState.property;
       }
     });

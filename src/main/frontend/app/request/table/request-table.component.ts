@@ -46,19 +46,13 @@ class RequestTableController {
                      private taskService: TaskService, private schemaService: SchemaService) {
 
     let task: Task = this.taskService.getCurrentTask();
-    let authorised: boolean = false;
-
-    if (this.taskService.isCurrentUserAuthorised(task) && this.taskService.isCurrentUserAssigned(task)) {
-      authorised = true;
-    }
 
     let settings: any = {
-      authorised: authorised,
       requestStatus: this.request.status,
-      // TODO: is there a better way than passing the service?
+      // TODO: is there a better way than passing the services?
       schemaService: this.schemaService,
+      taskService: this.taskService,
       cellRenderer: this.renderCell,
-      cells: this.evaluateCellSettings,
       afterChange: this.onAfterChange,
       afterRender: this.onAfterRender
     };
@@ -67,60 +61,7 @@ class RequestTableController {
 
     // Add additional helper methods
     this.table.navigateToField = this.navigateToField;
-
-    this.table.hot.updateSettings({cells: this.evaluateCellSettings});
   }
-
-  /**
-   * Evaluate "editable" state of each cell
-   *
-   * TODO: this could happen on init
-   */
-  public evaluateCellSettings = (row: number, col: number, prop: any) => {
-    if (typeof prop !== 'string') {
-      return;
-    }
-
-    let task: Task = this.taskService.getCurrentTask();
-
-    let authorised: boolean = false;
-    if (this.taskService.isCurrentUserAuthorised(task) && this.taskService.isCurrentUserAssigned(task)) {
-      authorised = true;
-    }
-
-    let editable: boolean = false;
-    if (authorised) {
-      let point: Point = this.request.points[row];
-      let field: Field = this.schema.getField(prop);
-
-      if (field) {
-        // Evaluate "editable" condition of the category
-        let category: Category = this.schema.getCategoryForField(field);
-        if (category.editable != null && typeof category.editable === 'object') {
-          let conditional: any = category.editable;
-
-          if (conditional != null) {
-            editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
-          }
-        }
-
-        // Evaluate "editable" condition of the field as it may override the category
-        let conditional: Conditional = field.editable;
-
-        if (conditional != null) {
-          editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
-        }
-      }
-
-      if (this.schema.hasRowSelectColumn(this.request.status) && prop === 'selected') {
-        editable = true;
-      } else if (this.schema.hasRowCommentColumn(this.request.status) && prop.contains('message')) {
-        editable = true;
-      }
-    }
-
-    return { readOnly: !editable };
-  };
 
   public renderCell = (instance: any, td: HTMLElement, row: number, col: number, prop: string,
                                           value: any, cellProperties: any): void => {
@@ -315,8 +256,8 @@ class RequestTableController {
       }
 
       // Add a thicker border between the control column(s) and the first data column
-      header.css('border-right', '5px double #ccc');
-      cells.css('border-right', '5px double #ccc');
+      // header.css('border-right', '5px double #ccc');
+      // cells.css('border-right', '5px double #ccc');
 
       // Listen for the change event on the 'select-all' checkbox and act accordingly
       // checkboxHeader.change(() => {
@@ -429,7 +370,7 @@ class RequestTableController {
           // Reload the history
           this.requestService.getRequestHistory(this.request.requestId).then((history: any) => {
             this.history = history;
-            this.table.hot.render();
+            this.table.render();
           });
         });
       }

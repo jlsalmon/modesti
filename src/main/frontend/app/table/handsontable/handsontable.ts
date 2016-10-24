@@ -2,6 +2,9 @@ import {Table} from '../table';
 import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
+import {Conditional} from '../../schema/conditional';
+import {SchemaService} from '../../schema/schema.service';
+import {TaskService} from '../../task/task.service';
 import {ColumnFactory} from '../column-factory';
 import {Point} from '../../request/point/point';
 import './select2-editor.ts';
@@ -18,12 +21,16 @@ export class HandsonTable extends Table {
   public hot: Handsontable.Core;
   public hotOptions: any;
   public hiddenColumnsPlugin: any;
+  public schemaService: SchemaService;
+  public taskService: TaskService;
 
   public constructor(schema: Schema, data: any[], settings: any) {
     super(schema, data, settings);
+    // Save references to services
+    this.schemaService = settings.schemaService;
+    this.taskService = settings.taskService;
 
     let columnDefs: any[] = this.getColumnDefs();
-    columnDefs.forEach((column: any) => column.renderer = settings.cellRenderer);
 
     this.hotOptions = {
       data: data,
@@ -33,7 +40,7 @@ export class HandsonTable extends Table {
       },
       fixedColumnsLeft: this.determineNumFixedColumns(),
       contextMenu: ['row_above', 'row_below', '---------', 'remove_row', '---------', 'undo', 'redo'],
-      stretchH: 'all',
+      // stretchH: 'all',
       minSpareRows: 0,
       undo: true,
       outsideClickDeselects: false,
@@ -54,15 +61,59 @@ export class HandsonTable extends Table {
     // Make sure the table fills the container height
     this.adjustTableHeight();
 
+    this.hot.updateSettings({cells: this.evaluateCellSettings});
+
     // Trigger an initial render
-    this.hot.render();
+    this.render();
   }
+
+  /**
+   * Evaluate "editable" state of each cell
+   */
+  public evaluateCellSettings = (row: number, col: number, prop: any) => {
+    if (typeof prop !== 'string') {
+      return;
+    }
+
+    let editable: boolean = false;
+    let assigned: boolean = this.taskService.isCurrentUserAssigned();
+    let point: Point = this.data[row];
+    let field: Field = this.schema.getField(prop);
+
+    if (assigned && field != null) {
+
+      // Evaluate "editable" condition of the category
+      let category: Category = this.schema.getCategoryForField(field);
+      if (category.editable != null && typeof category.editable === 'object') {
+        let conditional: any = category.editable;
+
+        if (conditional != null) {
+          editable = this.settings.schemaService.evaluateConditional(point, conditional, this.settings.requestStatus);
+        }
+      }
+
+      // Evaluate "editable" condition of the field as it may override the category
+      let conditional: Conditional = field.editable;
+
+      if (conditional != null) {
+        editable = this.settings.schemaService.evaluateConditional(point, conditional, this.settings.requestStatus);
+      }
+    }
+
+    if (this.schema.hasRowSelectColumn(this.settings.requestStatus) && prop === 'selected') {
+      editable = true;
+    } else if (this.schema.hasRowCommentColumn(this.settings.requestStatus) && prop.contains('message')) {
+      editable = true;
+    }
+
+    return { readOnly: !editable };
+  };
 
   public determineInitialHiddenColumns(columnDefs: any[]): number[] {
     let hiddenColumns: number[] = [];
 
     // We may have select and/or comment columns, so offset those
-    let offset: number = this.determineNumFixedColumns();
+    // let offset: number = this.determineNumFixedColumns();
 
     //if (this.state.getHiddenColumns().length > 0) {
       // If the table state holds a list of hidden columns, use that
@@ -76,8 +127,12 @@ export class HandsonTable extends Table {
       // Otherwise, initially show only the first category
       let firstCategory: Category = this.schema.categories[0];
       columnDefs.forEach((columnDef: any, index: number) => {
+        if (columnDef.data === 'selected' || columnDef.data.endsWith('message')) {
+          return;
+        }
+
         if (firstCategory.fields.indexOf(columnDef.field) === -1) {
-          hiddenColumns.push(index + offset);
+          hiddenColumns.push(index);
         }
       });
     //}
@@ -94,20 +149,37 @@ export class HandsonTable extends Table {
       }
     });
 
-    if (this.schema.hasRowSelectColumn(this.settings.requestStatus)) {
-      numFixedColumns++;
-    }
+    let assigned: boolean = this.taskService.isCurrentUserAssigned();
+    if (assigned) {
+      if (this.schema.hasRowSelectColumn(this.settings.requestStatus)) {
+        numFixedColumns++;
+      }
 
-    if (this.schema.hasRowCommentColumn(this.settings.requestStatus)) {
-      numFixedColumns++;
+      if (this.schema.hasRowCommentColumn(this.settings.requestStatus)) {
+        numFixedColumns++;
+      }
     }
 
     return numFixedColumns;
   }
 
-  public refreshData(): void {}
+  public refreshData(): void {
+    return;
+  }
 
-  public refreshColumnDefs(): void {}
+  public refreshColumnDefs(): void {
+    let columnDefs: any[] = this.getColumnDefs();
+
+    this.hot.updateSettings({
+      columns: columnDefs,
+      hiddenColumns: {
+        columns: this.determineInitialHiddenColumns(columnDefs)
+      },
+      fixedColumnsLeft: this.determineNumFixedColumns()
+    });
+
+    this.render();
+  }
 
   public render(): void {
     this.hot.render();
@@ -115,13 +187,13 @@ export class HandsonTable extends Table {
 
   public showColumn(field: Field): void {
     this.hiddenColumnsPlugin.showColumn(this.getColumnIndex(field));
-    this.hot.render();
+    this.render();
   }
 
   public hideColumn(field: Field): void {
     if (!field.fixed) {
       this.hiddenColumnsPlugin.hideColumn(this.getColumnIndex(field));
-      this.hot.render();
+      this.render();
     }
   }
 
@@ -132,7 +204,7 @@ export class HandsonTable extends Table {
     } else {
       this.hiddenColumnsPlugin.hideColumn(colIndex);
     }
-    this.hot.render();
+    this.render();
   }
 
   public isVisibleColumn(field: Field): boolean {
@@ -151,7 +223,7 @@ export class HandsonTable extends Table {
     } else {
       this.hiddenColumnsPlugin.showColumns(columnIndices);
     }
-    this.hot.render();
+    this.render();
   }
 
   public isVisibleColumnGroup(fields: Field[]): boolean {
@@ -174,11 +246,14 @@ export class HandsonTable extends Table {
   private getColumnDefs(): any[] {
     let meta: any = {
       requestStatus: this.settings.requestStatus,
-      authorised: this.settings.authorised,
-      schemaService: this.settings.schemaService
+      authorised: this.taskService.isCurrentUserAuthorised(),
+      assigned: this.taskService.isCurrentUserAssigned(),
+      schemaService: this.schemaService
     };
 
-    return ColumnFactory.getColumnDefinitions('handsontable', this, meta);
+    let columnDefs: any[] = ColumnFactory.getColumnDefinitions('handsontable', this, meta);
+    columnDefs.forEach((column: any) => column.renderer = this.settings.cellRenderer);
+    return columnDefs;
   }
 
   private getColumn(field: Field): any {

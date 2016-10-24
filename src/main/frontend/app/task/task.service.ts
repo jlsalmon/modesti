@@ -186,7 +186,11 @@ export class TaskService {
     return false;
   }
 
-  public isCurrentUserAssigned(task: Task): boolean {
+  public isCurrentUserAssigned(task?: Task): boolean {
+    if (!task) {
+      task = this.getCurrentTask();
+    }
+
     let user: User = this.authService.getCurrentUser();
     if (!user || !task) {
       return false;
@@ -201,9 +205,9 @@ export class TaskService {
    * @param task
    * @returns {boolean} true if the current user is authorised to act the given task
    */
-  public isCurrentUserAuthorised(task: Task): boolean {
+  public isCurrentUserAuthorised(task?: Task): boolean {
     if (!task) {
-      return false;
+      task = this.getCurrentTask();
     }
 
     let user: User = this.authService.getCurrentUser();
