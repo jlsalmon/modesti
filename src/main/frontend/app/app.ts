@@ -9,7 +9,8 @@ import 'angular-file-upload';
 import 'angular-http-auth';
 import 'angular-spinner';
 import 'angular-filter';
-import 'jquery'
+import 'angular-xeditable';
+import 'jquery';
 import 'spin.js';
 // import 'angular-bootstrap-select';
 import 'bootstrap-sass';
@@ -79,7 +80,8 @@ let app: any = angular.module('modesti', [
   'angularSpinner',
   'angular.filter',
   // 'angular-bootstrap-select',
-  'oc.lazyLoad'
+  'oc.lazyLoad',
+  'xeditable'
 ]);
 
 // TODO: split this up into modules
