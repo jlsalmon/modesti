@@ -102,7 +102,7 @@ export class AuthService {
   }
 
   public isCurrentUserAuthenticated(): boolean {
-    return this.$localStorage.user !== undefined;
+    return this.$localStorage.user != null;
   }
 
   public isCurrentUserAdministrator(): boolean {

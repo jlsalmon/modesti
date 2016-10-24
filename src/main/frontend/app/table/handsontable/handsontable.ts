@@ -61,6 +61,9 @@ export class HandsonTable extends Table {
   public determineInitialHiddenColumns(columnDefs: any[]): number[] {
     let hiddenColumns: number[] = [];
 
+    // We may have select and/or comment columns, so offset those
+    let offset: number = this.determineNumFixedColumns();
+
     //if (this.state.getHiddenColumns().length > 0) {
       // If the table state holds a list of hidden columns, use that
       //columnDefs.forEach((columnDef: any, index: number) => {
@@ -74,7 +77,7 @@ export class HandsonTable extends Table {
       let firstCategory: Category = this.schema.categories[0];
       columnDefs.forEach((columnDef: any, index: number) => {
         if (firstCategory.fields.indexOf(columnDef.field) === -1) {
-          hiddenColumns.push(index);
+          hiddenColumns.push(index + offset);
         }
       });
     //}
@@ -238,6 +241,27 @@ export class HandsonTable extends Table {
     return invalid;
   }
 
+  public isInvalidField(field: Field): boolean {
+    let invalid: boolean = false;
+
+    this.data.forEach((point: Point) => {
+      if (point.errors && point.errors.length > 0) {
+        point.errors.forEach((error: any) => {
+
+          if (error.property) {
+            let property: string = error.property.split('.')[0];
+
+            if (field.id === property) {
+              invalid = true;
+            }
+          }
+        });
+      }
+    });
+
+    return invalid;
+  }
+
   /**
    * Make sure all the line numbers are consecutive
    */
@@ -334,7 +358,7 @@ export class HandsonTable extends Table {
         continue;
       }
 
-      if (typeof newValue !== 'string' || newValue === undefined || newValue === null) {
+      if (typeof newValue !== 'string' || newValue == null) {
         continue;
       }
 

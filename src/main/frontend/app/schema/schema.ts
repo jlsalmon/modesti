@@ -12,15 +12,15 @@ export class Schema implements ISerializable<Schema> {
   public rowCommentStates: RowCommentStateDescriptor[];
 
   public getCategory(id: string): Category {
-    let result: Category;
+    let category: Category;
 
-    this.categories.concat(this.datasources).forEach((category: Category) => {
-      if (category.id === id || category.name === id) {
-        result = category;
+    this.categories.concat(this.datasources).forEach((c: Category) => {
+      if (c.id === id || c.name === id) {
+        category = c;
       }
     });
 
-    return result;
+    return category;
   }
 
   public getAllCategories(): Category[] {
@@ -47,6 +47,20 @@ export class Schema implements ISerializable<Schema> {
     });
 
     return field;
+  }
+
+  public getCategoryForField(field: Field): Category {
+    let category: Category;
+
+    this.getAllCategories().forEach((c: Category) => {
+      let fieldIds: string[] = c.fields.map((f: Field) => f.id);
+
+      if (fieldIds.indexOf(field.id) !== -1) {
+        category = c;
+      }
+    });
+
+    return category;
   }
 
   public getAllFields(): Field[] {

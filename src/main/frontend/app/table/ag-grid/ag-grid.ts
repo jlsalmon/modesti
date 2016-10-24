@@ -115,7 +115,7 @@ export class AgGrid extends Table {
   private getColumnDefs(): ColDef[] {
     let meta: any = {
       cellRenderer: (params: any) => {
-        if (params.data !== undefined) {
+        if (params.data != null) {
           return this.gridOptions.api.getValue(params.column, params.node);
         } else {
           return '...';

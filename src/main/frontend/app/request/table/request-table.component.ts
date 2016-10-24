@@ -27,7 +27,6 @@ export class RequestTableComponent implements IComponentOptions {
     tasks: '=',
     schema: '=',
     table: '=',
-    activeCategory: '=',
     history: '='
   };
 }
@@ -40,7 +39,6 @@ class RequestTableController {
   public tasks: Task[];
   public schema: Schema;
   public table: Table;
-  public activeCategory: Category;
   public history: Change[];
 
   public constructor(private $scope: IScope, private $q: IQService, private $filter: IFilterService,
@@ -69,6 +67,8 @@ class RequestTableController {
 
     // Add additional helper methods
     this.table.navigateToField = this.navigateToField;
+
+    this.table.hot.updateSettings({cells: this.evaluateCellSettings});
   }
 
   /**
@@ -91,26 +91,26 @@ class RequestTableController {
     let editable: boolean = false;
     if (authorised) {
       let point: Point = this.request.points[row];
+      let field: Field = this.schema.getField(prop);
 
-      // Evaluate "editable" condition of the category
-      if (this.activeCategory.editable !== undefined && typeof this.activeCategory.editable === 'object') {
-        let conditional: any = this.activeCategory.editable;
+      if (field) {
+        // Evaluate "editable" condition of the category
+        let category: Category = this.schema.getCategoryForField(field);
+        if (category.editable != null && typeof category.editable === 'object') {
+          let conditional: any = category.editable;
 
-        if (conditional !== undefined) {
-          editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
-        }
-      }
-
-      // Evaluate "editable" condition of the field as it may override the category
-      this.activeCategory.fields.forEach((field: Field) => {
-        if (field.id === prop.split('.')[1]) {
-          let conditional: Conditional = field.editable;
-
-          if (conditional !== undefined) {
+          if (conditional != null) {
             editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
           }
         }
-      });
+
+        // Evaluate "editable" condition of the field as it may override the category
+        let conditional: Conditional = field.editable;
+
+        if (conditional != null) {
+          editable = this.schemaService.evaluateConditional(point, conditional, this.request.status);
+        }
+      }
 
       if (this.schema.hasRowSelectColumn(this.request.status) && prop === 'selected') {
         editable = true;
@@ -212,7 +212,7 @@ class RequestTableController {
         content += '<tr><td style="background-color: #ffecec">&nbsp;- ' + original + '&nbsp;</td></tr>';
         content += '<tr><td style="background-color: #dbffdb">&nbsp;+ ' + modified + '&nbsp;</td></tr></table></samp>';
 
-        td.style.background = '#fcf8e3';
+        td.setAttribute('style', 'background-color: #fcf8e3 !important');
         $(td).popover({ trigger: 'hover', placement: 'top', container: 'body', html: true, content: content });
       }
     }
@@ -237,7 +237,7 @@ class RequestTableController {
       currentValue = point.properties[field.id];
     }
 
-    if (currentValue === undefined || currentValue === '') {
+    if (currentValue == null || currentValue === '') {
       let regex: RegExp = /^\{\{\s*[\w\.]+\s*}}/g;
 
       if (field.default && typeof field.default === 'string' && regex.test(field.default)) {
@@ -282,20 +282,20 @@ class RequestTableController {
     // Initialise the help text popovers on the column headers
     $('.help-text').popover({trigger: 'hover', delay: {'show': 500, 'hide': 100}});
 
-    if (this.schema.hasRowSelectColumn(this.schema, this.request.status)) {
+    if (this.schema.hasRowSelectColumn(this.request.status)) {
 
-      let firstColumnHeader: JQuery = $('.htCore colgroup col.rowHeader');
-      let lastColumnHeader: JQuery = $('.htCore colgroup col:last-child');
-      let checkboxColumn: JQuery = $('.htCore colgroup col:nth-child(2)');
+      // let firstColumnHeader: JQuery = $('.htCore colgroup col.rowHeader');
+      // let lastColumnHeader: JQuery = $('.htCore colgroup col:last-child');
+      // let checkboxColumn: JQuery = $('.htCore colgroup col:nth-child(2)');
 
       // Fix the width of the 'select-all' checkbox column (second column)
       // and add the surplus to the last column
-      let lastColumnHeaderWidth: number = lastColumnHeader.width() + (checkboxColumn.width() - 30);
-      lastColumnHeader.width(lastColumnHeaderWidth);
-      checkboxColumn.width('30px');
+      // let lastColumnHeaderWidth: number = lastColumnHeader.width() + (checkboxColumn.width() - 30);
+      // lastColumnHeader.width(lastColumnHeaderWidth);
+      // checkboxColumn.width('30px');
 
       // Fix the width of the first column (point id column)
-      firstColumnHeader.width('45px');
+      // firstColumnHeader.width('45px');
 
       // Centre checkboxes
       let checkboxCells: JQuery = $('.htCore input.htCheckboxRendererInput').parent();
@@ -306,7 +306,7 @@ class RequestTableController {
       checkboxHeader.prop(this.getCheckboxHeaderState(), true);
 
       let header: JQuery, cells: JQuery;
-      if (this.schema.hasRowCommentColumn(this.schema, this.request.status)) {
+      if (this.schema.hasRowCommentColumn(this.request.status)) {
         header = $('.htCore thead th:nth-child(3)');
         cells = $('.htCore tbody td:nth-child(3)');
       } else {
@@ -319,25 +319,25 @@ class RequestTableController {
       cells.css('border-right', '5px double #ccc');
 
       // Listen for the change event on the 'select-all' checkbox and act accordingly
-      checkboxHeader.change(() => {
-        for (let i: number = 0, len: number = this.request.points.length; i < len; i++) {
-          this.request.points[i].selected = this.checked;
-        }
-
-        // Need to explicitly trigger a digest loop here because we are out
-        // of the angularjs world and in the happy land of jquery hacking
-        this.$scope.$apply();
-      });
-
+      // checkboxHeader.change(() => {
+      //  for (let i: number = 0, len: number = this.request.points.length; i < len; i++) {
+      //    this.request.points[i].selected = this.checked;
+      //  }
+      //
+      //  // Need to explicitly trigger a digest loop here because we are out
+      //  // of the angularjs world and in the happy land of jquery hacking
+      //  this.$scope.$apply();
+      // });
+      //
       // Listen for change events on all checkboxes
-      $('.htCheckboxRendererInput:checkbox').change(() => {
-        $('.select-all:checkbox').prop(this.getCheckboxHeaderState(), true);
-      });
+      // $('.htCheckboxRendererInput:checkbox').change(() => {
+      //  $('.select-all:checkbox').prop(this.getCheckboxHeaderState(), true);
+      // });
     }
   };
 
   public getCheckboxHeaderState(): string {
-    if (!this.table.hasOwnProperty('getSelectedLineNumbers')) {
+    if (!this.table || !this.table.hasOwnProperty('getSelectedLineNumbers')) {
       return 'unchecked';
     }
 
@@ -381,6 +381,13 @@ class RequestTableController {
       oldValue = change[2];
       newValue = change[3];
 
+      let field: Field;
+      if (typeof property === 'string') {
+        field = this.schema.getField(property);
+      } else {
+        field = this.table.hotOptions.columns[property].field;
+      }
+
       // Mark the point as dirty.
       if (newValue !== oldValue) {
         console.log('dirty point: ' + this.request.points[row].lineNo);
@@ -389,12 +396,9 @@ class RequestTableController {
       }
 
       // If the value was cleared, make sure any other properties of the object are also cleared.
-      if (newValue === undefined || newValue === '') {
-        // let point = this.parent.hot.getSourceDataAtRow(row);
+      if (field && (newValue == null || newValue === '')) {
         let point: Point = this.request.points[row];
-        let propName: string = property.split('.')[1];
-
-        let prop: any = point.properties[propName];
+        let prop: any = point.properties[field.id];
 
         if (typeof prop === 'object') {
           for (let attribute in prop) {
@@ -405,11 +409,10 @@ class RequestTableController {
         } else {
           prop = undefined;
         }
-
       }
 
       // This is a workaround. See function documentation for info.
-      let promise: IPromise<any> = this.saveNewValue(row, property, newValue);
+      let promise: IPromise<any> = this.saveNewValue(row, field, newValue);
       promises.push(promise);
     }
 
@@ -426,7 +429,6 @@ class RequestTableController {
           // Reload the history
           this.requestService.getRequestHistory(this.request.requestId).then((history: any) => {
             this.history = history;
-
             this.table.hot.render();
           });
         });
@@ -444,26 +446,16 @@ class RequestTableController {
    * the background to be doubly sure that the new value is persisted.
    *
    * @param row
-   * @param property
+   * @param field
    * @param newValue
    */
-  public saveNewValue(row: number, property: string, newValue: any): IPromise<any> {
+  public saveNewValue(row: number, field: Field, newValue: any): IPromise<any> {
     let q: IDeferred<any> = this.$q.defer();
     let point: Point = this.request.points[row];
-    let outerProp: string;
-
-    if (typeof property === 'string') {
-      // get the outer object i.e. properties.location.value -> location
-      outerProp = property.split('.')[1];
-    } else {
-      outerProp = this.activeCategory.fields[property].id;
-    }
-
-    let field: Field = this.schema.getField(outerProp);
 
     // If there is no corresponding field in the schema, then it must be a "virtual"
     // column (such as "comment" or "checkbox")
-    if (field === undefined) {
+    if (field == null) {
       q.resolve();
       return q.promise;
     }
@@ -473,12 +465,12 @@ class RequestTableController {
       this.schemaService.queryFieldValues(field, newValue, point).then((values: any[]) => {
 
         values.forEach((item: any) => {
-          let value: any = (field.model === undefined && typeof item === 'object') ? item.value : item[field.model];
+          let value: any = (field.model == null && typeof item === 'object') ? item.value : item[field.model];
 
           if (value === newValue) {
             console.log('saving new value');
             delete item._links;
-            point.properties[outerProp] = item;
+            point.properties[field.id] = item;
           }
         });
 
@@ -486,7 +478,7 @@ class RequestTableController {
       });
     } else {
       // For non-autocomplete fields, just manually save the new value.
-      point.properties[outerProp] = newValue;
+      point.properties[field.id] = newValue;
       q.resolve();
     }
 
@@ -500,25 +492,23 @@ class RequestTableController {
    * @param fieldId the id of the field to focus on
    */
    public navigateToField = (categoryName: string, fieldId: string) => {
+    // TOD: reimplement this by showing the particular field
+
     // Find the category which contains the field
-    let category: Category;
-
-    if (fieldId.indexOf('.') !== -1) {
-      fieldId = fieldId.split('.')[0];
-    }
-
-    this.schema.categories.concat(this.schema.datasources).forEach((cat: Category) => {
-      if (cat.name === categoryName || cat.id === categoryName) {
-        cat.fields.forEach((field: Field) => {
-          if (field.id === fieldId || cat.name === fieldId || cat.id === fieldId) {
-            category = cat;
-          }
-        });
-      }
-    });
-
-    if (category) {
-      this.activeCategory = category;
-    }
+    // let category: Category;
+    //
+    // if (fieldId.indexOf('.') !== -1) {
+    //  fieldId = fieldId.split('.')[0];
+    // }
+    //
+    // this.schema.categories.concat(this.schema.datasources).forEach((cat: Category) => {
+    //  if (cat.name === categoryName || cat.id === categoryName) {
+    //    cat.fields.forEach((field: Field) => {
+    //      if (field.id === fieldId || cat.name === fieldId || cat.id === fieldId) {
+    //        category = cat;
+    //      }
+    //    });
+    //  }
+    // });
   };
 }

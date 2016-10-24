@@ -174,7 +174,7 @@ export class TaskService {
   }
 
   public isTaskClaimed(task: Task): boolean {
-    return task.assignee !== undefined;
+    return task.assignee != null;
   }
 
   public isAnyTaskClaimed(tasks: Task[]): boolean {
