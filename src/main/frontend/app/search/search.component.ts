@@ -57,10 +57,18 @@ class SearchController {
     this.schema = schema;
 
     if (this.table) {
+      this.resetFilters();
       this.table.schema = schema;
       this.table.refreshColumnDefs();
       this.table.refreshData();
     }
+  }
+
+  public resetFilters(): void {
+    this.filters = [];
+    this.page = {number: 0, size: 100};
+    this.table.gridOptions.api.setSortModel(null);
+    this.sort = '';
   }
 
   public search = (params?: any): void => {
