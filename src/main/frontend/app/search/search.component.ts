@@ -6,12 +6,10 @@ import {Table} from '../table/table';
 import {TableFactory} from '../table/table-factory';
 import {Schema} from '../schema/schema';
 import {Point} from '../request/point/point';
-import {Category} from '../schema/category/category';
-import {Field} from '../schema/field/field';
-import {ColumnFactory} from '../table/column-factory';
-import {IComponentOptions, IPromise} from 'angular';
+import {QueryParser} from './query-parser';
+import {Filter} from '../table/column-panel/filter';
+import {IComponentOptions, IPromise, IRootScopeService, IAngularEvent} from 'angular';
 import {IStateService} from 'angular-ui-router';
-import IRootScopeService = angular.IRootScopeService;
 
 export class SearchComponent implements IComponentOptions {
   public templateUrl: string = '/search/search.component.html';
@@ -28,7 +26,7 @@ class SearchController {
   public schema: Schema;
   public schemas: Schema[];
   public table: Table;
-  public filters: any[];
+  public filters: Map<string, Filter>;
   public query: string;
   public page: any = {number: 0, size: 100};
   public sort: string;
@@ -48,7 +46,8 @@ class SearchController {
 
     this.table = TableFactory.createTable('ag-grid', this.schema, [], settings);
 
-    $rootScope.$on('modesti:searchFiltersChanged', () => {
+    $rootScope.$on('modesti:searchFiltersChanged', (event: IAngularEvent, filters: Map<string, Filter>) => {
+      this.filters = filters;
       this.search();
     });
   }
@@ -65,7 +64,6 @@ class SearchController {
   }
 
   public resetFilters(): void {
-    this.filters = [];
     this.page = {number: 0, size: 100};
     this.table.gridOptions.api.setSortModel(null);
     this.sort = '';
@@ -75,7 +73,7 @@ class SearchController {
     this.loading = 'started';
     console.log('searching');
 
-    let query: string = this.parseQuery();
+    let query: string = QueryParser.parse(this.filters);
 
     if (params) {
       this.page.number = params.startRow / 100;
@@ -128,44 +126,6 @@ class SearchController {
       this.error = error;
     });
   };
-
-  public parseQuery(): string {
-    let expressions: string[] = [];
-
-    this.schema.getAllFields().forEach((field: Field) => {
-
-      if (field.filter && field.filter.value != null && field.filter.value !== '') {
-
-        let property: string;
-        if (field.type === 'autocomplete') {
-          let modelAttribute: string = field.model ? field.model : 'value';
-          property = field.id + '.' + modelAttribute;
-        } else {
-          property = field.id;
-        }
-
-        let operation: string = this.parseOperation(field.filter.operation);
-        let expression: string = property + ' ' + operation + ' "' + field.filter.value + '"';
-
-        if (expressions.indexOf(expression) === -1) {
-          expressions.push(expression);
-        }
-      }
-    });
-
-    let query: string = expressions.join(' and ');
-    console.log('parsed query: ' + query);
-    return query;
-  }
-
-  public parseOperation(operation: string): string {
-    if (operation === 'equals') {
-      return ' == ';
-    } else {
-      console.warn('not supported!');
-      return ' == ';
-    }
-  }
 
   public updatePoints(): void {
     let modalInstance: any = this.$modal.open({

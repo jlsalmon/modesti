@@ -50,23 +50,23 @@
           </div>
 
           <!-- Filter entry form -->
-          <form class="form-inline" ng-if="field.filter != null">
+          <form class="form-inline" ng-if="$ctrl.filters[field.id] != null">
             <div class="form-group">
               <div class="input-group">
                 <div class="input-group-addon">
                   <select class="form-control input-xs"
-                          ng-model="field.filter.operation"
+                          ng-model="$ctrl.filters[field.id].operation"
                           ng-change="$ctrl.onFiltersChanged()">
-                    <option value="equals">equals</option>
-                    <option value="not-equals">not equals</option>
                     <option value="starts-with">starts with</option>
                     <option value="ends-with">ends with</option>
+                    <option value="equals">equals</option>
+                    <option value="not-equals">not equals</option>
                     <option value="contains">contains</option>
                   </select>
                 </div>
                 <input type="text"
                        class="form-control input-sm"
-                       ng-model="field.filter.value"
+                       ng-model="$ctrl.filters[field.id].value"
                        ng-model-options='{ debounce: 600 }'
                        ng-change="$ctrl.onFiltersChanged()">
               </div>

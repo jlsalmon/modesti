@@ -1,8 +1,8 @@
 import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
-import {Point} from '../../request/point/point';
 import {Table} from '../table';
+import {Filter} from './filter';
 import {IComponentOptions, IRootScopeService} from 'angular';
 
 export class ColumnPanelComponent implements IComponentOptions {
@@ -20,6 +20,7 @@ class ColumnPanelController {
 
   public schema: Schema;
   public table: Table;
+  public filters: Map<string, Filter> = new Map<string, Filter>();
 
   public constructor(private $rootScope: IRootScopeService) {
     this.schema.categories.forEach(function (category: Category, index: number) {
@@ -44,11 +45,9 @@ class ColumnPanelController {
   }
 
   public toggleFilter(field: Field): void {
-    // FIXME: maintain filter state on the column defs, not the schema
-    field.filter = {value: undefined, operation: 'equals'};
+    this.filters[field.id] = {field: field, value: undefined, operation: 'starts-with'};
   }
-
   public onFiltersChanged(): void {
-    this.$rootScope.$emit('modesti:searchFiltersChanged');
+    this.$rootScope.$emit('modesti:searchFiltersChanged', this.filters);
   }
 }
