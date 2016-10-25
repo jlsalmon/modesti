@@ -1,0 +1,66 @@
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 50px;
+  background-color: #f5f5f5;
+  border-top: 1px solid #CCC;
+}
+
+.footer button.btn {
+  margin-top: 8px;
+}
+
+.footer {
+  font-size: 14px;
+}
+
+.footer .accordion  {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  z-index: 999;
+  left: 0;
+  right: 0;
+}
+
+.footer .panel-group {
+  margin-bottom: 0;
+}
+
+.footer .panel-heading {
+  height:50px;
+  padding: 15px 15px;
+}
+
+.footer .panel-heading, .footer .panel-group .panel, .footer .panel {
+  border-radius: 0;
+  box-shadow: none;
+  border-left: none;
+  border-right: none;
+}
+
+.footer .panel-heading a.accordion-toggle:hover, .footer .panel-heading a.accordion-toggle:focus {
+  color: inherit;
+}
+
+.footer .panel-title {
+  font-size: 14px;
+  line-height: inherit;
+}
+
+.footer .panel-title .btn-group {
+  margin-top: -15px;
+}
+
+.footer .panel-body {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.footer .label {
+  /* margin: 15px; */
+  font-size: 14px;
+  margin-right: 10px;
+}

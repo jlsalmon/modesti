@@ -1,0 +1,82 @@
+.toolbar {
+  position: absolute;
+  height: 50px;
+  top: 90px;
+  left: 250px;
+  right: 0;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  background-color: #F5F5F5;
+}
+
+.toolbar .toolbar-item {
+  display: inline-table;
+}
+
+.toolbar .request-category-selector {
+  width: 210px;
+}
+
+.toolbar .search-form {
+  padding: 0;
+}
+
+.toolbar .search-form {
+  margin-right: 5px;
+  margin-left: 3px;
+  border-radius: 2px;
+  border: 1px solid #dbdbdb;
+}
+
+.toolbar .search-form button#search-btn {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.toolbar .search-form input[type="text"], .toolbar .search-form .btn
+{
+  box-shadow: none;
+  background-color: #fafafa;
+  border: 1px solid #fafafa !important;
+}
+
+.toolbar .search-form input[type="text"] {
+  color: #666;
+  -webkit-border-top-left-radius: 2px !important;
+  -webkit-border-top-right-radius: 0 !important;
+  -webkit-border-bottom-right-radius: 0 !important;
+  -webkit-border-bottom-left-radius: 2px !important;
+  -moz-border-radius-topleft: 2px !important;
+  -moz-border-radius-topright: 0 !important;
+  -moz-border-radius-bottomright: 0 !important;
+  -moz-border-radius-bottomleft: 2px !important;
+  border-top-left-radius: 2px !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-bottom-left-radius: 2px !important;
+}
+
+.toolbar .search-form input[type="text"]:focus, .toolbar .search-form input[type="text"]:focus+.input-group-btn .btn {
+  background-color: #fff;
+  color: #666;
+}
+
+.toolbar .search-form input[type="text"]:focus+.input-group-btn .btn {
+  border-left-color: #fff !important;
+}
+
+.toolbar .search-form .btn {
+  color: #999;
+  -webkit-border-top-left-radius: 0 !important;
+  -webkit-border-top-right-radius: 2px !important;
+  -webkit-border-bottom-right-radius: 2px !important;
+  -webkit-border-bottom-left-radius: 0 !important;
+  -moz-border-radius-topleft: 0 !important;
+  -moz-border-radius-topright: 2px !important;
+  -moz-border-radius-bottomright: 2px !important;
+  -moz-border-radius-bottomleft: 0 !important;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 2px !important;
+  border-bottom-right-radius: 2px !important;
+  border-bottom-left-radius: 0 !important;
+}

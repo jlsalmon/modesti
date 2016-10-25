@@ -1,0 +1,36 @@
+.alert-messages {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  z-index: 1000;
+  width: 550px;
+}
+
+.alert-messages .alert {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.alert-success {
+  color: #3C763D !important;
+  background-color: #DFF0D8 !important;
+  border-color: #D6E9C6 !important;
+}
+
+.alert-info {
+  color: #31708F !important;
+  background-color: #D9EDF7 !important;
+  border-color: #BCE8F1 !important;
+}
+
+.alert-danger {
+  color: #A94442 !important;
+  background-color: #F2DEDE !important;
+  border-color: #EBCCD1 !important;
+}
+
+.alert-warning {
+  background-color: #fcf8e3 !important;
+}
