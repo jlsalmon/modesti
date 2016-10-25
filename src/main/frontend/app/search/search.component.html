@@ -7,7 +7,7 @@
 </div>
 
 
-<section class="container-fluid">
+<section class="search-header container-fluid">
   <div class="row">
     <div class="col-md-12">
 
@@ -20,7 +20,7 @@
 </section>
 
 
-<section class="toolbar container-fluid">
+<section class="search-toolbar container-fluid">
   <div class="row">
     <div class="col-lg-12">
 
@@ -224,12 +224,11 @@
 </section>
 
 
-<section class="table" style="width: 100%; position: absolute; top: 130px; bottom: 50px;">
+<section class="search-table">
 
+  <!-- Column select panel -->
   <div class="col-md-2" style="overflow-y: scroll; height: 100%; background-color: #f5f5f5;">
-
     <column-panel schema="$ctrl.schema" table="$ctrl.table" enable-filters="true"></column-panel>
-
   </div>
 
   <div class="col-md-10" style="height: 100%; padding: 0;">
@@ -240,7 +239,7 @@
       <i class="fa fa-3x fa-exclamation-triangle" ng-if="$ctrl.loading === 'error'"></i>
     </div>
 
-    <div id="table" style="height: 100%; width: 100%" class="ag-fresh"></div>
+    <div id="table" class="ag-fresh"></div>
   </div>
 
 </section>
