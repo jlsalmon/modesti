@@ -81,6 +81,10 @@
   /*border-top: none;*/
   border-bottom: none;
   border-right: none;
+  -webkit-user-select:text;
+  -moz-user-select:text;
+  -ms-user-select:text;
+  user-select:text;
 }
 
 .search-table .ag-fresh .ag-header {
