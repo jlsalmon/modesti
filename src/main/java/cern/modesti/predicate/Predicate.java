@@ -70,13 +70,13 @@ public class Predicate<T> {
     StringPath path = entityPath.getString(criteria.getKey());
 
     if (argument.startsWith("*") && argument.endsWith("*")) {
-      return path.containsIgnoreCase(argument.substring(1, argument.length() - 2));
+      return path.containsIgnoreCase(argument.substring(1, argument.length() - 1));
     } else if (argument.startsWith("*")) {
-      return path.endsWithIgnoreCase(argument.substring(1, argument.length() - 1));
+      return path.endsWithIgnoreCase(argument.substring(1, argument.length()));
     } else if (argument.endsWith("*")) {
-      return path.startsWithIgnoreCase(argument.substring(0, argument.length() - 2));
+      return path.startsWithIgnoreCase(argument.substring(0, argument.length() - 1));
     } else {
-      return path.eq(argument);
+      return path.equalsIgnoreCase(argument);
     }
   }
 

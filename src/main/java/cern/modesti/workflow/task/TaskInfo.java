@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * This class represents a single task inside a workflow process instance
- * associtated with a {@link cern.modesti.request.Request}.
+ * associated with a {@link cern.modesti.request.Request}.
  *
  * @author Justin Lewis Salmon
  */
