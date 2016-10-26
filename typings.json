@@ -4,6 +4,7 @@
     "angular-cookies": "registry:dt/angular-cookies#1.4.0+20160317120654",
     "angular-ui-router": "github:DefinitelyTyped/DefinitelyTyped/angular-ui-router/angular-ui-router.d.ts#41f31600a1bff1adef3c76642183b20ec97aa81e",
     "bootstrap": "github:DefinitelyTyped/DefinitelyTyped/bootstrap/bootstrap.d.ts#5ea7d92bb39c7a26f49dc3de2c566d5ae325e19e",
+    "handsontable": "registry:dt/handsontable#0.24.3+20160711161324",
     "jasmine": "github:DefinitelyTyped/DefinitelyTyped/jasmine/jasmine.d.ts#5d0f2126c8dac8fce0ff020218aea06607213b0d",
     "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#661fc869669af796c6048483e999dce5732eed72",
     "latinize": "registry:dt/latinize#0.2.0+20160417130619",

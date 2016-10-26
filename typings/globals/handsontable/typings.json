@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/ef0e322e4f3cece71e9a26584aa82ec52acef982/handsontable/handsontable.d.ts",
+    "raw": "registry:dt/handsontable#0.24.3+20160711161324",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/ef0e322e4f3cece71e9a26584aa82ec52acef982/handsontable/handsontable.d.ts"
+  }
+}
