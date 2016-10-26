@@ -53,7 +53,7 @@ export class AuthService {
 
     // Set ignoreAuthModule so that angular-http-auth doesn't show another modal
     // if the authentication fails
-    this.$http.get('/api/login', {headers: headers, ignoreAuthModule: true}).then((response: any) => {
+    this.$http.get('/api/login', {headers: headers, params: {ignoreAuthModule: true}}).then((response: any) => {
       console.log('authenticated');
 
       // Set data in local storage for other parts of the app to use
