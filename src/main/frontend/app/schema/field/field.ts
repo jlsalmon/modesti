@@ -14,6 +14,7 @@ export class Field {
   public minLength: number;
   public maxLength: number;
   public uppercase: boolean;
+  public options: any[];
   public url: string;
   public params: string[];
 
@@ -52,6 +53,7 @@ export class Field {
     this.minLength = field.minLength;
     this.maxLength = field.maxLength;
     this.uppercase = field.uppercase;
+    this.options = field.options;
     this.url = field.url;
     this.params = field.params;
     return this;
