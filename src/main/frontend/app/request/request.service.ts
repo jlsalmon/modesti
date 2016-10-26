@@ -11,7 +11,7 @@ export class RequestService {
 
   public cache: any = {};
 
-  public constructor(private $http: IHttpService, private $rootScope: IRootScopeService, private $q: IQService,
+  public constructor(private $http: IHttpService, private $rootScope: any, private $q: IQService,
                      private restangular: any, private authService: AuthService) {}
 
   public getRequests(page: number, size: number, sort: string, filter: string): IPromise<Request[]> {
@@ -197,8 +197,8 @@ export class RequestService {
     return this.createRequest(clone);
   }
 
-  public deleteRequest(id: string): IPromise<void> {
-    let q: IDeferred<void> = this.$q.defer();
+  public deleteRequest(id: string): IPromise<any> {
+    let q: IDeferred<any> = this.$q.defer();
 
     this.restangular.one('requests', id).remove().then((response: any) => {
       console.log('deleted request: ' + response);
