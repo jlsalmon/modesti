@@ -47,7 +47,10 @@ public class RsqlExpressionBuilder<T> implements RSQLVisitor<BooleanExpression, 
   }
 
   private BooleanExpression createExpression(final ComparisonNode comparisonNode) {
-    return new PredicateBuilder<>(klass).with(comparisonNode.getSelector(), comparisonNode.getOperator(), comparisonNode.getArguments()).build();
+    return new PredicateBuilder<>(klass).with(
+        comparisonNode.getSelector(),
+        comparisonNode.getOperator(),
+        comparisonNode.getArguments()).build();
   }
 
   private BooleanExpression createExpression(final Node node) {

@@ -18,6 +18,6 @@ class UserController {
               private authService: AuthService) {}
 
   public $onInit(): void {
-    this.authService.getUser(this.$stateParams.id).then((user: User) => this.user = user);
+    this.authService.getUser(this.$stateParams['id']).then((user: User) => this.user = user);
   }
 }

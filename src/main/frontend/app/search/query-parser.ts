@@ -7,25 +7,27 @@ export class QueryParser {
     let expressions: string[] = [];
 
     for (let fieldId in filters) {
-      let filter: Filter = filters[fieldId];
+      if (filters.hasOwnProperty(fieldId)) {
+        let filter: Filter = filters[fieldId];
 
-      if (filter.value != null && filter.value !== '') {
+        if (filter.value != null && filter.value !== '') {
+          let property: string = filter.field.getModelPath();
+          let operation: string = this.parseOperation(filter.operation);
+          let value: string = filter.value;
 
-        let property: string;
-        let field: Field = filter.field;
+          if (filter.operation === 'starts-with') {
+            value += '*';
+          } else if (filter.operation === 'ends-with') {
+            value = '*' + value;
+          } else if (filter.operation === 'contains') {
+            value = '*' + value + '*';
+          }
 
-        if (field.type === 'autocomplete') {
-          let modelAttribute: string = filter.field.model ? field.model : 'value';
-          property = field.id + '.' + modelAttribute;
-        } else {
-          property = field.id;
-        }
+          let expression: string = property + ' ' + operation + ' "' + value + '"';
 
-        let operation: string = this.parseOperation(filter.operation);
-        let expression: string = property + ' ' + operation + ' "' + filter.value + '"';
-
-        if (expressions.indexOf(expression) === -1) {
-          expressions.push(expression);
+          if (expressions.indexOf(expression) === -1) {
+            expressions.push(expression);
+          }
         }
       }
     }
@@ -38,8 +40,9 @@ export class QueryParser {
   private static parseOperation(operation: string): string {
     if (operation === 'equals') {
       return ' == ';
+    } else if (operation === 'not-equals') {
+      return ' != ';
     } else {
-      console.warn('not supported!');
       return ' == ';
     }
   }
