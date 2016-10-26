@@ -18,13 +18,13 @@ class RequestHeaderController {
 
   public constructor(private requestService: RequestService) {}
 
-  public validateDescription(data): String {
+  public validateDescription(data: string): string {
     if (!(data.toString().length > 0)) {
       return ' ';
     }
   }
 
-  public saveRequest(data): void {
+  public saveRequest(): void {
     this.requestService.saveRequest(this.request).then((request: Request) => {
       this.request = request;
     });

@@ -1,64 +1,3 @@
-<style>
-  /* TODO: move this to the proper place */
-  .request-header {
-    width: 100%;
-  }
-
-  .request-header .request-id {
-    display: inline-block;
-    padding: 0;
-    vertical-align: middle;
-    margin-top: 8px;
-  }
-
-  .request-header .request-description {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 5px;
-    color: #777;
-  }
-
-  .editable-hide {
-    display: none;
-  }
-
-  .editable-error {
-    color: #a94442;
-    padding-left: 5px;
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: 14px;
-    vertical-align: sub;
-  }
-
-  .editable-error:before {
-    /* fa-exclamation-triangle */
-    content:"\f071"
-  }
-
-  .editable-input {
-    border-radius: 0px !important;
-    box-shadow: none;
-    display: inline-block;
-    width: 310px;
-    height: 1.8em;
-    line-height: 1.42857;
-    color: #555;
-    background-color: #f5f5f5;
-    background-image: none;
-    border-bottom: 1px solid #ccc;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-  }
-
-  .editable-input:focus {
-    box-shadow: none;
-    outline: none;
-  }
-
-</style>
-
 <div class="row">
   <div class="col-lg-12">
 
@@ -76,7 +15,7 @@
               ng-mouseenter="$ctrl.hover = true"
               ng-mouseleave="$ctrl.hover = false"
               onbeforesave="$ctrl.validateDescription($data)"
-              onaftersave="$ctrl.saveRequest($data)">
+              onaftersave="$ctrl.saveRequest()">
           {{$ctrl.request.description}}
 
           <i class="fa fa-pencil"
