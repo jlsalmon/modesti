@@ -62,21 +62,28 @@ public class Predicate<T> {
     } else if (LESS_THAN_OR_EQUAL.equals(criteria.getOperation())) {
       return path.loe(value);
     } else {
-      return null;
+      throw new RuntimeException(format("Unknown operation %s", criteria.getOperation()));
     }
   }
 
   private BooleanExpression getStringPredicate(PathBuilder<T> entityPath, String argument) {
     StringPath path = entityPath.getString(criteria.getKey());
+    BooleanExpression expression;
 
     if (argument.startsWith("*") && argument.endsWith("*")) {
-      return path.containsIgnoreCase(argument.substring(1, argument.length() - 1));
+      expression = path.containsIgnoreCase(argument.substring(1, argument.length() - 1));
     } else if (argument.startsWith("*")) {
-      return path.endsWithIgnoreCase(argument.substring(1, argument.length()));
+      expression = path.endsWithIgnoreCase(argument.substring(1, argument.length()));
     } else if (argument.endsWith("*")) {
-      return path.startsWithIgnoreCase(argument.substring(0, argument.length() - 1));
+      expression = path.startsWithIgnoreCase(argument.substring(0, argument.length() - 1));
     } else {
-      return path.equalsIgnoreCase(argument);
+      expression = path.equalsIgnoreCase(argument);
+    }
+
+    if (EQUAL.equals(criteria.getOperation())) {
+      return expression;
+    } else {
+      return expression.not();
     }
   }
 
