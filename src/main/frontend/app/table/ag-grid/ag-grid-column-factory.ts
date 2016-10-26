@@ -15,7 +15,7 @@ export class AgGridColumnFactory {
         let columnDef: ColDef = {
           colId: field.id,
           headerName: field.name,
-          field: ColumnFactory.getModel(field)
+          field: field.getModelPath()
         };
 
         //let visibleColumns: string[] = meta.state.visibleColumns;

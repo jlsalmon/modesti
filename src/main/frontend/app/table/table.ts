@@ -30,16 +30,4 @@ export abstract class Table {
   public abstract toggleColumnGroup(fields: Field[]): void;
 
   public abstract isVisibleColumnGroup(fields: Field[]): boolean;
-
-  public getModel(field: Field): string {
-    let model: string = 'properties.' + field.id;
-    if (field.type === 'autocomplete') {
-      if (field.model) {
-        model += '.' + field.model;
-      } else {
-        model += '.value';
-      }
-    }
-    return model;
-  }
 }

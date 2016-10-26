@@ -17,16 +17,4 @@ export abstract class ColumnFactory {
   }
 
   protected abstract getColumnDefs(table: Table, meta: any): any[];
-
-  protected static getModel(field: Field): string {
-    let model: string = 'properties.' + field.id;
-    if (field.type === 'autocomplete') {
-      if (field.model) {
-        model += '.' + field.model;
-      } else {
-        model += '.value';
-      }
-    }
-    return model;
-  }
 }
