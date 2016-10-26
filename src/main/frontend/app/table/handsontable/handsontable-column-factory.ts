@@ -86,7 +86,7 @@ export class HandsontableColumnFactory {
       // Just use true/false dropdown until copy/paste issues are fixed.
       // See https://github.com/handsontable/handsontable/issues/2497
       (<OptionsField> field).options = ['true', 'false'];
-      column = this.getOptionsColumn(column, field as OptionsField);
+      column = this.getOptionsColumn(table, column, meta, field as OptionsField);
     }
 
     return column;
