@@ -1,4 +1,6 @@
 import {Table} from '../table';
+import {CopyPasteAware} from '../copy-paste-aware';
+import {UndoRedoAware} from '../undo-redo-aware';
 import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
@@ -16,7 +18,7 @@ declare var latinize: any;
 let Handsontable: any = require('handsontable-pro');
 
 
-export class HandsonTable extends Table {
+export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware {
 
   public hot: Handsontable.Core;
   public hotOptions: any;
@@ -351,6 +353,29 @@ export class HandsonTable extends Table {
     for (let i: number = 0, len: number = this.settings.data.length; i < len; i++) {
       this.settings.data[i].lineNo = i + 1;
     }
+  }
+
+  public undo(): void {
+    this.hot.undo();
+  }
+
+  public redo(): void {
+    this.hot.redo();
+  }
+
+  public cut(): void {
+    this.hot.copyPaste.triggerCut();
+  }
+
+  public copy(): void {
+    this.hot.copyPaste.setCopyableText();
+  }
+
+  public paste(): void {
+    this.hot.copyPaste.triggerPaste();
+    this.hot.copyPaste.copyPasteInstance.onPaste((value: any) => {
+      console.log('onPaste(): ' + value);
+    });
   }
 
   /**

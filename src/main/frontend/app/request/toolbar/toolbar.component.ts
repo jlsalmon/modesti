@@ -5,7 +5,8 @@ import {HistoryService} from '../history/history.service';
 import {Request} from '../request';
 import {Task} from '../../task/task';
 import {Schema} from '../../schema/schema';
-import {Table} from '../table/table';
+import {Table} from '../../table/table';
+import {HandsonTable} from '../../table/handsontable/handsontable';
 import {Category} from '../../schema/category/category';
 import {Point} from '../point/point';
 import {Field} from '../../schema/field/field';
@@ -19,7 +20,7 @@ export class RequestToolbarComponent implements IComponentOptions {
     request: '=',
     tasks: '=',
     schema: '=',
-    table: '=',
+    table: '='
   };
 }
 
@@ -30,7 +31,7 @@ class RequestToolbarController {
   public request: Request;
   public tasks: Task[];
   public schema: Schema;
-  public table: Table;
+  public table: HandsonTable;
 
   public constructor(private $modal: any, private $state: IStateService, private requestService: RequestService,
                      private taskService: TaskService, private alertService: AlertService,
@@ -43,26 +44,23 @@ class RequestToolbarController {
   }
 
   public undo(): void {
-    this.table.hot.undo();
+    this.table.undo();
   }
 
   public redo(): void {
-    this.table.hot.redo();
+    this.table.redo();
   }
 
   public cut(): void {
-    this.table.hot.copyPaste.triggerCut();
+    this.table.cut();
   }
 
   public copy(): void {
-    this.table.hot.copyPaste.setCopyableText();
+    this.table.copy();
   }
 
   public paste(): void {
-    this.table.hot.copyPaste.triggerPaste();
-    this.table.hot.copyPaste.copyPasteInstance.onPaste((value: any) => {
-      console.log('onPaste(): ' + value);
-    });
+    this.table.paste();
   }
 
   public assignTask(): void {
