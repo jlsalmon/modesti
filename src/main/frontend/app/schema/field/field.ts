@@ -16,4 +16,44 @@ export class Field {
   public uppercase: boolean;
   public url: string;
   public params: string[];
+
+  /**
+   * Return the full model path of the field. This means the field id plus
+   * the model attribute, separated by a space e.g. "person.name"
+   *
+   * For fields that are objects but have no 'model' attribute defined, assume
+   * that the object has only a single property called 'value'.
+   *
+   * @returns {string}
+   */
+  public getModelPath(): string {
+    let modelAttribute: string;
+
+    if (this.type === 'autocomplete') {
+      modelAttribute = this.id + '.' + this.model ? this.model : 'value';
+    } else {
+      modelAttribute = this.id;
+    }
+
+    return modelAttribute;
+  }
+
+  public deserialize(field: Field): Field {
+    this.id = field.id;
+    this.type = field.type;
+    this.name = field.name;
+    this.help = field.help;
+    this.required = field.required;
+    this.unique = field.unique;
+    this.editable = field.editable;
+    this.fixed = field.fixed;
+    this.default = field.default;
+    this.model = field.model;
+    this.minLength = field.minLength;
+    this.maxLength = field.maxLength;
+    this.uppercase = field.uppercase;
+    this.url = field.url;
+    this.params = field.params;
+    return this;
+  }
 }

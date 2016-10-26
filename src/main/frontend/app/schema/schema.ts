@@ -97,14 +97,33 @@ export class Schema implements ISerializable<Schema> {
     return has;
   }
 
-  public deserialize(json: any): Schema {
-    this.id = json.id;
-    this.description = json.description;
-    this.categories = json.categories;
-    this.datasources = json.datasources;
-    this.fields = json.fields;
-    this.selectableStates = json.selectableStates;
-    this.rowCommentStates = json.rowCommentStates;
+  public deserialize(schema: Schema): Schema {
+    this.id = schema.id;
+    this.description = schema.description;
+    this.selectableStates = schema.selectableStates;
+    this.rowCommentStates = schema.rowCommentStates;
+
+    if (schema.categories) {
+      this.categories = [];
+      schema.categories.forEach((category: Category) => {
+        this.categories.push(new Category().deserialize(category));
+      });
+    }
+
+    if (schema.datasources) {
+      this.datasources = [];
+      schema.datasources.forEach((category: Category) => {
+        this.datasources.push(new Category().deserialize(category));
+      });
+    }
+
+    if (schema.fields) {
+      this.fields = [];
+      schema.fields.forEach((field: Field) => {
+        this.fields.push(new Field().deserialize(field));
+      });
+    }
+
     return this;
   }
 }
