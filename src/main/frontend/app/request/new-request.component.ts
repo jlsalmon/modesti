@@ -60,6 +60,7 @@ class NewRequestController {
     }
 
     this.submitting = 'started';
+    this.request.assignee = this.request.creator;
 
     // Post form to server to create new request.
     this.requestService.createRequest(this.request).then((location: string) => {
