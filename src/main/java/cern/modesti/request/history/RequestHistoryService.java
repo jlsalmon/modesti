@@ -3,9 +3,8 @@ package cern.modesti.request.history;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
 import de.danielbechler.diff.ObjectDifferBuilder;
-import de.danielbechler.diff.comparison.ComparisonStrategy;
-import de.danielbechler.diff.comparison.PrimitiveDefaultValueMode;
 import de.danielbechler.diff.node.DiffNode;
+import de.danielbechler.diff.path.NodePath;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
@@ -68,11 +67,10 @@ public class RequestHistoryService {
       return;
     }
 
-    // TODO: FIXME: handle added/removed/shuffled rows for updates (can diff
-    // based on point ids?
-
     ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
-    DiffNode root = ObjectDifferBuilder.buildDefault().compare(modified, original);
+    DiffNode root = ObjectDifferBuilder.startBuilding()
+        .identity().ofCollectionItems(NodePath.with("points")).via(new PointIdentityStrategy())
+        .and().build().compare(modified, original);
 
     root.visit(new PrintingVisitor(modified, original));
     root.visit(new ChangeVisitor(event, modified, original));
