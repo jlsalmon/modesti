@@ -211,7 +211,7 @@ export class TaskService {
     }
 
     let user: User = this.authService.getCurrentUser();
-    if (!user) {
+    if (!user || !task) {
       return false;
     }
 
