@@ -31,7 +31,7 @@ export class Field {
     let modelAttribute: string;
 
     if (this.type === 'autocomplete') {
-      modelAttribute = this.id + '.' + this.model ? this.model : 'value';
+      modelAttribute = this.id + '.' + (this.model ? this.model : 'value');
     } else {
       modelAttribute = this.id;
     }
