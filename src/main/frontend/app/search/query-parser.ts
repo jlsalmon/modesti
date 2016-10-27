@@ -6,11 +6,11 @@ export class QueryParser {
   public static parse(filters: Map<string, Filter>): string {
     let expressions: string[] = [];
 
-    for (let fieldId in filters) {
-      if (filters.hasOwnProperty(fieldId)) {
-        let filter: Filter = filters[fieldId];
+    for (let key in filters) {
+      if (filters.hasOwnProperty(key)) {
+        let filter: Filter = filters[key];
 
-        if (filter.value != null && filter.value !== '') {
+        if (filter && filter.value != null && filter.value !== '') {
           let property: string = filter.field.getModelPath();
           let operation: string = this.parseOperation(filter.operation);
           let value: string = filter.value;
@@ -42,6 +42,10 @@ export class QueryParser {
       return ' == ';
     } else if (operation === 'not-equals') {
       return ' != ';
+    } else if (operation === 'less-than') {
+      return ' < ';
+    } else if (operation === 'greater-than') {
+      return ' > ';
     } else {
       return ' == ';
     }

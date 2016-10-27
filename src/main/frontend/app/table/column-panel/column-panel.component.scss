@@ -26,14 +26,24 @@
 
 .column-detail-panel .form-inline .input-group-addon {
   padding: 0;
+  width: 100px;
 }
 
 .column-detail-panel .form-inline .input-group-addon select {
   padding: 0;
   height: 30px;
+  width: 100px;
   margin: 0;
   border: none;
-  margin-right: -15px;
+}
+
+.column-detail-panel .form-inline .filter-input {
+  width: 100%;
+}
+
+.column-detail-panel .form-inline .filter-input input,
+.column-detail-panel .form-inline .filter-input select {
+  width: 100%;
 }
 
 .column-detail-panel .form-inline input {
@@ -51,7 +61,8 @@
   cursor: pointer;
 }
 
-.column-detail-panel .category-header i.fa-plus, .column-detail-panel .category-header i.fa-minus {
+.column-detail-panel .category-header i.fa-plus,
+.column-detail-panel .category-header i.fa-minus {
   margin-right: 2px;
   color: #999;
   cursor: pointer;

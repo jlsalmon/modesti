@@ -42,7 +42,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       },
       fixedColumnsLeft: this.determineNumFixedColumns(),
       contextMenu: ['row_above', 'row_below', '---------', 'remove_row', '---------', 'undo', 'redo'],
-      // stretchH: 'all',
+      stretchH: 'all',
       minSpareRows: 0,
       undo: true,
       outsideClickDeselects: false,

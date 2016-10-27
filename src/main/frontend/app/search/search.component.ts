@@ -135,7 +135,7 @@ class SearchController {
       size: 'lg',
       resolve: {
         points: () => {
-          let query: string = this.parseQuery();
+          let query: string = QueryParser.parse(this.filters);
           let page: any = { number: 0, size: this.page.totalElements };
 
           return this.searchService.getPoints(this.schema.id, query, page, this.sort).then((response: any) => {
@@ -173,17 +173,5 @@ class SearchController {
         this.submitting = 'error';
       });
     });
-  }
-
-  public queryFieldValues(field: any, value: string): IPromise<any[]> {
-    return this.schemaService.queryFieldValues(field, value, undefined);
-  }
-
-  public getOptionValue(option: any): string {
-    return typeof option === 'object' ? option.value : option;
-  }
-
-  public getOptionDisplayValue(option: any): string {
-    return typeof option === 'object' ? option.value + (option.description ? ': ' + option.description : '') : option;
   }
 }
