@@ -45,8 +45,6 @@ class RequestTableController {
                      private $localStorage: any, private requestService: RequestService,
                      private taskService: TaskService, private schemaService: SchemaService) {
 
-    let task: Task = this.taskService.getCurrentTask();
-
     let settings: any = {
       requestStatus: this.request.status,
       requestType: this.request.type,
@@ -55,7 +53,9 @@ class RequestTableController {
       taskService: this.taskService,
       cellRenderer: this.renderCell,
       afterChange: this.onAfterChange,
-      afterRender: this.onAfterRender
+      afterRender: this.onAfterRender,
+      afterCreateRow: () => this.onAfterCreateRow(),
+      afterRemoveRow: () => this.onAfterRemoveRow()
     };
 
     this.table = TableFactory.createTable('handsontable', this.schema, this.request.points, settings);
@@ -426,6 +426,14 @@ class RequestTableController {
 
     return q.promise;
   }
+
+  public onAfterCreateRow = (): void => {
+    this.requestService.saveRequest(this.request);
+  };
+
+  public onAfterRemoveRow = (): void => {
+    this.requestService.saveRequest(this.request);
+  };
 
   /**
    * Navigate somewhere to focus on a particular field.

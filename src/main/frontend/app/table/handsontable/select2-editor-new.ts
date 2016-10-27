@@ -45,7 +45,7 @@ export class Select2EditorNew extends Handsontable.editors.TextEditor {
       let point: Point = this.table.data[row];
       let value: any = point.getProperty(this.prop);
 
-      if (typeof value === 'object') {
+      if (value && typeof value === 'object') {
         value = value[this.getModelAttribute(this.field)];
       }
 

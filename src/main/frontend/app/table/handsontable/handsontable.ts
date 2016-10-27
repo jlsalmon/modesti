@@ -49,8 +49,8 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       manualColumnResize: true,
       rowHeaders: (row: any) => this.getRowHeader(row),
       beforeChange: (changes: any, source: any) => this.beforeChange(changes, source),
-      onAfterCreateRow: () => this.normaliseLineNumbers(),
-      onAfterRemoveRow: () => this.normaliseLineNumbers()
+      afterCreateRow: () => this.normaliseLineNumbers(),
+      afterRemoveRow: () => this.normaliseLineNumbers()
     };
 
     this.hot = new Handsontable(document.getElementById('table'), this.hotOptions);
@@ -59,6 +59,8 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     // Map and register hooks from the external settings
     this.hot.addHook('afterChange', settings.afterChange);
     this.hot.addHook('afterRender', settings.afterRender);
+    this.hot.addHook('afterCreateRow', settings.afterCreateRow);
+    this.hot.addHook('afterRemoveRow', settings.afterRemoveRow);
 
     // Make sure the table fills the container height
     this.adjustTableHeight();
@@ -350,8 +352,8 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
    * Make sure all the line numbers are consecutive
    */
   private normaliseLineNumbers(): void {
-    for (let i: number = 0, len: number = this.settings.data.length; i < len; i++) {
-      this.settings.data[i].lineNo = i + 1;
+    for (let i: number = 0, len: number = this.data.length; i < len; i++) {
+      this.data[i].lineNo = i + 1;
     }
   }
 
