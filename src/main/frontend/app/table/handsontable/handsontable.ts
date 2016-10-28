@@ -12,6 +12,7 @@ import {Point} from '../../request/point/point';
 import './select2-editor.ts';
 
 import 'latinize';
+import {ContextMenuFactory} from "./context-menu-factory";
 declare var latinize: any;
 
 // TODO: import this properly without require()
@@ -41,7 +42,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         columns: this.determineInitialHiddenColumns(columnDefs)
       },
       fixedColumnsLeft: this.determineNumFixedColumns(),
-      contextMenu: ['row_above', 'row_below', '---------', 'remove_row', '---------', 'undo', 'redo'],
+      contextMenu: ContextMenuFactory.getContextMenu(settings.requestType),
       stretchH: 'all',
       minSpareRows: 0,
       undo: true,
