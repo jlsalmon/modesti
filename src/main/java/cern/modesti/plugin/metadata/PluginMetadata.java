@@ -11,7 +11,7 @@ import cern.modesti.request.RequestType;
 public interface PluginMetadata {
 
   /**
-   * Returns the unique plugin Id. Plugins returning a metadata implementation
+   * Returns the unique plugin id. Plugins returning a metadata implementation
    * have to ensure uniqueness of this name.
    *
    * @return the id of the plugin
