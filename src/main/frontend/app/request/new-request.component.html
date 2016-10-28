@@ -8,12 +8,16 @@
     margin-top: 2px;
   }
 
-  .ui-select-container {
+  .new-request-form  .ui-select-container {
     width: 100%;
   }
 
-  .select2 > .select2-choice.ui-select-match {
+  .new-request-form .select2 > .select2-choice.ui-select-match {
     height: 30px;
+  }
+
+  .new-request-form .ui-select-choices {
+    width: 100%;
   }
 </style>
 
@@ -32,7 +36,7 @@
 
         <br />
 
-        <form name="form" class="form-horizontal" novalidate>
+        <form name="form" class="form-horizontal new-request-form" novalidate>
 
           <div class="form-group" ng-class="{ 'has-error': (form.domain.$invalid && form.domain.$dirty)
                                                         || (form.$submitted && form.domain.$invalid) }">
