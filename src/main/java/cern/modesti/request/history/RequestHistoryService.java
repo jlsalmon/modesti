@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -51,21 +52,25 @@ public class RequestHistoryService {
    * Compare the changes from the given, modified request to the original
    * request and save them to the history record.
    *
+   * Currently we are only storing a single change event, diffed from the
+   * original request. This only makes sense for UPDATE requests. Storing
+   * successive diffs for CREATE requests would probably be too complicated.
+   *
    * @param modified the modified request
    */
   public void saveChangeHistory(Request modified) {
     log.info(format("processing change history for request #%s", modified.getRequestId()));
-    Request original = requestRepository.findOneByRequestId(modified.getRequestId());
+    RequestHistory entry = requestHistoryRepository.findOneByRequestId(modified.getRequestId());
+    if (entry == null) {
+      initialiseChangeHistory(modified);
+      return;
+    }
+
+    Request original = entry.getOriginalRequest();
 
     Assert.notNull(modified);
     Assert.notNull(original);
     Assert.isTrue(modified.getRequestId().equals(original.getRequestId()));
-
-    RequestHistory entry = requestHistoryRepository.findOneByRequestId(original.getRequestId());
-    if (entry == null) {
-      initialiseChangeHistory(original);
-      return;
-    }
 
     ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
     DiffNode root = ObjectDifferBuilder.startBuilding()
@@ -75,7 +80,7 @@ public class RequestHistoryService {
     root.visit(new PrintingVisitor(modified, original));
     root.visit(new ChangeVisitor(event, modified, original));
 
-    entry.getEvents().add(event);
+    entry.setEvents(Collections.singletonList(event));
     requestHistoryRepository.save(entry);
   }
 
