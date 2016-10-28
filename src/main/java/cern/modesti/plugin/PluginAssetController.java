@@ -68,7 +68,7 @@ public class PluginAssetController {
 
     for (Resource resource : resolver.getResources("classpath*:/static/assets.json")) {
       if (resourceBelongsToPlugin(resource, plugin)) {
-        log.trace("found asset descriptor for plugin {}: {}", plugin.getMetadata().getName(), resource.getURL());
+        log.trace("found asset descriptor for plugin {}: {}", plugin.getMetadata().getId(), resource.getURL());
         javascriptAssets = mapper.readValue(resource.getInputStream(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
       }
     }
@@ -77,10 +77,10 @@ public class PluginAssetController {
 
     // The AngularJS module descriptor must be in the root directory and be
     // named "<lowercase domain id>.js"
-    String filename = plugin.getMetadata().getName().toLowerCase().replaceAll(" ", "-") + ".js";
+    String filename = plugin.getMetadata().getId().toLowerCase().replaceAll(" ", "-") + ".js";
 
     // FIXME: HACK ALERT
-    if (plugin.getMetadata().getName().contains("WinCC OA") || plugin.getMetadata().getName().contains("WINCCOA")) {
+    if (plugin.getMetadata().getId().contains("WinCC OA") || plugin.getMetadata().getId().contains("WINCCOA")) {
       filename = "winccoa-cv.js";
     }
 
@@ -88,7 +88,7 @@ public class PluginAssetController {
 
     for (Resource resource : resolver.getResources("classpath*:/static/**")) {
       if (resourceBelongsToPlugin(resource, plugin) && !resource.getFilename().equals(moduleDescriptor.getFilename())) {
-        log.trace("found resource for plugin {}: {}", plugin.getMetadata().getName(), resource.getURL());
+        log.trace("found resource for plugin {}: {}", plugin.getMetadata().getId(), resource.getURL());
 
         if (FilenameUtils.isExtension(resource.getFilename(), new String[]{"js", "html", "css"})) {
           String path = host + '/' + resource.getURL().getPath().split("static/")[1];
@@ -106,7 +106,7 @@ public class PluginAssetController {
 
   private RequestProvider getPlugin(String id) {
     for (RequestProvider provider : requestProviderRegistry.getPlugins()) {
-      if (provider.getMetadata().getName().equals(id)) {
+      if (provider.getMetadata().getId().equals(id)) {
         return provider;
       }
     }

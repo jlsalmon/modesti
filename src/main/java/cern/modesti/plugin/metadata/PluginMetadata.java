@@ -11,12 +11,12 @@ import cern.modesti.request.RequestType;
 public interface PluginMetadata {
 
   /**
-   * Returns a unique plugin name. Plugins returning a metadata implementation
+   * Returns the unique plugin Id. Plugins returning a metadata implementation
    * have to ensure uniqueness of this name.
    *
    * @return the name of the plugin
    */
-  String getName();
+  String getId();
 
   /**
    * Returns the name of the group to which a user must belong in order to be

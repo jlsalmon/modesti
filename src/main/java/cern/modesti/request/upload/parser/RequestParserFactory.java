@@ -43,7 +43,7 @@ public class RequestParserFactory {
     // Search for a plugin which is capable of parsing this request.
     RequestParser parser = null;
     for (RequestProvider provider : requestProviderRegistry.getPlugins()) {
-      String name = provider.getMetadata().getName();
+      String name = provider.getMetadata().getId();
 
       if (name.equals(domain)) {
         parser = provider.getRequestParser();

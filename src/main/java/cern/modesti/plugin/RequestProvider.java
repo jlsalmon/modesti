@@ -26,7 +26,7 @@ public abstract class RequestProvider implements Plugin<Request>, MetadataProvid
    */
   @Override
   public boolean supports(Request request) {
-    return getMetadata().getName().equals(request.getDomain());
+    return getMetadata().getId().equals(request.getDomain());
   }
 
   /**
@@ -47,7 +47,7 @@ public abstract class RequestProvider implements Plugin<Request>, MetadataProvid
    * instance of this domain from an Excel sheet.
    */
   public RequestParser getRequestParser() {
-    throw new UnsupportedRequestException(format("Plugin for domain %s does not provide a RequestParser implementation", getMetadata().getName()));
+    throw new UnsupportedRequestException(format("Plugin for domain %s does not provide a RequestParser implementation", getMetadata().getId()));
   }
 
   public RequestValidator getRequestValidator() {

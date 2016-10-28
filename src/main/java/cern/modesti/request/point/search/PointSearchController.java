@@ -57,7 +57,7 @@ public class PointSearchController {
     RequestProvider plugin = null;
 
     for (RequestProvider provider : requestProviderRegistry.getPlugins()) {
-      if (provider.getMetadata().getName().equals(domain)) {
+      if (provider.getMetadata().getId().equals(domain)) {
         plugin = provider;
       }
     }
