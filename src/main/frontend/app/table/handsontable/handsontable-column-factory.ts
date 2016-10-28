@@ -226,6 +226,6 @@ export class HandsontableColumnFactory {
       }
     });
 
-    return {data: property, type: 'text', title: 'Comment'};
+    return {data: 'properties.' + property, type: 'text', title: 'Comment'};
   }
 }
