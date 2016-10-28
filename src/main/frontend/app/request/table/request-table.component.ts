@@ -83,7 +83,7 @@ class RequestTableController {
       Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
     }
 
-    if (typeof prop !== 'string' || prop.indexOf('properties') === -1) {
+    if (typeof prop !== 'string') {
       return;
     }
 
@@ -92,20 +92,16 @@ class RequestTableController {
       return;
     }
 
-    let props: string[] = prop.split('.').slice(1, 3);
-
-    let field: Field = this.schema.getField(props[0]);
-    if (!field) {
-      return;
+    let field: Field = this.schema.getField(prop);
+    if (field) {
+      // Check if we need to fill in a default value for this point.
+      this.setDefaultValue(point, field);
     }
-
-    // Check if we need to fill in a default value for this point.
-    this.setDefaultValue(point, field);
 
     // Highlight errors in a cell by making the background red.
     angular.forEach(point.errors, (error: any) => {
 
-      if (error.property === prop.replace('properties.', '') || error.property === props[0] || error.property === '') {
+      if (error.property === prop.replace('properties.', '') || error.property === prop || error.property === '') {
         // If the property name isn't specified, then the error applies to the whole point.
         td.className += ' alert-danger';
         return;
@@ -125,6 +121,9 @@ class RequestTableController {
       }
     });
 
+    if (!field) {
+      return;
+    }
 
     if (this.request.type === 'UPDATE' && point.dirty === true) {
       let changes: Change[] = [];
