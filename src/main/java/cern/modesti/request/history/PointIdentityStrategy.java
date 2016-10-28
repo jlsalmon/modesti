@@ -12,8 +12,9 @@ public class PointIdentityStrategy implements IdentityStrategy {
   public boolean equals(Object working, Object base) {
 
     // FIXME: not all domains have a pointId field... how to determine identity?
+    Long workingPointId = ((Point) working).getProperty("pointId", Long.class);
+    Long basePointId = ((Point) base).getProperty("pointId", Long.class);
 
-    return ((Point) working).getProperty("pointId", Long.class)
-        .equals(((Point) base).getProperty("pointId", Long.class));
+    return !(workingPointId == null || basePointId == null) && workingPointId.equals(basePointId);
   }
 }
