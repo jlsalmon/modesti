@@ -4,7 +4,13 @@
   <li ng-repeat="category in $ctrl.schema.getAllCategories()">
 
     <h5 class="category-header" ng-click="$ctrl.toggleExpandCategory(category)">
-      <i class="fa" ng-class="$ctrl.isExpandedCategory(category) ? 'fa-minus' : 'fa-plus'"></i>
+
+      <span ng-if="$ctrl.isExpandedCategory(category)">
+        -&nbsp;
+      </span>
+      <span ng-if="!$ctrl.isExpandedCategory(category)">
+        +
+      </span>
 
       <b>{{::category.name}}</b>
 
@@ -41,17 +47,10 @@
                    tooltip-placement="right"
                    style="margin-top: 1px;">
 
-            <i class="fa fa-search-plus pull-right"
-               ng-if="$ctrl.enableFilters === true && !$ctrl.filters['_' + field.id]"
+            <i class="fa fa-search"
+               ng-if="$ctrl.enableFilters === true && !$ctrl.filters['_' + field.id] && hover"
                ng-click="$event.stopPropagation(); $ctrl.toggleFilter(field)"
                uib-tooltip="Add filter"
-               tooltip-append-to-body="true"
-               tooltip-placement="right"></i>
-
-            <i class="fa fa-search-minus pull-right"
-               ng-if="$ctrl.enableFilters === true && $ctrl.filters['_' + field.id]"
-               ng-click="$event.stopPropagation(); $ctrl.toggleFilter(field)"
-               uib-tooltip="Remove filter"
                tooltip-append-to-body="true"
                tooltip-placement="right"></i>
 
@@ -63,7 +62,7 @@
               <div class="input-group">
 
                 <!-- Operation switcher -->
-                <div class="input-group-addon">
+                <div class="input-group-addon operation-switcher">
                   <select class="form-control input-xs"
                           ng-if="field.type === 'text'"
                           ng-model="$ctrl.filters['_' + field.id].operation"
@@ -145,6 +144,14 @@
                   </div>
                 </div>
 
+                <div class="input-group-addon remove-filter-icon">
+                  <i class="fa fa-times"
+                     ng-if="$ctrl.enableFilters === true && $ctrl.filters['_' + field.id]"
+                     ng-click="$event.stopPropagation(); $ctrl.toggleFilter(field)"
+                     uib-tooltip="Remove filter"
+                     tooltip-append-to-body="true"
+                     tooltip-placement="right"></i>
+                </div>
               </div>
             </div>
           </form>

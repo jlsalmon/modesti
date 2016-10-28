@@ -10,31 +10,53 @@
   padding-right: 15px;
 }
 
+.column-detail-panel .column-detail-header {
+  margin-left: 10px;
+}
+
+.column-detail-panel .column-detail-header i {
+  margin-left: 5px;
+}
+
 .column-detail-panel input[type=checkbox] {
   margin: 0;
   margin-left: 10px;
   cursor: pointer;
 }
 
+.column-detail-panel form {
+  margin-left: -10px;
+}
+
 .column-detail-panel .form-inline .form-group {
   width: 100%;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .column-detail-panel .form-inline .input-group {
   width: 100%;
 }
 
-.column-detail-panel .form-inline .input-group-addon {
+.column-detail-panel .form-inline .input-group-addon.operation-switcher {
   padding: 0;
-  width: 100px;
+  width: 70px;
+  border: none;
 }
 
-.column-detail-panel .form-inline .input-group-addon select {
-  padding: 0;
+.column-detail-panel .form-inline .input-group-addon.operation-switcher select {
+  font-size: 12px;
+  padding: 0 2px 0 0;
   height: 30px;
-  width: 100px;
+  width: 70px;
   margin: 0;
   border: none;
+  outline: none;
+  background-color: #f5f5f5;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  direction: rtl;
 }
 
 .column-detail-panel .form-inline .filter-input {
@@ -44,12 +66,22 @@
 .column-detail-panel .form-inline .filter-input input,
 .column-detail-panel .form-inline .filter-input select {
   width: 100%;
+  height: 28px;
+  background-color: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  outline: none;
+  padding: 0;
+  margin-left: 5px;
 }
 
-.column-detail-panel .form-inline input {
-  padding-top: 0;
-  padding-bottom: 0;
-  height: 32px;
+.column-detail-panel .form-inline .input-group-addon.remove-filter-icon {
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 15px;
+  padding: 0 2px 0 8px;
 }
 
 .column-detail {

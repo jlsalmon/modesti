@@ -46,7 +46,7 @@ class ColumnPanelController {
   }
 
   public toggleFilter(field: Field): void {
-    let filter: Filter = this.filters[field.id];
+    let filter: Filter = this.filters['_' + field.id];
 
     if (filter) {
       this.filters['_' + field.id] = undefined;
