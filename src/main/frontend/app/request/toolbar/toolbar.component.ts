@@ -1,17 +1,12 @@
-import {RequestService} from '../request.service';
-import {TaskService} from '../../task/task.service';
-import {AlertService} from '../../alert/alert.service';
-import {HistoryService} from '../history/history.service';
-import {Request} from '../request';
-import {Task} from '../../task/task';
-import {Schema} from '../../schema/schema';
-import {Table} from '../../table/table';
-import {HandsonTable} from '../../table/handsontable/handsontable';
-import {Category} from '../../schema/category/category';
-import {Point} from '../point/point';
-import {Field} from '../../schema/field/field';
-import IComponentOptions = angular.IComponentOptions;
-import IStateService = angular.ui.IStateService;
+import {RequestService} from "../request.service";
+import {TaskService} from "../../task/task.service";
+import {AlertService} from "../../alert/alert.service";
+import {HistoryService} from "../history/history.service";
+import {Request} from "../request";
+import {Task} from "../../task/task";
+import {Schema} from "../../schema/schema";
+import {HandsonTable} from "../../table/handsontable/handsontable";
+import {IComponentOptions, IStateService} from 'angular';
 
 export class RequestToolbarComponent implements IComponentOptions {
   public templateUrl: string = '/request/toolbar/toolbar.component.html';
@@ -123,7 +118,7 @@ class RequestToolbarController {
       this.requestService.deleteRequest(this.request.requestId).then(() => {
         console.log('deleted request');
         this.alertService.add('success', 'Request was deleted successfully.');
-        this.$state.go('requests');
+        this.$state.go('requestList');
       }, (error: any) => {
         console.log('delete failed: ' + error.statusText);
       });
