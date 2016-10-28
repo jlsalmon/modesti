@@ -6,7 +6,8 @@ import {Request} from "../request";
 import {Task} from "../../task/task";
 import {Schema} from "../../schema/schema";
 import {HandsonTable} from "../../table/handsontable/handsontable";
-import {IComponentOptions, IStateService} from 'angular';
+import {IComponentOptions} from 'angular';
+import {IStateService} from 'angular-ui-router';
 
 export class RequestToolbarComponent implements IComponentOptions {
   public templateUrl: string = '/request/toolbar/toolbar.component.html';
