@@ -14,7 +14,7 @@ public interface PluginMetadata {
    * Returns the unique plugin Id. Plugins returning a metadata implementation
    * have to ensure uniqueness of this name.
    *
-   * @return the name of the plugin
+   * @return the id of the plugin
    */
   String getId();
 
