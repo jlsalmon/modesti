@@ -151,8 +151,12 @@ class RequestTableController {
         }
 
         let content: string = '<samp><table>';
-        content += '<tr><td style="background-color: #ffecec">&nbsp;- ' + original + '&nbsp;</td></tr>';
-        content += '<tr><td style="background-color: #dbffdb">&nbsp;+ ' + modified + '&nbsp;</td></tr></table></samp>';
+        if (original != null && original != '') {
+          content += '<tr><td style="background-color: #ffecec">&nbsp;- ' + original + '&nbsp;</td></tr>';
+        }
+        if (modified != null && modified != '') {
+          content += '<tr><td style="background-color: #dbffdb">&nbsp;+ ' + modified + '&nbsp;</td></tr></table></samp>';
+        }
 
         td.setAttribute('style', 'background-color: #fcf8e3 !important');
         $(td).popover({ trigger: 'hover', placement: 'top', container: 'body', html: true, content: content });
