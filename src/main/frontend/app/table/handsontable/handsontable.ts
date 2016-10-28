@@ -351,6 +351,27 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   }
 
   /**
+   * Return the line numbers of all rows that are currently selected (i.e.
+   * the current state is a "selectable" state and the user has selected
+   * the checkbox in the first column for that row).
+   *
+   * @returns {Array}
+   */
+  public getSelectedLineNumbers(): number[] {
+    var checkboxes = this.hot.getDataAtProp('selected');
+    var lineNumbers = [];
+
+    for (var i = 0, len = checkboxes.length; i < len; i++) {
+      if (checkboxes[i]) {
+        // Line numbers are 1-based
+        lineNumbers.push(this.data[i].lineNo);
+      }
+    }
+
+    return lineNumbers;
+  }
+
+  /**
    * Make sure all the line numbers are consecutive
    */
   private normaliseLineNumbers(): void {
