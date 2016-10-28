@@ -252,7 +252,8 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   }
 
   private getColumnIndex(field: Field): number {
-    return this.hotOptions.columns.indexOf(this.getColumn(field));
+    let offset: number = this.determineNumFixedColumns();
+    return this.hotOptions.columns.indexOf(this.getColumn(field)) + offset;
   }
 
   private getColumnDefs(): any[] {
