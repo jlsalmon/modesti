@@ -42,7 +42,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         columns: this.determineInitialHiddenColumns(columnDefs)
       },
       fixedColumnsLeft: this.determineNumFixedColumns(),
-      contextMenu: ContextMenuFactory.getContextMenu(settings.requestType),
+      contextMenu: ContextMenuFactory.getContextMenu(settings.requestType, settings.requestStatus),
       stretchH: 'all',
       minSpareRows: 0,
       undo: true,
