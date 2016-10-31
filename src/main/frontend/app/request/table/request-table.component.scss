@@ -49,6 +49,8 @@
 .table .handsontable td {
   font-family: Consolas, Monaco, monospace;
   font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .select2-container {
