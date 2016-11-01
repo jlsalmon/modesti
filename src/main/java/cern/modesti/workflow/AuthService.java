@@ -122,13 +122,9 @@ public class AuthService {
     return false;
   }
 
-  public boolean canCreate() {
-    return true;
-  }
-
   /**
    * Default is only creator is allowed to delete. Administrators are always allowed to delete.
-   * Plugins can implement the AuthorizationProvider to overwrite the canDelete() behavior.
+   * Plugins can implement the {@link AuthorizationProvider} to overwrite the {@link AuthorizationProvider#canDelete(Request)} behaviour.
    *
    * @param request the request object
    * @param user    the user to authorise
@@ -142,9 +138,11 @@ public class AuthService {
     if (isAdministrator(user)) return true;
 
     AuthorizationProvider authProvider = getPluginAuthorizationProvider(requestPluginId);
+
     if (authProvider != null) {
       return authProvider.canDelete(request);
     }
+    log.debug(format("No authProvider found. User: " + user.getUsername() + " ID: " +  request.getRequestId()));
 
     return request.getCreator().equals(user.getUsername());
   }

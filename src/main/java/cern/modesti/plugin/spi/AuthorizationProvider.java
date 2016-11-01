@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
  *
  * @author Martin Flamm
  */
-
-
 public interface AuthorizationProvider extends ExtensionPoint {
 
   boolean canDelete(Request request);
