@@ -1,17 +1,21 @@
 package cern.modesti.workflow;
 
 import cern.modesti.plugin.RequestProvider;
+import cern.modesti.plugin.UnsupportedRequestException;
+import cern.modesti.plugin.spi.AuthorizationProvider;
 import cern.modesti.request.Request;
 import cern.modesti.security.UserService;
-import cern.modesti.user.Role;
 import cern.modesti.user.User;
 import cern.modesti.workflow.task.TaskInfo;
 import cern.modesti.workflow.task.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -21,9 +25,12 @@ import static java.lang.String.format;
  *
  * @author Justin Lewis Salmon
  */
-@Service("authService")
 @Slf4j
+@Service("authService")
 public class AuthService {
+
+  @Autowired
+  private ApplicationContext context;
 
   @Autowired
   private TaskService taskService;
@@ -31,11 +38,15 @@ public class AuthService {
   @Autowired
   private UserService userService;
 
+  @Autowired
+  private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
+
   /**
    * Check if the user is the creator of the given request.
    *
    * @param request the request object
    * @param user    the user obejct
+   *
    * @return true if the user is the creator of the request, false otherwise
    */
   public boolean isCreator(Request request, User user) {
@@ -48,9 +59,10 @@ public class AuthService {
    * Check if a user is authorised to create {@link Request} instances for a
    * particular plugin.
    *
-   * @param plugin the plugin to authorise
+   * @param plugin  the plugin to authorise
    * @param request the request to be created
-   * @param user   the user to authorise
+   * @param user    the user to authorise
+   *
    * @return true if the user is authorised to create a request, false otherwise
    */
   public boolean isAuthorised(RequestProvider plugin, Request request, User user) {
@@ -65,6 +77,7 @@ public class AuthService {
    *
    * @param request the request object
    * @param user    the user to authorise
+   *
    * @return true if the user is authorised, false otherwise
    */
   public boolean isAuthorised(Request request, User user) {
@@ -77,6 +90,7 @@ public class AuthService {
    *
    * @param task the task object
    * @param user the user to authorise
+   *
    * @return true if the user is authorised, false otherwise
    */
   public boolean isAuthorised(TaskInfo task, User user) {
@@ -106,5 +120,45 @@ public class AuthService {
     }
 
     return false;
+  }
+
+  public boolean canCreate() {
+    return true;
+  }
+
+  /**
+   * Default is only creator is allowed to delete. Administrators are always allowed to delete.
+   * Plugins can implement the AuthorizationProvider to overwrite the canDelete() behavior.
+   *
+   * @param request the request object
+   * @param user    the user to authorise
+   *
+   * @return true if the user is authorised, false otherwise
+   */
+  public boolean canDelete(Request request, User user) {
+    RequestProvider plugin = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
+    String requestPluginId = plugin.getMetadata().getId();
+
+    if (isAdministrator(user)) return true;
+
+    AuthorizationProvider authProvider = getPluginAuthorizationProvider(requestPluginId);
+    if (authProvider != null) {
+      return authProvider.canDelete(request);
+    }
+
+    return request.getCreator().equals(user.getUsername());
+  }
+
+  private boolean isAdministrator(User user) {
+    return user.getAuthorities().contains("modesti-administrators");
+  }
+
+  private AuthorizationProvider getPluginAuthorizationProvider(String requestPluginId) {
+    for (AuthorizationProvider authProvider : context.getBeansOfType(AuthorizationProvider.class).values()) {
+      if (authProvider.getPluginId().equals(requestPluginId)) {
+        return authProvider;
+      }
+    }
+    return null;
   }
 }
