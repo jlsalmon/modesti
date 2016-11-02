@@ -1,10 +1,12 @@
 package cern.modesti.request.point.search;
 
 import cern.modesti.plugin.RequestProvider;
+import cern.modesti.plugin.spi.SearchProvider;
 import cern.modesti.request.Request;
 import cern.modesti.request.point.Point;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -36,10 +39,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class PointSearchController {
 
   @Autowired
-  private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
+  private PointResourceAssembler resourceAssembler;
 
   @Autowired
-  private PointResourceAssembler resourceAssembler;
+  private ApplicationContext context;
 
   /**
    * From a given query string, parse an RSQL predicate expression and delegate
@@ -54,24 +57,28 @@ public class PointSearchController {
   @RequestMapping(value = "/api/points/search", method = GET, produces = "application/json")
   HttpEntity<PagedResources<Point>> search(@RequestParam("domain") String domain, @RequestParam("query") String query, Pageable pageable,
                                            PagedResourcesAssembler assembler) {
-    RequestProvider plugin = null;
 
-    for (RequestProvider provider : requestProviderRegistry.getPlugins()) {
-      if (provider.getMetadata().getId().equals(domain)) {
-        plugin = provider;
+    SearchProvider searchProvider = getPluginSearchProvider(domain);
+
+    if (searchProvider != null) {
+      Page<Point> points = searchProvider.findAll(query, pageable);
+      if (points == null) {
+        points = new PageImpl<>(new ArrayList<>());
       }
+      return new ResponseEntity<>(assembler.toResource(points, resourceAssembler), HttpStatus.OK);
     }
-
-    if (plugin == null) {
+    else {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+  }
 
-    Page<Point> points = plugin.findAll(query, pageable);
-    if (points == null) {
-      points = new PageImpl<>(new ArrayList<>());
+  private SearchProvider getPluginSearchProvider(String requestPluginId) {
+    for (SearchProvider searchProvider : context.getBeansOfType(SearchProvider.class).values()) {
+      if (searchProvider.getPluginId().equals(requestPluginId)) {
+        return searchProvider;
+      }
     }
-
-    return new ResponseEntity<>(assembler.toResource(points, resourceAssembler), HttpStatus.OK);
+    return null;
   }
 
   @Component
