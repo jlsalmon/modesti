@@ -123,7 +123,6 @@ class RequestToolbarController {
       }, (error: any) => {
         if(error.status == 403){
           this.alertService.add('warning', 'Deleting not allowed in this stage.');
-          console.log('Deleting not allowed in this stage. ' + error.statusText);
         }
         console.log('delete failed: ' + error.statusText);
       });

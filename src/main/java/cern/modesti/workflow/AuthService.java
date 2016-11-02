@@ -138,11 +138,9 @@ public class AuthService {
     if (isAdministrator(user)) return true;
 
     AuthorizationProvider authProvider = getPluginAuthorizationProvider(requestPluginId);
-
     if (authProvider != null) {
       return authProvider.canDelete(request);
     }
-    log.debug(format("No authProvider found. User: " + user.getUsername() + " ID: " +  request.getRequestId()));
 
     return request.getCreator().equals(user.getUsername());
   }
