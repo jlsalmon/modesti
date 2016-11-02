@@ -121,7 +121,7 @@ class RequestToolbarController {
         this.alertService.add('success', 'Request was deleted successfully.');
         this.$state.go('requestList');
       }, (error: any) => {
-        if(error.status == 403){
+        if (error.status == 403) {
           this.alertService.add('warning', 'Deleting not allowed in this stage.');
         }
         console.log('delete failed: ' + error.statusText);
