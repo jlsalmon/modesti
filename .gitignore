@@ -19,3 +19,8 @@ make_tunnels*
 common.properties
 .~lock*
 node_modules
+typings/
+
+# Typescript Web App compiled .js and .js.map sources
+src/main/frontend/app/**/*.js
+src/main/frontend/app/**/*.js.map
