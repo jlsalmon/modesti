@@ -30,16 +30,6 @@ public abstract class RequestProvider implements Plugin<Request>, MetadataProvid
   }
 
   /**
-   * A plugin should implement this method to provide search capability on its
-   * domain database.
-   *
-   * @param query    an RSQL query string representing the user search input
-   * @param pageable paging information
-   * @return a list of {@link Point} instances matching the given query
-   */
-  public abstract Page<Point> findAll(String query, Pageable pageable);
-
-  /**
    * Plugins that wish to provide upload support from Excel sheets must
    * override this method and return a {@link RequestParser} implementation.
    *

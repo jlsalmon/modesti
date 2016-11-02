@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,9 @@ public class RequestParserFactory {
   @Autowired
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
+  @Autowired
+  private ApplicationContext context;
+
   /**
    * Parse the given Excel sheet as a {@link Request} instance.
    *
@@ -38,25 +42,12 @@ public class RequestParserFactory {
     Sheet sheet = getSheet(stream);
     Row header = sheet.getRow(0);
 
-    String domain = header.getCell(0).getStringCellValue().trim();
+    String pluginId = header.getCell(0).getStringCellValue().trim();
 
-    // Search for a plugin which is capable of parsing this request.
-    RequestParser parser = null;
-    for (RequestProvider provider : requestProviderRegistry.getPlugins()) {
-      String name = provider.getMetadata().getId();
-
-      if (name.equals(domain)) {
-        parser = provider.getRequestParser();
-      }
-
-      // FIXME: HACK ALERT: WINCCOA excel sheets use the old PVSS name...
-      else if ((name.contains("WinCC OA") || name.contains("WINCCOA")) && domain.equals("PVSS")) {
-        parser = provider.getRequestParser();
-      }
-    }
+    RequestParser parser = getPluginRequestParser(pluginId);
 
     if (parser == null) {
-      throw new UnsupportedRequestException("No parser found for domain " + domain);
+      throw new UnsupportedRequestException("No parser found for domain " + pluginId);
     }
 
     RequestParseResult result = parser.parseRequest(sheet);
@@ -66,6 +57,19 @@ public class RequestParserFactory {
     }
 
     return result;
+  }
+
+  private RequestParser getPluginRequestParser(String pluginId) {
+    for (RequestParser requestParser : context.getBeansOfType(RequestParser.class).values()) {
+      if (requestParser.getPluginId().equals(pluginId)) {
+        return requestParser;
+      }
+      // FIXME: HACK ALERT: WINCCOA excel sheets use the old PVSS name...
+      else if ((pluginId.contains("WinCC OA") || pluginId.contains("WINCCOA")) && pluginId.equals("PVSS")) {
+        return requestParser;
+      }
+    }
+    return null;
   }
 
   /**

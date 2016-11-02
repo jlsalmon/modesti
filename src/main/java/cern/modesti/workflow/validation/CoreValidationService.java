@@ -1,6 +1,7 @@
 package cern.modesti.workflow.validation;
 
 import cern.modesti.plugin.RequestProvider;
+import cern.modesti.plugin.spi.SearchProvider;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestService;
 import cern.modesti.request.point.Point;
@@ -19,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,9 @@ public class CoreValidationService {
 
   @Autowired
   private Environment environment;
+
+  @Autowired
+  private ApplicationContext context;
 
   private ObjectMapper mapper = new ObjectMapper();
 
@@ -96,21 +101,27 @@ public class CoreValidationService {
       log.info(format("request #%s failed validation, not invoking custom validator", request.getRequestId()));
       return false;
     }
-
     log.info(format("request #%s is valid, invoking custom validator", request.getRequestId()));
 
-    RequestValidator validator = requestProviderRegistry.getPluginFor(request).getRequestValidator();
+    RequestValidator validator = getPluginRequestValidator(request.getId());
     if (validator == null) {
       log.info(format("custom validator not provided for request #%s", request.getRequestId()));
       return true;
     }
-
     valid = validator.validateRequest(request, schema);
-
     request.setValid(valid);
     requestService.save(request);
 
     return valid;
+  }
+
+  private RequestValidator getPluginRequestValidator(String pluginId) {
+    for (RequestValidator validator : context.getBeansOfType(RequestValidator.class).values()) {
+      if (validator.getPluginId().equals(pluginId)) {
+        return validator;
+      }
+    }
+    return null;
   }
 
 

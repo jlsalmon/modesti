@@ -1,5 +1,6 @@
 package cern.modesti.request.upload.parser;
 
+import cern.modesti.plugin.spi.ExtensionPoint;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
@@ -8,7 +9,7 @@ import org.apache.poi.ss.usermodel.Sheet;
  *
  * @author Justin Lewis Salmon
  */
-public interface RequestParser {
+public interface RequestParser extends ExtensionPoint {
 
   /**
    * Parse a {@link cern.modesti.request.Request} instance from the given Excel
