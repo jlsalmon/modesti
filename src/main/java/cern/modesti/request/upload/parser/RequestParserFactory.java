@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 
+import javax.annotation.PostConstruct;
+
 /**
  * This class is responsible for delegating the parsing of a request to a
  * specific {@link RequestProvider} implementation.
@@ -25,9 +27,6 @@ import java.io.InputStream;
 @Component
 @Slf4j
 public class RequestParserFactory {
-
-  @Autowired
-  private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
   @Autowired
   private ApplicationContext context;
