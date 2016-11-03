@@ -170,6 +170,17 @@
             </select>
           </div>
 
+
+          <div class="pull-right" style="vertical-align: middle">
+            Hide closed requests:
+            <input type="checkbox"
+                   ng-model="$ctrl.hideClosedRequests"
+                   uib-tooltip="Click to show/hide closed requests"
+                   tooltip-append-to-body="true"
+                   tooltip-placement="right"
+                   ng-click="$ctrl.reloadRequestlist()"
+                   style="vertical-align: middle;margin-right: 1em;">
+          </div>
         </div>
       </div>
 
@@ -183,22 +194,22 @@
 
 
       <!-- The actual list of requests -->
-      <div class="list-group" ng-if="$ctrl.loading == 'success'">
-        <a ng-repeat="request in $ctrl.requests"
-           ng-if="$ctrl.requests.length > 0"
-           ng-click="$ctrl.editRequest(request)"
-           class="list-group-item">
+      <div ng-if="$ctrl.loading == 'success'">
+        <div ng-repeat="request in $ctrl.requests"
+             ng-if="$ctrl.requests.length > 0"
+             ng-click="$ctrl.editRequest(request)">
+          <a class="list-group-item" ng-if="$ctrl.hideClosedRequests === false || request.status !== 'CLOSED'">
+            <i class="fa fa-list-ol fa-fw text-muted"></i>
+            <span class=""><strong>{{request.description}}</strong></span>
 
-          <i class="fa fa-list-ol fa-fw text-muted"></i>
-          <span class=""><strong>{{request.description}}</strong></span>
-
-          <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.split("_").join(" ")}}</span>
-          <br/>
-          <span class="" style="font-size: 12px;">
+            <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.split("_").join(" ")}}</span>
+            <br/>
+            <span class="" style="font-size: 12px;">
             <span class="text-muted">#{{request.requestId}} by {{request.creator}} </span>
             <span class="text-muted badge"> {{request.type}} </span>
             <span class="text-muted badge"> <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
-            <span class="text-muted badge" ng-if="request.assignee" uib-tooltip="Assignee"> <i class="fa fa-fw fa-user"></i> {{request.assignee}} </span>
+            <span class="text-muted badge" ng-if="request.assignee" uib-tooltip="Assignee"> <i
+                    class="fa fa-fw fa-user"></i> {{request.assignee}} </span>
 
             <span ng-if="$ctrl.hasCustomProperties(request)"
                   style="margin-left: 5px;">

@@ -29,6 +29,7 @@ class RequestListController {
   public sort: string = 'createdAt,desc';
   public loading: string = undefined;
   public page: any = {};
+  public hideClosedRequests: boolean = true;
 
   public constructor(private $http: IHttpService, private $location: ILocationService, private $scope: IScope,
                      private requestService: RequestService, private authService: AuthService,
