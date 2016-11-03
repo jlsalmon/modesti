@@ -92,6 +92,8 @@ export class AgGrid extends Table {
     } else {
       this.gridOptions.columnApi.setColumnsVisible(fieldIds, true);
     }
+
+    this.gridOptions.api.sizeColumnsToFit();
   }
 
   public isVisibleColumnGroup(fields: Field[]): boolean {
@@ -125,5 +127,9 @@ export class AgGrid extends Table {
     };
 
     return ColumnFactory.getColumnDefinitions('ag-grid', this, meta);
+  }
+
+  public getActiveDatasources(): Category[] {
+    return this.schema.datasources;
   }
 }

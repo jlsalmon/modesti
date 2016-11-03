@@ -24,12 +24,14 @@
   <div class="row">
     <div class="col-lg-12">
 
-      <div class="pull-left">
-        <h4 style="margin: 0;">
-          <i class="fa fa-search fa-fw text-muted" style="vertical-align: baseline;"></i>
-          Searching for points on {{$ctrl.schema.id}} <small class="text-muted">{{$ctrl.schema.description}}</small>
-        </h4>
-      </div>
+      <!--<div class="pull-left">-->
+        <!--<h4 style="margin: 0;">-->
+          <!--<i class="fa fa-search fa-fw text-muted" style="vertical-align: baseline;"></i>-->
+          <!--Searching for points on {{$ctrl.schema.id}} <small class="text-muted">{{$ctrl.schema.description}}</small>-->
+        <!--</h4>-->
+      <!--</div>-->
+
+      <column-selector schema="$ctrl.schema" table="$ctrl.table" enable-filters="true"></column-selector>
 
       <!--<form class="form-inline pull-right">-->
 
@@ -71,162 +73,166 @@
             <!--</li>-->
           <!--</ul>-->
         <!--</div>-->
-
-
+        <!---->
       <!--</form>-->
 
 
-      <!--<form class="form-inline pull-left">-->
+      <form class="form-inline pull-left">
 
-        <!--&lt;!&ndash; Custom styles for angular-ui-select &ndash;&gt;-->
-        <!--<style>-->
-          <!--.ui-select-multiple.ui-select-bootstrap {-->
-            <!--padding: 0;-->
-            <!--min-width: 300px;-->
-          <!--}-->
+        <!-- Custom styles for angular-ui-select -->
+        <style>
+          .ui-select-multiple.ui-select-bootstrap {
+            padding: 0;
+            min-width: 300px;
+          }
 
-          <!--.ui-select-multiple.ui-select-bootstrap .ui-select-match-item {-->
-            <!--margin: 0;-->
-            <!--padding-top: 0;-->
-            <!--padding-bottom: 0;-->
-          <!--}-->
+          .ui-select-multiple.ui-select-bootstrap .ui-select-match-item {
+            margin: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+          }
 
-          <!--.ui-select-multiple.ui-select-bootstrap .ui-select-match-item:active {-->
-            <!--box-shadow: none;-->
-          <!--}-->
+          .ui-select-multiple.ui-select-bootstrap .ui-select-match-item:active {
+            box-shadow: none;
+          }
 
-          <!--.ui-select-match-item span.selected-field-name {-->
-            <!--padding-right: 5px;-->
-            <!--vertical-align: middle;-->
-          <!--}-->
+          .ui-select-match-item span.selected-field-name {
+            padding-right: 5px;
+            vertical-align: middle;
+          }
 
-          <!--.ui-select-multiple.ui-select-bootstrap .ui-select-match-item input {-->
-            <!--border: 0;-->
-            <!--border-left: 1px solid #d2d6de;-->
-            <!--height: 28px;-->
-            <!--padding: 0 5px;-->
-          <!--}-->
+          .ui-select-multiple.ui-select-bootstrap .ui-select-match-item input {
+            border: 0;
+            border-left: 1px solid #d2d6de;
+            height: 28px;
+            padding: 0 5px;
+          }
 
-          <!--.ui-select-multiple.ui-select-bootstrap .ui-select-match-item input:focus {-->
-            <!--border-color: #d2d6de !important;-->
-          <!--}-->
+          .ui-select-multiple.ui-select-bootstrap .ui-select-match-item input:focus {
+            border-color: #d2d6de !important;
+          }
 
-          <!--.ui-select-multiple.ui-select-bootstrap .ui-select-match-item select {-->
-            <!--padding: 0 2px;-->
-            <!--border: 0;-->
-            <!--border-left: 1px solid #d2d6de;-->
-            <!--height: 28px;-->
-          <!--}-->
+          .ui-select-multiple.ui-select-bootstrap .ui-select-match-item select {
+            padding: 0 2px;
+            border: 0;
+            border-left: 1px solid #d2d6de;
+            height: 28px;
+          }
 
-          <!--.ui-select-multiple.ui-select-bootstrap .ui-select-match-item select:focus {-->
-            <!--border-color: #d2d6de !important;-->
-          <!--}-->
+          .ui-select-multiple.ui-select-bootstrap .ui-select-match-item select:focus {
+            border-color: #d2d6de !important;
+          }
 
-          <!--.ui-select-multiple.ui-select-bootstrap .ui-select-match .close {-->
-            <!--padding-top: 7px;-->
-            <!--margin-left: 4px;-->
-            <!--margin-right: -4px;-->
-          <!--}-->
+          .ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
+            padding-top: 7px;
+            margin-left: 4px;
+            margin-right: -4px;
+          }
 
-          <!--.ui-select-multiple.ui-select-bootstrap .ui-select-choices {-->
-            <!--max-height: 500px;-->
-          <!--}-->
-        <!--</style>-->
+          .ui-select-multiple.ui-select-bootstrap .ui-select-choices {
+            max-height: 500px;
+          }
+        </style>
 
-        <!--&lt;!&ndash; Custom template for angular-ui-select &ndash;&gt;-->
-        <!--<script type="text/ng-template" id="bootstrap/select-multiple.tpl.html">-->
-          <!--<div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown pull-left" ng-class="{open: $select.open}">-->
-            <!--<div>-->
-              <!--<div class="ui-select-match"></div>-->
+        <!-- Custom template for angular-ui-select -->
+        <script type="text/ng-template" id="bootstrap/select-multiple.tpl.html">
+          <div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown pull-left" ng-class="{open: $select.open}">
+            <div>
+              <div class="ui-select-match"></div>
 
-              <!--<button class="btn btn-default btn-sm" ng-click="$select.activate()">-->
-                <!--<i class="fa fa-plus"></i> Add filter-->
-              <!--</button>-->
+              <button class="btn btn-default btn-sm" ng-click="$select.activate()">
+                <i class="fa fa-plus"></i> Add filter
+              </button>
 
-              <!--<input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ui-select-search input-xs"-->
-                     <!--placeholder="{{$selectMultiple.getPlaceholder()}}" ng-disabled="$select.disabled" ng-hide="true" ng-click="$select.activate()"-->
-                     <!--ng-model="$select.search" role="combobox" aria-label="{{ $select.baseTitle }}" ondrop="return false;"></div>-->
+              <input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                     class="ui-select-search input-xs"
+                     placeholder="{{$selectMultiple.getPlaceholder()}}"
+                     ng-disabled="$select.disabled"
+                     ng-hide="true"
+                     ng-click="$select.activate()"
+                     ng-model="$select.search"
+                     ondrop="return false;"></div>
 
-            <!--<div class="ui-select-choices"></div>-->
-            <!--<div class="ui-select-no-choice"></div>-->
-          <!--</div>-->
-        <!--</script>-->
-
-
-        <!--&lt;!&ndash; Custom template for angular-ui-select &ndash;&gt;-->
-        <!--<script type="text/ng-template" id="bootstrap/match-multiple.tpl.html">-->
-          <!--<span class="ui-select-match">-->
-            <!--<span ng-repeat="$item in $select.selected">-->
-              <!--<span class="ui-select-match-item btn btn-default btn-sm" tabindex="-1"-->
-                    <!--type="button" ng-disabled="$select.disabled"-->
-                    <!--ng-click="$selectMultiple.activeMatchIndex = $index;"-->
-                    <!--ng-class="{'select-locked':$select.isLocked(this, $index)}"-->
-                    <!--ui-select-sort="$select.selected">-->
-                <!--<span class="close ui-select-match-close" ng-hide="$select.disabled" ng-click="$selectMultiple.removeChoice($index)">&times;</span>-->
-                <!--<span uis-transclude-append=""></span>-->
-              <!--</span>-->
-            <!--</span>-->
-          <!--</span>-->
-        <!--</script>-->
-
-        <!--<div class="btn-group" ng-if="$ctrl.schema">-->
-          <!--<ui-select multiple ng-model="$ctrl.filters" theme="bootstrap" on-remove="$ctrl.onFiltersChanged()">-->
-
-            <!--<ui-select-match allow-clear="true">-->
-
-              <!--<span class="selected-field-name">-->
-                <!--{{$item.name}}-->
-              <!--</span>-->
-
-              <!--<span ng-if="$item.type === 'text'">-->
-                <!--<input type="text"-->
-                       <!--class="form-control input-xs"-->
-                       <!--ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"-->
-                       <!--ng-change="$ctrl.onFiltersChanged()">-->
-              <!--</span>-->
-              <!--<span ng-if="$item.type === 'numeric'">-->
-                <!--<input type="number"-->
-                       <!--class="form-control input-xs"-->
-                       <!--ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"-->
-                       <!--ng-change="$ctrl.onFiltersChanged()">-->
-              <!--</span>-->
-              <!--<span ng-if="$item.type === 'options'">-->
-                <!--<select class="form-control input-xs"-->
-                        <!--ng-options="$ctrl.getOptionValue(option) as $ctrl.getOptionDisplayValue(option) for option in $item.options"-->
-                        <!--ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"-->
-                        <!--ng-change="$ctrl.onFiltersChanged()">-->
-                  <!--<option value=""></option>-->
-                <!--</select>-->
-              <!--</span>-->
-              <!--<span ng-if="$item.type === 'autocomplete'">-->
-                <!--<input type="text" class="form-control input-xs" autocomplete="off" placeholder="Type to search..."-->
-                       <!--ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"-->
-                       <!--uib-typeahead="($item.model ? item[$item.model] : item.value) for item in $ctrl.queryFieldValues($item, $viewValue)"-->
-                       <!--typeahead-on-select="$ctrl.onFiltersChanged()"-->
-                       <!--typeahead-min-length="$item.minLength"-->
-                       <!--typeahead-append-to-body="true">-->
-              <!--</span>-->
+            <div class="ui-select-choices"></div>
+            <div class="ui-select-no-choice"></div>
+          </div>
+        </script>
 
 
-            <!--</ui-select-match>-->
+        <!-- Custom template for angular-ui-select -->
+        <script type="text/ng-template" id="bootstrap/match-multiple.tpl.html">
+          <span class="ui-select-match">
+            <span ng-repeat="$item in $select.selected">
+              <span class="ui-select-match-item btn btn-default btn-sm" tabindex="-1"
+                    type="button" ng-disabled="$select.disabled"
+                    ng-click="$selectMultiple.activeMatchIndex = $index;"
+                    ng-class="{'select-locked':$select.isLocked(this, $index)}"
+                    ui-select-sort="$select.selected">
+                <span class="close ui-select-match-close" ng-hide="$select.disabled" ng-click="$selectMultiple.removeChoice($index)">&times;</span>
+                <span uis-transclude-append=""></span>
+              </span>
+            </span>
+          </span>
+        </script>
 
-            <!--<ui-select-choices repeat="field in $ctrl.getAllFields()" group-by="'category'">-->
-              <!--<div ng-bind-html="field.name | highlight: $select.search"></div>-->
-            <!--</ui-select-choices>-->
+        <div class="btn-group" ng-if="$ctrl.schema">
+          <ui-select multiple ng-model="$ctrl.filters" theme="bootstrap" on-remove="$ctrl.onFiltersChanged()">
 
-          <!--</ui-select>-->
-        <!--</div>-->
+            <ui-select-match allow-clear="true">
 
-      <!--</form>-->
+              <span class="selected-field-name">
+                {{$item.name}}
+              </span>
+
+              <span ng-if="$item.type === 'text'">
+                <input type="text"
+                       class="form-control input-xs"
+                       ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"
+                       ng-change="$ctrl.onFiltersChanged()">
+              </span>
+              <span ng-if="$item.type === 'numeric'">
+                <input type="number"
+                       class="form-control input-xs"
+                       ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"
+                       ng-change="$ctrl.onFiltersChanged()">
+              </span>
+              <span ng-if="$item.type === 'options'">
+                <select class="form-control input-xs"
+                        ng-options="$ctrl.getOptionValue(option) as $ctrl.getOptionDisplayValue(option) for option in $item.options"
+                        ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"
+                        ng-change="$ctrl.onFiltersChanged()">
+                  <option value=""></option>
+                </select>
+              </span>
+              <span ng-if="$item.type === 'autocomplete'">
+                <input type="text" class="form-control input-xs" autocomplete="off" placeholder="Type to search..."
+                       ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"
+                       uib-typeahead="($item.model ? item[$item.model] : item.value) for item in $ctrl.queryFieldValues($item, $viewValue)"
+                       typeahead-on-select="$ctrl.onFiltersChanged()"
+                       typeahead-min-length="$item.minLength"
+                       typeahead-append-to-body="true">
+              </span>
+
+
+            </ui-select-match>
+
+            <ui-select-choices repeat="field in $ctrl.schema.getAllFields()" group-by="'category'">
+              <div ng-bind-html="field.name | highlight: $select.search"></div>
+            </ui-select-choices>
+
+          </ui-select>
+        </div>
+
+      </form>
 
     </div>
   </div>
 </section>
 
 
-<section class="column-panel search-column-panel">
-  <column-panel schema="$ctrl.schema" table="$ctrl.table" enable-filters="true"></column-panel>
-</section>
+<!--<section class="column-panel search-column-panel">-->
+  <!--<column-panel schema="$ctrl.schema" table="$ctrl.table" enable-filters="true"></column-panel>-->
+<!--</section>-->
 
 
 <section class="search-table">

@@ -235,6 +235,10 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     } else {
       this.hiddenColumnsPlugin.showColumns(columnIndices);
     }
+
+    // Render twice, because handsontable craps itself if you hide all columns
+    // and then show some again
+    this.render();
     this.render();
   }
 

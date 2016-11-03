@@ -22,7 +22,7 @@ export class HttpConfig {
         },
         responseError : (response: any) => {
           if (response && (response.status >= 500 || response.status === 0 || response.status === -1)) {
-            $injector.get('$state').transitionTo('500', {}, {location: false});
+            // $injector.get('$state').transitionTo('500', {}, {location: false});
           }
           if (response && response.status === 404) {
             console.log('error: page not found');

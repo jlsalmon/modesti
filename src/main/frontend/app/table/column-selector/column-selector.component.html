@@ -1,0 +1,103 @@
+<div class="column-picker pull-left">
+
+  <script type="text/ng-template" id="column-picker-popover.tpl">
+
+      <div class="popover-title">
+        Select columns
+      </div>
+
+
+      <div class="popover-content-scroll">
+        <ul>
+          <li ng-repeat="category in $ctrl.schema.categories"
+              class="category-label"
+              ng-click="$ctrl.toggleCategory(category)">
+            <span>
+              {{::category.name}}
+
+              <i ng-if="$ctrl.table.isVisibleColumnGroup(category.fields)" class="fa fa-check pull-right"
+                 style="margin-top: 4px;"></i>
+              <i ng-if="$ctrl.table.isInvalidCategory(category)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i>
+            </span>
+          </li>
+
+          <li class="divider" ng-if="$ctrl.schema.datasources.length > 0"></li>
+
+          <!-- Only show datasource if it has been selected as point type for at least one point -->
+          <li ng-repeat="datasource in $ctrl.table.getActiveDatasources()"
+              class="category-label"
+              ng-click="$ctrl.toggleCategory(datasource)">
+            <span>
+              {{::datasource.name}}
+
+              <i ng-if="$ctrl.table.isVisibleColumnGroup(datasource.fields)" class="fa fa-check pull-right" style="margin-top: 4px;"></i>
+            <i ng-if="$ctrl.table.isInvalidCategory(datasource)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i>
+            </span>
+          </li>
+        </ul>
+
+      </div>
+
+
+      <div class="popover-footer">
+        <button type="button"
+                ng-click="$ctrl.popover.isOpen = false"
+                class="btn btn-sm btn-default">
+          Done
+        </button>
+      </div>
+
+  </script>
+
+  <button uib-popover-template="'column-picker-popover.tpl'"
+          popover-placement="bottom-left"
+          popover-trigger="'outsideClick'"
+          popover-is-open="$ctrl.popover.isOpen"
+          ng-click="$ctrl.popover.isOpen = !$ctrl.popover.isOpen"
+          type="button"
+          class="btn btn-sm btn-default">
+    Columns
+  </button>
+
+
+
+  <!--<div class="btn-group toolbar-item" uib-dropdown auto-close="outsideClick">-->
+
+    <!--<button type="button" class="btn btn-sm btn-default dropdown-toggle" uib-dropdown-toggle>-->
+      <!--<span class="text-muted">group:</span>-->
+      <!--{{$ctrl.getDisplayedColumns()}} <span class="caret"></span>-->
+    <!--</button>-->
+
+    <!--<ul uib-dropdown-menu class="scrollable-dropdown">-->
+      <!--<li ng-repeat="category in $ctrl.schema.categories"-->
+          <!--ng-click="$ctrl.toggleCategory(category)">-->
+        <!--<a href="">-->
+              <!--<span>-->
+                <!--{{::category.name}}-->
+
+                <!--<i ng-if="$ctrl.table.isVisibleColumnGroup(category.fields)" class="fa fa-check pull-right"-->
+                   <!--style="margin-top: 4px;"></i>-->
+                <!--<i ng-if="$ctrl.table.isInvalidCategory(category)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i>-->
+              <!--</span>-->
+        <!--</a>-->
+      <!--</li>-->
+
+      <!--<li class="divider" ng-if="$ctrl.schema.datasources.length > 0"></li>-->
+
+      <!--&lt;!&ndash; Only show datasource if it has been selected as point type for at least one point &ndash;&gt;-->
+      <!--<li ng-repeat="datasource in $ctrl.table.getActiveDatasources()"-->
+          <!--ng-click="$ctrl.toggleCategory(datasource)">-->
+        <!--<a href="">-->
+              <!--<span>{{::datasource.name}}-->
+              <!--<i ng-if="$ctrl.table.isInvalidCategory(datasource)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i></span>-->
+        <!--</a>-->
+      <!--</li>-->
+
+      <!--<li role="separator" class="divider"></li>-->
+
+      <!--<li>-->
+        <!--<a class="btn btn-xs">Toggle</a>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</div>-->
+</div>

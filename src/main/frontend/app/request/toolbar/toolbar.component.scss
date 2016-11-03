@@ -1,9 +1,9 @@
 .toolbar {
-  position: absolute;
+  //position: absolute;
   height: 50px;
-  top: 90px;
-  left: 300px;
-  right: 0;
+  //top: 90px;
+  //left: 300px;
+  //right: 0;
   padding: 10px;
   border-bottom: 1px solid #ccc;
   background-color: #F5F5F5;
@@ -11,10 +11,6 @@
 
 .toolbar .toolbar-item {
   display: inline-table;
-}
-
-.toolbar .request-category-selector {
-  width: 210px;
 }
 
 .toolbar .search-form {
