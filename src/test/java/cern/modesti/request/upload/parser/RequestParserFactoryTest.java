@@ -53,7 +53,7 @@ public class RequestParserFactoryTest {
   }
 
   @Test(expected = RequestParseException.class)
-  public void inputstreamParameterIsNull() throws IOException {
+  public void inputStreamParameterIsNull() throws IOException {
     requestParserFactory.parseRequest(null);
   }
 
@@ -81,6 +81,4 @@ public class RequestParserFactoryTest {
     Resource sheet = sheets.get("empty.xlsx");
     requestParserFactory.parseRequest(sheet.getInputStream());
   }
-
-
 }
