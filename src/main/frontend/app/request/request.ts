@@ -12,6 +12,7 @@ export class Request implements ISerializable<Request> {
   public valid: boolean;
   public points: Point[];
   public comments: any[];
+  public createdAt: string;
   public properties: any;
   public childRequestIds: string[];
   public _links: any;
@@ -34,6 +35,7 @@ export class Request implements ISerializable<Request> {
     this.assignee = request.assignee;
     this.valid = request.valid;
     this.comments = request.comments;
+    this.createdAt = request.createdAt;
     this.properties = request.properties;
     this.childRequestIds = request.childRequestIds;
     this._links = request._links;
