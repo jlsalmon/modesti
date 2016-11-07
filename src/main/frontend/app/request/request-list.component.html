@@ -198,7 +198,7 @@
       <!-- The actual list of requests -->
       <div class="list-group" ng-if="$ctrl.loading == 'success'">
         <a ng-repeat="request in $ctrl.requests"
-           ng-if="$ctrl.requests.length > 0 && ($ctrl.hideClosedRequests === false || request.status !== 'IN_PROGRESS')"
+           ng-if="$ctrl.requests.length > 0 && ($ctrl.hideClosedRequests === false || request.status !== 'CLOSED')"
            ng-click="$ctrl.editRequest(request)"
            class="list-group-item">
 
