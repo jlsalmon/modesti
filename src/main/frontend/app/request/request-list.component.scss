@@ -74,3 +74,12 @@ a.btn.btn-xs.btn-link {
 .text-muted.badge .fa {
   color: #bfbfbf;
 }
+
+.filter-hide-closed {
+  padding: 7px;
+}
+
+.filter-hide-closed input[type="checkbox"] {
+  margin: 4px;
+  vertical-align: middle;
+}

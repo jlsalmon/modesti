@@ -92,11 +92,13 @@
           <div class="filter">
             <ui-select ng-model="$ctrl.filter.domain" theme="bootstrap" style="min-width: 80px;">
               <ui-select-match placeholder="Domain" allow-clear="true">
-                  {{$select.selected.id}}
+                {{$select.selected.id}}
               </ui-select-match>
 
               <ui-select-choices repeat="schema.id as schema in $ctrl.schemas">
-                <b><div ng-bind-html="schema.id"></div></b>
+                <b>
+                  <div ng-bind-html="schema.id"></div>
+                </b>
                 <div ng-bind-html="schema.description"></div>
               </ui-select-choices>
             </ui-select>
@@ -170,19 +172,19 @@
             </select>
           </div>
 
-
-          <div class="pull-right" style="vertical-align: middle">
-            Hide closed requests:
-            <input type="checkbox"
+          <div class="filter filter-hide-closed pull-right">
+            Hide closed requests
+            <input class="item" type="checkbox"
                    ng-model="$ctrl.hideClosedRequests"
                    uib-tooltip="Click to show/hide closed requests"
                    tooltip-append-to-body="true"
                    tooltip-placement="right"
-                   ng-click="$ctrl.reloadRequestlist()"
-                   style="vertical-align: middle;margin-right: 1em;">
+                   ng-click="$ctrl.reloadRequestlist()">
+            </input>
           </div>
         </div>
       </div>
+
 
       <!-- Loading overlay -->
       <div class="loading-container" style="height: 400px; width: 100%"
@@ -205,39 +207,39 @@
             <span class="label request-status small pull-right" ng-class="'{{request.status}}'">{{request.status.split("_").join(" ")}}</span>
             <br/>
             <span class="" style="font-size: 12px;">
-            <span class="text-muted">#{{request.requestId}} by {{request.creator}} </span>
-            <span class="text-muted badge"> {{request.type}} </span>
-            <span class="text-muted badge"> <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
-            <span class="text-muted badge" ng-if="request.assignee" uib-tooltip="Assignee"> <i
-                    class="fa fa-fw fa-user"></i> {{request.assignee}} </span>
+              <span class="text-muted">#{{request.requestId}} by {{request.creator}} </span>
+              <span class="text-muted badge"> {{request.type}} </span>
+              <span class="text-muted badge"> <i class="fa fa-fw fa-crosshairs"></i>  {{request.domain}} </span>
+              <span class="text-muted badge" ng-if="request.assignee" uib-tooltip="Assignee"> <i
+                      class="fa fa-fw fa-user"></i> {{request.assignee}} </span>
 
-            <span ng-if="$ctrl.hasCustomProperties(request)"
-                  style="margin-left: 5px;">
-              <span ng-repeat="(key, value) in request.properties">
-                <span ng-init="property = $ctrl.formatCustomProperty(request, key)">
-                  <span ng-if="property.value"
-                        class="text-muted badge"
-                        style="background-color: #F5F5F5; float: none;"
-                        uib-tooltip="{{property.field.name}}">
-                    {{property.value}}
+              <span ng-if="$ctrl.hasCustomProperties(request)"
+                    style="margin-left: 5px;">
+                <span ng-repeat="(key, value) in request.properties">
+                  <span ng-init="property = $ctrl.formatCustomProperty(request, key)">
+                    <span ng-if="property.value"
+                          class="text-muted badge"
+                          style="background-color: #F5F5F5; float: none;"
+                          uib-tooltip="{{property.field.name}}">
+                      {{property.value}}
+                    </span>
                   </span>
                 </span>
               </span>
             </span>
-
-          </span>
-          <span class="text-muted pull-right" style="font-size: 11px; margin-top: 5px;"><i class="fa fa-fw fa-clock-o"></i> {{request.createdAt | date:'medium'}}</span>
-        </a>
-        <div class="list-group-item" ng-if="$ctrl.requests.length == 0">
-          No requests to show
+            <span class="text-muted pull-right" style="font-size: 11px; margin-top: 5px;"><i class="fa fa-fw fa-clock-o"></i> {{request.createdAt | date:'medium'}}</span>
+          </a>
+          <div class="list-group-item" ng-if="$ctrl.requests.length == 0">
+            No requests to show
+          </div>
         </div>
       </div>
     </div>
 
-
     <!-- Pagination bar -->
     <div class="pull-left" ng-if="$ctrl.loading == 'success' && $ctrl.requests.length > 0">
       <div uib-pagination boundary-links="true"
+                  style="margin: 0;"
                   max-size="5"
                   total-items="$ctrl.page.totalElements"
                   items-per-page="$ctrl.page.size"
@@ -254,6 +256,5 @@
     <div class="pull-right" ng-if="$ctrl.page.totalElements">
       {{$ctrl.page.totalElements}} requests for this filter
     </div>
-
   </section>
 </div>
