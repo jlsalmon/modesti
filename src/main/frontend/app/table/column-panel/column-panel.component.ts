@@ -3,7 +3,7 @@ import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
 import {SchemaService} from '../../schema/schema.service';
 import {Table} from '../table';
-import {Filter} from './filter';
+import {Filter} from '../filter';
 import {IComponentOptions, IRootScopeService, IPromise} from 'angular';
 
 export class ColumnPanelComponent implements IComponentOptions {

@@ -1,14 +1,26 @@
 import {ColumnFactory} from '../column-factory';
 import {Table} from '../table';
-import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
-import {Grid, GridOptions, Column, ColDef} from 'ag-grid/main';
+import {ColDef} from 'ag-grid/main';
 
 export class AgGridColumnFactory {
 
   protected getColumnDefs(table: Table, meta: any): any[] {
     let columnDefs: ColDef[] = [];
+
+    columnDefs.push({
+      field: 'properties.pointId',
+      headerName: '',
+      width: 30,
+      checkboxSelection: true,
+      suppressSorting: true,
+      suppressMenu: true,
+      suppressResize: true,
+      suppressSizeToFit: true,
+      pinned: true,
+      // cellRenderer: meta.checkboxCellRenderer
+    });
 
     table.schema.categories.concat(table.schema.datasources).forEach((category: Category) => {
       category.fields.forEach((field: Field) => {

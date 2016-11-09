@@ -4,11 +4,12 @@ import {RequestService} from '../request/request.service';
 import {AlertService} from '../alert/alert.service';
 import {Table} from '../table/table';
 import {TableFactory} from '../table/table-factory';
+import {AgGridSelectionService} from '../table/ag-grid/ag-grid-selection.service';
 import {Schema} from '../schema/schema';
 import {Point} from '../request/point/point';
 import {QueryParser} from './query-parser';
-import {Filter} from '../table/column-panel/filter';
-import {IComponentOptions, IPromise, IRootScopeService, IAngularEvent} from 'angular';
+import {Filter} from '../table/filter';
+import {IComponentOptions, IRootScopeService, IAngularEvent} from 'angular';
 import {IStateService} from 'angular-ui-router';
 
 export class SearchComponent implements IComponentOptions {
@@ -21,7 +22,7 @@ export class SearchComponent implements IComponentOptions {
 
 class SearchController {
   public static $inject: string[] = ['$rootScope', '$uibModal', '$state', 'SearchService',
-                                     'SchemaService', 'RequestService', 'AlertService'];
+                                     'SchemaService', 'RequestService', 'AlertService', 'AgGridSelectionService'];
 
   public schema: Schema;
   public schemas: Schema[];
@@ -36,12 +37,14 @@ class SearchController {
 
   constructor(private $rootScope: IRootScopeService, private $modal: any, private $state: IStateService,
               private searchService: SearchService, private schemaService: SchemaService,
-              private requestService: RequestService, private alertService: AlertService) {
+              private requestService: RequestService, private alertService: AlertService,
+              private selectionService: AgGridSelectionService) {
 
     this.activateSchema(this.schemas[0]);
 
     let settings: any = {
-      getRows: this.search
+      getRows: this.search,
+      selectionService: this.selectionService
     };
 
     this.table = TableFactory.createTable('ag-grid', this.schema, [], settings);
@@ -113,6 +116,7 @@ class SearchController {
         }
 
         params.successCallback(points, lastRow);
+        this.table.updateSelections();
       } else {
         this.table.refreshData();
       }
@@ -134,19 +138,29 @@ class SearchController {
       controller: 'UpdatePointsModalController as ctrl',
       size: 'lg',
       resolve: {
-        points: () => {
-          let query: string = QueryParser.parse(this.filters);
-          let page: any = { number: 0, size: this.page.totalElements };
+        points: (): any => {
+          let selectedPoints: number[] = this.table.getSelectedPoints();
 
-          return this.searchService.getPoints(this.schema.id, query, page, this.sort).then((response: any) => {
-            let points: Point[] = [];
+          // If the user selected some specific points, just use those
+          if (selectedPoints.length !== 0) {
+            return selectedPoints;
+          }
 
-            if (response.hasOwnProperty('_embedded')) {
-              points = response._embedded.points;
-            }
+          // Otherwise, update all the points for the current filters
+          else {
+            let query: string = QueryParser.parse(this.filters);
+            let page: any = {number: 0, size: this.page.totalElements};
 
-            return points;
-          });
+            return this.searchService.getPoints(this.schema.id, query, page, this.sort).then((response: any) => {
+              let points: Point[] = [];
+
+              if (response.hasOwnProperty('_embedded')) {
+                points = response._embedded.points;
+              }
+
+              return points;
+            });
+          }
         },
         schema: () => this.schema
       }

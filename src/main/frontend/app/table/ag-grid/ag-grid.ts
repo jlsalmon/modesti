@@ -1,9 +1,14 @@
 import {Table} from '../table';
+import {Point} from '../../request/point/point';
 import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
 import {ColumnFactory} from '../column-factory';
-import {Grid, GridOptions, Column, ColDef} from 'ag-grid/main';
+import {Grid, GridOptions, Column, ColDef, RowNode} from 'ag-grid/main';
+import 'lodash';
+
+import * as agGrid from 'ag-grid/main'
+agGrid.initialiseAgGridWithAngular1(angular);
 
 export class AgGrid extends Table {
 
@@ -15,9 +20,12 @@ export class AgGrid extends Table {
     let columnDefs: ColDef[] = this.getColumnDefs();
 
     this.gridOptions = {
+      angularCompileRows: true,
       enableColResize: true,
       enableServerSideSorting: true,
       enableServerSideFilter: true,
+      rowSelection: 'multiple',
+      suppressRowClickSelection: true,
       debug: true,
       rowHeight: 24,
       rowDeselection: true,
@@ -28,7 +36,11 @@ export class AgGrid extends Table {
       paginationOverflowSize: 2,
       maxConcurrentDatasourceRequests: 2,
       paginationInitialRowCount: 50,
-      maxPagesInCache: 10,
+      maxPagesInCache: 2,
+      onRowSelected: this.rowSelected.bind(this),
+      onRowDeselected: this.rowDeselected.bind(this),
+      onBeforeFilterChanged: this.clearSelections.bind(this),
+      onBeforeSortChanged: this.clearSelections.bind(this),
       datasource: {
         rowCount: undefined, // behave as infinite scroll
         getRows: (params: any) => this.settings.getRows(params)
@@ -36,12 +48,12 @@ export class AgGrid extends Table {
       onGridReady: (event: any) => event.api.sizeColumnsToFit()
     };
 
-    this.grid = new Grid(document.getElementById('table'), this.gridOptions);
-
     window.onresize = (event: Event) => {
       this.gridOptions.api.sizeColumnsToFit();
     };
   }
+
+  render(): void {}
 
   public refreshData(): void {
     if (this.gridOptions) {
@@ -123,10 +135,51 @@ export class AgGrid extends Table {
           return '...';
         }
       },
-      state: this.state
+      checkboxCellRenderer: (params: any) => {
+        return '<input type="checkbox" ng-click="$ctrl.table.selectNodeById(' + params.node.id + ')" style="margin-left: 5px;">';
+      }
     };
 
     return ColumnFactory.getColumnDefinitions('ag-grid', this, meta);
+  }
+
+  public selectNodeById(id): void {
+    if (_.find(this.gridOptions.api.getSelectedNodes(), {id: id})) {
+      this.gridOptions.api.deselectIndex(id);
+    } else {
+      this.gridOptions.api.selectIndex(id, true, false);
+    }
+  };
+
+  public getSelectedPoints() {
+    let points: Point[] = [];
+    this.updateSelections();
+
+    // this.gridOptions.api.forEachNode((node) => {
+    //   if (node.isSelected()) {
+    //     points.push(node.data);
+    //   }
+    // });
+
+    points = this.gridOptions.api.getSelectedNodes();
+
+    return points;
+  }
+
+  public rowSelected(event) {
+    this.settings.selectionService.add(event.node.data, 'properties.pointId');
+  }
+
+  public rowDeselected(event) {
+    this.settings.selectionService.remove(event.node.data, 'properties.pointId');
+  }
+
+  public updateSelections() {
+    this.settings.selectionService.updateInGridSelections(this.gridOptions.api, 'properties.pointId');
+  }
+
+  public clearSelections(event) {
+    this.gridOptions.api.deselectAll();
   }
 
   public getActiveDatasources(): Category[] {

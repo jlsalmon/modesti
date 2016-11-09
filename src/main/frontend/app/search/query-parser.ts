@@ -1,4 +1,4 @@
-import {Filter} from '../table/column-panel/filter';
+import {Filter} from '../table/filter';
 import {Field} from '../schema/field/field';
 
 export class QueryParser {

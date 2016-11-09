@@ -4,7 +4,6 @@ import 'angular-animate';
 import 'angular-sanitize';
 import 'angular-ui-bootstrap';
 import 'angular-ui-router';
-// import 'angular-ui-router-title';
 import 'angular-file-upload';
 import 'angular-http-auth';
 import 'angular-spinner';
@@ -12,7 +11,6 @@ import 'angular-filter';
 import 'angular-xeditable';
 import 'jquery';
 import 'spin.js';
-// import 'angular-bootstrap-select';
 import 'bootstrap-sass';
 import 'ui-select';
 import 'ngstorage';
@@ -40,6 +38,7 @@ import {RequestTableComponent} from './request/table/request-table.component.ts'
 import {RequestFooterDirective} from './request/footer/footer.directive.ts';
 import {ColumnPanelComponent} from './table/column-panel/column-panel.component.ts';
 import {ColumnSelectorComponent} from './table/column-selector/column-selector.component.ts';
+import {FilterBuilderComponent} from './table/filter-builder/filter-builder.component';
 import {CloneRequestModalController} from './request/clone/clone-request.modal.ts';
 import {AssignRequestModalController} from './request/assign/assign-request.modal.ts';
 import {DeleteRequestModalController} from './request/delete/delete-request.modal.ts';
@@ -56,6 +55,7 @@ import {TaskService} from './task/task.service.ts';
 import {HistoryService} from './request/history/history.service.ts';
 import {AlertService} from './alert/alert.service.ts';
 import {SearchService} from './search/search.service.ts';
+import {AgGridSelectionService} from './table/ag-grid/ag-grid-selection.service';
 import {ValidationService} from './request/validation/validation.service.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
@@ -70,19 +70,17 @@ let app: any = angular.module('modesti', [
   'ngAnimate',
   'ngSanitize',
   'ngStorage',
-  // 'ngHandsontable',
   'ui.bootstrap',
   'ui.router',
-  // 'ui.router.title',
   'ui.select',
   'restangular',
   'angularFileUpload',
   'http-auth-interceptor',
   'angularSpinner',
   'angular.filter',
-  // 'angular-bootstrap-select',
   'oc.lazyLoad',
-  'xeditable'
+  'xeditable',
+  'agGrid'
 ]);
 
 // TODO: split this up into modules
@@ -98,6 +96,7 @@ app.component('requestTable', new RequestTableComponent());
 app.directive('requestFooter', RequestFooterDirective.factory());
 app.component('columnPanel', new ColumnPanelComponent());
 app.component('columnSelector', new ColumnSelectorComponent());
+app.component('filterBuilder', new FilterBuilderComponent());
 app.directive('showIf', ShowIfDirective.factory());
 app.directive('enableIf', EnableIfDirective.factory());
 app.component('user', new UserComponent());
@@ -112,6 +111,7 @@ app.service('HistoryService', HistoryService);
 app.service('AlertService', AlertService);
 app.service('SearchService', SearchService);
 app.service('ValidationService', ValidationService);
+app.service('AgGridSelectionService', AgGridSelectionService);
 
 app.controller('LoginModalController', LoginModalController);
 app.controller('CloneRequestModalController', CloneRequestModalController);
