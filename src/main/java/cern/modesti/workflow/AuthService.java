@@ -135,7 +135,14 @@ public class AuthService {
     RequestProvider plugin = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
     String requestPluginId = plugin.getMetadata().getId();
 
-    if (isAdministrator(user)) return true;
+    if (isAdministrator(user)) {
+      return true;
+    }
+
+    String pluginAuthrorizationGroup = plugin.getMetadata().getAuthorisationGroup(request);
+    if (user.getAuthorities().contains(pluginAuthrorizationGroup)) {
+      return true;
+    }
 
     AuthorizationProvider authProvider = getPluginAuthorizationProvider(requestPluginId);
     if (authProvider != null) {
