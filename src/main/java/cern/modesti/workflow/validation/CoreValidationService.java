@@ -101,13 +101,17 @@ public class CoreValidationService {
       log.info(format("request #%s failed validation, not invoking custom validator", request.getRequestId()));
       return false;
     }
+
     log.info(format("request #%s is valid, invoking custom validator", request.getRequestId()));
 
-    RequestValidator validator = getPluginRequestValidator(request.getId());
+    RequestProvider plugin = requestProviderRegistry.getPluginFor(request);
+    RequestValidator validator = getPluginRequestValidator(plugin.getMetadata().getId());
+
     if (validator == null) {
       log.info(format("custom validator not provided for request #%s", request.getRequestId()));
       return true;
     }
+
     valid = validator.validateRequest(request, schema);
     request.setValid(valid);
     requestService.save(request);
