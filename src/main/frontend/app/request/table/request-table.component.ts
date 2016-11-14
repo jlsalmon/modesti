@@ -59,9 +59,6 @@ class RequestTableController {
     };
 
     this.table = TableFactory.createTable('handsontable', this.schema, this.request.points, settings);
-
-    // Add additional helper methods
-    this.table.navigateToField = this.navigateToField;
   }
 
   public renderCell = (instance: any, td: HTMLElement, row: number, col: number, prop: string,
@@ -444,32 +441,5 @@ class RequestTableController {
 
   public onAfterRemoveRow = (): void => {
     this.requestService.saveRequest(this.request);
-  };
-
-  /**
-   * Navigate somewhere to focus on a particular field.
-   *
-   * @param categoryName the name of the category to which the field belongs
-   * @param fieldId the id of the field to focus on
-   */
-   public navigateToField = (categoryName: string, fieldId: string) => {
-    // TOD: reimplement this by showing the particular field
-
-    // Find the category which contains the field
-    // let category: Category;
-    //
-    // if (fieldId.indexOf('.') !== -1) {
-    //  fieldId = fieldId.split('.')[0];
-    // }
-    //
-    // this.schema.categories.concat(this.schema.datasources).forEach((cat: Category) => {
-    //  if (cat.name === categoryName || cat.id === categoryName) {
-    //    cat.fields.forEach((field: Field) => {
-    //      if (field.id === fieldId || cat.name === fieldId || cat.id === fieldId) {
-    //        category = cat;
-    //      }
-    //    });
-    //  }
-    // });
   };
 }

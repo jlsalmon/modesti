@@ -407,6 +407,29 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   }
 
   /**
+   * Navigate somewhere to highlight a particular cell.
+   *
+   * @param categoryName the name of the category to which the field belongs
+   * @param fieldId the id of the field to focus on
+   * @param lineNo the row to be highlighted
+   */
+  public highlightCell = (categoryName: string, fieldId: string, lineNo: number) => {
+    let field: Field = this.schema.getField(fieldId);
+
+    // Get the column number from the field id
+    let col: number = this.hot.propToCol('properties.' + field.getModelPath());
+
+    // Make sure the category is visible
+    if (!this.isVisibleColumn(field)) {
+      // Find the category which contains the field
+      let category: Category = this.schema.getCategoryForField(field);
+      this.toggleColumnGroup(category.fields);
+    }
+
+    this.hot.selectCell(lineNo - 1, col);
+  };
+
+  /**
    * Adjust the height of the table so that it fills the entire space from
    * below the toolbar to above the footer.
    */
