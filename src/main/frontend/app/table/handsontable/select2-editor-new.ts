@@ -193,14 +193,16 @@ export class Select2EditorNew extends Handsontable.editors.TextEditor {
     });
 
     // Set reference to the instance and row, so we can access them in the query function
-    self.$textarea[0].instance = self.instance;
-    self.$textarea[0].row = self.row;
+    this.$textarea[0].instance = self.instance;
+    this.$textarea[0].row = self.row;
 
-    self.$textarea.select2('open');
+    this.$textarea.select2('open');
 
-    // Push the original value to select2 if we have one
-    if (self.originalValue != null) {
-      self.$textarea.select2('search', self.originalValue);
+    // For autocomplete fields, push the original value to select2 if we have one
+    if (this.originalValue != null) {
+      if (this.field.type === 'autocomplete' || (this.field.type === 'text' && this.field.url != null)) {
+        this.$textarea.select2('search', this.originalValue);
+      }
     }
 
     // super.open(event);
