@@ -18,6 +18,7 @@ export class UpdatePointsModalController {
     this.request.type = 'UPDATE';
     this.request.description = '';
     this.request.creator = authService.getCurrentUser().username;
+    this.request.assignee = this.request.creator;
     this.request.domain = schema.id;
     this.request.points = points;
   }
