@@ -93,6 +93,13 @@
                 <div class="col-sm-9">
 
 
+                  <input ng-if="field.type === 'text'"
+                         type="text"
+                         class="form-control"
+                         ng-model="$ctrl.request.properties[field.id]"
+                         ng-required="{{field.required}}">
+
+
                   <ui-select ng-if="field.type === 'autocomplete'"
                              ng-model="$ctrl.request.properties[field.id]"
                              theme="bootstrap"
