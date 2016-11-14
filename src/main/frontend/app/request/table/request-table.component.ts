@@ -66,7 +66,7 @@ class RequestTableController {
 
   public renderCell = (instance: any, td: HTMLElement, row: number, col: number, prop: string,
                                           value: any, cellProperties: any): void => {
-    switch (cellProperties.type) {
+    switch (cellProperties.field.type) {
       case 'text':
         Handsontable.renderers.TextRenderer.apply(this, arguments);
         break;
@@ -76,11 +76,11 @@ class RequestTableController {
       case 'checkbox':
         Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
         break;
+      case 'autocomplete':
+      case 'options':
+        Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
+        break;
       default: break;
-    }
-
-    if (cellProperties.editor === 'select2') {
-      Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
     }
 
     if (typeof prop !== 'string') {
