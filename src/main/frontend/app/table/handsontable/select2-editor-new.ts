@@ -198,13 +198,6 @@ export class Select2EditorNew extends Handsontable.editors.TextEditor {
 
     self.$textarea.select2('open');
 
-    // Pushes initial character entered into the search field, if available
-    if (keyboardEvent && keyboardEvent.keyCode) {
-      var key = keyboardEvent.keyCode;
-      var keyText = (String.fromCharCode((96 <= key && key <= 105) ? key-48 : key)).toLowerCase();
-      self.$textarea.select2('search', keyText);
-    }
-
     // super.open(event);
     //
     // this.select = $(this.TEXTAREA).select2({
