@@ -198,6 +198,11 @@ export class Select2EditorNew extends Handsontable.editors.TextEditor {
 
     self.$textarea.select2('open');
 
+    // Push the original value to select2 if we have one
+    if (self.originalValue != null) {
+      self.$textarea.select2('search', self.originalValue);
+    }
+
     // super.open(event);
     //
     // this.select = $(this.TEXTAREA).select2({
