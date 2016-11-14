@@ -63,7 +63,23 @@ class RequestTableController {
 
   public renderCell = (instance: any, td: HTMLElement, row: number, col: number, prop: string,
                                           value: any, cellProperties: any): void => {
-    switch (cellProperties.field.type) {
+    let point: Point = this.request.points[row];
+    if (!point || point.isEmpty()) {
+      return;
+    }
+
+    if (typeof prop !== 'string') {
+      return;
+    }
+
+    let field: Field = this.schema.getField(prop);
+    if (field) {
+      // Check if we need to fill in a default value for this point.
+      this.setDefaultValue(point, field);
+    }
+
+    let type: string = cellProperties.field ? cellProperties.field.type : cellProperties.type;
+    switch (type) {
       case 'text':
         Handsontable.renderers.TextRenderer.apply(this, arguments);
         break;
@@ -80,21 +96,6 @@ class RequestTableController {
       default: break;
     }
 
-    if (typeof prop !== 'string') {
-      return;
-    }
-
-    let point: Point = this.request.points[row];
-    if (!point || point.isEmpty()) {
-      return;
-    }
-
-    let field: Field = this.schema.getField(prop);
-    if (field) {
-      // Check if we need to fill in a default value for this point.
-      this.setDefaultValue(point, field);
-    }
-
     // Highlight errors in a cell by making the background red.
     angular.forEach(point.errors, (error: any) => {
 
@@ -106,7 +107,7 @@ class RequestTableController {
         prop = prop.split('.')[0];
       }
 
-      if (error.property === prop || error.property === '') {
+      if (error.property === prop || error.property.split('.')[0] === prop || error.property === '') {
         // If the property name isn't specified, then the error applies to the whole point.
         td.className += ' alert-danger';
         return;
