@@ -61,7 +61,7 @@ export class SchemaService {
     let q: IDeferred<any[]> = this.$q.defer();
 
     // Don't make a call if the query is less than the minimum length (or is undefined)
-    if (!query || (field.minLength && query.length < field.minLength)) {
+    if (query == null || (field.minLength && query.length < field.minLength)) {
       q.resolve([]);
       return q.promise;
     }
