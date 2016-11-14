@@ -101,7 +101,15 @@ class RequestTableController {
     // Highlight errors in a cell by making the background red.
     angular.forEach(point.errors, (error: any) => {
 
-      if (error.property === prop.replace('properties.', '') || error.property === prop || error.property === '') {
+      if (prop.indexOf('properties.') !== -1) {
+        prop = prop.replace('properties.', '');
+      }
+
+      if (prop.indexOf('.') !== -1) {
+        prop = prop.split('.')[0];
+      }
+
+      if (error.property === prop || error.property === '') {
         // If the property name isn't specified, then the error applies to the whole point.
         td.className += ' alert-danger';
         return;
