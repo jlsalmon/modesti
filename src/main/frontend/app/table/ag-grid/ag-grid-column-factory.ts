@@ -10,16 +10,15 @@ export class AgGridColumnFactory {
     let columnDefs: ColDef[] = [];
 
     columnDefs.push({
-      field: 'properties.pointId',
+      field: meta.idProperty,
       headerName: '',
       width: 30,
-      checkboxSelection: true,
       suppressSorting: true,
       suppressMenu: true,
       suppressResize: true,
       suppressSizeToFit: true,
       pinned: true,
-      // cellRenderer: meta.checkboxCellRenderer
+      cellRenderer: meta.checkboxCellRenderer
     });
 
     table.schema.categories.concat(table.schema.datasources).forEach((category: Category) => {

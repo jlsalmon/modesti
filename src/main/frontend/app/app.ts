@@ -55,7 +55,6 @@ import {TaskService} from './task/task.service.ts';
 import {HistoryService} from './request/history/history.service.ts';
 import {AlertService} from './alert/alert.service.ts';
 import {SearchService} from './search/search.service.ts';
-import {AgGridSelectionService} from './table/ag-grid/ag-grid-selection.service';
 import {ValidationService} from './request/validation/validation.service.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
@@ -111,7 +110,6 @@ app.service('HistoryService', HistoryService);
 app.service('AlertService', AlertService);
 app.service('SearchService', SearchService);
 app.service('ValidationService', ValidationService);
-app.service('AgGridSelectionService', AgGridSelectionService);
 
 app.controller('LoginModalController', LoginModalController);
 app.controller('CloneRequestModalController', CloneRequestModalController);

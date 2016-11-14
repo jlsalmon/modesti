@@ -4,7 +4,6 @@ import {RequestService} from '../request/request.service';
 import {AlertService} from '../alert/alert.service';
 import {Table} from '../table/table';
 import {TableFactory} from '../table/table-factory';
-import {AgGridSelectionService} from '../table/ag-grid/ag-grid-selection.service';
 import {Schema} from '../schema/schema';
 import {Point} from '../request/point/point';
 import {QueryParser} from './query-parser';
@@ -22,7 +21,7 @@ export class SearchComponent implements IComponentOptions {
 
 class SearchController {
   public static $inject: string[] = ['$rootScope', '$uibModal', '$state', 'SearchService',
-                                     'SchemaService', 'RequestService', 'AlertService', 'AgGridSelectionService'];
+                                     'SchemaService', 'RequestService', 'AlertService'];
 
   public schema: Schema;
   public schemas: Schema[];
@@ -37,8 +36,7 @@ class SearchController {
 
   constructor(private $rootScope: IRootScopeService, private $modal: any, private $state: IStateService,
               private searchService: SearchService, private schemaService: SchemaService,
-              private requestService: RequestService, private alertService: AlertService,
-              private selectionService: AgGridSelectionService) {
+              private requestService: RequestService, private alertService: AlertService) {
 
     this.activateSchema(this.schemas[0]);
 
@@ -115,8 +113,8 @@ class SearchController {
           lastRow = this.page.totalElements;
         }
 
-        params.successCallback(points, lastRow);
         this.table.updateSelections();
+        params.successCallback(points, lastRow);
       } else {
         this.table.refreshData();
       }

@@ -76,6 +76,21 @@ export class Schema implements ISerializable<Schema> {
     return fields;
   }
 
+  public determineIdProperty(): string {
+    let property: string;
+
+    // Choose the first field marked as "unique"
+    // TODO: this would be better served by having a "primary" flag to avoid ambiguity
+    this.getAllFields().forEach((field: Field) => {
+      if (field.unique) {
+        property = field.id;
+        return;
+      }
+    });
+
+    return 'properties.' + property;
+  }
+
   public hasRowSelectColumn(requestStatus: string): boolean {
     let selectableStates: string[] = this.selectableStates;
     return selectableStates && selectableStates.indexOf(requestStatus) > -1;

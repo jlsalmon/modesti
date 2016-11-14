@@ -1,22 +1,25 @@
-import {Table} from '../table';
-import {Point} from '../../request/point/point';
-import {Schema} from '../../schema/schema';
-import {Category} from '../../schema/category/category';
-import {Field} from '../../schema/field/field';
-import {ColumnFactory} from '../column-factory';
-import {Grid, GridOptions, Column, ColDef, RowNode} from 'ag-grid/main';
-import 'lodash';
-
-import * as agGrid from 'ag-grid/main'
+import {Table} from "../table";
+import {Point} from "../../request/point/point";
+import {Schema} from "../../schema/schema";
+import {Category} from "../../schema/category/category";
+import {Field} from "../../schema/field/field";
+import {ColumnFactory} from "../column-factory";
+import * as agGrid from "ag-grid/main";
+import {Grid, GridOptions, Column, ColDef} from "ag-grid/main";
+import "lodash";
 agGrid.initialiseAgGridWithAngular1(angular);
 
 export class AgGrid extends Table {
 
   public grid: Grid;
   public gridOptions: GridOptions;
+  public selectedPoints: Point[] = [];
+  public idProperty: string;
 
   public constructor(schema: Schema, data: any[], settings: any) {
     super(schema, data, settings);
+    this.idProperty = this.schema.determineIdProperty();
+
     let columnDefs: ColDef[] = this.getColumnDefs();
 
     this.gridOptions = {
@@ -38,7 +41,6 @@ export class AgGrid extends Table {
       paginationInitialRowCount: 50,
       maxPagesInCache: 2,
       onRowSelected: this.rowSelected.bind(this),
-      onRowDeselected: this.rowDeselected.bind(this),
       onBeforeFilterChanged: this.clearSelections.bind(this),
       onBeforeSortChanged: this.clearSelections.bind(this),
       datasource: {
@@ -53,7 +55,7 @@ export class AgGrid extends Table {
     };
   }
 
-  render(): void {}
+  public render(): void {}
 
   public refreshData(): void {
     if (this.gridOptions) {
@@ -128,6 +130,7 @@ export class AgGrid extends Table {
 
   private getColumnDefs(): ColDef[] {
     let meta: any = {
+      idProperty: this.idProperty,
       cellRenderer: (params: any) => {
         if (params.data != null) {
           return this.gridOptions.api.getValue(params.column, params.node);
@@ -136,7 +139,9 @@ export class AgGrid extends Table {
         }
       },
       checkboxCellRenderer: (params: any) => {
-        return '<input type="checkbox" ng-click="$ctrl.table.selectNodeById(' + params.node.id + ')" style="margin-left: 5px;">';
+        return '<input type="checkbox" ' +
+          (params.node.selected ? 'checked="checked" ' : '') +
+          'ng-click="$ctrl.table.selectNodeById(' + params.node.id + ')" style="margin-left: 5px;">';
       }
     };
 
@@ -155,30 +160,70 @@ export class AgGrid extends Table {
     let points: Point[] = [];
     this.updateSelections();
 
-    // this.gridOptions.api.forEachNode((node) => {
-    //   if (node.isSelected()) {
-    //     points.push(node.data);
-    //   }
-    // });
-
-    points = this.gridOptions.api.getSelectedNodes();
+    this.gridOptions.api.getSelectedNodes().forEach((node) => {
+      points.push(node.data);
+    });
 
     return points;
   }
 
   public rowSelected(event) {
-    this.settings.selectionService.add(event.node.data, 'properties.pointId');
-  }
+    let point: Point = event.node.data;
+    let selected: boolean = event.node.isSelected();
 
-  public rowDeselected(event) {
-    this.settings.selectionService.remove(event.node.data, 'properties.pointId');
+    let path: string = this.idProperty;
+
+    if (selected) {
+      if (!_.some(this.selectedPoints, [path, _.get(point, path)])) {
+        this.selectedPoints.push(point);
+      }
+    } else {
+      _.remove(this.selectedPoints, [path, _.get(point, path)]);
+    }
   }
 
   public updateSelections() {
-    this.settings.selectionService.updateInGridSelections(this.gridOptions.api, 'properties.pointId');
+    let path: string = this.idProperty;
+
+    let selectedInGrid = this.gridOptions.api.getSelectedNodes();
+    let gridPath = 'data.' + path;
+
+    _.each(selectedInGrid, (node) => {
+      if (!_.some(this.selectedPoints, [path, _.get(node, gridPath)])) {
+        // The following suppressEvents=true flag is ignored for now, but a
+        // fixing pull request is waiting at ag-grid GitHub.
+        node.setSelected(false);
+        // this.gridOptions.api.deselectNode(node, true);
+      }
+    });
+
+    let selectedIdsInGrid = _.map(selectedInGrid, gridPath);
+    let currentlySelectedIds = _.map(this.selectedPoints, path);
+    let missingIdsInGrid = _.difference(currentlySelectedIds, selectedIdsInGrid);
+
+    if (missingIdsInGrid.length > 0) {
+      // We're trying to avoid the following loop, since it seems horrible to
+      // have to loop through all the nodes only to select some.  I wish there
+      // was a way to select nodes/rows based on an id.
+      var i;
+
+      this.gridOptions.api.forEachNode((node) => {
+        i = _.indexOf(missingIdsInGrid, _.get(node, gridPath));
+        if (i >= 0) {
+          // multi=true, suppressEvents=true:
+          // this.gridOptions.api.selectNode(node, true, true);
+          node.setSelected(true);
+
+          missingIdsInGrid.splice(i, 1);  // Reduce haystack.
+          if (!missingIdsInGrid.length) {
+            // I'd love for `forEachNode` to support breaking the loop here.
+          }
+        }
+      });
+    }
   }
 
-  public clearSelections(event) {
+  public clearSelections() {
     this.gridOptions.api.deselectAll();
   }
 
