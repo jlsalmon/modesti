@@ -4,15 +4,9 @@ import {AlertService} from '../../alert/alert.service';
 import {Point} from '../point/point';
 import {Task} from '../../task/task';
 import {Request} from '../request';
-import IPromise = angular.IPromise;
-import IDeferred = angular.IDeferred;
-import IQService = angular.IQService;
-import ICompileService = angular.ICompileService;
-import IHttpService = angular.IHttpService;
-import IDirective = angular.IDirective;
-import IDirectiveFactory = angular.IDirectiveFactory;
-import IScope = angular.IScope;
-import IStateService = angular.ui.IStateService;
+import {IPromise, IDeferred, IQService, ICompileService,
+        IHttpService, IDirective, IDirectiveFactory, IScope} from 'angular';
+import {IStateService} from 'angular-ui-router';
 
 export class RequestFooterDirective implements IDirective {
 
