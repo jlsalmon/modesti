@@ -63,22 +63,9 @@ class RequestTableController {
 
   public renderCell = (instance: any, td: HTMLElement, row: number, col: number, prop: string,
                                           value: any, cellProperties: any): void => {
-    let point: Point = this.request.points[row];
-    if (!point || point.isEmpty()) {
-      return;
-    }
-
-    if (typeof prop !== 'string') {
-      return;
-    }
-
     let field: Field = this.schema.getField(prop);
-    if (field) {
-      // Check if we need to fill in a default value for this point.
-      this.setDefaultValue(point, field);
-    }
 
-    let type: string = cellProperties.field ? cellProperties.field.type : cellProperties.type;
+    let type: string = field ? field.type : cellProperties.type;
     switch (type) {
       case 'text':
         Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -94,6 +81,20 @@ class RequestTableController {
         Handsontable.renderers.AutocompleteRenderer.apply(this, arguments);
         break;
       default: break;
+    }
+
+    let point: Point = this.request.points[row];
+    if (!point || point.isEmpty()) {
+      return;
+    }
+
+    if (typeof prop !== 'string') {
+      return;
+    }
+
+    if (field) {
+      // Check if we need to fill in a default value for this point.
+      this.setDefaultValue(point, field);
     }
 
     // Highlight errors in a cell by making the background red.
