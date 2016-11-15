@@ -231,6 +231,8 @@ export class SchemaService {
       result = true;
     } else if (condition.operation === 'in' && (condition.value.indexOf(value) > -1)) {
       result = true;
+    } else if (condition.operation === 'notIn' && (condition.value.indexOf(value) === -1)) {
+      result = true;
     }
 
     return result;

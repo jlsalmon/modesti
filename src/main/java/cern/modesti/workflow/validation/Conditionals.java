@@ -78,7 +78,6 @@ public class Conditionals {
     }
   }
 
-
   private static boolean evaluateValueCondition(Condition condition, Point point) {
     Object value = point.getProperties().get(condition.getField());
     boolean result = false;
@@ -93,7 +92,9 @@ public class Conditionals {
       result = true;
     } else if (condition.getOperation().equals("isNull") && (value == null || value.toString().isEmpty())) {
       result = true;
-    } else if (condition.getOperation().equals("in") && (value != null && ((List)condition.getValue()).contains(value.toString()))) {
+    } else if (condition.getOperation().equals("in") && (value != null && ((List) condition.getValue()).contains(value.toString()))) {
+      result = true;
+    } else if (condition.getOperation().equals("notIn") && (value != null && !((List) condition.getValue()).contains(value.toString()))) {
       result = true;
     }
 
