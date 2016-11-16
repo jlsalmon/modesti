@@ -93,8 +93,8 @@ public class RequestService {
 
     // Assert that the current user is allowed to create a request for this domain
     if (!authService.isAuthorised(plugin, request, user)) {
-      throw new NotAuthorisedException(format("User \"%s\" is not authorised to create requests for domain \"%s\". Authorisation group is \"%s\".",
-          user.getUsername(), request.getDomain(), plugin.getMetadata().getAuthorisationGroup(request)));
+      throw new NotAuthorisedException(format("User \"%s\" is not authorised to create requests for domain \"%s\". " +
+          "Authorisation group is \"%s\".", user.getUsername(), request.getDomain(), plugin.getMetadata().getAuthorisationGroup(request)));
     }
 
     // Set the creator as the current logged in user

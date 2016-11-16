@@ -2,6 +2,8 @@ package cern.modesti.request.history;
 
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestRepository;
+import cern.modesti.schema.Schema;
+import cern.modesti.schema.SchemaRepository;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
 import de.danielbechler.diff.path.NodePath;
@@ -35,7 +37,7 @@ public class RequestHistoryService {
   private RequestHistoryRepository requestHistoryRepository;
 
   @Autowired
-  private RequestRepository requestRepository;
+  private SchemaRepository schemaRepository;
 
   /**
    * Create a new entry in the history repository for the given request.
@@ -44,7 +46,10 @@ public class RequestHistoryService {
    */
   public void initialiseChangeHistory(Request request) {
     log.info(format("creating new base history record for request #%s", request.getRequestId()));
-    RequestHistory entry = new RequestHistory(new ObjectId().toString(), request.getRequestId(), request, new ArrayList<>(), false);
+
+    Schema schema = schemaRepository.findOne(request.getDomain());
+    RequestHistory entry = new RequestHistory(new ObjectId().toString(), request.getRequestId(),
+        schema.getIdProperty(), request, new ArrayList<>(), false);
     requestHistoryRepository.save(entry);
   }
 
@@ -74,24 +79,17 @@ public class RequestHistoryService {
 
     ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
     DiffNode root = ObjectDifferBuilder.startBuilding()
-        .identity().ofCollectionItems(NodePath.with("points")).via(new PointIdentityStrategy())
+        .identity().ofCollectionItems(NodePath.with("points")).via(new PointIdentityStrategy(entry.getIdProperty()))
         .and().build().compare(modified, original);
 
-    root.visit(new PrintingVisitor(modified, original));
     root.visit(new ChangeVisitor(event, modified, original));
 
     entry.setEvents(Collections.singletonList(event));
     requestHistoryRepository.save(entry);
   }
 
-  public List<Change> getChanges(Request modified) {
-    RequestHistory entry = requestHistoryRepository.findOneByRequestId(modified.getRequestId());
-    Request original = entry.getOriginalRequest();
-
-    ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
-    DiffNode root = ObjectDifferBuilder.buildDefault().compare(modified, original);
-
-    root.visit(new ChangeVisitor(event, modified, original));
-    return event.getChanges();
+  public List<Change> getChanges(Request request) {
+    RequestHistory entry = requestHistoryRepository.findOneByRequestId(request.getRequestId());
+    return entry.getEvents().get(0).getChanges();
   }
 }

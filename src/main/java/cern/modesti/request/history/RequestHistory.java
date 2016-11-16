@@ -27,6 +27,8 @@ public class RequestHistory {
 
   private String requestId;
 
+  private String idProperty;
+
   private Request originalRequest;
 
   private List<ChangeEvent> events = new ArrayList<>();

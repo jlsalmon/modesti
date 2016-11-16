@@ -45,6 +45,9 @@ public class Schema {
   @JsonProperty("extends")
   private String parent;
 
+  @JsonProperty("primary")
+  private String idProperty;
+
   private List<Field> fields;
 
   @JsonDeserialize(using = CategoryDeserializer.class)

@@ -8,6 +8,7 @@ export class Schema implements ISerializable<Schema> {
   public categories: Category[];
   public datasources: Category[];
   public fields: Field[];
+  public primary: string;
   public selectableStates: string[];
   public rowCommentStates: RowCommentStateDescriptor[];
 
@@ -76,19 +77,8 @@ export class Schema implements ISerializable<Schema> {
     return fields;
   }
 
-  public determineIdProperty(): string {
-    let property: string;
-
-    // Choose the first field marked as "unique"
-    // TODO: this would be better served by having a "primary" flag to avoid ambiguity
-    this.getAllFields().forEach((field: Field) => {
-      if (field.unique) {
-        property = field.id;
-        return;
-      }
-    });
-
-    return 'properties.' + property;
+  public getIdProperty(): string {
+    return 'properties.' + this.primary;
   }
 
   public hasRowSelectColumn(requestStatus: string): boolean {
@@ -115,6 +105,7 @@ export class Schema implements ISerializable<Schema> {
   public deserialize(schema: Schema): Schema {
     this.id = schema.id;
     this.description = schema.description;
+    this.primary = schema.primary;
     this.selectableStates = schema.selectableStates;
     this.rowCommentStates = schema.rowCommentStates;
 

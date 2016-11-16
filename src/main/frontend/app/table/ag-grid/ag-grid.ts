@@ -18,7 +18,7 @@ export class AgGrid extends Table {
 
   public constructor(schema: Schema, data: any[], settings: any) {
     super(schema, data, settings);
-    this.idProperty = this.schema.determineIdProperty();
+    this.idProperty = this.schema.getIdProperty();
 
     let columnDefs: ColDef[] = this.getColumnDefs();
 

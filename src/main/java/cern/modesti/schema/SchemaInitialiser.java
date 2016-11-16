@@ -105,6 +105,7 @@ public class SchemaInitialiser {
           categories.addAll(parentSchema.getCategories());
           datasources.addAll(parentSchema.getDatasources());
 
+          schema.setIdProperty(parentSchema.getIdProperty());
           schema.setSelectableStates(parentSchema.getSelectableStates());
           schema.setRowCommentStates(parentSchema.getRowCommentStates());
         }
