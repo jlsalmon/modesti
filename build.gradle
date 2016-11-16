@@ -177,7 +177,6 @@ publishing {
 }
 
 /** Configure release options */
-afterReleaseBuild.dependsOn publish
 release {
     preTagCommitMessage = 'Set version before release: '
     tagCommitMessage = 'Tagging version '
