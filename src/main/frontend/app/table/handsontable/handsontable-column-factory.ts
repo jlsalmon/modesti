@@ -8,7 +8,7 @@ import {OptionsField} from '../../schema/field/options-field';
 import {AutocompleteField} from '../../schema/field/autocomplete-field';
 import {TextField} from '../../schema/field/text-field';
 import {Point} from '../../request/point/point';
-import {Select2Editor} from './select2-editor-new';
+import {Select2Editor} from './select2-editor';
 
 export class HandsontableColumnFactory {
 
