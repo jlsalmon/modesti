@@ -1,29 +1,60 @@
+import {Table} from '../table';
+import {Point} from '../../request/point/point';
+import {Field} from '../../schema/field/field';
+import {SchemaService} from '../../schema/schema.service';
+
 import 'jquery';
 import 'select2';
 
 // TODO: import this properly without require()
 let Handsontable: any = require('handsontable-pro');
-// import Handsontable from 'handsontable-pro';
 
-(function (Handsontable) {
-  "use strict";
+/**
+ * Custom Handsontable editor using Select2: https://select2.github.io
+ *
+ * To understand how this works, see the documentation about creating custom
+ * editors: http://docs.handsontable.com/pro/1.7.0/tutorial-cell-editor.html
+ */
+export class Select2Editor extends Handsontable.editors.TextEditor {
 
-  var Select2Editor = Handsontable.editors.TextEditor.prototype.extend();
+  private table: Table;
+  private field: Field;
+  private schemaService: SchemaService;
+  private select2Options: any;
 
-  Select2Editor.prototype.prepare = function (row, col, prop, td, originalValue, cellProperties) {
+  public init(): void {
+    super.init();
+  }
 
-    Handsontable.editors.TextEditor.prototype.prepare.apply(this, arguments);
+  public prepare(row: number, col: number, prop: string, td: Element, originalValue: any, cellProperties: any): void {
+    super.prepare(row, col, prop, td, originalValue, cellProperties);
 
-    this.options = {};
+    this.table = cellProperties.table;
+    this.field = cellProperties.field;
+    this.schemaService = cellProperties.schemaService;
+    this.select2Options = cellProperties.select2Options;
 
-    if (this.cellProperties.select2Options) {
-      this.options = $.extend(this.options, cellProperties.select2Options);
-    }
-  };
+    this.select2Options.formatSelection = (option: any) => {
+      return option.text;
+    };
 
-  Select2Editor.prototype.createElements = function () {
-    this.$body = $(document.body);
+    this.select2Options.initSelection = (element: any, callback: any) => {
+      let point: Point = this.table.data[row];
+      let value: any = point.getProperty(this.prop);
 
+      if (value && typeof value === 'object') {
+        value = value[this.field.getModelPath()];
+      }
+
+      callback({id: value, text: value});
+    };
+
+    this.select2Options.nextSearchTerm = (selectedObject: any, currentSearchTerm: string) => {
+      return currentSearchTerm;
+    };
+  }
+
+  public createElements(): void {
     this.TEXTAREA = document.createElement('input');
     this.TEXTAREA.setAttribute('type', 'text');
     this.$textarea = $(this.TEXTAREA);
@@ -50,31 +81,21 @@ let Handsontable: any = require('handsontable-pro');
     this.instance._registerTimeout(setTimeout(function () {
       that.refreshDimensions();
     }, 0));
-  };
+  }
 
-  var onSelect2Changed = function () {
-    this.close();
-    this.finishEditing();
-  };
-  var onSelect2Closed = function () {
-    this.close();
-    this.finishEditing();
-  };
-  var onBeforeKeyDown = function (event) {
-    var instance = this;
-    var that = instance.getActiveEditor();
+  public onBeforeKeyDown = (event: KeyboardEvent): void => {
+    var keyCodes = Handsontable.helper.KEY_CODES;
+    // Catch CTRL but not right ALT (which in some systems triggers ALT+CTRL)
+    var ctrlDown = (event.ctrlKey || event.metaKey) && !event.altKey;
 
-    var keyCodes = Handsontable.helper.keyCode;
-    var ctrlDown = (event.ctrlKey || event.metaKey) && !event.altKey; //catch CTRL but not right ALT (which in some systems triggers ALT+CTRL)
+    event.isImmediatePropagationStopped = false;
 
-    Handsontable.Dom.enableImmediatePropagation(event);
-
-    //Process only events that have been fired in the editor
-    if (!$(event.target).hasClass('select2-input') || event.isImmediatePropagationStopped()) {
+    // Process only events that have been fired in the editor
+    if (!$(event.target).hasClass('select2-input') || Handsontable.Dom.isImmediatePropagationStopped(event)) {
       return;
     }
     if (event.keyCode === 17 || event.keyCode === 224 || event.keyCode === 91 || event.keyCode === 93) {
-      //when CTRL or its equivalent is pressed and cell is edited, don't prepare selectable text in textarea
+      // When CTRL or its equivalent is pressed and cell is edited, don't prepare selectable text in textarea
       event.stopImmediatePropagation();
       return;
     }
@@ -86,7 +107,7 @@ let Handsontable: any = require('handsontable-pro');
         if (Handsontable.Dom.getCaretPosition(target) !== target.value.length) {
           event.stopImmediatePropagation();
         } else {
-          that.$textarea.select2('close');
+          this.$textarea.select2('close');
         }
         break;
 
@@ -94,23 +115,25 @@ let Handsontable: any = require('handsontable-pro');
         if (Handsontable.Dom.getCaretPosition(target) !== 0) {
           event.stopImmediatePropagation();
         } else {
-          that.$textarea.select2('close');
+          this.$textarea.select2('close');
         }
         break;
 
       case keyCodes.ENTER:
-        var selected = that.instance.getSelected();
+        var selected = this.instance.getSelected();
         var isMultipleSelection = !(selected[0] === selected[2] && selected[1] === selected[3]);
-        if ((ctrlDown && !isMultipleSelection) || event.altKey) { //if ctrl+enter or alt+enter, add new line
-          if (that.isOpened()) {
-            that.val(that.val() + '\n');
-            that.focus();
+        // If ctrl+enter or alt+enter, add new line
+        if ((ctrlDown && !isMultipleSelection) || event.altKey) {
+          if (this.isOpened()) {
+            this.val(this.val() + '\n');
+            this.focus();
           } else {
-            that.beginEditing(that.originalValue + '\n')
+            this.beginEditing(this.originalValue + '\n')
           }
           event.stopImmediatePropagation();
         }
-        event.preventDefault(); //don't add newline to field
+        // Don't add newline to field
+        event.preventDefault();
         break;
 
       case keyCodes.A:
@@ -118,7 +141,8 @@ let Handsontable: any = require('handsontable-pro');
       case keyCodes.C:
       case keyCodes.V:
         if (ctrlDown) {
-          event.stopImmediatePropagation(); //CTRL+A, CTRL+C, CTRL+V, CTRL+X should only work locally when cell is edited (not in table context)
+          // CTRL+A, CTRL+C, CTRL+V, CTRL+X should only work locally when cell is edited (not in table context)
+          event.stopImmediatePropagation();
         }
         break;
 
@@ -126,59 +150,64 @@ let Handsontable: any = require('handsontable-pro');
       case keyCodes.DELETE:
       case keyCodes.HOME:
       case keyCodes.END:
-        event.stopImmediatePropagation(); //backspace, delete, home, end should only work locally when cell is edited (not in table context)
+        // Backspace, delete, home, end should only work locally when cell is edited (not in table context)
+        event.stopImmediatePropagation();
         break;
     }
+  }
 
-  };
-
-  Select2Editor.prototype.open = function (keyboardEvent) {
+  public open(keyboardEvent: KeyboardEvent): void {
     this.refreshDimensions();
     this.textareaParentStyle.display = 'block';
-    this.instance.addHook('beforeKeyDown', onBeforeKeyDown);
+    this.instance.addHook('beforeKeyDown', this.onBeforeKeyDown);
 
     this.$textarea.css({
       height: $(this.TD).height() + 4,
       'min-width': $(this.TD).outerWidth() - 4
     });
 
-    //display the list
+    // Display the list
     this.$textarea.show();
 
     var self = this;
-    this.$textarea.select2(this.options)
-    .on('change', onSelect2Changed.bind(this))
-    .on('select2-close', onSelect2Closed.bind(this));
+    this.$textarea.select2(this.select2Options)
+    .on('change', this.onSelect2Changed)
+    .on('select2-close', this.onSelect2Closed)
+    .on('select2-selected', (eventData: any) => {
+      if (eventData.choice) {
+        // item selected
+        var dataObj = eventData.choice.data;
+        var selectedId = eventData.choice.id;
+      } else {
+        // item cleared
+
+      }
+    });
 
     // Set reference to the instance and row, so we can access them in the query function
-    self.$textarea[0].instance = self.instance;
-    self.$textarea[0].row = self.row;
-    self.$textarea[0].prop = self.prop;
+    this.$textarea[0].instance = self.instance;
+    this.$textarea[0].row = self.row;
 
-    self.$textarea.select2('open');
+    this.$textarea.select2('open');
 
-    // Pushes initial character entered into the search field, if available
-    if (keyboardEvent && keyboardEvent.keyCode) {
-      var key = keyboardEvent.keyCode;
-      var keyText = (String.fromCharCode((96 <= key && key <= 105) ? key-48 : key)).toLowerCase();
-      self.$textarea.select2('search', keyText);
+    // For autocomplete fields, push the original value to select2 if we have one
+    if (this.originalValue != null) {
+      if (this.field.type === 'autocomplete' || (this.field.type === 'text' && this.field.url != null)) {
+        this.$textarea.select2('search', this.originalValue);
+      }
     }
-  };
+  }
 
-  Select2Editor.prototype.init = function () {
-    Handsontable.editors.TextEditor.prototype.init.apply(this, arguments);
-  };
-
-  Select2Editor.prototype.close = function () {
+  public close() {
     this.instance.listen();
     this.instance.removeHook('beforeKeyDown', onBeforeKeyDown);
     this.instance.selection.deselect();
     this.$textarea.off();
     this.$textarea.hide();
-    Handsontable.editors.TextEditor.prototype.close.apply(this, arguments);
+    super.close();
   };
 
-  Select2Editor.prototype.val = function (value) {
+  public val(value) {
     if (typeof value == 'undefined') {
       return this.$textarea.val();
     } else {
@@ -186,30 +215,34 @@ let Handsontable: any = require('handsontable-pro');
     }
   };
 
-  Select2Editor.prototype.focus = function () {
-
-    this.instance.listen();
-
-    // DO NOT CALL THE BASE TEXTEDITOR FOCUS METHOD HERE, IT CAN MAKE THIS EDITOR BEHAVE POORLY AND HAS NO PURPOSE WITHIN THE CONTEXT OF THIS EDITOR
-    //Handsontable.editors.TextEditor.prototype.focus.apply(this, arguments);
+  public onSelect2Changed = () => {
+    this.close();
+    this.finishEditing();
   };
 
-  Select2Editor.prototype.beginEditing = function (initialValue) {
+  public onSelect2Closed = () => {
+    this.close();
+    this.finishEditing();
+  };
+
+  public close(): void {
+    super.close();
+  }
+
+  public focus(): void {
+    this.instance.listen();
+  }
+
+  public beginEditing(initialValue: any, event: KeyboardEvent): void {
     var onBeginEditing = this.instance.getSettings().onBeginEditing;
     if (onBeginEditing && onBeginEditing() === false) {
       return;
     }
 
-    Handsontable.editors.TextEditor.prototype.beginEditing.apply(this, arguments);
+    super.beginEditing(initialValue, event);
+  }
 
-  };
-
-  Select2Editor.prototype.finishEditing = function (isCancelled, ctrlDown) {
-    // this.instance.listen();
-    return Handsontable.editors.TextEditor.prototype.finishEditing.apply(this, arguments);
-  };
-
-  Handsontable.editors.Select2Editor = Select2Editor;
-  Handsontable.editors.registerEditor('select2', Select2Editor);
-
-})(Handsontable);
+  public finishEditing(isCancelled: boolean, ctrlDown: boolean): void {
+    super.finishEditing(isCancelled, ctrlDown);
+  }
+}

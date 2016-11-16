@@ -9,7 +9,6 @@ import {SchemaService} from '../../schema/schema.service';
 import {TaskService} from '../../task/task.service';
 import {ColumnFactory} from '../column-factory';
 import {Point} from '../../request/point/point';
-import './select2-editor.ts';
 
 import 'latinize';
 import {ContextMenuFactory} from "./context-menu-factory";

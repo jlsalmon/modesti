@@ -8,9 +8,7 @@ import {OptionsField} from '../../schema/field/options-field';
 import {AutocompleteField} from '../../schema/field/autocomplete-field';
 import {TextField} from '../../schema/field/text-field';
 import {Point} from '../../request/point/point';
-
-import {Select2EditorNew} from './select2-editor-new';
-import './select2-editor';
+import {Select2Editor} from './select2-editor-new';
 
 export class HandsontableColumnFactory {
 
@@ -103,7 +101,7 @@ export class HandsontableColumnFactory {
 
   public getTextColumn(table: Table, column: any, meta: any, field: TextField): any {
     if (field.url) {
-      column.editor = Select2EditorNew;
+      column.editor = Select2Editor;
       column.table = table;
       column.field = field;
       column.schemaService = meta.schemaService;
@@ -126,7 +124,7 @@ export class HandsontableColumnFactory {
   }
 
   public getAutocompleteColumn(table: Table, column: any, meta: any, field: AutocompleteField): any {
-    column.editor = Select2EditorNew;
+    column.editor = Select2Editor;
 
     if (field.model) {
       column.data = 'properties.' + field.id + '.' + field.model;
@@ -142,7 +140,7 @@ export class HandsontableColumnFactory {
   }
 
   public getOptionsColumn(table: Table, column: any, meta: any, field: OptionsField): any {
-    column.editor = Select2EditorNew;
+    column.editor = Select2Editor;
 
     let options: any;
 
