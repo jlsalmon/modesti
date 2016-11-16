@@ -2,13 +2,12 @@
 
   <div class="filter input-group" ng-repeat="(fieldId, filter) in $ctrl.filters track by $index">
 
-    <button ng-if="filter"
+    <span ng-if="filter"
             uib-popover-template="'filter-popover.tpl'"
             popover-placement="bottom-left"
             popover-trigger="'outsideClick'"
             popover-is-open="filter.isOpen"
             ng-click="filter.isOpen = !filter.isOpen"
-            type="button"
             class="btn btn-sm btn-default">
 
       {{filter.field.name}}:
@@ -22,7 +21,7 @@
          uib-tooltip="Remove filter"
          tooltip-append-to-body="true"
          tooltip-placement="right"></i>
-    </button>
+    </span>
 
     <script type="text/ng-template" id="filter-popover.tpl">
 
