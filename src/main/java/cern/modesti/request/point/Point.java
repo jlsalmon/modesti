@@ -102,6 +102,7 @@ public class Point implements Serializable {
    * errors or other types of errors visually. The errors can be associated
    * directly with individual properties of the point.
    *
+   * @param category the category to which the property belongs
    * @param property the property (map key) to associate the error with
    * @param message  the error message
    */

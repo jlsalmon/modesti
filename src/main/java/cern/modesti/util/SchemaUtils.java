@@ -13,33 +13,21 @@ import java.util.stream.Collectors;
  */
 public class SchemaUtils {
 
-  /**
-   * Get a subset of fields of a category by ID
-   *
-   * @param category
-   * @param fieldIds
-   * @return
-   */
   public static List<Field> getFields(Category category, List<String> fieldIds) {
     return category.getFields().stream().filter(field -> fieldIds.contains(field.getId())).collect(Collectors.toList());
   }
 
-  /**
-   * Get the names of a subset of fields of a category by ID
-   *
-   * @param category
-   * @param fieldIds
-   * @return
-   */
   public static List<String> getFieldNames(Category category, List<String> fieldIds) {
     return getFields(category, fieldIds).stream().map(Field::getName).collect(Collectors.toList());
   }
 
   /**
    * Get the full property name of the given field. For object-type properties,
-   * this will generally be the field id + the model value (e.g. gmaCode.value)
+   * this will generally be the field id + the model value (e.g. gmaoCode.value)
    *
    * @param field the field to access
+   *
+   * @return the property name
    */
   public static String getPropertyName(Field field) {
     if (field.getType().equals("autocomplete")) {
@@ -49,12 +37,6 @@ public class SchemaUtils {
     }
   }
 
-  /**
-   *
-   * @param point
-   * @param fields
-   * @return
-   */
   public static List<Field> getEmptyFields(Point point, List<Field> fields) {
     List<Field> emptyFields = new ArrayList<>();
 

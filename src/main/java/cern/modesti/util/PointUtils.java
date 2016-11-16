@@ -28,6 +28,7 @@ public class PointUtils {
    * empty if all the values of its properties are either null or empty string.
    *
    * @param point the point object
+   *
    * @return true if the point was considered empty, false otherwise
    */
   public static boolean isEmptyPoint(Point point) {
@@ -53,9 +54,10 @@ public class PointUtils {
   /**
    * Get the value of the property of a point
    *
-   * @param point the
-   * @param propertyName
-   * @return
+   * @param point        the point
+   * @param propertyName the name of the property to retrieve
+   *
+   * @return the corresponding value
    */
   public static Object getValueByPropertyName(Point point, String propertyName) {
     Object value = null;
@@ -102,6 +104,7 @@ public class PointUtils {
    * @param pointsToCovert list of objects to be converted
    * @param klass          the type to convert from
    * @param <T>            the type to convert from
+   *
    * @return a list of {@link Point} instances created from the given objects
    */
   public static <T> List<Point> convertPoints(Iterable<T> pointsToCovert, Class<T> klass) {
