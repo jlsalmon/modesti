@@ -42,7 +42,6 @@ class SearchController {
 
     let settings: any = {
       getRows: this.search,
-      selectionService: this.selectionService
     };
 
     this.table = TableFactory.createTable('ag-grid', this.schema, [], settings);
@@ -62,6 +61,8 @@ class SearchController {
       this.table.refreshColumnDefs();
       this.table.refreshData();
     }
+
+    this.$rootScope.$emit('modesti:searchDomainChanged');
   }
 
   public resetFilters(): void {

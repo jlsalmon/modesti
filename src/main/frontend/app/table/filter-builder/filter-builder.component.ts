@@ -23,7 +23,11 @@ class FilterBuilderController {
   public popoverIsOpen: boolean = false;
 
   public constructor(private $rootScope: IRootScopeService, private $timeout: ITimeoutService,
-                     private schemaService: SchemaService) {}
+                     private schemaService: SchemaService) {
+    $rootScope.$on('modesti:searchDomainChanged', () => {
+      this.filters = new Map<string, Filter>();
+    });
+  }
 
   public addFilter(field: Field): void {
     let filter: Filter = {field: field, operation: undefined, value: undefined, isOpen: false};
