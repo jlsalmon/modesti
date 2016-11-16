@@ -66,6 +66,7 @@ class SearchController {
   }
 
   public resetFilters(): void {
+    this.filters = new Map<string, Filter>();
     this.page = {number: 0, size: 100};
     this.table.gridOptions.api.setSortModel(null);
     this.sort = '';
