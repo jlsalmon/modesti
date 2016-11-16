@@ -83,15 +83,15 @@ export class Select2EditorNew extends Handsontable.editors.TextEditor {
     }, 0));
   }
 
-  public onBeforeKeyDown(event: KeyboardEvent): void {
-    var keyCodes = Handsontable.helper.keyCode;
+  public onBeforeKeyDown = (event: KeyboardEvent): void => {
+    var keyCodes = Handsontable.helper.KEY_CODES;
     // Catch CTRL but not right ALT (which in some systems triggers ALT+CTRL)
     var ctrlDown = (event.ctrlKey || event.metaKey) && !event.altKey;
 
-    // Handsontable.Dom.enableImmediatePropagation(event);
+    event.isImmediatePropagationStopped = false;
 
     // Process only events that have been fired in the editor
-    if (!$(event.target).hasClass('select2-input') || event.isImmediatePropagationStopped()) {
+    if (!$(event.target).hasClass('select2-input') || Handsontable.Dom.isImmediatePropagationStopped(event)) {
       return;
     }
     if (event.keyCode === 17 || event.keyCode === 224 || event.keyCode === 91 || event.keyCode === 93) {
