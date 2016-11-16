@@ -279,11 +279,6 @@ public class SchemaInitialiser {
     Map<String, List<T>> resources = new HashMap<>();
 
     for (Resource resource : resolver.getResources(pattern)) {
-      // When running as a jar, don't detect ourselves as a plugin
-      if (resource.getURI().toString().contains("modesti-server")) {
-        continue;
-      }
-
       T t = loadResource(resource, klass);
 
       String pathToResource = getAbsolutePathToResource(resource);
