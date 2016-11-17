@@ -61,6 +61,8 @@ public class Field implements Serializable {
 
   private Object unique;
 
+  private Object template;
+
   private Object fixed;
 
   @JsonProperty("default")

@@ -8,6 +8,7 @@ export class Field {
   public required: boolean;
   public unique: boolean;
   public editable: any;
+  public template: string;
   public fixed: boolean;
   public default: any;
   public model: string;
@@ -47,6 +48,7 @@ export class Field {
     this.required = field.required;
     this.unique = field.unique;
     this.editable = field.editable;
+    this.template = field.template;
     this.fixed = field.fixed;
     this.default = field.default;
     this.model = field.model;
