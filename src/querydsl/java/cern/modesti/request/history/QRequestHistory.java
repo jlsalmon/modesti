@@ -28,6 +28,8 @@ public class QRequestHistory extends EntityPathBase<RequestHistory> {
 
     public final StringPath id = createString("id");
 
+    public final StringPath idProperty = createString("idProperty");
+
     public final cern.modesti.request.QRequest originalRequest;
 
     public final StringPath requestId = createString("requestId");

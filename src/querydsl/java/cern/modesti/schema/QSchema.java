@@ -34,6 +34,8 @@ public class QSchema extends EntityPathBase<Schema> {
 
     public final StringPath id = createString("id");
 
+    public final StringPath idProperty = createString("idProperty");
+
     public final BooleanPath isAbstract = createBoolean("isAbstract");
 
     public final ListPath<cern.modesti.schema.category.Category, cern.modesti.schema.category.QCategory> overrides = this.<cern.modesti.schema.category.Category, cern.modesti.schema.category.QCategory>createList("overrides", cern.modesti.schema.category.Category.class, cern.modesti.schema.category.QCategory.class, PathInits.DIRECT2);
