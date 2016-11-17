@@ -58,13 +58,18 @@ public class PluginAssetController {
 
   @RequestMapping("/api/plugins/{id}/assets")
   public List<String> getAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws IOException, URISyntaxException {
-    LinkedList<String> assets = new LinkedList<>();
-
     RequestProvider plugin = getPlugin(id);
-    String host = request.getRequestURL().substring(0, StringUtils.ordinalIndexOf(request.getRequestURL(), "/", 3));
 
-
+    LinkedList<String> assets = new LinkedList<>();
     List<String> javascriptAssets = new ArrayList<>();
+    String host;
+
+    String forwardedHost = request.getHeader("X-Forwarded-Host");
+    if (forwardedHost != null) {
+      host = "https://" + forwardedHost;
+    } else {
+      host = request.getRequestURL().substring(0, StringUtils.ordinalIndexOf(request.getRequestURL(), "/", 3));
+    }
 
     for (Resource resource : resolver.getResources("classpath*:/static/assets.json")) {
       if (resourceBelongsToPlugin(resource, plugin)) {
