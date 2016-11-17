@@ -9,6 +9,7 @@ import {AutocompleteField} from '../../schema/field/autocomplete-field';
 import {TextField} from '../../schema/field/text-field';
 import {Point} from '../../request/point/point';
 import {Select2Editor} from './select2-editor';
+import IInterpolateService = angular.IInterpolateService;
 
 export class HandsontableColumnFactory {
 
@@ -176,13 +177,13 @@ export class HandsontableColumnFactory {
     return {
       minimumInputLength: field.minLength || 0,
       maximumInputLength: 200,
-      query: this.getQueryFunction(column, field, meta.schemaService),
+      query: this.getQueryFunction(column, field, meta.schemaService, meta.interpolate),
       dropdownAutoWidth: true,
       width: 'resolve'
     };
   }
 
-  public getQueryFunction(column: any, field: Field, schemaService: SchemaService): any {
+  public getQueryFunction(column: any, field: Field, schemaService: SchemaService, interpolate: IInterpolateService): any {
     return (query: any) => {
       let hot: any = query.element[0].instance;
       let row: number = query.element[0].row;
@@ -195,7 +196,7 @@ export class HandsontableColumnFactory {
           if (typeof value === 'string') {
             return {id: value, text: value.toString(), data: value};
           } else {
-            return {id: value[this.getModelAttribute(field)], text: value[this.getModelAttribute(field)].toString(), data: value};
+            return {id: value[this.getModelAttribute(field)], text: this.getAutocompleteText(field, value, interpolate), data: value};
           }
         });
 
@@ -209,6 +210,11 @@ export class HandsontableColumnFactory {
     // For fields that are objects but have no 'model' attribute defined, assume that
     // the object has only a single property called 'value'.
     return field.model ? field.model : 'value';
+  }
+
+  public getAutocompleteText(field: Field, value: any, interpolate: IInterpolateService): string {
+    // If the `template` (e.g. `"template": "{{value}}: ({{obj_desc}})"`) attribute is defined, the template placeholders needs to be replaced by the real values.
+    return field.template ? interpolate(field.template)(value) : value[this.getModelAttribute(field)].toString;
   }
 
   public getRowSelectColumn(): any {
