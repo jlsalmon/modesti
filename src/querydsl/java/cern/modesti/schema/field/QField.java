@@ -39,6 +39,8 @@ public class QField extends BeanPath<Field> {
 
     public final SimplePath<Object> required = createSimple("required", Object.class);
 
+    public final SimplePath<Object> template = createSimple("template", Object.class);
+
     public final StringPath type = createString("type");
 
     public final SimplePath<Object> unique = createSimple("unique", Object.class);
