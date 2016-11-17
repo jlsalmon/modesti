@@ -12,6 +12,7 @@ import {Point} from '../../request/point/point';
 
 import 'latinize';
 import {ContextMenuFactory} from "./context-menu-factory";
+import IInterpolateService = angular.IInterpolateService;
 declare var latinize: any;
 
 // TODO: import this properly without require()
@@ -25,12 +26,14 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   public hiddenColumnsPlugin: any;
   public schemaService: SchemaService;
   public taskService: TaskService;
+  public interpolate: IInterpolateService;
 
   public constructor(schema: Schema, data: any[], settings: any) {
     super(schema, data, settings);
     // Save references to services
     this.schemaService = settings.schemaService;
     this.taskService = settings.taskService;
+    this.interpolate = settings.interpolate;
 
     let columnDefs: any[] = this.getColumnDefs();
 
@@ -263,7 +266,8 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       requestStatus: this.settings.requestStatus,
       authorised: this.taskService.isCurrentUserAuthorised(),
       assigned: this.taskService.isCurrentUserAssigned(),
-      schemaService: this.schemaService
+      schemaService: this.schemaService,
+      interpolate: this.interpolate
     };
 
     let columnDefs: any[] = ColumnFactory.getColumnDefinitions('handsontable', this, meta);
