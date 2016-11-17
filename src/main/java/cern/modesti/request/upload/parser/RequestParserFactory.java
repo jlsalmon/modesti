@@ -63,10 +63,6 @@ public class RequestParserFactory {
       if (requestParser.getPluginId().equals(pluginId)) {
         return requestParser;
       }
-      // FIXME: HACK ALERT: WINCCOA excel sheets use the old PVSS name...
-      else if ((pluginId.contains("WinCC OA") || pluginId.contains("WINCCOA")) && pluginId.equals("PVSS")) {
-        return requestParser;
-      }
     }
     return null;
   }
