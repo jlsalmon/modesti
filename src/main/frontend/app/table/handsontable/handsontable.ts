@@ -12,7 +12,7 @@ import {Point} from '../../request/point/point';
 
 import 'latinize';
 import {ContextMenuFactory} from "./context-menu-factory";
-import IInterpolateService = angular.IInterpolateService;
+import {IInterpolateService} from 'angular';
 declare var latinize: any;
 
 // TODO: import this properly without require()
