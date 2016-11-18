@@ -9,7 +9,7 @@ import {AutocompleteField} from '../../schema/field/autocomplete-field';
 import {TextField} from '../../schema/field/text-field';
 import {Point} from '../../request/point/point';
 import {Select2Editor} from './select2-editor';
-import IInterpolateService = angular.IInterpolateService;
+import {IInterpolateService} from 'angular';
 
 export class HandsontableColumnFactory {
 
@@ -213,7 +213,7 @@ export class HandsontableColumnFactory {
   }
 
   public getAutocompleteText(field: Field, value: any, interpolate: IInterpolateService): string {
-    // If the `"template": "{{value}}: ({{description}})"` attribute is set, the placeholders 
+    // If the `"template": "{{value}}: {{description}}"` attribute is set, the placeholders
     // needs to be replaced by the real values.
     return field.template ? interpolate(field.template)(value) : value[this.getModelAttribute(field)].toString;
   }
