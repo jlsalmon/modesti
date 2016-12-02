@@ -94,19 +94,29 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
       // Evaluate "editable" condition of the category
       let category: Category = this.schema.getCategoryForField(field);
-      if (category.editable != null && typeof category.editable === 'object') {
-        let conditional: any = category.editable;
+      let categoryConditional: Conditional = category.editable;
 
-        if (conditional != null) {
-          editable = this.settings.schemaService.evaluateConditional(point, conditional, this.settings.requestStatus);
-        }
+      if (categoryConditional != null) {
+        editable = this.settings.schemaService.evaluateConditional(point, categoryConditional, this.settings.requestStatus);
       }
 
-      // Evaluate "editable" condition of the field as it may override the category
-      let conditional: Conditional = field.editable;
 
-      if (conditional != null) {
-        editable = this.settings.schemaService.evaluateConditional(point, conditional, this.settings.requestStatus);
+      // Evaluate "editable" condition of the field as it may override the category
+      let fieldConditional: Conditional = field.editable;
+
+      if (fieldConditional != null) {
+
+        // If the category-level conditional specifies status(es) and the field-level
+        // conditional does not, take the category-level statuses into account relative
+        // to the field-level conditional
+        if (categoryConditional.status && !fieldConditional.status) {
+          fieldConditional = {
+            status: categoryConditional.status,
+            condition: fieldConditional
+          }
+        }
+
+        editable = this.settings.schemaService.evaluateConditional(point, fieldConditional, this.settings.requestStatus);
       }
     }
 
