@@ -215,7 +215,7 @@ export class HandsontableColumnFactory {
   public getAutocompleteText(field: Field, value: any, interpolate: IInterpolateService): string {
     // If the `"template": "{{value}}: {{description}}"` attribute is set, the placeholders
     // needs to be replaced by the real values.
-    return field.template ? interpolate(field.template)(value) : value[this.getModelAttribute(field)].toString;
+    return field.template ? interpolate(field.template)(value) : value[this.getModelAttribute(field)].toString();
   }
 
   public getRowSelectColumn(): any {
