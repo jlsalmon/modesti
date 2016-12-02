@@ -24,6 +24,7 @@ export class CloneRequestModalController {
       this.$state.go('request', {id: id}).then(() => {
         this.cloning = 'success';
         this.$modalInstance.close();
+        this.alertService.clear();
         this.alertService.add('success', 'Request was cloned successfully with id ' + id);
       });
     },
