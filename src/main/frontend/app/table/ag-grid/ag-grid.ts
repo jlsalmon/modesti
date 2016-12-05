@@ -148,8 +148,8 @@ export class AgGrid extends Table {
     return ColumnFactory.getColumnDefinitions('ag-grid', this, meta);
   }
 
-  public selectNodeById(id): void {
-    if (_.find(this.gridOptions.api.getSelectedNodes(), {id: id})) {
+  public selectNodeById(id: number): void {
+    if (_.find(this.gridOptions.api.getSelectedNodes(), {id: id.toString()})) {
       this.gridOptions.api.deselectIndex(id);
     } else {
       this.gridOptions.api.selectIndex(id, true, false);
