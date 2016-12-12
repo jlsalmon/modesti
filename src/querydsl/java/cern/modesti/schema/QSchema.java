@@ -1,19 +1,19 @@
 package cern.modesti.schema;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.mysema.query.types.path.*;
+import com.querydsl.core.types.dsl.*;
 
-import com.mysema.query.types.PathMetadata;
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.path.PathInits;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
  * QSchema is a Querydsl query type for Schema
  */
-@Generated("com.mysema.query.codegen.EntitySerializer")
+@Generated("com.querydsl.codegen.EntitySerializer")
 public class QSchema extends EntityPathBase<Schema> {
 
     private static final long serialVersionUID = 1180083797L;
@@ -54,7 +54,7 @@ public class QSchema extends EntityPathBase<Schema> {
         super(path.getType(), path.getMetadata());
     }
 
-    public QSchema(PathMetadata<?> metadata) {
+    public QSchema(PathMetadata metadata) {
         super(Schema.class, metadata);
     }
 

@@ -1,19 +1,19 @@
 package cern.modesti.request.history;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.mysema.query.types.path.*;
+import com.querydsl.core.types.dsl.*;
 
-import com.mysema.query.types.PathMetadata;
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.path.PathInits;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
  * QChangeEvent is a Querydsl query type for ChangeEvent
  */
-@Generated("com.mysema.query.codegen.EmbeddableSerializer")
+@Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QChangeEvent extends BeanPath<ChangeEvent> {
 
     private static final long serialVersionUID = -650745896L;
@@ -32,7 +32,7 @@ public class QChangeEvent extends BeanPath<ChangeEvent> {
         super(path.getType(), path.getMetadata());
     }
 
-    public QChangeEvent(PathMetadata<?> metadata) {
+    public QChangeEvent(PathMetadata metadata) {
         super(ChangeEvent.class, metadata);
     }
 

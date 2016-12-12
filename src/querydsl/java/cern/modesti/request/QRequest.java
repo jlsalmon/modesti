@@ -1,19 +1,19 @@
 package cern.modesti.request;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.mysema.query.types.path.*;
+import com.querydsl.core.types.dsl.*;
 
-import com.mysema.query.types.PathMetadata;
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.path.PathInits;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
  * QRequest is a Querydsl query type for Request
  */
-@Generated("com.mysema.query.codegen.EntitySerializer")
+@Generated("com.querydsl.codegen.EntitySerializer")
 public class QRequest extends EntityPathBase<Request> {
 
     private static final long serialVersionUID = -665863177L;
@@ -62,7 +62,7 @@ public class QRequest extends EntityPathBase<Request> {
         super(path.getType(), path.getMetadata());
     }
 
-    public QRequest(PathMetadata<?> metadata) {
+    public QRequest(PathMetadata metadata) {
         super(Request.class, metadata);
     }
 

@@ -1,18 +1,18 @@
 package cern.modesti.request;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.mysema.query.types.path.*;
+import com.querydsl.core.types.dsl.*;
 
-import com.mysema.query.types.PathMetadata;
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
+import com.querydsl.core.types.Path;
 
 
 /**
  * QComment is a Querydsl query type for Comment
  */
-@Generated("com.mysema.query.codegen.EmbeddableSerializer")
+@Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QComment extends BeanPath<Comment> {
 
     private static final long serialVersionUID = -811157561L;
@@ -33,7 +33,7 @@ public class QComment extends BeanPath<Comment> {
         super(path.getType(), path.getMetadata());
     }
 
-    public QComment(PathMetadata<?> metadata) {
+    public QComment(PathMetadata metadata) {
         super(Comment.class, metadata);
     }
 

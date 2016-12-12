@@ -1,10 +1,10 @@
 package cern.modesti.predicate;
 
 import com.google.common.base.CaseFormat;
-import com.mysema.query.types.expr.BooleanExpression;
-import com.mysema.query.types.path.NumberPath;
-import com.mysema.query.types.path.PathBuilder;
-import com.mysema.query.types.path.StringPath;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.StringPath;
 import lombok.AllArgsConstructor;
 
 import java.lang.reflect.Field;

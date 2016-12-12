@@ -1,18 +1,18 @@
 package cern.modesti.schema.category;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.mysema.query.types.path.*;
+import com.querydsl.core.types.dsl.*;
 
-import com.mysema.query.types.PathMetadata;
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
+import com.querydsl.core.types.Path;
 
 
 /**
  * QDatasource is a Querydsl query type for Datasource
  */
-@Generated("com.mysema.query.codegen.EmbeddableSerializer")
+@Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QDatasource extends BeanPath<Datasource> {
 
     private static final long serialVersionUID = -252850367L;
@@ -50,7 +50,7 @@ public class QDatasource extends BeanPath<Datasource> {
         super(path.getType(), path.getMetadata());
     }
 
-    public QDatasource(PathMetadata<?> metadata) {
+    public QDatasource(PathMetadata metadata) {
         super(Datasource.class, metadata);
     }
 

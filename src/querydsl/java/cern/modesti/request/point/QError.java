@@ -1,19 +1,19 @@
 package cern.modesti.request.point;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.mysema.query.types.path.*;
+import com.querydsl.core.types.dsl.*;
 
-import com.mysema.query.types.PathMetadata;
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.path.PathInits;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
  * QError is a Querydsl query type for Error
  */
-@Generated("com.mysema.query.codegen.EmbeddableSerializer")
+@Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QError extends BeanPath<Error> {
 
     private static final long serialVersionUID = -1756306030L;
@@ -34,7 +34,7 @@ public class QError extends BeanPath<Error> {
         super(path.getType(), path.getMetadata());
     }
 
-    public QError(PathMetadata<?> metadata) {
+    public QError(PathMetadata metadata) {
         super(Error.class, metadata);
     }
 

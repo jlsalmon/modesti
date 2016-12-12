@@ -1,19 +1,19 @@
 package cern.modesti.schema.category;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.mysema.query.types.path.*;
+import com.querydsl.core.types.dsl.*;
 
-import com.mysema.query.types.PathMetadata;
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.path.PathInits;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
  * QCategory is a Querydsl query type for Category
  */
-@Generated("com.mysema.query.codegen.EmbeddableSerializer")
+@Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QCategory extends BeanPath<Category> {
 
     private static final long serialVersionUID = 155233018L;
@@ -42,7 +42,7 @@ public class QCategory extends BeanPath<Category> {
         super(path.getType(), path.getMetadata());
     }
 
-    public QCategory(PathMetadata<?> metadata) {
+    public QCategory(PathMetadata metadata) {
         super(Category.class, metadata);
     }
 

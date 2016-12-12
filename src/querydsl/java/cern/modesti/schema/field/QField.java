@@ -1,18 +1,18 @@
 package cern.modesti.schema.field;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.mysema.query.types.path.*;
+import com.querydsl.core.types.dsl.*;
 
-import com.mysema.query.types.PathMetadata;
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
+import com.querydsl.core.types.Path;
 
 
 /**
  * QField is a Querydsl query type for Field
  */
-@Generated("com.mysema.query.codegen.EmbeddableSerializer")
+@Generated("com.querydsl.codegen.EmbeddableSerializer")
 public class QField extends BeanPath<Field> {
 
     private static final long serialVersionUID = -957984046L;
@@ -53,7 +53,7 @@ public class QField extends BeanPath<Field> {
         super(path.getType(), path.getMetadata());
     }
 
-    public QField(PathMetadata<?> metadata) {
+    public QField(PathMetadata metadata) {
         super(Field.class, metadata);
     }
 

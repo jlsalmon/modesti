@@ -1,7 +1,7 @@
 package cern.modesti.predicate;
 
-import com.mysema.query.types.Predicate;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import cz.jirutka.rsql.parser.RSQLParser;
 import cz.jirutka.rsql.parser.ast.*;
 import lombok.AllArgsConstructor;

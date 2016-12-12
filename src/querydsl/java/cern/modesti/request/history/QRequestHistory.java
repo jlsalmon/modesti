@@ -1,19 +1,19 @@
 package cern.modesti.request.history;
 
-import static com.mysema.query.types.PathMetadataFactory.*;
+import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.mysema.query.types.path.*;
+import com.querydsl.core.types.dsl.*;
 
-import com.mysema.query.types.PathMetadata;
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.path.PathInits;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
  * QRequestHistory is a Querydsl query type for RequestHistory
  */
-@Generated("com.mysema.query.codegen.EntitySerializer")
+@Generated("com.querydsl.codegen.EntitySerializer")
 public class QRequestHistory extends EntityPathBase<RequestHistory> {
 
     private static final long serialVersionUID = 189705527L;
@@ -39,18 +39,18 @@ public class QRequestHistory extends EntityPathBase<RequestHistory> {
     }
 
     public QRequestHistory(Path<? extends RequestHistory> path) {
-        this(path.getType(), path.getMetadata(), path.getMetadata().isRoot() ? INITS : PathInits.DEFAULT);
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QRequestHistory(PathMetadata<?> metadata) {
-        this(metadata, metadata.isRoot() ? INITS : PathInits.DEFAULT);
+    public QRequestHistory(PathMetadata metadata) {
+        this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QRequestHistory(PathMetadata<?> metadata, PathInits inits) {
+    public QRequestHistory(PathMetadata metadata, PathInits inits) {
         this(RequestHistory.class, metadata, inits);
     }
 
-    public QRequestHistory(Class<? extends RequestHistory> type, PathMetadata<?> metadata, PathInits inits) {
+    public QRequestHistory(Class<? extends RequestHistory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.originalRequest = inits.isInitialized("originalRequest") ? new cern.modesti.request.QRequest(forProperty("originalRequest")) : null;
     }
