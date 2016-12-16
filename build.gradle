@@ -14,7 +14,7 @@ plugins {
     id "idea"
     id "eclipse"
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.7"
-    id 'net.researchgate.release' version '2.3.4'
+    id 'net.researchgate.release' version "2.3.4"
     id "com.moowork.node" version "0.13"
 }
 
@@ -34,6 +34,7 @@ targetCompatibility = 1.8
  * start/stop/restart/status commands
  */
 springBoot {
+    classifier = 'exec'
     executable = true
     layout = 'ZIP'
 }
@@ -94,6 +95,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-mail"
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
 //    compile "org.springframework.boot:spring-boot-devtools"
+    compile "org.springframework.boot:spring-boot-starter-test"
     compile "org.springframework.security:spring-security-ldap:4.2.0.RELEASE"
     compile "org.activiti:activiti-spring-boot-starter-basic:5.19.0"
     compile "org.activiti:activiti-spring-boot-starter-jpa:5.19.0"
@@ -111,7 +113,7 @@ dependencies {
     compile "oracle:ojdbc:11.2.0.3"
     compile "de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5"
     compile "com.google.code.gson:gson:2.3.1"
-    compile "ch.qos.logback:logback-classic:1.1.2"
+    compile "ch.qos.logback:logback-classic:1.1.8"
     compile "org.slf4j:slf4j-api:1.7.12"
     compile "javax.interceptor:javax.interceptor-api:1.+"
     compile "org.subethamail:subethasmtp:3.1.7"
