@@ -1,5 +1,5 @@
 /bin/
-/build/
+build/
 /data/
 /out/
 .rest-shell.log

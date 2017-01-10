@@ -1,187 +1,73 @@
-buildscript {
+plugins {
+    id "io.spring.dependency-management" version "0.6.1.RELEASE"
+}
+
+subprojects {
+    group = 'cern.modesti'
+
+    apply plugin: "java"
+    apply plugin: "maven"
+    apply plugin: "maven-publish"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "idea"
+    apply plugin: "eclipse"
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
     repositories {
         mavenCentral()
+        maven { url "http://artifactory/release" }
+        maven { url "http://artifactory/development" }
+        maven { url "https://repo.spring.io/release" }
     }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE"
+
+    dependencyManagement {
+        applyMavenExclusions = false
     }
-}
 
-plugins {
-    id "java"
-    id "maven"
-    id "maven-publish"
-    id "idea"
-    id "eclipse"
-    id "com.ewerk.gradle.plugins.querydsl" version "1.0.7"
-    id 'net.researchgate.release' version "2.3.4"
-    id "com.moowork.node" version "0.13"
-}
-
-/**
- * Until the spring-boot plugin is included at plugins.gradle.org, we have to
- * use the old mechanism to include it. See https://github.com/spring-projects/spring-boot/issues/1567
- */
-apply plugin: "org.springframework.boot"
-
-group "cern.modesti"
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-/**
- * Tell Spring Boot to make the JAR executable by appending a script to the JAR with
- * start/stop/restart/status commands
- */
-springBoot {
-    classifier = 'exec'
-    executable = true
-    layout = 'ZIP'
-}
-
-/**
- * Make a tarball containing the executable fat jar created by bootRepackage, and everything
- * in the src/dist directory
- */
-task fatJarTar(type: Tar, dependsOn: 'bootRepackage') {
-    compression Compression.GZIP
-    extension "tar.gz"
-
-    into('lib') {
-        from libsDir
-        include project.name + "-" + version + ".jar"
-    }
-    from 'src/dist'
-}
-
-/** Add version information to the manifest file */
-jar {
-    manifest {
-        attributes("Implementation-Version": version)
-    }
-}
-
-/** Expand placeholders in properties files */
-processResources {
-    filesMatching('**/*.properties') { expand(project.properties) }
-}
-
-/** Repositories used when searching for dependencies */
-repositories {
-    mavenCentral()
-    maven { url "http://artifactory/release" }
-    maven { url "http://artifactory/development" }
-    maven { url "https://repo.spring.io/release" }
-    maven { url "https://repo.spring.io/milestone" }
-    maven { url "https://repo.spring.io/snapshot" }
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-dependencies {
-
-    compile "org.springframework.boot:spring-boot-starter-data-rest"
-    compile "org.springframework.boot:spring-boot-starter-data-mongodb"
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.springframework.boot:spring-boot-starter-mail"
-    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-//    compile "org.springframework.boot:spring-boot-devtools"
-    compile "org.springframework.boot:spring-boot-starter-test"
-    compile "org.springframework.security:spring-security-ldap:4.2.0.RELEASE"
-    compile "org.activiti:activiti-spring-boot-starter-basic:5.19.0"
-    compile "org.activiti:activiti-spring-boot-starter-jpa:5.19.0"
-    compile "org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE"
-    compile "org.apache.poi:poi:3.12-beta1"
-    compile "org.apache.poi:poi-ooxml:3.12-beta1"
-    compile "com.querydsl:querydsl-mongodb:4.1.4"
-    compile "com.querydsl:querydsl-jpa:4.1.4"
-    compile "cz.jirutka.rsql:rsql-parser:2.0.0"
-    compile 'de.danielbechler:java-object-diff:0.94'
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.1"
-    compile "org.apache.commons:commons-lang3:3.4"
-    compile "org.projectlombok:lombok:1.16.4"
-    compile "com.h2database:h2"
-    compile "oracle:ojdbc:11.2.0.3"
-    compile "de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.5"
-    compile "com.google.code.gson:gson:2.3.1"
-    compile "ch.qos.logback:logback-classic:1.1.8"
-    compile "org.slf4j:slf4j-api:1.7.12"
-    compile "javax.interceptor:javax.interceptor-api:1.+"
-    compile "org.subethamail:subethasmtp:3.1.7"
-
-    testCompile "cern.modesti:modesti-test:0.2.2-SNAPSHOT"
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "3.2.1"
+    gradleVersion = "2.10"
 }
 
-/** Generate QueryDsl classes */
-querydsl {
-    library = "com.querydsl:querydsl-apt:4.1.4"
-    querydslSourcesDir = "src/querydsl/java"
-    springDataMongo = true
-    jpa = true
-}
-
-/**
- * Make sure that the frontend gets built before we package the jar
- */
-jar.dependsOn npm_run_build
-
-node {
-//    // Set the work directory for unpacking node
-//    workDir = file("${project.buildDir}/nodejs")
+///** Configure publishing to Artifactory */
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//            pom.withXml {
+//                def parentNode = asNode().appendNode('parent')
+//                parentNode.appendNode('groupId', 'org.springframework.boot')
+//                parentNode.appendNode('artifactId', 'spring-boot-starter-parent')
+//                parentNode.appendNode('version', '1.4.2.RELEASE')
+//            }
+//            artifact(fatJarTar)  { classifier "dist" }
+//            artifact(sourcesJar) { classifier "sources" }
+//            artifact(javadocJar) { classifier "javadoc" }
+//        }
+//    }
+//    repositories {
+//        maven {
+//            credentials {
+//                username artifactoryUser
+//                password artifactoryPassword
+//            }
 //
-//    // Set the work directory where node_modules should be located
-//    nodeModulesDir = file("${project.projectDir}/src/main/frontend")
-}
+//            if (project.version.endsWith('-SNAPSHOT')) {
+//                url "http://artifactory/beco-development-local"
+//            } else {
+//                url "http://artifactory/beco-release-local"
+//            }
+//        }
+//    }
+//}
 
-/** Configure publishing to Artifactory */
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            pom.withXml {
-                def parentNode = asNode().appendNode('parent')
-                parentNode.appendNode('groupId', 'org.springframework.boot')
-                parentNode.appendNode('artifactId', 'spring-boot-starter-parent')
-                parentNode.appendNode('version', '1.4.2.RELEASE')
-            }
-            artifact(fatJarTar)  { classifier "dist" }
-            artifact(sourcesJar) { classifier "sources" }
-            artifact(javadocJar) { classifier "javadoc" }
-        }
-    }
-    repositories {
-        maven {
-            credentials {
-                username artifactoryUser
-                password artifactoryPassword
-            }
-
-            if (project.version.endsWith('-SNAPSHOT')) {
-                url "http://artifactory/beco-development-local"
-            } else {
-                url "http://artifactory/beco-release-local"
-            }
-        }
-    }
-}
-
-/** Configure release options */
-release {
-    preTagCommitMessage = 'Set version before release: '
-    tagCommitMessage = 'Tagging version '
-    newVersionCommitMessage = 'Bumped version to '
-}
+///** Configure release options */
+//release {
+//    preTagCommitMessage = 'Set version before release: '
+//    tagCommitMessage = 'Tagging version '
+//    newVersionCommitMessage = 'Bumped version to '
+//}
 

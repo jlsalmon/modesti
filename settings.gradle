@@ -1,2 +1,3 @@
-rootProject.name = 'modesti'
-
+include ':modesti-server'
+include ':modesti-api'
+include ':modesti-test'
