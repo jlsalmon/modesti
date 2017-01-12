@@ -1,7 +1,3 @@
-plugins {
-    id 'org.springframework.boot' version '1.4.3.RELEASE'
-}
-
 dependencies {
     compile project(':modesti-api')
     compile project(':modesti-server')
