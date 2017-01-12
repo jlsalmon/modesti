@@ -4,6 +4,7 @@ import cern.modesti.schema.field.Field;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.core.Relation;
 
 import java.io.Serializable;
 import java.util.*;
@@ -15,6 +16,7 @@ import static java.lang.String.format;
  */
 @Data
 @NoArgsConstructor
+@Relation(value = "point", collectionRelation = "points")
 public class PointImpl implements Point, Serializable {
 
   private static final long serialVersionUID = -7975036449830835583L;
