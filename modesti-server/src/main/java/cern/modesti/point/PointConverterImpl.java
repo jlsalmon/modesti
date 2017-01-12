@@ -69,6 +69,6 @@ public class PointConverterImpl implements PointConverter {
       points.add(point);
     }
 
-    return new PageImpl<>(points, pageable, points.size());
+    return new PageImpl<>(points, pageable, pointsToConvert.getTotalElements());
   }
 }
