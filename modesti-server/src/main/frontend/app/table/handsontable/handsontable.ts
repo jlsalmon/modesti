@@ -100,7 +100,6 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         editable = this.settings.schemaService.evaluateConditional(point, categoryConditional, this.settings.requestStatus);
       }
 
-
       // Evaluate "editable" condition of the field as it may override the category
       let fieldConditional: Conditional = field.editable;
 
