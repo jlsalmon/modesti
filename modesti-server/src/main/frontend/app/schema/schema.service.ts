@@ -165,6 +165,10 @@ export class SchemaService {
       return conditional;
     }
 
+    if (conditional.condition === false || conditional.condition === true) {
+      return conditional.condition;
+    }
+
     let results: boolean[] = [];
 
     if (conditional.or) {
