@@ -18,9 +18,9 @@
     </application>
 
 
-    <application name="modesti-pro" extends="default">
-      <startscript name="MODESTI-PRO"/>
-      <deployment installLocation="/opt/modesti-pro">
+    <application name="modesti-server-pro" extends="default">
+      <startscript name="MODESTI-SERVER-PRO"/>
+      <deployment installLocation="/opt/modesti-server-pro">
         <directory name="conf">
           <file name="modesti.properties" source="/user/timoper/rep/modesti/modesti-pro.properties" mask="400"/>
         </directory>
@@ -31,9 +31,9 @@
     </application>
 
 
-    <application name="modesti-test" extends="default">
-      <startscript name="MODESTI-TEST"/>
-      <deployment installLocation="/opt/modesti-test">
+    <application name="modesti-server-test" extends="default">
+      <startscript name="MODESTI-SERVER-TEST"/>
+      <deployment installLocation="/opt/modesti-server-test">
         <directory name="conf">
           <file name="modesti.properties" source="/user/timtest/rep/modesti/modesti-test.properties" mask="400"/>
         </directory>
@@ -44,11 +44,11 @@
     </application>
 
 
-    <application name="modesti-dev" extends="default">
-      <startscript name="MODESTI-DEV">
+    <application name="modesti-server-dev" extends="default">
+      <startscript name="MODESTI-SERVER-DEV">
         <java-vm-args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</java-vm-args>
       </startscript>
-      <deployment installLocation="/opt/modesti-dev">
+      <deployment installLocation="/opt/modesti-server-dev">
         <directory name="conf">
           <file name="modesti.properties" source="/opt/conf/modesti-dev.properties" mask="400"/>
         </directory>
