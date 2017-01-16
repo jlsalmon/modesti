@@ -1,6 +1,7 @@
 package cern.modesti.schema;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Data
 @NoArgsConstructor
 public class SchemaImpl implements Schema {
+
+  private static final long serialVersionUID = -5312446927405059667L;
 
   @Id
   private String id;
@@ -72,11 +75,6 @@ public class SchemaImpl implements Schema {
 
   public boolean isAbstract() {
     return isAbstract == null ? false : isAbstract;
-  }
-
-  @Override
-  public void setAbstract(boolean isAbstract) {
-    this.isAbstract = isAbstract;
   }
 
   /**
