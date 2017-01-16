@@ -137,6 +137,6 @@ public class PluginAssetController {
       resourceRootPath = resource.getFile().getParentFile().getParentFile().getAbsolutePath();
     }
 
-    return resourceRootPath.contains(pluginRootPath);
+    return resourceRootPath != null && resourceRootPath.contains(pluginRootPath);
   }
 }
