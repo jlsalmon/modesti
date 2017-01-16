@@ -3,20 +3,19 @@ package cern.modesti.schema;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Justin Lewis Salmon
  */
-public interface Schema {
+public interface Schema extends Serializable {
 
   String getId();
 
   void setId(String id);
 
   boolean isAbstract();
-
-  void setAbstract(boolean isAbstract);
 
   String getParent();
 
