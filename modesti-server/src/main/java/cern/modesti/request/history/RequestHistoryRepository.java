@@ -1,11 +1,13 @@
 package cern.modesti.request.history;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 /**
  * @author Justin Lewis Salmon
  */
-public interface RequestHistoryRepository extends MongoRepository<RequestHistory, String> {
+@RepositoryRestResource(path = "requestHistories", collectionResourceRel = "requestHistories")
+public interface RequestHistoryRepository extends MongoRepository<RequestHistoryImpl, String> {
 
-  RequestHistory findOneByRequestId(String requestId);
+  RequestHistoryImpl findOneByRequestId(String requestId);
 }

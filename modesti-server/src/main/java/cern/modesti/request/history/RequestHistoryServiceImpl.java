@@ -1,6 +1,7 @@
 package cern.modesti.request.history;
 
 import cern.modesti.request.Request;
+import cern.modesti.request.RequestImpl;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaRepository;
 import de.danielbechler.diff.ObjectDifferBuilder;
@@ -47,8 +48,8 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
     log.info(format("creating new base history record for request #%s", request.getRequestId()));
 
     Schema schema = schemaRepository.findOne(request.getDomain());
-    RequestHistory entry = new RequestHistoryImpl(new ObjectId().toString(), request.getRequestId(),
-        schema.getIdProperty(), request, new ArrayList<>(), false);
+    RequestHistoryImpl entry = new RequestHistoryImpl(new ObjectId().toString(), request.getRequestId(),
+        schema.getIdProperty(), (RequestImpl) request, new ArrayList<>(), false);
     requestHistoryRepository.save(entry);
   }
 
@@ -64,7 +65,7 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
    */
   public void saveChangeHistory(Request modified) {
     log.info(format("processing change history for request #%s", modified.getRequestId()));
-    RequestHistory entry = requestHistoryRepository.findOneByRequestId(modified.getRequestId());
+    RequestHistoryImpl entry = requestHistoryRepository.findOneByRequestId(modified.getRequestId());
     if (entry == null) {
       initialiseChangeHistory(modified);
       return;
