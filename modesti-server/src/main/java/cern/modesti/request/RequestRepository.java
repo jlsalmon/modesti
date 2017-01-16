@@ -33,7 +33,7 @@ public interface RequestRepository extends MongoRepository<RequestImpl, String>,
    * @return the request instance, or null if no request was found with the
    * given id
    */
-  Request findOneByRequestId(@Param("requestId") String requestId);
+  RequestImpl findOneByRequestId(@Param("requestId") String requestId);
 
   /**
    * Save a single {@link Request} instance.
