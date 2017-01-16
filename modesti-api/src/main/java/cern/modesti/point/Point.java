@@ -45,7 +45,7 @@ public interface Point {
 
   boolean isValid();
 
-  void setValid(boolean valid);
+  void setValid(Boolean valid);
 
   List<Error> getErrors();
 
