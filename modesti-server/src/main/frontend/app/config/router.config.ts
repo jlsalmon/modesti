@@ -30,7 +30,11 @@ export class RouterConfig {
               return taskService.getSignalsForRequest(request);
             }],
             history: ['request', 'RequestService', (request: any, requestService: any) => {
-              return requestService.getRequestHistory(request.requestId);
+              if (request.type === 'UPDATE') {
+                return requestService.getRequestHistory(request.requestId);
+              } else {
+                return null;
+              }
             }]
           }})
         .state('search', { url: '/search',    component: 'search',            title: 'Search',

@@ -379,11 +379,13 @@ class RequestTableController {
         this.requestService.saveRequest(this.request).then((request: Request) => {
           this.request = request;
 
-          // Reload the history
-          this.requestService.getRequestHistory(this.request.requestId).then((history: any) => {
-            this.history = history;
-            this.table.render();
-          });
+          if (request.type === 'UPDATE') {
+            // Reload the history
+            this.requestService.getRequestHistory(this.request.requestId).then((history: any) => {
+              this.history = history;
+              this.table.render();
+            });
+          }
         });
       }
     });
