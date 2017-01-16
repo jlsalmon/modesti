@@ -1,6 +1,8 @@
 package cern.modesti.request.history;
 
 import cern.modesti.request.Request;
+import cern.modesti.request.RequestImpl;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ public class RequestHistoryImpl implements RequestHistory {
   private String idProperty;
 
   @QueryType(PropertyType.NONE)
+  @JsonDeserialize(as = RequestImpl.class)
   private Request originalRequest;
 
   private List<ChangeEvent> events = new ArrayList<>();
