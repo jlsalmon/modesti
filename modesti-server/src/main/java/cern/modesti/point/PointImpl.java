@@ -1,6 +1,7 @@
 package cern.modesti.point;
 
 import cern.modesti.schema.field.Field;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ public class PointImpl implements Point, Serializable {
 
   private boolean selected = false;
 
-  private boolean valid;
+  private Boolean valid;
 
   private List<Error> errors = new ArrayList<>();
 
@@ -87,6 +88,7 @@ public class PointImpl implements Point, Serializable {
    *
    * @return true if the point was considered empty, false otherwise
    */
+  @JsonIgnore
   public boolean isEmpty() {
     if (properties.size() == 0) {
       return true;
@@ -214,6 +216,11 @@ public class PointImpl implements Point, Serializable {
       Error error = new Error(category, property, new ArrayList<>(Collections.singletonList(message)));
       errors.add(error);
     }
+  }
+
+  @Override
+  public boolean isValid() {
+    return valid == null || !valid;
   }
 
   public boolean equals(Object o) {
