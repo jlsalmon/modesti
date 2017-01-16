@@ -105,6 +105,10 @@ public class RequestServiceImpl implements RequestService {
 
     ((RequestImpl) request).setCreatedAt(new DateTime());
 
+    if (request.getPoints() == null) {
+      request.setPoints(new ArrayList<>());
+    }
+
     // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
       for (int i = 0; i < 50; i++) {
