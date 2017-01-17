@@ -20,24 +20,34 @@ public class RequestHistoryIdConverter implements BackendIdConverter {
 
   @Override
   public Serializable fromRequestId(String id, Class<?> entityType) {
-    RequestHistory entry = requestHistoryRepository.findOneByRequestId(id);
-    if (entry == null) {
-      return id;
+
+    if (entityType.equals(RequestHistoryImpl.class)) {
+      RequestHistory entry = requestHistoryRepository.findOneByRequestId(id);
+
+      if (entry != null) {
+        return entry.getId();
+      }
     }
-    return entry.getId();
+
+    return id;
   }
 
   @Override
   public String toRequestId(Serializable id, Class<?> entityType) {
-    RequestHistory entry = requestHistoryRepository.findOne(id.toString());
-    if (entry == null) {
-      return id.toString();
+
+    if (entityType.equals(RequestHistoryImpl.class)) {
+      RequestHistory entry = requestHistoryRepository.findOne(id.toString());
+
+      if (entry != null) {
+        return entry.getRequestId();
+      }
     }
-    return entry.getRequestId();
+
+    return id.toString();
   }
 
   @Override
   public boolean supports(Class<?> delimiter) {
-    return RequestHistory.class.equals(delimiter);
+    return RequestHistory.class.equals(delimiter) || RequestHistoryImpl.class.equals(delimiter);
   }
 }

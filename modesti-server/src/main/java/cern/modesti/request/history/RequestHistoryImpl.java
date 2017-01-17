@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.hateoas.core.Relation;
 
 import javax.persistence.Id;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.List;
  * @author Justin Lewis Salmon
  */
 @Document(collection = "request.history")
+@Relation(value = "requestHistory", collectionRelation = "requestHistories")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

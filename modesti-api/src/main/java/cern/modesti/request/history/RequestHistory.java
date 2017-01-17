@@ -8,6 +8,7 @@ import java.util.List;
  * @author Justin Lewis Salmon
  */
 public interface RequestHistory {
+
   String getId();
 
   String getRequestId();
