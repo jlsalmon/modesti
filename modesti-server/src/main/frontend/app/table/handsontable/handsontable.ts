@@ -272,8 +272,9 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   private getColumnIndex(field: Field): number {
     let column: any;
 
+    // TODO: compare column index as well as field id
     this.hotOptions.columns.forEach((col: any) => {
-      if (col.field && col.field.id === field.id && col.field.category === field.category) {
+      if (col.field && col.field.id === field.id) {
         column = col;
       }
     });
