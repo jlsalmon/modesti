@@ -2,6 +2,7 @@ package cern.modesti.request.search;
 
 import cern.modesti.predicate.RsqlExpressionBuilder;
 import cern.modesti.request.Request;
+import cern.modesti.request.RequestImpl;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.request.hateoas.RequestResourceAssembler;
 import com.querydsl.core.types.Predicate;
@@ -40,7 +41,7 @@ public class RequestSearchController {
     Page<? extends Request> requests;
 
     if (!query.isEmpty()) {
-      Predicate predicate = new RsqlExpressionBuilder<>(Request.class).createExpression(query);
+      Predicate predicate = new RsqlExpressionBuilder<>(RequestImpl.class).createExpression(query);
       log.debug(predicate.toString());
       requests = repository.findAll(predicate, pageable);
     } else {
