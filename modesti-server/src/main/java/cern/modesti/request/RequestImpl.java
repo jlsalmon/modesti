@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.hateoas.core.Relation;
 
 import javax.persistence.Id;
 import javax.persistence.Version;
@@ -29,6 +30,7 @@ import static java.util.stream.Collectors.toMap;
  * @author Justin Lewis Salmon
  */
 @Document(collection = "request")
+@Relation(value = "request", collectionRelation = "requests")
 @Data
 @NoArgsConstructor
 public class RequestImpl implements Request {
