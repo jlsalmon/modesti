@@ -125,23 +125,27 @@
     <div class="popover-content-scroll">
       <ul>
         <li ng-repeat="category in $ctrl.schema.categories">
-            <span class="category-label">{{::category.name}}</span>
+          <span class="category-label">{{::category.name}}</span>
 
-            <ul>
-              <li ng-repeat="field in category.fields"
-                  ng-click="$ctrl.addFilter(field)">
-                <div class="field-label">{{field.name}}</div>
-              </li>
-            </ul>
+          <ul>
+            <li ng-repeat="field in category.fields"
+                ng-click="$ctrl.addFilter(field)">
+              <div class="field-label">{{field.name}}</div>
+            </li>
+          </ul>
         </li>
 
         <li class="divider" ng-if="$ctrl.schema.datasources.length > 0"></li>
 
-        <li ng-repeat="datasource in $ctrl.schema.datasources"
-            class="category-label">
-          <span>
-            {{::datasource.name}}
-          </span>
+        <li ng-repeat="datasource in $ctrl.schema.datasources">
+          <span class="category-label">{{::datasource.name}}</span>
+
+          <ul>
+            <li ng-repeat="field in datasource.fields"
+                ng-click="$ctrl.addFilter(field)">
+              <div class="field-label">{{field.name}}</div>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
