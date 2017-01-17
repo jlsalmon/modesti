@@ -88,7 +88,10 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     let editable: boolean = false;
     let assigned: boolean = this.taskService.isCurrentUserAssigned();
     let point: Point = this.data[row];
-    let field: Field = this.schema.getField(prop);
+    let field: Field;
+    if(this.hotOptions.columns[col].field !== null) {
+      field = this.hotOptions.columns[col].field;
+    }
 
     if (assigned && field != null) {
 
@@ -267,7 +270,14 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   }
 
   private getColumnIndex(field: Field): number {
-    return this.hotOptions.columns.indexOf(this.getColumn(field));
+    let column: any;
+
+    this.hotOptions.columns.forEach((col: any) => {
+      if (col.field && col.field.id === field.id && col.field.category === field.category) {
+        column = col;
+      }
+    });
+    return this.hotOptions.columns.indexOf(column);
   }
 
   private getColumnDefs(): any[] {
@@ -282,18 +292,6 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     let columnDefs: any[] = ColumnFactory.getColumnDefinitions('handsontable', this, meta);
     columnDefs.forEach((column: any) => column.renderer = this.settings.cellRenderer);
     return columnDefs;
-  }
-
-  private getColumn(field: Field): any {
-    let column: any;
-
-    this.hotOptions.columns.forEach((col: any) => {
-      if (col.field && col.field.id === field.id) {
-        column = col;
-      }
-    });
-
-    return column;
   }
 
   public getActiveDatasources(): Category[] {

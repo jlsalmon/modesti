@@ -56,7 +56,7 @@ export class Schema implements ISerializable<Schema> {
     this.getAllCategories().forEach((c: Category) => {
       let fieldIds: string[] = c.fields.map((f: Field) => f.id);
 
-      if (fieldIds.indexOf(field.id) !== -1) {
+      if (fieldIds.indexOf(field.id) !== -1 && field.category === c.name) {
         category = c;
       }
     });
