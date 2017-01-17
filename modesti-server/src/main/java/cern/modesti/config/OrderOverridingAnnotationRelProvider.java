@@ -1,7 +1,7 @@
 package cern.modesti.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.hateoas.RelProvider;
@@ -27,7 +27,7 @@ public class OrderOverridingAnnotationRelProvider implements RelProvider {
   private AnnotationRelProvider annotationRelProvider;
 
   @Autowired
-  private OrderOverridingAnnotationRelProvider(GenericApplicationContext context) {
+  private OrderOverridingAnnotationRelProvider(ApplicationContext context) {
     this.annotationRelProvider = context.getBean("annotationRelProvider", AnnotationRelProvider.class);
   }
 
