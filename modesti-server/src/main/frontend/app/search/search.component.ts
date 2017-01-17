@@ -98,8 +98,7 @@ class SearchController {
       let points: Point[] = [];
 
       if (response.hasOwnProperty('_embedded')) {
-        // FIXME: why do we get _embedded.pointImpls on the second page load...?
-        points = response._embedded.points || response._embedded.pointImpls;
+        points = response._embedded.points;
       }
 
       console.log('fetched ' + points.length + ' points');

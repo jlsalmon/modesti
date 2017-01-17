@@ -5,6 +5,7 @@ import cern.modesti.schema.field.Field;
 
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ import static java.lang.String.format;
  *
  * @author Justin Lewis Salmon
  */
-public interface Point {
+public interface Point extends Serializable {
 
   Long getLineNo();
 

@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.core.Relation;
 
-import java.io.Serializable;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -15,10 +14,10 @@ import static java.lang.String.format;
 /**
  * @author Justin Lewis Salmon
  */
+@Relation(value = "point", collectionRelation = "points")
 @Data
 @NoArgsConstructor
-@Relation(value = "point", collectionRelation = "points")
-public class PointImpl implements Point, Serializable {
+public class PointImpl implements Point {
 
   private static final long serialVersionUID = -7975036449830835583L;
 
