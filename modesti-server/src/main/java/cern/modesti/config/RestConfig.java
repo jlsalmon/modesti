@@ -1,8 +1,11 @@
 package cern.modesti.config;
 
+import cern.modesti.point.PointImpl;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestDeserialiser;
 import cern.modesti.point.Point;
+import cern.modesti.request.RequestImpl;
+import cern.modesti.request.history.RequestHistoryImpl;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaImpl;
 import cern.modesti.schema.category.Category;
@@ -46,8 +49,9 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     super.configureRepositoryRestConfiguration(config);
 
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
-    config.exposeIdsFor(Point.class, Field.class, TextField.class, OptionsField.class, AutocompleteField.class, NumericField.class, CheckboxField.class,
-        UserImpl.class, SchemaImpl.class, CategoryImpl.class, DatasourceImpl.class, Option.class);
+    config.exposeIdsFor(RequestImpl.class, PointImpl.class, RequestHistoryImpl.class, UserImpl.class, SchemaImpl.class,
+        CategoryImpl.class, DatasourceImpl.class, Field.class, TextField.class, AutocompleteField.class, NumericField.class,
+        CheckboxField.class, OptionsField.class, Option.class);
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);
