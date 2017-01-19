@@ -336,7 +336,8 @@ class RequestTableController {
 
       let field: Field;
       if (typeof property === 'string') {
-        field = this.schema.getField(property);
+        let col: number = this.table.hot.propToCol(property);
+        field = this.table.hotOptions.columns[col].field;
       } else {
         field = this.table.hotOptions.columns[property].field;
       }

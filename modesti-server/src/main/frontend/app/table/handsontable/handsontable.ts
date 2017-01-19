@@ -88,15 +88,12 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     let editable: boolean = false;
     let assigned: boolean = this.taskService.isCurrentUserAssigned();
     let point: Point = this.data[row];
-    let field: Field;
-    if(this.hotOptions.columns[col].field !== null) {
-      field = this.hotOptions.columns[col].field;
-    }
-
+    let field: Field = this.hotOptions.columns[col].field;
+    
     if (assigned && field != null) {
 
       // Evaluate "editable" condition of the category
-      let category: Category = this.schema.getCategoryForField(field);
+      let category: Category = this.schema.getCategory(field.category);
       let categoryConditional: Conditional = category.editable;
 
       if (categoryConditional != null) {
@@ -274,8 +271,9 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
     // TODO: compare column index as well as field id
     this.hotOptions.columns.forEach((col: any) => {
-      if (col.field && col.field.id === field.id) {
+      if (col.field && col.field.id === field.id && col.field.category === field.category) {
         column = col;
+        return;
       }
     });
     return this.hotOptions.columns.indexOf(column);
