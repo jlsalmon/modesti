@@ -1,7 +1,6 @@
 import {Category} from './category/category';
 import {Field} from './field/field';
 import {RowCommentStateDescriptor} from './row-comment-state-descriptor';
-import {Column} from "../../../../../node_modules/ag-grid/dist/lib/entities/column";
 
 export class Schema implements ISerializable<Schema> {
   public id: string;
@@ -44,6 +43,7 @@ export class Schema implements ISerializable<Schema> {
       category.fields.forEach((f: Field) => {
         if ((f.id === id && cat === null) || (f.id === id && category.name === cat)) {
           field = f;
+          return;
         }
       });
     });
@@ -59,6 +59,7 @@ export class Schema implements ISerializable<Schema> {
 
       if (fieldIds.indexOf(field.id) !== -1 && field.category === c.name) {
         category = c;
+        return;
       }
     });
 
