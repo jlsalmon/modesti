@@ -18,6 +18,7 @@ export class Schema implements ISerializable<Schema> {
     this.categories.concat(this.datasources).forEach((c: Category) => {
       if (c.id === id || c.name === id) {
         category = c;
+        return;
       }
     });
 

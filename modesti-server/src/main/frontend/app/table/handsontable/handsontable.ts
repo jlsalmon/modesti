@@ -89,7 +89,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     let assigned: boolean = this.taskService.isCurrentUserAssigned();
     let point: Point = this.data[row];
     let field: Field = this.hotOptions.columns[col].field;
-    
+
     if (assigned && field != null) {
 
       // Evaluate "editable" condition of the category
@@ -269,7 +269,6 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   private getColumnIndex(field: Field): number {
     let column: any;
 
-    // TODO: compare column index as well as field id
     this.hotOptions.columns.forEach((col: any) => {
       if (col.field && col.field.id === field.id && col.field.category === field.category) {
         column = col;
@@ -423,7 +422,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
    * @param lineNo the row to be highlighted
    */
   public highlightCell = (categoryName: string, fieldId: string, lineNo: number) => {
-    let field: Field = this.schema.getField(fieldId);
+    let field: Field = this.schema.getField(fieldId, categoryName);
 
     // Get the column number from the field id
     let col: number = this.hot.propToCol('properties.' + field.getModelPath());
@@ -529,7 +528,14 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         continue;
       }
 
-      let field: Field = this.schema.getField(property);
+      let field: Field;
+      if (typeof property === 'string') {
+        let col: number = this.hot.propToCol(property);
+        field = this.hotOptions.columns[col].field;
+      } else {
+        field = this.hotOptions.columns[property].field;
+      }
+
       if (field) {
         // Remove accented characters
         newValue = latinize(newValue);

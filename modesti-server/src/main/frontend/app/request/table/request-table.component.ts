@@ -64,7 +64,11 @@ class RequestTableController {
 
   public renderCell = (instance: any, td: HTMLElement, row: number, col: number, prop: string,
                                           value: any, cellProperties: any): void => {
-    let field: Field = this.schema.getField(prop);
+    if (this.table == null) {
+      return;
+    }
+
+    let field: Field = this.table.hotOptions.columns[col].field;
 
     let type: string = field ? field.type : cellProperties.type;
     switch (type) {
