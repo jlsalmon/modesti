@@ -2,8 +2,6 @@ package cern.modesti.config;
 
 import cern.modesti.point.Point;
 import cern.modesti.point.PointImpl;
-import cern.modesti.request.RequestDeserialiser;
-import cern.modesti.request.RequestImpl;
 import cern.modesti.request.history.RequestHistoryImpl;
 import cern.modesti.schema.SchemaImpl;
 import cern.modesti.schema.category.CategoryImpl;
@@ -11,7 +9,6 @@ import cern.modesti.schema.category.DatasourceImpl;
 import cern.modesti.schema.field.*;
 import cern.modesti.user.UserImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleDeserializers;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
