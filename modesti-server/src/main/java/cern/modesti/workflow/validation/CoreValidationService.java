@@ -127,7 +127,7 @@ public class CoreValidationService {
   private boolean validatePoints(Request request, List<Category> categories) {
     boolean valid = true;
 
-    for (Point point : request.getPoints(true)) {
+    for (Point point : request.getNonEmptyPoints()) {
 
       for (Category category : categories) {
         for (Field field : category.getFields()) {
@@ -219,7 +219,7 @@ public class CoreValidationService {
 
             // For each point, check that if one or more of the fields of this category and one or more of the fields of the excluded category are filled. If
             // so, say something like "Fields in the "Alarms" group cannot be used if fields in the "Commands" group have been specified.".
-            for (Point point : request.getPoints(true)) {
+            for (Point point : request.getNonEmptyPoints()) {
               List<Field> emptyFields = point.getEmptyFields(category.getFields());
 
               // If at least one of the fields of this category are filled, then we must check the excluded category.

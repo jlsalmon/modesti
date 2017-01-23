@@ -38,6 +38,8 @@ public class QRequest extends BeanPath<Request> {
 
     public final StringPath id = createString("id");
 
+    public final ListPath<cern.modesti.point.Point, cern.modesti.point.QPoint> nonEmptyPoints = this.<cern.modesti.point.Point, cern.modesti.point.QPoint>createList("nonEmptyPoints", cern.modesti.point.Point.class, cern.modesti.point.QPoint.class, PathInits.DIRECT2);
+
     public final StringPath parentRequestId = createString("parentRequestId");
 
     public final ListPath<cern.modesti.point.Point, cern.modesti.point.QPoint> points = this.<cern.modesti.point.Point, cern.modesti.point.QPoint>createList("points", cern.modesti.point.Point.class, cern.modesti.point.QPoint.class, PathInits.DIRECT2);

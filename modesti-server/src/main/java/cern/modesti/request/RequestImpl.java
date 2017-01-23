@@ -4,9 +4,12 @@ import cern.modesti.point.Error;
 import cern.modesti.point.Point;
 import cern.modesti.point.PointImpl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.querydsl.core.annotations.PropertyType;
+import com.querydsl.core.annotations.QueryType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
@@ -77,8 +80,7 @@ public class RequestImpl implements Request {
 
   private boolean valid;
 
-  @JsonDeserialize(contentAs = PointImpl.class)
-  private List<Point> points = new ArrayList<>();
+  private List<PointImpl> points = new ArrayList<>();
 
   private List<Comment> comments = new ArrayList<>();
 
@@ -128,13 +130,21 @@ public class RequestImpl implements Request {
   }
 
   public void addPoint(Point point) {
-    this.points.add(point);
+    this.points.add((PointImpl) point);
   }
 
+  public List<Point> getPoints() {
+    return this.points.stream().map(point -> (Point) point).collect(toList());
+  }
+
+  public void setPoints(List<Point> points) {
+    this.points = points.stream().map(point -> (PointImpl) point).collect(toList());
+  }
+
+  @QueryType(PropertyType.NONE)
   @JsonIgnore
-  public List<Point> getPoints(boolean ignoreEmpty) {
-    return ignoreEmpty ? this.points.stream().filter(point -> !point.isEmpty()).collect(toList())
-        : this.getPoints();
+  public List<Point> getNonEmptyPoints() {
+    return this.points.stream().filter(point -> !point.isEmpty()).collect(toList());
   }
 
   @JsonIgnore

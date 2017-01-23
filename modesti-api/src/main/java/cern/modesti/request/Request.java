@@ -69,7 +69,7 @@ public interface Request extends Serializable {
 
   List<Point> getPoints();
 
-  List<Point> getPoints(boolean ignoreEmpty);
+  List<Point> getNonEmptyPoints();
 
   void setPoints(List<Point> points);
 
