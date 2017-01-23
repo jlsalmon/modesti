@@ -10,6 +10,7 @@ import cern.modesti.schema.field.*;
 import cern.modesti.user.UserImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -56,5 +57,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     SimpleModule module = new SimpleModule("CustomModule");
     module.addAbstractTypeMapping(Point.class, PointImpl.class);
     objectMapper.registerModule(module);
+    // Register a deserialiser for Joda classes
+    objectMapper.registerModule(new JodaModule());
   }
 }
