@@ -25,7 +25,7 @@ dependencies {
     compile "com.querydsl:querydsl-jpa:4.1.4"
     compile "cz.jirutka.rsql:rsql-parser:2.0.0"
     compile 'de.danielbechler:java-object-diff:0.94'
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.4"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda:2.6.4"
     compile "org.apache.commons:commons-lang3:3.4"
     compile "org.projectlombok:lombok:1.16.12"
     compile "com.h2database:h2:1.4.193"
