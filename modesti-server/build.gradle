@@ -132,11 +132,3 @@ publishing {
         }
     }
 }
-
-/** Configure release options */
-release {
-    preTagCommitMessage = 'Set version before release: '
-    tagCommitMessage = 'Tagging version '
-    newVersionCommitMessage = 'Bumped version to '
-}
-
