@@ -10,7 +10,7 @@ import org.springframework.data.rest.core.config.Projection;
  *
  * @author Justin Lewis Salmon
  */
-@Projection(types = {Request.class})
+@Projection(types = {RequestImpl.class})
 public interface RequestProjection {
 
   String getRequestId();

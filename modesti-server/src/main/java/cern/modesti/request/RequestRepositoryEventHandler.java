@@ -22,24 +22,24 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-@RepositoryEventHandler(Request.class)
+@RepositoryEventHandler(RequestImpl.class)
 public class RequestRepositoryEventHandler {
 
   @Autowired
   private RequestService requestService;
 
   @HandleBeforeCreate
-  public void handleRequestCreate(Request request) {
+  public void handleRequestCreate(RequestImpl request) {
     requestService.insert(request);
   }
 
   @HandleBeforeSave
-  public void handleRequestSave(Request request) {
+  public void handleRequestSave(RequestImpl request) {
     requestService.save(request);
   }
 
   @HandleAfterDelete
-  public void handleAfterDelete(Request request) {
+  public void handleAfterDelete(RequestImpl request) {
     requestService.delete(request);
   }
 }
