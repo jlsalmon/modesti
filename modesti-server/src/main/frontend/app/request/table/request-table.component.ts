@@ -351,16 +351,16 @@ class RequestTableController {
       // If the value was cleared, make sure any other properties of the object are also cleared.
       if (field && (newValue == null || newValue === '')) {
         let point: Point = this.request.points[row];
-        let prop: any = point.properties[field.id];
+        // let prop: any = point.properties[field.id];
 
-        if (typeof prop === 'object') {
-          for (let attribute in prop) {
-            if (prop.hasOwnProperty(attribute)) {
-              prop[attribute] = undefined;
+        if (typeof point.properties[field.id] === 'object') {
+          for (let attribute in point.properties[field.id]) {
+            if (point.properties[field.id].hasOwnProperty(attribute)) {
+              point.properties[field.id][attribute] = null;
             }
           }
         } else {
-          prop = undefined;
+          point.properties[field.id] = null;
         }
       }
 
