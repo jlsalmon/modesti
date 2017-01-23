@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.String.format;
 
@@ -137,29 +139,45 @@ public class RequestServiceImpl implements RequestService {
   /**
    * Save an existing request.
    *
-   * @param request the request to save
+   * @param updated the request to save
    * @return the newly saved request
    */
-  public Request save(Request request) {
-    if (repository.findOneByRequestId(request.getRequestId()) == null) {
-      throw new RuntimeException(format("Request #%s was not found", request.getRequestId()));
+  public Request save(Request updated) {
+    Request original = repository.findOne(updated.getId());
+    if (original == null) {
+      throw new RuntimeException(format("Request #%s was not found", updated.getId()));
     }
 
-    for (Point point : request.getPoints()) {
+    // The request id may not be modified manually.
+    if (!Objects.equals(updated.getRequestId(), original.getRequestId())) {
+      throw new IllegalArgumentException("Request ID cannot not be updated manually!");
+    }
+
+    // The request status may not be modified manually.
+    if (!Objects.equals(updated.getStatus(), original.getStatus())) {
+      throw new IllegalArgumentException("Request status cannot not be updated manually!");
+    }
+
+    // TODO: this shouldn't be necessary, and could cause side effects. Why do we lose properties when saving?
+    Map<String, Object> properties = original.getProperties();
+    properties.putAll(updated.getProperties());
+    updated.setProperties(properties);
+
+    for (Point point : updated.getPoints()) {
       if (point.getLineNo() == null) {
-        point.setLineNo((long) (request.getPoints().indexOf(point) + 1));
+        point.setLineNo((long) (updated.getPoints().indexOf(point) + 1));
       }
     }
 
     // Invoke any callbacks
     for (RequestEventHandler requestEventHandler : requestEventHandlers) {
-      requestEventHandler.onBeforeSave(request);
+      requestEventHandler.onBeforeSave(updated);
     }
 
     // Process and store any changes that were made to the request
-    ((RequestHistoryServiceImpl) historyService).saveChangeHistory(request);
+    ((RequestHistoryServiceImpl) historyService).saveChangeHistory(updated);
 
-    return repository.save((RequestImpl) request);
+    return repository.save((RequestImpl) updated);
   }
 
   /**

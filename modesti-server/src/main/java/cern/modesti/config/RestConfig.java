@@ -1,19 +1,14 @@
 package cern.modesti.config;
 
-import cern.modesti.point.PointImpl;
-import cern.modesti.request.Request;
-import cern.modesti.request.RequestDeserialiser;
 import cern.modesti.point.Point;
+import cern.modesti.point.PointImpl;
+import cern.modesti.request.RequestDeserialiser;
 import cern.modesti.request.RequestImpl;
 import cern.modesti.request.history.RequestHistoryImpl;
-import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaImpl;
-import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.CategoryImpl;
-import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.category.DatasourceImpl;
 import cern.modesti.schema.field.*;
-import cern.modesti.user.User;
 import cern.modesti.user.UserImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleDeserializers;
@@ -49,7 +44,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     super.configureRepositoryRestConfiguration(config);
 
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
-    config.exposeIdsFor(RequestImpl.class, PointImpl.class, RequestHistoryImpl.class, UserImpl.class, SchemaImpl.class,
+    config.exposeIdsFor(RequestHistoryImpl.class, UserImpl.class, SchemaImpl.class,
         CategoryImpl.class, DatasourceImpl.class, Field.class, TextField.class, AutocompleteField.class, NumericField.class,
         CheckboxField.class, OptionsField.class, Option.class);
 
@@ -61,14 +56,8 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
 
   @Override
   public void configureJacksonObjectMapper(ObjectMapper objectMapper) {
-    // Custom deserialiser for {@link Request} objects
-    objectMapper.registerModule(new SimpleModule("RequestModule") {
-      @Override
-      public void setupModule(SetupContext context) {
-        SimpleDeserializers deserializers = new SimpleDeserializers();
-        deserializers.addDeserializer(Request.class, new RequestDeserialiser());
-        context.addDeserializers(deserializers);
-      }
-    });
+    SimpleModule module = new SimpleModule("CustomModule");
+    module.addAbstractTypeMapping(Point.class, PointImpl.class);
+    objectMapper.registerModule(module);
   }
 }
