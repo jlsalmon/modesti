@@ -29,7 +29,7 @@ export class Schema implements ISerializable<Schema> {
     return this.categories.concat(this.datasources);
   }
 
-  public getField(id: string, cat: String): Field {
+  public getField(id: string, categoryName: string): Field {
     let field: Field;
 
     if (id.indexOf('properties.') !== -1) {
@@ -42,7 +42,7 @@ export class Schema implements ISerializable<Schema> {
 
     this.categories.concat(this.datasources).forEach((category: Category) => {
       category.fields.forEach((f: Field) => {
-        if ((f.id === id && cat === null) || (f.id === id && category.name === cat)) {
+        if ((f.id === id && categoryName === null) || (f.id === id && category.name === categoryName)) {
           field = f;
           return;
         }
