@@ -135,30 +135,17 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   public determineInitialHiddenColumns(columnDefs: any[]): number[] {
     let hiddenColumns: number[] = [];
 
-    // We may have select and/or comment columns, so offset those
-    // let offset: number = this.determineNumFixedColumns();
+    // Otherwise, initially show only the first category
+    let firstCategory: Category = this.schema.categories[0];
+    columnDefs.forEach((columnDef: any, index: number) => {
+      if (columnDef.data === 'selected' || columnDef.data.endsWith('message')) {
+        return;
+      }
 
-    //if (this.state.getHiddenColumns().length > 0) {
-      // If the table state holds a list of hidden columns, use that
-      //columnDefs.forEach((columnDef: any, index: number) => {
-      //  if (this.state.getHiddenColumns().indexOf(columnDef.field.id) === -1) {
-      //    hiddenColumns.push(index);
-      //  }
-      //});
-
-    //} else {
-      // Otherwise, initially show only the first category
-      let firstCategory: Category = this.schema.categories[0];
-      columnDefs.forEach((columnDef: any, index: number) => {
-        if (columnDef.data === 'selected' || columnDef.data.endsWith('message')) {
-          return;
-        }
-
-        if (firstCategory.fields.indexOf(columnDef.field) === -1) {
-          hiddenColumns.push(index);
-        }
-      });
-    //}
+      if (firstCategory.fields.indexOf(columnDef.field) === -1) {
+        hiddenColumns.push(index);
+      }
+    });
 
     return hiddenColumns;
   }
