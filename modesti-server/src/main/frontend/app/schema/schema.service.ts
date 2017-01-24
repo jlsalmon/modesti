@@ -134,7 +134,7 @@ export class SchemaService {
     let url: string;
 
     // Handle external URLs
-    if (field.url.indexOf('http://') != -1 || field.url.indexOf('https://')) {
+    if (field.url.indexOf('http://') != -1 || field.url.indexOf('https://') != -1) {
       url = field.url;
     } else {
       url = '/api/' + field.url;
