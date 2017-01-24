@@ -69,6 +69,10 @@ class RequestTableController {
       return;
     }
 
+    if (this.table.hotOptions.columns[col] == null) {
+      return;
+    }
+
     let field: Field = this.table.hotOptions.columns[col].field;
 
     let type: string = field ? field.type : cellProperties.type;
