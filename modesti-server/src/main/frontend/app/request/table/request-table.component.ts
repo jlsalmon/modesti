@@ -60,6 +60,7 @@ class RequestTableController {
     };
 
     this.table = TableFactory.createTable('handsontable', this.schema, this.request.points, settings);
+    this.table.render();
   }
 
   public renderCell = (instance: any, td: HTMLElement, row: number, col: number, prop: string,
