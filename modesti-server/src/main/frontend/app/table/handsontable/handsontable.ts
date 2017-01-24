@@ -85,6 +85,10 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       return;
     }
 
+    if (this.hotOptions.columns[col] == null) {
+      return;
+    }
+
     let editable: boolean = false;
     let assigned: boolean = this.taskService.isCurrentUserAssigned();
     let point: Point = this.data[row];
