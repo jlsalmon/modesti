@@ -131,8 +131,17 @@ export class SchemaService {
       }
     }
 
+    let url: string;
+
+    // Handle external URLs
+    if (field.url.indexOf('http://') != -1 || field.url.indexOf('https://')) {
+      url = field.url;
+    } else {
+      url = '/api/' + field.url;
+    }
+
     // Call the endpoint asynchronously and resolve the promise when we're done.
-    this.$http.get('/api/' + field.url, {
+    this.$http.get(url, {
       params: params,
       cache: true
     }).then((response: any) => {
