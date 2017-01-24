@@ -36,7 +36,7 @@ public class ChangeVisitorTest {
   @Test
   public void addStringProperty() {
     modified.getPoints().get(0).addProperty("string", "test");
-    ChangeEvent event = diff(modified, original);
+    ChangeEvent event = RequestDiffer.diff(modified, original, "id");
     assertTrue(event.getChanges().size() == 1);
 
     Change change = event.getChanges().get(0);
@@ -47,7 +47,7 @@ public class ChangeVisitorTest {
   public void updateStringProperty() {
     original.getPoints().get(0).addProperty("string", "test");
     modified.getPoints().get(0).addProperty("string", "test2");
-    ChangeEvent event = diff(modified, original);
+    ChangeEvent event = RequestDiffer.diff(modified, original, "id");
     assertTrue(event.getChanges().size() == 1);
 
     Change change = event.getChanges().get(0);
@@ -57,7 +57,7 @@ public class ChangeVisitorTest {
   @Test
   public void addIntegerProperty() {
     modified.getPoints().get(0).addProperty("integer", 0);
-    ChangeEvent event = diff(modified, original);
+    ChangeEvent event = RequestDiffer.diff(modified, original, "id");
     assertTrue(event.getChanges().size() == 1);
 
     Change change = event.getChanges().get(0);
@@ -68,7 +68,7 @@ public class ChangeVisitorTest {
   public void updateIntegerProperty() {
     original.getPoints().get(0).addProperty("integer", 0);
     modified.getPoints().get(0).addProperty("integer", 1);
-    ChangeEvent event = diff(modified, original);
+    ChangeEvent event = RequestDiffer.diff(modified, original, "id");
     assertTrue(event.getChanges().size() == 1);
 
     Change change = event.getChanges().get(0);
@@ -79,7 +79,7 @@ public class ChangeVisitorTest {
   public void addObjectProperty() {
     Thing thing = new Thing(1, "thing 1");
     modified.getPoints().get(0).addProperty("object", thing);
-    ChangeEvent event = diff(modified, original);
+    ChangeEvent event = RequestDiffer.diff(modified, original, "id");
     assertTrue(event.getChanges().size() == 1);
 
     Change change = event.getChanges().get(0);
@@ -92,7 +92,7 @@ public class ChangeVisitorTest {
     Thing thing2 = new Thing(2, "thing 2");
     original.getPoints().get(0).addProperty("object", thing1);
     modified.getPoints().get(0).addProperty("object", thing2);
-    ChangeEvent event = diff(modified, original);
+    ChangeEvent event = RequestDiffer.diff(modified, original, "id");
     assertTrue(event.getChanges().size() == 1);
 
     Change change = event.getChanges().get(0);
@@ -103,7 +103,7 @@ public class ChangeVisitorTest {
   public void convertStringToInteger() {
     original.getPoints().get(0).addProperty("integer", "0");
     modified.getPoints().get(0).addProperty("integer", 0);
-    ChangeEvent event = diff(modified, original);
+    ChangeEvent event = RequestDiffer.diff(modified, original, "id");
     assertTrue(event.getChanges().size() == 1);
 
     Change change = event.getChanges().get(0);
@@ -114,15 +114,8 @@ public class ChangeVisitorTest {
   public void nullToEmptyStringIsNotRecorded() {
     original.getPoints().get(0).addProperty("string", null);
     modified.getPoints().get(0).addProperty("string", "");
-    ChangeEvent event = diff(modified, original);
+    ChangeEvent event = RequestDiffer.diff(modified, original, "id");
     assertTrue(event.getChanges().size() == 0);
-  }
-
-  private ChangeEvent diff(Request modified, Request original) {
-    ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
-    DiffNode root = ObjectDifferBuilder.buildDefault().compare(modified, original);
-    root.visit(new ChangeVisitor(event, modified, original));
-    return event;
   }
 
   private void assertChangeEquals(Change change, DiffNode.State state, String path, Object original, Object modified) {

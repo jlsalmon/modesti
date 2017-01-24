@@ -77,14 +77,7 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
     Assert.notNull(original);
     Assert.isTrue(modified.getRequestId().equals(original.getRequestId()));
 
-    ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
-    DiffNode root = ObjectDifferBuilder.startBuilding()
-        .identity().ofCollectionItems(NodePath.with("points")).via(new PointIdentityStrategy(entry.getIdProperty()))
-        .and().build().compare(modified, original);
-
-    root.visit(new ChangeVisitor(event, modified, original));
-
-    entry.setEvents(Collections.singletonList(event));
+    entry.setEvents(Collections.singletonList(RequestDiffer.diff(original, modified, entry.getIdProperty())));
     requestHistoryRepository.save(entry);
   }
 
