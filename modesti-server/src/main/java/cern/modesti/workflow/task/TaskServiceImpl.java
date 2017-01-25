@@ -100,7 +100,7 @@ public class TaskServiceImpl implements TaskService {
     TaskInfo currentTask = getTask(requestId, taskName);
 
     // Authorise the user to act upon this task
-    if (!authService.isAuthorised(currentTask, user)) {
+    if (!authService.userAuthorisedForTask(currentTask, user)) {
       throw new NotAuthorisedException(format("User %s is not authorised to perform action '%s' on task '%s' for request %s", user, action, taskName,
           requestId));
     }

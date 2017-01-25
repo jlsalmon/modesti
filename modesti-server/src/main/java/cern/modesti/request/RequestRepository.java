@@ -51,7 +51,7 @@ public interface RequestRepository extends MongoRepository<RequestImpl, String>,
    * @param request the request to save
    * @return the newly saved request
    */
-  @PreAuthorize("@authService.isCreator(#request, principal) or @authService.isAuthorised(#request, principal) or hasRole('modesti-administrators')")
+  @PreAuthorize("@authService.canSave(#request, principal)")
   @Override
   RequestImpl save(@Param("request") RequestImpl request);
 

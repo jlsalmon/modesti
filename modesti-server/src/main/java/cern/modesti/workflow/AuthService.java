@@ -25,7 +25,7 @@ import static java.lang.String.format;
  * @author Justin Lewis Salmon
  */
 @Slf4j
-@Service("authService")
+@Service
 public class AuthService {
 
   @Autowired
@@ -64,10 +64,9 @@ public class AuthService {
    *
    * @return true if the user is authorised to create a request, false otherwise
    */
-  public boolean isAuthorised(RequestProvider plugin, Request request, User user) {
+  public boolean canCreate(RequestProvider plugin, Request request, User user) {
     String authorisationGroup = plugin.getMetadata().getAuthorisationGroup(request);
-
-    return user.isAdmin() || user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals(authorisationGroup));
+    return isAdministrator(user) || user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals(authorisationGroup));
   }
 
   /**
@@ -79,9 +78,21 @@ public class AuthService {
    *
    * @return true if the user is authorised, false otherwise
    */
-  public boolean isAuthorised(Request request, User user) {
+  public boolean canSave(Request request, User user) {
     TaskInfo currentTask = taskService.getActiveTask(request.getRequestId());
-    return isAuthorised(currentTask, user);
+    return isAdministrator(user) || isCreator(request, user) || userAuthorisedForTask(currentTask, user);
+  }
+
+  public boolean canSave(Request request, String username) {
+    User user;
+
+    if (username.equals("principal")) {
+      user = userService.getCurrentUser();
+    } else {
+      user = userService.findOneByUsername(username);
+    }
+
+    return canSave(request, user);
   }
 
   /**
@@ -92,7 +103,7 @@ public class AuthService {
    *
    * @return true if the user is authorised, false otherwise
    */
-  public boolean isAuthorised(TaskInfo task, User user) {
+  public boolean userAuthorisedForTask(TaskInfo task, User user) {
     if (task == null) {
       return true;
     }
@@ -139,7 +150,7 @@ public class AuthService {
     }
 
     String pluginAuthrorizationGroup = plugin.getMetadata().getAuthorisationGroup(request);
-    if (user.getAuthorities().contains(pluginAuthrorizationGroup)) {
+    if (hasRole(user, pluginAuthrorizationGroup)) {
       return true;
     }
 
@@ -151,8 +162,12 @@ public class AuthService {
     return request.getCreator().equals(user.getUsername());
   }
 
+  private boolean hasRole(User user, String role) {
+    return user.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(role));
+  }
+
   private boolean isAdministrator(User user) {
-    return user.getAuthorities().contains("modesti-administrators");
+    return user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("modesti-administrators"));
   }
 
   private AuthorizationProvider getPluginAuthorizationProvider(String requestPluginId) {
