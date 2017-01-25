@@ -13,6 +13,7 @@ import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.LikeFilter;
 import org.springframework.ldap.filter.OrFilter;
 import org.springframework.ldap.query.LdapQueryBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +92,11 @@ public class LdapUserService implements UserService {
 
   @Override
   public User getCurrentUser() {
-    return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null) {
+      return null;
+    }
+    return (User) authentication.getPrincipal();
   }
 
   public List<User> findByGroup(List<String> groups) {

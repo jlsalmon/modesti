@@ -14,7 +14,14 @@ import org.activiti.engine.impl.bpmn.parser.handler.AbstractBpmnParseHandler;
 import org.activiti.engine.impl.bpmn.parser.handler.UserTaskParseHandler;
 import org.activiti.engine.impl.task.TaskDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.intercept.RunAsUserToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
 
 import static java.lang.String.format;
 
@@ -50,6 +57,17 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
 
     else if (task.getEventName().equals(TaskListener.EVENTNAME_DELETE)) {
       request.setAssignee(null);
+    }
+
+    // It's possible that this listener will be invoked outside of the Spring
+    // Security filter chain, in which case calling RequestService#save will
+    // fail because the security context will be empty. To prevent this, we
+    // manually set the authentication context with the details of the modesti
+    // service account (which has admin privileges).
+    if (userService.getCurrentUser() == null) {
+      Authentication authentication = new UsernamePasswordAuthenticationToken("modesti", null,
+          Collections.singletonList(new SimpleGrantedAuthority("modesti-administrators")));
+      SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     requestService.save(request);
