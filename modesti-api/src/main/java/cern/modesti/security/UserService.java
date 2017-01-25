@@ -39,6 +39,14 @@ public interface UserService {
   List<User> findByNameAndGroup(String query, List<String> groups);
 
   /**
+   * Find a list of groups by prefix.
+   *
+   * @param query the group prefix query
+   * @return a list of found groups, or an empty list if none were found
+   */
+  List<String> findGroupsByName(String query);
+
+  /**
    * @return the current logged in user.
    */
   User getCurrentUser();

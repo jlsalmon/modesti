@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.naming.InvalidNameException;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
@@ -34,27 +35,36 @@ import java.util.List;
 @Slf4j
 public class LdapUserService implements UserService {
 
-  @Autowired
-  @Qualifier("anonymousLdapTemplate")
-  LdapTemplate ldapTemplate;
+  private final LdapTemplate ldapTemplate;
+
+  private final LdapUserDetailsMapper mapper;
+
+  private final Environment environment;
+
+  private final String ldapUserBase;
+
+  private final String ldapGroupFilter;
 
   @Autowired
-  LdapUserDetailsMapper mapper;
-
-  @Autowired
-  Environment env;
+  public LdapUserService(@Qualifier("anonymousLdapTemplate") LdapTemplate ldapTemplate, LdapUserDetailsMapper mapper, Environment environment) {
+    this.ldapTemplate = ldapTemplate;
+    this.mapper = mapper;
+    this.environment = environment;
+    this.ldapUserBase = environment.getRequiredProperty("ldap.user.base");
+    this.ldapGroupFilter = environment.getRequiredProperty("ldap.group.filter");
+  }
 
   @Override
   public User findOneByUsername(String username) {
     EqualsFilter filter = new EqualsFilter("CN", username);
-    return ldapTemplate.search(LdapQueryBuilder.query().base(env.getRequiredProperty("ldap.user.base")).filter(filter), mapper)
+    return ldapTemplate.search(LdapQueryBuilder.query().base(ldapUserBase).filter(filter), mapper)
         .stream().findFirst().orElse(null);
   }
 
   @Override
   public List<User> findByUsernameStartsWith(String query) {
     LikeFilter filter = new LikeFilter("CN", query + "*");
-    return ldapTemplate.search(LdapQueryBuilder.query().base(env.getRequiredProperty("ldap.user.base")).countLimit(10).filter(filter), mapper);
+    return ldapTemplate.search(LdapQueryBuilder.query().base(ldapUserBase).countLimit(10).filter(filter), mapper);
   }
 
   @Override
@@ -76,14 +86,14 @@ public class LdapUserService implements UserService {
     and.and(nameOr);
 
     try {
-      return ldapTemplate.search(env.getRequiredProperty("ldap.user.base"), and.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+      return ldapTemplate.search(ldapUserBase, and.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
     } catch (Exception e) {
 
       // The embedded LDAP server (apacheds-1.5.5) doesn't currently support searching using memberOf. So in this case we just ignore
       // the group search and do only a name-based search.
-      if (env.acceptsProfiles("dev")) {
+      if (environment.acceptsProfiles("dev")) {
         log.warn("Failed to search users using 'memberOf'. Falling back to name-only search");
-        return ldapTemplate.search(env.getRequiredProperty("ldap.user.base"), nameOr.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+        return ldapTemplate.search(ldapUserBase, nameOr.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
       } else {
         throw e;
       }
@@ -91,9 +101,15 @@ public class LdapUserService implements UserService {
   }
 
   @Override
+  public List<String> findGroupsByName(String query) {
+    return null;
+  }
+
+  @Override
   public User getCurrentUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null) {
+      log.warn("Current user is null!");
       return null;
     }
     return (User) authentication.getPrincipal();
@@ -107,13 +123,13 @@ public class LdapUserService implements UserService {
       throw new RuntimeException("Error querying LDAP server", e);
     }
 
-    return ldapTemplate.search(env.getRequiredProperty("ldap.user.base"), filter.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
+    return ldapTemplate.search(ldapUserBase, filter.encode(), SearchControls.SUBTREE_SCOPE, null, mapper);
   }
 
   private OrFilter memberOf(List<String> groups) throws InvalidNameException {
     OrFilter or = new OrFilter();
     for (String group : groups) {
-      LdapName ln = new LdapName(env.getRequiredProperty("ldap.group.filter"));
+      LdapName ln = new LdapName(ldapGroupFilter);
       ln.add(new Rdn("cn", group));
 
       // The magic number will trigger a recursive search of nested groups. It's slow, but it works.

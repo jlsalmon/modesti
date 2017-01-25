@@ -3,6 +3,7 @@ package cern.modesti.security.mock;
 import cern.modesti.user.User;
 import cern.modesti.security.UserService;
 import cern.modesti.user.UserImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -30,8 +31,7 @@ import java.util.stream.Collectors;
  *
  * @author Justin Lewis Salmon
  */
-//@Service
-//@Profile("dev")
+@Slf4j
 public class MockUserServiceImpl implements MockUserService, UserService {
 
   private List<User> users = new ArrayList<>();
@@ -74,9 +74,21 @@ public class MockUserServiceImpl implements MockUserService, UserService {
   }
 
   @Override
+  public List<String> findGroupsByName(String query) {
+    List<String> groups = new ArrayList<>();
+
+    for (User user : users) {
+      user.getAuthorities().forEach(authority -> groups.add(authority.getAuthority()));
+    }
+
+    return groups;
+  }
+
+  @Override
   public User getCurrentUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null) {
+      log.warn("Current user is null!");
       return null;
     }
     return (User) authentication.getPrincipal();

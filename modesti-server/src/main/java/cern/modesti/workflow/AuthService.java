@@ -6,6 +6,7 @@ import cern.modesti.plugin.spi.AuthorizationProvider;
 import cern.modesti.request.Request;
 import cern.modesti.security.UserService;
 import cern.modesti.user.User;
+import cern.modesti.user.UserImpl;
 import cern.modesti.workflow.task.TaskInfo;
 import cern.modesti.workflow.task.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -108,7 +109,7 @@ public class AuthService {
       return true;
     }
 
-    if (user.isAdmin()) {
+    if (isAdministrator(user)) {
       log.info(format("authorising admin user %s", user.getUsername()));
       return true;
     }
@@ -176,6 +177,7 @@ public class AuthService {
         return authProvider;
       }
     }
+
     return null;
   }
 }
