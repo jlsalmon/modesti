@@ -75,7 +75,11 @@ public class MockUserServiceImpl implements MockUserService, UserService {
 
   @Override
   public User getCurrentUser() {
-    return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null) {
+      return null;
+    }
+    return (User) authentication.getPrincipal();
   }
 
   public void addMockUser(User user) {
