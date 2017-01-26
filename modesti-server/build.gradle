@@ -133,3 +133,9 @@ publishing {
         }
     }
 }
+
+release {
+    git {
+        requireBranch ='temp'
+    }
+}
