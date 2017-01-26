@@ -26,7 +26,21 @@ subprojects {
     dependencyManagement {
         applyMavenExclusions = false
     }
+}
 
+release {
+    buildTasks = ['releaseBuild']
+}
+
+task releaseBuild {
+    dependsOn(
+            'modesti-api:build',
+            'modesti-api:publish',
+            'modesti-test:build',
+            'modesti-test:publish',
+            'modesti-server:build',
+            'modesti-server:publish'
+    )
 }
 
 task wrapper(type: Wrapper) {
