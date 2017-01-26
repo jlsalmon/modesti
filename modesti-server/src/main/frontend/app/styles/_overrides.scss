@@ -76,41 +76,49 @@ body {
 .label.request-status.IN_PROGRESS {
   color: #fff;
   background-color: #4A6785;
+  top: 2px;
 }
 
 .label.request-status.FOR_CORRECTION {
   color: #fff;
   background-color: #D04437;
+  top: 2px;
 }
 
 .label.request-status.FOR_APPROVAL {
   color: #594300;
   background-color: #F6C342;
+  top: 2px;
 }
 
 .label.request-status.FOR_ADDRESSING {
   color: #fff;
   background-color: #815B3A;
+  top: 2px;
 }
 
 .label.request-status.FOR_CONFIGURATION {
   color: #fff;
   background-color: #ac707a;
+  top: 2px;
 }
 
 .label.request-status.FOR_TESTING {
   color: #fff;
   background-color: #14892C;
+  top: 2px;
 }
 
 .label.request-status.CLOSED {
   color: #fff;
   background-color: #707070;
+  top: 2px;
 }
 
 .label.request-status.FOR_INSERTION {
   color: #fff;
   background-color: #3572b0;
+  top: 2px;
 }
 
 .label.request-status.REMOVE_TEST_FLAG {
@@ -121,33 +129,39 @@ body {
 .label.request-status.FOR_WINCCOA_CONFIG {
   color: #fff;
   background-color: #59afe1;
+  top: 2px;
 }
 
 .label.request-status.FOR_CSAM_SYNC {
   color: #fff;
   background-color: #67ab49;
+  top: 2px;
 }
 
 .badge.request-type {
   vertical-align: baseline;
+  top: 2px;
 }
 
 .badge.request-type.CREATE {
   font-weight: bold;
   color: #fff;
   background-color: #67ab49;
+  top: 2px;
 }
 
 .badge.request-type.UPDATE {
   font-weight: bold;
   color: #fff;
   background-color: #f1a257;
+  top: 2px;
 }
 
 .badge.request-type.DELETE {
   font-weight: bold;
   color: #fff;
   background-color: #d04437;
+  top: 2px;
 }
 
 .vcenter {
