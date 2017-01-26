@@ -24,26 +24,26 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact(sourcesJar) { classifier "sources" }
-            artifact(javadocJar) { classifier "javadoc" }
-        }
-    }
-    repositories {
-        maven {
-            credentials {
-                username artifactoryUser
-                password artifactoryPassword
-            }
-
-            if (project.version.endsWith('-SNAPSHOT')) {
-                url "http://artifactory/beco-development-local"
-            } else {
-                url "http://artifactory/beco-release-local"
-            }
-        }
-    }
-}
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//            artifact(sourcesJar) { classifier "sources" }
+//            artifact(javadocJar) { classifier "javadoc" }
+//        }
+//    }
+//    repositories {
+//        maven {
+//            credentials {
+//                username artifactoryUser
+//                password artifactoryPassword
+//            }
+//
+//            if (project.version.endsWith('-SNAPSHOT')) {
+//                url "http://artifactory/beco-development-local"
+//            } else {
+//                url "http://artifactory/beco-release-local"
+//            }
+//        }
+//    }
+//}

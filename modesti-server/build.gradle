@@ -103,36 +103,36 @@ jar.dependsOn npm_run_build
 node {}
 
 /** Configure publishing to Artifactory */
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            pom.withXml {
-                def parentNode = asNode().appendNode('parent')
-                parentNode.appendNode('groupId', 'org.springframework.boot')
-                parentNode.appendNode('artifactId', 'spring-boot-starter-parent')
-                parentNode.appendNode('version', '1.4.2.RELEASE')
-            }
-            artifact(fatJarTar)  { classifier "dist" }
-            artifact(sourcesJar) { classifier "sources" }
-            artifact(javadocJar) { classifier "javadoc" }
-        }
-    }
-    repositories {
-        maven {
-            credentials {
-                username artifactoryUser
-                password artifactoryPassword
-            }
-
-            if (project.version.endsWith('-SNAPSHOT')) {
-                url "http://artifactory/beco-development-local"
-            } else {
-                url "http://artifactory/beco-release-local"
-            }
-        }
-    }
-}
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            from components.java
+//            pom.withXml {
+//                def parentNode = asNode().appendNode('parent')
+//                parentNode.appendNode('groupId', 'org.springframework.boot')
+//                parentNode.appendNode('artifactId', 'spring-boot-starter-parent')
+//                parentNode.appendNode('version', '1.4.2.RELEASE')
+//            }
+//            artifact(fatJarTar)  { classifier "dist" }
+//            artifact(sourcesJar) { classifier "sources" }
+//            artifact(javadocJar) { classifier "javadoc" }
+//        }
+//    }
+//    repositories {
+//        maven {
+//            credentials {
+//                username artifactoryUser
+//                password artifactoryPassword
+//            }
+//
+//            if (project.version.endsWith('-SNAPSHOT')) {
+//                url "http://artifactory/beco-development-local"
+//            } else {
+//                url "http://artifactory/beco-release-local"
+//            }
+//        }
+//    }
+//}
 
 release {
     git {
