@@ -184,6 +184,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   public refreshColumnDefs(): void {
     let columnDefs: any[] = this.getColumnDefs();
 
+    this.hotOptions.columns = columnDefs;
     this.hot.updateSettings({
       columns: columnDefs,
       hiddenColumns: {
