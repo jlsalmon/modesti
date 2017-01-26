@@ -32,7 +32,9 @@
 
 
     <application name="modesti-server-test" extends="default">
-      <startscript name="MODESTI-SERVER-TEST"/>
+      <startscript name="MODESTI-SERVER-TEST">
+        <java-vm-args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</java-vm-args>
+      </startscript>
       <deployment installLocation="/opt/modesti-server-test">
         <directory name="conf">
           <file name="modesti.properties" source="/user/timtest/rep/modesti/modesti-test.properties" mask="400"/>
