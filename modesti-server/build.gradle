@@ -64,14 +64,16 @@ task fatJarTar(type: Tar, dependsOn: 'bootRepackage') {
 
 /** Add version information to the manifest file */
 jar {
-    manifest {
-        attributes("Implementation-Version": version)
-    }
-}
+    compileJava.doLast {
+        manifest {
+            attributes("Implementation-Version": version)
+        }
 
-/** Expand placeholders in properties files */
-processResources {
-    filesMatching('**/*.properties') { expand(project.properties) }
+        /** Expand placeholders in properties files */
+        processResources {
+            filesMatching('**/*.properties') { expand(project.properties) }
+        }
+    }
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
