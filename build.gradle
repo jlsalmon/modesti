@@ -9,7 +9,6 @@ subprojects {
     apply plugin: "java"
     apply plugin: "maven"
     apply plugin: "maven-publish"
-    apply plugin: "net.researchgate.release"
     apply plugin: "io.spring.dependency-management"
     apply plugin: "idea"
     apply plugin: "eclipse"
