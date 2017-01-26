@@ -26,6 +26,20 @@ subprojects {
     dependencyManagement {
         applyMavenExclusions = false
     }
+
+    /** Add version information to the manifest file */
+    jar {
+        compileJava.doLast {
+            manifest {
+                attributes("Implementation-Version": version)
+            }
+
+            /** Expand placeholders in properties files */
+            processResources {
+                filesMatching('**/*.properties') { expand(project.properties) }
+            }
+        }
+    }
 }
 
 release {
