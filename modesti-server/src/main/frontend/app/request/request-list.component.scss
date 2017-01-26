@@ -29,8 +29,23 @@
   border-bottom-left-radius: 0px;
 }
 
+.ui-select-bootstrap > .ui-select-choices {
+  max-height: 500px;
+  width: auto;
+}
+
 .ui-select-bootstrap > .ui-select-match > .btn {
   padding-right: 25px;
+}
+
+.ui-select-bootstrap .ui-select-toggle > a.btn {
+  margin-top: 0px;
+  right: 15px;
+}
+
+.ui-select-bootstrap .ui-select-match-text .label {
+  margin-top: 2px;
+  padding-top: 3px;
 }
 
 .ui-select-bootstrap .ui-select-choices-row > a {
@@ -58,11 +73,6 @@ a.btn.btn-xs.btn-link {
 
 .dropdown-menu > li > a > .glyphicon, .dropdown-menu > li > a > .fa, .dropdown-menu > li > a > .ion {
   margin-right: 0;
-}
-
-.ui-select-bootstrap > .ui-select-choices {
-  max-height: 500px;
-  width: auto;
 }
 
 .badge {
