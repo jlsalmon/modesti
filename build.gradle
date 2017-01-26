@@ -35,11 +35,8 @@ release {
 task releaseBuild {
     dependsOn(
             'modesti-api:build',
-            'modesti-api:publish',
             'modesti-test:build',
-            'modesti-test:publish',
-            'modesti-server:build',
-            'modesti-server:publish'
+            'modesti-server:build'
     )
 }
 
