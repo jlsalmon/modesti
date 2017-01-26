@@ -67,7 +67,7 @@ public class HistoryService {
 
         String description = "";
         for (HistoricTaskInstance task : tasks) {
-          if (task.getExecutionId().equals(activity.getExecutionId())) {
+          if (task.getId().equals(activity.getTaskId())) {
             description = task.getDescription();
           }
         }
