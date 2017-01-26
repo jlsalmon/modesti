@@ -47,6 +47,15 @@ springBoot {
     layout = 'ZIP'
 }
 
+/** Add version information to the manifest file */
+jar {
+    compileJava.doLast {
+        manifest {
+            attributes("Implementation-Version": version)
+        }
+    }
+}
+
 /**
  * Make a tarball containing the executable fat jar created by bootRepackage, and everything
  * in the src/dist directory
