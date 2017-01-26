@@ -127,8 +127,10 @@ public class RequestServiceImpl implements RequestService {
 
     request = repository.save((RequestImpl) request);
 
-    // Store an initial, empty change history
-    ((RequestHistoryServiceImpl) historyService).initialiseChangeHistory(request);
+    if (request.getType().equals(RequestType.UPDATE)) {
+      // Store an initial, empty change history
+      ((RequestHistoryServiceImpl) historyService).initialiseChangeHistory(request);
+    }
 
     // Kick off the workflow process
     workflowService.startProcessInstance(request);
@@ -174,8 +176,10 @@ public class RequestServiceImpl implements RequestService {
       requestEventHandler.onBeforeSave(updated);
     }
 
-    // Process and store any changes that were made to the request
-    ((RequestHistoryServiceImpl) historyService).saveChangeHistory(updated);
+    if (updated.getType().equals(RequestType.UPDATE)) {
+      // Process and store any changes that were made to the request
+      ((RequestHistoryServiceImpl) historyService).saveChangeHistory(updated);
+    }
 
     return repository.save((RequestImpl) updated);
   }
