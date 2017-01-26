@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.hateoas.core.Relation;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 //@Entry(objectClasses = { "person", "top" }, base = "OU=Users,OU=Organic Units")
 @Data
+@Relation(value = "user", collectionRelation = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserImpl implements User, UserDetails {
