@@ -160,7 +160,7 @@ public class CoreValidationService {
           }
 
           if (required) {
-            if (value == "" || value == null) {
+            if (value == null || value.equals("")) {
               point.setValid(false);
               valid = false;
               point.addErrorMessage(category.getId(), field.getId(), "'" + field.getName() + "' is mandatory");
@@ -262,7 +262,7 @@ public class CoreValidationService {
 
   private boolean isValidValue(Object value, Point point, Field field) {
     // If the value is empty, it's technically not invalid.
-    if (value ==  null || value == "") {
+    if (value ==  null || value.equals("")) {
       return true;
     }
 
