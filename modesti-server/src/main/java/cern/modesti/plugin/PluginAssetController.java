@@ -1,5 +1,6 @@
 package cern.modesti.plugin;
 
+import cern.modesti.ModestiServer;
 import cern.modesti.request.Request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +49,8 @@ public class PluginAssetController {
 
   @RequestMapping("/api/plugins")
   public VersionDescriptor getPluginInfo() throws IOException {
-    String version = environment.getRequiredProperty("modesti.version");
-    if (version.equals("<%=version%>")) version = "dev";
+    String version = ModestiServer.class.getPackage().getImplementationVersion();
+    if (version == null) version = "dev";
 
     // TODO: read plugin versions and insert them here
 

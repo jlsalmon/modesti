@@ -62,20 +62,6 @@ task fatJarTar(type: Tar, dependsOn: 'bootRepackage') {
     from 'src/dist'
 }
 
-/** Add version information to the manifest file */
-jar {
-    compileJava.doLast {
-        manifest {
-            attributes("Implementation-Version": version)
-        }
-
-        /** Expand placeholders in properties files */
-        processResources {
-            filesMatching('**/*.properties') { expand(project.properties) }
-        }
-    }
-}
-
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -85,7 +71,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
-
 
 /** Generate QueryDsl classes */
 querydsl {
