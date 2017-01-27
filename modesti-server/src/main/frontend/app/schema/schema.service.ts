@@ -17,7 +17,7 @@ export class SchemaService {
     console.log('fetching schema');
     let q: IDeferred<Schema> = this.$q.defer();
 
-    let url: string = request._links.schema.href;
+    let url: string = '/api/schemas/' + request.domain;
 
     this.$http.get(url).then((response: any) => {
       let schema: Schema = new Schema().deserialize(response.data);
