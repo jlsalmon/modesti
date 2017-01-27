@@ -142,7 +142,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     // Otherwise, initially show only the first category
     let firstCategory: Category = this.schema.categories[0];
     columnDefs.forEach((columnDef: any, index: number) => {
-      if (columnDef.data === 'selected' || columnDef.data.endsWith('message')) {
+      if (columnDef.data === 'selected' || this.endsWith(columnDef.data, 'message')) {
         return;
       }
 
@@ -152,6 +152,10 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     });
 
     return hiddenColumns;
+  }
+
+  private endsWith(str: string, suffix: string): boolean {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
   }
 
   public determineNumFixedColumns(): number {
