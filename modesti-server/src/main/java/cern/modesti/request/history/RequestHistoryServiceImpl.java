@@ -49,7 +49,7 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
 
     Schema schema = schemaRepository.findOne(request.getDomain());
     RequestHistoryImpl entry = new RequestHistoryImpl(new ObjectId().toString(), request.getRequestId(),
-        schema.getIdProperty(), (RequestImpl) request, new ArrayList<>(), false);
+        schema.getIdProperty(), request, new ArrayList<>(), false);
     requestHistoryRepository.save(entry);
   }
 
@@ -77,7 +77,7 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
     Assert.notNull(original);
     Assert.isTrue(modified.getRequestId().equals(original.getRequestId()));
 
-    entry.setEvents(Collections.singletonList(RequestDiffer.diff(original, modified, entry.getIdProperty())));
+    entry.setEvents(Collections.singletonList(RequestDiffer.diff(modified, original, entry.getIdProperty())));
     requestHistoryRepository.save(entry);
   }
 
