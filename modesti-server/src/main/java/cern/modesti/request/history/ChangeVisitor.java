@@ -46,7 +46,10 @@ public class ChangeVisitor implements DiffNode.Visitor {
     if ((isPrimitiveLeafProperty(node) || isObjectProperty(node)) && hasActuallyChanged(node)) {
       Change change = new Change(getPath(node), getLineNo(node), getProperty(node), node.getState().name(),
           node.canonicalGet(original), node.canonicalGet(modified));
-      event.getChanges().add(change);
+
+      if (!event.getChanges().contains(change)) {
+        event.getChanges().add(change);
+      }
     }
   }
 
