@@ -49,8 +49,13 @@ export class HandsontableColumnFactory {
       field: field
     };
 
-    if (meta.authorised && meta.assigned) {
+    if (meta.requestType === 'DELETE') {
+      column.readOnly = true;
+
+    } else if (meta.authorised && meta.assigned) {
       let editable: boolean = true;
+
+      // DELETE -> not editable
 
       if (field.editable === true || field.editable === false) {
         // Editable given as simple boolean

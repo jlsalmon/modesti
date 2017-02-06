@@ -131,6 +131,10 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       editable = true;
     }
 
+    if (this.settings.requestType === 'DELETE') {
+      editable = false;
+    }
+
     return { readOnly: !editable };
   };
 
@@ -279,6 +283,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   private getColumnDefs(): any[] {
     let meta: any = {
       requestStatus: this.settings.requestStatus,
+      requestType: this.settings.requestType,
       authorised: this.taskService.isCurrentUserAuthorised(),
       assigned: this.taskService.isCurrentUserAssigned(),
       schemaService: this.schemaService,
