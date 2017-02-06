@@ -55,7 +55,7 @@ class RequestTableController {
       afterChange: this.onAfterChange,
       afterRender: this.onAfterRender,
       interpolate: this.$interpolate,
-      afterCreateRow: () => this.onAfterCreateRow(),
+      afterCreateRow: (index: number, count: number, source: any) => this.onAfterCreateRow(index, count, source),
       afterRemoveRow: () => this.onAfterRemoveRow()
     };
 
@@ -116,6 +116,10 @@ class RequestTableController {
 
       if (prop.indexOf('.') !== -1) {
         prop = prop.split('.')[0];
+      }
+
+      if (!error.property) {
+        return;
       }
 
       if (error.property === prop || error.property.split('.')[0] === prop || error.property === '') {
@@ -450,7 +454,8 @@ class RequestTableController {
     return q.promise;
   }
 
-  public onAfterCreateRow = (): void => {
+  public onAfterCreateRow = (index: number, count: number, source: any): void => {
+    this.request.points[index] = new Point().deserialize(this.request.points[index]);
     this.requestService.saveRequest(this.request);
   };
 
