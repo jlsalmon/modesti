@@ -137,33 +137,7 @@ class SearchController {
       templateUrl: '/search/update/update-points.modal.html',
       controller: 'UpdatePointsModalController as ctrl',
       size: 'lg',
-      resolve: {
-        points: (): any => {
-          let selectedPoints: number[] = this.table.getSelectedPoints();
-
-          // If the user selected some specific points, just use those
-          if (selectedPoints.length !== 0) {
-            return selectedPoints;
-          }
-
-          // Otherwise, update all the points for the current filters
-          else {
-            let query: string = QueryParser.parse(this.filters);
-            let page: any = {number: 0, size: this.page.totalElements};
-
-            return this.searchService.getPoints(this.schema.id, query, page, this.sort).then((response: any) => {
-              let points: Point[] = [];
-
-              if (response.hasOwnProperty('_embedded')) {
-                points = response._embedded.points;
-              }
-
-              return points;
-            });
-          }
-        },
-        schema: () => this.schema
-      }
+      resolve: this.resolvePoints()
     });
 
     modalInstance.result.then((request: any) => {
@@ -187,5 +161,67 @@ class SearchController {
         this.submitting = 'error';
       });
     });
+  }
+
+  public deletePoints(): void {
+    let modalInstance: any = this.$modal.open({
+      animation: false,
+      templateUrl: '/search/delete/delete-points.modal.html',
+      controller: 'DeletePointsModalController as ctrl',
+      size: 'lg',
+      resolve: this.resolvePoints()
+    });
+
+    modalInstance.result.then((request: any) => {
+      console.log('creating delete request');
+
+      this.submitting = 'started';
+
+      // Post form to server to create new request.
+      this.requestService.createRequest(request).then((location: string) => {
+        // Strip request ID from location.
+        let id: string = location.substring(location.lastIndexOf('/') + 1);
+        // Redirect to point entry page.
+        this.$state.go('request', {id: id}).then(() => {
+          this.submitting = 'success';
+
+          this.alertService.add('success', 'Delete request #' + id + ' has been created.');
+        });
+      },
+
+      () => {
+        this.submitting = 'error';
+      });
+    });
+  }
+
+  private resolvePoints() {
+    return {
+      points: (): any => {
+        let selectedPoints: number[] = this.table.getSelectedPoints();
+
+        // If the user selected some specific points, just use those
+        if (selectedPoints.length !== 0) {
+          return selectedPoints;
+        }
+
+        // Otherwise, update all the points for the current filters
+        else {
+          let query: string = QueryParser.parse(this.filters);
+          let page: any = {number: 0, size: this.page.totalElements};
+
+          return this.searchService.getPoints(this.schema.id, query, page, this.sort).then((response: any) => {
+            let points: Point[] = [];
+
+            if (response.hasOwnProperty('_embedded')) {
+              points = response._embedded.points;
+            }
+
+            return points;
+          });
+        }
+      },
+      schema: () => this.schema
+    }
   }
 }

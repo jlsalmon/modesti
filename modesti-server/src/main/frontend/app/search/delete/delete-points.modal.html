@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Delete points
+  </h3>
+</div>
+
+<div class="modal-body">
+
+  <p>You are about to create a new MODESTI request to delete <b>{{ctrl.points.length}}</b> points.</p>
+
+  <form class="form-horizontal" name="form">
+
+    <div class="form-group has-feedback"
+         ng-class="{ 'has-error': (form.description.$invalid && form.description.$dirty)
+                                    || (form.$submitted && form.description.$invalid) }">
+      <label class="col-sm-3 control-label">Description</label>
+
+      <div class="col-sm-9">
+        <input type="text" class="form-control" ng-model="ctrl.request.description" name="description"
+               placeholder="Description" required>
+        <span class="help-block">Enter a general description of your request.</span>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="ctrl.cancel()">Cancel</button>
+  <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="form.$invalid">OK</button>
+</div>

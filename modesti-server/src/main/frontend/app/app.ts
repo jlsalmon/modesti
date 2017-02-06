@@ -58,6 +58,7 @@ import {SearchService} from './search/search.service.ts';
 import {ValidationService} from './request/validation/validation.service.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
+import {DeletePointsModalController} from './search/delete/delete-points.modal';
 import {RestangularConfig} from './config/restangular.config.ts';
 import {RouterConfig} from './config/router.config.ts';
 import {HttpConfig} from './config/http.config.ts';
@@ -118,6 +119,7 @@ app.controller('DeleteRequestModalController', DeleteRequestModalController);
 app.controller('RequestHistoryModalController', RequestHistoryModalController);
 app.controller('RequestCommentsModalController', RequestCommentsModalController);
 app.controller('UpdatePointsModalController', UpdatePointsModalController);
+app.controller('DeletePointsModalController', DeletePointsModalController);
 
 
 app.config(['RestangularProvider', (restangularProvider: any) => RestangularConfig.configure(restangularProvider)]);
