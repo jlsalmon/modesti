@@ -68,10 +68,12 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     // Make sure the table fills the container height
     this.adjustTableHeight();
 
-    this.hot.updateSettings({
-      cells: this.evaluateCellSettings,
-      maxRows: settings.requestStatus === 'IN_PROGRESS' ? undefined : data.length
-    });
+    this.hot.updateSettings({ cells: this.evaluateCellSettings });
+
+    // Only allow adding new rows then IN_PROGRESS
+    if (settings.requestStatus !== 'IN_PROGRESS') {
+      this.hot.updateSettings({ maxRows: data.length });
+    }
 
     // Trigger an initial render
     this.render();
