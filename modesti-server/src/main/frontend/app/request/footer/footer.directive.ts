@@ -116,6 +116,7 @@ class RequestFooterController {
       q.resolve(request);
     },
     (error: any) => {
+      this.submitting = 'error';
       q.reject(error);
     });
 
