@@ -175,7 +175,18 @@ public class SchemaInitialiser {
       }
     }
 
-    log.trace(format("loaded %d schemas", schemas.size()));
+    if (schemas.size() == 1) {
+      log.trace(format("loaded %d schema [%s]", schemas.size(), schemas.get(0).getId()));
+    } else {
+      StringBuilder sb = new StringBuilder();
+      for (Schema s : schemas) {
+        sb.append(s.getId());
+        if (!s.getId().equals(schemas.get(schemas.size()-1).getId())) {
+          sb.append(",");
+        }
+      }
+      log.trace(format("loaded %d schemas [%s]", schemas.size(), sb.toString()));
+    }
     return schemas;
   }
 
