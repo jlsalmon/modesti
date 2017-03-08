@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -178,15 +179,13 @@ public class SchemaInitialiser {
     if (schemas.size() == 1) {
       log.trace(format("loaded %d schema [%s]", schemas.size(), schemas.get(0).getId()));
     } else {
-      StringBuilder sb = new StringBuilder();
-      for (Schema s : schemas) {
-        sb.append(s.getId());
-        if (!s.getId().equals(schemas.get(schemas.size()-1).getId())) {
-          sb.append(",");
-        }
-      }
-      log.trace(format("loaded %d schemas [%s]", schemas.size(), sb.toString()));
+      String loadedPlugIns = schemas.stream()
+          .map(p -> p.getId())
+          .collect(Collectors.joining(", "));
+
+      log.trace(format("loaded %d schemas [%s]", schemas.size(), loadedPlugIns));
     }
+
     return schemas;
   }
 
