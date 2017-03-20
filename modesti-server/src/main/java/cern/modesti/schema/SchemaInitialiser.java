@@ -176,15 +176,11 @@ public class SchemaInitialiser {
       }
     }
 
-    if (schemas.size() == 1) {
-      log.trace(format("loaded %d schema [%s]", schemas.size(), schemas.get(0).getId()));
-    } else {
-      String loadedPlugIns = schemas.stream()
-          .map(p -> p.getId())
-          .collect(Collectors.joining(", "));
+    String loadedPlugIns = schemas.stream()
+        .map(p -> p.getId())
+        .collect(Collectors.joining(", "));
 
-      log.trace(format("loaded %d schemas [%s]", schemas.size(), loadedPlugIns));
-    }
+    log.trace("loaded {} schemas [{}]", schemas.size(), loadedPlugIns);
 
     return schemas;
   }
