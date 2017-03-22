@@ -1,115 +1,115 @@
 
 <!--[if lt IE 10]>
 <div class="col-lg-12">
-  <div class="alert alert-warning" style="margin-top: 20px; z-index: 1000;">
-    <p>
-      You are using an unsupported browser. Some parts of this site will not work properly. Supported browsers are
-      Google Chrome, Firefox, Safari and Internet Explorer (versions 10 and above). Please upgrade your browser to
-      improve your experience.
-    </p>
-  </div>
-  <div class="clearfix"></div>
+    <div class="alert alert-warning" style="margin-top: 20px; z-index: 1000;">
+        <p>
+            You are using an unsupported browser. Some parts of this site will not work properly. Supported browsers are
+            Google Chrome, Firefox, Safari and Internet Explorer (versions 10 and above). Please upgrade your browser to
+            improve your experience.
+        </p>
+    </div>
+    <div class="clearfix"></div>
 </div>
 <![endif]-->
 
 
 <header class="main-header">
 
-  <div class="container-fluid">
-    <div class="row">
-      <a ui-sref="home" class="logo"> modesti
-        <small style="font-size: 50%"><version></version></small>
-      </a>
+    <div class="container-fluid">
+        <div class="row">
+            <a ui-sref="home" class="logo"> modesti
+                <small style="font-size: 50%"><version></version></small>
+            </a>
 
-      <nav class="navbar navbar-static-top" role="navigation">
+            <nav class="navbar navbar-static-top" role="navigation">
 
-        <div class="pull-left">
-          <ul class="nav navbar-nav">
+                <div class="pull-left">
+                    <ul class="nav navbar-nav">
 
-            <li>
-              <a ui-sref="requestList" uib-tooltip="View All Requests" tooltip-placement="bottom" tooltip-append-to-body="true">
-                <i class="fa fa-list-ol"></i>
-              </a>
-            </li>
+                        <li>
+                            <a ui-sref="requestList" uib-tooltip="View All Requests" tooltip-placement="bottom" tooltip-append-to-body="true">
+                                <i class="fa fa-list-ol"></i>
+                            </a>
+                        </li>
 
-            <li>
-              <a ui-sref="newRequest" uib-tooltip="Create Points" tooltip-placement="bottom" tooltip-append-to-body="true">
-                <i class="fa fa-plus"></i>
-              </a>
-            </li>
+                        <li>
+                            <a ui-sref="newRequest" uib-tooltip="Create Points" tooltip-placement="bottom" tooltip-append-to-body="true">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </li>
 
-            <li>
-              <a ui-sref="search" uib-tooltip="Search for Points" tooltip-placement="bottom" tooltip-append-to-body="true">
-                <i class="fa fa-search"></i>
-              </a>
-            </li>
+                        <li>
+                            <a ui-sref="search" uib-tooltip="Search for Points" tooltip-placement="bottom" tooltip-append-to-body="true">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </li>
 
-          </ul>
-        </div>
+                    </ul>
+                </div>
 
-        <div class="navbar-custom-menu" ng-cloak>
-          <ul class="nav navbar-nav">
+                <div class="navbar-custom-menu" ng-cloak>
+                    <ul class="nav navbar-nav">
 
-            <li uib-dropdown class="user user-menu" >
-              <a href="" uib-dropdown-toggle ng-cloak>
+                        <li uib-dropdown class="user user-menu" >
+                            <a href="" uib-dropdown-toggle ng-cloak>
                 <span class="hidden-xs">
                   <i class="fa fa-question-circle"></i>
                 </span>
-              </a>
-              <ul uib-dropdown-menu  ng-cloak>
-                <li>
-                  <a ui-sref="about" class="header">
-                    About MODESTI
-                  </a>
-                </li>
-                <li>
-                  <a href="mailto:modesti-support@cern.ch" class="header">
-                    Help and support
-                  </a>
-                </li>
-                <li>
-                  <a href="https://gitlab.cern.ch/modesti/modesti/issues/new" class="header">
-                    Report an issue
-                  </a>
-                </li>
-              </ul>
-            </li>
+                            </a>
+                            <ul uib-dropdown-menu  ng-cloak>
+                                <li>
+                                    <a href="https://wikis.cern.ch/display/MODESTI/MODESTI" class="header">
+                                        About MODESTI
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="mailto:modesti-support@cern.ch" class="header">
+                                        Help and support
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://gitlab.cern.ch/modesti/modesti/issues/new" class="header">
+                                        Report an issue
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
-            <li uib-dropdown class="user user-menu">
-              <a href="" ng-click="$ctrl.login()" ng-if="!$ctrl.isAuthenticated()" ng-cloak>
+                        <li uib-dropdown class="user user-menu">
+                            <a href="" ng-click="$ctrl.login()" ng-if="!$ctrl.isAuthenticated()" ng-cloak>
                 <span class="hidden-xs">
                   <i class="fa fa-fw fa-sign-in"></i>
                     Sign In
                 </span>
-              </a>
+                            </a>
 
-              <a href="" uib-dropdown-toggle ng-if="$ctrl.isAuthenticated()" ng-cloak>
+                            <a href="" uib-dropdown-toggle ng-if="$ctrl.isAuthenticated()" ng-cloak>
                 <span class="hidden-xs">
                     {{$ctrl.user.firstName}} {{$ctrl.user.lastName}}
                   <span class="caret"></span>
                 </span>
-              </a>
-              <ul uib-dropdown-menu ng-show="$ctrl.isAuthenticated()" ng-cloak>
-                <li>
-                  <a ui-sref="user({ id: $ctrl.user.username })" class="header">
-                    <i class="fa fa-fw fa-user"></i>
-                    Profile ({{$ctrl.user.username}})
-                  </a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                  <a href="" class="header" ng-click="$ctrl.logout()">
-                    <i class="fa fa-fw fa-sign-out"></i>
-                    Sign out
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
+                            </a>
+                            <ul uib-dropdown-menu ng-show="$ctrl.isAuthenticated()" ng-cloak>
+                                <li>
+                                    <a ui-sref="user({ id: $ctrl.user.username })" class="header">
+                                        <i class="fa fa-fw fa-user"></i>
+                                        Profile ({{$ctrl.user.username}})
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="" class="header" ng-click="$ctrl.logout()">
+                                        <i class="fa fa-fw fa-sign-out"></i>
+                                        Sign out
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </div>
-      </nav>
     </div>
-  </div>
 </header>
 
 
