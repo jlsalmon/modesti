@@ -20,7 +20,7 @@ export class SearchService {
       params: {
         domain: domain,
         query: query,
-        page: page.number - 1,
+        page: page.number,
         size: page.size,
         sort: sort
       }
