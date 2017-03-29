@@ -6,7 +6,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 All issues referenced in parentheses can be consulted under [CERN GitLab](https://gitlab.cern.ch/modesti/modesti/issues).
 For more details on a given release, please check also the [Milestone planning](https://gitlab.cern.ch/modesti/modesti/milestones?state=all).
 
-## [0.2.10]
+
+## [Unreleased]
+### Added
+
+### Changed
+
+### Fixed
+
+## [0.2.11] - 2017-03-29
+### Fixed
+- Set 'angular-sanitize' version to 1.6.2 due to incompatibility with v1.6.3
+
+
+## [0.2.10] - 2017-03-29
 ### Added
 - Log message that shows which plugins are loaded at startup
 
