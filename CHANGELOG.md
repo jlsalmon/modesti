@@ -28,7 +28,8 @@ For more details on a given release, please check also the [Milestone planning](
 - Fix link of "About Modesti" button in help menu (#178)
 
 ### Fixed
-- Avoid NPE when no history entry was found for 
+- Fixed pagination problem in configuration browsing, which showed twice the first page (#194)
+- Avoid NPE when no change history entry was found
 
 
 [0.2.10]: https://gitlab.cern.ch/modesti/modesti/milestones/10
