@@ -81,6 +81,14 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+/** Copy handsontable-pro dependencies to build/resources/main/static/lib/handsontable-pro/dist
+ *  directory
+ */
+task copyHandsOnTableDependencies(type: Copy) {
+    from 'node_modules/handsontable-pro/dist/.'
+    into 'build/resources/main/static/lib/handsontable-pro/dist'
+}
+
 /** Generate QueryDsl classes */
 querydsl {
     library = "com.querydsl:querydsl-apt:4.1.4"
@@ -93,6 +101,7 @@ querydsl {
  * Make sure that the frontend gets built before we package the jar
  */
 jar.dependsOn npm_run_build
+jar.dependsOn copyHandsOnTableDependencies
 
 node {}
 
