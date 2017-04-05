@@ -86,7 +86,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
  */
 task copyHandsOnTableDependencies(type: Copy) {
     from 'node_modules/handsontable-pro/dist/.'
-    into 'src/main/resources/static/lib/handsontable-pro/dist'
+    into 'build/resources/main/static/lib/handsontable-pro/dist'
 }
 
 /** Generate QueryDsl classes */
