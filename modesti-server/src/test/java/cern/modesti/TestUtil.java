@@ -25,12 +25,12 @@ public class TestUtil {
     return request;
   }
 
-  public static List<Point> getDummyPoints() {
+  private static List<Point> getDummyPoints() {
     ArrayList<Point> points = new ArrayList<>();
     Point point1 = new PointImpl();
     Point point2 = new PointImpl();
     point1.setProperties(Maps.newHashMap(ImmutableMap.of("pointDescription", "TEST POINT 1", "pointDatatype", "Boolean")));
-    point1.setProperties(Maps.newHashMap(ImmutableMap.of("pointDescription", "TEST POINT 2", "pointDatatype", "Boolean")));
+    point2.setProperties(Maps.newHashMap(ImmutableMap.of("pointDescription", "TEST POINT 2", "pointDatatype", "Boolean")));
     points.add(point1);
     points.add(point2);
     return points;

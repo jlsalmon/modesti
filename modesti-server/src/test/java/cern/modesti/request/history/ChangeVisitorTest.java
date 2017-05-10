@@ -1,16 +1,16 @@
 package cern.modesti.request.history;
 
+import cern.modesti.point.Point;
 import cern.modesti.request.Request;
 import cern.modesti.TestUtil;
-import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.SerializationUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -118,6 +118,22 @@ public class ChangeVisitorTest {
     assertTrue(event.getChanges().size() == 0);
   }
 
+  @Test
+  public void compareCorrespondingEntriesIfRowIsRemoved(){
+    original.getPoints().get(0).addProperty("pointId", "1");
+    original.getPoints().get(1).addProperty("pointId", "2");
+    modified.getPoints().get(0).addProperty("pointId", "1");
+    modified.getPoints().get(1).addProperty("pointId", "2");
+    List<Point> points = modified.getPoints();
+    points.remove(0);
+    modified.setPoints(points);
+    modified.getPoints().get(0).setLineNo(1L);
+
+    ChangeEvent event = RequestDiffer.diff(modified, original, "pointId");
+
+    assertEquals("We expect no changes because the only difference is missing row.",0, event.getChanges().size());
+  }
+
   private void assertChangeEquals(Change change, DiffNode.State state, String path, Object original, Object modified) {
     assertEquals(change.getState(), state.name());
     assertEquals(change.getPath(), path);
@@ -127,7 +143,7 @@ public class ChangeVisitorTest {
 
   @Data
   @AllArgsConstructor
-  class Thing {
+  private class Thing {
     private Integer id;
     private String name;
   }

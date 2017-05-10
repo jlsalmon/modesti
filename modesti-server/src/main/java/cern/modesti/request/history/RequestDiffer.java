@@ -1,11 +1,19 @@
 package cern.modesti.request.history;
 
+import cern.modesti.point.Point;
 import cern.modesti.request.Request;
+import de.danielbechler.diff.ObjectDiffer;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
 import de.danielbechler.diff.path.NodePath;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * @author Justin Lewis Salmon
@@ -13,13 +21,61 @@ import org.joda.time.DateTimeZone;
 public class RequestDiffer {
 
   public static ChangeEvent diff(Request modified, Request original, String idProperty) {
+    List<Point> originalPointsStillPresentCurrently = deleteRemovedPoints(original.getPoints(), modified.getPoints(), idProperty);
+    original.setPoints(originalPointsStillPresentCurrently);
     ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
-    DiffNode root = ObjectDifferBuilder.startBuilding()
-        .identity().ofCollectionItems(NodePath.with("points"))
+    ObjectDiffer differ = ObjectDifferBuilder
+        .startBuilding()
+        .identity()
+        .ofCollectionItems(NodePath.with("points"))
         .via(new PointIdentityStrategy(idProperty))
-        .and().build().compare(modified, original);
-
+        .and()
+        .build();
+    DiffNode root = differ.compare(modified, original);
     root.visit(new ChangeVisitor(event, modified, original));
     return event;
+  }
+
+  /**
+   * Comparison does not work properly if some rows were removed, so we fix this by removing the same rows from original list,
+   * before we start comparing states.
+   *
+   * @param originalPoints list of original points state
+   * @param currentPoints  list of current points state
+   * @param idProperty     property which serves as key to match points which we want to compare
+   * @return list of original points without the ones missing in modified points
+   */
+  private static List<Point> deleteRemovedPoints(List<Point> originalPoints, List<Point> currentPoints, String idProperty) {
+    if (isIdPropertyMissing(originalPoints, currentPoints, idProperty)) {
+      return originalPoints;
+    }
+    Set<String> modifiedPointIds = currentPoints
+        .stream()
+        .map(point -> getIdPropertyFromPoint(idProperty, point))
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .collect(Collectors.toSet());
+    List<Point> originalPointsCurrentlyPresent = originalPoints
+        .stream()
+        .filter(point -> modifiedPointIds.contains(getIdPropertyFromPoint(idProperty, point).orElse("non existent value")))
+        .collect(Collectors.toList());
+    AtomicLong atomicLong = new AtomicLong(1);
+    originalPointsCurrentlyPresent.forEach(point -> point.setLineNo(atomicLong.getAndIncrement()));
+    return originalPointsCurrentlyPresent;
+  }
+
+  private static boolean isIdPropertyMissing(List<Point> originalPoints, List<Point> modifiedPoints, String idProperty) {
+    return isIdPropertyMissing(originalPoints, idProperty) || isIdPropertyMissing(modifiedPoints, idProperty);
+  }
+
+  private static boolean isIdPropertyMissing(List<Point> originalPoints, String idProperty) {
+    return originalPoints.stream()
+        .map(point -> getIdPropertyFromPoint(idProperty, point))
+        .anyMatch(propertyValue -> !propertyValue.isPresent());
+  }
+
+  private static Optional<String> getIdPropertyFromPoint(String idProperty, Point point) {
+    return Optional.ofNullable(point.getProperty(idProperty, Object.class))
+        .map(Object::toString);
   }
 }
