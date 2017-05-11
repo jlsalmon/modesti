@@ -64,6 +64,7 @@
                     ng-change="$ctrl.onFiltersChanged()">
               <option value="equals" ng-selected="selected">equals</option>
               <option value="not-equals">not equals</option>
+              <option value="contains">contains</option>
             </select>
           </div>
 
@@ -96,7 +97,7 @@
 
             </div>
 
-            <div ng-if="filter.field.type === 'autocomplete'">
+            <div ng-if="filter.field.type === 'autocomplete' && filter.operation !== 'contains'">
               <input type="text"
                      class="form-control input-xs"
                      autocomplete="off"
@@ -107,6 +108,14 @@
                      typeahead-on-select="$ctrl.onFiltersChanged()"
                      typeahead-min-length="field.minLength"
                      typeahead-append-to-body="true">
+            </div>
+
+            <div ng-if="filter.field.type === 'autocomplete' && filter.operation === 'contains'">
+              <input type="text"
+                     class="form-control input-xs"
+                     ng-model="filter.value"
+                     ng-model-options='{ debounce: 600 }'
+                     ng-change="$ctrl.onFiltersChanged()">
             </div>
           </div>
         </div>
