@@ -1,13 +1,10 @@
 var loaders = require('./webpack-loaders');
 var webpack = require('webpack');
-
 module.exports = {
-    entry: {
-        './build/resources/main/static/bin/app.js': './src/main/frontend/app/app.ts'
-    },
+    entry: './src/main/frontend/app/app.ts',
     output: {
-        path: '',
-        filename: '[name]'
+        path: './build/resources/main/static/bin',
+        filename: 'app.js'
     },
     devtool: 'source-map',
     resolve: {
