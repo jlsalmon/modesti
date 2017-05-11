@@ -97,17 +97,25 @@
 
             </div>
 
-            <div ng-if="filter.field.type === 'autocomplete'">
+            <div ng-if="filter.field.type === 'autocomplete' && filter.operation !== 'contains'">
               <input type="text"
                      class="form-control input-xs"
                      autocomplete="off"
                      placeholder="Type to search..."
                      ng-model="filter.value"
-                     ng-model-options='{ debounce: 300 }'
+                     ng-model-options='{ debounce: 200 }'
                      uib-typeahead="(filter.field.model ? item[filter.field.model] : item.value) for item in $ctrl.queryFieldValues(filter.field, $viewValue)"
-                     ng-change="$ctrl.onFiltersChanged()"
+                     typeahead-on-select="$ctrl.onFiltersChanged()"
                      typeahead-min-length="field.minLength"
                      typeahead-append-to-body="true">
+            </div>
+
+            <div ng-if="filter.field.type === 'autocomplete' && filter.operation === 'contains'">
+              <input type="text"
+                     class="form-control input-xs"
+                     ng-model="filter.value"
+                     ng-model-options='{ debounce: 600 }'
+                     ng-change="$ctrl.onFiltersChanged()">
             </div>
           </div>
         </div>
