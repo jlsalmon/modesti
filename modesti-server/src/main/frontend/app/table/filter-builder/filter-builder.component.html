@@ -64,6 +64,7 @@
                     ng-change="$ctrl.onFiltersChanged()">
               <option value="equals" ng-selected="selected">equals</option>
               <option value="not-equals">not equals</option>
+              <option value="contains">contains</option>
             </select>
           </div>
 
@@ -102,9 +103,9 @@
                      autocomplete="off"
                      placeholder="Type to search..."
                      ng-model="filter.value"
-                     ng-model-options='{ debounce: 200 }'
+                     ng-model-options='{ debounce: 300 }'
                      uib-typeahead="(filter.field.model ? item[filter.field.model] : item.value) for item in $ctrl.queryFieldValues(filter.field, $viewValue)"
-                     typeahead-on-select="$ctrl.onFiltersChanged()"
+                     ng-change="$ctrl.onFiltersChanged()"
                      typeahead-min-length="field.minLength"
                      typeahead-append-to-body="true">
             </div>
