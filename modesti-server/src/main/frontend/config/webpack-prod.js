@@ -2,10 +2,12 @@ var loaders = require('./webpack-loaders');
 var webpack = require('webpack');
 
 module.exports = {
-    entry: './src/main/frontend/app/app.ts',
+    entry: {
+        './build/resources/main/static/bin/app.js': './src/main/frontend/app/app.ts'
+    },
     output: {
-        path: './build/resources/main/static/bin',
-        filename: 'app.js'
+        path: '',
+        filename: '[name]'
     },
     resolve: {
         modulesDirectories: ['./node_modules'],
