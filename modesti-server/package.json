@@ -10,7 +10,8 @@
   "scripts": {
     "preinstall": "npm set progress=false",
     "copy": "cpx \"node_modules/**/*.{css,scss,eot,ttf,woff,woff2}\" build/resources/main/static/lib",
-    "build": "npm run copy -s && npm run build:js -s && npm run build:css -s && npm run build:html -s",
+    "copy:handsontable": "cpx \"node_modules/handsontable-pro/dist/**/*.js\" build/resources/main/static/lib/handsontable-pro/dist",
+    "build": "npm install -s && npm run copy -s && npm run build:js -s && npm run build:css -s && npm run build:html -s && npm run copy:handsontable -s",
     "build:js": "webpack --config src/main/frontend/config/webpack-prod.js --NODE_ENV=production",
     "build:css": "node-sass src/main/frontend/app/main.scss --output-style compressed -o build/resources/main/static/bin",
     "build:html": "cpx \"src/main/frontend/app/**/*.html\" build/resources/main/static",
