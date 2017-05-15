@@ -9,10 +9,15 @@ For more details on a given release, please check also the [Milestone planning](
 
 ## [Unreleased]
 ### Added
+- Show a link per plugin to workflow documentation on the request page (#44)
+- Allow to filter with "contains" on all search fields for creating new UPDATE/DELETE requests (#207) 
 
 ### Changed
+- Allow frontend to load without internet connection, e.g. on TN (#177)
 
 ### Fixed
+- Corrected link of "About MODESTI" button (#178)
+
 
 ## [0.2.11] - 2017-03-29
 ### Fixed
