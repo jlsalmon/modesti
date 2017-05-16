@@ -6,8 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 All issues referenced in parentheses can be consulted under [CERN GitLab](https://gitlab.cern.ch/modesti/modesti/issues).
 For more details on a given release, please check also the [Milestone planning](https://gitlab.cern.ch/modesti/modesti/milestones?state=all).
 
-
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Fixed
+
+
+## [0.2.12] - 2017-05-16
 ### Added
 - Show a link per plugin to workflow documentation on the request page (#44)
 - Allow to filter with "contains" on all search fields for creating new UPDATE/DELETE requests (#207) 
@@ -17,6 +24,7 @@ For more details on a given release, please check also the [Milestone planning](
 
 ### Fixed
 - Corrected link of "About MODESTI" button (#178)
+- Fixed problem with "Delete row' on Update request (#206)
 
 
 ## [0.2.11] - 2017-03-29
@@ -37,4 +45,5 @@ For more details on a given release, please check also the [Milestone planning](
 - Avoid NPE when no change history entry was found
 
 
+[0.2.12]: https://gitlab.cern.ch/modesti/modesti/milestones/11
 [0.2.10]: https://gitlab.cern.ch/modesti/modesti/milestones/10
