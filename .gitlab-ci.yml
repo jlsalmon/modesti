@@ -1,5 +1,10 @@
+stages:
+- build
+- deploy
+
 # Fully build and publish master branch
 build_and_publish:
+  stage: build
   script:
     - ./gradlew clean publish --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
   only:
@@ -7,8 +12,19 @@ build_and_publish:
 
 # Just run tests on feature branches
 build:
+  stage: build
   script:
     - ./gradlew clean test --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
   except:
     - master
 
+deploy_test:
+  stage: deploy
+  script:
+    - ssh timtest@modesti-test.cern.ch '~/scripts/deploy-modesti-server-test.sh'
+    - ssh timtest@modesti-test.cern.ch 'wreboot -N MODESTI-SERVER-TEST.jvm'
+  environment:
+    name: test
+    url: https://modesti-test.cern.ch
+  only:
+  - master
