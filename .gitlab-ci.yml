@@ -22,7 +22,7 @@ deploy_test:
   stage: deploy
   script:
     - ssh timtest@modesti-test.cern.ch '~/scripts/deploy-modesti-server-test.sh'
-    - ssh timtest@modesti-test.cern.ch 'wreboot -N MODESTI-SERVER-TEST.jvm'
+    - ssh timtest@modesti-test.cern.ch '/usr/opt/bin/wreboot -N MODESTI-SERVER-TEST.jvm'
   environment:
     name: test
     url: https://modesti-test.cern.ch
