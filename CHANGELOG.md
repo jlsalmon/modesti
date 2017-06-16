@@ -14,7 +14,7 @@ For more details on a given release, please check also the [Milestone planning](
 ### Fixed
 
 
-## 0.2.13
+## 0.2.13 - 2017-06-16
 ### Changed
 - Create change history only in status `IN_PROGRESS` and `FOR_ADDRESSING` 
 
