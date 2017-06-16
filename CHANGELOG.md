@@ -14,6 +14,17 @@ For more details on a given release, please check also the [Milestone planning](
 ### Fixed
 
 
+## 0.2.13
+### Changed
+- Create change history only in status `IN_PROGRESS` and `FOR_ADDRESSING` 
+
+### Fixed
+- Fixed handsontable-pro version in package.json
+
+### Removed
+- Removed commented files that were migrated to modesti-api
+
+
 ## [0.2.12] - 2017-05-16
 ### Added
 - Show a link per plugin to workflow documentation on the request page (#44)
