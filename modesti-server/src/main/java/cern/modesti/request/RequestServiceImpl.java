@@ -1,18 +1,12 @@
 package cern.modesti.request;
 
-import cern.modesti.plugin.RequestProvider;
-import cern.modesti.plugin.UnsupportedRequestException;
-import cern.modesti.request.counter.CounterService;
-import cern.modesti.request.history.RequestHistoryService;
-import cern.modesti.point.Point;
-import cern.modesti.point.PointImpl;
-import cern.modesti.request.history.RequestHistoryServiceImpl;
-import cern.modesti.request.spi.RequestEventHandler;
-import cern.modesti.user.User;
-import cern.modesti.security.UserService;
-import cern.modesti.workflow.AuthService;
-import cern.modesti.workflow.CoreWorkflowService;
-import cern.modesti.workflow.task.NotAuthorisedException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.annotation.PostConstruct;
+
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +14,19 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import cern.modesti.plugin.RequestProvider;
+import cern.modesti.plugin.UnsupportedRequestException;
+import cern.modesti.point.Point;
+import cern.modesti.point.PointImpl;
+import cern.modesti.request.counter.CounterService;
+import cern.modesti.request.history.RequestHistoryService;
+import cern.modesti.request.history.RequestHistoryServiceImpl;
+import cern.modesti.request.spi.RequestEventHandler;
+import cern.modesti.security.UserService;
+import cern.modesti.user.User;
+import cern.modesti.workflow.AuthService;
+import cern.modesti.workflow.CoreWorkflowService;
+import cern.modesti.workflow.task.NotAuthorisedException;
 
 import static java.lang.String.format;
 
@@ -88,6 +90,7 @@ public class RequestServiceImpl implements RequestService {
    * @param request the request to create
    * @return the newly created request with all properties set
    */
+  @Override
   public Request insert(Request request) {
     // Do not create a request if there is no appropriate domain
     RequestProvider plugin = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
@@ -144,6 +147,7 @@ public class RequestServiceImpl implements RequestService {
    * @param updated the request to save
    * @return the newly saved request
    */
+  @Override
   public Request save(Request updated) {
     Request original = repository.findOne(updated.getId());
     if (original == null) {
@@ -176,7 +180,8 @@ public class RequestServiceImpl implements RequestService {
       requestEventHandler.onBeforeSave(updated);
     }
 
-    if (updated.getType().equals(RequestType.UPDATE)) {
+    if (updated.getType().equals(RequestType.UPDATE)
+        && (updated.getStatus().equals("IN_PROGRESS") || updated.getStatus().equals("FOR_ADDRESSING"))) {
       // Process and store any changes that were made to the request
       ((RequestHistoryServiceImpl) historyService).saveChangeHistory(updated);
     }
@@ -191,6 +196,7 @@ public class RequestServiceImpl implements RequestService {
    * @return the request instance, or null if no request was found with the
    * given id
    */
+  @Override
   public Request findOneByRequestId(String requestId) {
     return repository.findOneByRequestId(requestId);
   }
@@ -200,6 +206,7 @@ public class RequestServiceImpl implements RequestService {
    *
    * @param request the request to delete
    */
+  @Override
   public void delete(Request request) {
     // TODO: mark the request as deleted in the history collection
 
