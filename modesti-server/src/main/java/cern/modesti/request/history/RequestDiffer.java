@@ -1,19 +1,22 @@
 package cern.modesti.request.history;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import cern.modesti.point.Point;
 import cern.modesti.request.Request;
 import de.danielbechler.diff.ObjectDiffer;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
 import de.danielbechler.diff.path.NodePath;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 /**
  * @author Justin Lewis Salmon
@@ -21,20 +24,34 @@ import java.util.stream.Collectors;
 public class RequestDiffer {
 
   public static ChangeEvent diff(Request modified, Request original, String idProperty) {
-    List<Point> originalPointsStillPresentCurrently = deleteRemovedPoints(original.getPoints(), modified.getPoints(), idProperty);
+    List<Point> originalPointsStillPresentCurrently = deleteRemovedPoints(original.getPoints(), modified.getPoints(),
+        idProperty);
     original.setPoints(originalPointsStillPresentCurrently);
     ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
-    ObjectDiffer differ = ObjectDifferBuilder
-        .startBuilding()
-        .identity()
-        .ofCollectionItems(NodePath.with("points"))
-        .via(new PointIdentityStrategy(idProperty))
-        .and()
-        .build();
-    DiffNode root = differ.compare(modified, original);
-    root.visit(new ChangeVisitor(event, modified, original));
+    ChangeVisitor visitor = new ChangeVisitor(event, modified, original);
+
+    Map<Object, Point> originalPointMap = getPointsMap(original.getPoints(), idProperty);
+    Map<Object, Point> modifiedPointMap = getPointsMap(modified.getPoints(), idProperty);
+
+    for (Map.Entry<Object, Point> entry : originalPointMap.entrySet()) {
+      Point originalPoint = entry.getValue();
+      Point modifiedPoint = modifiedPointMap.get(entry.getKey());
+
+      original.setPoints(Arrays.asList(new Point[] { originalPoint }));
+      modified.setPoints(Arrays.asList(new Point[] { modifiedPoint }));
+
+      ObjectDiffer differ = ObjectDifferBuilder.startBuilding().identity().ofCollectionItems(
+          NodePath.with("points")).via(new PointIdentityStrategy(idProperty)).and().build();
+
+      DiffNode root = differ.compare(modified, original);
+      if (root.hasChanges()) {
+        root.visit(visitor);
+      }
+    }
+
     return event;
   }
+
 
   /**
    * Comparison does not work properly if some rows were removed, so we fix this by removing the same rows from original list,
@@ -77,5 +94,9 @@ public class RequestDiffer {
   private static Optional<String> getIdPropertyFromPoint(String idProperty, Point point) {
     return Optional.ofNullable(point.getProperty(idProperty, Object.class))
         .map(Object::toString);
+  }
+
+  private static Map<Object, Point> getPointsMap(List<Point> points, String idProperty) {
+    return points.stream().collect(Collectors.toMap(p -> p.getValueByPropertyName(idProperty), p -> p));
   }
 }
