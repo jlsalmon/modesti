@@ -13,6 +13,7 @@ import org.joda.time.DateTimeZone;
 
 import cern.modesti.point.Point;
 import cern.modesti.request.Request;
+import cern.modesti.request.RequestImpl;
 import de.danielbechler.diff.ObjectDiffer;
 import de.danielbechler.diff.ObjectDifferBuilder;
 import de.danielbechler.diff.node.DiffNode;
@@ -24,26 +25,25 @@ import de.danielbechler.diff.path.NodePath;
 public class RequestDiffer {
 
   public static ChangeEvent diff(Request modified, Request original, String idProperty) {
-    List<Point> originalPointsStillPresentCurrently = deleteRemovedPoints(original.getPoints(), modified.getPoints(),
-        idProperty);
+    List<Point> originalPointsStillPresentCurrently = deleteRemovedPoints(original.getPoints(), modified.getPoints(), idProperty);
     original.setPoints(originalPointsStillPresentCurrently);
+
     ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
     ChangeVisitor visitor = new ChangeVisitor(event, modified, original);
+    Request modifiedClone = new RequestImpl();
+    Request originalClone = new RequestImpl();
 
-    Map<Object, Point> originalPointMap = getPointsMap(original.getPoints(), idProperty);
     Map<Object, Point> modifiedPointMap = getPointsMap(modified.getPoints(), idProperty);
 
-    for (Map.Entry<Object, Point> entry : originalPointMap.entrySet()) {
-      Point originalPoint = entry.getValue();
-      Point modifiedPoint = modifiedPointMap.get(entry.getKey());
+    for (Point originalPoint : original.getPoints()) {
+      Point modifiedPoint = modifiedPointMap.get(originalPoint.getValueByPropertyName(idProperty));
+      originalClone.setPoints(Arrays.asList(new Point[] { originalPoint }));
+      modifiedClone.setPoints(Arrays.asList(new Point[] { modifiedPoint }));
 
-      original.setPoints(Arrays.asList(new Point[] { originalPoint }));
-      modified.setPoints(Arrays.asList(new Point[] { modifiedPoint }));
+      ObjectDiffer differ = ObjectDifferBuilder.startBuilding().identity().ofCollectionItems(NodePath.with("points")).via(
+          new PointIdentityStrategy(idProperty)).and().build();
 
-      ObjectDiffer differ = ObjectDifferBuilder.startBuilding().identity().ofCollectionItems(
-          NodePath.with("points")).via(new PointIdentityStrategy(idProperty)).and().build();
-
-      DiffNode root = differ.compare(modified, original);
+      DiffNode root = differ.compare(modifiedClone, originalClone);
       if (root.hasChanges()) {
         root.visit(visitor);
       }

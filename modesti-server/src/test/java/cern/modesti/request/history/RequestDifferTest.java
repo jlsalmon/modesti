@@ -23,8 +23,8 @@ import cern.modesti.request.RequestType;
 public class RequestDifferTest {
 
   private static final String ID_PROPERTY = "id";
-  private static final int DEFAULT_NUM_POINTS = 500;
-  private static final int DEFAULT_NUM_PROPERTIES = 150;
+  private static final int DEFAULT_NUM_POINTS = 50;
+  private static final int DEFAULT_NUM_PROPERTIES = 15;
   private Request original;
   private Request modified;
 
@@ -36,7 +36,7 @@ public class RequestDifferTest {
 
   @Test
   public void singleModificationDiffTest() {
-    modified.getPoints().get(0).getProperties().put("Property_0", "Test_0");
+    modified.getPoints().get(10).getProperties().put("Property_11", "Test_11");
 
     ChangeEvent changeEvent = RequestDiffer.diff(modified, original, ID_PROPERTY);
     List<Change> changes = changeEvent.getChanges();
@@ -44,23 +44,29 @@ public class RequestDifferTest {
     assertEquals(1, changes.size());
 
     Change change = changes.get(0);
-    assertEquals("/points[1]/properties{Property_0}", change.getPath());
-    assertEquals(Long.valueOf("1"), change.getLineNo());
-    assertEquals("Property_0", change.getProperty());
+    checkLineChanges(change, 11);
+  }
+
+  private void checkLineChanges(Change change, int line) {
+    assertEquals(String.format("/points[%d]/properties{Property_%d}", line, line), change.getPath());
+    assertEquals(Long.valueOf(line), change.getLineNo());
+    assertEquals(String.format("Property_%d", line), change.getProperty());
     assertEquals("CHANGED", change.getState());
-    assertEquals("Test_0", change.getModified());
-    assertEquals("Value_0", change.getOriginal());
+    assertEquals(String.format("Test_%d", line), change.getModified());
+    assertEquals(String.format("Value_%d", line), change.getOriginal());
   }
 
   @Test
   public void multipleModificationsDiffTest() {
-    modified.getPoints().get(0).getProperties().put("Property_0", "Test_0");
-    modified.getPoints().get(1).getProperties().put("Property_1", "Test_1");
+    modified.getPoints().get(10).getProperties().put("Property_11", "Test_11");
+    modified.getPoints().get(11).getProperties().put("Property_12", "Test_12");
 
     ChangeEvent changeEvent = RequestDiffer.diff(modified, original, ID_PROPERTY);
     List<Change> changes = changeEvent.getChanges();
 
     assertEquals(2, changes.size());
+    checkLineChanges(changes.get(0), 11);
+    checkLineChanges(changes.get(1), 12);
   }
 
   @Test
