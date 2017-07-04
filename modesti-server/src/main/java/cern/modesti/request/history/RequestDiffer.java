@@ -3,6 +3,7 @@ package cern.modesti.request.history;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -29,9 +30,9 @@ public class RequestDiffer {
     original.setPoints(originalPointsStillPresentCurrently);
 
     ChangeEvent event = new ChangeEvent(new DateTime(DateTimeZone.UTC));
-    ChangeVisitor visitor = new ChangeVisitor(event, modified, original);
     Request modifiedClone = new RequestImpl();
     Request originalClone = new RequestImpl();
+    ChangeVisitor visitor = new ChangeVisitor(event, modifiedClone, originalClone);
 
     Map<Object, Point> modifiedPointMap = getPointsMap(modified.getPoints(), idProperty);
 
@@ -97,6 +98,8 @@ public class RequestDiffer {
   }
 
   private static Map<Object, Point> getPointsMap(List<Point> points, String idProperty) {
-    return points.stream().collect(Collectors.toMap(p -> p.getValueByPropertyName(idProperty), p -> p));
+    return points.stream()
+         .filter(p -> Objects.nonNull(p.getValueByPropertyName(idProperty)))
+         .collect(Collectors.toMap(p -> p.getValueByPropertyName(idProperty), p -> p));
   }
 }

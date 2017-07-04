@@ -49,6 +49,7 @@ public class ChangeVisitor implements DiffNode.Visitor {
 
       if (!event.getChanges().contains(change)) {
         event.getChanges().add(change);
+        visit.stop();
       }
     }
   }

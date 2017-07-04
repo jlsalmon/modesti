@@ -44,16 +44,26 @@ public class RequestDifferTest {
     assertEquals(1, changes.size());
 
     Change change = changes.get(0);
-    checkLineChanges(change, 11);
+    checkLineChanges(change, 11, 11);
   }
 
-  private void checkLineChanges(Change change, int line) {
-    assertEquals(String.format("/points[%d]/properties{Property_%d}", line, line), change.getPath());
+  /**
+   * Verifies the changes in one line
+   * 
+   * @param change
+   *          The change registered by the RequestDiffer
+   * @param line
+   *          The line number where the property was modified
+   * @param property
+   *          The number of the property that was modified
+   */
+  private void checkLineChanges(Change change, int line, int property) {
+    assertEquals(String.format("/points[%d]/properties{Property_%d}", line, property), change.getPath());
     assertEquals(Long.valueOf(line), change.getLineNo());
-    assertEquals(String.format("Property_%d", line), change.getProperty());
+    assertEquals(String.format("Property_%d", property), change.getProperty());
     assertEquals("CHANGED", change.getState());
-    assertEquals(String.format("Test_%d", line), change.getModified());
-    assertEquals(String.format("Value_%d", line), change.getOriginal());
+    assertEquals(String.format("Test_%d", property), change.getModified());
+    assertEquals(String.format("Value_%d", property), change.getOriginal());
   }
 
   @Test
@@ -65,8 +75,21 @@ public class RequestDifferTest {
     List<Change> changes = changeEvent.getChanges();
 
     assertEquals(2, changes.size());
-    checkLineChanges(changes.get(0), 11);
-    checkLineChanges(changes.get(1), 12);
+    checkLineChanges(changes.get(0), 11, 11);
+    checkLineChanges(changes.get(1), 12, 12);
+  }
+
+  @Test
+  public void multipleModificationsInOneRowDiffTest() {
+    modified.getPoints().get(10).getProperties().put("Property_11", "Test_11");
+    modified.getPoints().get(10).getProperties().put("Property_12", "Test_12");
+
+    ChangeEvent changeEvent = RequestDiffer.diff(modified, original, ID_PROPERTY);
+    List<Change> changes = changeEvent.getChanges();
+
+    assertEquals(2, changes.size());
+    checkLineChanges(changes.get(0), 11, 11);
+    checkLineChanges(changes.get(1), 11, 12);
   }
 
   @Test
