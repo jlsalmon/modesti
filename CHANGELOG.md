@@ -14,6 +14,11 @@ For more details on a given release, please check also the [Milestone planning](
 ### Fixed
 
 
+## [0.2.14] - 2017-07-05
+### Changed
+- Improved calculation speed of change history for big UPDATE requests (#211)
+
+
 ## 0.2.13 - 2017-06-16
 ### Changed
 - Create change history only in status `IN_PROGRESS` and `FOR_ADDRESSING` 
@@ -56,5 +61,7 @@ For more details on a given release, please check also the [Milestone planning](
 - Avoid NPE when no change history entry was found
 
 
+[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/13
+[0.2.14]: https://gitlab.cern.ch/modesti/modesti/milestones/12
 [0.2.12]: https://gitlab.cern.ch/modesti/modesti/milestones/11
 [0.2.10]: https://gitlab.cern.ch/modesti/modesti/milestones/10
