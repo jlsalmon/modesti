@@ -53,7 +53,7 @@ public class PointConverterImpl implements PointConverter {
           // This is a hack to make sure that all Object properties are constructed with null fields inside
           // because handsontable craps out otherwise
           if (value == null && !type.isPrimitive() && !type.equals(String.class) && !type.equals(Integer.class)
-              && !type.equals(Long.class) && !type.equals(Class.class)) {
+              && !type.equals(Long.class) && !type.equals(Class.class) && !type.equals(Float.class)) {
 
             value = propertyDescriptor.getPropertyType().newInstance();
           }
