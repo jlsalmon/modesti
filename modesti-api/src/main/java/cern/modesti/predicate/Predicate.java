@@ -31,7 +31,9 @@ public class Predicate<T> {
     String argument = args.get(0);
 
     boolean isString = field.getType().isAssignableFrom(String.class);
-    boolean isNumeric = field.getType().isAssignableFrom(Integer.class) || field.getType().isAssignableFrom(Long.class);
+    boolean isNumeric = field.getType().isAssignableFrom(Float.class)
+    		|| field.getType().isAssignableFrom(Integer.class)
+    		|| field.getType().isAssignableFrom(Long.class);
 
     if (isNumeric) {
       return getNumericPredicate(entityPath, argument);
@@ -46,8 +48,8 @@ public class Predicate<T> {
   }
 
   private BooleanExpression getNumericPredicate(PathBuilder<T> entityPath, String argument) {
-    NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
-    int value = Integer.parseInt(argument);
+    NumberPath<Float> path = entityPath.getNumber(criteria.getKey(), Float.class);
+    float value = Float.parseFloat(argument);
 
     if (RSQLOperators.EQUAL.equals(criteria.getOperation())) {
       return path.eq(value);
