@@ -29,13 +29,13 @@ subprojects {
 
     dependencyCheck {
         format="XML"
-	}
+    }
 	
-	sonarqube {
-		properties {
+    sonarqube {
+        properties {
             property "sonar.dependencyCheck.reportPath", "build/reports/dependency-check-report.xml"
-		}
-	}
+        }
+    }
 	
     repositories {
         mavenCentral()
