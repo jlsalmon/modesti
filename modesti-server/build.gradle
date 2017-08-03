@@ -47,6 +47,15 @@ springBoot {
     layout = 'ZIP'
 }
 
+
+bootRun {
+    systemProperties = System.properties
+    //why doesn't systemProperties.hasProperty("classpath") work?
+    if (systemProperties.get("classpath", "").length() > 0) {
+        classpath += files(systemProperties.get("classpath").split(","))
+    }
+}
+
 /** Add version information to the manifest file */
 jar {
     compileJava.doLast {
