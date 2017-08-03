@@ -1,8 +1,7 @@
 package cern.modesti.schema.category;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.Id;
@@ -11,11 +10,10 @@ import cern.modesti.schema.Schema;
 import cern.modesti.schema.field.Field;
 import cern.modesti.point.Point;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import cern.modesti.request.RequestType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -37,7 +35,8 @@ public class CategoryImpl implements Category {
 
   private String description;
 
-  private Object editable;
+  @JsonDeserialize(using = EditableDeserializer.class)
+  private Map<String, Object> editable;
 
   /**
    * List of category IDs which are mutually exclusive with this category.
@@ -74,6 +73,73 @@ public class CategoryImpl implements Category {
     return getFields(fieldIds).stream().map(Field::getName).collect(Collectors.toList());
   }
 
+  /**
+   * Deserialise editable fields.
+   *
+   * e.g.
+   *
+   * editable => {
+   *     "UPDATE" => { .. },
+   *     "CREATE" => { .. }
+   * }
+   *
+   * or
+   *
+   * editable => {
+   *     "status" => "IN_PROGRESS",
+   *     "type" => "CREATE"
+   * }
+   *
+   * or
+   *
+   * editable => false
+   *
+   * Returns a HashMap (RequestType|"_"):String => Object where "_" means any request type.
+   *
+   */
+  public static class EditableDeserializer extends JsonDeserializer<Map<String, Object>> {
+
+    @Override
+    public Map<String, Object> deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+      JsonNode node = parser.getCodec().readTree(parser);
+      Map<String, Object> map = new HashMap<>();
+
+      if (node.isBoolean()) {
+        map.put("_", node.booleanValue());
+      } else if (node.isObject()) {
+        ObjectMapper mapper = new ObjectMapper();
+        map = mapper.treeToValue(node, HashMap.class);
+        if (map.keySet().stream().anyMatch(e -> e.equals("_") || isValidType(e))) {
+          for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+              Map innerMap = (Map) entry.getValue();
+              if (innerMap.containsKey("type") && !innerMap.get("type").equals(entry.getKey())) {
+                throw new JsonMappingException("type field (" + innerMap.get("type") + ") does not match type key (" + entry.getKey() + ")");
+              }
+            }
+          }
+        } else {
+          HashMap<String, Object> newMap = new HashMap();
+          if (map.containsKey("type")) {
+            String type = map.get("type").toString();
+            if (!isValidType(type)) {
+              throw new JsonMappingException("Invalid type: " + type);
+            }
+            newMap.put(type, map);
+          } else {
+            newMap.put("_", map);
+          }
+          map = newMap;
+        }
+      }
+
+      return map;
+    }
+  }
+
+  private static boolean isValidType(final String type) {
+    return Arrays.stream(RequestType.values()).anyMatch(t -> t.name().equals(type));
+  }
   /**
    * Support specifying categories by ID as well as inline objects
    */

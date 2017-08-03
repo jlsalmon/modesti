@@ -156,7 +156,7 @@ public class CoreValidationService {
           if (field.getRequired() instanceof Boolean && (Boolean) field.getRequired()) {
             required = true;
           } else if (field.getRequired() != null) {
-            required = Conditionals.evaluate(field.getRequired(), point, request.getStatus());
+            required = Conditionals.evaluate(field.getRequired(), point, request);
           }
 
           if (required) {

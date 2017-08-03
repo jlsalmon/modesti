@@ -103,7 +103,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       let categoryConditional: Conditional = category.editable;
 
       if (categoryConditional != null) {
-        editable = this.settings.schemaService.evaluateConditional(point, categoryConditional, this.settings.requestStatus);
+        editable = this.settings.schemaService.evaluateConditional(point, categoryConditional, this.settings.requestStatus, this.settings.requestType);
       }
 
       // Evaluate "editable" condition of the field as it may override the category
@@ -121,7 +121,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
           }
         }
 
-        editable = this.settings.schemaService.evaluateConditional(point, fieldConditional, this.settings.requestStatus);
+        editable = this.settings.schemaService.evaluateConditional(point, fieldConditional, this.settings.requestStatus, this.settings.requestType);
       }
     }
 

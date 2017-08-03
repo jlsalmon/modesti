@@ -49,7 +49,7 @@ public class Constraints {
     for (Point point : request.getNonEmptyPoints()) {
 
       // Constraints are only applied if the category is editable.
-      boolean editable = Conditionals.evaluate(category.getEditable(), point, request.getStatus());
+      boolean editable = Conditionals.evaluate(category.getEditable(), point, request);
       if (!editable) {
         continue;
       }
@@ -84,7 +84,7 @@ public class Constraints {
     for (Point point : request.getNonEmptyPoints()) {
 
       // Constraints are only applied if the category is editable.
-      boolean editable = Conditionals.evaluate(category.getEditable(), point, request.getStatus());
+      boolean editable = Conditionals.evaluate(category.getEditable(), point, request);
       if (!editable) {
         continue;
       }
@@ -117,7 +117,7 @@ public class Constraints {
     for (Point point : request.getNonEmptyPoints()) {
 
       // Constraints are only applied if the category is editable.
-      boolean editable = Conditionals.evaluate(category.getEditable(), point, request.getStatus());
+      boolean editable = Conditionals.evaluate(category.getEditable(), point, request);
       if (!editable) {
         continue;
       }

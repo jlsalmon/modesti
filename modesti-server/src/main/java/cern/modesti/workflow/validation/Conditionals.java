@@ -1,9 +1,10 @@
 package cern.modesti.workflow.validation;
 
 import cern.modesti.point.Point;
+import cern.modesti.request.Request;
 import cern.modesti.schema.category.Condition;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +13,22 @@ import java.util.Map;
 /**
  * @author Justin Lewis Salmon
  */
+@Slf4j
 public class Conditionals {
 
   private static ObjectMapper mapper = new ObjectMapper();
 
-  public static boolean evaluate(Object conditional, Point point, String requestStatus) {
+  public static boolean evaluate(Object conditional, Point point, Request request) {
 
-    // Simple boolean
+    if (conditional instanceof Map) {
+        Map conditionalMap = (Map)conditional;
+        if (conditionalMap.containsKey(request.getType().name())) {
+            conditional = conditionalMap.get(request.getType().name());
+        } else if (conditionalMap.containsKey("_")) {
+          conditional = conditionalMap.get("_");
+        }
+    }
+
     if (conditional instanceof Boolean) {
       return (boolean) conditional;
     }
@@ -29,37 +39,35 @@ public class Conditionals {
     // Chained OR condition
     if (map.containsKey("or")) {
       for (Object subConditional : (List) map.get("or")) {
-        results.add(evaluate(subConditional, point, requestStatus));
+        results.add(evaluate(subConditional, point, request));
       }
 
       return results.contains(true);
-    }
-
-    // Chained AND condition
-    else if (map.containsKey("and")) {
+    } else if (map.containsKey("and")) {// Chained AND condition
       for (Object subConditional : (List) map.get("and")) {
-        results.add(evaluate(subConditional, point, requestStatus));
+        results.add(evaluate(subConditional, point, request));
       }
 
       return results.stream().reduce((a, b) -> (a == b) ? a : false).get();
     }
 
-    Boolean statusResult = null, valueResult = null;
+    Boolean statusResult = null;
+    Boolean valueResult = null;
 
     // Conditional based on the status of the request.
     if (map.containsKey("status")) {
       Object conditionalStatus = map.get("status");
 
       if (conditionalStatus instanceof List) {
-        statusResult = ((List) conditionalStatus).contains(requestStatus);
+        statusResult = ((List) conditionalStatus).contains(request.getStatus());
       } else if (conditionalStatus instanceof String) {
-        statusResult = conditionalStatus.equals(requestStatus);
+        statusResult = conditionalStatus.equals(request.getStatus());
       }
     }
 
     // Conditional based on the value of another property of the point, used in conjunction with the status conditional
     if (map.containsKey("condition")) {
-      valueResult = evaluate(map.get("condition"), point, requestStatus);
+      valueResult = evaluate(map.get("condition"), point, request);
     }
 
     // Simple value conditional without status conditional

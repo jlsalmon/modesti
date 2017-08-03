@@ -168,7 +168,13 @@ export class SchemaService {
     return q.promise;
   }
 
-  public evaluateConditional(point: Point, conditional: any, status: string): boolean {
+  public evaluateConditional(point: Point, conditional: any, status: string, type: string): boolean {
+    if (conditional.hasOwnProperty(type)) {
+      conditional = conditional[type];
+    } else if (conditional.hasOwnProperty("_")) {
+      conditional = conditional["_"];
+    }
+
     // Simple boolean
     if (conditional === false || conditional === true) {
       return conditional;
@@ -183,14 +189,14 @@ export class SchemaService {
     if (conditional.or) {
       // Chained OR condition
       conditional.or.forEach((subConditional: any) => {
-        results.push(this.evaluateConditional(point, subConditional, status));
+        results.push(this.evaluateConditional(point, subConditional, status, type));
       });
 
       return results.indexOf(true) > -1;
     } else if (conditional.and) {
       // Chained AND condition
       conditional.and.forEach((subConditional: any) => {
-        results.push(this.evaluateConditional(point, subConditional, status));
+        results.push(this.evaluateConditional(point, subConditional, status, type));
       });
 
       return results.reduce((a: boolean, b: boolean) => { return (a === b) ? a : false; }) === true;
@@ -209,7 +215,7 @@ export class SchemaService {
 
     // Conditional based on the value of another property of the point, used in conjunction with the status conditional
     if (conditional.condition) {
-      valueResult = this.evaluateConditional(point, conditional.condition, status);
+      valueResult = this.evaluateConditional(point, conditional.condition, status, type);
     }
 
     // Simple value conditional without status conditional

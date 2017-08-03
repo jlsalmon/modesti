@@ -2,6 +2,7 @@ package cern.modesti.schema.category;
 
 import cern.modesti.schema.field.Field;
 
+import java.util.Map;
 import java.util.List;
 
 /**
@@ -31,9 +32,9 @@ public interface Category {
 
   void setConstraints(List<Constraint> constraints);
 
-  Object getEditable();
+  Map<String, Object> getEditable();
 
-  void setEditable(Object editable);
+  void setEditable(Map<String, Object> editables);
 
   List<String> getFieldNames(List<String> fieldIds);
 }
