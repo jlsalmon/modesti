@@ -1,0 +1,11 @@
+{
+  "editable":{
+    "status":"FOR_ADDRESSING",
+    "type":"CREATE",
+    "condition":{
+      "field":"pointType",
+      "operation":"equals",
+      "value":"APIMMD"
+    }
+  }
+}
