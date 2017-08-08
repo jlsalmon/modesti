@@ -21,7 +21,7 @@ public class Conditionals {
   public static boolean evaluate(Object conditional, Point point, Request request) {
 
     if (conditional instanceof Map) {
-        Map conditionalMap = (Map)conditional;
+        Map<String, Object> conditionalMap = (Map<String, Object>) conditional;
         if (conditionalMap.containsKey(request.getType().name())) {
             conditional = conditionalMap.get(request.getType().name());
         } else if (conditionalMap.containsKey("_")) {
