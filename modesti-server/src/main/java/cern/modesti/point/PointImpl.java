@@ -193,6 +193,8 @@ public class PointImpl implements Point {
    * @param message  the error message
    */
   public void addErrorMessage(String category, String property, String message) {
+    String finalMessageToLog = Optional.ofNullable(message)
+            .orElse("Unexpected error occurred, no message available. Try again in few minutes.");
     boolean errorPropertyExists = false, propertyMessageExists = false;
 
     for (Error error : errors) {
@@ -200,19 +202,19 @@ public class PointImpl implements Point {
         errorPropertyExists = true;
 
         for (String e : error.getErrors()) {
-          if (e != null && e.equals(message)) {
+          if (e != null && e.equals(finalMessageToLog)) {
             propertyMessageExists = true;
           }
         }
 
         if (!propertyMessageExists) {
-          error.getErrors().add(message);
+          error.getErrors().add(finalMessageToLog);
         }
       }
     }
 
     if (!errorPropertyExists) {
-      Error error = new Error(category, property, new ArrayList<>(Collections.singletonList(message)));
+      Error error = new Error(category, property, new ArrayList<>(Collections.singletonList(finalMessageToLog)));
       errors.add(error);
     }
   }
