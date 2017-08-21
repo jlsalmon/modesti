@@ -12,24 +12,25 @@ import java.util.Map;
 /**
  * Deserialise editable fields.
  *
+ * <pre>
  * e.g.
  *
- * editable => {
- *     "UPDATE" => { .. },
- *     "CREATE" => { .. }
+ * "editable": {
+ *     "UPDATE": { .. },
+ *     "CREATE": { .. }
  * }
  *
  * or
  *
- * editable => {
- *     "status" => "IN_PROGRESS",
- *     "type" => "CREATE"
+ * "editable": {
+ *     "status": "IN_PROGRESS",
+ *     "type": "CREATE"
  * }
  *
  * or
  *
- * editable => false
- *
+ * "editable": false
+ * </pre>
  */
 public class EditableDeserializer extends JsonDeserializer<Map<String, Object>> {
 
@@ -76,18 +77,20 @@ public class EditableDeserializer extends JsonDeserializer<Map<String, Object>> 
     /**
      * Convert the following format:
      *
-     * editable => {
-     *     "status" => [],
-     *     "type => "CREATE"
+     * <pre>
+     * "editable": {
+     *     "status": [],
+     *     "type": "CREATE"
      * }
      *
      * to
      *
-     * editable => {
-     *     "CREATE" => {
-     *          "status" => []
+     * "editable": {
+     *     "CREATE": {
+     *          "status": []
      *     }
      * }
+     * </pre>
      *
      * @param map
      * @return
