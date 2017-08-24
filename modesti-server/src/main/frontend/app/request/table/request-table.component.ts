@@ -163,7 +163,9 @@ class RequestTableController {
         let original: any, modified: any;
 
         if (field.type === 'autocomplete') {
-          original = field.model ? latest.original[field.model] : latest.original.value;
+          if (latest.original != null) {
+              original = field.model ? latest.original[field.model] : latest.original.value;
+          }
           modified = field.model ? latest.modified[field.model] : latest.modified.value;
         } else {
           original = latest.original;

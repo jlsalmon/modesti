@@ -2,6 +2,9 @@
 **/querydsl/
 /bin/
 build/
+modesti-server/out
+modesti-server/hs_err*
+modesti-test/out
 /data/
 /out/
 .rest-shell.log
