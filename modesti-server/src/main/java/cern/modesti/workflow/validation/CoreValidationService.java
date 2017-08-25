@@ -54,64 +54,71 @@ public class CoreValidationService {
 
 
   public boolean validateRequest(Request request) {
-    boolean valid = true;
-    Schema schema = schemaRepository.findOne(request.getDomain());
+    try {
+      boolean valid = true;
+      Schema schema = schemaRepository.findOne(request.getDomain());
 
-    // Reset all points and clear any error messages.
-    for (Point point : request.getPoints()) {
-      point.setValid(true);
-      point.setErrors(new ArrayList<>());
-    }
-
-    if (environment.getProperty("modesti.disableValidator", Boolean.class, false)) {
-      log.info("core validations disabled");
-    } else {
-
-      // Concatenate all categories and datasources
-      List<Category> categories = new ArrayList<>(schema.getCategories());
-      categories.addAll(schema.getDatasources());
-
-      // Validate the mutually exclusive column group specifications.
-      if (!validateMutualExclusions(request, categories)) {
-        valid = false;
+      // Reset all points and clear any error messages.
+      for (Point point : request.getPoints()) {
+        point.setValid(true);
+        point.setErrors(new ArrayList<>());
       }
 
-      // Validate the constraints of the schema. This checks things like unique
-      // column groups and mutually inclusive fields.
-      if (!validateConstraints(request, categories)) {
-        valid = false;
+      if (environment.getProperty("modesti.disableValidator", Boolean.class, false)) {
+        log.info("core validations disabled");
+      } else {
+
+        // Concatenate all categories and datasources
+        List<Category> categories = new ArrayList<>(schema.getCategories());
+        categories.addAll(schema.getDatasources());
+
+        // Validate the mutually exclusive column group specifications.
+        if (!validateMutualExclusions(request, categories)) {
+          valid = false;
+        }
+
+        // Validate the constraints of the schema. This checks things like unique
+        // column groups and mutually inclusive fields.
+        if (!validateConstraints(request, categories)) {
+          valid = false;
+        }
+
+        // Validate each point separately. This checks things like required
+        // values, min/max length, valid values etc.
+        if (!validatePoints(request, categories)) {
+          valid = false;
+        }
       }
 
-      // Validate each point separately. This checks things like required
-      // values, min/max length, valid values etc.
-      if (!validatePoints(request, categories)) {
-        valid = false;
+      request.setValid(valid);
+      requestService.save(request);
+
+      if (!valid) {
+        log.info(format("request #%s failed validation, not invoking custom validator", request.getRequestId()));
+        return false;
       }
-    }
 
-    request.setValid(valid);
-    requestService.save(request);
+      log.info(format("request #%s is valid, invoking custom validator", request.getRequestId()));
 
-    if (!valid) {
-      log.info(format("request #%s failed validation, not invoking custom validator", request.getRequestId()));
+      RequestProvider plugin = requestProviderRegistry.getPluginFor(request);
+      RequestValidator validator = getPluginRequestValidator(plugin.getMetadata().getId());
+
+      if (validator == null) {
+        log.info(format("custom validator not provided for request #%s", request.getRequestId()));
+        return true;
+      }
+
+      valid = validator.validateRequest(request, schema);
+      request.setValid(valid);
+      requestService.save(request);
+
+      return valid;
+    }catch(RuntimeException e){
+      request.setValid(false);
+      requestService.save(request);
+      log.info(format("Unexpected error during validation phase for request #%s '%s'", request.getRequestId(), e.toString()));
       return false;
     }
-
-    log.info(format("request #%s is valid, invoking custom validator", request.getRequestId()));
-
-    RequestProvider plugin = requestProviderRegistry.getPluginFor(request);
-    RequestValidator validator = getPluginRequestValidator(plugin.getMetadata().getId());
-
-    if (validator == null) {
-      log.info(format("custom validator not provided for request #%s", request.getRequestId()));
-      return true;
-    }
-
-    valid = validator.validateRequest(request, schema);
-    request.setValid(valid);
-    requestService.save(request);
-
-    return valid;
   }
 
   private RequestValidator getPluginRequestValidator(String pluginId) {
