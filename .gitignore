@@ -1,4 +1,5 @@
 */bin/
+**/querydsl/
 /bin/
 build/
 /data/
