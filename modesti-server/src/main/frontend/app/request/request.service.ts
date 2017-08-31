@@ -7,12 +7,12 @@ import {User} from '../user/user';
 import {IPromise, IDeferred, IHttpService, IRootScopeService, IQService} from 'angular';
 
 export class RequestService {
-  public static $inject: string[] = ['$http', '$rootScope', '$q', 'Restangular', 'AuthService'];
+  public static $inject: string[] = ['$http', '$rootScope', '$q', '$uibModal', 'Restangular', 'AuthService'];
 
   public cache: any = {};
 
   public constructor(private $http: IHttpService, private $rootScope: any, private $q: IQService,
-                     private restangular: any, private authService: AuthService) {}
+                     private $modal: any, private restangular: any, private authService: AuthService) {}
 
   public getRequests(page: number, size: number, sort: string, filter: string): IPromise<Request[]> {
     let q: IDeferred<Request[]> = this.$q.defer();
@@ -239,5 +239,51 @@ export class RequestService {
 
   public clearCache(): void {
     this.cache = {};
+  }
+
+  public doAssignCreator(requestId: string, creator: string): IPromise<Request> {
+    let q: IDeferred<Request> = this.$q.defer();
+
+    let params: any = {
+      action: 'CREATOR',
+      creator: creator
+    }
+
+    this.$http.post('/api/requests/' + requestId, params).then((response: any) => {
+      console.log('assigned request ' + requestId + ' to user ' + params.creator);
+      q.resolve(response.data);
+    },
+
+    (error: any) => {
+      console.log('error assigning request ' + requestId + ": " + error.data.message);
+      q.reject(error);
+    });
+
+    return q.promise;
+  }
+
+  public assignCreator(request: Request): IPromise<Request> {
+    let q: IDeferred<Request> = this.$q.defer();
+    
+    let modalInstance: any = this.$modal.open({
+      animation: false,
+      templateUrl: '/request/creator/assign-creator.modal.html',
+      controller: 'AssignCreatorModalController as ctrl',
+      resolve: {
+        request: () => request
+      }
+    });
+
+    modalInstance.result.then((creator: User) => {
+      console.log('assigning creator to user ' + creator.username);
+
+      this.doAssignCreator(request.requestId, creator.username).then((newRequest: Request) => {
+        console.log('assigned request');
+        request.creator = creator.username;
+        q.resolve(newRequest);
+      });
+    });
+
+    return q.promise;
   }
 }
