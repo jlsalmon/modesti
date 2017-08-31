@@ -1,0 +1,41 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Assign creator
+  </h3>
+</div>
+
+<div class="modal-body">
+
+  <form class="form-horizontal" name="form">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">
+        Creator
+        <i class="fa fa-fw fa-user"></i>
+      </label>
+
+      <div class="col-sm-9">
+
+        <ui-select ng-model="ctrl.creator" theme="bootstrap">
+          <ui-select-match placeholder="Select a person in the list or search by name...">
+            {{$select.selected.firstName}} {{$select.selected.lastName}}
+          </ui-select-match>
+          <ui-select-choices repeat="user in ctrl.users track by $index"
+                             refresh="ctrl.refreshUsers($select.search)"
+                             refresh-delay="0">
+            <div ng-bind-html="user.firstName + ' ' + user.lastName | highlight: $select.search"></div>
+            <small>
+              <span style="color: #c7c7c7;" ng-bind-html="''+user.username | highlight: $select.search"></span>
+            </small>
+          </ui-select-choices>
+        </ui-select>
+
+      </div>
+    </div>
+  </form>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-default" ng-click="ctrl.cancel()">Cancel</button>
+  <button class="btn btn-primary" ng-click="ctrl.ok()" ng-disabled="form.$invalid">OK</button>
+</div>
