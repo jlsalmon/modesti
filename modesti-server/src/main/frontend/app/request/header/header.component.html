@@ -27,13 +27,26 @@
 
     <div class="pull-right">
 
+      <!-- Button to change the request creator -->
+      <span class="request-owner-button text-muted"
+            uib-tooltip="Change creator"
+            tooltip-append-to-body="true"
+            tooltip-placement="bottom"
+            ng-show="$ctrl.isCurrentUserOwner()">
+		        <button class="btn btn-sm btn-default toolbar-item"
+				        ng-show="$ctrl.isCurrentUserOwner()"
+				        ng-click="$ctrl.assignCreator()">
+			        Change creator
+		        </button>
+      </span>
+
       <!-- Request creator -->
       <span class="request-detail-item text-muted"
             uib-tooltip="Creator"
             tooltip-append-to-body="true"
             tooltip-placement="bottom">
         <i class="fa fa-fw fa-user-md"></i>
-        <a ui-sref="user({ id: $ctrl.request.creator })">{{::$ctrl.request.creator}}</a>
+        <a ui-sref="user({ id: $ctrl.getRequestCreator() })">{{$ctrl.getRequestCreator()}}</a>
       </span>
 
 
