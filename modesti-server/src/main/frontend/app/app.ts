@@ -41,6 +41,7 @@ import {ColumnSelectorComponent} from './table/column-selector/column-selector.c
 import {FilterBuilderComponent} from './table/filter-builder/filter-builder.component';
 import {CloneRequestModalController} from './request/clone/clone-request.modal.ts';
 import {AssignRequestModalController} from './request/assign/assign-request.modal.ts';
+import {AssignCreatorModalController} from './request/creator/assign-creator.modal.ts';
 import {DeleteRequestModalController} from './request/delete/delete-request.modal.ts';
 import {RequestHistoryModalController} from './request/history/request-history.modal.ts';
 import {RequestCommentsModalController} from './request/comments/request-comments.modal.ts';
@@ -63,6 +64,7 @@ import {RestangularConfig} from './config/restangular.config.ts';
 import {RouterConfig} from './config/router.config.ts';
 import {HttpConfig} from './config/http.config.ts';
 import {VersionComponent} from './version/version.component.ts';
+
 
 let app: any = angular.module('modesti', [
   'ng',
@@ -115,6 +117,7 @@ app.service('ValidationService', ValidationService);
 app.controller('LoginModalController', LoginModalController);
 app.controller('CloneRequestModalController', CloneRequestModalController);
 app.controller('AssignRequestModalController', AssignRequestModalController);
+app.controller('AssignCreatorModalController', AssignCreatorModalController);
 app.controller('DeleteRequestModalController', DeleteRequestModalController);
 app.controller('RequestHistoryModalController', RequestHistoryModalController);
 app.controller('RequestCommentsModalController', RequestCommentsModalController);
