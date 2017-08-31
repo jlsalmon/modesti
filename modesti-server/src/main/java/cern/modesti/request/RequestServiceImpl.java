@@ -26,6 +26,7 @@ import cern.modesti.security.UserService;
 import cern.modesti.user.User;
 import cern.modesti.workflow.AuthService;
 import cern.modesti.workflow.CoreWorkflowService;
+import cern.modesti.workflow.request.RequestAction;
 import cern.modesti.workflow.task.NotAuthorisedException;
 
 import static java.lang.String.format;
@@ -212,4 +213,36 @@ public class RequestServiceImpl implements RequestService {
 
     repository.delete((RequestImpl) request);
   }
+  
+  @Override
+  public Request execute(String requestId, RequestAction action, User user) {
+    switch(action.getAction()) {
+      case CREATOR:
+        return assignCreator(requestId, action.getCreator(), user.getUsername());
+      default:
+        throw new UnsupportedOperationException(format("'%s' is not a valid action", action.getAction()));
+	  }
+  }
+
+  private Request assignCreator(String requestId, String newCreator, String originalCreator) {
+    Request request = findOneByRequestId(requestId);
+    if (request == null) {
+      throw new IllegalArgumentException("No request with id " + requestId + " was found");
+    }
+    
+    User newCreatorUser = userService.findOneByUsername(newCreator);
+    if (newCreatorUser == null) {
+      throw new IllegalArgumentException("No user with username " + newCreator + " was found");
+    }
+    
+    if (!request.getCreator().equals(originalCreator)) {
+      throw new NotAuthorisedException(format("User %s is not authorized to change the request creator", originalCreator));
+    }
+    
+    request.setCreator(newCreator);
+    save(request);
+    
+    return request;
+  } 
+
 }
