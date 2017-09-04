@@ -8,10 +8,13 @@ For more details on a given release, please check also the [Milestone planning](
 
 ## [Unreleased]
 ### Added
-
-### Changed
+- Handle unexpected errors during validation phase (#220)
+- Allow to modify the request creator (#217)
+- Modified schema to allow for an editable option to be specified for only certain request types
 
 ### Fixed
+- Fixed issue for requests not passing stage `FOR_CSAM_SYNC` when JSON request contains unexpected Error format
+- Handle the case when there is no original value for a table cell
 
 
 ## [0.2.15] - 2017-07-12
