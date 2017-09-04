@@ -8,6 +8,14 @@ For more details on a given release, please check also the [Milestone planning](
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Fixed
+
+
+## [0.2.16] - 2017-09-04
+### Added
 - Handle unexpected errors during validation phase (#220)
 - Allow to modify the request creator (#217)
 - Modified schema to allow for an editable option to be specified for only certain request types
@@ -69,7 +77,8 @@ For more details on a given release, please check also the [Milestone planning](
 - Avoid NPE when no change history entry was found
 
 
-[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/14
+[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/15
+[0.2.16]: https://gitlab.cern.ch/modesti/modesti/milestones/14
 [0.2.15]: https://gitlab.cern.ch/modesti/modesti/milestones/13
 [0.2.14]: https://gitlab.cern.ch/modesti/modesti/milestones/12
 [0.2.12]: https://gitlab.cern.ch/modesti/modesti/milestones/11
