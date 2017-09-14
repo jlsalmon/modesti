@@ -6,7 +6,7 @@ stages:
 build_and_publish:
   stage: build
   script:
-    - ./gradlew clean publish --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+    - ./gradlew clean publish dependencyCheckAnalyze sonarqube --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
   only:
     - master
 
@@ -14,7 +14,7 @@ build_and_publish:
 build:
   stage: build
   script:
-    - ./gradlew clean test dependencyCheckAnalyze sonarqube --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+    - ./gradlew clean test --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
   except:
     - master
 
