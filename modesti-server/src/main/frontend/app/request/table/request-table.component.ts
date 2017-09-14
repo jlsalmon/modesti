@@ -78,10 +78,8 @@ class RequestTableController {
     let type: string = field ? field.type : cellProperties.type;
     switch (type) {
       case 'text':
-        Handsontable.renderers.TextRenderer.apply(this, arguments);
-        break;
       case 'numeric':
-        Handsontable.renderers.NumericRenderer.apply(this, arguments);
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
         break;
       case 'checkbox':
         Handsontable.renderers.CheckboxRenderer.apply(this, arguments);
