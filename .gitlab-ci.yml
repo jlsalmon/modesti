@@ -1,4 +1,4 @@
-Restages:
+stages:
 - build
 - deploy
 
@@ -6,7 +6,7 @@ Restages:
 build_and_publish:
   stage: build
   script:
-    - ./gradlew clean publish dependencyCheckAnalyze sonarqube --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD} -Dsonar.host.url=https://en-ice-sonar.cern.ch
+    - ./gradlew clean publish dependencyCheckAnalyze sonarqube --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
   only:
     - master
 
