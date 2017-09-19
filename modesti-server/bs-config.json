@@ -1,0 +1,5 @@
+{
+  "port": 1234,
+  "files": ["./build/resources/main/static/**/*.{html,htm,css,js}"],
+  "server": { "baseDir": "./build/resources/main/static" }
+}
