@@ -16,7 +16,7 @@ import 'ui-select';
 import 'ngstorage';
 import 'restangular';
 import 'oclazyload';
-
+import 'angular-cache';
 // TODO: import these properly, remove <script> tags from index.html
 // import 'numbro';
 // import 'moment';
@@ -57,6 +57,7 @@ import {HistoryService} from './request/history/history.service.ts';
 import {AlertService} from './alert/alert.service.ts';
 import {SearchService} from './search/search.service.ts';
 import {ValidationService} from './request/validation/validation.service.ts';
+import {CacheService} from './cache/cache.service.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
 import {DeletePointsModalController} from './search/delete/delete-points.modal';
@@ -82,7 +83,8 @@ let app: any = angular.module('modesti', [
   'angular.filter',
   'oc.lazyLoad',
   'xeditable',
-  'agGrid'
+  'agGrid',
+  'angular-cache'
 ]);
 
 // TODO: split this up into modules
@@ -113,6 +115,7 @@ app.service('HistoryService', HistoryService);
 app.service('AlertService', AlertService);
 app.service('SearchService', SearchService);
 app.service('ValidationService', ValidationService);
+app.service('CacheService', CacheService);
 
 app.controller('LoginModalController', LoginModalController);
 app.controller('CloneRequestModalController', CloneRequestModalController);
@@ -159,3 +162,4 @@ app.run(['$rootScope', '$timeout', '$transitions', '$interpolate',
 angular.bootstrap(document, ['modesti'], {
   strictDi: true
 });
+
