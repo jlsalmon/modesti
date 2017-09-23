@@ -151,8 +151,8 @@ class RequestListController {
   // TODO: consolidate this functionality with assign-request.modal.ts
   public queryUsers(query: string): IPromise<User[]> {
     return this.$http.get('/api/users/search', {
-      params: {
-        query: this.parseQuery(query)
+      params : {
+        query : this.parseQuery(query)
       }
     }).then((response: any) => {
       if (!response.data.hasOwnProperty('_embedded')) {
@@ -230,16 +230,15 @@ class RequestListController {
   }
 
   private loadFilterSettingsFromCache(): void {
+    if (typeof this.cacheService.filtersCache.get('sort') !== 'undefined') {
+      this.sort = this.cacheService.filtersCache.get('sort');
+    }
+
     if (typeof this.cacheService.filtersCache.get('request') === 'undefined') {
       this.resetFilter();
       return;
     }
     this.filter = this.cacheService.filtersCache.get('request');
-
-    if (typeof this.cacheService.filtersCache.get('sort') === 'undefined') {
-      return;
-    }
-    this.sort = this.cacheService.filtersCache.get('sort');
   }
 
   private saveFilterSettingsToCache(): void {
