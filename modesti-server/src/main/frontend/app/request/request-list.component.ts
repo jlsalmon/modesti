@@ -5,6 +5,7 @@ import {Request} from './request';
 import {Schema} from '../schema/schema';
 import {User} from '../user/user';
 import {Field} from '../schema/field/field';
+import { CacheService } from '../cache/cache.service';
 import IComponentOptions = angular.IComponentOptions;
 import IHttpService = angular.IHttpService;
 import ILocationService = angular.ILocationService;
@@ -18,7 +19,7 @@ export class RequestListComponent implements IComponentOptions {
 }
 
 class RequestListController {
-  public static $inject: string[] = ['$http', '$location', '$scope', 'RequestService', 'AuthService', 'SchemaService'];
+  public static $inject: string[] = ['$http', '$location', '$scope', 'RequestService', 'AuthService', 'SchemaService', 'CacheService'];
 
   public requests: Request[] = [];
   public statuses: string[] = [];
@@ -32,11 +33,11 @@ class RequestListController {
   public hideClosedRequests: boolean = true;
 
   public constructor(private $http: IHttpService, private $location: ILocationService, private $scope: IScope,
-                     private requestService: RequestService, private authService: AuthService,
-                     private schemaService: SchemaService) {
+    private requestService: RequestService, private authService: AuthService,
+    private schemaService: SchemaService, private cacheService: CacheService) {
     this.users.push(authService.getCurrentUser());
 
-    this.resetFilter();
+    this.loadFilterSettingsFromCache();
     this.getRequests(1, 15, this.sort, this.filter);
     this.getRequestMetrics();
     this.getSchemas();
@@ -90,9 +91,9 @@ class RequestListController {
       this.loading = 'success';
     },
 
-    () => {
-      this.loading = 'error';
-    });
+      () => {
+        this.loading = 'error';
+      });
   }
 
   public deleteRequest(request: Request): void {
@@ -150,8 +151,8 @@ class RequestListController {
   // TODO: consolidate this functionality with assign-request.modal.ts
   public queryUsers(query: string): IPromise<User[]> {
     return this.$http.get('/api/users/search', {
-      params : {
-        query : this.parseQuery(query)
+      params: {
+        query: this.parseQuery(query)
       }
     }).then((response: any) => {
       if (!response.data.hasOwnProperty('_embedded')) {
@@ -208,7 +209,7 @@ class RequestListController {
       }
     });
 
-    return {value: value, field: field};
+    return { value: value, field: field };
   }
 
   public onPageChanged(): void {
@@ -220,7 +221,23 @@ class RequestListController {
       return;
     }
 
+    if (this.filter) {
+      this.saveFilterSettingsToCache();
+    }
+
     console.log('filter: ' + JSON.stringify(this.filter));
     this.getRequests(0, this.page.size, this.sort, this.filter);
+  }
+
+  private loadFilterSettingsFromCache(): void {
+    if (typeof this.cacheService.filtersCache.get('request') === 'undefined') {
+      this.resetFilter();
+      return;
+    }
+    this.filter = this.cacheService.filtersCache.get('request');
+  }
+
+  private saveFilterSettingsToCache(): void {
+    this.cacheService.filtersCache.put('request', this.filter);
   }
 }
