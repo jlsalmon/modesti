@@ -209,7 +209,7 @@ class RequestListController {
       }
     });
 
-    return { value: value, field: field };
+    return {value: value, field: field};
   }
 
   public onPageChanged(): void {
@@ -221,7 +221,7 @@ class RequestListController {
       return;
     }
 
-    if (this.filter) {
+    if (this.filter || this.sort) {
       this.saveFilterSettingsToCache();
     }
 
@@ -235,9 +235,15 @@ class RequestListController {
       return;
     }
     this.filter = this.cacheService.filtersCache.get('request');
+
+    if (typeof this.cacheService.filtersCache.get('sort') === 'undefined') {
+      return;
+    }
+    this.sort = this.cacheService.filtersCache.get('sort');
   }
 
   private saveFilterSettingsToCache(): void {
     this.cacheService.filtersCache.put('request', this.filter);
+    this.cacheService.filtersCache.put('sort',    this.sort);
   }
 }
