@@ -37,7 +37,8 @@ class RequestListController {
     private schemaService: SchemaService, private cacheService: CacheService) {
     this.users.push(authService.getCurrentUser());
 
-    this.loadFilterSettingsFromCache();
+    this.resetFilter();
+    this.loadCachedValues();
     this.getRequests(1, 15, this.sort, this.filter);
     this.getRequestMetrics();
     this.getSchemas();
@@ -222,26 +223,19 @@ class RequestListController {
     }
 
     if (this.filter || this.sort) {
-      this.saveFilterSettingsToCache();
+      this.saveValuesToCache();
     }
 
     console.log('filter: ' + JSON.stringify(this.filter));
     this.getRequests(0, this.page.size, this.sort, this.filter);
   }
 
-  private loadFilterSettingsFromCache(): void {
-    if (typeof this.cacheService.filtersCache.get('sort') !== 'undefined') {
-      this.sort = this.cacheService.filtersCache.get('sort');
-    }
-
-    if (typeof this.cacheService.filtersCache.get('request') === 'undefined') {
-      this.resetFilter();
-      return;
-    }
-    this.filter = this.cacheService.filtersCache.get('request');
+  private loadCachedValues(): void {
+    this.sort   = this.cacheService.filtersCache.get('sort')    || this.sort;
+    this.filter = this.cacheService.filtersCache.get('request') || this.filter;
   }
 
-  private saveFilterSettingsToCache(): void {
+  private saveValuesToCache(): void {
     this.cacheService.filtersCache.put('request', this.filter);
     this.cacheService.filtersCache.put('sort',    this.sort);
   }
