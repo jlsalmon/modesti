@@ -28,11 +28,11 @@ class FilterBuilderController {
     private schemaService: SchemaService, private cacheService: CacheService, private $scope: IScope) {
 
     $scope.$watch('$ctrl.schema', (previousSchema) => {
-      this.loadFilterSettingsFromCache(previousSchema.id);
+      this.loadCachedValues(previousSchema.id);
     });
 
     $rootScope.$on('modesti:searchDomainChanged', () => {
-      this.saveFilterSettingsToCache();
+      this.saveValuesToCache();
     });
   }
 
@@ -63,7 +63,7 @@ class FilterBuilderController {
 
   public onFiltersChanged(): void {
     this.$rootScope.$emit('modesti:searchFiltersChanged', this.filters);
-    this.saveFilterSettingsToCache();
+    this.saveValuesToCache();
   }
 
   public getOptionValue(option: any): string {
@@ -78,17 +78,12 @@ class FilterBuilderController {
     return this.schemaService.queryFieldValues(field, value, undefined);
   }
 
-  private loadFilterSettingsFromCache(id: string): void {
-    if (typeof this.cacheService.filtersCache.get(id) === 'undefined') {
-      this.filters = new Map<string, Filter>();
-      return;
-    }
-
-    this.filters = this.cacheService.filtersCache.get(id);
+  private loadCachedValues(id: string): void {
+    this.filters = this.cacheService.filtersCache.get(id) || new Map<string, Filter>();
     this.onFiltersChanged();
   }
 
-  private saveFilterSettingsToCache(): void {
+  private saveValuesToCache(): void {
     this.cacheService.filtersCache.put(this.schema.id, this.filters);
   }
 }
