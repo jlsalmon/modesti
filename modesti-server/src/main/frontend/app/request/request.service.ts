@@ -310,7 +310,6 @@ export class RequestService {
     });
     
     diffFields.forEach((field : Field) => {
-      console.log("Removing value of property: " + field.id);
       point.setProperty(field.id, "");
     }
 
