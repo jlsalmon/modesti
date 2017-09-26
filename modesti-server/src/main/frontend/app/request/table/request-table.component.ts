@@ -346,6 +346,11 @@ class RequestTableController {
       property = change[1];
       oldValue = change[2];
       newValue = change[3];
+      
+      if (property === 'properties.pointType' && oldValue != newValue) {
+        let promise: IPromise<Request> = this.requestService.deleteOldPointTypeProperties(oldValue, newValue, this.request, this.schema, row);
+        promises.push(promise); 
+      }
 
       let field: Field;
       if (typeof property === 'string') {
