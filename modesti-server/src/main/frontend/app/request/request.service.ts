@@ -287,33 +287,4 @@ export class RequestService {
     return q.promise;
   }
 
-  
-  /**
-   * Called when the 'pointType' property is modified, the properties specific
-   *   to the old category will be removed.
-   * 
-   * @param oldSource the old data source in the 'pointType' field
-   * @param newSource the new data source in the 'pointType' field
-   * @param request the request being modified
-   * @param schema the schema for the request
-   * @param row the row number being modified
-   */
-  public deleteOldPointTypeProperties(oldSource: string , newSource: string, request: Request, schema: Schema, row: number): IPromise<Request>  {       
-    let point: Point = request.points[row];    
-    let oldCategory = schema.getCategory(oldSource);
-    let newCategory = schema.getCategory(newSource);
-    
-    let diffFields = oldCategory.fields.filter(function (obj) {
-      return !newCategory.fields.some(function(obj2) {
-        return obj.id == obj2.id;
-      });
-    });
-    
-    diffFields.forEach((field : Field) => {
-      point.setProperty(field.id, "");
-    }
-
-    return this.saveRequest(request);
-  }
-
 }
