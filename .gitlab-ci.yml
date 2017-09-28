@@ -1,12 +1,13 @@
 stages:
 - build
 - deploy
+- sonar
 
 # Fully build and publish master branch
 build_and_publish:
   stage: build
   script:
-    - ./gradlew clean publish dependencyCheckAnalyze sonarqube -Dsonar.host.url=https://en-ice-sonar.cern.ch --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+    - ./gradlew clean --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
   only:
     - master
 
@@ -28,3 +29,10 @@ deploy_test:
     url: https://modesti-test.cern.ch
   only:
   - master
+  
+quality_assurance:
+  stage: sonar
+  script:
+    - ./gradlew dependencyCheckAnalyze sonarqube -Dsonar.host.url=https://en-ice-sonar.cern.ch -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+  only:
+    - master
