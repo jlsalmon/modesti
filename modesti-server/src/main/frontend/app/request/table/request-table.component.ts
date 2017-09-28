@@ -347,9 +347,11 @@ class RequestTableController {
       oldValue = change[2];
       newValue = change[3];
       
-      if (property === 'properties.pointType' && oldValue != newValue) {
-        let promise: IPromise<Request> = this.requestService.deleteOldPointTypeProperties(oldValue, newValue, this.request, this.schema, row);
-        promises.push(promise); 
+      if (property === 'properties.pointType' && oldValue != newValue) {  
+        let fieldChangePromises : IPromise<any>[] = this.deleteOldPointTypeProperties(row, oldValue, newValue); 
+        if (fieldChangePromises.length > 0) {
+          promises = promises.concat(fieldChangePromises);
+        }
       }
 
       let field: Field;
@@ -409,7 +411,39 @@ class RequestTableController {
       }
     });
   };
-
+  
+   /**
+   * Called when the 'pointType' property is modified, the properties specific
+   *   to the old category will be removed.
+   * 
+   * @param row the row number being modified
+   * @param oldSource the old data source in the 'pointType' field
+   * @param newSource the new data source in the 'pointType' field
+   * @return Array of promises with the requests of the modified fields
+   */
+  public deleteOldPointTypeProperties(row:number, oldSource: string, newSource: string): IPromise<Request>[]  {       
+    let point: Point = this.request.points[row];    
+	let oldCategory = this.schema.getCategory(oldSource);
+	let newCategory = this.schema.getCategory(newSource);
+	let promises: IPromise<any>[];
+		
+	let diffFields = oldCategory.fields.filter(function (obj) {
+	  return !newCategory.fields.some(function(obj2) {
+		return obj.id == obj2.id;
+	  });
+	});
+		
+	diffFields.forEach((field : Field) => {
+	  if (point.getProperty(field.id) != null) {
+		console.log("Setting to null field: " + field.id );
+		let promise: IPromise<any> = this.saveNewValue(row, field, null);
+        promises.push(promise);
+	  }
+	}
+	
+	return promises;
+  }
+  
   /**
    * Currently Handsontable does not support columns backed by complex objects,
    * so for now it's necessary to manually save the object in the background.
