@@ -1,5 +1,6 @@
 stages:
 - build
+- sonar_preview
 - deploy
 - sonar
 
@@ -29,6 +30,13 @@ deploy_test:
     url: https://modesti-test.cern.ch
   only:
   - master
+  
+quality_preview:
+  stage: sonar_preview
+  script:
+    - ./gradlew sonarqube -Dsonar.host.url=https://en-ice-sonar.cern.ch -Dsonar.analysis.mode=preview -Dsonar.gitlab.commit_sha=$CI_BUILD_REF -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+  except:
+    - master
   
 quality_assurance:
   stage: sonar
