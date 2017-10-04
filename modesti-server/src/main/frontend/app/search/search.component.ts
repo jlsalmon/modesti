@@ -157,8 +157,10 @@ class SearchController {
         });
       },
 
-      () => {
+      (error: any) => {
         this.submitting = 'error';
+        console.log("Error submiting request: " + error.data.message);
+        this.alertService.add('danger', "Error submiting request: " + error.data.message);
       });
     });
   }
@@ -189,8 +191,10 @@ class SearchController {
         });
       },
 
-      () => {
+      (error: any) => {
         this.submitting = 'error';
+        console.log("Error submiting request: " + error.data.message);
+        this.alertService.add('danger', "Error submiting request: " + error.data.message);
       });
     });
   }
