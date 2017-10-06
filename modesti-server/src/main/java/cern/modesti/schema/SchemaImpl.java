@@ -89,7 +89,7 @@ public class SchemaImpl implements Schema {
       // TODO: This comment should be reported by sonarqube...
       JsonNode list = parser.getCodec().readTree(parser);
 
-      System.out.println("And this also should be reported")
+      System.out.println("And this also should be reported");
       for (JsonNode node : list) {
         if (node.isObject()) {
           ObjectMapper mapper = new ObjectMapper();
