@@ -425,7 +425,7 @@ class RequestTableController {
     let point: Point = this.request.points[row];    
 	let oldCategory = this.schema.getCategory(oldSource);
 	let newCategory = this.schema.getCategory(newSource);
-	let promises: IPromise<any>[];
+	let promises: IPromise<Request>[] = [];
 		
 	let diffFields = oldCategory.fields.filter(function (obj) {
 	  return !newCategory.fields.some(function(obj2) {
