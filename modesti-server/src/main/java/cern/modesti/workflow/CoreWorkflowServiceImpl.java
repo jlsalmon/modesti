@@ -41,8 +41,6 @@ import static java.lang.String.format;
 @Transactional
 public class CoreWorkflowServiceImpl implements CoreWorkflowService {
 
-  private static final String DEFAULT_INITIAL_STATUS = "IN_PROGRESS";
-
   @Autowired
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
@@ -69,14 +67,15 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
     RequestProvider plugin = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
     String processKey = plugin.getMetadata().getProcessKey(request.getType());
 
-    request.setStatus(DEFAULT_INITIAL_STATUS);
-    requestRepository.save((RequestImpl) request);
-
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
     variables.put("creator", request.getCreator());
 
-    return runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
+    ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
+    
+    // After initializing the process instance, sets the request status (it might have been modified by some Activiti tasks)
+    request.setStatus(getRequest(request.getRequestId()).getStatus());
+    return processInstance;
   }
 
   /**

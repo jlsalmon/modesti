@@ -12,6 +12,8 @@ import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.joda.time.DateTime;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -36,9 +38,12 @@ import static java.util.stream.Collectors.toMap;
 @Relation(value = "request", collectionRelation = "requests")
 @Data
 @NoArgsConstructor
+@Slf4j
 public class RequestImpl implements Request {
 
   private static final long serialVersionUID = -7075036449830835583L;
+  
+  private static final String DEFAULT_INITIAL_STATUS = "IN_PROGRESS";
 
   /**
    * Internal mongodb id
@@ -58,7 +63,7 @@ public class RequestImpl implements Request {
   private List<String> childRequestIds = new ArrayList<>();
 
   @Indexed
-  private String status;
+  private String status = DEFAULT_INITIAL_STATUS;
 
   @Indexed
   @NotNull(message = "Request type is compulsory")
