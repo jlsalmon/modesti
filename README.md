@@ -41,7 +41,20 @@ The actual publishing of the stable release is done by GitLab [Pipelines]. There
 
 Finally, it is good practice to inform the modesti-users about the deployed release.
 
+### Rollback
 
+To rollback the MODESTI server it simply requires redirecting the static link to the backup directory:
+```bash
+rm -f /opt/modesti-server; ln -s /opt/modesti-server-pro.1 /opt/modesti-server
+wreboot -N MODESTI-SERVER-PRO.jvm
+```
+
+To rollback one of the plugin's, please use the following script and restart once more the MODESTI server:
+```bash
+cd /opt/modesti-plugins/
+> ./get-plugin 
+usage: ./get-plugin --name <plugin> [--version (snapshot|release|0.1.2)]
+```
 
 [Milestone]: https://gitlab.cern.ch/modesti/modesti/milestones
 [Pipelines]: https://gitlab.cern.ch/modesti/modesti/pipelines
