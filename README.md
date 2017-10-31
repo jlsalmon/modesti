@@ -25,7 +25,7 @@ Before you trigger a release of a new stable version, please make sure that:
 - a new [Milestone] is created, in order to assign issues from the backlog to it
 
 
-To release a new version clone this project and run locally: `./gradlew release` (note that you will need to set `artifactoryUser` and `artifactoryPassword` in your ~/.gradle/gradle.properties)
+To release a new version clone this project and run locally: `./gradlew release`
 
 The actual publishing of the stable release is done by GitLab [Pipelines]. Therefore it is important to check, if the triggered [Pipelines] are passing successfully.
 
