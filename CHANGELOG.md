@@ -6,12 +6,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 All issues referenced in parentheses can be consulted under [CERN GitLab](https://gitlab.cern.ch/modesti/modesti/issues).
 For more details on a given release, please check also the [Milestone planning](https://gitlab.cern.ch/modesti/modesti/milestones?state=all).
 
+
 ## [Unreleased]
 ### Added
 
 ### Changed
 
 ### Fixed
+
+
+## [0.2.17] - 2017-11-01
+### Added
+- Filter criteria are now kept, even when using the browser back button (#187)
+- Added support for change of equipment type (modesti-tim-refdb-common#75)
+- SonarCube integration
+
+### Fixed
+- Provide feedback to unauthorized users who try to create update/delete requests (#226)
+- Logging value deadband is now correctly displayed in TIM domain (#216)
 
 
 ## [0.2.16] - 2017-09-04
@@ -77,7 +89,8 @@ For more details on a given release, please check also the [Milestone planning](
 - Avoid NPE when no change history entry was found
 
 
-[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/15
+[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/16
+[0.2.17]: https://gitlab.cern.ch/modesti/modesti/milestones/15
 [0.2.16]: https://gitlab.cern.ch/modesti/modesti/milestones/14
 [0.2.15]: https://gitlab.cern.ch/modesti/modesti/milestones/13
 [0.2.14]: https://gitlab.cern.ch/modesti/modesti/milestones/12
