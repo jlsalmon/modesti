@@ -33,7 +33,8 @@ The actual publishing of the stable release is done by GitLab [Pipelines]. There
 ## Deploying to Production
 
 - `ssh timoper@modesti.cern.ch`
-- Execute the following script to deploy the latest stable release: `~/scripts/deploy-modesti-server-pro.sh`
+- Execute the following script to deploy the latest stable MODESTI server release: `~/scripts/deploy-modesti-server-pro.sh`
+- Run this command to update in addition all plugins: `cd /opt/modesti-plugins/; ./get-all-plugins-release`
 - Restart the server with wreboot command: `wreboot -N MODESTI-SERVER-PRO.jvm`
 - The restart usally takes about one minute. To check if the system is back go to https://modesti.cern.ch
 - In addition you should also check that the log file does not contain any errors: `less /opt/modesti-server/log/modesti.log`
