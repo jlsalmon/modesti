@@ -351,6 +351,7 @@ class RequestTableController {
         let fieldChangePromises : IPromise<any>[] = this.deleteOldPointTypeProperties(row, oldValue, newValue); 
         if (fieldChangePromises.length > 0) {
           promises = promises.concat(fieldChangePromises);
+          dirty = true;
         }
       }
 
@@ -371,18 +372,7 @@ class RequestTableController {
 
       // If the value was cleared, make sure any other properties of the object are also cleared.
       if (field && (newValue == null || newValue === '')) {
-        let point: Point = this.request.points[row];
-        // let prop: any = point.properties[field.id];
-
-        if (typeof point.properties[field.id] === 'object') {
-          for (let attribute in point.properties[field.id]) {
-            if (point.properties[field.id].hasOwnProperty(attribute)) {
-              point.properties[field.id][attribute] = null;
-            }
-          }
-        } else {
-          point.properties[field.id] = null;
-        }
+        this.setPropertyToNull(row, field);
       }
 
       // This is a workaround. See function documentation for info.
@@ -412,6 +402,22 @@ class RequestTableController {
     });
   };
   
+
+  private setPropertyToNull(row: number, field: Field) {
+    let point: Point = this.request.points[row];
+
+    if (typeof point.properties[field.id] === 'object') {
+      for (let attribute in point.properties[field.id]) {
+        if (point.properties[field.id].hasOwnProperty(attribute)) {
+          point.properties[field.id][attribute] = null;
+        }
+      }
+    } else {
+      point.properties[field.id] = null;
+    }
+  }
+
+
    /**
    * Called when the 'pointType' property is modified, the properties specific
    *   to the old category will be removed.
@@ -426,27 +432,32 @@ class RequestTableController {
 	let oldCategory = this.schema.getCategory(oldSource);
 	let newCategory = this.schema.getCategory(newSource);
 	let promises: IPromise<Request>[] = [];
+        let diffFields = [];
 	
-	if (oldCategory === undefined || newCategory === undefined) {
-	    return promises;
-	}
-		
-	let diffFields = oldCategory.fields.filter(function (obj) {
-	  return !newCategory.fields.some(function(obj2) {
-		return obj.id == obj2.id;
-	  });
-	});
+        if (oldCategory === undefined) {
+            return promises;
+        } else if (newCategory === undefined) {
+            diffFields = oldCategory.fields;
+        } else {
+          diffFields = oldCategory.fields.filter(function (obj) {
+            return !newCategory.fields.some(function(obj2) {
+        	return obj.id == obj2.id;
+            });
+          });
+        }
 		
 	diffFields.forEach((field : Field) => {
-	  if (point.getProperty(field.id) != null) {
-		console.log("Setting to null field: " + field.id );
-		let promise: IPromise<any> = this.saveNewValue(row, field, null);
-        promises.push(promise);
+
+          if (point.getProperty(field.id) != null) {
+              console.log("Setting to null field: " + field.id );
+              this.setPropertyToNull(row, field);
+              let promise: IPromise<any> = this.saveNewValue(row, field, null);
+              promises.push(promise);
 	  }
 	}
 	
 	return promises;
-  }
+  } 
   
   /**
    * Currently Handsontable does not support columns backed by complex objects,
