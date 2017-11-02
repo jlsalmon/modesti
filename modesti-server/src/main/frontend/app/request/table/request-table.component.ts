@@ -426,6 +426,10 @@ class RequestTableController {
 	let oldCategory = this.schema.getCategory(oldSource);
 	let newCategory = this.schema.getCategory(newSource);
 	let promises: IPromise<Request>[] = [];
+	
+	if (oldCategory === undefined || newCategory === undefined) {
+	    return promises;
+	}
 		
 	let diffFields = oldCategory.fields.filter(function (obj) {
 	  return !newCategory.fields.some(function(obj2) {
