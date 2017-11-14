@@ -93,6 +93,8 @@ public interface Request extends Serializable {
   void setProperties(Map<String, Object> properties);
 
   Map<Long, List<Error>> getErrors();
+  
+  void setErrors(Map<Long, List<Error>> errors);
 
   List<Comment> getComments();
 
