@@ -74,7 +74,10 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
     ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
     
     // After initializing the process instance, sets the request status (it might have been modified by some Activiti tasks)
-    request.setStatus(getRequest(request.getRequestId()).getStatus());
+    Request savedRequest = getRequest(request.getRequestId());
+    request.setStatus(savedRequest.getStatus());
+    request.setErrors(savedRequest.getErrors());
+    
     return processInstance;
   }
 
