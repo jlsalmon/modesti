@@ -154,6 +154,20 @@ public class RequestImpl implements Request {
 
   @JsonIgnore
   public Map<Long, List<Error>> getErrors() {
-    return this.points.stream().collect(toMap(Point::getLineNo, Point::getErrors));
+    return this.points.stream().filter(p -> !p.getErrors().isEmpty()).collect(toMap(Point::getLineNo, Point::getErrors));
+  }
+  
+  @JsonIgnore
+  public void setErrors(Map<Long, List<Error>> errors) {
+    points.stream().forEach(p -> {
+      if (errors.containsKey(p.getLineNo())) {
+        p.setErrors(errors.get(p.getLineNo()));
+        p.setValid(false);
+      } else {
+        p.setValid(true);
+      }
+    });
+    
+    setValid(errors.isEmpty());
   }
 }
