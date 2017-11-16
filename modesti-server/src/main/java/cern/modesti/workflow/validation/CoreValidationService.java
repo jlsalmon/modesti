@@ -33,7 +33,7 @@ import static java.lang.String.format;
  */
 @Service
 @Slf4j
-public class CoreValidationService {
+public class CoreValidationService implements ValidationService {
 
   @Autowired
   private SchemaRepository schemaRepository;
