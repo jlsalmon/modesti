@@ -77,6 +77,7 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
     Request savedRequest = getRequest(request.getRequestId());
     request.setStatus(savedRequest.getStatus());
     request.setErrors(savedRequest.getErrors());
+    request.setPoints(savedRequest.getPoints());
     
     return processInstance;
   }
