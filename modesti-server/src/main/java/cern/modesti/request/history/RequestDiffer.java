@@ -24,6 +24,10 @@ import de.danielbechler.diff.path.NodePath;
  * @author Justin Lewis Salmon
  */
 public class RequestDiffer {
+  
+  private RequestDiffer() {
+    // Private empty constructor
+  }
 
   public static ChangeEvent diff(Request modified, Request original, String idProperty) {
     List<Point> originalPointsStillPresentCurrently = deleteRemovedPoints(original.getPoints(), modified.getPoints(), idProperty);
@@ -38,8 +42,9 @@ public class RequestDiffer {
 
     for (Point originalPoint : original.getPoints()) {
       Point modifiedPoint = modifiedPointMap.get(originalPoint.getValueByPropertyName(idProperty));
+      originalClone.setPoints(Arrays.asList((Point[])new Point[] { originalPoint }));
       if (modifiedPoint != null) {
-        modifiedClone.setPoints(Arrays.asList(new Point[] { modifiedPoint }));
+        modifiedClone.setPoints(Arrays.asList((Point[])new Point[] { modifiedPoint }));
       }
 
       ObjectDiffer differ = ObjectDifferBuilder.startBuilding().identity().ofCollectionItems(NodePath.with("points")).via(
