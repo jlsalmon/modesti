@@ -83,7 +83,7 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
 
   public List<Change> getChanges(Request request) {
     RequestHistory entry = requestHistoryRepository.findOneByRequestId(request.getRequestId());
-    if (entry != null) {
+    if (entry != null && !entry.getEvents().isEmpty()) {
       return entry.getEvents().get(0).getChanges();
     } else {
       return new ArrayList<>();
