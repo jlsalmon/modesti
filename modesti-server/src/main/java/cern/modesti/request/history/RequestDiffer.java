@@ -38,9 +38,6 @@ public class RequestDiffer {
 
     for (Point originalPoint : original.getPoints()) {
       Point modifiedPoint = modifiedPointMap.get(originalPoint.getValueByPropertyName(idProperty));
-      if (originalPoint != null) {
-        originalClone.setPoints(Arrays.asList(new Point[] { originalPoint }));
-      }
       if (modifiedPoint != null) {
         modifiedClone.setPoints(Arrays.asList(new Point[] { modifiedPoint }));
       }
