@@ -38,8 +38,12 @@ public class RequestDiffer {
 
     for (Point originalPoint : original.getPoints()) {
       Point modifiedPoint = modifiedPointMap.get(originalPoint.getValueByPropertyName(idProperty));
-      originalClone.setPoints(Arrays.asList(new Point[] { originalPoint }));
-      modifiedClone.setPoints(Arrays.asList(new Point[] { modifiedPoint }));
+      if (originalPoint != null) {
+        originalClone.setPoints(Arrays.asList(new Point[] { originalPoint }));
+      }
+      if (modifiedPoint != null) {
+        modifiedClone.setPoints(Arrays.asList(new Point[] { modifiedPoint }));
+      }
 
       ObjectDiffer differ = ObjectDifferBuilder.startBuilding().identity().ofCollectionItems(NodePath.with("points")).via(
           new PointIdentityStrategy(idProperty)).and().build();
