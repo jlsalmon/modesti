@@ -94,6 +94,11 @@ public interface Request extends Serializable {
 
   Map<Long, List<Error>> getErrors();
   
+  /**
+   * Set the list of errors in the request points.
+   * 
+   * @param errors Map where key=line number, value=list of errors
+   */
   void setErrors(Map<Long, List<Error>> errors);
 
   List<Comment> getComments();
