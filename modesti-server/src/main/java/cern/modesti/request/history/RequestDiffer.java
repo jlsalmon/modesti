@@ -23,7 +23,7 @@ import de.danielbechler.diff.path.NodePath;
 /**
  * @author Justin Lewis Salmon
  */
-public class RequestDiffer {
+public final class RequestDiffer {
   
   private RequestDiffer() {
     // Private empty constructor
