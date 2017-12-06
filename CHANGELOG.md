@@ -15,6 +15,14 @@ For more details on a given release, please check also the [Milestone planning](
 ### Fixed
 
 
+## [0.2.19] - 2017-12-06
+### Added
+- Added possibility to change the inital workflow status for a request (#229)
+
+### Changed
+- Updated the link to report an issue via SNOW (#231)
+
+
 ## [0.2.18] - 2017-11-02
 ### Fixed
 - Resolved critical Exception when the point type is modified in CREATE request (#230). Got introduced with last version.
@@ -94,7 +102,8 @@ For more details on a given release, please check also the [Milestone planning](
 - Avoid NPE when no change history entry was found
 
 
-[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/17
+[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/18
+[0.2.19]: https://gitlab.cern.ch/modesti/modesti/milestones/17
 [0.2.18]: https://gitlab.cern.ch/modesti/modesti/milestones/16
 [0.2.17]: https://gitlab.cern.ch/modesti/modesti/milestones/15
 [0.2.16]: https://gitlab.cern.ch/modesti/modesti/milestones/14
