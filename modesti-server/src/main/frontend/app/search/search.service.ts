@@ -9,11 +9,14 @@ export class SearchService {
 
   constructor(private $http: IHttpService, private $q: IQService) {}
 
-  public getPoints(domain: string, query: string, page: any, sort: string): IPromise<Point[]> {
+  public getPoints(domain: string, primary: string, query: string, page: any, sort: string): IPromise<Point[]> {
     let q: IDeferred<Point[]> = this.$q.defer();
     page.number = page.number || 0;
     page.size = page.size || 15;
-    // sort = sort || 'pointId,desc';
+
+    if (typeof(sort) != 'undefined' && sort.length > 0 && sort.indexOf(primary) == -1) {
+      sort = [sort, primary + ',asc'];
+    }
 
     this.$http.get('/api/points/search',
     {
