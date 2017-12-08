@@ -94,7 +94,7 @@ class SearchController {
       }
     }
 
-    this.searchService.getPoints(this.schema.id, query, this.page, this.sort).then((response: any) => {
+    this.searchService.getPoints(this.schema.id, this.schema.primary, query, this.page, this.sort).then((response: any) => {
       let points: Point[] = [];
 
       if (response.hasOwnProperty('_embedded')) {
@@ -214,7 +214,7 @@ class SearchController {
           let query: string = QueryParser.parse(this.filters);
           let page: any = {number: 0, size: this.page.totalElements};
 
-          return this.searchService.getPoints(this.schema.id, query, page, this.sort).then((response: any) => {
+          return this.searchService.getPoints(this.schema.id, this.schema.primary, query, page, this.sort).then((response: any) => {
             let points: Point[] = [];
 
             if (response.hasOwnProperty('_embedded')) {
