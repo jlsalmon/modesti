@@ -23,6 +23,7 @@ class FilterBuilderController {
   public table: Table;
   public filters: Map<string, Filter> = new Map<string, Filter>();
   public popoverIsOpen: boolean = false;
+  private uniqueId: number = 0;
 
   public constructor(private $rootScope: IRootScopeService, private $timeout: ITimeoutService,
     private schemaService: SchemaService, private cacheService: CacheService, private $scope: IScope) {
@@ -51,14 +52,19 @@ class FilterBuilderController {
     }
 
     this.popoverIsOpen = false;
-    this.filters['_' + field.id] = filter;
+        this.filters['_' + this.uniqueId++] = filter;
 
     this.$timeout(() => filter.isOpen = true);
   }
 
-  public removeFilter(field: Field): void {
-    this.filters['_' + field.id] = undefined;
-    this.onFiltersChanged();
+  public removeFilter(fieldId: string): void {
+      delete this.filters[fieldId];
+      this.onFiltersChanged();
+  }
+
+  public removeAllFilters(): void {
+      this.filters = new Map<string, Filter>();
+      this.onFiltersChanged();
   }
 
   public onFiltersChanged(): void {
@@ -85,5 +91,14 @@ class FilterBuilderController {
 
   private saveValuesToCache(): void {
     this.cacheService.filtersCache.put(this.schema.id, this.filters);
+  }
+
+  private checkIfFiltersAreSet(): boolean {
+        return Boolean(Object.keys(this.filters).length);
+  }
+
+  private buildLabel(name: string, operation: string): string {
+    operation = operation.replace(/-/g, ' ');
+    return `<b>${name}</b> ${operation}:`
   }
 }
