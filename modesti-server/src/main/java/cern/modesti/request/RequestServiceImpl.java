@@ -61,6 +61,9 @@ public class RequestServiceImpl implements RequestService {
 
   @Autowired
   private ApplicationContext context;
+  
+  @Autowired
+  private RequestFormatter requestFormatter;
 
   private Collection<RequestEventHandler> requestEventHandlers = new ArrayList<>();
 
@@ -114,6 +117,9 @@ public class RequestServiceImpl implements RequestService {
     if (request.getPoints() == null) {
       request.setPoints(new ArrayList<>());
     }
+    
+    // Apply formatting to the request points
+    requestFormatter.format(request);
 
     // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
