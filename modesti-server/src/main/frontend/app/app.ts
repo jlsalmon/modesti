@@ -57,6 +57,7 @@ import {TaskService} from './task/task.service.ts';
 import {HistoryService} from './request/history/history.service.ts';
 import {AlertService} from './alert/alert.service.ts';
 import {SearchService} from './search/search.service.ts';
+import {TableService} from './search/table.service';
 import {ValidationService} from './request/validation/validation.service.ts';
 import {CacheService} from './cache/cache.service.ts';
 import {LoginModalController} from './auth/login.modal.ts';
@@ -116,6 +117,7 @@ app.service('TaskService', TaskService);
 app.service('HistoryService', HistoryService);
 app.service('AlertService', AlertService);
 app.service('SearchService', SearchService);
+app.service('TableService', TableService);
 app.service('ValidationService', ValidationService);
 app.service('CacheService', CacheService);
 

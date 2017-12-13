@@ -3,10 +3,8 @@ import {SchemaService} from '../../schema/schema.service';
 import {RequestService} from '../../request/request.service';
 import {AlertService} from '../../alert/alert.service';
 import {SearchService} from '../search.service';
-import {SearchController} from '../search.component';
+import {TableService} from '../table.service';
 import {Table} from '../../table/table';
-import {TableFactory} from '../../table/table-factory';
-import {QueryParser} from '../query-parser';
 import {IPromise, IDeferred, IQService, IDirective, IDirectiveFactory, IHttpService, ICompileService, IScope, IRootScopeService} from 'angular';
 
 
@@ -21,12 +19,12 @@ export class SearchFooterDirective implements IDirective {
     table: '='
   }
 
-  public constructor(private $compile: ICompileService, private $http: IHttpService, private $ocLazyLoad: any, private schemaService: SchemaService) { }
+  public constructor(private $compile: ICompileService, private $http: IHttpService, private $ocLazyLoad: any, private schemaService: SchemaService, private tableService: TableService) { }
 
   public static factory(): IDirectiveFactory {
-    const directive: IDirectiveFactory = ($compile: ICompileService, $http: IHttpService, $ocLazyLoad: any, schemaService: SchemaService) =>
-      new SearchFooterDirective($compile, $http, $ocLazyLoad, schemaService);
-    directive.$inject = ['$compile', '$http', '$ocLazyLoad', 'SchemaService'];
+    const directive: IDirectiveFactory = ($compile: ICompileService, $http: IHttpService, $ocLazyLoad: any, schemaService: SchemaService, tableService : TableService) =>
+      new SearchFooterDirective($compile, $http, $ocLazyLoad, schemaService, tableService);
+    directive.$inject = ['$compile', '$http', '$ocLazyLoad', 'SchemaService', 'TableService'];
     return directive;
   }
 
@@ -66,7 +64,7 @@ export class SearchFooterDirective implements IDirective {
 
 
 class SearchFooterController {
-  public static $inject: string[] = ['$rootScope', '$uibModal', '$scope', '$state', '$q', 'SearchService', 'RequestService', 'AlertService'];
+  public static $inject: string[] = ['$rootScope', '$uibModal', '$scope', '$state', '$q', 'SearchService', 'RequestService', 'AlertService', 'TableService'];
   
   public activeSchemaId : string = "";
   public schema: Schema;
@@ -74,7 +72,8 @@ class SearchFooterController {
   public page: any = {number: 0, size: 100};
 
   public constructor(private $rootScope: IRootScope, private $modal: any, private $scope: IScope, private $state: IStateService, private $q: IQService,
-                     private searchService: SearchService, private requestService: RequestService, private alertService, AlertService) {
+                     private searchService: SearchService, private requestService: RequestService, private alertService: AlertService, 
+                     private tableService: TableService) {
     $rootScope.$on('modesti:searchDomainChanged', (event, data) => {
       this.activeSchemaId = data;
     });
@@ -90,7 +89,7 @@ class SearchFooterController {
   } 
 
   public updatePoints(): void {
-    this.$scope.$parent.$ctrl.updatePoints(); 
+    this.tableService.updatePoints();
   }
 
   public deletePoints(): void {
