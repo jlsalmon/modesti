@@ -19,7 +19,7 @@ export class SearchComponent implements IComponentOptions {
   };
 }
 
-class SearchController {
+export class SearchController {
   public static $inject: string[] = ['$rootScope', '$uibModal', '$state', 'SearchService',
                                      'SchemaService', 'RequestService', 'AlertService'];
 
@@ -62,7 +62,7 @@ class SearchController {
       this.table.refreshData();
     }
 
-    this.$rootScope.$emit('modesti:searchDomainChanged');
+    this.$rootScope.$emit('modesti:searchDomainChanged', schema.id);
   }
 
   public resetFilters(): void {
