@@ -11,6 +11,8 @@ import {Filter} from '../table/filter';
 import {IComponentOptions, IRootScopeService, IAngularEvent} from 'angular';
 import {IStateService} from 'angular-ui-router';
 
+import {TableService} from './table.service';
+
 export class SearchComponent implements IComponentOptions {
   public templateUrl: string = '/search/search.component.html';
   public controller: Function = SearchController;
@@ -21,7 +23,7 @@ export class SearchComponent implements IComponentOptions {
 
 export class SearchController {
   public static $inject: string[] = ['$rootScope', '$uibModal', '$state', 'SearchService',
-                                     'SchemaService', 'RequestService', 'AlertService'];
+                                     'SchemaService', 'RequestService', 'AlertService', 'TableService'];
 
   public schema: Schema;
   public schemas: Schema[];
@@ -36,15 +38,16 @@ export class SearchController {
 
   constructor(private $rootScope: IRootScopeService, private $modal: any, private $state: IStateService,
               private searchService: SearchService, private schemaService: SchemaService,
-              private requestService: RequestService, private alertService: AlertService) {
+              private requestService: RequestService, private alertService: AlertService,private tableService: TableService) {
 
     this.activateSchema(this.schemas[0]);
 
     let settings: any = {
-      getRows: this.search,
+      getRows: this.search
     };
 
-    this.table = TableFactory.createTable('ag-grid', this.schema, [], settings);
+    this.table = this.tableService.buildTable(this.schema, settings);
+    // this.table = TableFactory.createTable('ag-grid', this.schema, [], settings);
 
     $rootScope.$on('modesti:searchFiltersChanged', (event: IAngularEvent, filters: Map<string, Filter>) => {
       this.filters = filters;
@@ -130,102 +133,4 @@ export class SearchController {
       this.error = error;
     });
   };
-
-  public updatePoints(): void {
-    let modalInstance: any = this.$modal.open({
-      animation: false,
-      templateUrl: '/search/update/update-points.modal.html',
-      controller: 'UpdatePointsModalController as ctrl',
-      size: 'lg',
-      resolve: this.resolvePoints()
-    });
-
-    modalInstance.result.then((request: any) => {
-      console.log('creating update request');
-
-      this.submitting = 'started';
-
-      // Post form to server to create new request.
-      this.requestService.createRequest(request).then((location: string) => {
-        // Strip request ID from location.
-        let id: string = location.substring(location.lastIndexOf('/') + 1);
-        // Redirect to point entry page.
-        this.$state.go('request', {id: id}).then(() => {
-          this.submitting = 'success';
-
-          this.alertService.add('success', 'Update request #' + id + ' has been created.');
-        });
-      },
-
-      (error: any) => {
-        this.submitting = 'error';
-        console.log("Error submiting request: " + error.data.message);
-        this.alertService.add('danger', "Error submiting request: " + error.data.message);
-      });
-    });
-  }
-
-  public deletePoints(): void {
-    let modalInstance: any = this.$modal.open({
-      animation: false,
-      templateUrl: '/search/delete/delete-points.modal.html',
-      controller: 'DeletePointsModalController as ctrl',
-      size: 'lg',
-      resolve: this.resolvePoints()
-    });
-
-    modalInstance.result.then((request: any) => {
-      console.log('creating delete request');
-
-      this.submitting = 'started';
-
-      // Post form to server to create new request.
-      this.requestService.createRequest(request).then((location: string) => {
-        // Strip request ID from location.
-        let id: string = location.substring(location.lastIndexOf('/') + 1);
-        // Redirect to point entry page.
-        this.$state.go('request', {id: id}).then(() => {
-          this.submitting = 'success';
-
-          this.alertService.add('success', 'Delete request #' + id + ' has been created.');
-        });
-      },
-
-      (error: any) => {
-        this.submitting = 'error';
-        console.log("Error submiting request: " + error.data.message);
-        this.alertService.add('danger', "Error submiting request: " + error.data.message);
-      });
-    });
-  }
-
-  private resolvePoints() {
-    return {
-      points: (): any => {
-        let selectedPoints: number[] = this.table.getSelectedPoints();
-
-        // If the user selected some specific points, just use those
-        if (selectedPoints.length !== 0) {
-          return selectedPoints;
-        }
-
-        // Otherwise, update all the points for the current filters
-        else {
-          let query: string = QueryParser.parse(this.filters);
-          let page: any = {number: 0, size: this.page.totalElements};
-
-          return this.searchService.getPoints(this.schema.id, this.schema.primary, query, page, this.sort).then((response: any) => {
-            let points: Point[] = [];
-
-            if (response.hasOwnProperty('_embedded')) {
-              points = response._embedded.points;
-            }
-
-            return points;
-          });
-        }
-      },
-      schema: () => this.schema
-    }
-  }
 }
