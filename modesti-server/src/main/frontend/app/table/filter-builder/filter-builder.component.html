@@ -9,15 +9,14 @@
             popover-is-open="filter.isOpen"
             ng-click="filter.isOpen = !filter.isOpen"
             class="btn btn-sm btn-default">
-
-      {{filter.field.name}}:
+      <span ng-bind-html="$ctrl.buildLabel(filter.field.name, filter.operation)"></span>
 
       <span ng-if="filter.value">"{{filter.value}}"</span>
       <span ng-if="!filter.value">any</span>
 
 
       <i class="fa fa-times remove-filter-icon"
-         ng-click="$ctrl.removeFilter(filter.field)"
+         ng-click="$ctrl.removeFilter(fieldId)"
          uib-tooltip="Remove filter"
          tooltip-append-to-body="true"
          tooltip-placement="right"></i>
@@ -183,6 +182,13 @@
   </button>
 
 
+  <button ng-if="$ctrl.checkIfFiltersAreSet()"
+          ng-click="$ctrl.removeAllFilters()"
+          type="button"
+          class="btn btn-sm btn-default">
+    <i class="fa fa-times"></i>
+    &nbsp;Remove filters
+  </button>
 
   <!--&lt;!&ndash; Custom template for angular-ui-select &ndash;&gt;-->
   <!--<script type="text/ng-template" id="bootstrap/select-multiple.tpl.html">-->
@@ -271,6 +277,4 @@
 
     <!--</ui-select>-->
   <!--</div>-->
-
-
 </div>
