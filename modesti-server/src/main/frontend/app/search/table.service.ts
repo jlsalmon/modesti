@@ -3,7 +3,7 @@ import IHttpService = angular.IHttpService;
 import IQService = angular.IQService;
 import IPromise = angular.IPromise;
 import IDeferred = angular.IDeferred;
-import { AlertService } from '../alert/alert.service';
+import {AlertService} from '../alert/alert.service';
 import {RequestService} from '../request/request.service';
 import {Table} from '../table/table';
 import {TableFactory} from '../table/table-factory';
@@ -11,7 +11,8 @@ import {Schema} from '../schema/schema';
 import {QueryParser} from './query-parser';
 import {Filter} from '../table/filter';
 import {IComponentOptions, IRootScopeService, IAngularEvent} from 'angular';
-import { SearchService } from './search.service';
+import {SearchService} from './search.service';
+import {IStateService} from 'angular-ui-router';
 
 export class TableService {
   public schema: Schema;
@@ -23,27 +24,30 @@ export class TableService {
   public sort: string;
   public loading: string;
   public error: string;
-  public submitting: string;
+  public submitting: string; 
+  public static $inject: string[] = ['$http', '$rootScope', '$q', '$state', '$uibModal', 'AlertService', 'SearchService', 'RequestService'];
 
-  public static $inject: string[] = ['$http', '$q', '$uibModal', 'AlertService', 'SearchService', 'RequestService'];
-
-  constructor(private $http: IHttpService, private $q: IQService, 
+  constructor(private $http: IHttpService, private $rootScope: IRootScopeService, private $q: IQService, private $state: IStateService,
     private $modal: any, private alertService: AlertService, private searchService: SearchService,
-  private requestService: RequestService) {}
-
-  public sayHello(){
-    // alert("Hello in the end");
-  }
+    private requestService: RequestService) {}
 
   public buildTable(schema: Schema, settings: any){
     this.schema = schema;
     this.table = TableFactory.createTable('ag-grid', schema, [], settings);
     return this.table;
-
   }
 
-  public updatePoints(): void {
-    alert("update from update");
+  public getDefaultUpdateMessage() {
+    return 'You are about to create a new MODESTI request to update <b>' + this.table.getSelectedPoints().length + '</b> points.';
+  }
+
+  public updatePoints(message: string = ''): void {
+    if (typeof(message) == undefined || message == '') {
+      this.updateMessage = this.getDefaultUpdateMessage();
+    } else {
+      this.updateMessage = message
+    }
+
     let modalInstance: any = this.$modal.open({
       animation: false,
       templateUrl: '/search/update/update-points.modal.html',
@@ -115,7 +119,6 @@ export class TableService {
     return {
       points: (): any => {
         let selectedPoints: number[] = this.table.getSelectedPoints();
-        alert(JSON.stringify(selectedPoints));
         // If the user selected some specific points, just use those
         if (selectedPoints.length !== 0) {
           return selectedPoints;
@@ -138,7 +141,8 @@ export class TableService {
           });
         }
       },
-      schema: () => this.schema
+      schema: () => this.schema,
+      message: () => this.updateMessage
     }
   }
 }
