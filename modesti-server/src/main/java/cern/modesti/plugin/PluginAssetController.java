@@ -53,30 +53,58 @@ public class PluginAssetController {
     return new VersionDescriptor(version, Collections.emptyList());
   }
 
+  /**
+   * Get the list of plugin assets (controls for the different request states).
+   * @param id The plugin id.
+   * @param request The http request.
+   * @return List of paths for the plugin assets. 
+   * @throws PluginAssetControllerException
+   */
   @RequestMapping("/api/plugins/{id}/assets")
-  public List<String> getAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws IOException, URISyntaxException {
-    String host = getHostUrl(request);
-    List<String> assets = getPluginAssets(id, "assets", host);
-
-    Resource moduleDescriptor = getPluginModuleDescriptor(id);
-    RequestProvider plugin = getPlugin(id);
-
-    for (Resource resource : resolver.getResources("classpath*:/static/**")) {
-      if (resourceBelongsToPlugin(resource, plugin) && !resource.getFilename().equals(moduleDescriptor.getFilename())) {
-        log.trace("found resource for plugin {}: {}", plugin.getMetadata().getId(), resource.getURL());
-
-        if (FilenameUtils.isExtension(resource.getFilename(), new String[]{"js", "html", "css"})) {
-          String path = host + '/' + resource.getURL().getPath().split("static/")[1];
-
-          if (!assets.contains(path)) {
-            assets.add(path);
-          }
-        }
-      }
+  public List<String> getAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws PluginAssetControllerException {
+    try {
+      String host = getHostUrl(request);
+      List<String> assets = getPluginAssets(id, "assets", host);
+  
+      Resource moduleDescriptor = getPluginModuleDescriptor(id);
+      RequestProvider plugin = getPlugin(id);
+      addPluginStaticResources(assets, plugin, moduleDescriptor, host);
+      
+      assets.add(host + '/' + moduleDescriptor.getFilename());
+      return assets;
+    } catch (IOException | URISyntaxException e) {
+      String msg = "Exception loading the plugin assets";
+      log.trace(msg, e);
+      throw new PluginAssetControllerException(msg);
     }
-
-    assets.add(host + '/' + moduleDescriptor.getFilename());
-    return assets;
+  }
+  
+  
+  /**
+   * Get the list of search assets for the plugin.
+   * @param id The plugin id.
+   * @param request The http request.
+   * @return List of paths for the plugin search assets. 
+   * @throws PluginAssetControllerException
+   */
+  @RequestMapping("/api/plugins/{id}/search-assets")
+  public List<String> getSearchAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws PluginAssetControllerException {
+    try {
+      String host = getHostUrl(request);
+      List<String> assets = getPluginAssets(id, "search-assets", host);
+      
+      if (assets.isEmpty()) {
+        return assets;
+      }
+  
+      Resource moduleDescriptor = getPluginModuleDescriptor(id);
+      assets.add(host + '/' + moduleDescriptor.getFilename());
+      return assets;
+    } catch (IOException | URISyntaxException e) {
+      String msg = "URI syntax exception loading the plugin assets";
+      log.trace(msg, e);
+      throw new PluginAssetControllerException(msg);
+    }
   }
 
   
@@ -124,18 +152,20 @@ public class PluginAssetController {
   }
   
   
-  @RequestMapping("/api/plugins/{id}/search-assets")
-  public List<String> getSearchAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws IOException, URISyntaxException {
-    String host = getHostUrl(request);
-    List<String> assets = getPluginAssets(id, "search-assets", host);
-    
-    if (assets.isEmpty()) {
-      return assets;
-    }
+  private void addPluginStaticResources(List<String> assets, RequestProvider plugin, Resource moduleDescriptor, String host) throws IOException, URISyntaxException {
+    for (Resource resource : resolver.getResources("classpath*:/static/**")) {
+      if (resourceBelongsToPlugin(resource, plugin) && !resource.getFilename().equals(moduleDescriptor.getFilename()) ) {
+        log.trace("found resource for plugin {}: {}", plugin.getMetadata().getId(), resource.getURL());
 
-    Resource moduleDescriptor = getPluginModuleDescriptor(id);
-    assets.add(host + '/' + moduleDescriptor.getFilename());
-    return assets;
+        if (FilenameUtils.isExtension(resource.getFilename(), new String[]{"js", "html", "css"})) {
+          String path = host + '/' + resource.getURL().getPath().split("static/")[1];
+
+          if (!assets.contains(path)) {
+            assets.add(path);
+          }
+        }
+      }
+    }
   }
   
   
@@ -149,6 +179,7 @@ public class PluginAssetController {
     throw new UnsupportedRequestException(format("no plugin found for domain %s", id));
   }
 
+  
   private boolean resourceBelongsToPlugin(Resource resource, RequestProvider plugin) throws IOException, URISyntaxException {
     String pluginRootPath =  plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
 
