@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -40,57 +39,27 @@ public class PluginAssetController {
   @Autowired
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
 
-  @Autowired
-  private Environment environment;
-
   private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
 
   private ObjectMapper mapper = new ObjectMapper();
 
   @RequestMapping("/api/plugins")
-  public VersionDescriptor getPluginInfo() throws IOException {
+  public VersionDescriptor getPluginInfo() {
     String version = ModestiServer.class.getPackage().getImplementationVersion();
     if (version == null) version = "dev";
 
     // TODO: read plugin versions and insert them here
 
-    return new VersionDescriptor(version, Collections.EMPTY_LIST);
+    return new VersionDescriptor(version, Collections.emptyList());
   }
 
   @RequestMapping("/api/plugins/{id}/assets")
   public List<String> getAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws IOException, URISyntaxException {
+    String host = getHostUrl(request);
+    List<String> assets = getPluginAssets(id, "assets", host);
+
+    Resource moduleDescriptor = getPluginModuleDescriptor(id);
     RequestProvider plugin = getPlugin(id);
-
-    LinkedList<String> assets = new LinkedList<>();
-    List<String> javascriptAssets = new ArrayList<>();
-    String host;
-
-    String forwardedHost = request.getHeader("X-Forwarded-Host");
-    if (forwardedHost != null) {
-      host = "https://" + forwardedHost;
-    } else {
-      host = request.getRequestURL().substring(0, StringUtils.ordinalIndexOf(request.getRequestURL(), "/", 3));
-    }
-
-    for (Resource resource : resolver.getResources("classpath*:/static/assets.json")) {
-      if (resourceBelongsToPlugin(resource, plugin)) {
-        log.trace("found asset descriptor for plugin {}: {}", plugin.getMetadata().getId(), resource.getURL());
-        javascriptAssets = mapper.readValue(resource.getInputStream(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
-      }
-    }
-
-    assets.addAll(javascriptAssets.stream().map(javascriptAsset -> host + '/' + javascriptAsset).collect(Collectors.toList()));
-
-    // The AngularJS module descriptor must be in the root directory and be
-    // named "<lowercase domain id>.js"
-    String filename = plugin.getMetadata().getId().toLowerCase().replaceAll(" ", "-") + ".js";
-
-    // FIXME: HACK ALERT
-    if (plugin.getMetadata().getId().contains("WinCC OA") || plugin.getMetadata().getId().contains("WINCCOA")) {
-      filename = "winccoa-cv.js";
-    }
-
-    Resource moduleDescriptor = resolver.getResource("classpath*:/static/" + filename);
 
     for (Resource resource : resolver.getResources("classpath*:/static/**")) {
       if (resourceBelongsToPlugin(resource, plugin) && !resource.getFilename().equals(moduleDescriptor.getFilename())) {
@@ -111,31 +80,9 @@ public class PluginAssetController {
   }
 
   
-  // TODO: Duplicated from above method!!
-  @RequestMapping("/api/plugins/{id}/search-assets")
-  public List<String> getSearchAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws IOException, URISyntaxException {
-    RequestProvider plugin = getPlugin(id);
-
-    LinkedList<String> assets = new LinkedList<>();
-    List<String> javascriptAssets = new ArrayList<>();
-    String host;
-
-    String forwardedHost = request.getHeader("X-Forwarded-Host");
-    if (forwardedHost != null) {
-      host = "https://" + forwardedHost;
-    } else {
-      host = request.getRequestURL().substring(0, StringUtils.ordinalIndexOf(request.getRequestURL(), "/", 3));
-    }
-
-    for (Resource resource : resolver.getResources("classpath*:/static/search-assets.json")) {
-      if (resourceBelongsToPlugin(resource, plugin)) {
-        log.trace("found search asset descriptor for plugin {}: {}", plugin.getMetadata().getId(), resource.getURL());
-        javascriptAssets = mapper.readValue(resource.getInputStream(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
-      }
-    }
-
-    assets.addAll(javascriptAssets.stream().map(javascriptAsset -> host + '/' + javascriptAsset).collect(Collectors.toList()));
-
+  private Resource getPluginModuleDescriptor(String pluginId) {
+    RequestProvider plugin = getPlugin(pluginId);
+    
     // The AngularJS module descriptor must be in the root directory and be
     // named "<lowercase domain id>.js"
     String filename = plugin.getMetadata().getId().toLowerCase().replaceAll(" ", "-") + ".js";
@@ -145,22 +92,48 @@ public class PluginAssetController {
       filename = "winccoa-cv.js";
     }
 
-    Resource moduleDescriptor = resolver.getResource("classpath*:/static/" + filename);
-/*
-    for (Resource resource : resolver.getResources("classpath*:/static/**")) {
-      if (resourceBelongsToPlugin(resource, plugin) && !resource.getFilename().equals(moduleDescriptor.getFilename())) {
-        log.trace("found resource for plugin {}: {}", plugin.getMetadata().getId(), resource.getURL());
+    return resolver.getResource("classpath*:/static/" + filename);
+  }
+  
+  
+  private String getHostUrl(HttpServletRequest request ) {
+    String forwardedHost = request.getHeader("X-Forwarded-Host");
+    if (forwardedHost != null) {
+      return "https://" + forwardedHost;
+    } else {
+      return request.getRequestURL().substring(0, StringUtils.ordinalIndexOf(request.getRequestURL(), "/", 3));
+    }
+  }
+  
+  private List<String> getPluginAssets(String pluginId, String assetName, String host) throws IOException, URISyntaxException {
+    RequestProvider plugin = getPlugin(pluginId);
 
-        if (FilenameUtils.isExtension(resource.getFilename(), new String[]{"js", "html", "css"})) {
-          String path = host + '/' + resource.getURL().getPath().split("static/")[1];
+    LinkedList<String> assets = new LinkedList<>();
+    List<String> javascriptAssets = new ArrayList<>();
 
-          if (!assets.contains(path)) {
-            assets.add(path);
-          }
-        }
+    for (Resource resource : resolver.getResources("classpath*:/static/" + assetName + ".json")) {
+      if (resourceBelongsToPlugin(resource, plugin)) {
+        log.trace("found asset descriptor for plugin {}: {}", plugin.getMetadata().getId(), resource.getURL());
+        javascriptAssets = mapper.readValue(resource.getInputStream(), mapper.getTypeFactory().constructCollectionType(List.class, String.class));
       }
-    }*/
+    }
 
+    assets.addAll(javascriptAssets.stream().map(javascriptAsset -> host + '/' + javascriptAsset).collect(Collectors.toList()));
+    
+    return assets;
+  }
+  
+  
+  @RequestMapping("/api/plugins/{id}/search-assets")
+  public List<String> getSearchAssetsForPlugin(@PathVariable("id") String id, HttpServletRequest request) throws IOException, URISyntaxException {
+    String host = getHostUrl(request);
+    List<String> assets = getPluginAssets(id, "search-assets", host);
+    
+    if (assets.isEmpty()) {
+      return assets;
+    }
+
+    Resource moduleDescriptor = getPluginModuleDescriptor(id);
     assets.add(host + '/' + moduleDescriptor.getFilename());
     return assets;
   }
