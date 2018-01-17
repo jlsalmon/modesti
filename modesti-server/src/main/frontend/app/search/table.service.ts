@@ -15,8 +15,6 @@ import {SearchService} from './search.service';
 import {IStateService} from 'angular-ui-router';
 
 export class TableService {
-  public schema: Schema;
-  public schemas: Schema[];
   public table: Table;
   public filters: Map<string, Filter>;
   public query: string;
@@ -32,7 +30,6 @@ export class TableService {
     private requestService: RequestService) {}
 
   public buildTable(schema: Schema, settings: any){
-    this.schema = schema;
     this.table = TableFactory.createTable('ag-grid', schema, [], settings);
     return this.table;
   }
@@ -129,7 +126,7 @@ export class TableService {
           let query: string = QueryParser.parse(this.filters);
           let page: any = {number: 0, size: this.page.totalElements};
 
-          return this.searchService.getPoints(this.schema.id, this.schema.primary, query, page, this.sort)
+          return this.searchService.getPoints(this.table.schema.id, this.table.schema.primary, query, page, this.sort)
           .then((response: any) => {
             let points: Point[] = [];
 
@@ -141,7 +138,7 @@ export class TableService {
           });
         }
       },
-      schema: () => this.schema,
+      schema: () => this.table.schema,
       message: () => this.updateMessage
     }
   }
