@@ -47,7 +47,6 @@ export class SearchController {
     };
 
     this.table = this.tableService.buildTable(this.schema, settings);
-    // this.table = TableFactory.createTable('ag-grid', this.schema, [], settings);
 
     $rootScope.$on('modesti:searchFiltersChanged', (event: IAngularEvent, filters: Map<string, Filter>) => {
       this.filters = filters;
