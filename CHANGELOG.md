@@ -114,7 +114,7 @@ For more details on a given release, please check also the [Milestone planning](
 
 
 [Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/19
-[0.2.29]: https://gitlab.cern.ch/modesti/modesti/milestones/18
+[0.2.20]: https://gitlab.cern.ch/modesti/modesti/milestones/18
 [0.2.19]: https://gitlab.cern.ch/modesti/modesti/milestones/17
 [0.2.18]: https://gitlab.cern.ch/modesti/modesti/milestones/16
 [0.2.17]: https://gitlab.cern.ch/modesti/modesti/milestones/15
