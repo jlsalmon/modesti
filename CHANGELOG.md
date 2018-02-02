@@ -6,13 +6,24 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/).
 All issues referenced in parentheses can be consulted under [CERN GitLab](https://gitlab.cern.ch/modesti/modesti/issues).
 For more details on a given release, please check also the [Milestone planning](https://gitlab.cern.ch/modesti/modesti/milestones?state=all).
 
-
 ## [Unreleased]
 ### Added
 
 ### Changed
 
 ### Fixed
+
+
+## [0.2.20] - 2018-02-02
+### Added
+- Added support for custom controls on search page (#233)
+
+### Changed
+- On requests page search filters are now applied with wildcards without the need to match directly the case (#238)
+
+### Fixed
+- Applying now the correct data type to the numeric point properties in update requests. This is important when changing e.g. float values (#237)
+- Fixed problem with duplicated elements in pageable searchs (#236)
 
 
 ## [0.2.19] - 2017-12-06
@@ -102,7 +113,8 @@ For more details on a given release, please check also the [Milestone planning](
 - Avoid NPE when no change history entry was found
 
 
-[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/18
+[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/19
+[0.2.29]: https://gitlab.cern.ch/modesti/modesti/milestones/18
 [0.2.19]: https://gitlab.cern.ch/modesti/modesti/milestones/17
 [0.2.18]: https://gitlab.cern.ch/modesti/modesti/milestones/16
 [0.2.17]: https://gitlab.cern.ch/modesti/modesti/milestones/15
