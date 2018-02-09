@@ -44,7 +44,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
     config.exposeIdsFor(RequestHistoryImpl.class, UserImpl.class, SchemaImpl.class,
         CategoryImpl.class, DatasourceImpl.class, Field.class, TextField.class, AutocompleteField.class, NumericField.class,
-        CheckboxField.class, OptionsField.class, Option.class);
+        CheckboxField.class, OptionsField.class, Option.class, EmailField.class, DateField.class);
 
     config.setReturnBodyOnCreate(true);
     config.setReturnBodyOnUpdate(true);
