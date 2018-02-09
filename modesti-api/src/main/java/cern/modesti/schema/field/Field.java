@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 
 /**
@@ -30,7 +29,9 @@ import java.io.Serializable;
     @Type(value = NumericField.class, name = "numeric"),
     @Type(value = CheckboxField.class, name = "checkbox"),
     @Type(value = OptionsField.class, name = "options"),
-    @Type(value = AutocompleteField.class, name = "autocomplete")})
+    @Type(value = AutocompleteField.class, name = "autocomplete"),
+    @Type(value = EmailField.class, name = "email"),
+    @Type(value = DateField.class, name = "date")})
 @JsonInclude(Include.NON_NULL)
 public class Field implements Serializable {
 
