@@ -10,6 +10,7 @@ export class Request implements ISerializable<Request> {
   public creator: string;
   public assignee: string;
   public valid: boolean;
+  public skipCoreValidation: boolean;
   public points: Point[];
   public comments: any[];
   public createdAt: string;
@@ -28,6 +29,7 @@ export class Request implements ISerializable<Request> {
   public deserialize(request: Request): Request {
     this.requestId = request.requestId;
     this.status = request.status;
+    this.skipCoreValidation = request.skipCoreValidation;
     this.type = request.type;
     this.description = request.description;
     this.domain = request.domain;
