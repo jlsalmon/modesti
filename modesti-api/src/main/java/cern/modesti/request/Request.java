@@ -66,6 +66,10 @@ public interface Request extends Serializable {
   boolean isValid();
 
   void setValid(boolean valid);
+  
+  boolean isSkipCoreValidation();
+  
+  void setSkipCoreValidation(boolean skip);
 
   List<Point> getPoints();
 
