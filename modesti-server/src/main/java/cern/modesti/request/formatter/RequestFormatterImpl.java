@@ -25,15 +25,17 @@ public class RequestFormatterImpl implements RequestFormatter {
   @Autowired
   private ApplicationContext context;
   
+  private static final String SUFFIX = "RequestFormatter";
+  
   @Override
   public void format(Request request) {
-    String domain = request.getDomain();
+    String formatterName = request.getDomain() + SUFFIX;
     try {
-      RequestFormatter domainFormatter = context.getBean(domain, RequestFormatter.class);
+      RequestFormatter domainFormatter = context.getBean(formatterName, RequestFormatter.class);
       domainFormatter.format(request);
     } catch (BeansException e) {
       // Domain formatter not found
-      log.debug("Exception looking for a request formatter of the domain {}", domain, e);
+      log.debug("Exception looking for a request formatter of the domain {}", formatterName, e);
     }
   }
 }
