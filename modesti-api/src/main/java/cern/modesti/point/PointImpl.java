@@ -122,18 +122,15 @@ public class PointImpl implements Point {
       // TODO: or a "multiple" option which would do the same... or both
 
       // HACK ALERT: treat auto-generated fields as "empty"
-      if (field.getId().equals("tagname") || field.getId().equals("faultFamily") ||
-          field.getId().equals("faultMember") || field.getId().equals("pointDescription")) {
-        if (!emptyFields.contains(field)) {
-          emptyFields.add(field);
-        }
+      if ( (field.getId().equals("tagname") || field.getId().equals("faultFamily") ||
+          field.getId().equals("faultMember") || field.getId().equals("pointDescription")) && 
+          !emptyFields.contains(field)) {
+        emptyFields.add(field);
       }
 
       // HACK ALERT #2: ignore the monitoringEquipment field because it can be in multiple categories...
-      if (field.getId().equals("monitoringEquipment")) {
-        if (!emptyFields.contains(field)) {
-          emptyFields.add(field);
-        }
+      if (field.getId().equals("monitoringEquipment") && !emptyFields.contains(field)) {
+        emptyFields.add(field);
       }
     }
 
@@ -195,7 +192,8 @@ public class PointImpl implements Point {
   public void addErrorMessage(String category, String property, String message) {
     String finalMessageToLog = Optional.ofNullable(message)
             .orElse("Unexpected error occurred, no message available. Try again in few minutes.");
-    boolean errorPropertyExists = false, propertyMessageExists = false;
+    boolean errorPropertyExists = false;
+    boolean propertyMessageExists = false;
 
     for (Error error : errors) {
       if (error.getProperty().equals(property)) {
@@ -228,24 +226,24 @@ public class PointImpl implements Point {
     if (o == this) return true;
     if (!(o instanceof Point)) return false;
     final PointImpl other = (PointImpl) o;
-    final Object this$lineNo = this.lineNo;
-    final Object other$lineNo = other.lineNo;
-    return !(this$lineNo == null ? other$lineNo != null : !this$lineNo.equals(other$lineNo));
+    final Object thisLineNo = this.lineNo;
+    final Object otherLineNo = other.lineNo;
+    return !(thisLineNo == null ? otherLineNo != null : !thisLineNo.equals(otherLineNo));
   }
 
   public int hashCode() {
-    final int PRIME = 59;
+    final int prime = 59;
     int result = 1;
-    final Object $lineNo = this.lineNo;
-    result = result * PRIME + ($lineNo == null ? 0 : $lineNo.hashCode());
-    final Object $dirty = this.dirty;
-    result = result * PRIME + ($dirty == null ? 0 : $dirty.hashCode());
-    final Object $selected = this.selected;
-    result = result * PRIME + ($selected == null ? 0 : $selected.hashCode());
-    final Object $errors = this.errors;
-    result = result * PRIME + ($errors == null ? 0 : $errors.hashCode());
-    final Object $properties = this.properties;
-    result = result * PRIME + ($properties == null ? 0 : $properties.hashCode());
+    final Object thisLineNo = this.lineNo;
+    result = result * prime + (thisLineNo == null ? 0 : thisLineNo.hashCode());
+    final Object thisDirty = this.dirty;
+    result = result * prime + (thisDirty == null ? 0 : thisDirty.hashCode());
+    final Object thisSelected = this.selected;
+    result = result * prime + (thisSelected == null ? 0 : thisSelected.hashCode());
+    final Object thisErrors = this.errors;
+    result = result * prime + (thisErrors == null ? 0 : thisErrors.hashCode());
+    final Object thisProperties = this.properties;
+    result = result * prime + (thisProperties == null ? 0 : thisProperties.hashCode());
     return result;
   }
 }
