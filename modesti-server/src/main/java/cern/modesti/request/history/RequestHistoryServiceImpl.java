@@ -1,16 +1,10 @@
 package cern.modesti.request.history;
 
 import cern.modesti.request.Request;
-import cern.modesti.request.RequestImpl;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaRepository;
-import de.danielbechler.diff.ObjectDifferBuilder;
-import de.danielbechler.diff.node.DiffNode;
-import de.danielbechler.diff.path.NodePath;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -39,11 +33,8 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
   @Autowired
   private SchemaRepository schemaRepository;
 
-  /**
-   * Create a new entry in the history repository for the given request.
-   *
-   * @param request the request object
-   */
+  
+  @Override
   public void initialiseChangeHistory(Request request) {
     log.info(format("creating new base history record for request #%s", request.getRequestId()));
 
@@ -53,16 +44,8 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
     requestHistoryRepository.save(entry);
   }
 
-  /**
-   * Compare the changes from the given, modified request to the original
-   * request and save them to the history record.
-   *
-   * Currently we are only storing a single change event, diffed from the
-   * original request. This only makes sense for UPDATE requests. Storing
-   * successive diffs for CREATE requests would probably be too complicated.
-   *
-   * @param modified the modified request
-   */
+
+  @Override
   public void saveChangeHistory(Request modified) {
     log.info(format("processing change history for request #%s", modified.getRequestId()));
     RequestHistoryImpl entry = requestHistoryRepository.findOneByRequestId(modified.getRequestId());
@@ -81,6 +64,7 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
     requestHistoryRepository.save(entry);
   }
 
+  @Override
   public List<Change> getChanges(Request request) {
     RequestHistory entry = requestHistoryRepository.findOneByRequestId(request.getRequestId());
     if (entry != null && !entry.getEvents().isEmpty()) {
@@ -88,5 +72,13 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
     } else {
       return new ArrayList<>();
     }
+  }
+
+
+  @Override
+  public void deleteChangeHistory(Request request) {
+    log.info(format("deleting change history for request #%s", request.getRequestId()));
+    RequestHistory entry = requestHistoryRepository.findOneByRequestId(request.getRequestId());
+    requestHistoryRepository.delete(entry.getId());
   }
 }
