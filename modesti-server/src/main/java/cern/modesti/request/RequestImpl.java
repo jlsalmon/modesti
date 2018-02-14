@@ -84,6 +84,8 @@ public class RequestImpl implements Request {
   private String assignee;
 
   private boolean valid;
+  
+  private boolean skipCoreValidation;
 
   private List<PointImpl> points = new ArrayList<>();
 
@@ -170,4 +172,5 @@ public class RequestImpl implements Request {
     
     setValid(errors.isEmpty());
   }
+
 }
