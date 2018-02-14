@@ -64,7 +64,8 @@ public class CoreValidationService implements ValidationService {
         point.setErrors(new ArrayList<>());
       }
 
-      if (environment.getProperty("modesti.disableValidator", Boolean.class, false)) {
+      if (environment.getProperty("modesti.disableValidator", Boolean.class, false) ||
+          request.isSkipCoreValidation()) {
         log.info("core validations disabled");
       } else {
 
