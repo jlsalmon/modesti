@@ -78,6 +78,7 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
     request.setStatus(savedRequest.getStatus());
     request.setErrors(savedRequest.getErrors());
     request.setPoints(savedRequest.getPoints());
+    request.setSkipCoreValidation(savedRequest.isSkipCoreValidation());
     
     return processInstance;
   }
