@@ -63,7 +63,7 @@ import {ValidationService} from './request/validation/validation.service.ts';
 import {CacheService} from './cache/cache.service.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
-import {DeletePointsModalController} from './search/delete/delete-points.modal';
+import {DeletePointsModalController} from './search/delete/delete-points.modal.ts';
 import {RestangularConfig} from './config/restangular.config.ts';
 import {RouterConfig} from './config/router.config.ts';
 import {HttpConfig} from './config/http.config.ts';
