@@ -107,12 +107,12 @@
                              theme="bootstrap"
                              ng-required="{{field.required}}">
                     <ui-select-match placeholder="Type to search...">
-                      {{$select.selected[field.model ? field.model : 'value']}}
+                      {{$select.selected[field.model ? field.model : 'value' ]}}
                     </ui-select-match>
                     <ui-select-choices repeat="item in $ctrl.fieldValues"
                                        refresh="$ctrl.queryFieldValues(field, $select.search)"
                                        refresh-delay="0">
-                      <div ng-bind-html="item[field.model ? field.model : 'value'] | highlight: $select.search"></div>
+                      <div ng-bind-html="item[field.model ? field.model : 'value' ] | highlight: $select.search"></div>
                     </ui-select-choices>
                   </ui-select>
 
@@ -130,7 +130,12 @@
                   </ui-select>
 
 
-                  <span class="help-block">{{field.help}}</span>
+                  <span class="help-block">
+					  <span>{{field.help}}</span>
+					  <a ng-if="field.helpUrl" href="{{field.helpUrl}}" rel="noopener" target="_blank">
+					    <span class="glyphicon glyphicon-question-sign"></span>
+					  </a>
+				  </span>
                 </div>
               </div>
             </ng-form>
