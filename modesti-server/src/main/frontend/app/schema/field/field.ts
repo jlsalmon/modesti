@@ -5,6 +5,7 @@ export class Field {
   public type: string;
   public name: string;
   public help: string;
+  public helpUrl: string;
   public required: boolean;
   public unique: boolean;
   public editable: any;
@@ -45,6 +46,7 @@ export class Field {
     this.type = field.type;
     this.name = field.name;
     this.help = field.help;
+    this.helpUrl = field.helpUrl;
     this.required = field.required;
     this.unique = field.unique;
     this.editable = field.editable;

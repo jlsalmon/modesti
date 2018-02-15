@@ -69,6 +69,8 @@ public class Field implements Serializable {
 
   private String help = "";
 
+  private String helpUrl = "";
+
   public Field(String id) {
     this.id = id;
   }
