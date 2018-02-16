@@ -62,9 +62,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     String from = env.getRequiredProperty("spring.mail.from");
 
-    // If we're on the test server, send all emails to the developers group
+    // If we're on the test server, send all emails to the addresses specified in the property or to the developers group
     if (from.contains("test")) {
-      recipients = Collections.singletonList("modesti-developers@cern.ch");
+      String [] sendTo = env.getProperty("spring.mail.test.recipients", "modesti-developers@cern.ch").split(",");
+      recipients = Arrays.asList(sendTo);
       from = "modesti.service@cern.ch";
     }
 
