@@ -49,8 +49,8 @@
 						  <ui-select-match placeholder="Type to search...">
 							  {{$select.selected[field.model ? field.model : 'value' ]}}
 						  </ui-select-match>
-						  <ui-select-choices repeat="item in $ctrl.fieldValues"
-											 refresh="$ctrl.queryFieldValues(field, $select.search)"
+						  <ui-select-choices repeat="item in ctrl.fieldValues"
+											 refresh="ctrl.queryFieldValues(field, $select.search)"
 											 refresh-delay="0">
 							  <div ng-bind-html="item[field.model ? field.model : 'value' ] | highlight: $select.search"></div>
 						  </ui-select-choices>
