@@ -66,6 +66,13 @@ class RequestToolbarController {
     });
   }
 
+  public unassignTask(): void {
+    this.taskService.unassignTask(this.request).then((newTask: Task) => {
+      this.tasks[newTask.name] = newTask;
+      this.table.refreshColumnDefs();
+    });
+  }
+
   public assignTaskToCurrentUser(): void {
     this.taskService.assignTaskToCurrentUser(this.request).then((newTask: Task) => {
       this.tasks[newTask.name] = newTask;
