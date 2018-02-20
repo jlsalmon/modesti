@@ -103,6 +103,27 @@ export class TaskService {
     return q.promise;
   }
 
+  public unassignTask(request: Request): IPromise<Task> {
+    let q: IDeferred<Task> = this.$q.defer();
+    let task: Task = this.getCurrentTask();
+
+    let params: any = {
+      action: 'UNASSIGN'
+    };
+
+    this.$http.post('/api/requests/' + request.requestId + '/tasks/' + task.name, params).then((response: any) => {
+      console.log('unassigned task ' + task.name);
+      q.resolve(response.data);
+    },
+
+    (error: any) => {
+      console.log('error unassigning task ' + task.name + ': ' + error.data.message);
+      q.reject(error);
+    });
+
+    return q.promise;
+  }
+
   public assignTaskToCurrentUser(request: Request): IPromise<Task> {
     let q: IDeferred<Task> = this.$q.defer();
     let task: Task = this.getCurrentTask();
