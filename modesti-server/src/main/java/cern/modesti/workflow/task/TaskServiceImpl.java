@@ -108,6 +108,8 @@ public class TaskServiceImpl implements TaskService {
     switch (action.getAction()) {
       case ASSIGN:
         return assignTask(requestId, taskName, action.getAssignee());
+      case UNASSIGN:
+        return unassignTask(requestId, taskName);
       case COMPLETE:
         completeTask(requestId, taskName);
         return null;
@@ -137,6 +139,16 @@ public class TaskServiceImpl implements TaskService {
     // This will trigger an "assignment" event on the task, and also cause the assignee to be saved to the request object.
     taskService.setAssignee(task.getId(), username);
 
+    task = getTaskForRequest(requestId, taskName);
+    return new TaskInfoImpl(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(),
+        getCandidateGroups(task));
+  }
+  
+  
+  private TaskInfo unassignTask(String requestId, String taskName) {
+    Task task = getTaskForRequest(requestId, taskName);
+    task.setAssignee(null);
+    taskService.setAssignee(task.getId(), null);
     task = getTaskForRequest(requestId, taskName);
     return new TaskInfoImpl(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(),
         getCandidateGroups(task));
