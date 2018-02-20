@@ -94,6 +94,13 @@
       Assign to me
     </button>
 
+    <!-- Unassign button -->
+    <button show-if="user-authorised-for-task && task-assigned-to-current-user"
+            ng-click="$ctrl.unassignTask()"
+            class="btn btn-sm btn-default toolbar-item">
+      Unassign
+    </button>
+
 
     <!-- Show a red warning if the request is restricted to administrators only -->
     <span class="toolbar-item"
