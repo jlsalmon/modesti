@@ -14,6 +14,14 @@ For more details on a given release, please check also the [Milestone planning](
 ### Fixed
 
 
+## [0.2.21]
+### Added
+- Extend input types for the new or update request form (#240)
+
+### Changed
+- Modify the bean name of the request formatters (#244)
+
+
 ## [0.2.20] - 2018-02-02
 ### Added
 - Added support for custom controls on search page (#233)
@@ -112,8 +120,8 @@ For more details on a given release, please check also the [Milestone planning](
 - Fixed pagination problem in configuration browsing, which showed twice the first page (#194)
 - Avoid NPE when no change history entry was found
 
-
-[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/19
+[Unreleased]: https://gitlab.cern.ch/modesti/modesti/milestones/20
+[0.2.21]: https://gitlab.cern.ch/modesti/modesti/milestones/19
 [0.2.20]: https://gitlab.cern.ch/modesti/modesti/milestones/18
 [0.2.19]: https://gitlab.cern.ch/modesti/modesti/milestones/17
 [0.2.18]: https://gitlab.cern.ch/modesti/modesti/milestones/16
