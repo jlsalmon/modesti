@@ -52,7 +52,8 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
 
     if (task.getEventName().equals(TaskListener.EVENTNAME_ASSIGNMENT)) {
       User assignee = userService.findOneByUsername(task.getAssignee());
-      request.setAssignee(assignee.getUsername());
+      String username = assignee == null ? null : assignee.getUsername();
+      request.setAssignee(username);
     }
 
     else if (task.getEventName().equals(TaskListener.EVENTNAME_DELETE)) {
