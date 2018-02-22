@@ -50,6 +50,7 @@ export class SearchController {
 
     $rootScope.$on('modesti:searchFiltersChanged', (event: IAngularEvent, filters: Map<string, Filter>) => {
       this.filters = filters;
+      this.tableService.filters = this.filters;
       this.search();
     });
   }
