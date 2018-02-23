@@ -8,13 +8,13 @@ import IPromise = angular.IPromise;
 import {IPromise, IRootScopeService} from 'angular';
 
 export class UpdatePointsModalController {
-  public static $inject: string[] = ['$uibModalInstance', '$rootScope', 'points', 'schema', 'message', 'AuthService', 'SchemaService'];
+  public static $inject: string[] = ['$uibModalInstance', '$rootScope', 'points', 'schema', 'message', 'header', 'AuthService', 'SchemaService'];
 
   public request: Request;
   public fieldValues: any[] = [];
 
   constructor(private $modalInstance: any, private $rootScope: IRootScopeService, private points: Point[], private schema: Schema, private message: string,
-              private authService: AuthService, private schemaService: SchemaService) {
+  			  private header: string, private authService: AuthService, private schemaService: SchemaService) {
     this.request = new Request();
     this.request.type = 'UPDATE';
     this.request.description = '';
@@ -23,6 +23,7 @@ export class UpdatePointsModalController {
     this.request.domain = schema.id;
     this.request.points = points;
     this.updateMessage = message;
+    this.updateHeader = header;
   }
 
   public ok(): void {

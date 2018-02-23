@@ -34,11 +34,20 @@ export class TableService {
     return this.table;
   }
 
+  public getDefaultUpdateHeader() {
+    return 'Modify points';
+  }
+
   public getDefaultUpdateMessage() {
     return 'You are about to create a new MODESTI request to update <b>' + this.table.getSelectedPoints().length + '</b> points.';
   }
 
-  public updatePoints(message: string = ''): void {
+  public updatePoints(header: string = '', message: string = ''): void {
+  	if (typeof(header) == undefined || header == '') {
+	  this.updateHeader = this.getDefaultUpdateHeader();
+    } else {
+	  this.updateHeader = header
+    }
     if (typeof(message) == undefined || message == '') {
       this.updateMessage = this.getDefaultUpdateMessage();
     } else {
@@ -139,7 +148,8 @@ export class TableService {
         }
       },
       schema: () => this.table.schema,
-      message: () => this.updateMessage
+      message: () => this.updateMessage,
+      header: () => this.updateHeader
     }
   }
 }
