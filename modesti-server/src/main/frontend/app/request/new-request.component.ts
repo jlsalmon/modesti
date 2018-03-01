@@ -53,6 +53,18 @@ class NewRequestController {
     });
   }
 
+  public removeDuplicates(arr: any[], model: string): string[] {
+	if(!model){	model = 'value'; }
+	let duplicatesArr = arr.map(function(item){ return item[model] });
+	let duplicatesFreeArr: string[] = [];
+	duplicatesArr.some(function(item, idx){
+	  if (duplicatesArr.indexOf(item) == idx ){
+		  duplicatesFreeArr.push(arr[idx]);
+	  }
+	});
+	return duplicatesFreeArr;
+  }
+
   public submit(form: IFormController): void {
     if (form.$invalid) {
       console.log('form invalid');
