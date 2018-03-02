@@ -44,7 +44,14 @@ export class RequestService {
 
     for (let property in filter) {
       if (typeof filter[property] === 'string' && filter[property] !== '') {
-        expressions.push(property.toString() + '=="*' + filter[property] + '*"');
+        switch (property.toString()) {
+          case 'description':
+          case 'id':
+            expressions.push(property.toString() + '=="*' + filter[property] + '*"');
+            break;
+          default:
+            expressions.push(property.toString() + '=="' + filter[property] + '"');
+        }
       } else if (filter[property] instanceof Array && filter[property].length > 0) {
         expressions.push(property.toString() + '=in=' + '("' + filter[property].join('","') + '")');
       } else if (typeof filter[property] === 'object') {
