@@ -26,18 +26,6 @@ export class UpdatePointsModalController {
     this.updateHeader = header;
   }
 
-  public removeDuplicates(arr: any[], model: string): string[] {
-	if(!model){	model = 'value'; }
-	let duplicatesArr = arr.map(function(item){ return item[model] });
-	let duplicatesFreeArr: string[] = [];
-	duplicatesArr.some(function(item, idx){
-	  if (duplicatesArr.indexOf(item) == idx ){
-		  duplicatesFreeArr.push(arr[idx]);
-	  }
-	});
-	return duplicatesFreeArr;
-  }
-
   public ok(): void {
     this.$modalInstance.close(this.request);
   }
@@ -50,5 +38,23 @@ export class UpdatePointsModalController {
     return this.schemaService.queryFieldValues(field, query, undefined).then((values: any[]) => {
       this.fieldValues = values;
 	});
+  }
+
+  public queryFieldValues(field: Field, query: string): IPromise<void> {
+    return this.schemaService.queryFieldValues(field, query, undefined).then((values: any[]) => {
+      let model: string = field.model;
+
+      if(!model){ model = 'value'; }
+
+      let modelValues : string[] = [];
+      for(let i in values){
+	    let v = values[i];
+	    let modelValue = v[model];
+	    modelValues.push(modelValue);
+      }
+      let modelValuesSet = new Set(modelValues);
+      modelValues = Array.from(modelValuesSet);
+      this.fieldValues = modelValues;
+    });
   }
 }

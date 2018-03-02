@@ -45,12 +45,12 @@
 								 theme="bootstrap"
 								 ng-required="{{field.required}}">
 						  <ui-select-match placeholder="Type to search...">
-							  {{$select.selected[field.model ? field.model : 'value' ]}}
+							  {{$select.selected}}
 						  </ui-select-match>
-						  <ui-select-choices repeat="item in ctrl.removeDuplicates(ctrl.fieldValues, field.model) | filter: $select.search"
+						  <ui-select-choices repeat="item in ctrl.fieldValues | filter: $select.search track by item"
 											 refresh="ctrl.queryFieldValues(field, $select.search)"
 											 refresh-delay="0">
-							  <div ng-bind-html="item[field.model ? field.model : 'value' ] | highlight: $select.search"></div>
+							  <div ng-bind-html="item | highlight: $select.search"></div>
 						  </ui-select-choices>
 					  </ui-select>
 
@@ -65,7 +65,6 @@
 							  <div ng-bind-html="item | highlight: $select.search"></div>
 						  </ui-select-choices>
 					  </ui-select>
-
 
 					  <span class="help-block">
 					  <span>{{field.help}}</span>
