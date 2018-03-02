@@ -43,17 +43,16 @@ export class UpdatePointsModalController {
   public queryFieldValues(field: Field, query: string): IPromise<void> {
     return this.schemaService.queryFieldValues(field, query, undefined).then((values: any[]) => {
       let model: string = field.model;
-
       if(!model){ model = 'value'; }
+      let modelValuesSet = new Set();
 
-      let modelValues : string[] = [];
       for(let i in values){
 	    let v = values[i];
 	    let modelValue = v[model];
-	    modelValues.push(modelValue);
+	    modelValuesSet.add(modelValue);
       }
-      let modelValuesSet = new Set(modelValues);
-      modelValues = Array.from(modelValuesSet);
+
+      let modelValues: string[] = Array.from(modelValuesSet);
       this.fieldValues = modelValues;
     });
   }
