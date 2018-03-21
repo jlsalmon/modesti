@@ -3,6 +3,7 @@ package cern.modesti.workflow.validation;
 import cern.modesti.plugin.RequestProvider;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestService;
+import cern.modesti.request.RequestType;
 import cern.modesti.point.Point;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaRepository;
@@ -55,9 +56,14 @@ public class CoreValidationService implements ValidationService {
 
   public boolean validateRequest(Request request) {
     try {
+      if (RequestType.DELETE.equals(request.getType())) {
+        // Delete requests should not be validated
+        return true;
+      }
+      
       boolean valid = true;
       Schema schema = schemaRepository.findOne(request.getDomain());
-
+      
       // Reset all points and clear any error messages.
       for (Point point : request.getPoints()) {
         point.setValid(true);
@@ -117,7 +123,7 @@ public class CoreValidationService implements ValidationService {
     }catch(RuntimeException e){
       request.setValid(false);
       requestService.save(request);
-      log.info(format("Unexpected error during validation phase for request #%s '%s'", request.getRequestId(), e.toString()));
+      log.info(format("Unexpected error during validation phase for request #%s '%s'", request.getRequestId(), e.toString()), e);
       return false;
     }
   }
