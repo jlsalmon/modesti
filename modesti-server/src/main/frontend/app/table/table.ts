@@ -1,4 +1,5 @@
 import {Schema} from '../schema/schema';
+import {Category} from '../schema/category/category';
 import {Field} from '../schema/field/field';
 
 export abstract class Table {
@@ -24,6 +25,8 @@ export abstract class Table {
   public abstract hideColumn(field: Field): void;
 
   public abstract toggleColumn(field: Field): void;
+
+  public abstract toggleCategory(category: Category): void;
 
   public abstract isVisibleColumn(field: Field): boolean;
 

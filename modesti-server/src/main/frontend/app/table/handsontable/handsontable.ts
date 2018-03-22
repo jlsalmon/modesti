@@ -9,10 +9,12 @@ import {SchemaService} from '../../schema/schema.service';
 import {TaskService} from '../../task/task.service';
 import {ColumnFactory} from '../column-factory';
 import {Point} from '../../request/point/point';
+import { CacheService } from '../../cache/cache.service';
 
 import 'latinize';
 import {ContextMenuFactory} from "./context-menu-factory";
 import {IInterpolateService} from 'angular';
+import { forEach } from 'angular-ui-router';
 declare var latinize: any;
 
 // TODO: import this properly without require()
@@ -27,6 +29,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   public schemaService: SchemaService;
   public taskService: TaskService;
   public interpolate: IInterpolateService;
+  public cacheService: CacheService;
 
   public constructor(schema: Schema, data: any[], settings: any) {
     super(schema, data, settings);
@@ -34,6 +37,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     this.schemaService = settings.schemaService;
     this.taskService = settings.taskService;
     this.interpolate = settings.interpolate;
+    this.cacheService = settings.cacheService;
 
     let columnDefs: any[] = this.getColumnDefs();
 
@@ -142,19 +146,82 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     return this.settings.requestStatus === 'IN_PROGRESS' && this.settings.requestType === 'CREATE';
   }
 
+  private addVisibleCategoryToCache(categoryId : string) : void {
+    let domain : string = this.schema.id;
+    let visibleCategories : string[] = this.getVisibleCategoriesFromCache(domain);
+
+    if (!(categoryId in visibleCategories)) {
+      visibleCategories.push(categoryId);
+    }
+
+    this.cacheService.requestColumnsCache.put(domain, visibleCategories);
+  }
+
+  private deleteVisibleCategoryFromCache(categoryId: string) : void {
+    let domain : string = this.schema.id;
+    let visibleCategories : string[] = this.getVisibleCategoriesFromCache(domain);
+
+    let index :number = visibleCategories.indexOf(categoryId);
+    if (index > -1) {
+      visibleCategories.splice(index, 1);
+    }
+
+    this.cacheService.requestColumnsCache.put(domain, visibleCategories);
+  }
+
+  private getVisibleCategoriesFromCache(domain: string) : string[] {
+    let visibleCategoriesCache = this.cacheService.requestColumnsCache;
+    if (visibleCategoriesCache[domain] == undefined) {
+      visibleCategoriesCache[domain] = [];
+    }
+
+    return visibleCategoriesCache[domain];
+  }
+
+
   public determineInitialHiddenColumns(columnDefs: any[]): number[] {
     let hiddenColumns: number[] = [];
+    let domain = this.schema.id;
 
-    // Otherwise, initially show only the first category
-    let firstCategory: Category = this.schema.categories[0];
+    let visibleCategories : string[] = this.getVisibleCategoriesFromCache(domain);
+    if (visibleCategories.length == 0) {
+      let defaultVisibleCategory : string = this.schema.categories[0].id;
+      this.addVisibleCategoryToCache(defaultVisibleCategory);
+      hiddenColumns = this.getInitialHiddenColumns([defaultVisibleCategory], columnDefs);
+    } else {
+      hiddenColumns = this.getInitialHiddenColumns(visibleCategories, columnDefs);
+    }
+
+    return hiddenColumns;
+  }
+
+  private getInitialHiddenColumns(visibleCategories: string[], columnDefs: any[]) : number[] {
+    let hiddenColumns: number[] = [];
+    let visibleFields : Field[] = [];
+    let allCategories : Category[] = this.schema.categories;
+    if (this.schema.datasources !== undefined) {
+      allCategories = allCategories.concat(this.schema.datasources);
+    }
+
+    visibleCategories.forEach((id: string) => {
+      let category : Category = allCategories.find((c: Category) => { 
+        return id == c.id;
+      }) ;
+      if (category !== undefined) {
+        visibleFields = visibleFields.concat(category.fields);
+      } else {
+        this.deleteVisibleCategoryFromCache(id);
+      }
+    }); 
+
     columnDefs.forEach((columnDef: any, index: number) => {
       if (columnDef.data === 'selected' || this.endsWith(columnDef.data, 'message')) {
         return;
       }
 
-      if (firstCategory.fields.indexOf(columnDef.field) === -1) {
+      if (visibleFields.indexOf(columnDef.field) === -1) {
         hiddenColumns.push(index);
-      }
+      } 
     });
 
     return hiddenColumns;
@@ -236,6 +303,21 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     return !this.hiddenColumnsPlugin.isHidden(this.getColumnIndex(field));
   }
 
+  public toggleCategory(category: Category) : void {
+    this.toggleColumnGroup(category.fields);
+    
+    let categoryIndex : number = this.schema.categories.indexOf(category);
+    let dataSourceIndex : number = this.schema.datasources.indexOf(category);
+    if (categoryIndex > -1 || dataSourceIndex > -1) {
+      let visibleCategories : string[] = this.getVisibleCategoriesFromCache(this.schema.id);
+      if (categoryIndex in visibleCategories) {
+        this.deleteVisibleCategoryFromCache(category.id);
+      } else {
+        this.addVisibleCategoryToCache(category.id);
+      }
+    }
+  }
+
   public toggleColumnGroup(fields: Field[]): void {
     let columnIndices: number[] = fields.map((field: Field) => {
       if (!field.fixed) {
@@ -245,10 +327,12 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
     if (this.isVisibleColumnGroup(fields)) {
       this.hiddenColumnsPlugin.hideColumns(columnIndices);
+      console.log("Hiding columns: " + columnIndices);
     } else {
       this.hiddenColumnsPlugin.showColumns(columnIndices);
+      console.log("Showing columns: " + columnIndices);
     }
-
+    
     // Render twice, because handsontable craps itself if you hide all columns
     // and then show some again
     this.render();

@@ -83,6 +83,10 @@ export class AgGrid extends Table {
     this.gridOptions.api.sizeColumnsToFit();
   }
 
+  public toggleCategory(category: Category): void {
+    this.toggleColumnGroup(category.fields);
+  }
+
   public toggleColumn(field: Field): void {
     let column: Column = this.getColumn(field);
     if (column.isVisible()) {

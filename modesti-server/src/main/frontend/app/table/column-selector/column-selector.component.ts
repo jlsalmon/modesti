@@ -23,7 +23,7 @@ class ColumnSelectorController {
   public constructor() {}
 
   public toggleCategory(category: Category): void {
-    this.table.toggleColumnGroup(category.fields);
+    this.table.toggleCategory(category);
   }
 
   public toggleColumn(field: Field): void {

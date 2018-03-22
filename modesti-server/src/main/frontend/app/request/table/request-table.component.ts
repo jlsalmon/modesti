@@ -12,6 +12,7 @@ import {Field} from '../../schema/field/field';
 import {AutocompleteField} from '../../schema/field/autocomplete-field';
 import {Conditional} from '../../schema/conditional';
 import {Change} from '../history/change';
+import { CacheService } from '../../cache/cache.service';
 
 import {IComponentOptions, IPromise, IDeferred, IScope, IQService, IFilterService, IInterpolateService} from 'angular';
 import 'jquery';
@@ -33,7 +34,7 @@ export class RequestTableComponent implements IComponentOptions {
 
 class RequestTableController {
   public static $inject: string[] = ['$scope', '$q', '$filter', '$localStorage', '$interpolate',
-                                     'RequestService', 'TaskService', 'SchemaService'];
+                                     'RequestService', 'TaskService', 'SchemaService', 'CacheService'];
 
   public request: Request;
   public tasks: Task[];
@@ -43,7 +44,7 @@ class RequestTableController {
 
   public constructor(private $scope: IScope, private $q: IQService, private $filter: IFilterService,
                      private $localStorage: any, private $interpolate: IInterpolateService, private requestService: RequestService,
-                     private taskService: TaskService, private schemaService: SchemaService) {
+                     private taskService: TaskService, private schemaService: SchemaService, private cacheService: CacheService) {
 
     let settings: any = {
       requestStatus: this.request.status,
@@ -55,6 +56,7 @@ class RequestTableController {
       afterChange: this.onAfterChange,
       afterRender: this.onAfterRender,
       interpolate: this.$interpolate,
+      cacheService: this.cacheService,
       afterCreateRow: (index: number, count: number, source: any) => this.onAfterCreateRow(index, count, source),
       afterRemoveRow: () => this.onAfterRemoveRow()
     };
