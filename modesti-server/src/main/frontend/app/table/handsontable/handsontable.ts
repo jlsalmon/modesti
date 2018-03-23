@@ -310,7 +310,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     let dataSourceIndex : number = this.schema.datasources.indexOf(category);
     if (categoryIndex > -1 || dataSourceIndex > -1) {
       let visibleCategories : string[] = this.getVisibleCategoriesFromCache(this.schema.id);
-      if (categoryIndex in visibleCategories) {
+      if (visibleCategories.indexOf(category.id) > -1) {
         this.deleteVisibleCategoryFromCache(category.id);
       } else {
         this.addVisibleCategoryToCache(category.id);
@@ -327,10 +327,8 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
     if (this.isVisibleColumnGroup(fields)) {
       this.hiddenColumnsPlugin.hideColumns(columnIndices);
-      console.log("Hiding columns: " + columnIndices);
     } else {
       this.hiddenColumnsPlugin.showColumns(columnIndices);
-      console.log("Showing columns: " + columnIndices);
     }
     
     // Render twice, because handsontable craps itself if you hide all columns
@@ -343,7 +341,8 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     let visible: boolean = true;
 
     fields.forEach((field: Field) => {
-      if (this.hiddenColumnsPlugin.isHidden(this.getColumnIndex(field))) {
+      let colIndex : number = this.getColumnIndex(field);
+      if (colIndex>0 && this.hiddenColumnsPlugin.isHidden(colIndex)) {
         visible = false;
         return;
       }
