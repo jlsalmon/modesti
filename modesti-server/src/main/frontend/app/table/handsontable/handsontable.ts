@@ -208,7 +208,11 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         return id == c.id;
       }) ;
       if (category !== undefined) {
-        visibleFields = visibleFields.concat(category.fields);
+        category.fields.forEach((field: Field) => {
+          if (field.searchFieldOnly === undefined || field.searchFieldOnly === false) {
+            visibleFields.push(field);
+          }
+        });
       } else {
         this.deleteVisibleCategoryFromCache(id);
       }
@@ -278,7 +282,9 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   }
 
   public showColumn(field: Field): void {
-    this.hiddenColumnsPlugin.showColumn(this.getColumnIndex(field));
+    if (field.searchFieldOnly === false) {
+      this.hiddenColumnsPlugin.showColumn(this.getColumnIndex(field));
+    }
     this.render();
   }
 
@@ -292,7 +298,9 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   public toggleColumn(field: Field): void {
     let colIndex: number = this.getColumnIndex(field);
     if (this.hiddenColumnsPlugin.isHidden(colIndex)) {
-      this.hiddenColumnsPlugin.showColumn(colIndex);
+      if (field.searchFieldOnly === false ) {
+        this.hiddenColumnsPlugin.showColumn(colIndex);
+      }
     } else {
       this.hiddenColumnsPlugin.hideColumn(colIndex);
     }
@@ -320,7 +328,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
   public toggleColumnGroup(fields: Field[]): void {
     let columnIndices: number[] = fields.map((field: Field) => {
-      if (!field.fixed) {
+      if (!field.fixed && !field.searchFieldOnly) {
         return this.getColumnIndex(field);
       }
     });
@@ -342,7 +350,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
     fields.forEach((field: Field) => {
       let colIndex : number = this.getColumnIndex(field);
-      if (colIndex>0 && this.hiddenColumnsPlugin.isHidden(colIndex)) {
+      if (!field.fixed && !field.searchFieldOnly && this.hiddenColumnsPlugin.isHidden(colIndex)) {
         visible = false;
         return;
       }
