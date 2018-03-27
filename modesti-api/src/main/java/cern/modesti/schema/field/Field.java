@@ -70,6 +70,8 @@ public class Field implements Serializable {
   private String help = "";
 
   private String helpUrl = "";
+  
+  private Boolean searchFieldOnly;
 
   public Field(String id) {
     this.id = id;
