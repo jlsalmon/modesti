@@ -15,6 +15,7 @@ export class Field {
   public model: string;
   public minLength: number;
   public maxLength: number;
+  public searchFieldOnly: boolean;
   public uppercase: boolean;
   public options: any[];
   public url: string;
@@ -56,6 +57,7 @@ export class Field {
     this.model = field.model;
     this.minLength = field.minLength;
     this.maxLength = field.maxLength;
+    this.searchFieldOnly = field.searchFieldOnly !== undefined && field.searchFieldOnly === true;
     this.uppercase = field.uppercase;
     this.options = field.options;
     this.url = field.url;
