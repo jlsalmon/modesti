@@ -68,6 +68,7 @@ import {RestangularConfig} from './config/restangular.config.ts';
 import {RouterConfig} from './config/router.config.ts';
 import {HttpConfig} from './config/http.config.ts';
 import {VersionComponent} from './version/version.component.ts';
+import {ConfirmationModalController} from './util/confirmation.modal.controller.ts';
 
 
 let app: any = angular.module('modesti', [
@@ -132,6 +133,7 @@ app.controller('RequestHistoryModalController', RequestHistoryModalController);
 app.controller('RequestCommentsModalController', RequestCommentsModalController);
 app.controller('UpdatePointsModalController', UpdatePointsModalController);
 app.controller('DeletePointsModalController', DeletePointsModalController);
+app.controller('ConfirmationModalController', ConfirmationModalController);
 
 
 app.config(['RestangularProvider', (restangularProvider: any) => RestangularConfig.configure(restangularProvider)]);
