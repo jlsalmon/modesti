@@ -18,6 +18,6 @@ public class TaskAction {
   private String assignee;
 
   public enum Action {
-    ASSIGN, UNASSIGN, COMPLETE 
+    ASSIGN, UNASSIGN, COMPLETE, FORCE_CLOSE 
   }
 }
