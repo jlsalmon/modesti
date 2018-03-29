@@ -160,9 +160,19 @@ export class TaskService {
     return q.promise;
   }
 
+  public forceCloseTask(taskName: string, request: Request): IPromise<Request> {
+    let params: any = {action: 'FORCE_CLOSE'};
+    return this.doCompleteTask(taskName, request, params);
+  }
+
   public completeTask(taskName: string, request: Request): IPromise<Request> {
-    let q: IDeferred<Request> = this.$q.defer();
     let params: any = {action: 'COMPLETE'};
+    return this.doCompleteTask(taskName, request, params);
+  }
+
+  private doCompleteTask(taskName: string, request: Request, params: any): IPromise<Request> {
+    let q: IDeferred<Request> = this.$q.defer();
+    
 
     this.requestService.saveRequest(request).then(() => {
       console.log('saved request before completing task');
