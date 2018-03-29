@@ -67,13 +67,13 @@ export class SearchFooterDirective implements IDirective {
         directiveName = asset.split('/')[asset.split('/').length - 1];
         directiveName = directiveName.substring(0, directiveName.length - 3);
       }
-    }
+    });
 
     this.$ocLazyLoad.load(assets, {serie: true}).then(() => {
       let controlsName = directiveName;
       let template: string = '<div ' + controlsName + ' table="$ctrl.table" ng-show="$ctrl.isVisible(\'' + schemaId + '\')"></div>';
       element.append(this.$compile(template)(scope));
-    };
+    });
   }
 }
 
