@@ -11,7 +11,9 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -111,7 +113,10 @@ public class TaskServiceImpl implements TaskService {
       case UNASSIGN:
         return unassignTask(requestId, taskName);
       case COMPLETE:
-        completeTask(requestId, taskName);
+        completeTask(requestId, taskName, false);
+        return null;
+      case FORCE_CLOSE:
+        completeTask(requestId, taskName, true);
         return null;
       default:
         throw new UnsupportedOperationException(format("'%s' is not a valid action", action.getAction()));
@@ -160,11 +165,17 @@ public class TaskServiceImpl implements TaskService {
    *
    * @param requestId the id of the request
    * @param taskName  the name of the task to complete
+   * @param forced TRUE if and only if the completion of the task has been forced (FORCE_CLOSED)
    */
-  private void completeTask(String requestId, String taskName) {
+  private void completeTask(String requestId, String taskName, boolean forced) {
     Task task = getTaskForRequest(requestId, taskName);
-    taskService.complete(task.getId());
-    // return new TaskInfo(task.getName(), task.getDescription(), task.getOwner(), task.getAssignee(), task.getDelegationState(), getCandidateGroups(task));
+    if (forced) {
+      Map<String, Object> variables = new HashMap<>();
+      variables.put("forceClose", true);
+      taskService.complete(task.getId(), variables);
+    } else {
+      taskService.complete(task.getId());
+    }
   }
 
   /**
