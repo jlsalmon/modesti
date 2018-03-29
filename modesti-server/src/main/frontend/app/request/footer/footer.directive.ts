@@ -96,7 +96,15 @@ class RequestFooterController {
     });
   }
 
+  public forceClose(event: JQueryEventObject): IPromise<Request> {
+    return this.callTaskService("forceCloseTask", event);
+  }
+
   public submit(event: JQueryEventObject): IPromise<Request> {
+    return this.callTaskService("completeTask", event);
+  }
+
+  private callTaskService(func:string, event: JQueryEventObject): IPromise<Request> {
     this.stopEvent(event);
     let q: IDeferred<Request> = this.$q.defer();
 
@@ -106,8 +114,8 @@ class RequestFooterController {
     this.alertService.clear();
     this.submitting = 'started';
 
-    // Complete the task associated with the request
-    this.taskService.completeTask(task.name, this.request).then((request: Request) => {
+    // Call the task service function
+    this.taskService[func](task.name, this.request).then((request: Request) => {
       console.log('completed task ' + task.name);
 
       this.request = request;
