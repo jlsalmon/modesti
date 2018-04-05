@@ -3,6 +3,7 @@
 </div>
 <div class="modal-body">
   <p>{{ctrl.bodyDesc}}</p>
+  <input type="text" class="form-control" ng-model="ctrl.userInput" ng-show="ctrl.showTextBox" name="userInput" required>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn" data-ng-click="ctrl.close()">{{ctrl.closeButtonText}}</button>
