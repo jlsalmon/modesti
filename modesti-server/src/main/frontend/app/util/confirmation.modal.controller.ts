@@ -5,6 +5,8 @@ export class ConfirmationModalController {
   public actionButtonText: string = "Ok";
   public headerText: string = "Proceed?";
   public bodyDesc: string = "Perform this action?";
+  public showTextBox: boolean = false;
+  public userInput: string = "";
 
   constructor(private $modalInstance: any) { 
     if ($modalInstance.headerText !== undefined) {
@@ -14,10 +16,14 @@ export class ConfirmationModalController {
     if ($modalInstance.bodyDesc !== undefined) {
       this.bodyDesc = $modalInstance.bodyDesc;
     }
+
+    if ($modalInstance.showTextBox !== undefined) {
+      this.showTextBox = $modalInstance.showTextBox;
+    }
   }
 
   public ok(): void {
-    this.$modalInstance.close("Ok");
+    this.$modalInstance.close(this.userInput);
   }
 
   public close(): void {
