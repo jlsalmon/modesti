@@ -195,28 +195,30 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     return hiddenColumns;
   }
 
-  private getInitialHiddenColumns(visibleCategories: string[], columnDefs: any[]) : number[] {
+  private getInitialHiddenColumns(visibleCategoryIds: string[], columnDefs: any[]) : number[] {
     let hiddenColumns: number[] = [];
     let visibleFields : Field[] = [];
     let allCategories : Category[] = this.schema.categories;
     if (this.schema.datasources !== undefined) {
       allCategories = allCategories.concat(this.schema.datasources);
     }
-
-    visibleCategories.forEach((id: string) => {
-      let category : Category = allCategories.find((c: Category) => { 
-        return id == c.id;
-      }) ;
-      if (category !== undefined) {
+    
+    allCategories.forEach((category: Category) => {
+      if (visibleCategoryIds.indexOf(category.id) !== -1) {
         category.fields.forEach((field: Field) => {
           if (field.searchFieldOnly === undefined || field.searchFieldOnly === false) {
             visibleFields.push(field);
           }
         });
       } else {
-        this.deleteVisibleCategoryFromCache(id);
+        this.deleteVisibleCategoryFromCache(category.id);
+        category.fields.forEach((field: Field) => {
+          if (field.fixed) {
+            visibleFields.push(field);
+          }
+        });
       }
-    }); 
+    });
 
     columnDefs.forEach((columnDef: any, index: number) => {
       if (columnDef.data === 'selected' || this.endsWith(columnDef.data, 'message')) {
