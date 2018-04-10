@@ -1,6 +1,8 @@
 package cern.modesti.workflow.notification;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -64,7 +66,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     // If we're on the test server, send all emails to the addresses specified in the property or to the developers group
     if (from.contains("test")) {
-      String [] sendTo = env.getProperty("spring.mail.test.recipients", "modesti-developers@cern.ch").split(",");
+      String testRecipients = env.getProperty("spring.mail.test.recipients", "modesti-developers@cern.ch");
+      log.debug("Sending notifications to: {} instead of {}", testRecipients, StringUtils.join(recipients, ","));
+      String [] sendTo = testRecipients.split(",");
       recipients = Arrays.asList(sendTo);
       from = "modesti.service@cern.ch";
     }
