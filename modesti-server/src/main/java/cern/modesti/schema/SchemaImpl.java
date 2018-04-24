@@ -1,7 +1,6 @@
 package cern.modesti.schema;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,8 @@ import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.CategoryImpl;
 import cern.modesti.schema.category.Datasource;
 import cern.modesti.schema.category.DatasourceImpl;
+import cern.modesti.schema.configuration.Configuration;
+import cern.modesti.schema.configuration.ConfigurationImpl;
 import cern.modesti.schema.field.Field;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -63,6 +64,9 @@ public class SchemaImpl implements Schema {
 
   @JsonDeserialize(contentAs = DatasourceImpl.class)
   private List<Datasource> datasourceOverrides = new ArrayList<>();
+  
+  @JsonDeserialize(using = ConfigurationDeserializer.class)
+  private Configuration configuration;
 
   private List<String> selectableStates;
 
@@ -77,6 +81,20 @@ public class SchemaImpl implements Schema {
     return isAbstract == null ? false : isAbstract;
   }
 
+
+  /** 
+   * Deserializer for Configuration property 
+   */
+  public static class ConfigurationDeserializer extends JsonDeserializer<ConfigurationImpl> {
+
+    @Override
+    public ConfigurationImpl deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+      JsonNode node = parser.getCodec().readTree(parser);
+      ObjectMapper mapper = new ObjectMapper();
+      return mapper.treeToValue(node, ConfigurationImpl.class);
+    }
+  }
+  
   /**
    * Support specifying categories by ID as well as inline objects
    */

@@ -1,5 +1,6 @@
 import {Category} from './category/category';
 import {Field} from './field/field';
+import {Configuration} from './configuration/configuration';
 import {RowCommentStateDescriptor} from './row-comment-state-descriptor';
 
 export class Schema implements ISerializable<Schema> {
@@ -8,6 +9,7 @@ export class Schema implements ISerializable<Schema> {
   public categories: Category[];
   public datasources: Category[];
   public fields: Field[];
+  public configuration: Configuration;
   public primary: string;
   public selectableStates: string[];
   public rowCommentStates: RowCommentStateDescriptor[];
@@ -111,6 +113,7 @@ export class Schema implements ISerializable<Schema> {
     this.primary = schema.primary;
     this.selectableStates = schema.selectableStates;
     this.rowCommentStates = schema.rowCommentStates;
+    this.configuration = schema.configuration;
 
     if (schema.categories) {
       this.categories = [];

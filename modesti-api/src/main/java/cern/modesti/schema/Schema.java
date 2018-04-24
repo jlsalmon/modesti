@@ -2,6 +2,7 @@ package cern.modesti.schema;
 
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Datasource;
+import cern.modesti.schema.configuration.Configuration;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,6 +29,10 @@ public interface Schema extends Serializable {
   List<Category> getCategories();
 
   void setCategories(List<Category> categories);
+  
+  Configuration getConfiguration();
+  
+  void setConfiguration(Configuration configuration);
 
   List<Category> getOverrides();
 
