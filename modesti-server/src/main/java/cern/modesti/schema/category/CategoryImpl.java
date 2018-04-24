@@ -10,10 +10,8 @@ import cern.modesti.schema.Schema;
 import cern.modesti.schema.field.Field;
 import cern.modesti.point.Point;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import cern.modesti.request.RequestType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +25,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CategoryImpl implements Category {
+
+  private static final long serialVersionUID = -3539311586940536677L;
 
   @Id
   private String id;

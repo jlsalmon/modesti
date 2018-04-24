@@ -3,12 +3,13 @@ package cern.modesti.schema.category;
 import cern.modesti.schema.field.Field;
 
 import java.util.Map;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Justin Lewis Salmon
  */
-public interface Category {
+public interface Category extends Serializable {
 
   String getId();
 
