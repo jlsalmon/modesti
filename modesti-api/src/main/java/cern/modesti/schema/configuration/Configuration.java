@@ -10,8 +10,8 @@ import java.io.Serializable;
 public interface Configuration extends Serializable {
 
   /**
-   * Specifies if the creation of requests from the UI is disabled
+   * Specifies if the creation of requests from the UI is allowed
    * @return
    */ 
-  boolean isDisableCreateFromUi();
+  boolean isCreateFromUi();
 }
