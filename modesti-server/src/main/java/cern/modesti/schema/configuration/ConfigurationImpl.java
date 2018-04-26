@@ -13,6 +13,6 @@ import lombok.Data;
 public class ConfigurationImpl implements Configuration {
   private static final long serialVersionUID = -4884546544907353282L;
   
-  @JsonProperty("disableCreateFromUi")
-  private boolean disableCreateFromUi;
+  @JsonProperty("createFromUi")
+  private boolean createFromUi;
 }
