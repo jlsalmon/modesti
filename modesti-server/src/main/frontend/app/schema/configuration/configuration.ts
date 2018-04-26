@@ -1,8 +1,8 @@
 export class Configuration {
-    public disableCreateFromUi: boolean;
+    public createFromUi: boolean;
 
     public deserialize(config: Configuration): Configuration {
-        this.disableCreateFromUi = config.disableCreateFromUi;
+        this.createFromUi = config.createFromUi;
 
         return this;
     }
