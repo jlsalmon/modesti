@@ -29,7 +29,7 @@ class NewRequestController {
   public $onInit(): void {
     this.schemaService.getSchemas().then((schemas: Schema[]) => {
       schemas.forEach((schema: Schema) => {
-        if (schema.configuration === null || schema.configuration.disableCreateFromUi === false) {
+        if (schema.configuration === null || schema.configuration.createFromUi === false) {
           this.schemas.push(schema);
         }
       });
