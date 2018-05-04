@@ -144,6 +144,15 @@ public class CoreValidationService implements ValidationService {
     for (Point point : request.getNonEmptyPoints()) {
 
       for (Category category : categories) {
+        Map<String, Object> editable = category.getEditable();
+        if (editable.containsKey("status")) {
+          editable.remove("status");
+        }
+        if (!Conditionals.evaluate(category.getEditable(), point, request)) {
+          log.trace("The category {} will not be evaluated (not relevant)", category.getName());
+          continue;
+        }
+        
         for (Field field : category.getFields()) {
 
           Object value = point.getValueByPropertyName(field.getPropertyName());
