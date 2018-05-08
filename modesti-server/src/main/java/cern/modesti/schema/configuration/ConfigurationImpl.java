@@ -14,5 +14,8 @@ public class ConfigurationImpl implements Configuration {
   private static final long serialVersionUID = -4884546544907353282L;
   
   @JsonProperty("createFromUi")
-  private boolean createFromUi;
+  private boolean createFromUi = true;
+  
+  @JsonProperty("showFieldsOnClone")
+  private boolean showFieldsOnClone = false;
 }
