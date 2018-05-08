@@ -14,4 +14,10 @@ public interface Configuration extends Serializable {
    * @return
    */ 
   boolean isCreateFromUi();
+  
+  /**
+   * Specifies if the clone requests must show the schema fields
+   * @return
+   */
+  boolean isShowFieldsOnClone();
 }
