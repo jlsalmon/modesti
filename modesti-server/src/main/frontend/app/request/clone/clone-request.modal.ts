@@ -2,18 +2,26 @@ import {RequestService} from '../request.service';
 import {AlertService} from '../../alert/alert.service';
 import {Request} from '../request';
 import {Schema} from '../../schema/schema';
+import {SchemaService} from '../../schema/schema.service';
 import {IStateService} from 'angular-ui-router';
+import {Field} from '../../schema/field/field';
+import {IPromise, IRootScopeService} from 'angular';
 
 export class CloneRequestModalController {
-  public static $inject: string[] = ['$uibModalInstance', '$state', 'request', 'schema',
-    'RequestService', 'AlertService'];
+  public static $inject: string[] = ['$uibModalInstance', '$rootScope', '$state', 'request', 'schema', 'RequestService', 'AlertService', 'SchemaService'];
 
   public cloning: string = undefined;
+  public showFieldsOnClone: boolean;
+  public fieldValues : any[] = [];   
+  
+  constructor(private $modalInstance: any, private $rootScope: IRootScopeService, private $state: IStateService, public request: Request,
+              private schema: Schema, private requestService: RequestService, private alertService: AlertService, private schemaService: SchemaService) {}
 
-  constructor(private $modalInstance: any, private $state: IStateService, private request: Request,
-              private schema: Schema, private requestService: RequestService, private alertService: AlertService) {}
+  public $onInit(): void {
+    this.showFieldsOnClone = this.schema.configuration !== null && this.schema.configuration.showFieldsOnClone === true;
+  }
 
-  public clone(): void {
+  public clone(): void { 
     this.cloning = 'started';
 
     this.requestService.cloneRequest(this.request, this.schema).then((location: any) => {
@@ -37,5 +45,15 @@ export class CloneRequestModalController {
 
   public cancel(): void {
     this.$modalInstance.dismiss();
+  }
+
+  public queryFieldValues(field: Field, query: string): IPromise<void> {
+    return this.schemaService.queryFieldValues(field, query, undefined).then((values: any[]) => {
+      this.fieldValues = values;
+      if (values.length == 1) {
+        // Auto select the only value
+        this.request.properties[field.id] = values[0];
+      }
+    });
   }
 }
