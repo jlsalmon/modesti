@@ -14,7 +14,7 @@ export class Request implements ISerializable<Request> {
   public points: Point[];
   public comments: any[];
   public createdAt: string;
-  public properties: any;
+  public properties: any[] = [];
   public childRequestIds: string[];
   public _links: any;
 
