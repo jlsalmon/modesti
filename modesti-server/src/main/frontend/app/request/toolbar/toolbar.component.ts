@@ -147,6 +147,7 @@ class RequestToolbarController {
       animation: false,
       templateUrl: '/request/clone/clone-request.modal.html',
       controller: 'CloneRequestModalController as ctrl',
+      size: 'lg',
       resolve: {
         request: () => this.request,
         schema: () => this.schema
