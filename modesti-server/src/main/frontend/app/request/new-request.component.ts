@@ -29,7 +29,7 @@ class NewRequestController {
   public $onInit(): void {
     this.schemaService.getSchemas().then((schemas: Schema[]) => {
       schemas.forEach((schema: Schema) => {
-        if (schema.configuration === null || schema.configuration.createFromUi === false) {
+        if (schema.configuration === null || schema.configuration.createFromUi === true) {
           this.schemas.push(schema);
         }
       });
@@ -54,6 +54,10 @@ class NewRequestController {
   public queryFieldValues(field: Field, query: string): IPromise<void> {
     return this.schemaService.queryFieldValues(field, query, undefined).then((values: any[]) => {
       this.fieldValues = values;
+      if (values.length == 1) {
+        // Auto select the only value
+        this.request.properties[field.id] = values[0];
+      }
     });
   }
 
