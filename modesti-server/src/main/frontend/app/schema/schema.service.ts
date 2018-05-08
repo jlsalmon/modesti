@@ -57,7 +57,6 @@ export class SchemaService {
   }
 
   public queryFieldValues(field: Field, query: string, point: Point): IPromise<any[]> {
-    console.log('querying values for field ' + field.id + ' with query string "' + query + '"');
     let q: IDeferred<any[]> = this.$q.defer();
 
     // Don't make a call if the query is less than the minimum length (or is undefined)
@@ -156,7 +155,6 @@ export class SchemaService {
         values = response.data;
       }
 
-      console.log('found ' + values.length + ' values');
       q.resolve(values);
     },
 
