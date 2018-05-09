@@ -16,6 +16,9 @@ public class ConfigurationImpl implements Configuration {
   @JsonProperty("createFromUi")
   private boolean createFromUi = true;
   
+  @JsonProperty("cloneFromUi")
+  private boolean cloneFromUi = true;
+  
   @JsonProperty("showFieldsOnClone")
-  private boolean showFieldsOnClone = false;
+  private boolean showFieldsOnClone;
 }
