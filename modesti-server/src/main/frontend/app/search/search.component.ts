@@ -40,6 +40,12 @@ export class SearchController {
               private searchService: SearchService, private schemaService: SchemaService,
               private requestService: RequestService, private alertService: AlertService,private tableService: TableService) {
 
+    this.schemas.sort(function(s1: Schema, s2: Schema) {
+      if (s1.id < s2.id) return -1;
+      if (s1.id > s2.id) return 1;
+      return 0;
+    });
+
     this.activateSchema(this.schemas[0]);
 
     let settings: any = {
