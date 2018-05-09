@@ -22,6 +22,7 @@ export class UpdatePointsModalController {
     this.request.assignee = this.request.creator;
     this.request.domain = schema.id;
     this.request.points = points;
+    this.request.properties = [];
     this.updateMessage = message;
     this.updateHeader = header;
   }
@@ -36,7 +37,11 @@ export class UpdatePointsModalController {
 
    public queryFieldValues(field: Field, query: string): IPromise<void> {
       return this.schemaService.queryFieldValues(field, query, undefined).then((values: any[]) => {
-        this.fieldValues = values;
+        this.fieldValues = values; 
+        if (values.length == 1) {
+          // Auto select the only value
+          this.request.properties[field.id] = values[0];
+        }
       });
     }
 }
