@@ -16,6 +16,12 @@ public interface Configuration extends Serializable {
   boolean isCreateFromUi();
   
   /**
+   * Specifies if the cloning of requests from the UI is allowed
+   * @return
+   */ 
+  boolean isCloneFromUi();
+  
+  /**
    * Specifies if the clone requests must show the schema fields
    * @return
    */
