@@ -138,6 +138,10 @@ class RequestToolbarController {
     });
   }
 
+  public canCloneRequest() : boolean {
+    return this.request.type == 'CREATE';
+  }
+
   public cloneRequest(): void {
     let modalInstance: any = this.$modal.open({
       animation: false,

@@ -141,7 +141,7 @@
         </button>
         <ul uib-dropdown-menu class="pull-right">
           <li>
-            <a ng-click="$ctrl.cloneRequest()">Clone request</a>
+            <a ng-click="$ctrl.cloneRequest()" ng-show="$ctrl.canCloneRequest()">Clone request</a>
           </li>
           <li>
             <a ng-click="$ctrl.deleteRequest()" show-if="user-authorised-for-task">Delete request</a>
