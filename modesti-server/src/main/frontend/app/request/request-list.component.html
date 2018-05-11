@@ -55,26 +55,25 @@
   <section class="content" ng-if="$ctrl.isUserAuthenticated()">
 
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="tasklist-controls">
+      <div class="panel-heading clearfix">
+        <div class="tasklist-controls ">
 
           <!-- RequestId filter -->
           <div class="filter">
-            <input class="form-control" ng-model="$ctrl.filter.requestId" style="width: 100px;" placeholder="Id">
+            <input class="form-control  pull-left" ng-model="$ctrl.filter.requestId" style="width: 100px;" placeholder="Id">
           </div>
 
           <!-- Description filter -->
           <div class="filter">
-            <input class="form-control" ng-model="$ctrl.filter.description" placeholder="Description">
+            <input class="form-control pull-left" ng-model="$ctrl.filter.description" placeholder="Description">
           </div>
 
 
           <!-- Status filter -->
           <div class="filter">
-            <ui-select ng-model="$ctrl.filter.status" theme="bootstrap" style="min-width: 80px;">
+            <ui-select class="pull-left" ng-model="$ctrl.filter.status" theme="bootstrap" style="min-width: 80px;">
               <ui-select-match placeholder="Status" allow-clear="true">
                 <span class='label request-status {{$select.selected.status}}'>
-                  <!--{{::$ctrl.filter.status.replace('_', ' ')}}-->
                   {{$select.selected.status.split("_").join(" ")}}
                 </span>
               </ui-select-match>
@@ -90,7 +89,7 @@
 
           <!-- Domain filter -->
           <div class="filter">
-            <ui-select ng-model="$ctrl.filter.domain" theme="bootstrap" style="min-width: 80px;">
+            <ui-select class="pull-left" ng-model="$ctrl.filter.domain" theme="bootstrap" style="min-width: 80px;">
               <ui-select-match placeholder="Domain" allow-clear="true">
                 {{$select.selected.id}}
               </ui-select-match>
@@ -107,7 +106,7 @@
 
           <!-- Request creator filter -->
           <div class="filter">
-            <ui-select ng-model="$ctrl.filter.creator" theme="bootstrap" style="min-width: 80px;">
+            <ui-select class="pull-left" ng-model="$ctrl.filter.creator" theme="bootstrap" style="min-width: 80px;">
               <ui-select-match placeholder="Creator" allow-clear="true">{{$select.selected.username}}</ui-select-match>
               <ui-select-choices repeat="user.username as user in $ctrl.users track by $index"
                                  refresh="$ctrl.queryUsers($select.search)"
@@ -123,7 +122,7 @@
 
           <!-- Request assignee filter -->
           <div class="filter">
-            <ui-select ng-model="$ctrl.filter.assignee" theme="bootstrap" style="min-width: 80px;">
+            <ui-select class="pull-left" ng-model="$ctrl.filter.assignee" theme="bootstrap" style="min-width: 80px;">
               <ui-select-match placeholder="Assignee" allow-clear="true">{{$select.selected.username}}</ui-select-match>
               <ui-select-choices repeat="user.username as user in $ctrl.users track by $index"
                                  refresh="$ctrl.queryUsers($select.search)"
@@ -139,7 +138,7 @@
 
           <!-- Request type filter -->
           <div class="filter">
-            <ui-select ng-model="$ctrl.filter.type" theme="bootstrap" style="min-width: 80px;">
+            <ui-select class="pull-left" ng-model="$ctrl.filter.type" theme="bootstrap" style="min-width: 80px;">
               <ui-select-match placeholder="Type" allow-clear="true">
                 {{$select.selected}}
               </ui-select-match>
@@ -153,14 +152,14 @@
 
           <!-- Reset filter button -->
           <div class="filter">
-            <button class="btn btn-default" ng-click="$ctrl.resetFilter()" uib-tooltip="Clear filter" tooltip-append-to-body="true">
+            <button class="btn btn-default pull-left" ng-click="$ctrl.resetFilter()" uib-tooltip="Clear filter" tooltip-append-to-body="true">
               <i class="fa fa-times"></i>
             </button>
           </div>
 
 
           <!-- Sort selector -->
-          <div class="pull-right">
+          <div class="filter pull-right">
             <select class="form-control" ng-model="$ctrl.sort">
               <option value="createdAt,desc" title="sort: Newest" selected>Newest</option>
               <option value="createdAt,asc" title="sort: Oldest">Oldest</option>
@@ -174,12 +173,12 @@
 
           <div class="filter filter-hide-closed pull-right">
             Hide closed requests
-            <input class="item" type="checkbox"
-                   ng-model="$ctrl.hideClosedRequests"
-                   uib-tooltip="Click to show/hide closed requests"
-                   tooltip-append-to-body="true"
-                   tooltip-placement="right"
-                   ng-click="$ctrl.reloadRequestlist()">
+            <input class="item" type="checkbox" id="hideClosed"
+                  ng-model="$ctrl.hideClosedRequests"
+                  uib-tooltip="Click to show/hide closed requests"
+                  tooltip-append-to-body="true"
+                  tooltip-placement="right"
+                  ng-click="$ctrl.reloadRequestlist()">
             </input>
           </div>
         </div>
