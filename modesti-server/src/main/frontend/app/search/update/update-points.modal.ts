@@ -21,8 +21,7 @@ export class UpdatePointsModalController {
     this.request.creator = authService.getCurrentUser().username;
     this.request.assignee = this.request.creator;
     this.request.domain = schema.id;
-    this.request.points = points;
-    this.request.properties = [];
+    this.request.points = points;    
     this.updateMessage = message;
     this.updateHeader = header;
   }
@@ -40,6 +39,9 @@ export class UpdatePointsModalController {
         this.fieldValues = values; 
         if (values.length == 1) {
           // Auto select the only value
+          if (this.request.properties === undefined) {
+            this.request.properties = [];
+          }
           this.request.properties[field.id] = values[0];
         }
       });
