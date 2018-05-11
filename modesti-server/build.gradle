@@ -35,6 +35,9 @@ dependencies {
     compile "org.slf4j:slf4j-api:1.7.12"
     compile "javax.interceptor:javax.interceptor-api:1.2.1"
     compile "org.subethamail:subethasmtp:3.1.7"
+    
+    testCompile "org.powermock:powermock-core:1.6.4"
+    testCompile "org.powermock:powermock-mockito-release-full:1.6.4"
 }
 
 /**
