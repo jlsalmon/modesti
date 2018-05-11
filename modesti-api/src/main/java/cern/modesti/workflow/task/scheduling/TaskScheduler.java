@@ -1,4 +1,4 @@
-package cern.modesti.workflow.task.scheduler;
+package cern.modesti.workflow.task.scheduling;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
