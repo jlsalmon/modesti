@@ -3,7 +3,6 @@ package cern.modesti.workflow.task.scheduling;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,12 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TaskScheduler {
   
-  private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
   
-  
-  private TaskScheduler() {
-    formatter.setTimeZone(TimeZone.getDefault());
-  }
   
   /**
    * Schedule a daily task for a specific hour/minute.
@@ -40,7 +35,6 @@ public class TaskScheduler {
         hour,
         minute,
         now.get(Calendar.SECOND));
-    schedule.setTimeZone(TimeZone.getDefault());
     
     if (schedule.before(now)) {
       schedule.add(Calendar.DAY_OF_MONTH, 1);
