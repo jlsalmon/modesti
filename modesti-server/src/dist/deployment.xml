@@ -39,9 +39,6 @@
         <directory name="conf">
           <file name="modesti.properties" source="/user/timtest/rep/modesti/modesti-test.properties" mask="400"/>
         </directory>
-        <notification>
-          <mail address="modesti-administrators@cern.ch"/>
-        </notification>
       </deployment>
     </application>
 
@@ -53,6 +50,34 @@
       <deployment installLocation="/opt/modesti-server-dev">
         <directory name="conf">
           <file name="modesti.properties" source="/opt/conf/modesti-dev.properties" mask="400"/>
+        </directory>
+      </deployment>
+    </application>
+    
+    
+    <application name="dipcm-server-pro" extends="default">
+      <startscript name="DIPCM-MODESTI-SERVER-PRO">
+        <property name="loader.path" value="/opt/dipcm-modesti-plugins" />
+      </startscript>
+      <deployment installLocation="/opt/dipcm-modesti-server-pro">
+        <directory name="conf">
+          <file name="modesti.properties" source="/user/timoper/rep/dipcm/modesti/modesti-pro.properties" mask="400"/>
+        </directory>
+        <notification>
+          <mail address="modesti-administrators@cern.ch"/>
+        </notification>
+      </deployment>
+    </application>
+
+
+    <application name="dipcm-server-test" extends="default">
+      <startscript name="DIPCM-MODESTI-SERVER-TEST">
+        <java-vm-args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</java-vm-args>
+        <property name="loader.path" value="/opt/dipcm-modesti-plugins" />
+      </startscript>
+      <deployment installLocation="/opt/dipcm-modesti-server-test">
+        <directory name="conf">
+          <file name="modesti.properties" source="/user/timtest/rep/dipcm/modesti/modesti-test.properties" mask="400"/>
         </directory>
       </deployment>
     </application>
