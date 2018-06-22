@@ -29,3 +29,6 @@ typings/
 # Typescript Web App compiled .js and .js.map sources
 src/main/frontend/app/**/*.js
 src/main/frontend/app/**/*.js.map
+*#
+*~
+target/

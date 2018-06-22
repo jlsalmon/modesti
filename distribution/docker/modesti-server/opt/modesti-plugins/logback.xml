@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true">
+
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <logger name="cern.modesti" level="TRACE" />
+
+    <logger name="org.springframework" level="INFO" />
+
+    <logger name="org.springframework.security" level="INFO" />
+
+    <logger name="org.springframework.web.servlet.mvc.method.annotation" level="INFO" />
+
+    <logger name="org.activiti" level="INFO" />
+
+    <logger name="org.hibernate.SQL" level="INFO"/>
+
+    <logger name="org.hibernate.type" level="INFO"/>
+
+    <logger name="org.hibernate.jdbc" level="INFO"/>
+
+    <logger name="org.hibernate.engine.query" level="INFO"/>
+
+    <logger name="jdbc.resultsettable" level="INFO"/>
+
+</configuration>
+
+
