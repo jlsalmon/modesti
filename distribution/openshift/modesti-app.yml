@@ -1,0 +1,234 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: c2mon
+  annotations:
+    description: "The CERN Control and Monitoring Platform (C2MON) is a heterogeneous, cloud-ready data acquisition framework with configuration, persistence, historical browsing, control and alarm functionalities."
+objects:
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      annotations:
+        service.alpha.openshift.io/dependencies: '[{"name":"c2mon-web-ui","namespace":"","kind":"Service"}]'
+      labels:
+        app: c2mon
+      name: c2mon
+    spec:
+      ports:
+      - name: "jms-broker-http"
+        port: 8089
+        protocol: TCP
+        targetPort: 8089
+      - name: "hsqldb-tcp"
+        port: 9001
+        protocol: TCP
+        targetPort: 9001
+      - name: "elasticsearch-http"
+        port: 9200
+        protocol: TCP
+        targetPort: 9200
+      - name: "elasticsearch-native"
+        port: 9300
+        protocol: TCP
+        targetPort: 9300
+      selector:
+        app: c2mon
+        deploymentconfig: c2mon
+      sessionAffinity: None
+      type: ClusterIP
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      labels:
+        app: c2mon
+      name: c2mon
+    spec:
+      replicas: ${{C2MON_REPLICA_COUNT}}
+      selector:
+        app: c2mon
+        deploymentconfig: c2mon
+      strategy:
+        recreateParams:
+          timeoutSeconds: 600
+        resources:
+          requests:
+            cpu: 200m
+            memory: 300Mi
+        type: Recreate
+      template:
+        metadata:
+          annotations:
+            openshift.io/container.c2mon.image.entrypoint: '["bin/c2mon.sh","run"]'
+          labels:
+            app: c2mon
+            deploymentconfig: c2mon
+        spec:
+          containers:
+          - image: gitlab-registry.cern.ch/c2mon/c2mon:latest
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: _JAVA_OPTIONS
+                value: -Dc2mon.server.jms.url=http://0.0.0.0:8089 -Dc2mon.server.elasticsearch.home=/tmp
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: /
+                port: 9200
+                scheme: HTTP
+              initialDelaySeconds: 300
+              periodSeconds: 10
+              successThreshold: 3
+              timeoutSeconds: 10
+            name: c2mon
+            ports:
+            - containerPort: 8089
+              protocol: TCP
+            - containerPort: 9001
+              protocol: TCP
+            - containerPort: 9200
+              protocol: TCP
+            - containerPort: 9300
+              protocol: TCP
+            resources:
+              limits:
+                cpu: "2"
+                memory: 2Gi
+              requests:
+                cpu: 500m
+                memory: 500Mi
+            terminationMessagePath: /dev/termination-log
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      labels:
+        app: c2mon
+      name: c2mon-web-ui
+    spec:
+      ports:
+      - name: "http"
+        port: 8080
+        protocol: TCP
+        targetPort: 8080
+      selector:
+        app: c2mon
+        deploymentconfig: c2mon-web-ui
+      sessionAffinity: None
+      type: ClusterIP
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      labels:
+        app: c2mon
+      name: c2mon-web-ui
+    spec:
+      replicas: ${{C2MON_WEBUI_REPLICA_COUNT}}
+      selector:
+        app: c2mon
+        deploymentconfig: c2mon-web-ui
+      strategy:
+        rollingParams:
+          intervalSeconds: 3
+          maxSurge: 25%
+          maxUnavailable: 25%
+          timeoutSeconds: 600
+          updatePeriodSeconds: 3
+        resources:
+          requests:
+            cpu: 200m
+            memory: 200Mi
+        type: Rolling
+      template:
+        metadata:
+          annotations:
+            openshift.io/container.c2mon.image.entrypoint: '["bin/webapp.sh","run"]'
+          labels:
+            app: c2mon
+            deploymentconfig: c2mon-web-ui
+        spec:
+          containers:
+          - image: gitlab-registry.cern.ch/c2mon/c2mon-web-ui:latest
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: C2MON_DAQ_JMS_URL
+                value: http://${C2MON_SERVICE_HOST}:8089
+              - name: _JAVA_OPTIONS
+                value: -Dc2mon.client.jms.url=http://${C2MON_SERVICE_HOST}:8089 -Dc2mon.client.history.jdbc.url=jdbc:hsqldb:hsql://${C2MON_SERVICE_HOST}/c2mondb;sql.syntax_ora=true
+            livenessProbe:
+              failureThreshold: 3
+              httpGet:
+                path: /c2mon-web-ui
+                port: 8080
+                scheme: HTTP
+              initialDelaySeconds: 300
+              periodSeconds: 10
+              successThreshold: 1
+              timeoutSeconds: 10
+            name: c2mon-web-ui
+            ports:
+            - containerPort: 8080
+              protocol: TCP
+            resources:
+              limits:
+                cpu: "1"
+                memory: 2Gi
+              requests:
+                cpu: 200m
+                memory: 1Gi
+            terminationMessagePath: /dev/termination-log
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          securityContext: {}
+          terminationGracePeriodSeconds: 20
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      annotations:
+        router.cern.ch/network-visibility: Intranet
+      labels:
+        app: c2mon
+      name: c2mon-activemq-http
+    spec:
+      path: /
+      port:
+        targetPort: "jms-broker-http"
+      tls:
+        termination: edge
+        insecureEdgeTerminationPolicy: Allow
+      to:
+        kind: Service
+        name: c2mon
+  - apiVersion: v1
+    kind: Route
+    metadata:
+      annotations:
+        router.cern.ch/network-visibility: Intranet
+      labels:
+        app: c2mon
+      name: c2mon-web-ui-http
+    spec:
+      path: /c2mon-web-ui
+      port:
+        targetPort: "http"
+      tls:
+        termination: edge
+      to:
+        kind: Service
+        name: c2mon-web-ui
+parameters:
+  - name: ACTIVEMQ_ADMIN_PASSWORD
+    displayName: ActiveMQ Admin Password
+    generate: expression 
+    from: "[a-zA-Z0-9]{40}"
+    description: ActiveMQ JMS Broker admin password
+    required: true 
+  - name: C2MON_REPLICA_COUNT
+    description: Number of C2MON Server replicas to run
+    value: "1"
+  - name: C2MON_WEBUI_REPLICA_COUNT
+    description: Number of C2MON Web UI replicas to run
+    value: "1"
+message: "... The ActiveMQ Admin password is ${ACTIVEMQ_ADMIN_PASSWORD} ..." 
