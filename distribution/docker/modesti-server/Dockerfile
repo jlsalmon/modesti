@@ -9,7 +9,7 @@ RUN cd /opt/modesti && tar xvfz /opt/modesti/*.tar.gz && rm /opt/modesti/modesti
 #ADD modesti-server-$MODESTI_VERSION-dist.tar.gz /opt/modesti/
 RUN cd /opt/modesti/lib && ln -s modesti-server-$MODESTI_VERSION-exec.jar modesti-server-exec.jar
 
-ONBUILD COPY opt/modesti-plugins/* /opt/modesti-plugins/
+ONBUILD COPY target/dependency/* /opt/modesti-plugins/
 
 COPY opt /opt
 

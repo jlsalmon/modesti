@@ -12,15 +12,41 @@
 
   <name>modesti :: Modesti TimrefDB docker image</name>
   <dependencies>
-    <!-- Add TIMREF DB dependencies JARs -->
-    <!-- They will be picked up by the parent ONBUILD directive if copied under opt -->
-  </dependencies>
+    <dependency>
+      <groupId>cern.modesti</groupId>
+      <artifactId>modesti-tim-plugin</artifactId>
+      <version>0.2.17</version>
+    </dependency>
+    <dependency>
+      <groupId>cern.modesti</groupId>
+      <artifactId>modesti-tim-refdb-common</artifactId>
+      <version>0.2.22</version>
+    </dependency>
+  </dependencies> 
   <build>
     <plugins>
-       <!-- Add ANTRUN or DEPENDENCY plugin to copy plugin JARs to opt/modesti-plugins -->
-       <!-- or hard-code plugin URLs from artifactory for default locations -->
-      
        <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-dependency-plugin</artifactId>
+         <version>3.1.1</version>
+         <executions>
+            <execution>
+              <id>copy-dependencies</id>
+              <phase>package</phase>
+              <goals>
+                <goal>copy-dependencies</goal>
+              </goals>
+              <configuration>
+                <!--outputDirectory>${project.build.directory}/alternateLocation</outputDirectory-->
+                <overWriteReleases>false</overWriteReleases>
+                <overWriteSnapshots>true</overWriteSnapshots>
+                <overWriteIfNewer>true</overWriteIfNewer>
+                <excludeTransitive>true</excludeTransitive>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
           <groupId>com.spotify</groupId>
           <artifactId>dockerfile-maven-plugin</artifactId>
           <configuration> <skip>false</skip> </configuration>
