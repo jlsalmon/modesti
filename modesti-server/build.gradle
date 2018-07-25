@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '1.4.3.RELEASE'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.7"
     id "com.moowork.node" version "0.13"
+    id "net.linguica.maven-settings" version "0.5"
 }
 
 dependencies {
@@ -123,11 +124,6 @@ publishing {
     }
     repositories {
         maven {
-            credentials {
-                username artifactoryUser
-                password artifactoryPassword
-            }
-
             if (project.version.endsWith('-SNAPSHOT')) {
                 url "http://artifactory/beco-development-local"
             } else {

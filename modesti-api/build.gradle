@@ -1,3 +1,7 @@
+plugins {
+  id 'net.linguica.maven-settings' version '0.5'
+}
+
 dependencies {
     compile "org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE"
     compile "org.springframework.data:spring-data-commons:1.12.5.RELEASE"
@@ -32,11 +36,6 @@ publishing {
     }
     repositories {
         maven {
-            credentials {
-                username artifactoryUser
-                password artifactoryPassword
-            }
-
             if (project.version.endsWith('-SNAPSHOT')) {
                 url "http://artifactory/beco-development-local"
             } else {
