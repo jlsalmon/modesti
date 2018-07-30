@@ -40,7 +40,6 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     this.cacheService = settings.cacheService;
 
     let columnDefs: any[] = this.getColumnDefs();
-
     this.hotOptions = {
       data: data,
       columns: columnDefs,
@@ -61,6 +60,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     };
 
     this.hot = new Handsontable(document.getElementById('table'), this.hotOptions);
+    
     this.hiddenColumnsPlugin = this.hot.getPlugin('hiddenColumns');
 
     // Map and register hooks from the external settings
@@ -81,6 +81,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
     // Trigger an initial render
     this.render();
+     
   }
 
   /**
@@ -96,6 +97,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     }
 
     let editable: boolean = false;
+    let skipOnPaste : boolean = false;
     let assigned: boolean = this.taskService.isCurrentUserAssigned();
     let point: Point = this.data[row];
     let field: Field = this.hotOptions.columns[col].field;
@@ -139,7 +141,11 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       editable = false;
     }
 
-    return { readOnly: !editable };
+    if (field.searchFieldOnly) {
+      skipOnPaste = true;
+    }
+
+    return { readOnly: !editable, skipColumnOnPaste: skipOnPaste };
   };
 
   public canAddRows(): boolean {
