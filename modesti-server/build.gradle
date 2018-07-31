@@ -123,8 +123,10 @@ publishing {
     repositories {
         maven {
             if (project.version.endsWith('-SNAPSHOT')) {
+                name "snapshot"
                 url "http://artifactory/beco-development-local"
             } else {
+                name "central"
                 url "http://artifactory/beco-release-local"
             }
         }
