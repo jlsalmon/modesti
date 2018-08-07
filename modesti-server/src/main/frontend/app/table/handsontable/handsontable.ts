@@ -129,6 +129,10 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
         editable = this.settings.schemaService.evaluateConditional(point, fieldConditional, this.settings.requestStatus, this.settings.requestType);
       }
+
+      if (field.searchFieldOnly) {
+        skipOnPaste = true;
+      }
     }
 
     if (this.schema.hasRowSelectColumn(this.settings.requestStatus) && prop === 'selected') {
@@ -139,10 +143,6 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
     if (this.settings.requestType === 'DELETE') {
       editable = false;
-    }
-
-    if (field.searchFieldOnly) {
-      skipOnPaste = true;
     }
 
     return { readOnly: !editable, skipColumnOnPaste: skipOnPaste };
