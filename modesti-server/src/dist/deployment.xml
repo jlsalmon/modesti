@@ -74,8 +74,8 @@
     <application name="dipcm-server-test" extends="default">
       <startscript name="DIPCM-MODESTI-SERVER-TEST">
         <java-vm-args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006 -Djava.library.path=/opt/dipcm-modesti-server-test</java-vm-args>
-        <env name="LD_LIBRARY_PATH" value="/opt/dipcm-modesti-server-test"/>
-        <property name="loader.path" value="/opt/dipcm-modesti-plugins" />
+        <env name="LD_LIBRARY_PATH" value="/opt/dipcm-modesti-server-test/lib"/>
+        <property name="loader.path" value="/opt/dipcm-modesti-plugins/lib" />
       </startscript>
       <deployment installLocation="/opt/dipcm-modesti-server-test">
         <directory name="conf">
