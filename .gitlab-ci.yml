@@ -33,13 +33,13 @@ deploy_test:
 quality_assurance_preview:
   stage: sonar
   script:
-    - ./gradlew clean build sonarqube --refresh-dependencies -Dsonar.host.url=https://en-ice-sonar.cern.ch -Dsonar.analysis.mode=preview -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit -Dsonar.gitlab.commit_sha=$CI_BUILD_REF -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID -Dsonar.gitlab.max_major_issues_gate=0
+    - ./gradlew clean build sonarqube --refresh-dependencies -Dsonar.host.url=${SONAR_URL} -Dsonar.analysis.mode=preview -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit -Dsonar.gitlab.commit_sha=$CI_BUILD_REF -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID -Dsonar.gitlab.max_major_issues_gate=0 -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
   except:
     - master
   
 quality_assurance:
   stage: sonar
   script:
-    - ./gradlew clean build dependencyCheckAnalyze sonarqube -Dsonar.host.url=https://en-ice-sonar.cern.ch -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit 
+    - ./gradlew clean build dependencyCheckAnalyze sonarqube -Dsonar.host.url=${SONAR_URL} -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
   only:
     - master

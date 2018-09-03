@@ -39,9 +39,6 @@ export class UpdatePointsModalController {
         this.fieldValues = values; 
         if (values.length == 1) {
           // Auto select the only value
-          if (this.request.properties === undefined) {
-            this.request.properties = [];
-          }
           this.request.properties[field.id] = values[0];
         }
       });
