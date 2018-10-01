@@ -55,6 +55,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       manualColumnResize: true,
       rowHeaders: (row: any) => this.getRowHeader(row),
       beforeChange: (changes: any, source: any) => this.beforeChange(changes, source),
+      beforeCopy: (data: any[][], coords: any[]) => this.beforeCopy(data, coords),
       afterCreateRow: () => this.normaliseLineNumbers(),
       afterRemoveRow: () => this.normaliseLineNumbers()
     };
@@ -507,6 +508,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
 
   public copy(): void {
     this.hot.copyPaste.setCopyableText();
+    this.hot.copyPaste.copyPasteInstance.triggerCopy();
   }
 
   public paste(): void {
@@ -514,6 +516,42 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     this.hot.copyPaste.copyPasteInstance.onPaste((value: any) => {
       console.log('onPaste(): ' + value);
     });
+  }
+
+  /**
+   * Remove from the copied data the fields configured as searchOnlyField
+   * 
+   * @param data array of arrays which contains the copied data
+   * @param coords array of objects with danges of the visual indexes of the copied data
+   */
+  public beforeCopy(data: any[][], coords: any[]) : void {
+    if (coords === undefined || data === undefined) {
+      return;
+    }
+
+    let dimensionIndex : number = 0;
+    coords.forEach((coord : any) => {
+      let spliceIndex : number [] = [];
+      
+      for (let col : number = coord.startCol; col < coord.endCol; col++) {
+        let field: Field = this.hotOptions.columns[col].field;
+        let searchFieldOnly : boolean = field.searchFieldOnly;
+        if (searchFieldOnly) {
+          spliceIndex.push(col);
+        }
+      }
+
+      if (spliceIndex.length) {
+        let rowData : any[] = data[dimensionIndex];
+        let removedCols : number = 0;
+        spliceIndex.forEach((deleteColIndex: number) => {
+          rowData.splice(deleteColIndex - removedCols, 1);
+          removedCols++;
+        })
+      }
+
+      dimensionIndex++;
+    })
   }
 
   /**
