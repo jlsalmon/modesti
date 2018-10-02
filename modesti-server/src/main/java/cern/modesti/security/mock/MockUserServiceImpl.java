@@ -4,23 +4,19 @@ import cern.modesti.user.User;
 import cern.modesti.security.UserService;
 import cern.modesti.user.UserImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,28 +102,29 @@ public class MockUserServiceImpl implements MockUserService, UserService {
 
   private void loadMockUsers() throws IOException {
     for (Resource resource : resolver.getResources("classpath*:mock-users.txt")) {
-      BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()));
-      String line;
-
-      while ((line = reader.readLine()) != null) {
-        if (line.isEmpty() || line.startsWith("#")) {
-          continue;
-        }
-
-        String[] props = line.split(" ");
-        List<SimpleGrantedAuthority> roles = Arrays.stream(props[4].split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-
-        User user = new UserImpl(users.size() + 1, props[0], props[1], props[2], props[3], roles);
-        boolean store = true;
-
-        for (User existingUser : users) {
-          if (existingUser.getUsername().equals(user.getUsername())) {
-            store = false;
+      try(BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+        String line;
+  
+        while ((line = reader.readLine()) != null) {
+          if (line.isEmpty() || line.startsWith("#")) {
+            continue;
           }
-        }
-
-        if (store) {
-          addMockUser(user);
+  
+          String[] props = line.split(" ");
+          List<SimpleGrantedAuthority> roles = Arrays.stream(props[4].split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+  
+          User user = new UserImpl(users.size() + 1, props[0], props[1], props[2], props[3], roles);
+          boolean store = true;
+  
+          for (User existingUser : users) {
+            if (existingUser.getUsername().equals(user.getUsername())) {
+              store = false;
+            }
+          }
+  
+          if (store) {
+            addMockUser(user);
+          }
         }
       }
     }

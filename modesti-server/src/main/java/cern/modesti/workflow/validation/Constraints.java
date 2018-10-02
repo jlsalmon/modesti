@@ -157,23 +157,23 @@ public class Constraints {
 
     // Build a new array containing the concatenation of the values of all constraint members
     for (Point point : request.getNonEmptyPoints()) {
-      String concatenatedValue = "";
+      StringBuilder stringBuilder = new StringBuilder();
       boolean atLeastOneNullMember = false;
 
       for (String member : constraint.getMembers()) {
         Object value = point.getValueByPropertyName(member);
         if (value != null && (value instanceof String && !((String) value).isEmpty())) {
-          concatenatedValue += value.toString();
+          stringBuilder.append(value.toString());
         } else {
           atLeastOneNullMember = true;
         }
       }
 
       if (atLeastOneNullMember) {
-        concatenatedValue = "";
+        concatenatedValues.add("");
+      } else {
+        concatenatedValues.add(stringBuilder.toString());
       }
-
-      concatenatedValues.add(concatenatedValue);
     }
 
     for (Point point : request.getNonEmptyPoints()) {

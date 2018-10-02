@@ -313,10 +313,7 @@ public class CoreValidationService implements ValidationService {
 
     // Otherwise, if we have an autocomplete field, make a call to the backend to see if this value returns any results
     else if (field.getType().equals("autocomplete")) {
-      String url = ((AutocompleteField) field).getUrl();
-
       // FIXME: currently, pasting an invalid value into an autocomplete field won't trigger an error.
-
       return true;
     }
 
