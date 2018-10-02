@@ -537,7 +537,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         let field: Field = this.hotOptions.columns[col].field;
         let searchFieldOnly : boolean = field.searchFieldOnly;
         if (searchFieldOnly) {
-          spliceIndex.push(col);
+          spliceIndex.push(col-coord.startCol);
         }
       }
 
