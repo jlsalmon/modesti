@@ -254,4 +254,39 @@ export class SchemaService {
 
     return result;
   }
+
+  public hasFieldInCondition(fieldName: string, conditional: any, type: string) : boolean {
+    if (conditional.hasOwnProperty(type)) {
+      conditional = conditional[type];
+    } else if (conditional.hasOwnProperty("_")) {
+      conditional = conditional["_"];
+    }
+
+    // Simple boolean
+    if (conditional === false || conditional === true || conditional.condition === false || conditional.condition === true) {
+      return false;
+    }
+
+    let results: boolean[] = [];
+    if (conditional.or ) {
+      // Chained OR condition
+      conditional.or.forEach((subConditional: any) => {
+        results.push(this.hasFieldInCondition(fieldName, subConditional, type));
+      });
+      return results.indexOf(true) > -1;
+    } else if (conditional.and) {
+      // Chained AND condition
+      conditional.and.forEach((subConditional: any) => {
+        results.push(this.hasFieldInCondition(fieldName, subConditional, type));
+      });
+      return results.indexOf(true) > -1;
+    } 
+    
+    // Simple value conditional without status conditional
+    if (conditional.field) {
+      return conditional.field === fieldName;
+    }
+
+    return false;
+  }
 }

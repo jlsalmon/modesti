@@ -389,6 +389,7 @@ class RequestTableController {
       if (dirty) {
         this.request.valid = false;
 
+        console.log("Saving request: ", this.request);
         this.requestService.saveRequest(this.request).then((request: Request) => {
           this.request = request;
 
@@ -431,34 +432,57 @@ class RequestTableController {
    */
   public deleteOldPointTypeProperties(row:number, oldSource: string, newSource: string): IPromise<Request>[]  {       
     let point: Point = this.request.points[row];    
-	let oldCategory = this.schema.getCategory(oldSource);
-	let newCategory = this.schema.getCategory(newSource);
-	let promises: IPromise<Request>[] = [];
-        let diffFields = [];
-	
-        if (oldCategory === undefined) {
-            return promises;
-        } else if (newCategory === undefined) {
-            diffFields = oldCategory.fields;
-        } else {
-          diffFields = oldCategory.fields.filter(function (obj) {
-            return !newCategory.fields.some(function(obj2) {
-        	return obj.id == obj2.id;
-            });
-          });
-        }
-		
-	diffFields.forEach((field : Field) => {
+    let oldCategory = this.schema.getCategory(oldSource);
+    let newCategory = this.schema.getCategory(newSource);
+    let promises: IPromise<Request>[] = [];
+    let fieldsToClean : Field[]= [];
+    let commonFieldIds : string[] = [];
 
-          if (point.getProperty(field.id) != null) {
-              console.log("Setting to null field: " + field.id );
-              this.setPropertyToNull(row, field);
-              let promise: IPromise<any> = this.saveNewValue(row, field, null);
-              promises.push(promise);
-	  }
-	}
-	
-	return promises;
+    if (oldCategory === undefined) {
+      return promises;
+    } else if (newCategory === undefined) {
+      fieldsToClean = oldCategory.fields;
+    } else {
+      fieldsToClean = oldCategory.fields.filter(function (obj) {
+        return !newCategory.fields.some(function(obj2) {
+          return obj.id == obj2.id;
+        });
+      });
+      
+      commonFieldIds = oldCategory.fields.filter(function(obj) {
+        return newCategory.fields.some(function(obj2) {
+          return obj.id == obj2.id;
+        });
+      }).map(function(obj) {
+        return obj.id;
+      });
+    }
+
+    this.schema.getAllFields().forEach((field : Field ) => {
+      if (point.getProperty(field.id) == null) {
+        // The field value is already null, ignore it
+        return;
+      }
+      let fieldConditional: Conditional = field.required;   
+      if (fieldConditional !== undefined)  {
+        let required : boolean = this.schemaService.evaluateConditional(point, fieldConditional, this.request.status, this.request.type);
+        let hasPointTypeInCondition : boolean = this.schemaService.hasFieldInCondition('pointType', fieldConditional, this.request.type);
+        if (!required && hasPointTypeInCondition && commonFieldIds.indexOf(field.id)===-1 && fieldsToClean.indexOf(field) === -1) {
+          fieldsToClean.push(field);
+        }
+      }
+    });
+    
+    fieldsToClean.forEach((field : Field) => {
+      if (point.getProperty(field.id) != null) {
+        console.log("Setting to null field: " + field.id );
+        this.setPropertyToNull(row, field);
+        let promise: IPromise<any> = this.saveNewValue(row, field, null);
+        promises.push(promise);
+      }
+    });
+    
+    return promises;
   } 
   
   /**
