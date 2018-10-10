@@ -28,6 +28,7 @@ import 'angular-cache';
 
 import {MainComponent} from './main.component.ts';
 import {HomeComponent} from './home/home.component.ts';
+import {LogoComponent} from './home/logo.component.ts';
 import {RequestListComponent} from './request/request-list.component.ts';
 import {NewRequestComponent} from './request/new-request.component.ts';
 import {UploadRequestComponent} from './request/upload-request.component.ts';
@@ -61,13 +62,13 @@ import {SearchService} from './search/search.service.ts';
 import {TableService} from './search/table.service';
 import {ValidationService} from './request/validation/validation.service.ts';
 import {CacheService} from './cache/cache.service.ts';
+import {ServerInfoService} from './server/server.info.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
 import {DeletePointsModalController} from './search/delete/delete-points.modal.ts';
 import {RestangularConfig} from './config/restangular.config.ts';
 import {RouterConfig} from './config/router.config.ts';
 import {HttpConfig} from './config/http.config.ts';
-import {VersionComponent} from './version/version.component.ts';
 import {ConfirmationModalController} from './util/confirmation.modal.controller.ts';
 
 
@@ -111,7 +112,7 @@ app.directive('showIf', ShowIfDirective.factory());
 app.directive('enableIf', EnableIfDirective.factory());
 app.component('user', new UserComponent());
 app.component('search', new SearchComponent());
-app.component('version', new VersionComponent());
+app.component('logo', new LogoComponent());
 
 app.service('AuthService', AuthService);
 app.service('RequestService', RequestService);
@@ -123,6 +124,7 @@ app.service('SearchService', SearchService);
 app.service('TableService', TableService);
 app.service('ValidationService', ValidationService);
 app.service('CacheService', CacheService);
+app.service('ServerInfoService', ServerInfoService);
 
 app.controller('LoginModalController', LoginModalController);
 app.controller('CloneRequestModalController', CloneRequestModalController);

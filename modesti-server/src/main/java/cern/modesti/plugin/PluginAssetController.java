@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -38,6 +39,10 @@ public class PluginAssetController {
 
   @Autowired
   private PluginRegistry<RequestProvider, Request> requestProviderRegistry;
+  @Value("${server.title:modesti}")
+  private String title;
+  @Value("${server.home:/home/home.component.html}")
+  private String home;
 
   private ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
 
@@ -46,11 +51,13 @@ public class PluginAssetController {
   @RequestMapping("/api/plugins")
   public VersionDescriptor getPluginInfo() {
     String version = ModestiServer.class.getPackage().getImplementationVersion();
-    if (version == null) version = "dev";
+    if (version == null) {
+      version = "dev";
+    }
 
     // TODO: read plugin versions and insert them here
 
-    return new VersionDescriptor(version, Collections.emptyList());
+    return new VersionDescriptor(title, version, home, Collections.emptyList());
   }
 
   /**

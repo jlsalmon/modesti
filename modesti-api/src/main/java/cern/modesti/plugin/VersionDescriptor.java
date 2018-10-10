@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VersionDescriptor {
+  private String name;
   private String version;
+  private String homePage;
   private List<PluginDescriptor> plugins;
 }
