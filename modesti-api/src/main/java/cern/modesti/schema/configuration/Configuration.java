@@ -26,4 +26,10 @@ public interface Configuration extends Serializable {
    * @return
    */
   boolean isShowFieldsOnClone();
+  
+  /**
+   * Specifies if the delete requests must show the schema fields
+   * @return
+   */
+  boolean isShowFieldsOnDelete();
 }

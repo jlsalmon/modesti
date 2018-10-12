@@ -21,4 +21,7 @@ public class ConfigurationImpl implements Configuration {
   
   @JsonProperty("showFieldsOnClone")
   private boolean showFieldsOnClone;
+
+  @JsonProperty("showFieldsOnDelete")
+  private boolean showFieldsOnDelete;
 }
