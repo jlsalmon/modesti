@@ -1,5 +1,7 @@
 package cern.modesti.predicate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -9,12 +11,12 @@ import cz.jirutka.rsql.parser.ast.RSQLOperators;
 import lombok.AllArgsConstructor;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import org.activiti.engine.impl.util.json.JSONArray;
-
 import static java.lang.String.format;
+
+import java.io.IOException;
 
 /**
  * @author Justin Lewis Salmon
@@ -53,14 +55,9 @@ public class Predicate<T> {
   private BooleanExpression getNumericPredicate(PathBuilder<T> entityPath, String argument) {
     
     if (RSQLOperators.IN.equals(criteria.getOperation())) {
-      JSONArray array = new JSONArray(argument);
-      List<Long> values = new ArrayList<>();
-      for (int i=0; i< array.length(); i++) {
-        values.add(array.optLong(i));
-      }
-      
+      Collection<Long> values = jsonToJavaCollection(argument, Long.class);
       NumberPath<Long> path = entityPath.getNumber(criteria.getKey(), Long.class);
-      return path.in(values);
+      return path.in(values);      
     }
     
     NumberPath<Float> path = entityPath.getNumber(criteria.getKey(), Float.class);
@@ -82,20 +79,26 @@ public class Predicate<T> {
       throw new InvalidPredicateException(String.format("Unknown operation %s", criteria.getOperation()));
     }
   }
+  
+  private <T> Collection<T> jsonToJavaCollection(String json, Class<T> elementType) {
+    try {
+      ObjectMapper mapper = new ObjectMapper();
+      CollectionType javaType = mapper.getTypeFactory().constructCollectionType(List.class, elementType);
+      return new ObjectMapper().readValue(json, javaType);
+    } catch (IOException e) {
+      throw new InvalidPredicateException(String.format("Exception reading values for 'IN' operation: %s", json));
+    }
+  }
 
   private BooleanExpression getStringPredicate(PathBuilder<T> entityPath, String argument) {
     StringPath path = entityPath.getString(criteria.getKey());
-    BooleanExpression expression;
 
     if (RSQLOperators.IN.equals(criteria.getOperation())) {
-      JSONArray array = new JSONArray(argument);
-      List<String> values = new ArrayList<>();
-      for (int i=0; i< array.length(); i++) {
-        values.add(array.optString(i));
-      }
-      return path.in(values);
+      Collection<String> values = jsonToJavaCollection(argument, String.class);
+      return path.in(values);  
     }
     
+    BooleanExpression expression;
     if (argument.startsWith("*") && argument.endsWith("*")) {
       expression = path.containsIgnoreCase(argument.substring(1, argument.length() - 1));
     } else if (argument.startsWith("*")) {

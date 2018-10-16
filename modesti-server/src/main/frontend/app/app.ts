@@ -9,6 +9,7 @@ import 'angular-http-auth';
 import 'angular-spinner';
 import 'angular-filter';
 import 'angular-xeditable';
+import 'angular-bind-html-compile';
 import 'jquery';
 import 'spin.js';
 import 'bootstrap-sass';
@@ -79,6 +80,7 @@ let app: any = angular.module('modesti', [
   'ngAnimate',
   'ngSanitize',
   'ngStorage',
+  'angular-bind-html-compile',
   'ui.bootstrap',
   'ui.router',
   'ui.select',

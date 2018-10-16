@@ -14,6 +14,8 @@ import {IComponentOptions, IRootScopeService, IAngularEvent} from 'angular';
 import {SearchService} from './search.service';
 import {SelectedPointsService} from '../search/selected-points.service';
 import {IStateService} from 'angular-ui-router';
+import "lodash";
+
 
 export class TableService {
   public table: Table;
@@ -43,7 +45,7 @@ export class TableService {
 
   public getDefaultUpdateMessage() {
     let numPoints: number = this.table.getSelectedPoints().length === 0 ? this.page.size : this.table.getSelectedPoints().length;
-    return 'You are about to create a new MODESTI request to update <b>' + numPoints + '</b> points.';
+    return 'You are about to create a new MODESTI request to update <b>{{ctrl.points.length}}</b> points.';
   }
 
   public updatePoints(header: string = '', message: string = ''): void {
@@ -141,9 +143,9 @@ export class TableService {
         // Otherwise, update all the points for the current filters
         else {
           let query: string = QueryParser.parse(this.filters);
-          let page: any = {number: 0, size: this.page.size};
+          let queryPage: any = {number: 0, size: this.page.size};
 
-          return this.searchService.getPoints(this.table.schema.id, this.table.schema.primary, query, page, this.sort)
+          return this.searchService.getPoints(this.table.schema.id, this.table.schema.primary, query, queryPage, this.sort)
           .then((response: any) => {
             let points: Point[] = [];
 
@@ -151,7 +153,7 @@ export class TableService {
               points = response._embedded.points;
             }
 
-            return points;
+            return _.uniqBy(points, this.table.schema.getIdProperty());
           });
         }
       },
