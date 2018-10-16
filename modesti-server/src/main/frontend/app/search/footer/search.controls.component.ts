@@ -23,7 +23,7 @@ class SearchControlsController {
     this.tableService.deletePoints();
   }
 
-  public getTable(): Table {
+  public getTable(): TableService {
     return this.tableService;
   }
 }

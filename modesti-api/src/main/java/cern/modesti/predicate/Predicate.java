@@ -1,5 +1,7 @@
 package cern.modesti.predicate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.google.common.base.CaseFormat;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -9,9 +11,12 @@ import cz.jirutka.rsql.parser.ast.RSQLOperators;
 import lombok.AllArgsConstructor;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 
 import static java.lang.String.format;
+
+import java.io.IOException;
 
 /**
  * @author Justin Lewis Salmon
@@ -43,11 +48,18 @@ public class Predicate<T> {
       StringPath path = entityPath.getString(criteria.getKey());
       return path.eq(argument);
     } else {
-      throw new RuntimeException(format("Field type %s is not currently supported", field.getType()));
+      throw new InvalidPredicateException(format("Field type %s is not currently supported", field.getType()));
     }
   }
 
   private BooleanExpression getNumericPredicate(PathBuilder<T> entityPath, String argument) {
+    
+    if (RSQLOperators.IN.equals(criteria.getOperation())) {
+      Collection<Long> values = jsonToJavaCollection(argument, Long.class);
+      NumberPath<Long> path = entityPath.getNumber(criteria.getKey(), Long.class);
+      return path.in(values);      
+    }
+    
     NumberPath<Float> path = entityPath.getNumber(criteria.getKey(), Float.class);
     float value = Float.parseFloat(argument);
 
@@ -64,14 +76,29 @@ public class Predicate<T> {
     } else if (RSQLOperators.LESS_THAN_OR_EQUAL.equals(criteria.getOperation())) {
       return path.loe(value);
     } else {
-      throw new RuntimeException(String.format("Unknown operation %s", criteria.getOperation()));
+      throw new InvalidPredicateException(String.format("Unknown operation %s", criteria.getOperation()));
+    }
+  }
+  
+  private <T> Collection<T> jsonToJavaCollection(String json, Class<T> elementType) {
+    try {
+      ObjectMapper mapper = new ObjectMapper();
+      CollectionType javaType = mapper.getTypeFactory().constructCollectionType(List.class, elementType);
+      return new ObjectMapper().readValue(json, javaType);
+    } catch (IOException e) {
+      throw new InvalidPredicateException(String.format("Exception reading values for 'IN' operation: %s", json), e);
     }
   }
 
   private BooleanExpression getStringPredicate(PathBuilder<T> entityPath, String argument) {
     StringPath path = entityPath.getString(criteria.getKey());
-    BooleanExpression expression;
 
+    if (RSQLOperators.IN.equals(criteria.getOperation())) {
+      Collection<String> values = jsonToJavaCollection(argument, String.class);
+      return path.in(values);  
+    }
+    
+    BooleanExpression expression;
     if (argument.startsWith("*") && argument.endsWith("*")) {
       expression = path.containsIgnoreCase(argument.substring(1, argument.length() - 1));
     } else if (argument.startsWith("*")) {
@@ -92,21 +119,22 @@ public class Predicate<T> {
   private Field getField(String fieldName, Class<T> klass) {
     Field field;
     String nestedFieldName = null;
+    String name = fieldName;
 
-    if (fieldName.contains(".")) {
-      String[] parts = fieldName.split("\\.");
-      fieldName = parts[0];
+    if (name.contains(".")) {
+      String[] parts = name.split("\\.");
+      name = parts[0];
       nestedFieldName = parts[1];
     }
 
     try {
-      field = klass.getDeclaredField(fieldName);
+      field = klass.getDeclaredField(name);
 
       if (nestedFieldName != null) {
         field = field.getType().getDeclaredField(nestedFieldName);
       }
     } catch (NoSuchFieldException e) {
-      throw new RuntimeException("Error creating predicate", e);
+      throw new InvalidPredicateException("Error creating predicate", e);
     }
 
     return field;

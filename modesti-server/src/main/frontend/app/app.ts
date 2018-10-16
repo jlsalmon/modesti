@@ -9,6 +9,7 @@ import 'angular-http-auth';
 import 'angular-spinner';
 import 'angular-filter';
 import 'angular-xeditable';
+import 'angular-bind-html-compile';
 import 'jquery';
 import 'spin.js';
 import 'bootstrap-sass';
@@ -63,6 +64,7 @@ import {TableService} from './search/table.service';
 import {ValidationService} from './request/validation/validation.service.ts';
 import {CacheService} from './cache/cache.service.ts';
 import {ServerInfoService} from './server/server.info.ts';
+import {SelectedPointsService} from './search/selected-points.service.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
 import {DeletePointsModalController} from './search/delete/delete-points.modal.ts';
@@ -78,6 +80,7 @@ let app: any = angular.module('modesti', [
   'ngAnimate',
   'ngSanitize',
   'ngStorage',
+  'angular-bind-html-compile',
   'ui.bootstrap',
   'ui.router',
   'ui.select',
@@ -125,6 +128,7 @@ app.service('TableService', TableService);
 app.service('ValidationService', ValidationService);
 app.service('CacheService', CacheService);
 app.service('ServerInfoService', ServerInfoService);
+app.service('SelectedPointsService', SelectedPointsService);
 
 app.controller('LoginModalController', LoginModalController);
 app.controller('CloneRequestModalController', CloneRequestModalController);

@@ -12,7 +12,10 @@ import {QueryParser} from './query-parser';
 import {Filter} from '../table/filter';
 import {IComponentOptions, IRootScopeService, IAngularEvent} from 'angular';
 import {SearchService} from './search.service';
+import {SelectedPointsService} from '../search/selected-points.service';
 import {IStateService} from 'angular-ui-router';
+import "lodash";
+
 
 export class TableService {
   public table: Table;
@@ -23,14 +26,16 @@ export class TableService {
   public loading: string;
   public error: string;
   public submitting: string; 
-  public static $inject: string[] = ['$http', '$rootScope', '$q', '$state', '$uibModal', 'AlertService', 'SearchService', 'RequestService'];
+  public updateHeader: string;
+  public updateMessage: string;
+  public static $inject: string[] = ['$http', '$rootScope', '$q', '$state', '$uibModal', 'AlertService', 'SearchService', 'RequestService', 'SelectedPointsService'];
 
   constructor(private $http: IHttpService, private $rootScope: IRootScopeService, private $q: IQService, private $state: IStateService,
     private $modal: any, private alertService: AlertService, private searchService: SearchService,
-    private requestService: RequestService) {}
+    private requestService: RequestService, private selectedPointsService: SelectedPointsService) {}
 
   public buildTable(schema: Schema, settings: any){
-    this.table = TableFactory.createTable('ag-grid', schema, [], settings);
+    this.table = TableFactory.createTable('ag-grid', schema, [], settings, this.selectedPointsService);
     return this.table;
   }
 
@@ -39,14 +44,15 @@ export class TableService {
   }
 
   public getDefaultUpdateMessage() {
-    return 'You are about to create a new MODESTI request to update <b>' + this.table.getSelectedPoints().length + '</b> points.';
+    let numPoints: number = this.table.getSelectedPoints().length === 0 ? this.page.size : this.table.getSelectedPoints().length;
+    return 'You are about to create a new MODESTI request to update <b>{{ctrl.points.length}}</b> points.';
   }
 
   public updatePoints(header: string = '', message: string = ''): void {
-  	if (typeof(header) == undefined || header == '') {
-	  this.updateHeader = this.getDefaultUpdateHeader();
+    if (typeof(header) == undefined || header == '') {
+      this.updateHeader = this.getDefaultUpdateHeader();
     } else {
-	  this.updateHeader = header
+      this.updateHeader = header
     }
     if (typeof(message) == undefined || message == '') {
       this.updateMessage = this.getDefaultUpdateMessage();
@@ -74,7 +80,6 @@ export class TableService {
         // Redirect to point entry page.
         this.$state.go('request', {id: id}).then(() => {
           this.submitting = 'success';
-
           this.alertService.add('success', 'Update request #' + id + ' has been created.');
         });
       },
@@ -108,7 +113,6 @@ export class TableService {
         // Redirect to point entry page.
         this.$state.go('request', {id: id}).then(() => {
           this.submitting = 'success';
-
           this.alertService.add('success', 'Delete request #' + id + ' has been created.');
         });
       },
@@ -121,10 +125,16 @@ export class TableService {
     });
   }
 
+  public clearSelections() : void {
+    if (this.table) {
+      this.table.clearSelections();
+    }
+  }
+
   private resolvePoints() {
     return {
       points: (): any => {
-        let selectedPoints: number[] = this.table.getSelectedPoints();
+        let selectedPoints: Point[] = this.table.getSelectedPoints();
         // If the user selected some specific points, just use those
         if (selectedPoints.length !== 0) {
           return selectedPoints;
@@ -133,9 +143,9 @@ export class TableService {
         // Otherwise, update all the points for the current filters
         else {
           let query: string = QueryParser.parse(this.filters);
-          let page: any = {number: 0, size: this.page.totalElements};
+          let queryPage: any = {number: 0, size: this.page.size};
 
-          return this.searchService.getPoints(this.table.schema.id, this.table.schema.primary, query, page, this.sort)
+          return this.searchService.getPoints(this.table.schema.id, this.table.schema.primary, query, queryPage, this.sort)
           .then((response: any) => {
             let points: Point[] = [];
 
@@ -143,10 +153,11 @@ export class TableService {
               points = response._embedded.points;
             }
 
-            return points;
+            return _.uniqBy(points, this.table.schema.getIdProperty());
           });
         }
       },
+      
       schema: () => this.table.schema,
       message: () => this.updateMessage,
       header: () => this.updateHeader

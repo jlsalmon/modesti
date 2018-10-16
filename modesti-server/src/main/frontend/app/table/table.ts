@@ -1,6 +1,7 @@
 import {Schema} from '../schema/schema';
 import {Category} from '../schema/category/category';
 import {Field} from '../schema/field/field';
+import {Point} from "../request/point/point";
 
 export abstract class Table {
 
@@ -33,4 +34,10 @@ export abstract class Table {
   public abstract toggleColumnGroup(fields: Field[]): void;
 
   public abstract isVisibleColumnGroup(fields: Field[]): boolean;
+
+  public abstract getSelectedPoints(): Point[];
+
+  public abstract clearSelections(): void;
+
+  public abstract showSelectedRowsOnly(value: boolean): void;
 }

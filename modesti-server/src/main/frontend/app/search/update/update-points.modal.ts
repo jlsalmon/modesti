@@ -12,6 +12,8 @@ export class UpdatePointsModalController {
 
   public request: Request;
   public fieldValues: any[] = [];
+  public updateMessage: string;
+  public updateHeader: string;
 
   constructor(private $modalInstance: any, private $rootScope: IRootScopeService, private points: Point[], private schema: Schema, private message: string,
   			  private header: string, private authService: AuthService, private schemaService: SchemaService) {

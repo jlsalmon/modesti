@@ -19,13 +19,13 @@ public class PredicateBuilder<T> {
     this.klass = klass;
   }
 
-  public PredicateBuilder with(String key, ComparisonOperator operation, List<String> arguments) {
+  public PredicateBuilder<T> with(String key, ComparisonOperator operation, List<String> arguments) {
     params.add(new SearchCriteria(key, operation, arguments));
     return this;
   }
 
   public BooleanExpression build() {
-    if (params.size() == 0) {
+    if (params.isEmpty()) {
       return null;
     }
 

@@ -23,26 +23,11 @@
 <section class="search-toolbar container-fluid" ng-if="$ctrl.tableService.table">
   <div class="row">
     <div class="col-lg-12">
-
-      <!--<div class="pull-left">-->
-        <!--<h4 style="margin: 0;">-->
-          <!--<i class="fa fa-search fa-fw text-muted" style="vertical-align: baseline;"></i>-->
-          <!--Searching for points on {{$ctrl.schema.id}} <small class="text-muted">{{$ctrl.schema.description}}</small>-->
-        <!--</h4>-->
-      <!--</div>-->
-
       <column-selector schema="$ctrl.schema" table="$ctrl.tableService.table"></column-selector>
-
       <filter-builder schema="$ctrl.schema" table="$ctrl.tableService.table"></filter-builder>
-
     </div>
   </div>
 </section>
-
-
-<!--<section class="column-panel search-column-panel">-->
-  <!--<column-panel schema="$ctrl.schema" table="$ctrl.tableService.table" enable-filters="true"></column-panel>-->
-<!--</section>-->
 
 
 <section class="search-table"  ng-if="$ctrl.tableService.table">
@@ -64,48 +49,38 @@
       <div class="col-md-12">
         <form class="form-inline">
 
-          <div class="form-group" style="padding-top: 12px;">
+          <div class="form-group" style="padding-top: 12px; width: 170px;">
             <span ng-if="$ctrl.page.totalElements" style="vertical-align: middle;">
-              <!--page {{$ctrl.page.number}} of {{$ctrl.page.totalPages}} &middot; -->
               <b>{{$ctrl.page.totalElements}}</b> points for this filter
             </span>
           </div>
 
-          <div class="pull-right">
-            <!--div class="form-group">
-              <search-footer
-                schema="$ctrl.schema"
-                table="$ctrl.tableService.table">
-              </search-footer>
-            </div-->
+          <div class="form-group" style="padding-top: 12px; width: 120px;">
+              <span ng-if="$ctrl.page.totalElements" style="vertical-align: middle;">
+                <b>{{$ctrl.getNumPointsSelected()}}</b> selected points
+              </span>
+          </div>
 
+          <div class="form-group" style="padding-top: 12px; ">
+              <span ng-if="$ctrl.page.totalElements" >
+                <input type="checkbox" style="margin-left: 5px" ng-model="$ctrl.showSelectedPoints" 
+                ng-click="$ctrl.showSelection()" ng-disabled="$ctrl.getNumPointsSelected() === 0"> 
+                show selected 
+              </span>
+          </div>
+          
+          <div class="form-group" style="padding-left: 10px;">
+            <button class="btn btn-sm btn-primary pull-right" ng-if="$ctrl.page.totalElements" 
+              ng-click="$ctrl.clearSelection()" ng-disabled="$ctrl.getNumPointsSelected() === 0">
+                <i class="fa fa-pencil"></i>
+                Clear selection
+              </button>
+          </div>
+
+          <div class="pull-right">
             <div class="form-group">
               <search-footer schema="$ctrl.schema"></search-footer>
             </div>
-
-
-
-            <!--div class="form-group">
-              <search-controls width="100px" height="100px">
-              </search-controls>
-            </div>
-          </div-->
-          <!--div class="pull-right">
-            
-            <div class="form-group">
-              <button class="btn btn-sm btn-warning pull-right" ng-click="$ctrl.updatePoints()">
-                <i class="fa fa-pencil"></i>
-                Update selected points
-              </button>
-            </div>
-
-            <div class="form-group">
-              <button class="btn btn-sm btn-danger pull-right" ng-click="$ctrl.deletePoints()">
-                <i class="fa fa-trash"></i>
-                Delete selected points
-              </button>
-            </div>-->
-
           </div>
         </form>
       </div>

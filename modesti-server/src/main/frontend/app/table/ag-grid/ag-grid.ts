@@ -3,25 +3,27 @@ import {Point} from "../../request/point/point";
 import {Schema} from "../../schema/schema";
 import {Category} from "../../schema/category/category";
 import {Field} from "../../schema/field/field";
+import {SelectedPointsService} from '../../search/selected-points.service';
 import {ColumnFactory} from "../column-factory";
 import * as agGrid from "ag-grid/main";
 import {Grid, GridOptions, Column, ColDef} from "ag-grid/main";
 import "lodash";
 agGrid.initialiseAgGridWithAngular1(angular);
 
-export class AgGrid extends Table {
 
+export class AgGrid extends Table {
+  public static $inject: string[] = ['Schema', 'SelectedPointsService']; 
   public grid: Grid;
   public gridOptions: GridOptions;
-  public selectedPoints: Point[] = [];
   public idProperty: string;
+  private showSelectedRows: boolean = false;
 
-  public constructor(schema: Schema, data: any[], settings: any) {
+  public constructor(schema: Schema, data: any[], settings: any, private selectedPointsService: SelectedPointsService) {
     super(schema, data, settings);
     this.idProperty = this.schema.getIdProperty();
-
-    let columnDefs: ColDef[] = this.getColumnDefs();
-
+    this.clearSelections();
+    let columnDefs: ColDef[] = this.getColumnDefs();    
+    
     this.gridOptions = {
       angularCompileRows: true,
       enableColResize: true,
@@ -41,8 +43,8 @@ export class AgGrid extends Table {
       paginationInitialRowCount: 50,
       maxPagesInCache: 2,
       onRowSelected: this.rowSelected.bind(this),
-      onBeforeFilterChanged: this.clearSelections.bind(this),
-      onBeforeSortChanged: this.clearSelections.bind(this),
+      onModelUpdated: this.updateSelections.bind(this),
+
       datasource: {
         rowCount: undefined, // behave as infinite scroll
         getRows: (params: any) => this.settings.getRows(params)
@@ -128,6 +130,13 @@ export class AgGrid extends Table {
     return visible;
   }
 
+  public showSelectedRowsOnly(show: boolean) : void {
+    this.showSelectedRows = show;
+    this.gridOptions.api.purgeVirtualPageCache();
+    let sortModel : any = this.gridOptions.api.getSortModel();
+    this.gridOptions.api.setSortModel(sortModel);   
+  }
+
   private getColumn(field: Field): Column {
     return this.gridOptions.columnApi.getColumn(field.id);
   }
@@ -147,7 +156,7 @@ export class AgGrid extends Table {
           (params.node.selected ? 'checked="checked" ' : '') +
           'ng-click="$ctrl.table.selectNodeById(' + params.node.id + ')" style="margin-left: 5px;">';
       }
-    };
+     };
 
     return ColumnFactory.getColumnDefinitions('ag-grid', this, meta);
   }
@@ -161,39 +170,28 @@ export class AgGrid extends Table {
   };
 
   public getSelectedPoints() {
-    let points: Point[] = [];
-    this.updateSelections();
-
-    this.gridOptions.api.getSelectedNodes().forEach((node) => {
-      points.push(node.data);
-    });
-
-    return points;
+    return this.selectedPointsService.getSelectedPoints();
   }
 
   public rowSelected(event) {
     let point: Point = event.node.data;
     let selected: boolean = event.node.isSelected();
-
     let path: string = this.idProperty;
 
     if (selected) {
-      if (!_.some(this.selectedPoints, [path, _.get(point, path)])) {
-        this.selectedPoints.push(point);
-      }
+      this.selectedPointsService.addPoint(point, path);
     } else {
-      _.remove(this.selectedPoints, [path, _.get(point, path)]);
+      this.selectedPointsService.deletePoint(point, this.idProperty);
     }
   }
 
   public updateSelections() {
     let path: string = this.idProperty;
-
     let selectedInGrid = this.gridOptions.api.getSelectedNodes();
     let gridPath = 'data.' + path;
 
     _.each(selectedInGrid, (node) => {
-      if (!_.some(this.selectedPoints, [path, _.get(node, gridPath)])) {
+      if (!_.some(this.selectedPointsService.getSelectedPoints(), [path, _.get(node, gridPath)])) {
         // The following suppressEvents=true flag is ignored for now, but a
         // fixing pull request is waiting at ag-grid GitHub.
         node.setSelected(false);
@@ -202,7 +200,7 @@ export class AgGrid extends Table {
     });
 
     let selectedIdsInGrid = _.map(selectedInGrid, gridPath);
-    let currentlySelectedIds = _.map(this.selectedPoints, path);
+    let currentlySelectedIds = _.map(this.selectedPointsService.getSelectedPoints(), path);
     let missingIdsInGrid = _.difference(currentlySelectedIds, selectedIdsInGrid);
 
     if (missingIdsInGrid.length > 0) {
@@ -210,25 +208,33 @@ export class AgGrid extends Table {
       // have to loop through all the nodes only to select some.  I wish there
       // was a way to select nodes/rows based on an id.
       var i;
-
+      let rowsToRefresh : agGrid.RowNode [] = [];
       this.gridOptions.api.forEachNode((node) => {
         i = _.indexOf(missingIdsInGrid, _.get(node, gridPath));
         if (i >= 0) {
-          // multi=true, suppressEvents=true:
-          // this.gridOptions.api.selectNode(node, true, true);
           node.setSelected(true);
-
+          rowsToRefresh.push(node);
           missingIdsInGrid.splice(i, 1);  // Reduce haystack.
           if (!missingIdsInGrid.length) {
             // I'd love for `forEachNode` to support breaking the loop here.
           }
         }
       });
+      this.gridOptions.api.refreshRows(rowsToRefresh);
     }
   }
 
-  public clearSelections() {
-    this.gridOptions.api.deselectAll();
+  public clearSelections(): void {
+    if(this.gridOptions) {
+      let selectedInGrid = this.gridOptions.api.getSelectedNodes();
+      this.gridOptions.api.deselectAll();       
+      this.selectedPointsService.clear();
+      if (this.showSelectedRows) {
+        this.showSelectedRowsOnly(false);
+      } else {
+        this.gridOptions.api.refreshRows(selectedInGrid);
+      }
+    }
   }
 
   public getActiveDatasources(): Category[] {
