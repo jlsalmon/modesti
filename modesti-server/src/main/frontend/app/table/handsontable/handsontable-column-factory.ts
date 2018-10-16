@@ -13,7 +13,7 @@ import {IInterpolateService} from 'angular';
 
 export class HandsontableColumnFactory {
 
-  protected getColumnDefs(table: Table, meta: any): any[] {
+  public getColumnDefs(table: Table, meta: any): any[] {
     let columns: any[] = [];
 
     if (meta.authorised && meta.assigned) {

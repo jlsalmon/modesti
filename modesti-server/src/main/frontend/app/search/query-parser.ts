@@ -46,6 +46,8 @@ export class QueryParser {
       return ' < ';
     } else if (operation === 'greater-than') {
       return ' > ';
+    } else if (operation === 'in') {
+      return ' =in= ';
     } else {
       return ' == ';
     }

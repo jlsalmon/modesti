@@ -12,6 +12,7 @@ import {QueryParser} from './query-parser';
 import {Filter} from '../table/filter';
 import {IComponentOptions, IRootScopeService, IAngularEvent} from 'angular';
 import {SearchService} from './search.service';
+import {SelectedPointsService} from '../search/selected-points.service';
 import {IStateService} from 'angular-ui-router';
 
 export class TableService {
@@ -23,14 +24,16 @@ export class TableService {
   public loading: string;
   public error: string;
   public submitting: string; 
-  public static $inject: string[] = ['$http', '$rootScope', '$q', '$state', '$uibModal', 'AlertService', 'SearchService', 'RequestService'];
+  public updateHeader: string;
+  public updateMessage: string;
+  public static $inject: string[] = ['$http', '$rootScope', '$q', '$state', '$uibModal', 'AlertService', 'SearchService', 'RequestService', 'SelectedPointsService'];
 
   constructor(private $http: IHttpService, private $rootScope: IRootScopeService, private $q: IQService, private $state: IStateService,
     private $modal: any, private alertService: AlertService, private searchService: SearchService,
-    private requestService: RequestService) {}
+    private requestService: RequestService, private selectedPointsService: SelectedPointsService) {}
 
   public buildTable(schema: Schema, settings: any){
-    this.table = TableFactory.createTable('ag-grid', schema, [], settings);
+    this.table = TableFactory.createTable('ag-grid', schema, [], settings, this.selectedPointsService);
     return this.table;
   }
 
@@ -43,10 +46,10 @@ export class TableService {
   }
 
   public updatePoints(header: string = '', message: string = ''): void {
-  	if (typeof(header) == undefined || header == '') {
-	  this.updateHeader = this.getDefaultUpdateHeader();
+    if (typeof(header) == undefined || header == '') {
+      this.updateHeader = this.getDefaultUpdateHeader();
     } else {
-	  this.updateHeader = header
+      this.updateHeader = header
     }
     if (typeof(message) == undefined || message == '') {
       this.updateMessage = this.getDefaultUpdateMessage();
@@ -121,10 +124,17 @@ export class TableService {
     });
   }
 
+  public clearSelections() : void {
+    if (this.table) {
+      this.table.clearSelections();
+    }
+  }
+
   private resolvePoints() {
     return {
+      /*
       points: (): any => {
-        let selectedPoints: number[] = this.table.getSelectedPoints();
+        let selectedPoints: Point[] = this.table.getSelectedPoints();
         // If the user selected some specific points, just use those
         if (selectedPoints.length !== 0) {
           return selectedPoints;
@@ -147,6 +157,8 @@ export class TableService {
           });
         }
       },
+      */
+      points: () => this.table.getSelectedPoints(),
       schema: () => this.table.schema,
       message: () => this.updateMessage,
       header: () => this.updateHeader

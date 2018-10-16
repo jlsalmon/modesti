@@ -63,6 +63,7 @@ import {TableService} from './search/table.service';
 import {ValidationService} from './request/validation/validation.service.ts';
 import {CacheService} from './cache/cache.service.ts';
 import {ServerInfoService} from './server/server.info.ts';
+import {SelectedPointsService} from './search/selected-points.service.ts';
 import {LoginModalController} from './auth/login.modal.ts';
 import {UpdatePointsModalController} from './search/update/update-points.modal.ts';
 import {DeletePointsModalController} from './search/delete/delete-points.modal.ts';
@@ -125,6 +126,7 @@ app.service('TableService', TableService);
 app.service('ValidationService', ValidationService);
 app.service('CacheService', CacheService);
 app.service('ServerInfoService', ServerInfoService);
+app.service('SelectedPointsService', SelectedPointsService);
 
 app.controller('LoginModalController', LoginModalController);
 app.controller('CloneRequestModalController', CloneRequestModalController);

@@ -5,13 +5,16 @@ import {AlertService} from '../alert/alert.service';
 import {Table} from '../table/table';
 import {TableFactory} from '../table/table-factory';
 import {Schema} from '../schema/schema';
+import {Field} from '../schema/field/field';
 import {Point} from '../request/point/point';
 import {QueryParser} from './query-parser';
 import {Filter} from '../table/filter';
 import {IComponentOptions, IRootScopeService, IAngularEvent} from 'angular';
 import {IStateService} from 'angular-ui-router';
+import "lodash"
 
 import {TableService} from './table.service';
+import { Category } from '../schema/category/category';
 
 export class SearchComponent implements IComponentOptions {
   public templateUrl: string = '/search/search.component.html';
@@ -35,6 +38,7 @@ export class SearchController {
   public loading: string;
   public error: string;
   public submitting: string;
+  public showSelectedPoints: boolean;
 
   constructor(private $rootScope: IRootScopeService, private $modal: any, private $state: IStateService,
               private searchService: SearchService, private schemaService: SchemaService,
@@ -49,7 +53,7 @@ export class SearchController {
     this.activateSchema(this.schemas[0]);
 
     let settings: any = {
-      getRows: this.search
+      getRows: this.getRows
     };
 
     this.table = this.tableService.buildTable(this.schema, settings);
@@ -69,6 +73,7 @@ export class SearchController {
       this.table.schema = schema;
       this.table.refreshColumnDefs();
       this.table.refreshData();
+      this.table.clearSelections();
     }
 
     this.$rootScope.$emit('modesti:searchDomainChanged', schema.id);
@@ -81,11 +86,44 @@ export class SearchController {
     this.sort = '';
   }
 
-  public search = (params?: any): void => {
-    this.loading = 'started';
-    console.log('searching');
+  public getNumPointsSelected() : number {
+    return this.table.getSelectedPoints().length;
+  }
 
-    let query: string = QueryParser.parse(this.filters);
+  public clearSelection() : void {
+    this.showSelectedPoints = false;
+    this.table.clearSelections();
+  }
+
+  public showSelection() : void {
+    this.table.showSelectedRowsOnly(this.showSelectedPoints);
+  }
+
+  public selectAll(): void {
+    this.table.selectAll();
+  }
+
+  public getRows = (params?: any) : void => {
+    if (this.showSelectedPoints) {
+      let primaryField : Field = this.schema.getPrimaryField();
+      let selectedPointIds : string [] = [];
+      this.table.getSelectedPoints().forEach((point: Point) => {
+        selectedPointIds.push(point.properties[primaryField.id]);
+      });
+      let filters: Map<string, Filter> = new Map();
+      filters['_' + primaryField.id] = { field: primaryField, operation: "in", value: '[' + selectedPointIds.toString() + ']', isOpen: false };
+      
+      return this.search(params, filters);
+    } else {
+      return this.search(params);
+    }
+  }
+
+  public search = (params?: any, applyFilters?: Map<string, Filter>): void => {
+    this.loading = 'started';
+
+    let searchFilters = applyFilters === undefined ? this.filters : applyFilters;
+    let query: string = QueryParser.parse(searchFilters);
 
     if (params) {
       this.page.number = params.startRow / 100;
@@ -124,7 +162,6 @@ export class SearchController {
           lastRow = this.page.totalElements;
         }
 
-        this.table.updateSelections();
         params.successCallback(points, lastRow);
       } else {
         this.table.refreshData();

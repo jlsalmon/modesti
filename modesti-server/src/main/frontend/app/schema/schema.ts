@@ -9,8 +9,10 @@ export class Schema implements ISerializable<Schema> {
   public categories: Category[];
   public datasources: Category[];
   public fields: Field[];
+  public allFields: Field[];
   public configuration: Configuration;
   public primary: string;
+  public primaryField: Field;
   public selectableStates: string[];
   public rowCommentStates: RowCommentStateDescriptor[];
 
@@ -86,6 +88,10 @@ export class Schema implements ISerializable<Schema> {
     return 'properties.' + this.primary;
   }
 
+  public getPrimaryField(): Field {
+    return this.primaryField;
+  }
+
   public hasRowSelectColumn(requestStatus: string): boolean {
     let selectableStates: string[] = this.selectableStates;
     return selectableStates && selectableStates.indexOf(requestStatus) > -1;
@@ -114,6 +120,7 @@ export class Schema implements ISerializable<Schema> {
     this.selectableStates = schema.selectableStates;
     this.rowCommentStates = schema.rowCommentStates;
     this.configuration = schema.configuration;
+    this.allFields = [];
 
     if (schema.categories) {
       this.categories = [];
@@ -135,6 +142,16 @@ export class Schema implements ISerializable<Schema> {
         this.fields.push(new Field().deserialize(field));
       });
     }
+
+    this.categories.concat(this.datasources).forEach((category: any) => {
+      category.fields.forEach((field: any) => {
+        field.category = category.name;
+        this.allFields.push(field);
+        if (field.id === schema.primary) {
+          this.primaryField = field;
+        }
+      });
+    });
 
     return this;
   }
