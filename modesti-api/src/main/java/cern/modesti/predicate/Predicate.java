@@ -86,7 +86,7 @@ public class Predicate<T> {
       CollectionType javaType = mapper.getTypeFactory().constructCollectionType(List.class, elementType);
       return new ObjectMapper().readValue(json, javaType);
     } catch (IOException e) {
-      throw new InvalidPredicateException(String.format("Exception reading values for 'IN' operation: %s", json));
+      throw new InvalidPredicateException(String.format("Exception reading values for 'IN' operation: %s", json), e);
     }
   }
 
