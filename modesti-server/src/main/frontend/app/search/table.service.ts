@@ -42,7 +42,8 @@ export class TableService {
   }
 
   public getDefaultUpdateMessage() {
-    return 'You are about to create a new MODESTI request to update <b>' + this.table.getSelectedPoints().length + '</b> points.';
+    let numPoints: number = this.table.getSelectedPoints().length === 0 ? this.page.size : this.table.getSelectedPoints().length;
+    return 'You are about to create a new MODESTI request to update <b>' + numPoints + '</b> points.';
   }
 
   public updatePoints(header: string = '', message: string = ''): void {
@@ -77,7 +78,6 @@ export class TableService {
         // Redirect to point entry page.
         this.$state.go('request', {id: id}).then(() => {
           this.submitting = 'success';
-
           this.alertService.add('success', 'Update request #' + id + ' has been created.');
         });
       },
@@ -111,7 +111,6 @@ export class TableService {
         // Redirect to point entry page.
         this.$state.go('request', {id: id}).then(() => {
           this.submitting = 'success';
-
           this.alertService.add('success', 'Delete request #' + id + ' has been created.');
         });
       },
@@ -132,7 +131,6 @@ export class TableService {
 
   private resolvePoints() {
     return {
-      /*
       points: (): any => {
         let selectedPoints: Point[] = this.table.getSelectedPoints();
         // If the user selected some specific points, just use those
@@ -143,7 +141,7 @@ export class TableService {
         // Otherwise, update all the points for the current filters
         else {
           let query: string = QueryParser.parse(this.filters);
-          let page: any = {number: 0, size: this.page.totalElements};
+          let page: any = {number: 0, size: this.page.size};
 
           return this.searchService.getPoints(this.table.schema.id, this.table.schema.primary, query, page, this.sort)
           .then((response: any) => {
@@ -157,8 +155,7 @@ export class TableService {
           });
         }
       },
-      */
-      points: () => this.table.getSelectedPoints(),
+      
       schema: () => this.table.schema,
       message: () => this.updateMessage,
       header: () => this.updateHeader

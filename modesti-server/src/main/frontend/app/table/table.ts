@@ -39,7 +39,5 @@ export abstract class Table {
 
   public abstract clearSelections(): void;
 
-  public abstract selectAll(): void;
-
   public abstract showSelectedRowsOnly(value: boolean): void;
 }
