@@ -529,7 +529,6 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       return;
     }
 
-    let dimensionIndex : number = 0;
     coords.forEach((coord : any) => {
       let spliceIndex : number [] = [];
       
@@ -542,15 +541,14 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       }
 
       if (spliceIndex.length) {
-        let rowData : any[] = data[dimensionIndex];
-        let removedCols : number = 0;
-        spliceIndex.forEach((deleteColIndex: number) => {
-          rowData.splice(deleteColIndex - removedCols, 1);
-          removedCols++;
-        })
+        data.forEach((rowData: any[]) => {
+          let removedCols : number = 0;
+          spliceIndex.forEach((deleteColIndex: number) => {
+            rowData.splice(deleteColIndex - removedCols, 1);
+            removedCols++;
+          })
+        });
       }
-
-      dimensionIndex++;
     })
   }
 
