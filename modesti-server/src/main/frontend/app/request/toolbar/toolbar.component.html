@@ -136,7 +136,7 @@
 
       <!-- Actions dropdown -->
       <div class="btn-group toolbar-item" uib-dropdown uib-dropdown-append-to-body>
-        <button type="button" class="btn btn-sm btn-default dropdown" uib-dropdown-toggle>
+        <button type="button" class="btn btn-sm btn-default dropdown" ng-disabled="!$ctrl.canCloneRequest() && !$ctrl.canDeleteRequest()" uib-dropdown-toggle>
           <i class="fa fa-fw fa-cog"></i> Actions <span class="caret text-muted"></span>
         </button>
         <ul uib-dropdown-menu class="pull-right">
@@ -144,7 +144,7 @@
             <a ng-click="$ctrl.cloneRequest()" ng-show="$ctrl.canCloneRequest()">Clone request</a>
           </li>
           <li>
-            <a ng-click="$ctrl.deleteRequest()" show-if="user-authorised-for-task">Delete request</a>
+            <a ng-click="$ctrl.deleteRequest()" ng-show="$ctrl.canDeleteRequest()">Delete request</a>
           </li>
         </ul>
       </div>

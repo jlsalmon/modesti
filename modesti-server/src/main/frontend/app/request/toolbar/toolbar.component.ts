@@ -112,6 +112,12 @@ class RequestToolbarController {
     });
   }
 
+  public canDeleteRequest() : boolean {
+    let task : Task = this.taskService.getCurrentTask();
+    let authorized : boolean = this.taskService.isCurrentUserAuthorised(task);
+    return authorized && this.request.status !== 'FOR_CONFIGURATION';
+  }
+
   public deleteRequest(): void {
     let modalInstance: any = this.$modal.open({
       animation: false,
