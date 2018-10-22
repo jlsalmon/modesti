@@ -224,6 +224,14 @@ export class AgGrid extends Table {
     }
   }
 
+  public selectAll() : void {
+    this.gridOptions.api.forEachNode((node: agGrid.RowNode) => {
+      node.setSelected(true);
+    })
+
+    this.gridOptions.api.refreshView();
+  }
+
   public clearSelections(): void {
     if(this.gridOptions) {
       let selectedInGrid = this.gridOptions.api.getSelectedNodes();

@@ -689,14 +689,19 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   }
 
   public getSelectedPoints(): Point[] {
+    // Nothing to do
     return [];
   }
 
   public clearSelections(): void {
-    return;
+    // Nothing to do
   }
 
   public showSelectedRowsOnly(value: boolean) : void {
-    return;
+    // Nothing to do
+  }
+
+  public selectAll() : void {
+    // Nothing to do
   }
 }

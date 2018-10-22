@@ -99,6 +99,10 @@ export class SearchController {
     this.table.showSelectedRowsOnly(this.showSelectedPoints);
   }
 
+  public selectAll() : void {
+    this.table.selectAll();
+  }
+
   public getRows = (params?: any) : void => {
     if (this.showSelectedPoints) {
       let primaryField : Field = this.schema.getPrimaryField();
