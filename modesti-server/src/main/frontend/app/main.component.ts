@@ -11,29 +11,26 @@ export class MainComponent implements IComponentOptions {
 }
 
 class MainController {
-  public static $inject: string[] = ['$scope', '$rootScope', '$location', 'AuthService'];
+  public static $inject: string[] = ['$scope', '$rootScope', '$location', 'AuthService', 'httpBuffer'];
 
   private user: User;
 
   constructor(private $scope: IScope, private $rootScope: IRootScopeService, private $location: ILocationService,
-              private authService: AuthService) {
+              private authService: AuthService, private httpBuffer: any) {
     this.user = authService.getCurrentUser();
 
     // When an API request returns 401 Unauthorized, angular-http-auth broadcasts
     // this event. We simply catch it and show the login modal.
-    $scope.$on('event:auth-loginRequired', () => this.login());
+    this.$scope.$on('event:auth-loginRequired', () => this.login());
   }
-
-  // public isActivePage(page:) {
-  //  return this.$location.path().lastIndexOf(page, 0) === 0;
-  // }
 
   public isAuthenticated(): boolean {
     return this.authService.isCurrentUserAuthenticated();
   }
 
   public login(): void {
-    this.authService.login().then((user:any) => this.user = user);
+    this.httpBuffer.rejectAll("ClearBuffer");
+    this.authService.login().then((user:any) => this.user = user)
   }
 
   public logout(): void {

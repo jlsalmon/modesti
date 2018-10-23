@@ -69,7 +69,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http
         // Authentication is required for all API endpoints
-        .authorizeRequests().antMatchers("/api/**").authenticated()
+        .authorizeRequests()
+        .antMatchers("/api/plugins").permitAll()
+        .antMatchers("/api/**").authenticated()
 
         // Enable basic HTTP authentication
         .and().httpBasic().authenticationEntryPoint((request, response, authException) -> {
