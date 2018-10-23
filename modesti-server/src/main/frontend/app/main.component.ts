@@ -4,6 +4,7 @@ import IComponentOptions = angular.IComponentOptions;
 import IScope = angular.IScope;
 import IRootScopeService = angular.IRootScopeService;
 import ILocationService = angular.ILocationService;
+import IStateService = angular.ui.IStateService;
 
 export class MainComponent implements IComponentOptions {
   public templateUrl: string = '/main.component.html';
@@ -11,12 +12,12 @@ export class MainComponent implements IComponentOptions {
 }
 
 class MainController {
-  public static $inject: string[] = ['$scope', '$rootScope', '$location', 'AuthService', 'httpBuffer'];
+  public static $inject: string[] = ['$scope', '$rootScope', '$location', 'AuthService', 'httpBuffer', '$state'];
 
   private user: User;
 
   constructor(private $scope: IScope, private $rootScope: IRootScopeService, private $location: ILocationService,
-              private authService: AuthService, private httpBuffer: any) {
+              private authService: AuthService, private httpBuffer: any, private $state: IStateService) {
     this.user = authService.getCurrentUser();
 
     // When an API request returns 401 Unauthorized, angular-http-auth broadcasts
@@ -30,7 +31,12 @@ class MainController {
 
   public login(): void {
     this.httpBuffer.rejectAll("ClearBuffer");
-    this.authService.login().then((user:any) => this.user = user)
+    this.authService.login().then((user:any) => {
+      this.user = user;
+      if (this.user !== undefined) {
+        this.$state.go(this.$state.current, {}, {reload: true});
+      }
+    });
   }
 
   public logout(): void {
