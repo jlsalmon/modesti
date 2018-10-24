@@ -3,18 +3,16 @@ import {SchemaService} from '../schema/schema.service';
 import {RequestService} from '../request/request.service';
 import {AlertService} from '../alert/alert.service';
 import {Table} from '../table/table';
-import {TableFactory} from '../table/table-factory';
 import {Schema} from '../schema/schema';
 import {Field} from '../schema/field/field';
 import {Point} from '../request/point/point';
 import {QueryParser} from './query-parser';
 import {Filter} from '../table/filter';
 import {IComponentOptions, IRootScopeService, IAngularEvent} from 'angular';
-import {IStateService} from 'angular-ui-router';
 import "lodash"
 
 import {TableService} from './table.service';
-import { Category } from '../schema/category/category';
+
 
 export class SearchComponent implements IComponentOptions {
   public templateUrl: string = '/search/search.component.html';
@@ -25,8 +23,8 @@ export class SearchComponent implements IComponentOptions {
 }
 
 export class SearchController {
-  public static $inject: string[] = ['$rootScope', '$uibModal', '$state', 'SearchService',
-                                     'SchemaService', 'RequestService', 'AlertService', 'TableService'];
+  public static $inject: string[] = ['$rootScope', '$uibModal', 'SearchService',
+                                     'SchemaService', 'AlertService', 'TableService'];
 
   public schema: Schema;
   public schemas: Schema[];
@@ -40,9 +38,9 @@ export class SearchController {
   public submitting: string;
   public showSelectedPoints: boolean;
 
-  constructor(private $rootScope: IRootScopeService, private $modal: any, private $state: IStateService,
+  constructor(private $rootScope: IRootScopeService, private $modal: any, 
               private searchService: SearchService, private schemaService: SchemaService,
-              private requestService: RequestService, private alertService: AlertService,private tableService: TableService) {
+              private alertService: AlertService,private tableService: TableService) {
 
     this.schemas.sort(function(s1: Schema, s2: Schema) {
       if (s1.id < s2.id) return -1;
@@ -100,7 +98,14 @@ export class SearchController {
   }
 
   public selectAll() : void {
-    this.table.selectAll();
+    if (this.page.totalElements > 200) {
+      this.alertService.add('danger', 'Too many points in the filter. </br>Please create a filter containing <= 200 points.');
+    } else {
+      // Not all the points are loaded in the model, specify the lastRowIndex in call to selectAll
+      if (this.page.totalElements > 0) {
+        this.table.selectAll(this.page.totalElements - 1);
+      }
+    }
   }
 
   public getRows = (params?: any) : void => {

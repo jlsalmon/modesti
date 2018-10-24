@@ -17,6 +17,7 @@ export class AgGrid extends Table {
   public gridOptions: GridOptions;
   public idProperty: string;
   private showSelectedRows: boolean = false;
+  private selectAllAfterModelUpdate: boolean = false;
 
   public constructor(schema: Schema, data: any[], settings: any, private selectedPointsService: SelectedPointsService) {
     super(schema, data, settings);
@@ -49,7 +50,9 @@ export class AgGrid extends Table {
         rowCount: undefined, // behave as infinite scroll
         getRows: (params: any) => this.settings.getRows(params)
       },
-      onGridReady: (event: any) => event.api.sizeColumnsToFit()
+      onGridReady: (event: any) => {
+        event.api.sizeColumnsToFit()
+      }
     };
 
     window.onresize = (event: Event) => {
@@ -186,6 +189,15 @@ export class AgGrid extends Table {
   }
 
   public updateSelections() {
+    if(this.selectAllAfterModelUpdate === true) {
+      this.selectAll();
+    }
+
+    let selectedPoints: Point[] = this.selectedPointsService.getSelectedPoints();
+    if (selectedPoints.length === 0) {
+      return;
+    }
+    
     let path: string = this.idProperty;
     let selectedInGrid = this.gridOptions.api.getSelectedNodes();
     let gridPath = 'data.' + path;
@@ -224,12 +236,20 @@ export class AgGrid extends Table {
     }
   }
 
-  public selectAll() : void {
-    this.gridOptions.api.forEachNode((node: agGrid.RowNode) => {
-      node.setSelected(true);
-    })
-
-    this.gridOptions.api.refreshView();
+  public selectAll(lastRowIndex?:number) : void {
+    if (lastRowIndex !== undefined && this.gridOptions.api.getModel().getRowCount() -1 !== lastRowIndex) {
+      // If the model doesn't contain all the expected rows, triggers the data loading.
+      // The selectAll() function will be called again from the updateSelections() after the model has been updated.
+      this.selectAllAfterModelUpdate = true;
+      this.gridOptions.api.getModel().getRow(lastRowIndex);
+    } else {
+      // All the rows are loaded in the model, just select them all
+      this.selectAllAfterModelUpdate = false;
+      this.gridOptions.api.forEachNode((node: agGrid.RowNode) => {
+        node.setSelected(true);
+      })
+      this.gridOptions.api.refreshView();
+    }
   }
 
   public clearSelections(): void {

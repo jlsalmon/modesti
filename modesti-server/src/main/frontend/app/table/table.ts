@@ -41,5 +41,5 @@ export abstract class Table {
 
   public abstract showSelectedRowsOnly(value: boolean): void;
 
-  public abstract selectAll() : void;
+  public abstract selectAll(lastRowIndex?: number) : void;
 }

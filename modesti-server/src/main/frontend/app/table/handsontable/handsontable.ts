@@ -701,7 +701,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     // Nothing to do
   }
 
-  public selectAll() : void {
+  public selectAll(lastRowIndex?: number) : void {
     // Nothing to do
   }
 }
