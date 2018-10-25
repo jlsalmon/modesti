@@ -1,6 +1,7 @@
 import {RequestService} from './request.service';
 import {SchemaService} from '../schema/schema.service';
 import {AuthService} from '../auth/auth.service';
+import {StatsService} from '../stats/stats-service';
 import {Request} from './request';
 import {Schema} from '../schema/schema';
 import {Field} from '../schema/field/field';
@@ -14,7 +15,7 @@ export class NewRequestComponent implements IComponentOptions {
 }
 
 class NewRequestController {
-  public static $inject: string[] = ['$state', 'RequestService', 'SchemaService', 'AuthService'];
+  public static $inject: string[] = ['$state', 'RequestService', 'SchemaService', 'AuthService', 'StatsService'];
 
   public schemas: Schema[] = [];
   public request: Request;
@@ -24,7 +25,8 @@ class NewRequestController {
   public error: string;
 
   public constructor(private $state: any, private requestService: RequestService,
-                     private schemaService: SchemaService, private authService: AuthService) {}
+                     private schemaService: SchemaService, private authService: AuthService,
+                     private statsService: StatsService) {}
 
   public $onInit(): void {
     this.schemaService.getSchemas().then((schemas: Schema[]) => {
@@ -38,6 +40,7 @@ class NewRequestController {
       this.request.type = 'CREATE';
       this.request.description = '';
       this.request.creator = this.authService.getCurrentUser().username;
+      this.statsService.recordVisit('new-request');
     });
   }
 

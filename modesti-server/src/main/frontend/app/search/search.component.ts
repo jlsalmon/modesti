@@ -2,6 +2,7 @@ import {SearchService} from './search.service';
 import {SchemaService} from '../schema/schema.service';
 import {RequestService} from '../request/request.service';
 import {AlertService} from '../alert/alert.service';
+import {StatsService} from '../stats/stats-service';
 import {Table} from '../table/table';
 import {Schema} from '../schema/schema';
 import {Field} from '../schema/field/field';
@@ -24,7 +25,7 @@ export class SearchComponent implements IComponentOptions {
 
 export class SearchController {
   public static $inject: string[] = ['$rootScope', '$uibModal', 'SearchService',
-                                     'SchemaService', 'AlertService', 'TableService'];
+                                     'SchemaService', 'AlertService', 'TableService', 'StatsService'];
 
   public schema: Schema;
   public schemas: Schema[];
@@ -40,7 +41,7 @@ export class SearchController {
 
   constructor(private $rootScope: IRootScopeService, private $modal: any, 
               private searchService: SearchService, private schemaService: SchemaService,
-              private alertService: AlertService,private tableService: TableService) {
+              private alertService: AlertService,private tableService: TableService, private statsService: StatsService) {
 
     this.schemas.sort(function(s1: Schema, s2: Schema) {
       if (s1.id < s2.id) return -1;
@@ -61,6 +62,8 @@ export class SearchController {
       this.tableService.filters = this.filters;
       this.search();
     });
+
+    this.statsService.recordVisit('search');
   }
 
   public activateSchema(schema: Schema): void {

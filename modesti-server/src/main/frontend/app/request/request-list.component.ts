@@ -1,6 +1,7 @@
 import {RequestService} from './request.service';
 import {AuthService} from '../auth/auth.service';
 import {SchemaService} from '../schema/schema.service';
+import {StatsService} from '../stats/stats-service';
 import {Request} from './request';
 import {Schema} from '../schema/schema';
 import {User} from '../user/user';
@@ -19,7 +20,8 @@ export class RequestListComponent implements IComponentOptions {
 }
 
 class RequestListController {
-  public static $inject: string[] = ['$http', '$location', '$scope', 'RequestService', 'AuthService', 'SchemaService', 'CacheService'];
+  public static $inject: string[] = ['$http', '$location', '$scope', 'RequestService', 'AuthService', 'SchemaService', 
+      'CacheService', 'StatsService'];
 
   public requests: Request[] = [];
   public statuses: string[] = [];
@@ -34,7 +36,7 @@ class RequestListController {
 
   public constructor(private $http: IHttpService, private $location: ILocationService, private $scope: IScope,
     private requestService: RequestService, private authService: AuthService,
-    private schemaService: SchemaService, private cacheService: CacheService) {
+    private schemaService: SchemaService, private cacheService: CacheService, private statsService: StatsService) {
     this.users.push(authService.getCurrentUser());
 
     this.resetFilter();
@@ -45,6 +47,7 @@ class RequestListController {
 
     $scope.$watch(() => { return this.filter; }, this.onCriteriaChanged, true);
     $scope.$watch(() => { return this.sort; }, this.onCriteriaChanged, true);
+    this.statsService.recordVisit('requests');
   }
 
   public isUserAuthenticated(): boolean {

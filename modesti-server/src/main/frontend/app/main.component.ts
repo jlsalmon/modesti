@@ -1,5 +1,6 @@
 import {AuthService} from './auth/auth.service';
 import {User} from './user/user';
+import {StatsService} from './stats/stats-service'
 import IComponentOptions = angular.IComponentOptions;
 import IScope = angular.IScope;
 import IRootScopeService = angular.IRootScopeService;
@@ -12,12 +13,13 @@ export class MainComponent implements IComponentOptions {
 }
 
 class MainController {
-  public static $inject: string[] = ['$scope', '$rootScope', '$location', 'AuthService', 'httpBuffer', '$state'];
+  public static $inject: string[] = ['$scope', '$rootScope', '$location', 'AuthService', 'httpBuffer', '$state', 'StatsService'];
 
   private user: User;
 
   constructor(private $scope: IScope, private $rootScope: IRootScopeService, private $location: ILocationService,
-              private authService: AuthService, private httpBuffer: any, private $state: IStateService) {
+              private authService: AuthService, private httpBuffer: any, private $state: IStateService,
+              private statsService: StatsService) {
     this.user = authService.getCurrentUser();
 
     // When an API request returns 401 Unauthorized, angular-http-auth broadcasts
@@ -35,6 +37,7 @@ class MainController {
       this.user = user;
       if (this.user !== undefined) {
         this.$state.go(this.$state.current, {}, {reload: true});
+        this.statsService.recordLogin(this.user.username);
       }
     });
   }
