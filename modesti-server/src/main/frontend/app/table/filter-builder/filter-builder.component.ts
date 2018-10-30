@@ -23,6 +23,7 @@ class FilterBuilderController {
   public table: Table;
   public filters: Map<string, Filter> = new Map<string, Filter>();
   public popoverIsOpen: boolean = false;
+  public showFilters: boolean = true;
 
   public constructor(private $rootScope: IRootScopeService, private $timeout: ITimeoutService,
     private schemaService: SchemaService, private cacheService: CacheService, private $scope: IScope) {
@@ -33,6 +34,10 @@ class FilterBuilderController {
 
     $rootScope.$on('modesti:searchDomainChanged', () => {
       this.saveValuesToCache();
+    });
+
+    $rootScope.$on('modesti:enableSearchFilters', (event, data) => {
+      this.enableFilters(data);
     });
   }
 
@@ -85,5 +90,9 @@ class FilterBuilderController {
 
   private saveValuesToCache(): void {
     this.cacheService.filtersCache.put(this.schema.id, this.filters);
+  }
+
+  private enableFilters(show: boolean) : void {
+    this.showFilters = show;
   }
 }

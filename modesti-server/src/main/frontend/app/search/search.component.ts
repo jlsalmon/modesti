@@ -9,7 +9,7 @@ import {Point} from '../request/point/point';
 import {QueryParser} from './query-parser';
 import {Filter} from '../table/filter';
 import {ExportService} from "../export/export.service";
-import {IComponentOptions, IRootScopeService, IAngularEvent, IDeferred, IPromise, IQService} from 'angular';
+import {IComponentOptions, IRootScopeService, IAngularEvent, IPromise, IQService} from 'angular';
 import "lodash"
 
 import {TableService} from './table.service';
@@ -94,11 +94,13 @@ export class SearchController {
 
   public clearSelection() : void {
     this.showSelectedPoints = false;
+    this.$rootScope.$emit('modesti:enableSearchFilters', true);
     this.table.clearSelections();
   }
 
   public showSelection() : void {
     this.table.showSelectedRowsOnly(this.showSelectedPoints);
+    this.$rootScope.$emit('modesti:enableSearchFilters', !this.showSelectedPoints);
   }
 
   public selectAll() : void {
@@ -136,7 +138,7 @@ export class SearchController {
     this.exportInProgress = true;
     let query: string = QueryParser.parse(this.filters);
     let allQueries : IPromise[] = [];
-    
+
     for (let pageNumber : number = 0; pageNumber * 1000 < this.page.totalElements; pageNumber++) {
       let page : any = {number: pageNumber, size: 1000};
       let promise : IPromise<Point[]> = this.searchService.getPoints(this.schema.id, this.schema.primary, query, page, this.sort);

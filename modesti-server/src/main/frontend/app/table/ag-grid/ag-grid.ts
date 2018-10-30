@@ -138,6 +138,7 @@ export class AgGrid extends Table {
     this.gridOptions.api.purgeVirtualPageCache();
     let sortModel : any = this.gridOptions.api.getSortModel();
     this.gridOptions.api.setSortModel(sortModel);   
+    this.gridOptions.api.refreshView();
   }
 
   private getColumn(field: Field): Column {

@@ -1,4 +1,4 @@
-<div class="filter-builder">
+<div class="filter-builder" ng-show="$ctrl.showFilters===true">
 
   <div class="filter input-group" ng-repeat="(fieldId, filter) in $ctrl.filters track by $index">
 
@@ -120,8 +120,7 @@
           </div>
         </div>
       </form>
-    </script>
-
+    </script>      
   </div>
 
 
@@ -169,6 +168,7 @@
     </div>
   </script>
 
+  
 
   <button uib-popover-template="'filter-builder-popover.tpl'"
           popover-placement="bottom-left"
@@ -176,101 +176,18 @@
           popover-is-open="$ctrl.popoverIsOpen"
           popover-class="filter-builder-popover"
           ng-click="$ctrl.popoverIsOpen = !$ctrl.popoverIsOpen"
+          ng-show="$ctrl.showFilters===true"
           type="button"
           class="btn btn-sm btn-default">
     <i class="fa fa-plus"></i>
     &nbsp;Add filter
   </button>
 
-
-
-  <!--&lt;!&ndash; Custom template for angular-ui-select &ndash;&gt;-->
-  <!--<script type="text/ng-template" id="bootstrap/select-multiple.tpl.html">-->
-    <!--<div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown pull-left" ng-class="{open: $select.open}">-->
-      <!--<div>-->
-        <!--<div class="ui-select-match"></div>-->
-
-        <!--<button class="btn btn-default btn-sm" ng-click="$select.activate()">-->
-          <!--<i class="fa fa-plus"></i> Add filter-->
-        <!--</button>-->
-
-        <!--<input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"-->
-               <!--class="ui-select-search input-xs"-->
-               <!--placeholder="{{$selectMultiple.getPlaceholder()}}"-->
-               <!--ng-disabled="$select.disabled"-->
-               <!--ng-hide="true"-->
-               <!--ng-click="$select.activate()"-->
-               <!--ng-model="$select.search"-->
-               <!--ondrop="return false;"></div>-->
-
-      <!--<div class="ui-select-choices"></div>-->
-      <!--<div class="ui-select-no-choice"></div>-->
-    <!--</div>-->
-  <!--</script>-->
-
-
-  <!--&lt;!&ndash; Custom template for angular-ui-select &ndash;&gt;-->
-  <!--<script type="text/ng-template" id="bootstrap/match-multiple.tpl.html">-->
-    <!--<span class="ui-select-match">-->
-      <!--<span ng-repeat="$item in $select.selected">-->
-        <!--<span class="ui-select-match-item btn btn-default btn-sm" tabindex="-1"-->
-              <!--type="button" ng-disabled="$select.disabled"-->
-              <!--ng-click="$selectMultiple.activeMatchIndex = $index;"-->
-              <!--ng-class="{'select-locked':$select.isLocked(this, $index)}"-->
-              <!--ui-select-sort="$select.selected">-->
-          <!--<span class="close ui-select-match-close" ng-hide="$select.disabled" ng-click="$selectMultiple.removeChoice($index)">&times;</span>-->
-          <!--<span uis-transclude-append=""></span>-->
-        <!--</span>-->
-      <!--</span>-->
-    <!--</span>-->
-  <!--</script>-->
-
-  <!--<div class="btn-group" ng-if="$ctrl.schema">-->
-    <!--<ui-select multiple ng-model="$ctrl.filters" theme="bootstrap" on-remove="$ctrl.onFiltersChanged()">-->
-
-      <!--<ui-select-match allow-clear="true">-->
-
-        <!--<span class="selected-field-name">-->
-          <!--{{$item.name}}-->
-        <!--</span>-->
-
-        <!--<span ng-if="$item.type === 'text'">-->
-          <!--<input type="text"-->
-                 <!--class="form-control input-xs"-->
-                 <!--ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"-->
-                 <!--ng-change="$ctrl.onFiltersChanged()">-->
-        <!--</span>-->
-        <!--<span ng-if="$item.type === 'numeric'">-->
-          <!--<input type="number"-->
-                 <!--class="form-control input-xs"-->
-                 <!--ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"-->
-                 <!--ng-change="$ctrl.onFiltersChanged()">-->
-        <!--</span>-->
-        <!--<span ng-if="$item.type === 'options'">-->
-          <!--<select class="form-control input-xs"-->
-                  <!--ng-options="$ctrl.getOptionValue(option) as $ctrl.getOptionDisplayValue(option) for option in $item.options"-->
-                  <!--ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"-->
-                  <!--ng-change="$ctrl.onFiltersChanged()">-->
-            <!--<option value=""></option>-->
-          <!--</select>-->
-        <!--</span>-->
-        <!--<span ng-if="$item.type === 'autocomplete'">-->
-          <!--<input type="text" class="form-control input-xs" autocomplete="off" placeholder="Type to search..."-->
-                 <!--ng-model="$ctrl.filters[$ctrl.filters.indexOf($item)].value"-->
-                 <!--uib-typeahead="($item.model ? item[$item.model] : item.value) for item in $ctrl.queryFieldValues($item, $viewValue)"-->
-                 <!--typeahead-on-select="$ctrl.onFiltersChanged()"-->
-                 <!--typeahead-min-length="$item.minLength"-->
-                 <!--typeahead-append-to-body="true">-->
-        <!--</span>-->
-
-      <!--</ui-select-match>-->
-
-      <!--<ui-select-choices repeat="field in $ctrl.schema.getAllFields()" group-by="'category'">-->
-        <!--<div ng-bind-html="field.name | highlight: $select.search"></div>-->
-      <!--</ui-select-choices>-->
-
-    <!--</ui-select>-->
-  <!--</div>-->
-
-
 </div>
+
+<div ng-show="$ctrl.showFilters===false" style="padding-top: 5px;">
+    <span class="text-danger">
+      <i class="fa fa-fw fa-exclamation-triangle"></i>
+    Filters disabled while 'show selected' checkbox is checked
+    </span>
+  </div>
