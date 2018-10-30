@@ -22,6 +22,31 @@ export class Point implements ISerializable<Point> {
     this.properties[property] = value;
   }
 
+  public getPropertyAsString(property: string) : string {
+    let prop : any = this.getProperty(property);
+    let value : string = '';
+
+    if (prop === null || prop === undefined) {
+      return value;
+    }
+
+    if (typeof prop === 'object') {
+      if (property === 'responsiblePerson') {
+        value = prop.name;
+      } else {
+        value = prop.value;
+      }
+    } else {
+      value = prop;
+    }
+
+    if (value === undefined || value == null) {
+      value = '';
+    }
+
+    return value;
+  }
+
   /**
    * Check if a point is empty. A point is considered to be empty if it
    * contains no properties, or if the values of all its properties are either

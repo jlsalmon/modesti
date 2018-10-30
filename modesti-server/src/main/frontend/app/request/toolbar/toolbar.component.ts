@@ -2,7 +2,11 @@ import {RequestService} from "../request.service";
 import {TaskService} from "../../task/task.service";
 import {AlertService} from "../../alert/alert.service";
 import {HistoryService} from "../history/history.service";
+import {ExportService} from "../../export/export.service";
 import {Request} from "../request";
+import {Point} from "../point/point";
+import {Field} from "../../schema/field/field";
+import {Category} from "../../schema/category/category";
 import {Task} from "../../task/task";
 import {Schema} from "../../schema/schema";
 import {HandsonTable} from "../../table/handsontable/handsontable";
@@ -22,7 +26,7 @@ export class RequestToolbarComponent implements IComponentOptions {
 
 class RequestToolbarController {
   public static $inject: string[] = ['$uibModal', '$state', 'RequestService', 'TaskService',
-                                     'AlertService', 'HistoryService'];
+                                     'AlertService', 'HistoryService', 'ExportService'];
 
   public request: Request;
   public tasks: Task[];
@@ -31,7 +35,7 @@ class RequestToolbarController {
 
   public constructor(private $modal: any, private $state: IStateService, private requestService: RequestService,
                      private taskService: TaskService, private alertService: AlertService,
-                     private historyService: HistoryService) {}
+                     private historyService: HistoryService, private exportService: ExportService) {}
 
   public save(): void {
     this.requestService.saveRequest(this.request).then((request: Request) => {
@@ -175,5 +179,13 @@ class RequestToolbarController {
   public isCurrentTaskRestricted(): boolean {
     let task: Task = this.taskService.getCurrentTask();
     return task && task.candidateGroups.length === 1 && task.candidateGroups[0] === 'modesti-administrators';
+  }
+
+  public exportRequest() : void {
+    this.exportService.showModal(this.request.points.length).then((exportVisibleColumnsOnly: boolean) => {
+      this.exportService.exportPoints(this.table, this.schema, this.request.points, exportVisibleColumnsOnly);
+    }, () => {
+      console.log("Export aborted");
+    });
   }
 }

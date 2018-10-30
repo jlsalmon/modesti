@@ -72,16 +72,24 @@
           <div class="form-group" style="padding-left: 10px;">
             <button class="btn btn-sm btn-primary pull-right" ng-if="$ctrl.page.totalElements" 
               ng-click="$ctrl.clearSelection()" ng-disabled="$ctrl.getNumPointsSelected() === 0">
-                <i class="fa fa-pencil"></i>
+                <i class="fa fa-square-o"></i>
                 Clear selection
               </button>
           </div>
 
           <div class="form-group" style="padding-left: 10px;">
-              <button class="btn btn-sm btn-success pull-right" ng-if="$ctrl.page.totalElements" 
-                ng-click="$ctrl.selectAll()" ng-disabled="$ctrl.page.totalElements === 0">
-                  <i class="fa fa-pencil"></i>
-                  Select all
+            <button class="btn btn-sm btn-success pull-right" ng-if="$ctrl.page.totalElements" 
+              ng-click="$ctrl.selectAll()" ng-disabled="$ctrl.page.totalElements === 0">
+                <i class="fa fa-check-square-o"></i>
+                Select all
+              </button>
+          </div>
+
+          <div class="form-group" style="padding-left: 10px;">
+              <button class="btn btn-sm btn-default pull-right" ng-if="$ctrl.page.totalElements" 
+                ng-click="$ctrl.export()" ng-disabled="$ctrl.page.totalElements === 0 || $ctrl.exportInProgress === true">
+                  <i ng-class="{'fa fa-file-excel-o':$ctrl.exportInProgress===false, 'fa fa-cog fa-spin':$ctrl.exportInProgress===true}"></i>
+                  Export CSV
                 </button>
             </div>
 

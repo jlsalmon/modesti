@@ -8,10 +8,12 @@ import {Field} from '../schema/field/field';
 import {Point} from '../request/point/point';
 import {QueryParser} from './query-parser';
 import {Filter} from '../table/filter';
-import {IComponentOptions, IRootScopeService, IAngularEvent} from 'angular';
+import {ExportService} from "../export/export.service";
+import {IComponentOptions, IRootScopeService, IAngularEvent, IDeferred, IPromise, IQService} from 'angular';
 import "lodash"
 
 import {TableService} from './table.service';
+import { timingSafeEqual } from 'crypto';
 
 
 export class SearchComponent implements IComponentOptions {
@@ -24,7 +26,7 @@ export class SearchComponent implements IComponentOptions {
 
 export class SearchController {
   public static $inject: string[] = ['$rootScope', '$uibModal', 'SearchService',
-                                     'SchemaService', 'AlertService', 'TableService'];
+                                     'SchemaService', 'AlertService', 'TableService', '$q', 'ExportService'];
 
   public schema: Schema;
   public schemas: Schema[];
@@ -37,10 +39,12 @@ export class SearchController {
   public error: string;
   public submitting: string;
   public showSelectedPoints: boolean;
+  public exportInProgress: boolean = false;
 
   constructor(private $rootScope: IRootScopeService, private $modal: any, 
               private searchService: SearchService, private schemaService: SchemaService,
-              private alertService: AlertService,private tableService: TableService) {
+              private alertService: AlertService,private tableService: TableService, private $q: IQService, 
+              private exportService: ExportService) {
 
     this.schemas.sort(function(s1: Schema, s2: Schema) {
       if (s1.id < s2.id) return -1;
@@ -107,6 +111,48 @@ export class SearchController {
       }
     }
   }
+
+  public export() : void {
+    this.exportService.showModal(this.page.totalElements).then((exportVisibleColumnsOnly: boolean) => {
+      this.exportPoints(exportVisibleColumnsOnly);
+    }, () => {
+      console.log("Export aborted");
+    });
+  }
+
+  private getPointsFromSearch(response: any) : Point[] {
+    let points : Point [] = [];
+
+    if (response.hasOwnProperty('_embedded')) {
+      response._embedded.points.forEach((p: any) => {
+        points.push(new Point().deserialize(p));
+      })
+    }
+
+    return points;
+  }
+
+  private exportPoints(exportVisibleColumnsOnly : boolean) : void {
+    this.exportInProgress = true;
+    let query: string = QueryParser.parse(this.filters);
+    let allQueries : IPromise[] = [];
+    
+    for (let pageNumber : number = 0; pageNumber * 1000 < this.page.totalElements; pageNumber++) {
+      let page : any = {number: pageNumber, size: 1000};
+      let promise : IPromise<Point[]> = this.searchService.getPoints(this.schema.id, this.schema.primary, query, page, this.sort);
+      allQueries.push(promise);
+    }
+    
+    this.$q.all(allQueries).then((data) => {
+      let allPoints: Point[] = [];
+      data.forEach((response: any) => {
+        allPoints = allPoints.concat(this.getPointsFromSearch(response));
+      });
+
+      this.exportService.exportPoints(this.table, this.schema, allPoints, exportVisibleColumnsOnly);
+      this.exportInProgress = false;
+    });
+   }
 
   public getRows = (params?: any) : void => {
     if (this.showSelectedPoints) {

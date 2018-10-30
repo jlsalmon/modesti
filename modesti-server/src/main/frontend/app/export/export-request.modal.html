@@ -1,0 +1,17 @@
+<div class="modal-header">
+  <h3 class="modal-title"><i class="fa fa-fw fa-file-excel-o"></i> Export {{::ctrl.points}} points as CSV</h3>
+</div>
+
+<div class="modal-body">
+
+<p>
+  <input type="checkbox" name="exportVisibleColumnsOnly" ng-model="ctrl.exportVisibleColumnsOnly"> Export only visible columns
+</p>
+
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ctrl.cancel()">Cancel</button>
+  <button class="btn btn-default" ng-click="ctrl.ok()">OK</button>
+</div>
+      

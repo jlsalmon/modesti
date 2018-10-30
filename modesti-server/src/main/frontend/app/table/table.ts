@@ -35,6 +35,8 @@ export abstract class Table {
 
   public abstract isVisibleColumnGroup(fields: Field[]): boolean;
 
+  public abstract getActiveDatasources(): Category[];
+
   public abstract getSelectedPoints(): Point[];
 
   public abstract clearSelections(): void;
