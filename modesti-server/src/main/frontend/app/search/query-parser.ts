@@ -10,7 +10,7 @@ export class QueryParser {
       if (filters.hasOwnProperty(key)) {
         let filter: Filter = filters[key];
 
-        if (filter && filter.value != null && filter.value !== '') {
+        if (filter && ((filter.value != null && filter.value !== '') || filter.operation === 'is-empty') )  {
           let property: string = filter.field.getModelPath();
           let operation: string = this.parseOperation(filter.operation);
           let value: string = filter.value;
@@ -21,6 +21,8 @@ export class QueryParser {
             value = '*' + value;
           } else if (filter.operation === 'contains') {
             value = '*' + value + '*';
+          } else if (filter.operation === 'is-empty') {
+            value = null;
           }
 
           let expression: string = property + ' ' + operation + ' "' + value + '"';

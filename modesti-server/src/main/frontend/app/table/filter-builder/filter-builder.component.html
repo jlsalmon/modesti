@@ -13,7 +13,8 @@
       {{filter.field.name}}:
 
       <span ng-if="filter.value">"{{filter.value}}"</span>
-      <span ng-if="!filter.value">any</span>
+      <span ng-if="!filter.value && filter.operation!=='is-empty'">any</span>
+      <span ng-if="!filter.value && filter.operation=='is-empty'">empty</span>
 
 
       <i class="fa fa-times remove-filter-icon"
@@ -38,6 +39,7 @@
               <option value="equals">equals</option>
               <option value="not-equals">not equals</option>
               <option value="contains">contains</option>
+              <option value="is-empty">is empty</option>
             </select>
 
             <select class="form-control input-xs"
@@ -48,6 +50,7 @@
               <option value="not-equals">not equals</option>
               <option value="greater-than">above</option>
               <option value="less-than">below</option>
+              <option value="is-empty">is empty</option>
             </select>
 
             <select class="form-control input-xs"
@@ -75,6 +78,7 @@
                      class="form-control input-xs"
                      ng-model="filter.value"
                      ng-model-options='{ debounce: 600 }'
+                     ng-show="filter.operation!=='is-empty'"
                      ng-change="$ctrl.onFiltersChanged()">
             </div>
 
@@ -83,6 +87,7 @@
                      class="form-control input-xs"
                      ng-model="filter.value"
                      ng-model-options='{ debounce: 100 }'
+                     ng-show="filter.operation!=='is-empty'"
                      ng-change="$ctrl.onFiltersChanged()">
             </div>
 

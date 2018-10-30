@@ -61,7 +61,11 @@ public class Predicate<T> {
     }
     
     NumberPath<Float> path = entityPath.getNumber(criteria.getKey(), Float.class);
-    float value = Float.parseFloat(argument);
+    if (argument == null || "null".equals(argument)) {
+      return path.isNull();
+    }
+    
+    Float value = Float.parseFloat(argument);
 
     if (RSQLOperators.EQUAL.equals(criteria.getOperation())) {
       return path.eq(value);
@@ -96,6 +100,10 @@ public class Predicate<T> {
     if (RSQLOperators.IN.equals(criteria.getOperation())) {
       Collection<String> values = jsonToJavaCollection(argument, String.class);
       return path.in(values);  
+    }
+    
+    if (argument == null || "null".equals(argument)) {
+      return path.isNull();
     }
     
     BooleanExpression expression;
