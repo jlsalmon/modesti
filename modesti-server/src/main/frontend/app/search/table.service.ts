@@ -44,11 +44,18 @@ export class TableService {
   }
 
   public getDefaultUpdateMessage() {
-    let numPoints: number = this.table.getSelectedPoints().length === 0 ? this.page.size : this.table.getSelectedPoints().length;
     return 'You are about to create a new MODESTI request to update <b>{{ctrl.points.length}}</b> points.';
   }
 
-  public updatePoints(header: string = '', message: string = ''): void {
+  private checkMaxPointsInRequest(): boolean {
+    if (this.table.getSelectedPoints().length > 500) {
+      this.alertService.add("danger", "Cannot create requests with more than 500 points.</br>Please unselect some points.");
+      return false;
+    }
+    return true;
+  }
+
+  private setUpdateMessage(header: string, message: string) : void {
     if (typeof(header) == undefined || header == '') {
       this.updateHeader = this.getDefaultUpdateHeader();
     } else {
@@ -59,6 +66,14 @@ export class TableService {
     } else {
       this.updateMessage = message
     }
+  }
+
+  public updatePoints(header: string = '', message: string = ''): void {
+    if (!this.checkMaxPointsInRequest()) {
+      return;
+    }
+
+    this.setUpdateMessage(header, message);
 
     let modalInstance: any = this.$modal.open({
       animation: false,
@@ -93,6 +108,10 @@ export class TableService {
   }
 
   public deletePoints(): void {
+    if (!this.checkMaxPointsInRequest()) {
+      return;
+    }
+
     let modalInstance: any = this.$modal.open({
       animation: false,
       templateUrl: '/search/delete/delete-points.modal.html',
@@ -103,7 +122,6 @@ export class TableService {
 
     modalInstance.result.then((request: any) => {
       console.log('creating delete request');
-
       this.submitting = 'started';
 
       // Post form to server to create new request.

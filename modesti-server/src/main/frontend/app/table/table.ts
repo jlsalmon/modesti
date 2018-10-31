@@ -17,6 +17,8 @@ export abstract class Table {
 
   public abstract refreshData(): void;
 
+  public abstract updateSelections(): void;
+
   public abstract refreshColumnDefs(): void;
 
   public abstract render(): void;
@@ -42,6 +44,4 @@ export abstract class Table {
   public abstract clearSelections(): void;
 
   public abstract showSelectedRowsOnly(value: boolean): void;
-
-  public abstract selectAll(lastRowIndex?: number) : void;
 }

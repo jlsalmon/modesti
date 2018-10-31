@@ -9,6 +9,7 @@ import {Point} from '../request/point/point';
 import {QueryParser} from './query-parser';
 import {Filter} from '../table/filter';
 import {ExportService} from "../export/export.service";
+import {SelectedPointsService} from "./selected-points.service";
 import {IComponentOptions, IRootScopeService, IAngularEvent, IPromise, IQService} from 'angular';
 import "lodash"
 
@@ -25,8 +26,8 @@ export class SearchComponent implements IComponentOptions {
 }
 
 export class SearchController {
-  public static $inject: string[] = ['$rootScope', '$uibModal', 'SearchService',
-                                     'SchemaService', 'AlertService', 'TableService', '$q', 'ExportService'];
+  public static $inject: string[] = ['$rootScope', '$uibModal', 'SearchService', 'SchemaService', 'AlertService', 
+                                     'TableService', '$q', 'ExportService', 'SelectedPointsService'];
 
   public schema: Schema;
   public schemas: Schema[];
@@ -44,7 +45,7 @@ export class SearchController {
   constructor(private $rootScope: IRootScopeService, private $modal: any, 
               private searchService: SearchService, private schemaService: SchemaService,
               private alertService: AlertService,private tableService: TableService, private $q: IQService, 
-              private exportService: ExportService) {
+              private exportService: ExportService, private selectedPointsService: SelectedPointsService) {
 
     this.schemas.sort(function(s1: Schema, s2: Schema) {
       if (s1.id < s2.id) return -1;
@@ -104,13 +105,17 @@ export class SearchController {
   }
 
   public selectAll() : void {
-    if (this.page.totalElements > 200) {
-      this.alertService.add('danger', 'Too many points in the filter. </br>Please create a filter containing <= 200 points.');
+    if (this.page.totalElements > 500) {
+      this.alertService.add('danger', 'Too many points in the filter. </br>Please create a filter containing <= 500 points.');
     } else {
-      // Not all the points are loaded in the model, specify the lastRowIndex in call to selectAll
-      if (this.page.totalElements > 0) {
-        this.table.selectAll(this.page.totalElements - 1);
-      }
+      let query: string = QueryParser.parse(this.filters);
+      let page: any = {number: 0, size: this.page.totalElements};
+      this.searchService.getPoints(this.schema.id, this.schema.primary, query, page, this.sort).then(
+        (response: any) =>{
+          let points: Point[] = this.getPointsFromSearch(response);
+          this.selectedPointsService.addPoints(points, this.schema.getIdProperty());
+          this.table.updateSelections();
+      });
     }
   }
 
@@ -202,7 +207,6 @@ export class SearchController {
       }
 
       console.log('fetched ' + points.length + ' points');
-
 
       this.page = response.page;
       // Backend pages 0-based, Bootstrap pagination 1-based

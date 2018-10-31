@@ -18,6 +18,10 @@ export class SelectedPointsService {
         this.selectedPoints.push(point);
       }
     }
+
+    public addPoints(points: Point[], idProperty: string) : void {
+      points.forEach((point: Point) => this.addPoint(point, idProperty));
+    }
     
     public deletePoint(point: Point, idProperty: string) : void {
       _.remove(this.selectedPoints, [idProperty, _.get(point, idProperty)]);

@@ -17,7 +17,6 @@ export class AgGrid extends Table {
   public gridOptions: GridOptions;
   public idProperty: string;
   private showSelectedRows: boolean = false;
-  private selectAllAfterModelUpdate: boolean = false;
 
   public constructor(schema: Schema, data: any[], settings: any, private selectedPointsService: SelectedPointsService) {
     super(schema, data, settings);
@@ -190,10 +189,6 @@ export class AgGrid extends Table {
   }
 
   public updateSelections() {
-    if(this.selectAllAfterModelUpdate === true) {
-      this.selectAll();
-    }
-
     let selectedPoints: Point[] = this.selectedPointsService.getSelectedPoints();
     if (selectedPoints.length === 0) {
       return;
@@ -208,7 +203,6 @@ export class AgGrid extends Table {
         // The following suppressEvents=true flag is ignored for now, but a
         // fixing pull request is waiting at ag-grid GitHub.
         node.setSelected(false);
-        // this.gridOptions.api.deselectNode(node, true);
       }
     });
 
@@ -234,22 +228,6 @@ export class AgGrid extends Table {
         }
       });
       this.gridOptions.api.refreshRows(rowsToRefresh);
-    }
-  }
-
-  public selectAll(lastRowIndex?:number) : void {
-    if (lastRowIndex !== undefined && this.gridOptions.api.getModel().getRowCount() -1 !== lastRowIndex) {
-      // If the model doesn't contain all the expected rows, triggers the data loading.
-      // The selectAll() function will be called again from the updateSelections() after the model has been updated.
-      this.selectAllAfterModelUpdate = true;
-      this.gridOptions.api.getModel().getRow(lastRowIndex);
-    } else {
-      // All the rows are loaded in the model, just select them all
-      this.selectAllAfterModelUpdate = false;
-      this.gridOptions.api.forEachNode((node: agGrid.RowNode) => {
-        node.setSelected(true);
-      })
-      this.gridOptions.api.refreshView();
     }
   }
 
