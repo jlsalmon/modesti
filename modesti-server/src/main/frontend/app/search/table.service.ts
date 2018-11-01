@@ -19,7 +19,7 @@ import "lodash";
 
 export class TableService {
   public table: Table;
-  public filters: Map<string, Filter>;
+  public filters: Filter[];
   public query: string;
   public page: any = {number: 0, size: 100};
   public sort: string;

@@ -3,13 +3,14 @@ import {Field} from '../schema/field/field';
 
 export class QueryParser {
 
-  public static parse(filters: Map<string, Filter>): string {
+  public static parse(filters: Filter[]): string {
     let expressions: string[] = [];
 
-    for (let key in filters) {
-      if (filters.hasOwnProperty(key)) {
-        let filter: Filter = filters[key];
-
+    //for (let key in filters) {
+    //  if (filters.hasOwnProperty(key)) {
+    //    let filter: Filter = filters[key];
+      for (let i=0; i<filters.length; i++) {
+        let filter: Filter = filters[i];
         if (filter && ((filter.value != null && filter.value !== '') || filter.operation === 'is-empty') )  {
           let property: string = filter.field.getModelPath();
           let operation: string = this.parseOperation(filter.operation);
@@ -29,10 +30,11 @@ export class QueryParser {
 
           if (expressions.indexOf(expression) === -1) {
             expressions.push(expression);
-          }
+          }      
         }
       }
-    }
+    //  }
+    //}
 
     let query: string = expressions.join(' and ');
     console.log('parsed query: ' + query);

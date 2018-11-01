@@ -21,7 +21,7 @@ class FilterBuilderController {
 
   public schema: Schema;
   public table: Table;
-  public filters: Map<string, Filter> = new Map<string, Filter>();
+  public filters: Filter[] = [];
   public popoverIsOpen: boolean = false;
   public showFilters: boolean = true;
 
@@ -56,14 +56,22 @@ class FilterBuilderController {
     }
 
     this.popoverIsOpen = false;
-    this.filters['_' + field.id] = filter;
-
+    this.filters.push(filter);
     this.$timeout(() => filter.isOpen = true);
   }
 
-  public removeFilter(field: Field): void {
-    this.filters['_' + field.id] = undefined;
-    this.onFiltersChanged();
+  private filterToString(filter : Filter): string {
+    return filter.field.id + '_' + filter.operation + '_' + filter.value;
+  }
+ 
+  public removeFilter(filter: Filter): void {
+    let filtersAsString: string[] = this.filters.map((f: Filter) => this.filterToString(f));
+    let index : number = filtersAsString.indexOf(this.filterToString(filter));
+
+    if (index >=0) {
+      this.filters.splice(index, 1);
+      this.onFiltersChanged();
+    }
   }
 
   public onFiltersChanged(): void {
@@ -79,12 +87,35 @@ class FilterBuilderController {
     return typeof option === 'object' ? option.value + (option.description ? ': ' + option.description : '') : option;
   }
 
+  public getOperationDisplayValue(operation: string) : string {
+    switch(operation) {
+      case 'starts-with':
+        return 'starts with';
+      case 'ends-with':
+        return 'ends with';
+      case 'equals':
+        return '=';
+      case 'not-equals':
+        return '!=';
+      case 'contains':
+        return 'contains';
+      case 'is-empty':
+        return 'is empty';
+      case 'greater-than':
+        return '>';
+      case 'less-than':
+        return '<';
+      default:
+        return '???';
+    }
+  }
+
   public queryFieldValues(field: any, value: string): IPromise<any[]> {
     return this.schemaService.queryFieldValues(field, value, undefined);
   }
 
   private loadCachedValues(id: string): void {
-    this.filters = this.cacheService.filtersCache.get(id) || new Map<string, Filter>();
+    this.filters = this.cacheService.filtersCache.get(id) || [];
     this.onFiltersChanged();
   }
 

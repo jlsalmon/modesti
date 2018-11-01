@@ -62,14 +62,14 @@ export class AgGrid extends Table {
   public render(): void {}
 
   public refreshData(): void {
-    if (this.gridOptions) {
+    if (this.gridOptions && this.gridOptions.api) {
       this.gridOptions.api.purgeVirtualPageCache();
       this.gridOptions.api.setDatasource(this.gridOptions.datasource);
     }
   }
 
   public refreshColumnDefs(): void {
-    if (this.gridOptions) {
+    if (this.gridOptions && this.gridOptions.api) {
       this.gridOptions.api.setColumnDefs(this.getColumnDefs());
       this.gridOptions.api.sizeColumnsToFit();
     }

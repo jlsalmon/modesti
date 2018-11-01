@@ -10,15 +10,14 @@
             ng-click="filter.isOpen = !filter.isOpen"
             class="btn btn-sm btn-default">
 
-      {{filter.field.name}}:
+      {{filter.field.name}} {{$ctrl.getOperationDisplayValue(filter.operation)}}
 
       <span ng-if="filter.value">"{{filter.value}}"</span>
       <span ng-if="!filter.value && filter.operation!=='is-empty'">any</span>
-      <span ng-if="!filter.value && filter.operation=='is-empty'">empty</span>
 
 
       <i class="fa fa-times remove-filter-icon"
-         ng-click="$ctrl.removeFilter(filter.field)"
+         ng-click="$ctrl.removeFilter(filter)"
          uib-tooltip="Remove filter"
          tooltip-append-to-body="true"
          tooltip-placement="right"></i>

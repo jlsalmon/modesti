@@ -32,7 +32,7 @@ export class SearchController {
   public schema: Schema;
   public schemas: Schema[];
   public table: Table;
-  public filters: Map<string, Filter>;
+  public filters: Filter[];
   public query: string;
   public page: any = {number: 0, size: 100};
   public sort: string;
@@ -61,7 +61,7 @@ export class SearchController {
 
     this.table = this.tableService.buildTable(this.schema, settings);
 
-    $rootScope.$on('modesti:searchFiltersChanged', (event: IAngularEvent, filters: Map<string, Filter>) => {
+    $rootScope.$on('modesti:searchFiltersChanged', (event: IAngularEvent, filters: Filter[]) => {
       this.filters = filters;
       this.tableService.filters = this.filters;
       this.search();
@@ -83,7 +83,7 @@ export class SearchController {
   }
 
   public resetFilters(): void {
-    this.filters = new Map<string, Filter>();
+    this.filters = [];
     this.page = {number: 0, size: 100};
     this.table.gridOptions.api.setSortModel(null);
     this.sort = '';
@@ -168,16 +168,14 @@ export class SearchController {
       this.table.getSelectedPoints().forEach((point: Point) => {
         selectedPointIds.push(point.properties[primaryField.id]);
       });
-      let filters: Map<string, Filter> = new Map();
-      filters['_' + primaryField.id] = { field: primaryField, operation: "in", value: '[' + selectedPointIds.toString() + ']', isOpen: false };
-      
+      let filters: Filter[] = [{ field: primaryField, operation: "in", value: '[' + selectedPointIds.toString() + ']', isOpen: false }];      
       return this.search(params, filters);
     } else {
       return this.search(params);
     }
   }
 
-  public search = (params?: any, applyFilters?: Map<string, Filter>): void => {
+  public search = (params?: any, applyFilters?: Filter[]): void => {
     this.loading = 'started';
 
     let searchFilters = applyFilters === undefined ? this.filters : applyFilters;
