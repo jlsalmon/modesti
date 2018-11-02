@@ -61,7 +61,7 @@ class RequestTableController {
       afterRemoveRow: () => this.onAfterRemoveRow()
     };
 
-    this.table = TableFactory.createTable('handsontable', this.schema, this.request.points, settings);
+    this.table = TableFactory.createTable('handsontable', this.schema, this.request.points, settings, null);
     this.table.render();
   }
 

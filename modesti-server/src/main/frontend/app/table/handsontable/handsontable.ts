@@ -368,7 +368,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     return visible;
   }
 
-  private getColumnIndex(field: Field): number {
+  private getColumnIndex(field: any): number {
     let column: any;
 
     this.hotOptions.columns.forEach((col: any) => {

@@ -1,6 +1,6 @@
 export class ContextMenuFactory {
 
-  public static getContextMenu(requestType: string, requestStatus: string): string[] {
+  public static getContextMenu(requestType: string, requestStatus: string): any {
 
     // TODO: take "schema.editableStates" into account
 

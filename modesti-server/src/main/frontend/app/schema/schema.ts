@@ -56,7 +56,7 @@ export class Schema implements ISerializable<Schema> {
     return field;
   }
 
-  public getCategoryForField(field: Field): Category {
+  public getCategoryForField(field: any): Category {
     let category: Category;
 
     this.getAllCategories().forEach((c: Category) => {

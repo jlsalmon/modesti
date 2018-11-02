@@ -9,7 +9,7 @@ export class SearchService {
 
   constructor(private $http: IHttpService, private $q: IQService) {}
 
-  public getPoints(domain: string, primary: string, query: string, page: any, sort: string): IPromise<Point[]> {
+  public getPoints(domain: string, primary: string, query: string, page: any, sort: any): IPromise<Point[]> {
     let q: IDeferred<Point[]> = this.$q.defer();
     page.number = page.number || 0;
     page.size = page.size || 15;

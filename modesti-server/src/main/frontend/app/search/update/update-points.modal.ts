@@ -4,7 +4,6 @@ import {Request} from '../../request/request';
 import {Point} from '../../request/point/point';
 import {Schema} from '../../schema/schema';
 import {Field} from '../../schema/field/field';
-import IPromise = angular.IPromise;
 import {IPromise, IRootScopeService} from 'angular';
 
 export class UpdatePointsModalController {

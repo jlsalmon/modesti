@@ -247,4 +247,8 @@ export class AgGrid extends Table {
   public getActiveDatasources(): Category[] {
     return this.schema.datasources;
   }
+
+  public getSelectedLineNumbers(): number[] {
+    return [];
+  }
 }

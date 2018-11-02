@@ -44,4 +44,6 @@ export abstract class Table {
   public abstract clearSelections(): void;
 
   public abstract showSelectedRowsOnly(value: boolean): void;
+
+  public abstract getSelectedLineNumbers() : number[];
 }
