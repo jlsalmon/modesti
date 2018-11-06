@@ -13,6 +13,7 @@ import {AutocompleteField} from '../../schema/field/autocomplete-field';
 import {Conditional} from '../../schema/conditional';
 import {Change} from '../history/change';
 import { CacheService } from '../../cache/cache.service';
+import {HandsonTable} from '../../table/handsontable/handsontable';
 
 import {IComponentOptions, IPromise, IDeferred, IScope, IQService, IFilterService, IInterpolateService} from 'angular';
 import 'jquery';
@@ -39,7 +40,7 @@ class RequestTableController {
   public request: Request;
   public tasks: Task[];
   public schema: Schema;
-  public table: Table;
+  public table: HandsonTable;
   public history: Change[];
 
   public constructor(private $scope: IScope, private $q: IQService, private $filter: IFilterService,
@@ -61,7 +62,7 @@ class RequestTableController {
       afterRemoveRow: () => this.onAfterRemoveRow()
     };
 
-    this.table = TableFactory.createTable('handsontable', this.schema, this.request.points, settings, null);
+    this.table = <HandsonTable> TableFactory.createTable('handsontable', this.schema, this.request.points, settings, null);
     this.table.render();
   }
 
