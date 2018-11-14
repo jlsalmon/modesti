@@ -16,24 +16,34 @@ public class TaskScheduler {
   
   private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
   
-  
   /**
-   * Schedule a daily task for a specific hour/minute.
-   * @param hour The required hour for the schedule.
-   * @param minute The required minute for the schedule.
-   * @return The date for the task execution in the format "yyyy-MM-dd'T'HH:mm:ss'Z'"
+   * Schedule a task using the config values
+   * @param config
+   * @return
    */
-  public static String scheduleDailyTask(int hour, int minute) {
-    return new TaskScheduler().scheduleDailyTask(new GregorianCalendar(), hour, minute);
+  public static String scheduleTask(TaskSchedulerConfig config) {
+    TaskScheduler scheduler = new TaskScheduler();
+    GregorianCalendar now = new GregorianCalendar();
+    
+    if (config.isDailyTask()) {
+      return scheduler.scheduleDailyTask(now, config);
+    } else {
+      // Weekly task
+      if (config.hasTimeRestriction()) {
+        return scheduler.scheduleWeeklyTaskWithTimeLimit(now, config);
+      } else {
+        return scheduler.scheduleWeeklyTask(now, config);
+      }
+    }
   }
   
-  private String scheduleDailyTask(GregorianCalendar now, int hour, int minute) {
+  private String scheduleDailyTask(GregorianCalendar now, TaskSchedulerConfig config) {
     GregorianCalendar schedule = new GregorianCalendar(
         now.get(Calendar.YEAR), 
         now.get(Calendar.MONTH),
         now.get(Calendar.DAY_OF_MONTH),
-        hour,
-        minute,
+        config.getHour(),
+        config.getMinute(),
         now.get(Calendar.SECOND));
     
     if (schedule.before(now)) {
@@ -45,27 +55,17 @@ public class TaskScheduler {
     return formatter.format(schedule.getTime());
   }
   
-  /**
-   * Schedule a weekly task for a specific day/hour.
-   * @param weekDay The required weekday for the schedule ({@link Calendar#DAY_OF_WEEK}).
-   * @param hour The required hour for the schedule.
-   * @return The date for the task execution in the format "yyyy-MM-dd'T'HH:mm:ss'Z'"
-   */
-  public static String scheduleWeeklyTask(int weekDay, int hour) {
-    return new TaskScheduler().scheduleWeeklyTask(new GregorianCalendar(), weekDay, hour);
-  }
-  
-  private String scheduleWeeklyTask(GregorianCalendar now, int weekDay, int hour) {
+  private String scheduleWeeklyTask(GregorianCalendar now, TaskSchedulerConfig config) {
     GregorianCalendar schedule = new GregorianCalendar(
         now.get(Calendar.YEAR), 
         now.get(Calendar.MONTH),
         now.get(Calendar.DAY_OF_MONTH),
-        hour,
-        0,
+        config.getHour(),
+        config.getMinute(),
         now.get(Calendar.SECOND));
     
-    if (schedule.get(Calendar.DAY_OF_WEEK) != weekDay) {
-      setForNextWeekDay(schedule, weekDay);
+    if (schedule.get(Calendar.DAY_OF_WEEK) != config.getWeekDay()) {
+      setForNextWeekDay(schedule, config.getWeekDay());
     }
     
     if (schedule.before(now)) {
@@ -83,45 +83,30 @@ public class TaskScheduler {
     date.add(Calendar.DAY_OF_WEEK, offset );
   }
   
-  /**
-   * Schedule a weekly task for a specific day/hour with time restriction. If the task arrives after the limit date, it will
-   * be scheduled for the next week.
-   * @param weekDay The required weekday for the schedule ({@link Calendar#DAY_OF_WEEK}).
-   * @param hour The required hour for the schedule.
-   * @param limitWeekDay The limit weekday ({@link Calendar#DAY_OF_WEEK}).
-   * @param limitHour The limit hour.
-   * @param limitMinute The limit minute.
-   * @return
-   */
-  public static String scheduleWeeklyTask(int weekDay, int hour, int limitWeekDay, int limitHour, int limitMinute) {
-    return new TaskScheduler().scheduleWeeklyTask(new GregorianCalendar(), weekDay, hour, limitWeekDay, limitHour, limitMinute);
-  }
-  
-  private String scheduleWeeklyTask(GregorianCalendar now, int weekDay, int hour, int limitWeekDay, int limitHour, int limitMinute) {
-    
+  private String scheduleWeeklyTaskWithTimeLimit(GregorianCalendar now, TaskSchedulerConfig config) {
     GregorianCalendar schedule = new GregorianCalendar(
         now.get(Calendar.YEAR), 
         now.get(Calendar.MONTH),
         now.get(Calendar.DAY_OF_MONTH),
-        hour,
-        0,
+        config.getHour(),
+        config.getMinute(),
         now.get(Calendar.SECOND));
     
-    if (schedule.get(Calendar.DAY_OF_WEEK) != weekDay) {
-      setForNextWeekDay(schedule, weekDay);
+    if (schedule.get(Calendar.DAY_OF_WEEK) != config.getWeekDay()) {
+      setForNextWeekDay(schedule, config.getWeekDay());
     }
     
     GregorianCalendar limit = new GregorianCalendar(
         now.get(Calendar.YEAR), 
         now.get(Calendar.MONTH),
         now.get(Calendar.DAY_OF_MONTH),
-        limitHour,
-        limitMinute,
+        config.getLimitHour(),
+        config.getLimitMinute(),
         0);
     limit.add(Calendar.SECOND, -1);
     
-    if (limit.get(Calendar.DAY_OF_WEEK) != limitWeekDay) {
-      setForNextWeekDay(limit, limitWeekDay);
+    if (limit.get(Calendar.DAY_OF_WEEK) != config.getLimitWeekDay()) {
+      setForNextWeekDay(limit, config.getLimitWeekDay());
     }
     
     if (schedule.before(now) || now.after(limit)) {
