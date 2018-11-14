@@ -18,8 +18,8 @@ public class TaskScheduler {
   
   /**
    * Schedule a task using the config values
-   * @param config
-   * @return
+   * @param config Parameters to schedule the task
+   * @return Date when the task will be executed, in the format "yyyy-MM-dd'T'HH:mm:ss"
    */
   public static String scheduleTask(TaskSchedulerConfig config) {
     TaskScheduler scheduler = new TaskScheduler();
