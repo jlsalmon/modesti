@@ -32,6 +32,7 @@ public class WorkflowConfig {
   public InitializingBean activitiConfigurer(SpringProcessEngineConfiguration engineConfiguration) {
     return () -> {
       engineConfiguration.getBpmnParser().getBpmnParserHandlers().addHandler(userTaskAssignmentHandler);
+      engineConfiguration.setJobExecutorActivate(true);
       workflowInitialiser.init();
     };
   }

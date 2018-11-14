@@ -27,7 +27,7 @@ public class HistoryService {
   RequestRepository requestRepository;
 
   @Autowired
-  org.activiti.engine.HistoryService historyService;
+  org.activiti.engine.HistoryService history;
 
   @Autowired
   TaskService taskService;
@@ -49,35 +49,47 @@ public class HistoryService {
       throw new IllegalArgumentException("No request with id " + requestId + " was found");
     }
 
-    List<HistoricEvent> history = new ArrayList<>();
+    List<HistoricEvent> historyEvents = new ArrayList<>();
 
     // Find the process instance for this request
-    HistoricProcessInstance process = historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(requestId).singleResult();
+    HistoricProcessInstance process = history.createHistoricProcessInstanceQuery().processInstanceBusinessKey(requestId).singleResult();
 
     // Find all the activities that happened so far for this process
-    List<HistoricTaskInstance> tasks = historyService.createHistoricTaskInstanceQuery().processInstanceId(process.getId()).orderByTaskCreateTime().asc().list();
+    List<HistoricTaskInstance> tasks = history.createHistoricTaskInstanceQuery().processInstanceId(process.getId()).orderByTaskCreateTime().asc().list();
 
     // Find all the activities that happened so far for this process
-    List<HistoricActivityInstance> activities = historyService.createHistoricActivityInstanceQuery().processInstanceId(process.getId())
+    List<HistoricActivityInstance> activities = history.createHistoricActivityInstanceQuery().processInstanceId(process.getId())
         .orderByHistoricActivityInstanceStartTime().asc().list();
-
+    
     for (HistoricActivityInstance activity : activities) {
-      // Only interested in user tasks
-      if (activity.getActivityType().equals("userTask")) {
-
-        String description = "";
-        for (HistoricTaskInstance task : tasks) {
-          if (task.getId().equals(activity.getTaskId())) {
-            description = task.getDescription();
-          }
-        }
-
-        HistoricEvent event = new HistoricEvent(activity.getStartTime(), activity.getEndTime(), activity.getDurationInMillis(), activity.getActivityName(),
-            activity.getActivityType(), description, activity.getAssignee());
-        history.add(event);
+      String description;
+      String assignee;
+      
+      if ("userTask".equals(activity.getActivityType()) ) {
+        description = getUserTaskDescription(tasks, activity.getTaskId());
+        assignee = activity.getAssignee();
+      } else if ("serviceTask".equals(activity.getActivityType())) {
+        assignee = "admin";
+        description = activity.getActivityName();
+      } else {
+        continue;
       }
+      
+      HistoricEvent event = new HistoricEvent(activity.getStartTime(), activity.getEndTime(), activity.getDurationInMillis(), activity.getActivityName(),
+          activity.getActivityType(), description, assignee);
+      historyEvents.add(event);
     }
 
-    return history;
+    return historyEvents;
+  }
+  
+  private String getUserTaskDescription(List<HistoricTaskInstance> tasks, String taskId) {
+    for (HistoricTaskInstance task : tasks) {
+      if (task.getId().equals(taskId)) {
+        return task.getDescription();
+      }
+    }
+    
+    return "";
   }
 }
