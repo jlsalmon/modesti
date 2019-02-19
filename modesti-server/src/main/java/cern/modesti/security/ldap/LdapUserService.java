@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.naming.InvalidNameException;
 import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
@@ -112,7 +111,12 @@ public class LdapUserService implements UserService {
       log.warn("Current user is null!");
       return null;
     }
-    return (User) authentication.getPrincipal();
+    try {
+      return (User) authentication.getPrincipal();
+    } catch (ClassCastException e) {
+      log.debug("Exception casting principal to User", authentication.getPrincipal(), e);
+      return null;
+    }
   }
 
   public List<User> findByGroup(List<String> groups) {
