@@ -145,6 +145,8 @@ export class AgGrid extends Table {
   }
 
   private getColumnDefs(): ColDef[] {
+    let alarmField : Field = this.schema.getAlarmField();
+    let commandField: Field = this.schema.getCommandField()
     let meta: any = {
       idProperty: this.idProperty,
       cellRenderer: (params: any) => {
@@ -158,6 +160,16 @@ export class AgGrid extends Table {
         return '<input type="checkbox" ' +
           (params.node.selected ? 'checked="checked" ' : '') +
           'ng-click="$ctrl.table.selectNodeById(' + params.node.id + ')" style="margin-left: 5px;">';
+      },
+      cellClassRules: {
+        'alarm' : function(params) { 
+            return alarmField !== undefined && params.data !== undefined && params.data.properties[alarmField.id] !== undefined 
+            && params.data.properties[alarmField.id] !== null  && params.data.properties[alarmField.id] !== '';
+          },
+        'command' : function(params) { 
+          return commandField !== undefined && params.data !== undefined && params.data.properties[commandField.id]!== undefined 
+          && params.data.properties[commandField.id] !== null  && params.data.properties[commandField.id] !== '';
+        }
       }
      };
 
