@@ -13,6 +13,10 @@ export class Schema implements ISerializable<Schema> {
   public configuration: Configuration;
   public primary: string;
   public primaryField: Field;
+  public alarm: string;
+  public alarmField: Field;
+  public command: string;
+  public commandField: Field;
   public selectableStates: string[];
   public rowCommentStates: RowCommentStateDescriptor[];
 
@@ -92,6 +96,14 @@ export class Schema implements ISerializable<Schema> {
     return this.primaryField;
   }
 
+  public getAlarmField(): Field {
+    return this.alarmField;
+  }
+
+  public getCommandField(): Field {
+    return this.commandField;
+  }
+
   public hasRowSelectColumn(requestStatus: string): boolean {
     let selectableStates: string[] = this.selectableStates;
     return selectableStates && selectableStates.indexOf(requestStatus) > -1;
@@ -117,6 +129,8 @@ export class Schema implements ISerializable<Schema> {
     this.id = schema.id;
     this.description = schema.description;
     this.primary = schema.primary;
+    this.alarm = schema.alarm;
+    this.command = schema.command;
     this.selectableStates = schema.selectableStates;
     this.rowCommentStates = schema.rowCommentStates;
     this.configuration = schema.configuration;
@@ -149,7 +163,12 @@ export class Schema implements ISerializable<Schema> {
         this.allFields.push(field);
         if (field.id === schema.primary) {
           this.primaryField = field;
+        } else if (field.id === schema.alarm) {
+          this.alarmField = field;
+        } else if (field.id === schema.command) {
+          this.commandField = field;
         }
+
       });
     });
 

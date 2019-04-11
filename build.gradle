@@ -32,6 +32,7 @@ subprojects {
         mavenCentral()
         maven { url "http://artifactory/release" }
         maven { url "http://artifactory/development" }
+        maven { url "http://artifactory/beco-thirdparty-local" }
         maven { url "https://repo.spring.io/release" }
     }
 

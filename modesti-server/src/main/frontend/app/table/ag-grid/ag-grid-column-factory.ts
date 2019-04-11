@@ -39,6 +39,10 @@ export class AgGridColumnFactory {
           columnDef.cellRenderer = meta.cellRenderer;
         }
 
+        if (field.id === 'tagname') {
+          columnDef.cellClassRules = meta.cellClassRules;
+        }
+
         columnDefs.push(columnDef);
       });
     });

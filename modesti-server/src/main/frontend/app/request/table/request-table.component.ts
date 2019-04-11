@@ -185,6 +185,16 @@ class RequestTableController {
         $(td).popover({ trigger: 'hover', placement: 'top', container: 'body', html: true, content: content });
       }
     }
+
+    if ( field.id == 'tagname' ) {
+      let alarmField : Field = this.schema.getAlarmField();
+      let commandField: Field = this.schema.getCommandField();
+      if (alarmField !== undefined && point.getPropertyAsString(alarmField.id) !== '') {
+        td.setAttribute('style', 'background-color: #f7dfde !important');
+      } else if (commandField !== undefined && point.getPropertyAsString(commandField.id) !== '') {
+        td.setAttribute('style', 'background-color: #c1ebf7 !important');
+      }
+    }
   };
 
   /**
@@ -398,9 +408,12 @@ class RequestTableController {
             // Reload the history
             this.requestService.getRequestHistory(this.request.requestId).then((history: any) => {
               this.history = history;
-              this.table.render();
             });
           }
+          // Renders the table: in some cases editing one cell and some other cell is modified automatically
+          //   e.g. : Setting 'Pulse length' will automatically add the default RBAC role.
+          //   without calling render, the change will only be visible after the next cell edition!
+          this.table.render(); 
         });
       }
     });

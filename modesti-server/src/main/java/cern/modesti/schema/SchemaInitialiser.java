@@ -108,6 +108,8 @@ public class SchemaInitialiser {
           datasources.addAll(parentSchema.getDatasources());
 
           schema.setIdProperty(parentSchema.getIdProperty());
+          schema.setAlarmProperty(parentSchema.getAlarmProperty());
+          schema.setCommandProperty(parentSchema.getCommandProperty());
           schema.setSelectableStates(parentSchema.getSelectableStates());
           schema.setRowCommentStates(parentSchema.getRowCommentStates());
         }

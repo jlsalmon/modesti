@@ -50,6 +50,12 @@ public class SchemaImpl implements Schema {
 
   @JsonProperty("primary")
   private String idProperty;
+  
+  @JsonProperty("alarm")
+  private String alarmProperty;
+  
+  @JsonProperty("command")
+  private String commandProperty;
 
   private List<Field> fields;
 
