@@ -134,7 +134,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       if (field.searchFieldOnly) {
         skipOnPaste = true;
       }
-    }
+    }    
 
     if (this.schema.hasRowSelectColumn(this.settings.requestStatus) && prop === 'selected') {
       editable = true;
@@ -213,14 +213,15 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     allCategories.forEach((category: Category) => {
       if (visibleCategoryIds.indexOf(category.id) !== -1) {
         category.fields.forEach((field: Field) => {
-          if (field.searchFieldOnly === undefined || field.searchFieldOnly === false) {
+          if ((field.searchFieldOnly === undefined || field.searchFieldOnly === false)
+            && field.visibleOnStatus === undefined) {
             visibleFields.push(field);
           }
         });
       } else {
         this.deleteVisibleCategoryFromCache(category.id);
         category.fields.forEach((field: Field) => {
-          if (field.fixed) {
+          if (field.fixed && field.visibleOnStatus === undefined) {
             visibleFields.push(field);
           }
         });
@@ -232,7 +233,9 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         return;
       }
 
-      if (visibleFields.indexOf(columnDef.field) === -1) {
+      if (columnDef.forceVisible === true && visibleFields.indexOf(columnDef.field) === -1) {
+        visibleFields.push(columnDef.field);
+      } else if (visibleFields.indexOf(columnDef.field) === -1) {
         hiddenColumns.push(index);
       } 
     });

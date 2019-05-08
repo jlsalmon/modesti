@@ -92,8 +92,24 @@ export class HandsontableColumnFactory {
       (<OptionsField> field).options = ['true', 'false'];
       column = this.getOptionsColumn(table, column, meta, field as OptionsField);
     }
+    
+    column.forceVisible = this.getColumnVisibility(field, meta);
 
     return column;
+  }
+
+  /**
+   * Set the column visibility based on the 'visibleOnStatus' property of the field
+   * @param field The field to evaluate
+   * @param meta request metadata
+   */
+  private getColumnVisibility(field: Field, meta: any) : boolean {
+    let visible = false;
+    if (field.visibleOnStatus !== undefined) {
+      // Visible field can be a string or a string array
+      visible = meta.requestStatus === field.visibleOnStatus || field.visibleOnStatus.indexOf(meta.requestStatus) !== -1;
+    }
+    return visible;
   }
 
   public getColumnHeader(field: Field): string {

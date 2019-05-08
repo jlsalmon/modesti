@@ -9,6 +9,7 @@ export class Field {
   public required: boolean;
   public unique: boolean;
   public editable: any;
+  public visibleOnStatus: any;
   public template: string;
   public fixed: boolean;
   public default: any;
@@ -51,6 +52,7 @@ export class Field {
     this.required = field.required;
     this.unique = field.unique;
     this.editable = field.editable;
+    this.visibleOnStatus = field.visibleOnStatus;
     this.template = field.template;
     this.fixed = field.fixed;
     this.default = field.default;

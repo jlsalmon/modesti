@@ -31,7 +31,7 @@ export class AgGridColumnFactory {
         };
 
         // initially show only the first category
-        if (table.schema.categories.indexOf(category) !== 0) {
+        if (table.schema.categories.indexOf(category) !== 0 || field.visibleOnStatus !== undefined) {
           columnDef.hide = true;
         }
 

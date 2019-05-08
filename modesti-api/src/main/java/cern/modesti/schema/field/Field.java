@@ -57,6 +57,8 @@ public class Field implements Serializable {
   private Object required;
 
   private Object editable;
+  /** Defines fields visible on certain workflow statuses **/
+  private Object visibleOnStatus;
 
   private Object unique;
 
