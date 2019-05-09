@@ -2,6 +2,7 @@ import {Category} from './category/category';
 import {Field} from './field/field';
 import {Configuration} from './configuration/configuration';
 import {RowCommentStateDescriptor} from './row-comment-state-descriptor';
+import {StatusFilter} from './filter/status-filter'
 
 export class Schema implements ISerializable<Schema> {
   public id: string;
@@ -19,6 +20,7 @@ export class Schema implements ISerializable<Schema> {
   public commandField: Field;
   public selectableStates: string[];
   public rowCommentStates: RowCommentStateDescriptor[];
+  private statusFilters: { [status: string]: StatusFilter; } = {};
 
   public getCategory(id: string): Category {
     let category: Category;
@@ -125,6 +127,33 @@ export class Schema implements ISerializable<Schema> {
     return has;
   }
 
+  private addToStatusFilter(field: Field) : void {
+    if (field.filters === undefined) {
+      return;
+    }
+
+    if (typeof field.filters === 'string') {
+      this.addToFilter(field.filters, field);
+    } else if (field.filters instanceof Array) {
+      field.filters.forEach((filter: string) => {
+        this.addToFilter(filter, field);
+      });
+    }
+  }
+
+  private addToFilter(status: string, field: Field) : void {
+    if (this.statusFilters[status] === undefined) {
+      this.statusFilters[status] = new StatusFilter(status);
+    }
+
+    let filter : StatusFilter = this.statusFilters[status];
+    filter.addField(field);
+  }
+
+  public getStatusFilter(status: string) : StatusFilter {
+    return this.statusFilters[status];
+  }
+
   public deserialize(schema: Schema): Schema {
     this.id = schema.id;
     this.description = schema.description;
@@ -161,6 +190,7 @@ export class Schema implements ISerializable<Schema> {
       category.fields.forEach((field: any) => {
         field.category = category.name;
         this.allFields.push(field);
+        this.addToStatusFilter(field);
         if (field.id === schema.primary) {
           this.primaryField = field;
         } else if (field.id === schema.alarm) {

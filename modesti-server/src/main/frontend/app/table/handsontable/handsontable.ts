@@ -10,6 +10,7 @@ import {TaskService} from '../../task/task.service';
 import {ColumnFactory} from '../column-factory';
 import {Point} from '../../request/point/point';
 import { CacheService } from '../../cache/cache.service';
+import {StatusFilter} from '../../schema/filter/status-filter';
 
 import 'latinize';
 import {ContextMenuFactory} from "./context-menu-factory";
@@ -30,6 +31,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   public taskService: TaskService;
   public interpolate: IInterpolateService;
   public cacheService: CacheService;
+  public requestStatus: string;
 
   public constructor(schema: Schema, data: any[], settings: any) {
     super(schema, data, settings);
@@ -38,14 +40,12 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     this.taskService = settings.taskService;
     this.interpolate = settings.interpolate;
     this.cacheService = settings.cacheService;
+    this.requestStatus = settings.requestStatus;
 
     let columnDefs: any[] = this.getColumnDefs();
     this.hotOptions = {
       data: data,
       columns: columnDefs,
-      hiddenColumns: {
-        columns: this.determineInitialHiddenColumns(columnDefs)
-      },
       fixedColumnsLeft: this.determineNumFixedColumns(),
       contextMenu: ContextMenuFactory.getContextMenu(settings.requestType, settings.requestStatus),
       stretchH: 'all',
@@ -79,6 +79,12 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     if (settings.requestStatus !== 'IN_PROGRESS') {
       this.hot.updateSettings({ maxRows: data.length });
     }
+
+    this.hot.updateSettings({
+      hiddenColumns: {
+        columns: this.determineInitialHiddenColumns(columnDefs)
+      }
+    });
 
     // Trigger an initial render
     this.render();
@@ -189,6 +195,10 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   public determineInitialHiddenColumns(columnDefs: any[]): number[] {
     let hiddenColumns: number[] = [];
     let domain = this.schema.id;
+
+    if (this.isDefaultFilterDefined(this.requestStatus)) {
+      return this.getHiddenColumnsFromDefaultFilter();
+    }
 
     let visibleCategories : string[] = this.getVisibleCategoriesFromCache(domain);
     if (visibleCategories.length == 0) {
@@ -336,6 +346,58 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         this.addVisibleCategoryToCache(category.id);
       }
     }
+  }
+
+  private isDefaultFilterDefined(status: string ) : boolean {
+    return this.schema.getStatusFilter(this.requestStatus) !== undefined;
+  }
+
+  private getHiddenColumnsFromDefaultFilter() : number[] {
+    if (!this.isDefaultFilterDefined(this.requestStatus)) {
+      return [];
+    }
+
+    let hiddenFieldIndices: number[] = [];
+    let statusFilter: StatusFilter = this.schema.getStatusFilter(this.requestStatus);
+    this.schema.getAllFields().forEach((field: Field, index: number) => {
+      if ((field.fixed===undefined || 
+          (field.fixed===true && field.visibleOnStatus !== undefined && this.hotOptions.columns[index].forceVisible===false) ) 
+          && statusFilter.fields.indexOf(field) == -1) {
+          hiddenFieldIndices.push(this.getColumnIndex(field));
+      }
+    });
+
+    return hiddenFieldIndices;
+  }
+
+  private getVisibleColumsFromDefaultFilter() : number [] {
+    if (!this.isDefaultFilterDefined(this.requestStatus)) {
+      return [];
+    }
+
+    let showFieldIndices: number[] = [];
+    let statusFilter: StatusFilter = this.schema.getStatusFilter(this.requestStatus);
+    statusFilter.fields.forEach((field: Field) => {
+      showFieldIndices.push(this.getColumnIndex(field));
+    });
+
+    return showFieldIndices;
+  }
+
+  public applyDefaultFilter(status: string) : void {
+    if (!this.isDefaultFilterDefined(this.requestStatus)) {
+      return;
+    }
+
+    let showFieldIndices: number[] = this.getVisibleColumsFromDefaultFilter();
+    let hideFieldIndices: number[] = this.getHiddenColumnsFromDefaultFilter();
+    this.hiddenColumnsPlugin.hideColumns(hideFieldIndices);
+    this.hiddenColumnsPlugin.showColumns(showFieldIndices);
+
+    // Render twice, because handsontable craps itself if you hide all columns
+    // and then show some again
+    this.render();
+    this.render();
   }
 
   public toggleColumnGroup(fields: Field[]): void {

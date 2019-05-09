@@ -4,6 +4,15 @@
 
       <div class="popover-title">
         Select columns
+        
+        <button type="button"
+                ng-show="$ctrl.hasDefaultFilter()"
+                ng-click="$ctrl.applyDefaultFilter()"
+                class="btn btn-sm btn-default"
+                style="margin-left: 20px;">
+          Apply Default Filter
+        </button>
+
       </div>
 
 

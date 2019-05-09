@@ -32,7 +32,7 @@ export class SearchController {
   public schema: Schema;
   public schemas: Schema[];
   public table: Table;
-  public filters: Filter[];
+  public filters: Filter[] = [];
   public query: string;
   public page: any = {number: 0, size: 100};
   public sort: string;

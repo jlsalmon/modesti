@@ -74,6 +74,8 @@ public class Field implements Serializable {
   private String helpUrl = "";
   
   private Boolean searchFieldOnly;
+  
+  private Object filters;
 
   public Field(String id) {
     this.id = id;

@@ -31,6 +31,8 @@ export abstract class Table {
 
   public abstract toggleCategory(category: Category): void;
 
+  public abstract applyDefaultFilter(status: string) : void;
+
   public abstract isVisibleColumn(field: Field): boolean;
 
   public abstract toggleColumnGroup(fields: Field[]): void;

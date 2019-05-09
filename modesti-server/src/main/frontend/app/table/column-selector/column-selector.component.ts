@@ -2,6 +2,8 @@ import {Schema} from '../../schema/schema';
 import {Category} from '../../schema/category/category';
 import {Field} from '../../schema/field/field';
 import {Table} from '../table';
+import {Request} from '../../request/request';
+import {StatusFilter} from '../../schema/filter/status-filter';
 import {IComponentOptions} from 'angular';
 
 export class ColumnSelectorComponent implements IComponentOptions {
@@ -10,6 +12,7 @@ export class ColumnSelectorComponent implements IComponentOptions {
   public bindings: any = {
     schema: '=',
     table: '=',
+    request: '=',
   };
 }
 
@@ -18,6 +21,7 @@ class ColumnSelectorController {
 
   public schema: Schema;
   public table: Table;
+  public request: Request;
   public popoverIsOpen: boolean = false;
 
   public constructor() {}
@@ -28,5 +32,13 @@ class ColumnSelectorController {
 
   public toggleColumn(field: Field): void {
     this.table.toggleColumn(field);
+  }
+
+  public hasDefaultFilter() : boolean {
+    return this.request!==undefined && this.schema.getStatusFilter(this.request.status) !== undefined;
+  }
+
+  public applyDefaultFilter() : void {
+    this.table.applyDefaultFilter(this.request.status);
   }
 }
