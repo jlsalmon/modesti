@@ -56,7 +56,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       rowHeaders: (row: any) => this.getRowHeader(row),
       beforeChange: (changes: any, source: any) => this.beforeChange(changes, source),
       beforeCopy: (data: any[][], coords: any[]) => this.beforeCopy(data, coords),
-      afterCreateRow: () => this.normaliseLineNumbers(),
+      afterCreateRow: (index: number, amount: number) => this.afterCreateRow(index, amount),
       afterRemoveRow: () => this.normaliseLineNumbers()
     };
 
@@ -429,7 +429,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         return;
       }
     });
-
+ 
     return visible;
   }
 
@@ -556,6 +556,15 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   private normaliseLineNumbers(): void {
     for (let i: number = 0, len: number = this.data.length; i < len; i++) {
       this.data[i].lineNo = i + 1;
+    }
+  }
+
+  private afterCreateRow(index: number, amount: number) {
+    if (this.settings.requestType === 'DELETE' || this.settings.requestType === 'UPDATE') {
+      // Do NOT create new lines in DELETE and UPDATE requests
+      this.data.splice(index, amount);
+    } else {    
+      this.normaliseLineNumbers();
     }
   }
 
