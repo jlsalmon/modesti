@@ -18,6 +18,7 @@ import 'ngstorage';
 import 'restangular';
 import 'oclazyload';
 import 'angular-cache';
+import 'ng-middle-click';
 // TODO: import these properly, remove <script> tags from index.html
 // import 'numbro';
 // import 'moment';
@@ -93,7 +94,8 @@ let app: any = angular.module('modesti', [
   'oc.lazyLoad',
   'xeditable',
   'agGrid',
-  'angular-cache'
+  'angular-cache',
+  'ng-middle-click'
 ]);
 
 // TODO: split this up into modules

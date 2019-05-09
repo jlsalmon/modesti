@@ -51,6 +51,7 @@
     "latinize": "0.4.0",
     "lodash": "4.17.*",
     "moment": "2.15.2",
+    "ng-middle-click": "0.0.1",
     "ngstorage": "0.3.10",
     "numbro": "1.9.3",
     "oclazyload": "1.0.9",

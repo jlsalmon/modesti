@@ -19,7 +19,8 @@ export class RequestListComponent implements IComponentOptions {
 }
 
 class RequestListController {
-  public static $inject: string[] = ['$http', '$location', '$scope', 'RequestService', 'AuthService', 'SchemaService', 'CacheService'];
+  public static $inject: string[] = ['$http', '$location', '$scope', 'RequestService', 'AuthService', 
+    'SchemaService', 'CacheService', '$window'];
 
   public requests: Request[] = [];
   public statuses: string[] = [];
@@ -34,7 +35,8 @@ class RequestListController {
 
   public constructor(private $http: IHttpService, private $location: ILocationService, private $scope: IScope,
     private requestService: RequestService, private authService: AuthService,
-    private schemaService: SchemaService, private cacheService: CacheService) {
+    private schemaService: SchemaService, private cacheService: CacheService,
+    private $window: any) {
     this.users.push(authService.getCurrentUser());
 
     this.resetFilter();
@@ -107,11 +109,15 @@ class RequestListController {
     });
   }
 
-  public editRequest(request: Request): void {
+  public editRequest(request: Request, openInNewTab: boolean=false): void {
     let href: string = request._links.self.href;
     let id: string = href.substring(href.lastIndexOf('/') + 1).replace('{?projection}', '');
 
-    this.$location.path('/requests/' + id);
+    if (openInNewTab) {
+      this.$window.open('/requests/' + id, '_blank');
+    } else {
+      this.$location.path('/requests/' + id);
+    }
   }
 
   /**

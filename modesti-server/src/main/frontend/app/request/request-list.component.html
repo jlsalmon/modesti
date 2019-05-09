@@ -199,6 +199,7 @@
         <a ng-repeat="request in $ctrl.requests"
            ng-if="$ctrl.requests.length > 0 && ($ctrl.hideClosedRequests === false || request.status !== 'CLOSED')"
            ng-click="$ctrl.editRequest(request)"
+           ng-middle-click="$ctrl.editRequest(request, true)"
            class="list-group-item">
 
           <i class="fa fa-list-ol fa-fw text-muted"></i>
