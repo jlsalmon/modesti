@@ -4,15 +4,12 @@ import cern.modesti.point.Error;
 import cern.modesti.point.Point;
 import cern.modesti.point.PointImpl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.querydsl.core.annotations.PropertyType;
 import com.querydsl.core.annotations.QueryType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.joda.time.DateTime;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -21,7 +18,6 @@ import org.springframework.hateoas.core.Relation;
 
 import javax.persistence.Id;
 import javax.persistence.Version;
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +34,6 @@ import static java.util.stream.Collectors.toMap;
 @Relation(value = "request", collectionRelation = "requests")
 @Data
 @NoArgsConstructor
-@Slf4j
 public class RequestImpl implements Request {
 
   private static final long serialVersionUID = -7075036449830835583L;

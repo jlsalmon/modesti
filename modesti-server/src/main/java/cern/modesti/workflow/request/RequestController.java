@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestService;
 import cern.modesti.user.User;
-import lombok.extern.slf4j.Slf4j;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 

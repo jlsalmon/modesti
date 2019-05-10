@@ -170,9 +170,7 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
 
     // Rebase the point IDs back to starting from 1.
     for (Point point : parent.getPoints()) {
-      //if (pointIdsToSplit.contains(point.getId())) {
       point.setLineNo((long) (parent.getPoints().indexOf(point) + 1));
-      //}
     }
 
     // Generate a request ID for the new child

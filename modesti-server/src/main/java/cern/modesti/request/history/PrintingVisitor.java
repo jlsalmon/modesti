@@ -2,12 +2,13 @@ package cern.modesti.request.history;
 
 import de.danielbechler.diff.node.DiffNode;
 import de.danielbechler.diff.node.Visit;
-import de.danielbechler.diff.path.NodePath;
 import de.danielbechler.util.Strings;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Justin Lewis Salmon
  */
+@Slf4j
 public class PrintingVisitor implements DiffNode.Visitor {
 
   private final Object working;
@@ -45,7 +46,7 @@ public class PrintingVisitor implements DiffNode.Visitor {
   }
 
   protected void print(final String text) {
-    System.out.println(text);
+    log.debug(text);
   }
 
   private static String translateState(final DiffNode.State state, final Object base, final Object modified) {
