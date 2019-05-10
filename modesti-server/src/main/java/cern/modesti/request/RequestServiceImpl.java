@@ -135,17 +135,18 @@ public class RequestServiceImpl implements RequestService {
       }
     }
 
-    request = repository.save((RequestImpl) request);
+    Request newRequest = repository.save((RequestImpl) request);
+    // Kick off the workflow process
+    workflowService.startProcessInstance(newRequest);
 
-    if (request.getType().equals(RequestType.UPDATE)) {
+    if (newRequest.getType().equals(RequestType.UPDATE)) {
       // Store an initial, empty change history
       ((RequestHistoryServiceImpl) historyService).initialiseChangeHistory(request);
+      // Initially update requests are not valid (values in the database might be incorrect)
+      newRequest.setValid(false);
     }
 
-    // Kick off the workflow process
-    workflowService.startProcessInstance(request);
-
-    return request;
+    return newRequest;
   }
 
   /**
@@ -225,12 +226,11 @@ public class RequestServiceImpl implements RequestService {
   
   @Override
   public Request execute(String requestId, RequestAction action, User user) {
-    switch(action.getAction()) {
-      case CREATOR:
-        return assignCreator(requestId, action.getCreator(), user.getUsername());
-      default:
-        throw new UnsupportedOperationException(format("'%s' is not a valid action", action.getAction()));
-	  }
+    if (RequestAction.Action.CREATOR.equals(action.getAction())) {
+      return assignCreator(requestId, action.getCreator(), user.getUsername());
+    } else {
+      throw new UnsupportedOperationException(format("'%s' is not a valid action", action.getAction()));
+    }
   }
 
   private Request assignCreator(String requestId, String newCreator, String originalCreator) {
