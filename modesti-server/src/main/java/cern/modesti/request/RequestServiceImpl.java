@@ -121,6 +121,7 @@ public class RequestServiceImpl implements RequestService {
     // Apply formatting to the request points
     requestFormatter.format(request);
 
+    boolean isEmptyRequest = request.getPoints().isEmpty();
     // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
       for (int i = 0; i < 50; i++) {
@@ -142,10 +143,13 @@ public class RequestServiceImpl implements RequestService {
     if (newRequest.getType().equals(RequestType.UPDATE)) {
       // Store an initial, empty change history
       ((RequestHistoryServiceImpl) historyService).initialiseChangeHistory(request);
-      // Initially update requests are not valid (values in the database might be incorrect)
-      newRequest.setValid(false);
     }
 
+    if (!isEmptyRequest) {
+      // Initially updated/cloned requests are not valid (values in the database might be incorrect)
+      newRequest.setValid(false);
+    }
+    
     return newRequest;
   }
 
