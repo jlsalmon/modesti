@@ -53,12 +53,15 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
 
     // Save the new assignee to the request object
     Request request = requestService.findOneByRequestId((String) task.getVariable("requestId"));
+    User currentUser = userService.getCurrentUser();
 
     if (task.getEventName().equals(TaskListener.EVENTNAME_ASSIGNMENT)) {
       User assignee = userService.findOneByUsername(task.getAssignee());
       String username = assignee == null ? null : assignee.getUsername();
       request.setAssignee(username);
-      if (assignee != null) {
+      
+      // Send a notification to the assignee if someone else assigned the request to him
+      if (assignee != null && currentUser != null && !assignee.getEmployeeId().equals(currentUser.getEmployeeId())) {
         notificationService.sendNotification(CoreNotifications.requestAssignedToUser(request));
       }
     } else if (task.getEventName().equals(TaskListener.EVENTNAME_DELETE)) {
@@ -70,7 +73,7 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
     // fail because the security context will be empty. To prevent this, we
     // manually set the authentication context with the details of the modesti
     // service account (which has admin privileges).
-    if (userService.getCurrentUser() == null) {
+    if (currentUser == null) {
       Authentication authentication = new UsernamePasswordAuthenticationToken("modesti", null,
           Collections.singletonList(new SimpleGrantedAuthority("modesti-administrators")));
       SecurityContextHolder.getContext().setAuthentication(authentication);
