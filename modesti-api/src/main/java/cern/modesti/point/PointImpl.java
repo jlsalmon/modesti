@@ -12,6 +12,8 @@ import java.util.*;
 import static java.lang.String.format;
 
 /**
+ * Implementation of {@link Point} representing a single data point
+ * 
  * @author Justin Lewis Salmon
  */
 @Relation(value = "point", collectionRelation = "points")
@@ -33,6 +35,10 @@ public class PointImpl implements Point {
 
   private Map<String, Object> properties = new HashMap<>();
 
+  /**
+   * Class constructor
+   * @param lineNo Line number of the point definition
+   */
   public PointImpl(Long lineNo) {
     this.lineNo = lineNo;
   }
@@ -48,6 +54,7 @@ public class PointImpl implements Point {
    * @param <T>   the type of the value
    * @return the value mapped by the given key, converted to the given type
    */
+  @Override
   public <T> T getProperty(String key, Class<T> klass) {
     Object value = properties.get(key);
     return new ObjectMapper().convertValue(value, klass);
@@ -66,6 +73,7 @@ public class PointImpl implements Point {
    * @return the value mapped by the given key, converted to the given type or
    *         the provided default value
    */
+  @Override
   public <T> T getProperty(String key, Class<T> klass, T defaultValue) {
     T value = getProperty(key, klass);
     return value == null ? defaultValue : value;
@@ -77,6 +85,7 @@ public class PointImpl implements Point {
    * @param key   the property key
    * @param value the property value
    */
+  @Override
   public void addProperty(String key, Object value) {
     properties.put(key, value);
   }
@@ -87,6 +96,7 @@ public class PointImpl implements Point {
    *
    * @return true if the point was considered empty, false otherwise
    */
+  @Override
   @JsonIgnore
   public boolean isEmpty() {
     if (properties.size() == 0) {
@@ -108,6 +118,7 @@ public class PointImpl implements Point {
     return true;
   }
 
+  @Override
   public List<Field> getEmptyFields(List<Field> fields) {
     List<Field> emptyFields = new ArrayList<>();
 
@@ -144,6 +155,7 @@ public class PointImpl implements Point {
    *
    * @return the corresponding value
    */
+  @Override
   public Object getValueByPropertyName(String propertyName) {
     Object value = null;
 
@@ -189,6 +201,7 @@ public class PointImpl implements Point {
    * @param property the property (map key) to associate the error with
    * @param message  the error message
    */
+  @Override
   public void addErrorMessage(String category, String property, String message) {
     String finalMessageToLog = Optional.ofNullable(message)
             .orElse("Unexpected error occurred, no message available. Try again in few minutes.");
@@ -222,6 +235,7 @@ public class PointImpl implements Point {
     return valid == null || !valid;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof Point)) return false;
@@ -231,6 +245,7 @@ public class PointImpl implements Point {
     return !(thisLineNo == null ? otherLineNo != null : !thisLineNo.equals(otherLineNo));
   }
 
+  @Override
   public int hashCode() {
     final int prime = 59;
     int result = 1;
