@@ -65,7 +65,7 @@ public class ChangeVisitor implements DiffNode.Visitor {
   private boolean isProperty(DiffNode node) {
     return node.getParentNode() != null
         && node.getParentNode().getPropertyName() != null
-        && node.getParentNode().getPropertyName().equals("properties")
+        && "properties".equals(node.getParentNode().getPropertyName())
         && node.getParentNode().getParentNode().canonicalGet(modified) instanceof Point;
   }
 

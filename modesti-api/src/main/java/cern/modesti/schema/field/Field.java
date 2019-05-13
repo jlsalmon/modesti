@@ -88,7 +88,7 @@ public class Field implements Serializable {
    * @return the property name
    */
   public String getPropertyName() {
-    if (type.equals("autocomplete")) {
+    if ("autocomplete".equals(type)) {
       return id + "." + (model != null ? model : "value");
     } else {
       return id;

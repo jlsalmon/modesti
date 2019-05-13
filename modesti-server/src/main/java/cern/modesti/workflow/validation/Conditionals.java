@@ -4,7 +4,6 @@ import cern.modesti.point.Point;
 import cern.modesti.request.Request;
 import cern.modesti.schema.category.Condition;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.Map;
 /**
  * @author Justin Lewis Salmon
  */
-@Slf4j
 public class Conditionals {
 
   private static ObjectMapper mapper = new ObjectMapper();
@@ -90,20 +88,30 @@ public class Conditionals {
     Object value = point.getProperties().get(condition.getField());
     boolean result = false;
 
-    if (condition.getOperation().equals("equals") && (value != null && value.equals(condition.getValue()))) {
-      result = true;
-    } else if (condition.getOperation().equals("notEquals") && (value == null || !value.equals(condition.getValue()))) {
-      result = true;
-    } else if (condition.getOperation().equals("contains") && (value != null && value.toString().contains(condition.getValue().toString()))) {
-      result = true;
-    } else if (condition.getOperation().equals("notNull") && (value != null && !value.toString().isEmpty())) {
-      result = true;
-    } else if (condition.getOperation().equals("isNull") && (value == null || value.toString().isEmpty())) {
-      result = true;
-    } else if (condition.getOperation().equals("in") && (value != null && ((List) condition.getValue()).contains(value.toString()))) {
-      result = true;
-    } else if (condition.getOperation().equals("notIn") && (value != null && !((List) condition.getValue()).contains(value.toString()))) {
-      result = true;
+    switch (condition.getOperation()) {
+    case "equals":
+      result = value != null && value.equals(condition.getValue());
+      break;
+    case "notEquals":
+      result = value == null || !value.equals(condition.getValue());
+      break;
+    case "contains":
+      result = value != null && value.toString().contains(condition.getValue().toString());
+      break;
+    case "notNull":
+      result = value != null && !value.toString().isEmpty();
+      break;
+    case "isNull":
+      result = value == null || value.toString().isEmpty();
+      break;
+    case "in":
+      result = value != null && ((List) condition.getValue()).contains(value.toString());
+      break;
+    case "notIn":
+      result = value != null && !((List) condition.getValue()).contains(value.toString());
+      break;
+    default:
+      result = false;
     }
 
     return result;

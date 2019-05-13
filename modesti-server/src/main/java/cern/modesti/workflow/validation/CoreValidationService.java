@@ -9,7 +9,6 @@ import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaRepository;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Constraint;
-import cern.modesti.schema.field.AutocompleteField;
 import cern.modesti.schema.field.Field;
 import cern.modesti.schema.field.Option;
 import cern.modesti.schema.field.OptionsField;
@@ -182,41 +181,33 @@ public class CoreValidationService implements ValidationService {
             required = Conditionals.evaluate(field.getRequired(), point, request);
           }
 
-          if (required) {
-            if (value == null || value.equals("")) {
-              point.setValid(false);
-              valid = false;
-              point.addErrorMessage(category.getId(), field.getId(), "'" + field.getName() + "' is mandatory");
-            }
+          if (required && (value == null || "".equals(value))) {
+            point.setValid(false);
+            valid = false;
+            point.addErrorMessage(category.getId(), field.getId(), "'" + field.getName() + "' is mandatory");
           }
 
           // Min length
-          if (field.getMinLength() != null) {
-            if (value != null && value.toString().length() < field.getMinLength()) {
-              point.setValid(false);
-              valid = false;
-              point.addErrorMessage(category.getId(), field.getId(),
-                  "'" + field.getName() + "' must be at least " + field.getMinLength() + " characters in length");
-            }
+          if (field.getMinLength() != null && (value != null && value.toString().length() < field.getMinLength())) {
+            point.setValid(false);
+            valid = false;
+            point.addErrorMessage(category.getId(), field.getId(),
+                "'" + field.getName() + "' must be at least " + field.getMinLength() + " characters in length");
           }
 
           // Max length
-          if (field.getMaxLength() != null) {
-            if (value != null && value.toString().length() > field.getMaxLength()) {
-              point.setValid(false);
-              valid = false;
-              point.addErrorMessage(category.getId(), field.getId(),
-                  "'" + field.getName() + "' must not exceed " + field.getMaxLength() + " characters in length");
-            }
+          if (field.getMaxLength() != null && (value != null && value.toString().length() > field.getMaxLength())) {
+            point.setValid(false);
+            valid = false;
+            point.addErrorMessage(category.getId(), field.getId(),
+                "'" + field.getName() + "' must not exceed " + field.getMaxLength() + " characters in length");
           }
 
           // Numeric fields
-          if (field.getType().equals("numeric")) {
-            if (value != null && !value.toString().isEmpty() && !NumberUtils.isNumber(value.toString())) {
-              point.setValid(false);
-              valid = false;
-              point.addErrorMessage(category.getId(), field.getId(), "Value for '" + field.getName() + "' must be numeric");
-            }
+          if ("numeric".equals(field.getType()) && (value != null && !value.toString().isEmpty() && !NumberUtils.isNumber(value.toString()))) {
+            point.setValid(false);
+            valid = false;
+            point.addErrorMessage(category.getId(), field.getId(), "Value for '" + field.getName() + "' must be numeric");
           }
         }
       }
@@ -285,12 +276,12 @@ public class CoreValidationService implements ValidationService {
 
   private boolean isValidValue(Object value, Point point, Field field) {
     // If the value is empty, it's technically not invalid.
-    if (value ==  null || value.equals("")) {
+    if (value ==  null || "".equals(value)) {
       return true;
     }
 
     // If we have an options field, check that the value is in the list of options
-    if (field.getType().equals("options"))  {
+    if ("options".equals(field.getType()))  {
       OptionsField optionsField = (OptionsField) field;
       List<Object> options = (List<Object>) optionsField.getOptions();
 
@@ -309,10 +300,8 @@ public class CoreValidationService implements ValidationService {
       }
 
       return false;
-    }
-
-    // Otherwise, if we have an autocomplete field, make a call to the backend to see if this value returns any results
-    else if (field.getType().equals("autocomplete")) {
+    } else if ("autocomplete".equals(field.getType())) {
+      // Otherwise, if we have an autocomplete field, make a call to the backend to see if this value returns any results
       // FIXME: currently, pasting an invalid value into an autocomplete field won't trigger an error.
       return true;
     }

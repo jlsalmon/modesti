@@ -6,7 +6,6 @@ import cern.modesti.plugin.spi.AuthorizationProvider;
 import cern.modesti.request.Request;
 import cern.modesti.security.UserService;
 import cern.modesti.user.User;
-import cern.modesti.user.UserImpl;
 import cern.modesti.workflow.task.TaskInfo;
 import cern.modesti.workflow.task.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +86,7 @@ public class AuthService {
   public boolean canSave(Request request, String username) {
     User user;
 
-    if (username.equals("principal")) {
+    if ("principal".equals(username)) {
       user = userService.getCurrentUser();
     } else {
       user = userService.findOneByUsername(username);
@@ -168,7 +167,7 @@ public class AuthService {
   }
 
   private boolean isAdministrator(User user) {
-    return user.getAuthorities().stream().anyMatch(role -> role.getAuthority().equals("modesti-administrators"));
+    return user.getAuthorities().stream().anyMatch(role -> "modesti-administrators".equals(role.getAuthority()));
   }
 
   private AuthorizationProvider getPluginAuthorizationProvider(String requestPluginId) {

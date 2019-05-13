@@ -27,14 +27,18 @@ public class CORSFilter implements Filter {
     response.setHeader("Access-Control-Expose-Headers", "Location");
     response.setHeader("Access-Control-Allow-Credentials", "true");
 
-    if (!((HttpServletRequest) req).getMethod().equals("OPTIONS")) {
+    if (!"OPTIONS".equals(((HttpServletRequest) req).getMethod())) {
       chain.doFilter(req, res);
     }
   }
 
   @Override
-  public void init(FilterConfig filterConfig) {}
+  public void init(FilterConfig filterConfig) {
+    // Nothing to do
+  }
 
   @Override
-  public void destroy() {}
+  public void destroy() {
+    // Nothing to do
+  }
 }

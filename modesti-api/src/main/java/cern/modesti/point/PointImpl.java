@@ -106,11 +106,11 @@ public class PointImpl implements Point {
     for (Object subProperty : properties.values()) {
       if (subProperty instanceof Map) {
         for (Object subSubProperty : ((Map) subProperty).values()) {
-          if (subSubProperty != null && !subSubProperty.equals("")) {
+          if (subSubProperty != null && !"".equals(subSubProperty)) {
             return false;
           }
         }
-      } else if (subProperty != null && !subProperty.equals("")) {
+      } else if (subProperty != null && !"".equals(subProperty)) {
         return false;
       }
     }
@@ -133,14 +133,14 @@ public class PointImpl implements Point {
       // TODO: or a "multiple" option which would do the same... or both
 
       // HACK ALERT: treat auto-generated fields as "empty"
-      if ( (field.getId().equals("tagname") || field.getId().equals("faultFamily") ||
-          field.getId().equals("faultMember") || field.getId().equals("pointDescription")) && 
+      if ( ("tagname".equals(field.getId()) || "faultFamily".equals(field.getId()) ||
+          "faultMember".equals(field.getId()) || "pointDescription".equals(field.getId())) && 
           !emptyFields.contains(field)) {
         emptyFields.add(field);
       }
 
       // HACK ALERT #2: ignore the monitoringEquipment field because it can be in multiple categories...
-      if (field.getId().equals("monitoringEquipment") && !emptyFields.contains(field)) {
+      if ("monitoringEquipment".equals(field.getId()) && !emptyFields.contains(field)) {
         emptyFields.add(field);
       }
     }

@@ -196,7 +196,7 @@ public class RequestServiceImpl implements RequestService {
     requestFormatter.format(updated);
 
     if (updated.getType().equals(RequestType.UPDATE)
-        && (updated.getStatus().equals("IN_PROGRESS") || updated.getStatus().equals("FOR_ADDRESSING") || updated.getStatus().equals("IN_ERROR"))) {
+        && ("IN_PROGRESS".equals(updated.getStatus()) || "FOR_ADDRESSING".equals(updated.getStatus()) || "IN_ERROR".equals(updated.getStatus()))) {
       // Process and store any changes that were made to the request
       ((RequestHistoryServiceImpl) historyService).saveChangeHistory(updated);
     }

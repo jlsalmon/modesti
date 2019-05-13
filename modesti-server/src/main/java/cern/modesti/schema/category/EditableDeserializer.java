@@ -117,7 +117,7 @@ public class EditableDeserializer extends JsonDeserializer<Map<String, Object>> 
     }
 
     private static boolean containsTypeKeys(final Map<String, Object> map) {
-        return map.keySet().stream().anyMatch(e -> e.equals("_") || isValidRequestType(e));
+        return map.keySet().stream().anyMatch(e -> "_".equals(e) || isValidRequestType(e));
     }
 }
 

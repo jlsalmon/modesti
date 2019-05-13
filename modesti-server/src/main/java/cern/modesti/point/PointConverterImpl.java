@@ -58,7 +58,7 @@ public class PointConverterImpl implements PointConverter {
 
     for (PropertyDescriptor propertyDescriptor : beanInfo.getPropertyDescriptors()) {
       String propertyName = propertyDescriptor.getName();
-      if (propertyName.equals("class")) {
+      if ("class".equals(propertyName)) {
         continue;
       }
 

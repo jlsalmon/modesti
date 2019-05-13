@@ -319,7 +319,7 @@ public class SchemaInitialiser {
     } else {
       log.warn(format("loading resource outside of JAR file: %s", resource.getFile().getAbsolutePath()));
 
-      if (resource.getFile().getParentFile().getName().equals("schemas")) {
+      if ("schemas".equals(resource.getFile().getParentFile().getName())) {
         return resource.getFile().getParentFile().getAbsolutePath();
       } else {
         return resource.getFile().getParentFile().getParentFile().getAbsolutePath();

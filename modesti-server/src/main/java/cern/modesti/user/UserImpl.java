@@ -10,18 +10,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.hateoas.core.Relation;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
  * @author Justin Lewis Salmon
  */
-//@Entry(objectClasses = { "person", "top" }, base = "OU=Users,OU=Organic Units")
 @Data
 @Relation(value = "user", collectionRelation = "users")
 @AllArgsConstructor
@@ -70,6 +67,6 @@ public class UserImpl implements User, UserDetails {
   }
 
   public boolean isAdmin() {
-    return authorities.stream().anyMatch(role -> role.getAuthority().equals("modesti-administrators"));
+    return authorities.stream().anyMatch(role -> "modesti-administrators".equals(role.getAuthority()));
   }
 }
