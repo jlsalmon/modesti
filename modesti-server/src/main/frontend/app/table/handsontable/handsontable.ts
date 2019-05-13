@@ -56,6 +56,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       rowHeaders: (row: any) => this.getRowHeader(row),
       beforeChange: (changes: any, source: any) => this.beforeChange(changes, source),
       beforeCopy: (data: any[][], coords: any[]) => this.beforeCopy(data, coords),
+      afterPaste:  (data: any[][], coords: any[]) => this.afterPaste(data, coords),
       afterCreateRow: (index: number, amount: number) => this.afterCreateRow(index, amount),
       afterRemoveRow: () => this.normaliseLineNumbers()
     };
@@ -624,6 +625,14 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
         });
       }
     })
+  }
+
+  public afterPaste(data: any[][], coords: any[]) : void { 
+    // [MOD-59] Removes the row errors popover if it was pasted
+    let popover: JQuery = $('[role="tooltip"]');
+    if (popover) {
+      $(popover).popover('destroy');
+    }
   }
 
   /**
