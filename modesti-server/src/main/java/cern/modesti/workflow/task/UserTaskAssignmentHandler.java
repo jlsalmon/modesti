@@ -3,6 +3,8 @@ package cern.modesti.workflow.task;
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestService;
 import cern.modesti.user.User;
+import cern.modesti.workflow.notification.CoreNotifications;
+import cern.modesti.workflow.notification.NotificationService;
 import cern.modesti.security.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.bpmn.model.BaseElement;
@@ -14,7 +16,6 @@ import org.activiti.engine.impl.bpmn.parser.handler.AbstractBpmnParseHandler;
 import org.activiti.engine.impl.bpmn.parser.handler.UserTaskParseHandler;
 import org.activiti.engine.impl.task.TaskDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.intercept.RunAsUserToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,6 +43,9 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
 
   @Autowired
   private UserService userService;
+  
+  @Autowired
+  private NotificationService notificationService;
 
   @Override
   public void notify(DelegateTask task) {
@@ -54,9 +58,10 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
       User assignee = userService.findOneByUsername(task.getAssignee());
       String username = assignee == null ? null : assignee.getUsername();
       request.setAssignee(username);
-    }
-
-    else if (task.getEventName().equals(TaskListener.EVENTNAME_DELETE)) {
+      if (assignee != null) {
+        notificationService.sendNotification(CoreNotifications.requestAssignedToUser(request));
+      }
+    } else if (task.getEventName().equals(TaskListener.EVENTNAME_DELETE)) {
       request.setAssignee(null);
     }
 
