@@ -10,7 +10,7 @@ import java.util.function.Function;
  * 
  * @author Ivan Prieto Barreiro
  */
-public class PointPropertyMerger {
+public final class PointPropertyMerger {
   
   private PointPropertyMerger() {
     // Private, empty constructor
