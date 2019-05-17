@@ -59,7 +59,20 @@ public class CoreValidationService implements ValidationService {
 
   private ObjectMapper mapper = new ObjectMapper();
 
+  
+  @Override
+  public boolean preValidateRequest(Request request) {
+    RequestValidator validator = getPluginRequestValidator(request);
+    if (validator == null) {
+      log.info(format("Custom validator not provided for request #%s", request.getRequestId()));
+      return true;
+    }
+    
+    Schema schema = schemaRepository.findOne(request.getDomain());
+    return validator.preValidateRequest(request, schema);
+  }
 
+  @Override
   public boolean validateRequest(Request request) {
     try {
       if (RequestType.DELETE.equals(request.getType())) {
@@ -118,9 +131,7 @@ public class CoreValidationService implements ValidationService {
 
       log.info(format("request #%s is valid, invoking custom validator", request.getRequestId()));
 
-      RequestProvider plugin = requestProviderRegistry.getPluginFor(request);
-      RequestValidator validator = getPluginRequestValidator(plugin.getMetadata().getId());
-
+      RequestValidator validator = getPluginRequestValidator(request);
       if (validator == null) {
         log.info(format("custom validator not provided for request #%s", request.getRequestId()));
         return true;
@@ -139,7 +150,9 @@ public class CoreValidationService implements ValidationService {
     }
   }
 
-  private RequestValidator getPluginRequestValidator(String pluginId) {
+  private RequestValidator getPluginRequestValidator(Request request) {
+    RequestProvider plugin = requestProviderRegistry.getPluginFor(request);
+    String pluginId = plugin.getMetadata().getId();
     for (RequestValidator validator : context.getBeansOfType(RequestValidator.class).values()) {
       if (validator.getPluginId().equals(pluginId)) {
         return validator;
