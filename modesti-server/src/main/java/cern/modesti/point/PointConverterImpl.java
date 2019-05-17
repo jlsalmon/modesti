@@ -36,15 +36,25 @@ public class PointConverterImpl implements PointConverter {
     return new PageImpl<>(points, pageable, pointsToConvert.getTotalElements());
   }
 
-  /**
-   * Used to convert either TimPoint, CsamPoint or WinCCOAPoint
-   */
-  public static <T> List<Point> convert(List<T> pointsToConvert, Class<T> klass) {
+  @Override
+  public <T> List<Point> convert(List<T> pointsToConvert, Class<T> klass) {
     List<Point> points = Collections.synchronizedList(new ArrayList<>());
     pointsToConvert.stream().parallel().forEach(t -> points.add(convert(t, klass)));
     return points;
   }
 
+  /**
+   * Utility method to convert a bean of a given type into MODESTI
+   * point objects. The value of each field of the given type will be inserted
+   * into the property map of the MODESTI point, where the key is the field
+   * name and the value is the field value.
+   *
+   * @param pointToConvert  object to be converted
+   * @param klass           the type to convert from
+   * @param <T>             the type to convert from
+   *
+   * @return a list of {@link Point} instances created from the given objects
+   */
   public static <T> Point convert(T pointToConvert, Class<T> klass) {
     Point point = new PointImpl();
 
