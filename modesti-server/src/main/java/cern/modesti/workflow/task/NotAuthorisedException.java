@@ -10,6 +10,10 @@ public class NotAuthorisedException extends RuntimeException {
 
   private static final long serialVersionUID = 3878619384566019345L;
 
+  /**
+   * Class constructor
+   * @param message Error message
+   */
   public NotAuthorisedException(String message) {
     super(message);
   }
