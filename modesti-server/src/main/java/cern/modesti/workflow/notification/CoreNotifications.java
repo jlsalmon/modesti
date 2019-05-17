@@ -24,6 +24,9 @@ public class CoreNotifications {
   @Autowired
   private UserService userService;
   
+  /**
+   * Registers the class singleton instance
+   */
   @PostConstruct
   public void registerInstance() {
     setInstance(this);
