@@ -81,6 +81,8 @@ public class RequestImpl implements Request {
   private boolean valid;
   
   private boolean skipCoreValidation;
+  
+  private boolean generatedFromUi;
 
   private List<PointImpl> points = new ArrayList<>();
 
