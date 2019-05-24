@@ -142,7 +142,7 @@ public interface Request extends Serializable {
    * Gets the valid of the skipCoreValidation flag. The core validations must be disabled
    * when UPDATE/DELETE requests provide the modified fields/point IDs.
    * @return TRUE if and only if the core validation must be skipped
-   * @deprecated Since version 0.2.33. Not necessary since the {@link CoreValidationService} 
+   * @deprecated Since version 0.2.33. Not necessary since the {@link cern.modesti.workflow.validation.ValidationService} 
    * implements the pre-validate method
    */
   @Deprecated
@@ -152,7 +152,7 @@ public interface Request extends Serializable {
    * Sets the value for the skipCoreValidation flag. The core validations must be disabled
    * when UPDATE/DELETE requests provide the modified fields/point IDs.
    * @param skip Value for the skipCoreValidation flag
-   * @deprecated Since version 0.2.33. Not necessary since the {@link CoreValidationService} 
+   * @deprecated Since version 0.2.33. Not necessary since the {@link cern.modesti.workflow.validation.ValidationService} 
    * implements the pre-validate method
    */
   @Deprecated
