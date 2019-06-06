@@ -4,8 +4,6 @@ import cern.modesti.plugin.spi.SearchProvider;
 import cern.modesti.point.Point;
 import cern.modesti.point.PointConverter;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,10 +20,5 @@ public class DummySearchProvider implements SearchProvider {
   @Override
   public String getPluginId() {
     return DummyRequestProvider.DUMMY;
-  }
-
-  @Override
-  public List<Point> findAllByPointId(List<Long> pointIds) {
-    return null;
   }
 }
