@@ -14,9 +14,11 @@ import {Conditional} from '../../schema/conditional';
 import {Change} from '../history/change';
 import { CacheService } from '../../cache/cache.service';
 import {HandsonTable} from '../../table/handsontable/handsontable';
+import {AlertService} from '../../alert/alert.service';
 
 import {IComponentOptions, IPromise, IDeferred, IScope, IQService, IFilterService, IInterpolateService} from 'angular';
 import 'jquery';
+import { Alert } from 'selenium-webdriver';
 
 // TODO: import this properly without require()
 let Handsontable: any = require('handsontable-pro');
@@ -35,7 +37,7 @@ export class RequestTableComponent implements IComponentOptions {
 
 class RequestTableController {
   public static $inject: string[] = ['$scope', '$q', '$filter', '$localStorage', '$interpolate',
-                                     'RequestService', 'TaskService', 'SchemaService', 'CacheService'];
+              'RequestService', 'TaskService', 'SchemaService', 'CacheService', 'AlertService'];
 
   public request: Request;
   public tasks: Task[];
@@ -45,7 +47,7 @@ class RequestTableController {
 
   public constructor(private $scope: IScope, private $q: IQService, private $filter: IFilterService,
                      private $localStorage: any, private $interpolate: IInterpolateService, private requestService: RequestService,
-                     private taskService: TaskService, private schemaService: SchemaService, private cacheService: CacheService) {
+                     private taskService: TaskService, private schemaService: SchemaService, private cacheService: CacheService, private alertService: AlertService) {
 
     let settings: any = {
       requestStatus: this.request.status,
@@ -58,6 +60,7 @@ class RequestTableController {
       afterRender: this.onAfterRender,
       interpolate: this.$interpolate,
       cacheService: this.cacheService,
+      alertService: this.alertService,
       afterCreateRow: (index: number, count: number, source: any) => this.onAfterCreateRow(index, count, source),
       afterRemoveRow: () => this.onAfterRemoveRow()
     };
