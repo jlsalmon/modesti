@@ -5,5 +5,9 @@ package cern.modesti.plugin.spi;
  */
 public interface ExtensionPoint {
 
+  /**
+   * Gets the plugin identifier
+   * @return plugin identifier
+   */
   String getPluginId();
 }
