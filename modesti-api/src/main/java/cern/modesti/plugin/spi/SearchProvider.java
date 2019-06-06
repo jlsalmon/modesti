@@ -3,8 +3,6 @@ package cern.modesti.plugin.spi;
 import cern.modesti.point.Point;
 import cern.modesti.point.PointConverter;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,11 +24,5 @@ public interface SearchProvider extends ExtensionPoint {
    * @return a list of {@link Point} instances matching the given query
    */
   Page<Point> findAll(String query, Pageable pageable, PointConverter converter);
-  
-  /**
-   * Find all the points which id is provided as parameter
-   * @param pointIds list of point ids to search for
-   * @return List of {@link Point} found in the database
-   */
-  List<Point> findAllByPointId(List<Long> pointIds);
+
 }
