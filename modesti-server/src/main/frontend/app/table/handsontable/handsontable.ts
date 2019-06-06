@@ -11,6 +11,7 @@ import {ColumnFactory} from '../column-factory';
 import {Point} from '../../request/point/point';
 import { CacheService } from '../../cache/cache.service';
 import {StatusFilter} from '../../schema/filter/status-filter';
+import {AlertService} from '../../alert/alert.service';
 
 import 'latinize';
 import {ContextMenuFactory} from "./context-menu-factory";
@@ -31,6 +32,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   public taskService: TaskService;
   public interpolate: IInterpolateService;
   public cacheService: CacheService;
+  public alertService: AlertService;
   public requestStatus: string;
 
   public constructor(schema: Schema, data: any[], settings: any) {
@@ -41,6 +43,7 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     this.interpolate = settings.interpolate;
     this.cacheService = settings.cacheService;
     this.requestStatus = settings.requestStatus;
+    this.alertService = settings.alertService;
 
     let columnDefs: any[] = this.getColumnDefs();
     this.hotOptions = {
@@ -561,11 +564,19 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
   }
 
   private afterCreateRow(index: number, amount: number) {
+    console.log("Data len: ", this.data.length);
     if (this.settings.requestType === 'DELETE' || this.settings.requestType === 'UPDATE') {
       // Do NOT create new lines in DELETE and UPDATE requests
       this.data.splice(index, amount);
     } else {    
-      this.normaliseLineNumbers();
+      let maxRows : number = 500;
+      if (this.data.length > maxRows) {
+        this.data.splice(index, amount);
+        this.alertService.clear();
+        this.alertService.add('danger', 'The maximum number of rows in a request is ' + maxRows);
+      } else {
+        this.normaliseLineNumbers();
+      }
     }
   }
 
