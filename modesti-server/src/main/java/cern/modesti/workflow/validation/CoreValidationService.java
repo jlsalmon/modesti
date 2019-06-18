@@ -57,6 +57,7 @@ public class CoreValidationService implements ValidationService {
     try {
       if (RequestType.DELETE.equals(request.getType())) {
         // Delete requests should not be validated
+        request.setValid(true);
         return true;
       }
       
