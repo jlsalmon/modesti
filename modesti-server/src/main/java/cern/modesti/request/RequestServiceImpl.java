@@ -145,10 +145,8 @@ public class RequestServiceImpl implements RequestService {
       ((RequestHistoryServiceImpl) historyService).initialiseChangeHistory(request);
     }
 
-    if (!isEmptyRequest) {
-      // Initially updated/cloned requests are not valid (values in the database might be incorrect)
-      newRequest.setValid(false);
-    }
+    // Initially updated/cloned requests are not valid (values in the database might be incorrect)
+    request.setValid(isEmptyRequest || request.getType().equals(RequestType.DELETE));
     
     return newRequest;
   }
