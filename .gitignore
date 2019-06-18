@@ -4,6 +4,7 @@
 build/
 modesti-server/out
 modesti-server/hs_err*
+modesti-server/package-lock.json
 modesti-test/out
 /data/
 /out/
