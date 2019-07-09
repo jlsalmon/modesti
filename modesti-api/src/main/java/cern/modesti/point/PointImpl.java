@@ -2,6 +2,7 @@ package cern.modesti.point;
 
 import cern.modesti.schema.field.Field;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -57,7 +58,9 @@ public class PointImpl implements Point {
   @Override
   public <T> T getProperty(String key, Class<T> klass) {
     Object value = properties.get(key);
-    return new ObjectMapper().convertValue(value, klass);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.disable(MapperFeature.USE_ANNOTATIONS);
+    return mapper.convertValue(value, klass);
   }
 
   /**
