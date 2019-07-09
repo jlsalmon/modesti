@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -170,11 +171,12 @@ public class RequestServiceImpl implements RequestService {
    */
   @Override
   public Request save(Request updated) {
-    Request original = repository.findOne(updated.getId());
-    if (original == null) {
+    Optional<RequestImpl> originalOpt = repository.findById(updated.getId());
+    if (!originalOpt.isPresent()) {
       throw new RuntimeException(format("Request #%s was not found", updated.getId()));
     }
 
+    Request original = originalOpt.get();
     // The request id may not be modified manually.
     if (!Objects.equals(updated.getRequestId(), original.getRequestId())) {
       throw new IllegalArgumentException("Request ID cannot not be updated manually!");
