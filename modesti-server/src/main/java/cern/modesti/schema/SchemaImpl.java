@@ -78,6 +78,12 @@ public class SchemaImpl implements Schema {
 
   private List<RowCommentStateDescriptor> rowCommentStates;
 
+  /**
+   * Class constructor
+   * 
+   * @param id schema identifier
+   * @param description schema description 
+   */
   public SchemaImpl(String id, String description) {
     this.id = id;
     this.description = description;
