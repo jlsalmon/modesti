@@ -1,21 +1,13 @@
 package cern.modesti.workflow.validation;
 
-import cern.modesti.plugin.RequestProvider;
-import cern.modesti.request.Request;
-import cern.modesti.request.RequestService;
-import cern.modesti.request.RequestType;
-import cern.modesti.point.Point;
-import cern.modesti.schema.Schema;
-import cern.modesti.schema.SchemaRepository;
-import cern.modesti.schema.category.Category;
-import cern.modesti.schema.category.Constraint;
-import cern.modesti.schema.field.Field;
-import cern.modesti.schema.field.Option;
-import cern.modesti.schema.field.OptionsField;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
+import static java.lang.String.format;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -23,12 +15,24 @@ import org.springframework.core.env.Environment;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static java.lang.String.format;
+import cern.modesti.plugin.RequestProvider;
+import cern.modesti.point.Point;
+import cern.modesti.request.Request;
+import cern.modesti.request.RequestService;
+import cern.modesti.request.RequestType;
+import cern.modesti.schema.Schema;
+import cern.modesti.schema.SchemaImpl;
+import cern.modesti.schema.SchemaRepository;
+import cern.modesti.schema.category.Category;
+import cern.modesti.schema.category.Constraint;
+import cern.modesti.schema.field.Field;
+import cern.modesti.schema.field.Option;
+import cern.modesti.schema.field.OptionsField;
+import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Justin Lewis Salmon
@@ -64,8 +68,12 @@ public class CoreValidationService implements ValidationService {
       }
       
       boolean valid = true;
-      Schema schema = schemaRepository.findOne(request.getDomain());
+      Optional<SchemaImpl> schemaOpt = schemaRepository.findById(request.getDomain());
+      if (!schemaOpt.isPresent()) {
+        throw new RuntimeException("The schema was not found in the repository: " + request.getDomain());
+      }
       
+      Schema schema = schemaOpt.get();
       // Reset all points and clear any error messages.
       for (Point point : request.getPoints()) {
         point.setValid(true);
