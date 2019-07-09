@@ -18,6 +18,65 @@ export class AuthService {
   public login(): IPromise<User> {
     let q: IDeferred<User> = this.$q.defer();
 
+    this.isTnAddress().then((tnAddress: boolean) => {
+      if (tnAddress) {
+        this.showForm(q);
+      } else {
+        this.doOauthLogin(q);
+      }
+      
+    });
+
+    return q.promise;
+  }
+
+  private doOauthLogin(q : IDeferred<User> ) : void {
+    this.$http.get('/api/user').then((response: any) => {
+      if (response.data.authenticated !== undefined && response.data.authenticated === true) {
+        this.$localStorage.user = response.data;    
+        this.setCommonUserProperties();  
+        q.resolve(this.$localStorage.user);
+      } else {
+        window.location.href = '/login'; 
+      }
+    },
+    (error: any) => {
+      console.log("Error in call to '/api/user'", error);
+      this.showForm(q);
+    });
+
+  }
+
+  private isTnAddress() : IPromise<Boolean> {
+    let q: IDeferred<Boolean> = this.$q.defer();
+
+    this.$http.get('/api/is_tn_address').then((response: any) => {
+      if (response.data !== undefined) {
+        q.resolve(response.data);
+      } else {
+        q.resolve(false);
+      }
+    }, 
+    () => {
+      q.resolve(false);
+    });
+
+    return q.promise;
+  }
+
+  private setCommonUserProperties() : void {
+    if (this.$localStorage.user === undefined) {
+      return;
+    }
+    
+    let user : any = this.$localStorage.user;
+    user.username = user.name;
+    user.firstName = user.userAuthentication.details.first_name;
+    user.lastName = user.userAuthentication.details.last_name;
+    this.$localStorage.user = user;
+  }
+
+  private showForm(q : IDeferred<User> ) : void {
     if (this.loginModalOpened) {
       return this.$q.when(undefined);
     }
@@ -39,8 +98,6 @@ export class AuthService {
       this.authService.loginCancelled();
       this.$state.go('home');
     });
-
-    return q.promise;
   }
 
   public doLogin(credentials: any): IPromise<{}> {
@@ -53,7 +110,7 @@ export class AuthService {
 
     // Set ignoreAuthModule so that angular-http-auth doesn't show another modal
     // if the authentication fails
-    this.$http.get('/api/login', {headers: headers, params: {ignoreAuthModule: true}}).then((response: any) => {
+    this.$http.get('/api/ldap_login', {headers: headers, params: {ignoreAuthModule: true}}).then((response: any) => {
       console.log('authenticated');
 
       // Set data in local storage for other parts of the app to use
@@ -79,13 +136,11 @@ export class AuthService {
     let q: IDeferred<{}> = this.$q.defer();
 
     this.$http.get('/logout').then(() => {
-      console.log('logged out');
-
       this.$localStorage.user = undefined;
       this.$cookies.remove('JSESSIONID');
       delete this.$cookies.JSESSIONID;
-
       q.resolve();
+      window.location.href = 'https://login.cern.ch/adfs/ls/?wa=wsignout1.0'; 
     },
 
     (error: any) => {
