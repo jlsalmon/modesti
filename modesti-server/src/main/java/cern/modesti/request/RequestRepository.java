@@ -2,7 +2,7 @@
 package cern.modesti.request;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,8 +24,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 @RepositoryRestResource(path = "requests", collectionResourceRel = "requests", itemResourceRel = "request",
     excerptProjection = RequestProjection.class)
-public interface RequestRepository extends MongoRepository<RequestImpl, String>, QueryDslPredicateExecutor<RequestImpl> {
-
+public interface RequestRepository extends MongoRepository<RequestImpl, String>, QuerydslPredicateExecutor<RequestImpl> {
+  
   /**
    * Retrieve a single {@link Request} instance.
    *
@@ -57,7 +57,7 @@ public interface RequestRepository extends MongoRepository<RequestImpl, String>,
 
   @PreAuthorize("@authService.canDelete(#request, principal)")
   @Override
-  void delete(String id);
+  void deleteById(String id);
 
   @PreAuthorize("@authService.canDelete(#request, principal)")
   @Override
