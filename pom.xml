@@ -41,6 +41,13 @@
       <url>http://artifactory/beco-development-local</url>
     </snapshotRepository>
   </distributionManagement>
+  
+  <scm>
+    <url>https://gitlab.cern.ch/modesti/modesti</url>
+    <connection>scm:git:ssh://git@gitlab.cern.ch:7999/modesti/modesti.git</connection>
+    <developerConnection>scm:git:ssh://git@gitlab.cern.ch:7999/modesti/modesti.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
 
   <dependencyManagement>
     <dependencies>
