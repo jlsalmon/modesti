@@ -16,6 +16,6 @@ public class SchemaTests extends BaseIntegrationTest {
 
   @Test
   public void schemaIsLoaded() {
-    assertTrue(schemaRepository.exists("DUMMY"));
+    assertTrue(schemaRepository.existsById("DUMMY"));
   }
 }
