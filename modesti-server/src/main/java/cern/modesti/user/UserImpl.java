@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.hateoas.core.Relation;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -39,7 +40,7 @@ public class UserImpl implements User, UserDetails {
   private String email;
 
   @JsonDeserialize(contentAs = SimpleGrantedAuthority.class)
-  private List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+  private List<GrantedAuthority> authorities = new ArrayList<>();
 
   @Override
   public String getPassword() {
