@@ -2,7 +2,6 @@ package cern.modesti.security.ldap;
 
 import cern.modesti.user.User;
 import cern.modesti.user.UserImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.support.AbstractContextMapper;
@@ -13,8 +12,6 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-
-import static java.lang.String.format;
 
 /**
  * This class is responsible for mapping the attributes of an LDAP user object
@@ -29,7 +26,6 @@ import static java.lang.String.format;
  * @author Justin Lewis Salmon
  */
 @Component
-@Slf4j
 public class LdapUserDetailsMapper extends AbstractContextMapper<User> implements UserDetailsContextMapper {
 
   @Override
@@ -67,5 +63,7 @@ public class LdapUserDetailsMapper extends AbstractContextMapper<User> implement
   }
 
   @Override
-  public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {}
+  public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
+    // Nothing to do
+  }
 }
