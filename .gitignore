@@ -15,6 +15,7 @@ spring-shell.log
 .classpath
 .project
 .gradle
+project.version
 make_tunnels*
 .DS_Store
 .idea/
