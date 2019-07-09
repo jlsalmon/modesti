@@ -2,6 +2,7 @@ import {AuthService} from './auth/auth.service';
 import {User} from './user/user';
 import IComponentOptions = angular.IComponentOptions;
 import IScope = angular.IScope;
+import IPromise = angular.IPromise;
 import IRootScopeService = angular.IRootScopeService;
 import ILocationService = angular.ILocationService;
 import IStateService = angular.ui.IStateService;
@@ -18,7 +19,11 @@ class MainController {
 
   constructor(private $scope: IScope, private $rootScope: IRootScopeService, private $location: ILocationService,
               private authService: AuthService, private httpBuffer: any, private $state: IStateService, private $window: any) {
-    this.user = authService.getCurrentUser();
+
+    let userPromise: IPromise<User> = this.authService.login();
+    userPromise.then((response: any) => {
+      this.user = authService.getCurrentUser();
+    });
 
     // When an API request returns 401 Unauthorized, angular-http-auth broadcasts
     // this event. We simply catch it and show the login modal.
