@@ -31,6 +31,17 @@
     <module>modesti-test</module>
   </modules>
 
+  <distributionManagement>
+    <repository>
+      <id>beco-release</id>
+      <url>http://artifactory/beco-release-local</url>
+    </repository>
+    <snapshotRepository>
+      <id>beco-development</id>
+      <url>http://artifactory/beco-development-local</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -170,22 +181,22 @@
       <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-joda</artifactId>
-        <version>${jackson-version}</version>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>${jackson-version}</version>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>${jackson-version}</version>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>${jackson-version}</version>
+        <version>${jackson.version}</version>
       </dependency>
       
       <dependency>
