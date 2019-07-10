@@ -149,7 +149,8 @@ class RequestToolbarController {
   }
 
   public canCloneRequest() : boolean {
-    return this.request.type == 'CREATE' && (this.schema.configuration === null || this.schema.configuration.cloneFromUi);
+    return this.request.type == 'CREATE' && 
+      (this.schema.configuration === null || this.schema.configuration === undefined || this.schema.configuration.cloneFromUi);
   }
 
   public cloneRequest(): void {
