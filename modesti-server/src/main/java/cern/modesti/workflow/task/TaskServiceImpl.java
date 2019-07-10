@@ -4,7 +4,6 @@ import cern.modesti.request.Request;
 import cern.modesti.user.User;
 import cern.modesti.security.UserService;
 import cern.modesti.workflow.AuthService;
-import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
@@ -25,7 +24,6 @@ import static java.lang.String.format;
  * @author Justin Lewis Salmon
  */
 @Service
-@Slf4j
 public class TaskServiceImpl implements TaskService {
 
   @Autowired
