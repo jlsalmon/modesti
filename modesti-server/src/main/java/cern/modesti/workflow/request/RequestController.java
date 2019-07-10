@@ -1,7 +1,7 @@
 package cern.modesti.workflow.request;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +39,7 @@ public class RequestController {
   @PreAuthorize("permitAll")
   public HttpEntity<Resource<Request>> action(@PathVariable("id") String requestId, @RequestBody RequestAction action,
 			Principal principal) {
-    User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+    User user = (User) ((AbstractAuthenticationToken) principal).getPrincipal();
     Request request = requestService.execute(requestId, action, user);
     
     if (request != null) {
