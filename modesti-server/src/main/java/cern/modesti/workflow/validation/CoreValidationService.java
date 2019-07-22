@@ -25,6 +25,7 @@ import cern.modesti.request.RequestType;
 import cern.modesti.schema.Schema;
 import cern.modesti.schema.SchemaImpl;
 import cern.modesti.schema.SchemaRepository;
+import cern.modesti.schema.UnknownSchemaException;
 import cern.modesti.schema.category.Category;
 import cern.modesti.schema.category.Constraint;
 import cern.modesti.schema.field.Field;
@@ -70,7 +71,7 @@ public class CoreValidationService implements ValidationService {
       boolean valid = true;
       Optional<SchemaImpl> schemaOpt = schemaRepository.findById(request.getDomain());
       if (!schemaOpt.isPresent()) {
-        throw new RuntimeException("The schema was not found in the repository: " + request.getDomain());
+        throw new UnknownSchemaException(request.getDomain());
       }
       
       Schema schema = schemaOpt.get();
