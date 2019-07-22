@@ -15,7 +15,7 @@ build_and_publish:
 build:
   stage: build
   script:
-    - mvn clean package -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+    - mvn clean package 
   except:
     - master
 
