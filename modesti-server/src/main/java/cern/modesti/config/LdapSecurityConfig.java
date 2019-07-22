@@ -58,7 +58,7 @@ import cern.modesti.security.mock.MockUserServiceImpl;
  * @author Justin Lewis Salmon
  */
 @Configuration
-@EnableWebSecurity(debug=true)
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(1)
 public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
