@@ -1,8 +1,6 @@
 package cern.modesti.request.metrics;
 
-import cern.modesti.request.Request;
 import cern.modesti.request.RequestImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.mapreduce.GroupBy;
@@ -21,7 +19,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * @author Justin Lewis Salmon
  */
 @RestController
-@Slf4j
 public class MetricsController {
 
   @Autowired
