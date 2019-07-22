@@ -1,20 +1,16 @@
 package cern.modesti.workflow.task;
 
-import cern.modesti.request.Request;
-import cern.modesti.request.RequestService;
-import cern.modesti.user.User;
-import cern.modesti.workflow.notification.CoreNotifications;
-import cern.modesti.workflow.notification.NotificationService;
-import cern.modesti.security.UserService;
-import lombok.extern.slf4j.Slf4j;
-import org.activiti.bpmn.model.BaseElement;
+import static java.lang.String.format;
+
+import java.util.Collections;
+
+import org.activiti.bpmn.model.ActivitiListener;
+import org.activiti.bpmn.model.ImplementationType;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.TaskListener;
 import org.activiti.engine.impl.bpmn.parser.BpmnParse;
-import org.activiti.engine.impl.bpmn.parser.handler.AbstractBpmnParseHandler;
 import org.activiti.engine.impl.bpmn.parser.handler.UserTaskParseHandler;
-import org.activiti.engine.impl.task.TaskDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,9 +18,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-
-import static java.lang.String.format;
+import cern.modesti.request.Request;
+import cern.modesti.request.RequestService;
+import cern.modesti.security.UserService;
+import cern.modesti.user.User;
+import cern.modesti.workflow.notification.CoreNotifications;
+import cern.modesti.workflow.notification.NotificationService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Custom {@link TaskListener} registered globally via custom
@@ -36,7 +36,8 @@ import static java.lang.String.format;
  */
 @Component
 @Slf4j
-public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask> implements TaskListener {
+public class UserTaskAssignmentHandler extends UserTaskParseHandler implements TaskListener {
+  private static final long serialVersionUID = 2958253516432482700L;
 
   @Autowired
   private RequestService requestService;
@@ -46,7 +47,10 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
   
   @Autowired
   private NotificationService notificationService;
-
+  
+  @Autowired
+  org.activiti.engine.TaskService  taskService;
+  
   @Override
   public void notify(DelegateTask task) {
     log.debug(format("handling assignment of task %s", task.getName()));
@@ -83,14 +87,18 @@ public class UserTaskAssignmentHandler extends AbstractBpmnParseHandler<UserTask
   }
 
   @Override
-  protected Class< ? extends BaseElement> getHandledType() {
-    return UserTask.class;
+  protected void executeParse(BpmnParse bpmnParse, UserTask userTask) {
+    super.executeParse(bpmnParse, userTask);
+    
+    addListener(userTask, TaskListener.EVENTNAME_ASSIGNMENT);
+    addListener(userTask, TaskListener.EVENTNAME_DELETE);
   }
-
-  @Override
-  protected void executeParse(BpmnParse bpmnParse, UserTask element) {
-    TaskDefinition taskDefinition = (TaskDefinition) bpmnParse.getCurrentActivity().getProperty(UserTaskParseHandler.PROPERTY_TASK_DEFINITION);
-    taskDefinition.addTaskListener(TaskListener.EVENTNAME_ASSIGNMENT, this);
-    taskDefinition.addTaskListener(TaskListener.EVENTNAME_DELETE, this);
+  
+  private void addListener(UserTask userTask, String event) {
+    ActivitiListener listener = new ActivitiListener();
+    listener.setEvent(event);
+    listener.setImplementationType(ImplementationType.IMPLEMENTATION_TYPE_INSTANCE);
+    listener.setInstance(this);
+    userTask.getTaskListeners().add(listener);
   }
 }
