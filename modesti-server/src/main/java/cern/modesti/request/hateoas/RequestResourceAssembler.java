@@ -42,7 +42,7 @@ public class RequestResourceAssembler extends ResourceAssemblerSupport<Request, 
   }
 
   @Override
-  public Resource toResource(Request request) {
+  public Resource<Request> toResource(Request request) {
     Link self = entityLinks.linkToSingleResource(RequestImpl.class, request.getId()).withSelfRel();
     return new Resource<>(request, self);
   }
