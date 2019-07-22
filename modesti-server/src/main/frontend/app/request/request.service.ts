@@ -153,7 +153,7 @@ export class RequestService {
     let requests: any = this.restangular.all('requests');
 
     this.$http.post('/api/requests', request).then((response: any) => {
-      let location: string = response.headers('Location');
+      let location: string = response.config.url + '/' + response.data.requestId; 
       console.log('created request: ' + location);
       q.resolve(location);
     },
