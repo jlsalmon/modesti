@@ -63,6 +63,13 @@
           <releases><enabled>false</enabled></releases>
           <snapshots><enabled>true</enabled></snapshots>
         </repository>
+        <repository>
+          <id>beco-repo1</id>
+          <name>CERN BE-CO repo1</name>
+          <url>http://artifactory/repo1</url>
+          <releases><enabled>false</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
 
       </repositories>
       <pluginRepositories>
