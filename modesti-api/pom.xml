@@ -68,6 +68,7 @@
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-mockito-release-full</artifactId>
+      <classifier>full</classifier>
     </dependency>
   </dependencies>
 
