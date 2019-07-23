@@ -15,7 +15,7 @@ build_and_publish:
 build:
   stage: build
   script:
-    - mvn clean package -s settings.xml 
+    - mvn clean package -s settings.xml -U
   except:
     - master
 
