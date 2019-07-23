@@ -302,6 +302,7 @@
         <groupId>org.powermock</groupId>
         <artifactId>powermock-mockito-release-full</artifactId>
         <version>1.6.4</version>
+        <classifier>full</classifier>
         <scope>test</scope>
       </dependency>
       
