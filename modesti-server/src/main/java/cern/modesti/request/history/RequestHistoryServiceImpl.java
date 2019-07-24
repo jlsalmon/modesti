@@ -37,11 +37,29 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
   private SchemaRepository schemaRepository;
 
   
+  public RequestHistory findOneByRequestId(String id) {
+    List<? extends RequestHistory> entries = requestHistoryRepository.findAllByRequestId(id);
+
+    if (entries != null && !entries.isEmpty()) {
+      // Bug fix... In case there are more than 1 entries, find the one 
+      // with more events and chose that one...
+      RequestHistory entry = entries.get(0);
+      for (RequestHistory r : entries) {
+        if (entry==null || r.getEvents().size() > entry.getEvents().size()) {
+          entry = r;
+        }
+      }
+      return entry;
+    }
+    
+    return null;
+  }
+  
   @Override
   public void initialiseChangeHistory(Request request) {
     log.info(format("creating new base history record for request #%s", request.getRequestId()));
 
-    RequestHistoryImpl entry = requestHistoryRepository.findOneByRequestId(request.getRequestId());
+    RequestHistory entry = findOneByRequestId(request.getRequestId());
     if (entry != null) {
       return;
     }
@@ -54,14 +72,14 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
     Schema schema = schemaOpt.get();
     entry = new RequestHistoryImpl(new ObjectId().toString(), request.getRequestId(),
         schema.getIdProperty(), request, new ArrayList<>(), false);
-    requestHistoryRepository.save(entry);
+    requestHistoryRepository.save((RequestHistoryImpl) entry);
   }
 
 
   @Override
   public void saveChangeHistory(Request modified) {
     log.info(format("processing change history for request #%s", modified.getRequestId()));
-    RequestHistoryImpl entry = requestHistoryRepository.findOneByRequestId(modified.getRequestId());
+    RequestHistoryImpl entry = (RequestHistoryImpl) findOneByRequestId(modified.getRequestId());
     if (entry == null) {
       initialiseChangeHistory(modified);
       return;
@@ -79,7 +97,7 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
 
   @Override
   public List<Change> getChanges(Request request) {
-    RequestHistory entry = requestHistoryRepository.findOneByRequestId(request.getRequestId());
+    RequestHistory entry = findOneByRequestId(request.getRequestId());
     if (entry != null && !entry.getEvents().isEmpty()) {
       return entry.getEvents().get(0).getChanges();
     } else {
@@ -91,7 +109,7 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
   @Override
   public void deleteChangeHistory(Request request) {
     log.info(format("deleting change history for request #%s", request.getRequestId()));
-    RequestHistory entry = requestHistoryRepository.findOneByRequestId(request.getRequestId());
+    RequestHistory entry = findOneByRequestId(request.getRequestId());
     requestHistoryRepository.deleteById(entry.getId());
   }
 }

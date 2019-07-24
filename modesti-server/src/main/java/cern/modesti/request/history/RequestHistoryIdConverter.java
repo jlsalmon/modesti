@@ -18,13 +18,15 @@ public class RequestHistoryIdConverter implements BackendIdConverter {
 
   @Autowired
   private RequestHistoryRepository requestHistoryRepository;
+  
+  @Autowired
+  private RequestHistoryServiceImpl requestHistoryService;
 
   @Override
   public Serializable fromRequestId(String id, Class<?> entityType) {
 
     if (entityType.equals(RequestHistoryImpl.class)) {
-      RequestHistory entry = requestHistoryRepository.findOneByRequestId(id);
-
+      RequestHistory entry = requestHistoryService.findOneByRequestId(id);
       if (entry != null) {
         return entry.getId();
       }
