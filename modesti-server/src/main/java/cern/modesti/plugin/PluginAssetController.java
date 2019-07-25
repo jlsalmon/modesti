@@ -161,7 +161,8 @@ public class PluginAssetController {
   
   private void addPluginStaticResources(List<String> assets, RequestProvider plugin, Resource moduleDescriptor, String host) throws IOException, URISyntaxException {
     for (Resource resource : resolver.getResources("classpath*:/static/**")) {
-      if (resourceBelongsToPlugin(resource, plugin) && !resource.getFilename().equals(moduleDescriptor.getFilename()) ) {
+      if (resourceBelongsToPlugin(resource, plugin) && resource.getFilename()!=null 
+          && !resource.getFilename().equals(moduleDescriptor.getFilename()) ) {
         log.trace("found resource for plugin {}: {}", plugin.getMetadata().getId(), resource.getURL());
 
         if (FilenameUtils.isExtension(resource.getFilename(), new String[]{"js", "html", "css"})) {

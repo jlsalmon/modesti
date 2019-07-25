@@ -66,11 +66,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
     List<ServerAddress> hosts = new ArrayList<>();
     for (Object hostname : env.getRequiredProperty("mongodb.host", List.class)) {
-      try {
-        hosts.add(new ServerAddress((String) hostname));
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+      hosts.add(new ServerAddress((String) hostname));
     }
 
     String username = env.getRequiredProperty("mongodb.username");

@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+/**
+ * Configuration class for OAuth authentication
+ * 
+ * @author Ivan Prieto Barreiro
+ */
 @EnableOAuth2Sso
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
