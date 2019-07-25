@@ -36,7 +36,12 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
   @Autowired
   private SchemaRepository schemaRepository;
 
-  
+  /**
+   * Finds one request by request id. The method is a workaround to fix the problem
+   * when there are more than one entries in the repository with the same requestID
+   * @param id the request id
+   * @return The request matching the requestId or null if it was not found.
+   */
   public RequestHistory findOneByRequestId(String id) {
     List<? extends RequestHistory> entries = requestHistoryRepository.findAllByRequestId(id);
 

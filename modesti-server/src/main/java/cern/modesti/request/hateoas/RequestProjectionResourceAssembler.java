@@ -23,6 +23,9 @@ import java.util.List;
 @Component
 public class RequestProjectionResourceAssembler extends ResourceAssemblerSupport<RequestProjection, Resource> {
 
+  /** 
+   * Default constructor
+   */
   public RequestProjectionResourceAssembler() {
     super(RequestSearchController.class, Resource.class);
   }

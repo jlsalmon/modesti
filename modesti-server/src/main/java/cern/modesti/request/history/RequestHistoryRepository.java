@@ -16,7 +16,7 @@ public interface RequestHistoryRepository extends MongoRepository<RequestHistory
    * @param requestId The request identifier
    * @return The request with the specified identifier or null if it was not found
    */
-//  RequestHistoryImpl findOneByRequestId(String requestId);
+  RequestHistoryImpl findOneByRequestId(String requestId);
   
   /**
    * Finds all the requests with the specified request identifier. This method was added

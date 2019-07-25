@@ -65,6 +65,12 @@ public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
   Environment env;
+  
+  private static final String LDAP_BASE = "ldap.base";
+  private static final String LDAP_USER_BASE = "ldap.user.base";
+  private static final String LDAP_USER_FILTER = "ldap.user.filter";
+  private static final String LDAP_GROUP_BASE = "ldap.group.base";
+  private static final String LDAP_GROUP_FILTER = "ldap.group.filter";
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -100,14 +106,12 @@ public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
 
     if (env.acceptsProfiles("dev")) {
       auth.authenticationProvider(mockAuthenticationProvider());
-    }
-
-    else {
+    } else {
       auth.authenticationProvider(ldapAuthenticationProvider())
           .ldapAuthentication()
-          .userDnPatterns(env.getRequiredProperty("ldap.user.filter"))
-          .groupSearchBase(env.getRequiredProperty("ldap.group.base"))
-          .groupSearchFilter(env.getRequiredProperty("ldap.group.filter"))
+          .userDnPatterns(env.getRequiredProperty(LDAP_USER_FILTER))
+          .groupSearchBase(env.getRequiredProperty(LDAP_GROUP_BASE))
+          .groupSearchFilter(env.getRequiredProperty(LDAP_GROUP_FILTER))
           .contextSource(contextSource());
     }
   }
@@ -122,8 +126,8 @@ public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapAuthoritiesPopulator ldapAuthoritiesPopulator() {
     return new RecursiveLdapAuthoritiesPopulator(anonymousContextSource(),
-        env.getRequiredProperty("ldap.base"), env.getRequiredProperty("ldap.user.base"),
-        env.getRequiredProperty("ldap.group.base"), env.getRequiredProperty("ldap.group.filter"));
+        env.getRequiredProperty(LDAP_BASE), env.getRequiredProperty(LDAP_USER_BASE),
+        env.getRequiredProperty(LDAP_GROUP_BASE), env.getRequiredProperty(LDAP_GROUP_FILTER));
   }
 
   @Bean
@@ -134,7 +138,7 @@ public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapAuthenticator ldapAuthenticator() {
     BindAuthenticator authenticator = new BindAuthenticator(contextSource());
-    String[] userDnPatterns = new String[]{env.getRequiredProperty("ldap.user.filter")};
+    String[] userDnPatterns = new String[]{env.getRequiredProperty(LDAP_USER_FILTER)};
     authenticator.setUserDnPatterns(userDnPatterns);
     return authenticator;
   }
@@ -142,7 +146,7 @@ public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapContextSource contextSource() {
     DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.auth.url"));
-    contextSource.setBase(env.getRequiredProperty("ldap.base"));
+    contextSource.setBase(env.getRequiredProperty(LDAP_BASE));
     return contextSource;
   }
 
@@ -154,8 +158,8 @@ public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapUserSearch ldapUserSearch() {
     return new FilterBasedLdapUserSearch(
-        env.getRequiredProperty("ldap.user.base"), 
-        env.getRequiredProperty("ldap.group.filter"),
+        env.getRequiredProperty(LDAP_USER_BASE), 
+        env.getRequiredProperty(LDAP_GROUP_FILTER),
         anonymousContextSource());
   }
   
@@ -167,7 +171,7 @@ public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapContextSource anonymousContextSource() {
     DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.anon.url"));
-    contextSource.setBase(env.getRequiredProperty("ldap.base"));
+    contextSource.setBase(env.getRequiredProperty(LDAP_BASE));
     contextSource.setAnonymousReadOnly(true);
     return contextSource;
   }
