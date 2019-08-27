@@ -22,6 +22,8 @@ import cern.modesti.request.counter.CounterService;
 import cern.modesti.request.history.RequestHistoryService;
 import cern.modesti.request.history.RequestHistoryServiceImpl;
 import cern.modesti.request.spi.RequestEventHandler;
+import cern.modesti.schema.SchemaImpl;
+import cern.modesti.schema.SchemaRepository;
 import cern.modesti.security.UserService;
 import cern.modesti.user.User;
 import cern.modesti.workflow.AuthService;
@@ -43,6 +45,9 @@ public class RequestServiceImpl implements RequestService {
 
   @Autowired
   private RequestRepository repository;
+  
+  @Autowired
+  private SchemaRepository schemaRepository;
 
   @Autowired
   private RequestHistoryService historyService;
@@ -145,8 +150,14 @@ public class RequestServiceImpl implements RequestService {
       ((RequestHistoryServiceImpl) historyService).initialiseChangeHistory(request);
     }
 
-    // Initially updated/cloned requests are not valid (values in the database might be incorrect)
-    request.setValid(isEmptyRequest || request.getType().equals(RequestType.DELETE));
+    // Checks the schema configuration to see if it allows create requests from the UI.
+    // This is a (not too good) way to distinguish between PSEN and the other plug-ins.
+    // TODO: Must be modified when the REST service to create requests is implemented!!!
+    SchemaImpl schema = schemaRepository.findOne(request.getDomain());
+    if (schema.getConfiguration().isCreateFromUi()) {
+      // Initially updated/cloned requests are not valid (values in the database might be incorrect)
+      request.setValid(isEmptyRequest || request.getType().equals(RequestType.DELETE));
+    }
     
     return newRequest;
   }
