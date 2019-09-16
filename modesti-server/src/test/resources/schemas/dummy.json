@@ -1,3 +1,7 @@
 {
-  "id": "DUMMY"
+  "id": "DUMMY",
+  "configuration": {
+    "createFromUi" : true,
+    "cloneFromUi" : true
+  }
 }
