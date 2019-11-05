@@ -154,7 +154,7 @@ public class RequestServiceImpl implements RequestService {
     // This is a (not too good) way to distinguish between PSEN and the other plug-ins.
     // TODO: Must be modified when the REST service to create requests is implemented!!!
     SchemaImpl schema = schemaRepository.findOne(request.getDomain());
-    if (schema.getConfiguration().isCreateFromUi()) {
+    if (schema.getConfiguration() == null || schema.getConfiguration().isCreateFromUi()) {
       // Initially updated/cloned requests are not valid (values in the database might be incorrect)
       request.setValid(isEmptyRequest || request.getType().equals(RequestType.DELETE));
     }
