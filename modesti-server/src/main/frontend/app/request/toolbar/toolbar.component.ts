@@ -119,7 +119,7 @@ class RequestToolbarController {
   public canDeleteRequest() : boolean {
     let task : Task = this.taskService.getCurrentTask();
     let authorized : boolean = this.taskService.isCurrentUserAuthorised(task);
-    return authorized && this.request.status !== 'FOR_CONFIGURATION';
+    return authorized && this.request.status !== 'FOR_CONFIGURATION' && this.request.status !== 'FOR_CSAM_SYNC';
   }
 
   public deleteRequest(): void {
