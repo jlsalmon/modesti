@@ -31,6 +31,14 @@ export abstract class Table {
 
   public abstract toggleCategory(category: Category): void;
 
+  /**
+   * Called to check if a category is selectable (for the column selector)
+   * Categories can be hidden in Handsontable if all fields are flagged as 'searchFieldOnly'
+   * @param category The category to verify
+   * @returns TRUE if and only if the category is selectable to show/hide columns
+   */
+  public abstract isSelectableCategory(category: Category): boolean;
+
   public abstract applyDefaultFilter(status: string) : void;
 
   public abstract isVisibleColumn(field: Field): boolean;

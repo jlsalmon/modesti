@@ -437,6 +437,19 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
     return visible;
   }
 
+  public isSelectableCategory(category: Category): boolean {
+    let selectable : boolean = false;
+
+    category.fields.forEach((field: Field) => {
+      if (!field.searchFieldOnly) {
+        selectable = true;
+        return;
+      }
+    });
+
+    return selectable;
+  }
+
   private getColumnIndex(field: any): number {
     let column: any;
 

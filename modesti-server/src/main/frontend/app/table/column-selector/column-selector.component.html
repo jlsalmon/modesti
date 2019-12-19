@@ -18,14 +18,13 @@
 
       <div class="popover-content-scroll">
         <ul>
-          <li ng-repeat="category in $ctrl.schema.categories"
+          <li ng-repeat="category in $ctrl.getSelectableCategories()"
               class="category-label"
               ng-click="$ctrl.toggleCategory(category)">
             <span>
               <strong>{{::category.name}}</strong>
 
-              <i ng-if="$ctrl.table.isVisibleColumnGroup(category.fields)" class="fa fa-check pull-right"
-                 style="margin-top: 4px;"></i>
+              <i ng-if="$ctrl.table.isVisibleColumnGroup(category.fields)" class="fa fa-check pull-right" style="margin-top: 4px;"></i>
               <i ng-if="$ctrl.table.isInvalidCategory(category)" class="fa fa-exclamation-triangle text-danger pull-right" style="margin-top: 4px;"></i>
             </span>
           </li>

@@ -132,6 +132,10 @@ export class AgGrid extends Table {
     return visible;
   }
 
+  public isSelectableCategory(category: Category): boolean {
+    return true;
+  }
+
   public showSelectedRowsOnly(show: boolean) : void {
     this.showSelectedRows = show;
     this.gridOptions.api.purgeVirtualPageCache();

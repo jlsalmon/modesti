@@ -41,4 +41,16 @@ class ColumnSelectorController {
   public applyDefaultFilter() : void {
     this.table.applyDefaultFilter(this.request.status);
   }
+
+  public getSelectableCategories() : any {
+    let categories : Category[] = [];
+    
+    this.schema.categories.forEach((category: Category) => {
+      if (this.table.isSelectableCategory(category)) {
+        categories.push(category);
+      } 
+    });
+     
+    return categories;
+  }
 }
