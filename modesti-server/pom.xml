@@ -182,7 +182,9 @@
             </goals>
             <phase>package</phase>
             <configuration>
-              <descriptors><descriptor>src/dist/assembly.xml</descriptor></descriptors>
+              <descriptors>
+              	<descriptor>src/dist/assembly.xml</descriptor>
+              </descriptors>
             </configuration>
           </execution>
         </executions>
