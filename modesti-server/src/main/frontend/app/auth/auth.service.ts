@@ -37,7 +37,7 @@ export class AuthService {
         this.setCommonUserProperties();  
         q.resolve(this.$localStorage.user);
       } else {
-        window.location.href = '/login'; 
+        window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
       }
     },
     (error: any) => {

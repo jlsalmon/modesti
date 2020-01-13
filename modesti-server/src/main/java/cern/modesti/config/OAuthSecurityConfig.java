@@ -1,6 +1,9 @@
 package cern.modesti.config;
 
+import java.io.IOException;
 import java.security.Principal;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +17,7 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -39,6 +43,19 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
   @GetMapping("/api/user")
   public Principal user(Principal principal) {
     return principal;
+  }
+  
+  /**
+   * @param response Response redirects back to the frontend page.
+   * @param callback The URL of frontend to which backend will redirect after successful log in.
+   * @throws IOException sendRedirect failed.
+   */
+  @GetMapping("/api/sso")
+  public void sso(
+    HttpServletResponse response,
+    @RequestParam("callback") String callback
+  ) throws IOException {
+    response.sendRedirect(callback);
   }
   
   @Override
