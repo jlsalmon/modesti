@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.projection.ProjectionFactory;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 
 /**
  * REST controller for searching {@link Request} instances via RSQL queries.
@@ -38,6 +41,8 @@ public class RequestSearchController {
   
   @Autowired
   private RequestProjectionResourceAssembler projectionAssembler;
+  
+  private ProjectionFactory factory = new SpelAwareProxyProjectionFactory();
 
   /**
    * Searches for requests in the repository using the provided query (if any)
@@ -52,7 +57,10 @@ public class RequestSearchController {
     if (!query.isEmpty()) {
       Predicate predicate = new RsqlExpressionBuilder<>(RequestImpl.class).createExpression(query);
       log.debug(predicate.toString());
-      requests = repository.findAllProjectedBy(predicate, pageable);
+      // The next two lines are a workaround since the call to repository.findAllProjectedBy(predicate, pageable)
+      // is not returning the correct results...
+      Page<RequestImpl> requestImpl = repository.findAll(predicate, pageable);
+      requests = requestImpl.map(p -> factory.createProjection(RequestProjection.class, p));
     } else {
       requests = repository.findAllProjectedBy(pageable);
     }

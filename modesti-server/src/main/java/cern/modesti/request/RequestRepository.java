@@ -46,13 +46,12 @@ public interface RequestRepository extends MongoRepository<RequestImpl, String>,
   Page<RequestProjection> findAllProjectedBy(Pageable pageable);
   
   /**
-   * Get a page of requests using the {@link RequestProjection} projection
+   * Get a page of requests fulfilling the provided predicate
    * @param predicate Predicate for searching requests
    * @param pageable Pagination information
    * @return Page of projected requests 
    */
-  Page<RequestProjection> findAllProjectedBy(Predicate predicate, Pageable pageable);
-  
+  Page<RequestImpl> findAll(Predicate predicate, Pageable pageable);
   
   /**
    * Save a single {@link Request} instance.
