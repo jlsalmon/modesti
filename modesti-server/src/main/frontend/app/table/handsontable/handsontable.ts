@@ -784,6 +784,8 @@ export class HandsonTable extends Table implements CopyPasteAware, UndoRedoAware
       if (field) {
         // Remove accented characters
         newValue = latinize(newValue);
+        // Remove whitespaces
+        newValue = newValue.trim();
 
         // Force uppercase if necessary
         if (field.uppercase === true) {

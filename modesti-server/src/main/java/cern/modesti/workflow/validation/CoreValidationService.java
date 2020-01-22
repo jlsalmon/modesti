@@ -14,6 +14,8 @@ import cern.modesti.schema.field.Option;
 import cern.modesti.schema.field.OptionsField;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -143,6 +145,8 @@ public class CoreValidationService implements ValidationService {
 
     for (Point point : request.getNonEmptyPoints()) {
 
+      valid &= validateTagName(point);
+      
       for (Category category : categories) {
         Map<String, Object> editable = category.getEditable();
         if (editable.containsKey("status")) {
@@ -215,6 +219,18 @@ public class CoreValidationService implements ValidationService {
     }
 
     return valid;
+  }
+
+  private boolean validateTagName(Point point) {
+    String tagname = point.getProperty("tagname", String.class);
+    
+    if (StringUtils.containsWhitespace(tagname)) {
+      point.setValid(false);
+      point.addErrorMessage("general", "tagname", "The field 'Tagname' cannot contain whitespace characters");
+      return false;
+    }
+    
+    return true;
   }
 
   private boolean validateMutualExclusions(Request request, List<Category> categories) {
