@@ -2,7 +2,7 @@
 <products>
   <product name="modesti">
 
-    <application name="default">
+    <application name="default" runtimeJvm="1.8" >
       <startscript>
         <main-class name="org.springframework.boot.loader.PropertiesLauncher" />
         <property name="spring.config.location" value="conf/modesti.properties" />
@@ -18,7 +18,7 @@
     </application>
 
 
-    <application name="modesti-server-pro" extends="default">
+    <application name="modesti-server-pro" extends="default" runtimeJvm="1.8" >
       <startscript name="MODESTI-SERVER-PRO"/>
       <deployment installLocation="/opt/modesti-server-pro">
         <directory name="conf">
@@ -31,7 +31,7 @@
     </application>
 
 
-    <application name="modesti-server-test" extends="default">
+    <application name="modesti-server-test" extends="default" runtimeJvm="1.8" >
       <startscript name="MODESTI-SERVER-TEST">
         <java-vm-args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</java-vm-args>
       </startscript>
@@ -43,7 +43,7 @@
     </application>
 
 
-    <application name="modesti-server-dev" extends="default">
+    <application name="modesti-server-dev" extends="default" runtimeJvm="1.8" >
       <startscript name="MODESTI-SERVER-DEV">
         <java-vm-args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</java-vm-args>
       </startscript>
@@ -55,7 +55,7 @@
     </application>
     
     
-    <application name="dipcm-server-pro" extends="default">
+    <application name="dipcm-server-pro" extends="default" runtimeJvm="1.8" >
       <startscript name="DIPCM-MODESTI-SERVER-PRO">
         <property name="loader.path" value="/opt/dipcm-modesti-plugins" />
       </startscript>
@@ -70,7 +70,7 @@
     </application>
 
 
-    <application name="dipcm-server-test" extends="default">
+    <application name="dipcm-server-test" extends="default" runtimeJvm="1.8" >
       <startscript name="DIPCM-MODESTI-SERVER-TEST">
         <java-vm-args>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006</java-vm-args>
         <property name="loader.path" value="/opt/dipcm-modesti-plugins" />
