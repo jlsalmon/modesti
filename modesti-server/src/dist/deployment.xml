@@ -9,6 +9,7 @@
         <property name="loader.path" value="/opt/modesti-plugins" />
         <property name="logging.config" value="conf/logback.xml" />
         <property name="logging.file" value="log/modesti.log" />
+        <env name="JAVA_HOME" value="/usr/java/jdk1.8" />
       </startscript>
       <deployment installLocation="/opt/modesti/">
         <backupPolicy keepBackups="2">
