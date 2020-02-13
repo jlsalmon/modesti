@@ -72,7 +72,7 @@ public class SchemaImpl implements Schema {
   private List<Datasource> datasourceOverrides = new ArrayList<>();
   
   @JsonDeserialize(using = ConfigurationDeserializer.class)
-  private Configuration configuration;
+  private Configuration configuration = new ConfigurationImpl();
 
   private List<String> selectableStates;
 
