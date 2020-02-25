@@ -17,34 +17,29 @@ export class AuthService {
 
   public login(): IPromise<User> {
     let q: IDeferred<User> = this.$q.defer();
-
-    this.isTnAddress().then((tnAddress: boolean) => {
-      if (tnAddress) {
-        this.showForm(q);
-      } else {
-        this.doOauthLogin(q);
-      }
       
-    });
-
-    return q.promise;
-  }
-
-  private doOauthLogin(q : IDeferred<User> ) : void {
     this.$http.get('/api/user').then((response: any) => {
       if (response.data.authenticated !== undefined && response.data.authenticated === true) {
         this.$localStorage.user = response.data;    
         this.setCommonUserProperties();  
         q.resolve(this.$localStorage.user);
       } else {
-        window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
-      }
+        // The user is not authenticated
+        this.isTnAddress().then((tnAddress: boolean) => {
+          if (tnAddress) {
+            this.showForm(q);
+          } else {
+            window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
+          }
+        });
+      };
     },
     (error: any) => {
       console.log("Error in call to '/api/user'", error);
       this.showForm(q);
     });
 
+    return q.promise;
   }
 
   private isTnAddress() : IPromise<Boolean> {
@@ -70,9 +65,10 @@ export class AuthService {
     }
     
     let user : any = this.$localStorage.user;
-    user.username = user.name;
-    user.firstName = user.userAuthentication.details.first_name;
-    user.lastName = user.userAuthentication.details.last_name;
+    
+    user.firstName = user.principal.firstName;
+    user.lastName = user.principal.lastName;
+    user.username = user.firstName + ' ' + user.lastName;
     this.$localStorage.user = user;
   }
 
