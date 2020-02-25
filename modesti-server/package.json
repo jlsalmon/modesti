@@ -18,7 +18,7 @@
     "watch": "typings install && npm run build:css -s && concurrently \"npm run watch:js\" \"npm run watch:css\" \"npm run watch:html\"",
     "watch:js": "webpack --watch --config src/main/frontend/config/webpack-dev.js --NODE_ENV=dev --display-error-details",
     "dev": "typings install && npm run build:css -s && concurrently \"npm run dev:js\" \"npm run watch:css\" \"npm run watch:html\"",
-    "dev:js": "webpack --watch --config src/main/frontend/config/webpack-external-api-dev.js https://modesti-test.cern.ch/api/ --NODE_ENV=dev --display-error-details",
+    "dev:js": "webpack --watch --config src/main/frontend/config/webpack-external-api-dev.js https://pcbe16495.cern.ch:8443/api/ --NODE_ENV=dev --display-error-details",
     "watch:css": "node-sass src/main/frontend/app/main.scss --watch -o build/resources/main/static/bin",
     "watch:html": "cpx -w \"src/main/frontend/app/**/*.html\" build/resources/main/static",
     "lint": "npm run lint:ts -s && npm run lint:scss -s",
