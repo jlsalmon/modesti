@@ -20,8 +20,7 @@ export class AuthService {
       
     this.$http.get('/api/user').then((response: any) => {
       if (response.data.authenticated !== undefined && response.data.authenticated === true) {
-        this.$localStorage.user = response.data;    
-        this.setCommonUserProperties();  
+        this.$localStorage.user = response.data.principal;    
         q.resolve(this.$localStorage.user);
       } else {
         // The user is not authenticated
@@ -57,19 +56,6 @@ export class AuthService {
     });
 
     return q.promise;
-  }
-
-  private setCommonUserProperties() : void {
-    if (this.$localStorage.user === undefined) {
-      return;
-    }
-    
-    let user : any = this.$localStorage.user;
-    
-    user.firstName = user.principal.firstName;
-    user.lastName = user.principal.lastName;
-    user.username = user.firstName + ' ' + user.lastName;
-    this.$localStorage.user = user;
   }
 
   private showForm(q : IDeferred<User> ) : void {
