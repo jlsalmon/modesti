@@ -113,12 +113,13 @@ public class RequestController {
    * @param id The request id
    */
   @DeleteMapping(path="/requests/{id}")
-  public void deleteRequest(String id) {
+  public ResponseEntity<Void> deleteRequest(@PathVariable("id") String id) {
     Request request = repository.findOneByRequestId(id);
     if (request == null) {
       throw new RequestNotFoundException(id);
     }
     
     requestService.delete(request);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 }
