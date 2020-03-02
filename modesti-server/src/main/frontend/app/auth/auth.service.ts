@@ -74,6 +74,8 @@ export class AuthService {
     modalInstance.result.then(() => {
       this.loginModalOpened = false;
       q.resolve(this.$localStorage.user);
+      // Force a page reload
+      window.location.href = window.location.href;
     }, () => {
       this.loginModalOpened = false;
       q.reject();
