@@ -32,8 +32,8 @@ export class SearchFooterDirective implements IDirective {
   public link: Function = (scope, element) => {
 
     this.schemaService.getSchemas().then((schemas: Schema[]) => { 
-      if (schemas.length > 0) {
-        scope.$ctrl.activeSchemaId = schemas[0].id;
+      if (schemas.length == 0) {
+        return;
       }
 
       schemas.forEach((schema: Schema) => {
@@ -41,12 +41,16 @@ export class SearchFooterDirective implements IDirective {
 
         this.$http.get('/api/plugins/' + schemaId + '/search-assets').then((response: any) => {
           let assets: string[] = response.data;
-
+          
           if (assets.length == 0) {
             this.loadDefaultSearchButtons(schemaId, element, scope);
           } else {
             this.loadPluginSearchButtons(schemaId, assets, element, scope);
-         }
+          }
+
+          if (schemaId == schemas[schemas.length-1].id) {
+            scope.$ctrl.activeSchemaId = schemas[0].id;
+          }
         });
       });
     });
