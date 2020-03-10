@@ -36,12 +36,13 @@ export class SearchFooterDirective implements IDirective {
         return;
       }
 
+      let loadedSchemas : string[] = [];
       schemas.forEach((schema: Schema) => {
         let schemaId = schema.id;
+        loadedSchemas.push(schemaId);
 
         this.$http.get('/api/plugins/' + schemaId + '/search-assets').then((response: any) => {
           let assets: string[] = response.data;
-          
           if (assets.length == 0) {
             this.loadDefaultSearchButtons(schemaId, element, scope);
           } else {
@@ -49,7 +50,9 @@ export class SearchFooterDirective implements IDirective {
           }
 
           if (schemaId == schemas[schemas.length-1].id) {
-            scope.$ctrl.activeSchemaId = schemas[0].id;
+            // When the search buttons for all the plugins are loaded, activates the first plugin (alphabetically sorted)
+            loadedSchemas.sort();
+            scope.$ctrl.activeSchemaId = loadedSchemas[0];
           }
         });
       });
