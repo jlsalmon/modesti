@@ -7,7 +7,7 @@ stages:
 build_and_publish:
   stage: build
   script:
-    - ./gradlew clean publish --refresh-dependencies -PartifactoryUser=${ARTIFACTORY_USERNAME} -PartifactoryPassword=${ARTIFACTORY_PASSWORD}
+    - mvn clean deploy -s settings.xml
   only:
     - master
 
