@@ -13,6 +13,8 @@ import cern.modesti.request.RequestImpl;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.request.RequestService;
 import cern.modesti.request.hateoas.RequestResourceAssembler;
+import cern.modesti.user.User;
+import cern.modesti.workflow.request.RequestAction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
@@ -20,7 +22,9 @@ import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 
+import java.security.Principal;
 import java.util.List;
 
 
@@ -83,6 +87,21 @@ public class RequestController {
     }
     
     return new ResponseEntity<> (HttpStatus.NOT_FOUND);
+  }
+  
+  /**
+   * Changes the request creator
+   * @param requestId The request id
+   * @param action the request action
+   * @param principal the user who submits the change request
+   * @return HttpEntity with the request
+   */
+  @PostMapping(path="/requests/{id}")
+  public HttpEntity<Resource<Request>> assignCreator(@PathVariable("id") String requestId,
+      @RequestBody RequestAction action, Principal principal) {
+    User user = (User) ((AbstractAuthenticationToken) principal).getPrincipal();
+    requestService.execute(requestId, action, user);
+    return getRequest(requestId);
   }
   
   /**
