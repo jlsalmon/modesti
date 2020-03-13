@@ -232,6 +232,9 @@ class RequestListController {
       this.saveValuesToCache();
     }
 
+    if (this.filter && this.filter.status == "CLOSED") {
+      this.hideClosedRequests = false;
+    }
     console.log('filter: ' + JSON.stringify(this.filter));
     this.getRequests(0, this.page.size, this.sort, this.filter);
   }
