@@ -6,6 +6,8 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.FixedAuthoritiesExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
@@ -19,7 +21,6 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 
 /**
  * Configuration class for OAuth authentication
@@ -44,7 +45,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
   public Principal user(Principal principal) {
     return principal;
   }
-  
+
   /**
    * @param response Response redirects back to the frontend page.
    * @param callback The URL of frontend to which backend will redirect after successful log in.
@@ -66,11 +67,21 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
       .authorizeRequests()
       .antMatchers("/", "/api/plugins", "/api/user", "/login", "/api/ldap_login", "/api/is_tn_address").permitAll()
       .antMatchers("/api/**").authenticated()
-      .and().logout().logoutSuccessUrl("/").permitAll()
+      .and().logout().logoutSuccessUrl("/").deleteCookies("JSESSIONID").invalidateHttpSession(true).clearAuthentication(true)
+      .permitAll()
       ;
     // @formatter:on
   }
-  
+    
+  /**
+   * Bean for extracting the user authorities
+   * @return
+   */
+  @Bean
+  public AuthoritiesExtractor oauthAuthoritiesExtractor() {
+      return new FixedAuthoritiesExtractor();
+  }
+    
   /**
    * @return REST template that is able to make OAuth2-authenticated REST requests with the credentials of the provided resource.
    */

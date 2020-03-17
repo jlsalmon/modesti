@@ -74,7 +74,7 @@ export class AuthService {
     modalInstance.result.then(() => {
       this.loginModalOpened = false;
       q.resolve(this.$localStorage.user);
-      // Force a page reload
+      // Force a page reload  
       window.location.href = window.location.href;
     }, () => {
       this.loginModalOpened = false;
@@ -124,7 +124,7 @@ export class AuthService {
       this.$cookies.remove('JSESSIONID');
       delete this.$cookies.JSESSIONID;
       q.resolve();
-      window.location.href = 'https://login.cern.ch/adfs/ls/?wa=wsignout1.0'; 
+      window.location.href = 'https://auth.cern.ch/auth/realms/cern/protocol/openid-connect/logout?redirect_uri=https://cern.ch';
     },
 
     (error: any) => {
