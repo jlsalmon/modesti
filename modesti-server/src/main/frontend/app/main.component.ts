@@ -40,7 +40,8 @@ class MainController {
       this.user = user;
       if (this.user !== undefined) {
         // Force a page reload since the httpBuffer was cleaned
-        this.$window.location.href = this.$window.location.href;
+        //this.$window.location.href = this.$window.location.href;
+        window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
       }
     });
   }

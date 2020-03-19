@@ -23,11 +23,12 @@ export class HttpConfig {
         responseError : (response: any) => {
           if (response && (response.status >= 500 || response.status === 0 || response.status === -1)) {
             // $injector.get('$state').transitionTo('500', {}, {location: false});
+            window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
           }
           if (response && response.status === 404) {
             console.log('error: page not found');
             $injector.get('$state').transitionTo('404', {}, {location: false});
-          }
+          }     
           return $q.reject(response);
         }
       };
