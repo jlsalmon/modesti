@@ -19,101 +19,32 @@ export class AuthService {
     let q: IDeferred<User> = this.$q.defer();
       
     this.$http.get('/api/user').then((response: any) => {
-      if (response.data.authenticated !== undefined && response.data.authenticated === true) {
-        this.$localStorage.user = response.data.principal;    
+      if (response.data.idToken !== undefined ) {
+        this.$localStorage.user = this.getAuthenticatedUser(response.data);    
         q.resolve(this.$localStorage.user);
       } else {
         // The user is not authenticated
-        this.isTnAddress().then((tnAddress: boolean) => {
-          if (tnAddress) {
-            this.showForm(q);
-          } else {
-            window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
-          }
-        });
+        window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
       };
     },
     (error: any) => {
       console.log("Error in call to '/api/user'", error);
-      this.showForm(q);
+      window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
     });
 
     return q.promise;
   }
 
-  private isTnAddress() : IPromise<Boolean> {
-    let q: IDeferred<Boolean> = this.$q.defer();
-
-    this.$http.get('/api/is_tn_address').then((response: any) => {
-      if (response.data !== undefined) {
-        q.resolve(response.data);
-      } else {
-        q.resolve(false);
-      }
-    }, 
-    () => {
-      q.resolve(false);
+  private getAuthenticatedUser(principal: any) : User {
+    let user: User = new User();
+    user.username = principal.name;
+    user.firstName=principal.givenName;
+    user.lastName=principal.familyName;
+    user.email=principal.email;
+    user.authorities=principal.attributes.cern_roles.map(element => {
+      return new Authority(element);
     });
-
-    return q.promise;
-  }
-
-  private showForm(q : IDeferred<User> ) : void {
-    if (this.loginModalOpened) {
-      return this.$q.when(undefined);
-    }
-
-    this.loginModalOpened = true;
-
-    let modalInstance: any = this.$modal.open({
-      animation: false,
-      templateUrl: '/auth/login.modal.html',
-      controller: 'LoginModalController as ctrl'
-    });
-
-    modalInstance.result.then(() => {
-      this.loginModalOpened = false;
-      q.resolve(this.$localStorage.user);
-      // Force a page reload  
-      window.location.href = window.location.href;
-    }, () => {
-      this.loginModalOpened = false;
-      q.reject();
-      this.authService.loginCancelled();
-      this.$state.go('home');
-    });
-  }
-
-  public doLogin(credentials: any): IPromise<{}> {
-    let q: IDeferred<{}> = this.$q.defer();
-
-    // Build a basic auth header
-    let headers: any = credentials ? {
-      authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)
-    } : {};
-
-    // Set ignoreAuthModule so that angular-http-auth doesn't show another modal
-    // if the authentication fails
-    this.$http.get('/api/ldap_login', {headers: headers, params: {ignoreAuthModule: true}}).then((response: any) => {
-      console.log('authenticated');
-
-      // Set data in local storage for other parts of the app to use
-      this.$localStorage.user = response.data;
-
-      // Confirm the login, so that angular-http-auth can resume any ajax requests
-      // that were suspended due to 401s
-      this.authService.loginConfirmed();
-
-      q.resolve();
-    },
-
-    (error: any) => {
-      console.log('failed to authenticate');
-      this.$localStorage.user = undefined;
-      q.reject(error);
-    });
-
-    return q.promise;
+    return user;
   }
 
   public logout(): IPromise<{}> {
@@ -124,7 +55,6 @@ export class AuthService {
       this.$cookies.remove('JSESSIONID');
       delete this.$cookies.JSESSIONID;
       q.resolve();
-      window.location.href = 'https://auth.cern.ch/auth/realms/cern/protocol/openid-connect/logout?redirect_uri=https://cern.ch';
     },
 
     (error: any) => {

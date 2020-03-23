@@ -5,35 +5,39 @@ import java.security.Principal;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.FixedAuthoritiesExtractor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoderJwkSupport;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import cern.modesti.security.oauth.*;
+
+import static org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI;
 
 /**
  * Configuration class for OAuth authentication
  * 
  * @author Ivan Prieto Barreiro
  */
-@EnableOAuth2Sso
-@EnableWebSecurity
+@Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RestController
 @Order(2)
 @Profile("!dev")
-public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
+public class OAuthSecurityConfig {
 
   /**
    * REST interface providing the user information.
@@ -42,7 +46,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
    * @return The user information
    */
   @GetMapping("/api/user")
-  public Principal user(Principal principal) {
+  public OidcUser getOidcUserPrincipal(@AuthenticationPrincipal OidcUser principal) {
     return principal;
   }
 
@@ -59,34 +63,46 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
     response.sendRedirect(callback);
   }
   
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    // @formatter:off
-    http
-      .csrf().disable()
-      .authorizeRequests()
-      .antMatchers("/", "/api/plugins", "/api/user", "/login", "/api/ldap_login", "/api/is_tn_address").permitAll()
-      .antMatchers("/api/**").authenticated()
-      .and().logout().logoutSuccessUrl("/").deleteCookies("JSESSIONID").invalidateHttpSession(true).clearAuthentication(true)
-      .permitAll()
-      ;
-    // @formatter:on
-  }
-    
   /**
-   * Bean for extracting the user authorities
+   * Configures OAuth Login with Spring Security 5.
    * @return
    */
   @Bean
-  public AuthoritiesExtractor oauthAuthoritiesExtractor() {
-      return new FixedAuthoritiesExtractor();
-  }
-    
-  /**
-   * @return REST template that is able to make OAuth2-authenticated REST requests with the credentials of the provided resource.
-   */
+  public WebSecurityConfigurerAdapter webSecurityConfigurer(
+      @Value("${spring.security.oauth2.client.registration.modesti-sso-dev.client-id}") 
+      final String registrationId,
+      KeycloakOauth2UserService keycloakOidcUserService,
+      KeycloakLogoutHandler keycloakLogoutHandler
+  ) {
+      return new WebSecurityConfigurerAdapter() {
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
+          http
+              .csrf().disable()
+              .authorizeRequests()
+              .antMatchers("/", "/api/plugins", "/api/user", "/login", "/api/ldap_login", "/api/is_tn_address").permitAll()
+              .antMatchers("/api/**").authenticated()
+              .and().logout().addLogoutHandler(keycloakLogoutHandler).and()
+              .oauth2Login().userInfoEndpoint().oidcUserService(keycloakOidcUserService)
+              .and().loginPage(DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/" + registrationId)
+            ;
+          }
+      };
+  }  
+  
   @Bean
-  public OAuth2RestTemplate oauth2RestTemplate(OAuth2ProtectedResourceDetails resource, OAuth2ClientContext context) {
-    return new OAuth2RestTemplate(resource, context);
+  KeycloakOauth2UserService keycloakOidcUserService(OAuth2ClientProperties oauth2ClientProperties) {
+    NimbusJwtDecoderJwkSupport jwtDecoder = new NimbusJwtDecoderJwkSupport(
+        oauth2ClientProperties.getProvider().get("keycloak").getJwkSetUri());
+
+    SimpleAuthorityMapper authoritiesMapper = new SimpleAuthorityMapper();
+    authoritiesMapper.setConvertToUpperCase(true);
+
+    return new KeycloakOauth2UserService(jwtDecoder, authoritiesMapper);
+  }
+  
+  @Bean
+  KeycloakLogoutHandler keycloakLogoutHandler() {
+    return new KeycloakLogoutHandler(new RestTemplate());
   }
 }

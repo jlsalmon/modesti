@@ -25,7 +25,7 @@
     <querydsl.version>4.2.1</querydsl.version>
     <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
     <spring.security.version>5.1.5.RELEASE</spring.security.version>
-    <spring.security.oauth.version>2.0.9.RELEASE</spring.security.oauth.version>
+    <spring.security.oauth.version>5.0.5.RELEASE</spring.security.oauth.version>
     <spring.plugin.version>1.2.0.RELEASE</spring.plugin.version>
     <spring.test.version>4.3.4.RELEASE</spring.test.version>
   </properties>
@@ -91,7 +91,7 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
-        <version>${spring.boot.version}</version>
+        <version>${spring.boot.version}</version> 
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -121,14 +121,14 @@
 	  </dependency>
 	  <dependency>
 	    <groupId>org.springframework.security</groupId>
-	    <artifactId>spring-security-oauth2-core</artifactId>
-	    <version>${spring.security.version}</version> 
-	  </dependency>
-	  <dependency>
-	    <groupId>org.springframework.security.oauth.boot</groupId>
-	    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+	    <artifactId>spring-security-oauth2-client</artifactId>
 	    <version>${spring.security.oauth.version}</version> 
 	  </dependency>
+	  <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-oauth2-jose</artifactId>
+        <version>${spring.security.oauth.version}</version> 
+      </dependency>
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-test</artifactId>
@@ -139,7 +139,6 @@
         <artifactId>spring-plugin-core</artifactId>
         <version>${spring.plugin.version}</version>  
       </dependency>
-
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
