@@ -80,7 +80,7 @@ public class OAuthSecurityConfig {
           http
               .csrf().disable()
               .authorizeRequests()
-              .antMatchers("/", "/api/plugins", "/api/user", "/login", "/api/ldap_login", "/api/is_tn_address").permitAll()
+              .antMatchers("/", "/api/plugins", "/api/user", "/login").permitAll()
               .antMatchers("/api/**").authenticated()
               .and().logout().addLogoutHandler(keycloakLogoutHandler).and()
               .oauth2Login().userInfoEndpoint().oidcUserService(keycloakOidcUserService)
