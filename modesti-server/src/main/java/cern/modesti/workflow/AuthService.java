@@ -6,12 +6,14 @@ import cern.modesti.plugin.spi.AuthorizationProvider;
 import cern.modesti.request.Request;
 import cern.modesti.security.UserService;
 import cern.modesti.user.User;
+import cern.modesti.user.UserImpl;
 import cern.modesti.workflow.task.TaskInfo;
 import cern.modesti.workflow.task.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.plugin.core.PluginRegistry;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -70,19 +72,27 @@ public class AuthService {
   }
 
   /**
-   * Check if a user is authorised to act upon the currently active task of
+   * Check if a user is authorized to act upon the currently active task of
    * the workflow process instance associated with the given request.
    *
    * @param request the request object
-   * @param user    the user to authorise
+   * @param user    the user to authorize
    *
-   * @return true if the user is authorised, false otherwise
+   * @return true if the user is authorized, false otherwise
    */
   public boolean canSave(Request request, User user) {
     TaskInfo currentTask = taskService.getActiveTask(request.getRequestId());
     return isAdministrator(user) || isCreator(request, user) || userAuthorisedForTask(currentTask, user);
   }
 
+  /**
+   * Check if a user is authorized to save the given request.
+   *
+   * @param request the request object
+   * @param user    the user to authorize
+   *
+   * @return true if the user is authorized, false otherwise
+   */
   public boolean canSave(Request request, String username) {
     User user;
 
@@ -93,6 +103,18 @@ public class AuthService {
     }
 
     return canSave(request, user);
+  }
+  
+  /**
+   * Check if a user is authorized to save the given request.
+   *
+   * @param request the request object
+   * @param user    the user to authorize
+   *
+   * @return true if the user is authorized, false otherwise
+   */
+  public boolean canSave(Request request, OidcUser user) {
+    return canSave(request, new UserImpl(user));
   }
 
   /**
@@ -137,9 +159,9 @@ public class AuthService {
    * Plugins can implement the {@link AuthorizationProvider} to overwrite the {@link AuthorizationProvider#canDelete(Request)} behaviour.
    *
    * @param request the request object
-   * @param user    the user to authorise
+   * @param user    the user to authorize
    *
-   * @return true if the user is authorised, false otherwise
+   * @return true if the user is authorized, false otherwise
    */
   public boolean canDelete(Request request, User user) {
     RequestProvider plugin = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
@@ -162,6 +184,16 @@ public class AuthService {
     return request.getCreator().equals(user.getUsername());
   }
 
+  /**
+   * Checks if the authenticated user can delete a request
+   * @param request the request object
+   * @param user the user to authorize
+   * @return true if the user is authorized, otherwise false
+   */
+  public boolean canDelete(Request request, OidcUser user) {
+    return canDelete(request, new UserImpl(user));
+  }
+  
   private boolean hasRole(User user, String role) {
     return user.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(role));
   }

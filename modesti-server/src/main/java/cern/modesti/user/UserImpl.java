@@ -13,8 +13,10 @@ import org.springframework.hateoas.core.Relation;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -40,8 +42,22 @@ public class UserImpl implements User, UserDetails {
   private String email;
 
   @JsonDeserialize(contentAs = SimpleGrantedAuthority.class)
-  private List<GrantedAuthority> authorities = new ArrayList<>();
+  private Collection<? extends GrantedAuthority> authorities = new ArrayList<>();
 
+  /** 
+   * Creates a new user from the OAuth Oidc user 
+   * @param user 
+   */
+  @SuppressWarnings("unchecked")
+  public UserImpl(OidcUser user) {
+    this.username = user.getName();
+    this.employeeId = ((Long) user.getAttributes().get("cern_person_id")).intValue();
+    this.firstName = user.getGivenName();
+    this.lastName = user.getFamilyName();
+    this.email = user.getEmail();
+    this.authorities = user.getAuthorities();
+  }
+  
   @Override
   public String getPassword() {
     return null;

@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -34,7 +33,6 @@ public class KeycloakOauth2UserService extends OidcUserService {
 
   private final OAuth2Error invalidRequest = new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST);
   private final JwtDecoder jwtDecoder;
-  private final GrantedAuthoritiesMapper authoritiesMapper;
 
   /**
    * Augments {@link OidcUserService#loadUser(OidcUserRequest)} to add authorities
@@ -83,11 +81,8 @@ public class KeycloakOauth2UserService extends OidcUserService {
 
     Collection<? extends GrantedAuthority> authorities = AuthorityUtils
                     .createAuthorityList(clientRoles.toArray(new String[0]));
-    if (authoritiesMapper == null) {
-      return authorities;
-    }
 
-    return authoritiesMapper.mapAuthorities(authorities);
+    return authorities;
   }
 
   private Jwt parseJwt(String accessTokenValue) {

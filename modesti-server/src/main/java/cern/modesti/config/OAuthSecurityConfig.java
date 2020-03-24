@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoderJwkSupport;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,7 +68,7 @@ public class OAuthSecurityConfig {
    */
   @Bean
   public WebSecurityConfigurerAdapter webSecurityConfigurer(
-      @Value("${spring.security.oauth2.client.registration.modesti-sso-dev.client-id}") 
+      @Value("${keycloak.client-id}") 
       final String registrationId,
       KeycloakOauth2UserService keycloakOidcUserService,
       KeycloakLogoutHandler keycloakLogoutHandler
@@ -95,10 +94,7 @@ public class OAuthSecurityConfig {
     NimbusJwtDecoderJwkSupport jwtDecoder = new NimbusJwtDecoderJwkSupport(
         oauth2ClientProperties.getProvider().get("keycloak").getJwkSetUri());
 
-    SimpleAuthorityMapper authoritiesMapper = new SimpleAuthorityMapper();
-    authoritiesMapper.setConvertToUpperCase(true);
-
-    return new KeycloakOauth2UserService(jwtDecoder, authoritiesMapper);
+    return new KeycloakOauth2UserService(jwtDecoder);
   }
   
   @Bean

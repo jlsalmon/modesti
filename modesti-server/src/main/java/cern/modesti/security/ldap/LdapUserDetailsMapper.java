@@ -36,11 +36,8 @@ public class LdapUserDetailsMapper extends AbstractContextMapper<User> implement
     user.setFirstName(context.getStringAttribute("givenName"));
     user.setLastName(context.getStringAttribute("sn"));
     user.setEmail(context.getStringAttribute("mail"));
-
-    for (GrantedAuthority authority : grantedAuthorities) {
-      user.getAuthorities().add(new SimpleGrantedAuthority(authority.getAuthority()));
-    }
-
+    user.setAuthorities(grantedAuthorities);
+    
     return user;
   }
 

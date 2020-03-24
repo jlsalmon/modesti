@@ -41,9 +41,7 @@ export class AuthService {
     user.firstName=principal.givenName;
     user.lastName=principal.familyName;
     user.email=principal.email;
-    user.authorities=principal.attributes.cern_roles.map(element => {
-      return new Authority(element);
-    });
+    user.authorities=principal.authorities;
     return user;
   }
 
