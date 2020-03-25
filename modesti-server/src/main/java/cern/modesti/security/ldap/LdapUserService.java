@@ -1,7 +1,6 @@
 package cern.modesti.security.ldap;
 
 import cern.modesti.user.User;
-import cern.modesti.user.UserImpl;
 import cern.modesti.security.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.ldap.filter.OrFilter;
 import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import javax.naming.InvalidNameException;
@@ -114,7 +112,7 @@ public class LdapUserService implements UserService {
       return null;
     }
     try {
-      return new UserImpl((OidcUser) authentication.getPrincipal());
+      return (User) authentication.getPrincipal();
     } catch (ClassCastException e) {
       log.debug("Exception casting principal to User", authentication.getPrincipal(), e);
       return null;

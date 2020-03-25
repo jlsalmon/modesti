@@ -14,13 +14,13 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.util.CollectionUtils;
 
+import cern.modesti.user.OidcUserImpl;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -47,10 +47,9 @@ public class KeycloakOauth2UserService extends OidcUserService {
     OidcUser user = super.loadUser(userRequest);
 
     Set<GrantedAuthority> authorities = new LinkedHashSet<>();
-    authorities.addAll(user.getAuthorities());
     authorities.addAll(extractKeycloakAuthorities(userRequest));
 
-    return new DefaultOidcUser(authorities, userRequest.getIdToken(), user.getUserInfo(), "preferred_username");
+    return new OidcUserImpl(user, userRequest.getIdToken(), authorities);
   }
 
   /**

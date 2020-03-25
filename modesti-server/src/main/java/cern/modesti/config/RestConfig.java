@@ -7,6 +7,7 @@ import cern.modesti.schema.SchemaImpl;
 import cern.modesti.schema.category.CategoryImpl;
 import cern.modesti.schema.category.DatasourceImpl;
 import cern.modesti.schema.field.*;
+import cern.modesti.user.OidcUserImpl;
 import cern.modesti.user.UserImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -42,7 +43,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
     super.configureRepositoryRestConfiguration(config);
 
     // Tell Spring Data REST to expose IDs for the following classes in JSON responses.
-    config.exposeIdsFor(RequestHistoryImpl.class, UserImpl.class, SchemaImpl.class,
+    config.exposeIdsFor(RequestHistoryImpl.class, UserImpl.class, OidcUserImpl.class, SchemaImpl.class,
         CategoryImpl.class, DatasourceImpl.class, Field.class, TextField.class, AutocompleteField.class, NumericField.class,
         CheckboxField.class, OptionsField.class, Option.class, EmailField.class, DateField.class);
 

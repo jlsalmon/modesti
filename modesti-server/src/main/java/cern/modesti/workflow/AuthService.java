@@ -6,14 +6,12 @@ import cern.modesti.plugin.spi.AuthorizationProvider;
 import cern.modesti.request.Request;
 import cern.modesti.security.UserService;
 import cern.modesti.user.User;
-import cern.modesti.user.UserImpl;
 import cern.modesti.workflow.task.TaskInfo;
 import cern.modesti.workflow.task.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.plugin.core.PluginRegistry;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -104,18 +102,6 @@ public class AuthService {
 
     return canSave(request, user);
   }
-  
-  /**
-   * Check if a user is authorized to save the given request.
-   *
-   * @param request the request object
-   * @param user    the user to authorize
-   *
-   * @return true if the user is authorized, false otherwise
-   */
-  public boolean canSave(Request request, OidcUser user) {
-    return canSave(request, new UserImpl(user));
-  }
 
   /**
    * Check if a user is authorised to act upon the given task.
@@ -182,16 +168,6 @@ public class AuthService {
     }
 
     return request.getCreator().equals(user.getUsername());
-  }
-
-  /**
-   * Checks if the authenticated user can delete a request
-   * @param request the request object
-   * @param user the user to authorize
-   * @return true if the user is authorized, otherwise false
-   */
-  public boolean canDelete(Request request, OidcUser user) {
-    return canDelete(request, new UserImpl(user));
   }
   
   private boolean hasRole(User user, String role) {
