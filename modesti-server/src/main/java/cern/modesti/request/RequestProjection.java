@@ -1,5 +1,7 @@
 package cern.modesti.request;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
 
@@ -62,4 +64,9 @@ public interface RequestProjection {
   @Value("#{target.createdAt.millis}")
   Long getCreatedAt();
 
+  /** 
+   * Gets the request properties
+   * @return Map containing the request properties (e.g. subdomain)
+   */
+  Map<String, Object> getProperties();
 }
