@@ -2,6 +2,7 @@ package cern.modesti.config;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -9,9 +10,15 @@ import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
@@ -51,7 +58,10 @@ import cern.modesti.security.mock.MockUserServiceImpl;
  * @author Justin Lewis Salmon
  */
 @Configuration
-public class LdapSecurityConfig {
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Order(1)
+public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
   Environment env;
@@ -62,6 +72,54 @@ public class LdapSecurityConfig {
   private static final String LDAP_GROUP_BASE = "ldap.group.base";
   private static final String LDAP_GROUP_FILTER = "ldap.group.filter";
 
+  
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http
+        .csrf().disable()
+        .requestMatcher(new BasicRequestMatcher())
+        // Authentication is required for all API endpoints
+        .authorizeRequests()
+        .antMatchers("/api/plugins").permitAll()
+        .antMatchers("/api/**").authenticated()
+
+        // Enable basic HTTP authentication
+        .and().httpBasic().authenticationEntryPoint((request, response, authException) -> {
+          String requestedWith = request.getHeader("X-Requested-With");
+          if (requestedWith == null || requestedWith.isEmpty()) {
+            response.addHeader("WWW-Authenticate", "Basic realm=NICE");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+          } else {
+            response.addHeader("WWW-Authenticate", "Application driven");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+          }
+        })
+
+        // Enable /logout endpoint
+        .and().logout()
+
+        // TODO: implement CSRF protection. Here we just turn it off.
+        .and().csrf().disable();
+  }
+
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+    if (env.acceptsProfiles("dev")) {
+      auth.authenticationProvider(mockAuthenticationProvider());
+    }
+
+    else {
+      auth.authenticationProvider(ldapAuthenticationProvider())
+          .ldapAuthentication()
+          .userDnPatterns(env.getRequiredProperty(LDAP_USER_FILTER))
+          .groupSearchBase(env.getRequiredProperty(LDAP_GROUP_BASE))
+          .groupSearchFilter(env.getRequiredProperty(LDAP_GROUP_FILTER))
+          .contextSource(contextSource());
+    }
+  }
+
+  
   @Bean
   public LdapAuthenticationProvider ldapAuthenticationProvider() {
     LdapAuthenticationProvider provider = new LdapAuthenticationProvider(ldapAuthenticator(), ldapAuthoritiesPopulator());
