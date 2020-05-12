@@ -26,7 +26,7 @@ deploy_test:
     - mvn help:evaluate -Dexpression=project.version
     - echo -n "version=" > project.version && mvn help:evaluate -Dexpression=project.version | grep -v '\[' >> project.version
     - source ./project.version; ssh timtest@modesti-test.cern.ch "~/scripts/deploy-modesti-server-test.sh $version"
-    - ssh timtest@modesti-test.cern.ch '/usr/opt/bin/wreboot -N MODESTI-SERVER-TEST.jvm'
+    - ssh timtest@modesti-test.cern.ch '/usr/local/sbin/lumensctl restart -S MODESTI-SERVER-TEST.jvm'
   environment:
     name: test
     url: https://modesti-test.cern.ch
