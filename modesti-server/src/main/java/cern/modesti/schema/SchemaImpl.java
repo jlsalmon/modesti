@@ -72,12 +72,18 @@ public class SchemaImpl implements Schema {
   private List<Datasource> datasourceOverrides = new ArrayList<>();
   
   @JsonDeserialize(using = ConfigurationDeserializer.class)
-  private Configuration configuration;
+  private Configuration configuration = new ConfigurationImpl();
 
   private List<String> selectableStates;
 
   private List<RowCommentStateDescriptor> rowCommentStates;
 
+  /**
+   * Class constructor
+   * 
+   * @param id schema identifier
+   * @param description schema description 
+   */
   public SchemaImpl(String id, String description) {
     this.id = id;
     this.description = description;

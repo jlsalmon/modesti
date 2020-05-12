@@ -68,7 +68,7 @@ public class SchemaInitialiser {
     log.info("Initialising schemas");
 
     schemaRepository.deleteAll();
-    schemaRepository.save(loadSchemas());
+    schemaRepository.saveAll(loadSchemas());
   }
 
   /**

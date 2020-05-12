@@ -1,16 +1,12 @@
 package cern.modesti.config;
 
-import cern.modesti.security.ldap.LdapUserDetailsMapper;
-import cern.modesti.security.ldap.RecursiveLdapAuthoritiesPopulator;
-import cern.modesti.security.mock.MockAuthenticationProvider;
-import cern.modesti.security.mock.MockUserService;
-import cern.modesti.security.mock.MockUserServiceImpl;
-import org.apache.catalina.Context;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatContextCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -28,10 +24,16 @@ import org.springframework.security.ldap.SpringSecurityLdapTemplate;
 import org.springframework.security.ldap.authentication.BindAuthenticator;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
+import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
+import org.springframework.security.ldap.search.LdapUserSearch;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
+import org.springframework.security.ldap.userdetails.LdapUserDetailsService;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import cern.modesti.security.ldap.LdapUserDetailsMapper;
+import cern.modesti.security.ldap.RecursiveLdapAuthoritiesPopulator;
+import cern.modesti.security.mock.MockAuthenticationProvider;
+import cern.modesti.security.mock.MockUserService;
+import cern.modesti.security.mock.MockUserServiceImpl;
 
 /**
  * Configuration class for the core web security and LDAP beans.
@@ -56,18 +58,26 @@ import java.io.IOException;
  * @author Justin Lewis Salmon
  */
 @Configuration
-//@EnableLdapRepositories(basePackageClasses = UserRepository.class, ldapTemplateRef = "anonymousLdapTemplate")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Order(1)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class LdapSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
   Environment env;
+  
+  private static final String LDAP_BASE = "ldap.base";
+  private static final String LDAP_USER_BASE = "ldap.user.base";
+  private static final String LDAP_USER_FILTER = "ldap.user.filter";
+  private static final String LDAP_GROUP_BASE = "ldap.group.base";
+  private static final String LDAP_GROUP_FILTER = "ldap.group.filter";
 
+  
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
+        .csrf().disable()
+        .requestMatcher(new BasicRequestMatcher())
         // Authentication is required for all API endpoints
         .authorizeRequests()
         .antMatchers("/api/plugins").permitAll()
@@ -102,13 +112,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     else {
       auth.authenticationProvider(ldapAuthenticationProvider())
           .ldapAuthentication()
-          .userDnPatterns(env.getRequiredProperty("ldap.user.filter"))
-          .groupSearchBase(env.getRequiredProperty("ldap.group.base"))
-          .groupSearchFilter(env.getRequiredProperty("ldap.group.filter"))
+          .userDnPatterns(env.getRequiredProperty(LDAP_USER_FILTER))
+          .groupSearchBase(env.getRequiredProperty(LDAP_GROUP_BASE))
+          .groupSearchFilter(env.getRequiredProperty(LDAP_GROUP_FILTER))
           .contextSource(contextSource());
     }
   }
 
+  
   @Bean
   public LdapAuthenticationProvider ldapAuthenticationProvider() {
     LdapAuthenticationProvider provider = new LdapAuthenticationProvider(ldapAuthenticator(), ldapAuthoritiesPopulator());
@@ -119,8 +130,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapAuthoritiesPopulator ldapAuthoritiesPopulator() {
     return new RecursiveLdapAuthoritiesPopulator(anonymousContextSource(),
-        env.getRequiredProperty("ldap.base"), env.getRequiredProperty("ldap.user.base"),
-        env.getRequiredProperty("ldap.group.base"), env.getRequiredProperty("ldap.group.filter"));
+        env.getRequiredProperty(LDAP_BASE), env.getRequiredProperty(LDAP_USER_BASE),
+        env.getRequiredProperty(LDAP_GROUP_BASE), env.getRequiredProperty(LDAP_GROUP_FILTER));
   }
 
   @Bean
@@ -131,7 +142,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapAuthenticator ldapAuthenticator() {
     BindAuthenticator authenticator = new BindAuthenticator(contextSource());
-    String[] userDnPatterns = new String[]{env.getRequiredProperty("ldap.user.filter")};
+    String[] userDnPatterns = new String[]{env.getRequiredProperty(LDAP_USER_FILTER)};
     authenticator.setUserDnPatterns(userDnPatterns);
     return authenticator;
   }
@@ -139,10 +150,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapContextSource contextSource() {
     DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.auth.url"));
-    contextSource.setBase(env.getRequiredProperty("ldap.base"));
+    contextSource.setBase(env.getRequiredProperty(LDAP_BASE));
     return contextSource;
   }
 
+  @Bean
+  public LdapUserDetailsService ldapUserDetailsService() {
+    return new LdapUserDetailsService(ldapUserSearch(), ldapAuthoritiesPopulator());
+  }
+  
+  @Bean
+  public LdapUserSearch ldapUserSearch() {
+    return new FilterBasedLdapUserSearch(
+        env.getRequiredProperty(LDAP_USER_BASE), 
+        env.getRequiredProperty(LDAP_GROUP_FILTER),
+        anonymousContextSource());
+  }
+  
   @Bean
   public LdapTemplate anonymousLdapTemplate() {
     return new SpringSecurityLdapTemplate(anonymousContextSource());
@@ -151,15 +175,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LdapContextSource anonymousContextSource() {
     DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(env.getRequiredProperty("ldap.anon.url"));
-    contextSource.setBase(env.getRequiredProperty("ldap.base"));
+    contextSource.setBase(env.getRequiredProperty(LDAP_BASE));
     contextSource.setAnonymousReadOnly(true);
     return contextSource;
   }
-
-//  @Bean
-//  public LoggerListener loggerListener() {
-//    return new LoggerListener();
-//  }
 
   @Bean
   @Profile("dev")
@@ -177,18 +196,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    * This class enables programmatic customisation of the Tomcat context used by Spring Boot.
    */
   @Configuration
-  static class ServletContainerCustomizer implements EmbeddedServletContainerCustomizer {
+  static class ServletContainerCustomizer implements WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
 
     @Override
-    public void customize(final ConfigurableEmbeddedServletContainer container) {
-      ((TomcatEmbeddedServletContainerFactory) container).addContextCustomizers(new TomcatContextCustomizer() {
-        @Override
-        public void customize(Context context) {
-          // Setting HttpOnly to false allows access to cookies from JavaScript. We need this
-          // so that the frontend is able to delete the session cookie on logout.
-          context.setUseHttpOnly(false);
-        }
-      });
+    public void customize(TomcatServletWebServerFactory factory) {
+      // Setting HttpOnly to false allows access to cookies from JavaScript. We need this
+      // so that the frontend is able to delete the session cookie on logout.
+      factory.addContextCustomizers(context -> context.setUseHttpOnly(false));
     }
   }
 }

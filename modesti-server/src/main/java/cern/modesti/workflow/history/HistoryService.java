@@ -55,7 +55,7 @@ public class HistoryService {
     HistoricProcessInstance process = history.createHistoricProcessInstanceQuery().processInstanceBusinessKey(requestId).singleResult();
 
     // Find all the activities that happened so far for this process
-    List<HistoricTaskInstance> tasks = history.createHistoricTaskInstanceQuery().processInstanceId(process.getId()).orderByTaskCreateTime().asc().list();
+    List<HistoricTaskInstance> tasks = history.createHistoricTaskInstanceQuery().processInstanceBusinessKey(requestId).orderByTaskCreateTime().asc().list();
 
     // Find all the activities that happened so far for this process
     List<HistoricActivityInstance> activities = history.createHistoricActivityInstanceQuery().processInstanceId(process.getId())

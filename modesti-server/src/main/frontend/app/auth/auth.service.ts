@@ -17,74 +17,41 @@ export class AuthService {
 
   public login(): IPromise<User> {
     let q: IDeferred<User> = this.$q.defer();
-
-    if (this.loginModalOpened) {
-      return this.$q.when(undefined);
-    }
-
-    this.loginModalOpened = true;
-
-    let modalInstance: any = this.$modal.open({
-      animation: false,
-      templateUrl: '/auth/login.modal.html',
-      controller: 'LoginModalController as ctrl'
-    });
-
-    modalInstance.result.then(() => {
-      this.loginModalOpened = false;
-      q.resolve(this.$localStorage.user);
-    }, () => {
-      this.loginModalOpened = false;
-      q.reject();
-      this.authService.loginCancelled();
-      this.$state.go('home');
+      
+    this.$http.get('/api/user').then((response: any) => {
+      if (response.data.idToken !== undefined ) {
+        this.$localStorage.user = this.getAuthenticatedUser(response.data);    
+        q.resolve(this.$localStorage.user);
+      } else {
+        // The user is not authenticated
+        window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
+      };
+    },
+    (error: any) => {
+      console.log("Error in call to '/api/user'", error);
+      window.location.href = '/api/sso?callback=' + encodeURIComponent(document.URL); 
     });
 
     return q.promise;
   }
 
-  public doLogin(credentials: any): IPromise<{}> {
-    let q: IDeferred<{}> = this.$q.defer();
-
-    // Build a basic auth header
-    let headers: any = credentials ? {
-      authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)
-    } : {};
-
-    // Set ignoreAuthModule so that angular-http-auth doesn't show another modal
-    // if the authentication fails
-    this.$http.get('/api/login', {headers: headers, params: {ignoreAuthModule: true}}).then((response: any) => {
-      console.log('authenticated');
-
-      // Set data in local storage for other parts of the app to use
-      this.$localStorage.user = response.data;
-
-      // Confirm the login, so that angular-http-auth can resume any ajax requests
-      // that were suspended due to 401s
-      this.authService.loginConfirmed();
-
-      q.resolve();
-    },
-
-    (error: any) => {
-      console.log('failed to authenticate');
-      this.$localStorage.user = undefined;
-      q.reject(error);
-    });
-
-    return q.promise;
+  private getAuthenticatedUser(principal: any) : User {
+    let user: User = new User();
+    user.username = principal.name;
+    user.firstName=principal.givenName;
+    user.lastName=principal.familyName;
+    user.email=principal.email;
+    user.authorities=principal.authorities;
+    return user;
   }
 
   public logout(): IPromise<{}> {
     let q: IDeferred<{}> = this.$q.defer();
 
     this.$http.get('/logout').then(() => {
-      console.log('logged out');
-
       this.$localStorage.user = undefined;
       this.$cookies.remove('JSESSIONID');
       delete this.$cookies.JSESSIONID;
-
       q.resolve();
     },
 

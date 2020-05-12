@@ -1,3 +1,0 @@
-include ':modesti-server'
-include ':modesti-api'
-include ':modesti-test'

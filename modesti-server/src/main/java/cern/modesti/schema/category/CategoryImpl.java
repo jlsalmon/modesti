@@ -48,6 +48,10 @@ public class CategoryImpl implements Category {
   @JsonDeserialize(using = FieldDeserializer.class)
   private List<Field> fields;
 
+  /**
+   * Constructor based on the category ID
+   * @param id The category ID
+   */
   public CategoryImpl(String id) {
     this.id = id;
   }

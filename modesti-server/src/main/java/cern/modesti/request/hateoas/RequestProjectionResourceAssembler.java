@@ -2,6 +2,7 @@ package cern.modesti.request.hateoas;
 
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestImpl;
+import cern.modesti.request.RequestProjection;
 import cern.modesti.request.search.RequestSearchController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
@@ -20,9 +21,12 @@ import java.util.List;
  * @author Justin Lewis Salmon
  */
 @Component
-public class RequestResourceAssembler extends ResourceAssemblerSupport<Request, Resource> {
+public class RequestProjectionResourceAssembler extends ResourceAssemblerSupport<RequestProjection, Resource> {
 
-  public RequestResourceAssembler() {
+  /** 
+   * Default constructor
+   */
+  public RequestProjectionResourceAssembler() {
     super(RequestSearchController.class, Resource.class);
   }
 
@@ -30,20 +34,18 @@ public class RequestResourceAssembler extends ResourceAssemblerSupport<Request, 
   private EntityLinks entityLinks;
 
   @Override
-  public List<Resource> toResources(Iterable<? extends Request> requests) {
+  public List<Resource> toResources(Iterable<? extends RequestProjection> projections) {
     List<Resource> resources = new ArrayList<>();
-
-    for (Request request : requests) {
-      Link self = entityLinks.linkToSingleResource(RequestImpl.class, request.getRequestId());
-      resources.add(new Resource<>(request, self));
+    
+    for (RequestProjection projection : projections) {
+      resources.add(toResource(projection));
     }
-
     return resources;
   }
-
+  
   @Override
-  public Resource<Request> toResource(Request request) {
-    Link self = entityLinks.linkToSingleResource(RequestImpl.class, request.getId()).withSelfRel();
-    return new Resource<>(request, self);
+  public Resource toResource(RequestProjection entity) {
+    Link self = entityLinks.linkToSingleResource(RequestImpl.class, entity.getRequestId()).withSelfRel();
+    return new Resource<>(entity, self);
   }
 }

@@ -51,7 +51,7 @@ public class CoreNotifications {
         .subject(format("A MODESTI request has been assigned to you (#%s)", request.getRequestId()))
         .template("request-assigned-to-user")
         .templateParameter("creator", creator)
-        .recipient(assignee.getEmail())
+        .recipient(assignee.getMail())
         .build();
   }
 }

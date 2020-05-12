@@ -29,9 +29,15 @@ class NewRequestController {
   public $onInit(): void {
     this.schemaService.getSchemas().then((schemas: Schema[]) => {
       schemas.forEach((schema: Schema) => {
-        if (schema.configuration === null || schema.configuration.createFromUi === true) {
+        if (schema.configuration === null || schema.configuration === undefined || schema.configuration.createFromUi === true) {
           this.schemas.push(schema);
         }
+      });
+
+      this.schemas.sort(function(s1: Schema, s2: Schema) {
+        if (s1.id < s2.id) return -1;
+        if (s1.id > s2.id) return 1;
+        return 0;
       });
 
       this.request = new Request();

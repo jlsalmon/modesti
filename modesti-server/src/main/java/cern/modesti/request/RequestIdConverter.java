@@ -5,6 +5,7 @@ import org.springframework.data.rest.webmvc.spi.BackendIdConverter;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * This class is used by the Spring Data infrastructure to convert to/from the
@@ -36,10 +37,10 @@ public class RequestIdConverter implements BackendIdConverter {
   public String toRequestId(Serializable id, Class<?> entityType) {
 
     if (entityType.equals(RequestImpl.class)) {
-      Request request = requestRepository.findOne(id.toString());
+      Optional<RequestImpl> request = requestRepository.findById(id.toString());
 
-      if (request != null) {
-        return request.getRequestId();
+      if (request.isPresent()) {
+        return request.get().getRequestId();
       }
     }
 

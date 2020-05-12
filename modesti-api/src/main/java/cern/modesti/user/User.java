@@ -1,6 +1,8 @@
 package cern.modesti.user;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  * This class represents a single user entity retrieved from the authentication
@@ -8,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  *
  * @author Justin Lewis Salmon
  */
-public interface User extends UserDetails {
+public interface User {
 
   Integer getEmployeeId();
 
@@ -17,8 +19,10 @@ public interface User extends UserDetails {
   String getFirstName();
 
   String getLastName();
-
-  String getEmail();
+  
+  String getMail();
 
   boolean isAdmin();
+  
+  Collection<? extends GrantedAuthority> getAuthorities();
 }

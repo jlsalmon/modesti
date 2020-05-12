@@ -2,8 +2,10 @@ package cern.modesti.request;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -24,6 +26,8 @@ import cern.modesti.request.history.RequestHistoryServiceImpl;
 import cern.modesti.request.spi.RequestEventHandler;
 import cern.modesti.schema.SchemaImpl;
 import cern.modesti.schema.SchemaRepository;
+import cern.modesti.schema.category.Category;
+import cern.modesti.schema.field.Field;
 import cern.modesti.security.UserService;
 import cern.modesti.user.User;
 import cern.modesti.workflow.AuthService;
@@ -123,6 +127,7 @@ public class RequestServiceImpl implements RequestService {
       request.setPoints(new ArrayList<>());
     }
     
+    removeSearchOnlyFields(request);
     // Apply formatting to the request points
     requestFormatter.format(request);
 
@@ -153,13 +158,32 @@ public class RequestServiceImpl implements RequestService {
     // Checks the schema configuration to see if it allows create requests from the UI.
     // This is a (not too good) way to distinguish between PSEN and the other plug-ins.
     // TODO: Must be modified when the REST service to create requests is implemented!!!
-    SchemaImpl schema = schemaRepository.findOne(request.getDomain());
-    if (schema.getConfiguration() == null || schema.getConfiguration().isCreateFromUi()) {
+    Optional<SchemaImpl> schema = schemaRepository.findById(request.getDomain());
+    if (schema.isPresent() && (schema.get().getConfiguration() == null || schema.get().getConfiguration().isCreateFromUi())) {
       // Initially updated/cloned requests are not valid (values in the database might be incorrect)
       request.setValid(isEmptyRequest || request.getType().equals(RequestType.DELETE));
     }
     
     return newRequest;
+  }
+
+  private void removeSearchOnlyFields(Request request) {
+    Optional<SchemaImpl> schemaOpt = schemaRepository.findById(request.getDomain());
+    if(schemaOpt.isPresent()) {
+      SchemaImpl schema = schemaOpt.get();
+      // Concatenate all categories and datasources
+      List<Category> categories = new ArrayList<>(schema.getCategories());
+      categories.addAll(schema.getDatasources());
+      for (Category category : categories) {
+        for (Field field : category.getFields()) {
+          if(Boolean.TRUE == field.getSearchFieldOnly()) {
+            for (Point p : request.getNonEmptyPoints()) {
+              p.getProperties().remove(field.getId());
+            }
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -170,11 +194,12 @@ public class RequestServiceImpl implements RequestService {
    */
   @Override
   public Request save(Request updated) {
-    Request original = repository.findOne(updated.getId());
-    if (original == null) {
+    Optional<RequestImpl> originalOpt = repository.findById(updated.getId());
+    if (!originalOpt.isPresent()) {
       throw new RuntimeException(format("Request #%s was not found", updated.getId()));
     }
 
+    Request original = originalOpt.get();
     // The request id may not be modified manually.
     if (!Objects.equals(updated.getRequestId(), original.getRequestId())) {
       throw new IllegalArgumentException("Request ID cannot not be updated manually!");

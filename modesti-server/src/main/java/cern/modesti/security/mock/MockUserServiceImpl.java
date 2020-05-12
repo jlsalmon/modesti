@@ -9,6 +9,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -111,7 +112,7 @@ public class MockUserServiceImpl implements MockUserService, UserService {
           }
   
           String[] props = line.split(" ");
-          List<SimpleGrantedAuthority> roles = Arrays.stream(props[4].split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+          List<GrantedAuthority> roles = Arrays.stream(props[4].split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
   
           User user = new UserImpl(users.size() + 1, props[0], props[1], props[2], props[3], roles);
           boolean store = true;
