@@ -302,7 +302,7 @@ public class CoreValidationService implements ValidationService {
 
   private boolean isValidValue(Object value, Point point, Field field) {
     // If the value is empty, it's technically not invalid.
-    if (value ==  null || "".equals(value)) {
+    if (value ==  null || "".equals(value) || Boolean.TRUE.equals(field.getSearchFieldOnly())) {
       return true;
     }
 
