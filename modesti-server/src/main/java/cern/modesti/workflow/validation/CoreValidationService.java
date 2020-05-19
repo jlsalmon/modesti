@@ -68,8 +68,15 @@ public class CoreValidationService implements ValidationService {
       return true;
     }
     
-    Schema schema = schemaRepository.findOne(request.getDomain());
-    return validator.preValidateRequest(request, schema);
+    return validator.preValidateRequest(request, getSchema(request.getDomain()));
+  }
+  
+  private SchemaImpl getSchema(String id) {
+    Optional<SchemaImpl> schemaOpt = schemaRepository.findById(id);
+    if (!schemaOpt.isPresent()) {
+      throw new UnknownSchemaException(id);
+    }
+    return schemaOpt.get();
   }
 
   @Override
@@ -82,12 +89,7 @@ public class CoreValidationService implements ValidationService {
       }
       
       boolean valid = true;
-      Optional<SchemaImpl> schemaOpt = schemaRepository.findById(request.getDomain());
-      if (!schemaOpt.isPresent()) {
-        throw new UnknownSchemaException(request.getDomain());
-      }
-      
-      Schema schema = schemaOpt.get();
+      Schema schema = getSchema(request.getDomain());
       // Reset all points and clear any error messages.
       for (Point point : request.getPoints()) {
         point.setValid(true);
