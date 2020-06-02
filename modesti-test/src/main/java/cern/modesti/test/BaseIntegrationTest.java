@@ -9,6 +9,7 @@ import cern.modesti.workflow.CoreWorkflowService;
 import cern.modesti.workflow.task.TaskAction;
 import cern.modesti.workflow.task.TaskInfo;
 import cern.modesti.workflow.task.TaskService;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RuntimeService;
@@ -21,6 +22,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.subethamail.wiser.Wiser;
@@ -39,8 +41,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
     "classpath:modesti-test.properties",
 })
 @ActiveProfiles("dev")
+@ContextConfiguration
 public abstract class BaseIntegrationTest {
-
   @Autowired
   public RequestService requestService;
 
@@ -58,13 +60,13 @@ public abstract class BaseIntegrationTest {
 
   @Autowired
   public MockUserService userService;
-
+  
   /**
    * In-memory SMTP server for receiving emails sent during the tests.
    */
   @Autowired
   public Wiser emails;
-
+  
   @Before
   public void setUpBase() throws Exception {
     MockitoAnnotations.initMocks(this);
@@ -75,7 +77,7 @@ public abstract class BaseIntegrationTest {
 
     Mocks.register("coreWorkflowService", coreWorkflowService);
   }
-
+  
   public void assertTaskNameAndRequestStatus(String requestId, String taskName, String status) {
     TaskInfo task = taskService.getActiveTask(requestId);
     assertNotNull(task);
