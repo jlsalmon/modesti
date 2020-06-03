@@ -7,7 +7,6 @@ stages:
 build_and_publish:
   stage: build
   script:
-    - mvn clean test
     - mvn clean deploy -Dmaven.test.skip=true -s settings.xml
   only:
     - master
