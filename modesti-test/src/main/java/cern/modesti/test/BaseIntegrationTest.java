@@ -106,4 +106,10 @@ public abstract class BaseIntegrationTest {
     assertEquals("CLOSED", requestService.findOneByRequestId(requestId).getStatus());
     assertEquals(0, runtimeService.createProcessInstanceQuery().count());
   }
+  
+  public void assertWorkflowFinishedWithRestFailedStatus(String requestId) {
+    assertNull(taskService.getActiveTask(requestId));
+    assertEquals("REST_FAILED", requestService.findOneByRequestId(requestId).getStatus());
+    assertEquals(0, runtimeService.createProcessInstanceQuery().count());
+  }
 }

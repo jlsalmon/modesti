@@ -72,6 +72,7 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
     variables.put("creator", request.getCreator());
+    variables.put("generatedFromUi", request.isGeneratedFromUi());
 
     ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
     
