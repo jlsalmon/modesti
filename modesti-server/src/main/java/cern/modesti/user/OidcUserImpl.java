@@ -29,7 +29,9 @@ public class OidcUserImpl extends AUser implements MyOidcUser {
   private Map<String, Object> attributes;
   
   public OidcUserImpl(OidcUser user, OidcIdToken idToken, Set<GrantedAuthority> authorities) {
-    super(((Long) user.getAttributes().get("cern_person_id")).intValue(),
+    // cern_person_id does not exist for service accounts...
+    super(user.getAttributes().get("cern_person_id") == null ? null :
+          ((Long) user.getAttributes().get("cern_person_id")).intValue(),
         user.getName(), user.getGivenName(), user.getFamilyName(), user.getEmail(), authorities);
     this.claims = user.getClaims();
     this.userInfo = user.getUserInfo();
