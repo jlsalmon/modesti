@@ -7,6 +7,7 @@ stages:
 build_and_publish:
   stage: build
   script:
+    - mvn clean install -N
     - mvn clean deploy -Dmaven.test.skip=true -s settings.xml
   only:
     - master
@@ -15,6 +16,7 @@ build_and_publish:
 build:
   stage: build
   script:
+    - mvn clean install -N
     - mvn clean package -s settings.xml -U
   except:
     - master
@@ -35,6 +37,7 @@ deploy_test:
 quality_assurance_preview:
   stage: sonar
   script:
+    - mvn clean install -N
     - mvn clean install sonar:sonar -s settings.xml -Dsonar.host.url=${SONAR_URL} -Dsonar.analysis.mode=preview -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit -Dsonar.gitlab.commit_sha=$(git log --pretty=format:%H origin/master..$CI_COMMIT_REF | tr '\n' ',') -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID -Dsonar.gitlab.max_major_issues_gate=0 
   except:
     - master
@@ -42,6 +45,7 @@ quality_assurance_preview:
 quality_assurance:
   stage: sonar
   script:
+    - mvn clean install -N
     - mvn clean install sonar:sonar -s settings.xml -Dsonar.host.url=${SONAR_URL} -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit 
   only:
     - master
