@@ -123,6 +123,11 @@ body {
   background-color: #59afe1;
 }
 
+.label.request-status.REST_FAILED {
+  color: #fff;
+  background-color: #c40f18;
+}
+
 .label.request-status.FOR_CSAM_SYNC {
   color: #fff;
   background-color: #67ab49;
