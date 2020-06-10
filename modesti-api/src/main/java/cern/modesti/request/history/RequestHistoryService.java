@@ -12,7 +12,7 @@ public interface RequestHistoryService {
   /**
    * Get the list of changes for the given request.
    * @param request the request object
-   * @return
+   * @return List of changes on the request
    */
   List<Change> getChanges(Request request);
   

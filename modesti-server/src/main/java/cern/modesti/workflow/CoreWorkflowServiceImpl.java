@@ -6,6 +6,7 @@ import cern.modesti.request.Request;
 import cern.modesti.request.RequestImpl;
 import cern.modesti.request.RequestRepository;
 import cern.modesti.request.counter.CounterService;
+import cern.modesti.workflow.exception.InvalidRequesqtIdException;
 import cern.modesti.point.Point;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RuntimeService;
@@ -60,6 +61,7 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
    *                workflow process instance
    * @return the newly started process instance object
    */
+  @Override
   public ProcessInstance startProcessInstance(final Request request) {
     log.info(format("starting process for %s request %s", request.getDomain(), request.getRequestId()));
 
@@ -70,6 +72,7 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
     Map<String, Object> variables = new HashMap<>();
     variables.put("requestId", request.getRequestId());
     variables.put("creator", request.getCreator());
+    variables.put("generatedFromUi", request.isGeneratedFromUi());
 
     ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey, request.getRequestId(), variables);
     
@@ -110,6 +113,7 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
    * @param requestId the id of the request
    * @return the {@link ProcessInstance} object associated with the request
    */
+  @Override
   public ProcessInstance getProcessInstance(String requestId) {
     return runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(requestId).singleResult();
   }
@@ -195,7 +199,7 @@ public class CoreWorkflowServiceImpl implements CoreWorkflowService {
   private Request getRequest(String requestId) {
     Request request = requestRepository.findOneByRequestId(requestId);
     if (request == null) {
-      throw new RuntimeException("No request with id " + requestId + " was found");
+      throw new InvalidRequesqtIdException("No request with id " + requestId + " was found");
     }
     return request;
   }

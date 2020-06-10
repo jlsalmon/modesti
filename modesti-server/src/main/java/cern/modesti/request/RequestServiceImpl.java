@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -33,7 +36,10 @@ import cern.modesti.user.User;
 import cern.modesti.workflow.AuthService;
 import cern.modesti.workflow.CoreWorkflowService;
 import cern.modesti.workflow.request.RequestAction;
+import cern.modesti.request.InvalidRequestException;
 import cern.modesti.workflow.task.NotAuthorisedException;
+import cern.modesti.workflow.validation.CoreValidationService;
+import cern.modesti.point.Error;
 
 import static java.lang.String.format;
 
@@ -61,6 +67,9 @@ public class RequestServiceImpl implements RequestService {
 
   @Autowired
   private CoreWorkflowService workflowService;
+  
+  @Autowired
+  private CoreValidationService validationService;
 
   @Autowired
   private UserService userService;
@@ -73,6 +82,9 @@ public class RequestServiceImpl implements RequestService {
   
   @Autowired
   private RequestFormatter requestFormatter;
+  
+  @Autowired
+  private RequestDomainSearch requestDomainSearch;
 
   private Collection<RequestEventHandler> requestEventHandlers = new ArrayList<>();
 
@@ -82,41 +94,15 @@ public class RequestServiceImpl implements RequestService {
     this.requestEventHandlers = context.getBeansOfType(RequestEventHandler.class).values();
   }
 
-  /**
-   * Insert (create) a new request.
-   * <p>
-   * Creating a new request performs the following actions:
-   * <ul>
-   * <li>
-   * Asserts that the currently logged-in user is authorised to create a
-   * request for the domain of the request
-   * </li>
-   * <li>
-   * Sets the currently logged-in user as the creator of the request
-   * </li>
-   * <li>Generates a request id</li>
-   * <li>Adds some empty points to the request if none were specified</li>
-   * <li>Starts a new workflow process instance using the workflow key of the
-   * plugin associated with the request domain</li>
-   * </ul>
-   *
-   * @param request the request to create
-   * @return the newly created request with all properties set
-   */
   @Override
   public Request insert(Request request) {
-    // Do not create a request if there is no appropriate domain
-    RequestProvider plugin = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
+    validateRequestDomain(request);
     User user = userService.getCurrentUser();
-
-    // Assert that the current user is allowed to create a request for this domain
-    if (!authService.canCreate(plugin, request, user)) {
-      throw new NotAuthorisedException(format("User \"%s\" is not authorised to create requests for domain \"%s\". " +
-          "Authorisation group is \"%s\".", user.getUsername(), request.getDomain(), plugin.getMetadata().getAuthorisationGroup(request)));
-    }
-
     // Set the creator as the current logged in user
     request.setCreator(user.getUsername());
+    
+    validateUserPermissions(request, user);
+    preValidateRestRequest(request);
 
     ((RequestImpl) request).setRequestId(counterService.getNextSequence(CounterService.REQUEST_ID_SEQUENCE).toString());
     log.trace(format("generated request id: %s", request.getRequestId()));
@@ -132,6 +118,12 @@ public class RequestServiceImpl implements RequestService {
     requestFormatter.format(request);
 
     boolean isEmptyRequest = request.getPoints().isEmpty();
+    if ((RequestType.UPDATE.equals(request.getType()) || RequestType.DELETE.equals(request.getType()))
+        && isEmptyRequest) {
+      // Update and delete request must contain non empty points
+      throw new InvalidRequestException(format("%s requests must contain at least one point", request.getType()));
+    }
+    
     // Add some empty points if there aren't any yet
     if (request.getPoints().isEmpty()) {
       for (int i = 0; i < 50; i++) {
@@ -155,16 +147,51 @@ public class RequestServiceImpl implements RequestService {
       ((RequestHistoryServiceImpl) historyService).initialiseChangeHistory(request);
     }
 
-    // Checks the schema configuration to see if it allows create requests from the UI.
-    // This is a (not too good) way to distinguish between PSEN and the other plug-ins.
-    // TODO: Must be modified when the REST service to create requests is implemented!!!
-    Optional<SchemaImpl> schema = schemaRepository.findById(request.getDomain());
-    if (schema.isPresent() && (schema.get().getConfiguration() == null || schema.get().getConfiguration().isCreateFromUi())) {
+    if (newRequest.isGeneratedFromUi()) {
       // Initially updated/cloned requests are not valid (values in the database might be incorrect)
-      request.setValid(isEmptyRequest || request.getType().equals(RequestType.DELETE));
+      newRequest.setValid(isEmptyRequest || newRequest.getType().equals(RequestType.DELETE));
+      repository.save((RequestImpl) newRequest);
     }
     
     return newRequest;
+  }
+
+  private void preValidateRestRequest(Request request) {
+    // If the request has not been created from the MODESTI UI it must be pre-validated
+    if (!request.isGeneratedFromUi() && !validationService.preValidateRequest(request)) {
+      // Converts all the errors to a single String
+      List<String> errorList = request.getNonEmptyPoints().stream()
+          .map(Point::getErrors)
+          .flatMap(Collection::stream)
+          .map(Error::toString)
+          .collect(Collectors.toList());
+      String errorAsString = StringUtils.join(errorList, System.lineSeparator());
+      throw new InvalidRequestException(format("Pre-validation failed for the request: %s", errorAsString));
+    }
+  }
+
+  private void validateUserPermissions(Request request, User user) {
+    // Do not create a request if there is no appropriate domain
+    RequestProvider plugin = requestProviderRegistry.getPluginFor(request, new UnsupportedRequestException(request));
+    // Assert that the current user is allowed to create a request for this domain
+    if (!authService.canCreate(plugin, request, user)) {
+      throw new NotAuthorisedException(format("User \"%s\" is not authorised to create requests for domain \"%s\". " +
+          "Authorisation group is \"%s\".", user.getUsername(), request.getDomain(), plugin.getMetadata().getAuthorisationGroup(request)));
+    }
+  }
+
+  /**
+   * REST requests might not have a domain specified for UPDATE requests (e.g. update requests from HelpAlarm).
+   * In that case, it tries to find the domain for the request
+   * @param request The original request.
+   */
+  private void validateRequestDomain(Request request) {
+    if (!StringUtils.isEmpty(request.getDomain()) || RequestType.UPDATE != request.getType()) {
+      return;
+    }
+    
+    String domain = requestDomainSearch.find(request);
+    request.setDomain(domain);
   }
 
   private void removeSearchOnlyFields(Request request) {
@@ -238,27 +265,14 @@ public class RequestServiceImpl implements RequestService {
     return repository.save((RequestImpl) updated);
   }
 
-  /**
-   * Find a single request.
-   *
-   * @param requestId the id of the request
-   * @return the request instance, or null if no request was found with the
-   * given id
-   */
   @Override
   public Request findOneByRequestId(String requestId) {
     return repository.findOneByRequestId(requestId);
   }
 
-  /**
-   * Delete a request.
-   *
-   * @param request the request to delete
-   */
   @Override
   public void delete(Request request) {
     // TODO: mark the request as deleted in the history collection
-
     repository.delete((RequestImpl) request);
   }
   
@@ -291,5 +305,4 @@ public class RequestServiceImpl implements RequestService {
     
     return request;
   } 
-
 }

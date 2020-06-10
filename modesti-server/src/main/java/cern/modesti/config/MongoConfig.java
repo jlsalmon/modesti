@@ -5,6 +5,7 @@ import static java.util.Collections.singletonList;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -49,7 +50,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
   @Autowired
   private Environment env;
-
+  
   @Override
   protected String getDatabaseName() {
     return env.getRequiredProperty("mongodb.db");
@@ -96,8 +97,8 @@ public class MongoConfig extends AbstractMongoConfiguration {
   }
 
   private MongoClient embeddedMongo() {
-    int port = 12345;
     try {
+      int port = new Random().nextInt(10000) + 10000;
       MongodConfigBuilder builder = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
           .net(new Net(port, Network.localhostIsIPv6()));
 

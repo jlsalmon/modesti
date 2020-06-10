@@ -3,12 +3,15 @@ package cern.modesti.request.upload.parser;
 import cern.modesti.plugin.UnsupportedRequestException;
 import cern.modesti.request.upload.exception.RequestParseException;
 import cern.modesti.plugin.DummyRequestParser;
+
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -19,13 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Justin Lewis Salmon
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
 public class RequestParserFactoryTest {
 
   @InjectMocks
@@ -44,6 +46,11 @@ public class RequestParserFactoryTest {
     for (Resource sheet : sheets) {
       RequestParserFactoryTest.sheets.put(sheet.getFilename(), sheet);
     }
+  }
+  
+  @Before
+  public void init() {
+    MockitoAnnotations.initMocks(this);
   }
 
   @Test(expected = RequestParseException.class)

@@ -151,6 +151,7 @@ export class RequestService {
   public createRequest(request: Request): IPromise<String> {
     let q: IDeferred<String> = this.$q.defer();
     let requests: any = this.restangular.all('requests');
+    request.generatedFromUi = true;
 
     this.$http.post('/api/requests', request).then((response: any) => {
       let location: string = response.config.url + '/' + response.data.requestId; 
@@ -172,6 +173,7 @@ export class RequestService {
     clone.type = request.type;
     clone.description = request.description;
     clone.creator = this.authService.getCurrentUser().username;
+    clone.generatedFromUi = true;
     clone.points = request.points.slice();
     clone.properties = {};
 

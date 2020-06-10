@@ -142,15 +142,37 @@ public interface Request extends Serializable {
    * Gets the valid of the skipCoreValidation flag. The core validations must be disabled
    * when UPDATE/DELETE requests provide the modified fields/point IDs.
    * @return TRUE if and only if the core validation must be skipped
+   * @deprecated Since version 0.2.33. Not necessary since the {@link cern.modesti.workflow.validation.ValidationService} 
+   * implements the pre-validate method
    */
+  @Deprecated
   boolean isSkipCoreValidation();
   
   /**
    * Sets the value for the skipCoreValidation flag. The core validations must be disabled
    * when UPDATE/DELETE requests provide the modified fields/point IDs.
    * @param skip Value for the skipCoreValidation flag
+   * @deprecated Since version 0.2.33. Not necessary since the {@link cern.modesti.workflow.validation.ValidationService} 
+   * implements the pre-validate method
    */
+  @Deprecated
   void setSkipCoreValidation(boolean skip);
+  
+  /**
+   * Checks is the request is generated from the MODESTI UI, opposite than created from a REST request.
+   * Requests generated from the UI must stop in the workflow stage IN_PROGRESS.
+   * On the opposite, requests generated from the REST service already contain the necessary changes and
+   * can continue in the workflow.
+   * 
+   * @return TRUE if and only if the request has been generated from the MODESTI UI
+   */
+  boolean isGeneratedFromUi();
+  
+  /**
+   * Sets the value of the flag 'generatedFromUi'.
+   * @param value Value of the flag 'generatedFromUi'
+   */
+  void setGeneratedFromUi(boolean value);
 
   /**
    * Gets the list of points in the request

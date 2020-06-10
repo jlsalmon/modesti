@@ -115,6 +115,8 @@ public class RequestHistoryServiceImpl implements RequestHistoryService {
   public void deleteChangeHistory(Request request) {
     log.info(format("deleting change history for request #%s", request.getRequestId()));
     RequestHistory entry = findOneByRequestId(request.getRequestId());
-    requestHistoryRepository.deleteById(entry.getId());
+    if (entry != null) {
+      requestHistoryRepository.deleteById(entry.getId());
+    }
   }
 }

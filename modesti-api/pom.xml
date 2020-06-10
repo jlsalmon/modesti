@@ -64,16 +64,16 @@
       <groupId>org.activiti</groupId>
       <artifactId>activiti-engine</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.powermock</groupId>
-      <artifactId>powermock-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-mockito-release-full</artifactId>
-      <type>pom</type>
-    </dependency>
+	  <artifactId>powermock-module-junit4</artifactId>
+	  <scope>test</scope>
+	</dependency>
+	<dependency>
+	  <groupId>org.powermock</groupId>
+	  <artifactId>powermock-api-mockito2</artifactId>
+	  <scope>test</scope>
+	</dependency>
   </dependencies>
 
 </project>

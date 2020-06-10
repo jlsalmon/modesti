@@ -2,6 +2,7 @@ package cern.modesti.plugin.spi;
 
 import cern.modesti.point.Point;
 import cern.modesti.point.PointConverter;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,4 +24,5 @@ public interface SearchProvider extends ExtensionPoint {
    * @return a list of {@link Point} instances matching the given query
    */
   Page<Point> findAll(String query, Pageable pageable, PointConverter converter);
+
 }
