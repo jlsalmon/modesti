@@ -25,7 +25,7 @@
     <lombok.version>1.16.12</lombok.version>
     <querydsl.version>4.2.1</querydsl.version>
     <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-    <spring.security.version>5.1.5.RELEASE</spring.security.version>
+    <spring.security.version>5.3.3.RELEASE</spring.security.version>
     <spring.security.oauth.version>5.0.5.RELEASE</spring.security.oauth.version>
     <spring.plugin.version>1.2.0.RELEASE</spring.plugin.version>
     <spring.test.version>4.3.4.RELEASE</spring.test.version>    
