@@ -157,8 +157,17 @@ public class RequestServiceImpl implements RequestService {
   }
 
   private void preValidateRestRequest(Request request) {
+    if (request.isGeneratedFromUi()) {
+      return;
+    }
+    
+    if (request.getNonEmptyPoints().size() > 500) {
+      throw new InvalidRequestException(format("Pre-validation failed for the request: "
+          + "Maximum number of points exceeded (500)"));
+    }
+    
     // If the request has not been created from the MODESTI UI it must be pre-validated
-    if (!request.isGeneratedFromUi() && !validationService.preValidateRequest(request)) {
+    if (!validationService.preValidateRequest(request)) {
       // Converts all the errors to a single String
       List<String> errorList = request.getNonEmptyPoints().stream()
           .map(Point::getErrors)
