@@ -1,5 +1,7 @@
 package cern.modesti.request;
 
+import cern.modesti.schema.Schema;
+
 /**
  * Interface to be implemented by the different domain formatters.
  * 
@@ -13,6 +15,7 @@ public interface RequestFormatter {
   /**
    * Format the point properties of the request to the appropriate type.
    * @param request The request to be formatted.
+   * @param schema The schema for the request.
    */
-  void format(Request request);
+  void format(Request request, Schema schema);
 }

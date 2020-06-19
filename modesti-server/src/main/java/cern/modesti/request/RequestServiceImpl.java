@@ -115,7 +115,7 @@ public class RequestServiceImpl implements RequestService {
     
     removeSearchOnlyFields(request);
     // Apply formatting to the request points
-    requestFormatter.format(request);
+    formatRequest(request);
 
     boolean isEmptyRequest = request.getPoints().isEmpty();
     if ((RequestType.UPDATE.equals(request.getType()) || RequestType.DELETE.equals(request.getType()))
@@ -156,6 +156,12 @@ public class RequestServiceImpl implements RequestService {
     return newRequest;
   }
 
+  private void formatRequest(Request request) {
+    Optional<SchemaImpl> schemaOpt = schemaRepository.findById(request.getDomain());
+    SchemaImpl schema = schemaOpt.isPresent() ? schemaOpt.get() : null;
+    requestFormatter.format(request, schema);
+  }
+  
   private void preValidateRestRequest(Request request) {
     if (request.isGeneratedFromUi()) {
       return;
@@ -263,7 +269,7 @@ public class RequestServiceImpl implements RequestService {
     }
     
     // Apply formatting to the request points
-    requestFormatter.format(updated);
+    formatRequest(updated);
 
     if (updated.getType().equals(RequestType.UPDATE)
         && ("IN_PROGRESS".equals(updated.getStatus()) || "FOR_ADDRESSING".equals(updated.getStatus()) || "IN_ERROR".equals(updated.getStatus()))) {

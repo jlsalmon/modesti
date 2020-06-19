@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import cern.modesti.request.Request;
 import cern.modesti.request.RequestFormatter;
+import cern.modesti.schema.Schema;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -28,11 +29,11 @@ public class RequestFormatterImpl implements RequestFormatter {
   private static final String SUFFIX = "RequestFormatter";
   
   @Override
-  public void format(Request request) {
+  public void format(Request request, Schema schema) {
     String formatterName = request.getDomain() + SUFFIX;
     try {
       RequestFormatter domainFormatter = context.getBean(formatterName, RequestFormatter.class);
-      domainFormatter.format(request);
+      domainFormatter.format(request, schema);
     } catch (BeansException e) {
       // Domain formatter not found
       log.debug("Exception looking for a request formatter of the domain {}", formatterName, e);
