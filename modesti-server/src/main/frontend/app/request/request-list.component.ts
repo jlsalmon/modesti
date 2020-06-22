@@ -152,6 +152,11 @@ class RequestListController {
   public getSchemas(): void {
     this.schemaService.getSchemas().then((schemas: Schema[]) => {
       this.schemas = schemas;
+      this.schemas.sort(function(s1: Schema, s2: Schema) {
+        if (s1.id < s2.id) return -1;
+        if (s1.id > s2.id) return 1;
+        return 0;
+      });
     });
   }
 
