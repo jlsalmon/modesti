@@ -82,12 +82,6 @@ public class CoreValidationService implements ValidationService {
   @Override
   public boolean validateRequest(Request request) {
     try {
-      if (RequestType.DELETE.equals(request.getType())) {
-        // Delete requests should not be validated
-        request.setValid(true);
-        return true;
-      }
-      
       boolean valid = true;
       Schema schema = getSchema(request.getDomain());
       // Reset all points and clear any error messages.
