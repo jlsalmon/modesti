@@ -19,7 +19,7 @@ export class AgGridColumnFactory {
       suppressResize: true,
       suppressSizeToFit: true,
       pinned: true,
-      cellRenderer: meta.checkboxCellRenderer
+      cellRenderer: meta.selectPointCheckboxCellRenderer
     });
 
     table.schema.categories.concat(table.schema.datasources).forEach((category: Category) => {
@@ -35,7 +35,10 @@ export class AgGridColumnFactory {
           columnDef.hide = true;
         }
 
-        if (meta.cellRenderer) {
+        if (field.type === 'checkbox') {
+          columnDef.cellRenderer = meta.checkboxCellRenderer;
+          columnDef.cellStyle= {'text-align': 'center'}
+        } else if (meta.cellRenderer) {
           columnDef.cellRenderer = meta.cellRenderer;
         }
 

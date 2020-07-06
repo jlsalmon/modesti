@@ -264,6 +264,9 @@ class RequestTableController {
     // Initialise the help text popovers on the column headers
     $('.help-text').popover({trigger: 'hover', delay: {'show': 500, 'hide': 100}});
 
+    let checkboxCells: JQuery = $('.htCore input.htCheckboxRendererInput').parent();
+    checkboxCells.css('text-align', 'center');
+
     if (this.schema.hasRowSelectColumn(this.request.status)) {
 
       // let firstColumnHeader: JQuery = $('.htCore colgroup col.rowHeader');
@@ -280,8 +283,8 @@ class RequestTableController {
       // firstColumnHeader.width('45px');
 
       // Centre checkboxes
-      let checkboxCells: JQuery = $('.htCore input.htCheckboxRendererInput').parent();
-      checkboxCells.css('text-align', 'center');
+      //let checkboxCells: JQuery = $('input.htCheckboxRendererInput').parent();
+      //checkboxCells.css('text-align', 'center');
 
       // Initialise checkbox header state
       let checkboxHeader: JQuery = $('.select-all:checkbox');

@@ -113,7 +113,7 @@ public class PointImpl implements Point {
             return false;
           }
         }
-      } else if (subProperty != null && !"".equals(subProperty)) {
+      } else if (subProperty != null && !("".equals(subProperty) || subProperty instanceof Boolean)) {
         return false;
       }
     }

@@ -160,10 +160,16 @@ export class AgGrid extends Table {
           return '...';
         }
       },
-      checkboxCellRenderer: (params: any) => {
+      selectPointCheckboxCellRenderer: (params: any) => {
+        console.log('params1: ', params);
         return '<input type="checkbox" ' +
           (params.node.selected ? 'checked="checked" ' : '') +
           'ng-click="$ctrl.table.selectNodeById(' + params.node.id + ')" style="margin-left: 5px;">';
+      },
+      checkboxCellRenderer: (params: any) => {
+        console.log('params2: ', params);
+        return '<input type="checkbox" disabled ' +
+          (params.value? 'checked="checked" ' : '') + ' style="margin-left: 5px;">';
       },
       cellClassRules: {
         'alarm' : function(params) { 
