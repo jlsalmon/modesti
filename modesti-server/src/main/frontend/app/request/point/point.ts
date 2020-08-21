@@ -50,7 +50,7 @@ export class Point implements ISerializable<Point> {
   /**
    * Check if a point is empty. A point is considered to be empty if it
    * contains no properties, or if the values of all its properties are either
-   * null, undefined or empty strings.
+   * null, undefined, empty strings or Boolean values.
    *
    * @returns {boolean} true if the point is empty, false otherwise
    */
@@ -72,7 +72,7 @@ export class Point implements ISerializable<Point> {
               }
             }
           }
-        } else if (property != null && property !== '') {
+        } else if (property != null && property !== '' && property != true && property != false) {
           return false;
         }
       }
