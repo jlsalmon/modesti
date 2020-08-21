@@ -68,6 +68,13 @@
               <option value="not-equals">not equals</option>
               <option value="contains">contains</option>
             </select>
+
+            <select class="form-control input-xs"
+                    ng-if="filter.field.type === 'checkbox'"
+                    ng-model="filter.operation"
+                    ng-change="$ctrl.onFiltersChanged()">
+              <option value="equals" ng-selected="selected">equals</option>
+            </select>
           </div>
 
           <!-- Input field -->
@@ -120,6 +127,16 @@
                      ng-model="filter.value"
                      ng-model-options='{ debounce: 600 }'
                      ng-change="$ctrl.onFiltersChanged()">
+            </div>
+
+            <div ng-if="filter.field.type === 'checkbox'">
+              <select class="form-control input-xs"                      
+                      ng-model="filter.value"
+                      ng-model-options='{ debounce: 100 }'
+                      ng-change="$ctrl.onFiltersChanged()">
+                <option value="TRUE" ng-selected="selected">TRUE</option>
+                <option value="FALSE">FALSE</option>
+              </select>
             </div>
           </div>
         </div>
