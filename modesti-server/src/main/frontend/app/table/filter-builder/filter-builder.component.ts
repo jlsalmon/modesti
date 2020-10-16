@@ -51,7 +51,6 @@ class FilterBuilderController {
       case 'numeric':
       case 'options':
       case 'autocomplete':
-      case 'checkbox':
         filter.operation = 'equals';
         break;
     }

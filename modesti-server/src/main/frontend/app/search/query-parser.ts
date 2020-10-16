@@ -12,9 +12,6 @@ export class QueryParser {
         let property: string = filter.field.getModelPath();
         let operation: string = this.parseOperation(filter.operation);
         let value: string = filter.value;
-        if (filter.field.type === 'checkbox') {
-          value = filter.value === 'TRUE' ? '1' : '0';
-        }
 
         if (filter.operation === 'starts-with') {
           value += '*';

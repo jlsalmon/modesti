@@ -79,7 +79,7 @@ class RequestTableController {
       return;
     }
 
-    let field: Field = this.table.hotOptions.columns[col].field;
+    let field: Field = this.table.hotOptions.columns[col].field;    
 
     let type: string = field ? field.type : cellProperties.type;
     switch (type) {
