@@ -89,8 +89,9 @@ export class HandsontableColumnFactory {
     if (field.type === 'checkbox') {
       // Just use true/false dropdown until copy/paste issues are fixed.
       // See https://github.com/handsontable/handsontable/issues/2497
-      (<OptionsField> field).options = ['true', 'false'];
-      column = this.getOptionsColumn(table, column, meta, field as OptionsField);
+      //(<OptionsField> field).options = ['true', 'false'];
+      //column = this.getOptionsColumn(table, column, meta, field as OptionsField);
+      column.type = 'checkbox';
     }
     
     column.forceVisible = this.getColumnVisibility(field, meta);

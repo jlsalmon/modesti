@@ -164,6 +164,7 @@ export class AgGrid extends Table {
         return '<input type="checkbox" ' +
           (params.node.selected ? 'checked="checked" ' : '') +
           'ng-click="$ctrl.table.selectNodeById(' + params.node.id + ')" style="margin-left: 5px;">';
+
       },
       cellClassRules: {
         'alarm' : function(params) { 
