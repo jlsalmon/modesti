@@ -10,7 +10,7 @@
 
   <groupId>cern.modesti</groupId>
   <artifactId>modesti-parent</artifactId>
-  <version>${revision}</version>
+  <version>0.3.3</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -56,7 +56,7 @@
     <url>https://gitlab.cern.ch/modesti/modesti</url>
     <connection>scm:git:ssh://git@gitlab.cern.ch:7999/modesti/modesti.git</connection>
     <developerConnection>scm:git:ssh://git@gitlab.cern.ch:7999/modesti/modesti.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>modesti-parent-0.3.3</tag>
   </scm>
 
   <dependencyManagement>
