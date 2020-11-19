@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -28,6 +29,9 @@ import static org.mockito.Mockito.when;
  * @author Justin Lewis Salmon
  */
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"javax.management.*", "com.sun.org.apache.xerces.*", 
+	  "javax.xml.*", "org.xml.*", "org.w3c.dom.*",
+	  "com.sun.org.apache.xalan.*", "javax.activation.*"})
 public class RequestParserFactoryTest {
 
   @InjectMocks
