@@ -15,22 +15,28 @@
 
   <properties>
     <revision>0.3.5-SNAPSHOT</revision>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>    
+    <java.version>8</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>    
+    <maven.compiler.release>${java.version}</maven.compiler.release> 
     <activiti.version>7.1.0.M2</activiti.version>
     <apache.commons.version>3.4</apache.commons.version>
     <apache.poi.version>3.12-beta1</apache.poi.version>
     <hibernate.validator.version>6.0.13.Final</hibernate.validator.version>
     <jackson.version>2.9.5</jackson.version>
-    <lombok.version>1.16.12</lombok.version>
+    <jaxb.version>2.3.0</jaxb.version>
+    <jaxb.runtime.version>2.3.2</jaxb.runtime.version>
+    <logback.version>1.2.3</logback.version>
+    <lombok.version>1.18.10</lombok.version>
     <ojdbc.version>19.8.0.0</ojdbc.version>
     <querydsl.version>4.2.1</querydsl.version>
     <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
     <spring.security.version>5.1.5.RELEASE</spring.security.version>
     <spring.security.oauth.version>5.0.5.RELEASE</spring.security.oauth.version>
     <spring.plugin.version>1.2.0.RELEASE</spring.plugin.version>
-    <spring.test.version>4.3.4.RELEASE</spring.test.version>    
-    <powermock.version>2.0.7</powermock.version>
+    <spring.test.version>4.3.4.RELEASE</spring.test.version> 
+    <mockito.core.version>2.22.0</mockito.core.version>   
+    <powermock.version>2.0.9</powermock.version>
     <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 	<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 	<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>    
@@ -277,6 +283,11 @@
         <version>${apache.commons.version}</version>
       </dependency>
       <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.hamcrest</groupId>
         <artifactId>hamcrest-all</artifactId>
         <version>1.3</version>
@@ -287,7 +298,36 @@
         <version>${lombok.version}</version>      
       </dependency>
 
-
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-core</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml.ws</groupId>
+        <artifactId>jaxws-api</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.ws</groupId>
+        <artifactId>rt</artifactId>
+        <version>${jaxb.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+        <version>${jaxb.runtime.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -307,6 +347,12 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-core</artifactId>
+        <version>${powermock.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
 	    <groupId>org.powermock</groupId>
 	    <artifactId>powermock-module-junit4</artifactId>
 	    <version>${powermock.version}</version>
@@ -318,11 +364,36 @@
 	    <version>${powermock.version}</version>
 	     <scope>test</scope>
 	  </dependency>
+	  <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.core.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>3.24.1-GA</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>  
