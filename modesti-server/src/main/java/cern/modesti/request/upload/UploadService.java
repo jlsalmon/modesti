@@ -4,7 +4,6 @@ import cern.modesti.request.Request;
 import cern.modesti.request.RequestService;
 import cern.modesti.request.upload.parser.RequestParseResult;
 import cern.modesti.request.upload.parser.RequestParserFactory;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,6 @@ import java.io.InputStream;
  * @author Justin Lewis Salmon
  */
 @Service
-@Slf4j
 public class UploadService {
 
   @Autowired
@@ -36,6 +34,7 @@ public class UploadService {
   public RequestParseResult parseRequestFromExcelSheet(String description, InputStream stream) {
     RequestParseResult result = requestParserFactory.parseRequest(stream);
     Request request = result.getRequest();
+    request.setGeneratedFromUi(true);
 
     if (request.getDescription() == null) {
       request.setDescription(description);
