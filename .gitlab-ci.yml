@@ -1,10 +1,11 @@
+  default:
+    tags:
+      - java11
 
   stages:
     - build
     - deploy
     - sonar
-  tags:
-    - java11
 
   # Fully build and publish master branch
   build_and_publish:
