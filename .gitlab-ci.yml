@@ -1,55 +1,55 @@
-  default:
-    tags:
-      - java11
+default:
+  tags:
+    - java11
 
-  stages:
-    - build
-    - deploy
-    - sonar
+stages:
+  - build
+  - deploy
+  - sonar
 
-  # Fully build and publish master branch
-  build_and_publish:
-    stage: build
-    script:
-      - mvn clean install -N
-      - mvn clean deploy -Dmaven.test.skip=true -s settings.xml
-    only:
-      - master
+# Fully build and publish master branch
+build_and_publish:
+  stage: build
+  script:
+    - mvn clean install -N
+    - mvn clean deploy -Dmaven.test.skip=true -s settings.xml
+  only:
+    - master
 
-  # Just run tests on feature branches
-  build:
-    stage: build
-    script:
-      - mvn clean install -N
-      - mvn clean package -s settings.xml -U
-    except:
-      - master
+# Just run tests on feature branches
+build:
+  stage: build
+  script:
+    - mvn clean install -N
+    - mvn clean package -s settings.xml -U
+  except:
+    - master
 
-  deploy_test:
-    stage: deploy
-    script:
-      - mvn help:evaluate -Dexpression=project.version
-      - echo -n "version=" > project.version && mvn help:evaluate -Dexpression=project.version | grep -v '\[' >> project.version
-      - source ./project.version; ssh timtest@modesti-test.cern.ch "~/scripts/deploy-modesti-server-test.sh $version"
-      - ssh timtest@modesti-test.cern.ch '/usr/local/sbin/lumensctl restart -S MODESTI-SERVER-TEST.jvm'
-    environment:
-      name: test
-      url: https://modesti-test.cern.ch
-    only:
-      - master
+deploy_test:
+  stage: deploy
+  script:
+    - mvn help:evaluate -Dexpression=project.version
+    - echo -n "version=" > project.version && mvn help:evaluate -Dexpression=project.version | grep -v '\[' >> project.version
+    - source ./project.version; ssh timtest@modesti-test.cern.ch "~/scripts/deploy-modesti-server-test.sh $version"
+    - ssh timtest@modesti-test.cern.ch '/usr/local/sbin/lumensctl restart -S MODESTI-SERVER-TEST.jvm'
+  environment:
+    name: test
+    url: https://modesti-test.cern.ch
+  only:
+    - master
   
-  quality_assurance_preview:
-    stage: sonar
-    script:
-      - mvn clean install -N
-      - mvn clean install sonar:sonar -s settings.xml -Dsonar.host.url=${SONAR_URL} -Dsonar.analysis.mode=preview -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit -Dsonar.gitlab.commit_sha=$(git log --pretty=format:%H origin/master..$CI_COMMIT_REF | tr '\n' ',') -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID -Dsonar.gitlab.max_major_issues_gate=0 
-    except:
-      - master
+quality_assurance_preview:
+  stage: sonar
+  script:
+    - mvn clean install -N
+    - mvn clean install sonar:sonar -s settings.xml -Dsonar.host.url=${SONAR_URL} -Dsonar.analysis.mode=preview -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit -Dsonar.gitlab.commit_sha=$(git log --pretty=format:%H origin/master..$CI_COMMIT_REF | tr '\n' ',') -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID -Dsonar.gitlab.max_major_issues_gate=0 
+  except:
+    - master
   
-  quality_assurance:
-    stage: sonar
-    script:
-      - mvn clean install -N
-      - mvn clean install sonar:sonar -s settings.xml -Dsonar.host.url=${SONAR_URL} -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit 
-    only:
-      - master
+quality_assurance:
+  stage: sonar
+  script:
+    - mvn clean install -N
+    - mvn clean install sonar:sonar -s settings.xml -Dsonar.host.url=${SONAR_URL} -Djavax.net.ssl.trustStore=/home/gitlab-runner/java-certificates/cacerts -Djavax.net.ssl.trustStorePassword=changeit 
+  only:
+    - master
