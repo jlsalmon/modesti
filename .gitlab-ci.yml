@@ -1,7 +1,10 @@
-stages:
-- build
-- deploy
-- sonar
+job:
+  stages:
+    - build
+    - deploy
+    - sonar
+  tags:
+    - java11
 
 # Fully build and publish master branch
 build_and_publish:
