@@ -10,11 +10,11 @@
 
   <groupId>cern.modesti</groupId>
   <artifactId>modesti-parent</artifactId>
-  <version>0.3.5-SNAPSHOT</version>
+  <version>${revision}</version>
   <packaging>pom</packaging>
 
   <properties>
-    <revision>0.3.4-SNAPSHOT</revision>
+    <revision>0.3.5-SNAPSHOT</revision>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>    
     <activiti.version>7.1.0.M2</activiti.version>
