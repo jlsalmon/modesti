@@ -20,7 +20,7 @@
     <activiti.version>7.1.0.M2</activiti.version>
     <apache.commons.version>3.4</apache.commons.version>
     <apache.poi.version>3.12-beta1</apache.poi.version>
-    <hibernate.validator.version>6.0.13.Final</hibernate.validator.version>
+    <hibernate.validator.version>6.0.20.Final</hibernate.validator.version>
     <jackson.version>2.9.5</jackson.version>
     <lombok.version>1.16.12</lombok.version>
     <ojdbc.version>19.8.0.0</ojdbc.version>
